@@ -1,8 +1,13 @@
 <?php
 namespace suda\core;
 use Exception;
-class Applcation
+class Application
 {
+    protected $path;
+    public function Application(string $app){
+        $this->path=$app;
+    }
+    
     public function onRequest(Request $request){
         
     }

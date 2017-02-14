@@ -1,3 +1,3 @@
-<?php
-    require_once __DIR__.'/../system/start.php';
+<?php    
     define('APP_PATH',__DIR__.'/../application');
+    require_once __DIR__.'/../system/suda.php';

@@ -210,7 +210,6 @@ class Storage
         }
         // Windows 文件中文编码
         $charset=array_merge(self::$charset, $charset);
-
         foreach ($charset as $code) {
             $file = iconv('UTF-8', $code, $name);
             if (self::exist_case($file)) {

@@ -1,0 +1,7 @@
+{
+    "namespace":"cn\\atd3",
+    "application":"suda\\core\\Application",
+    "modules":["default"],
+    "views":"resource/views",
+    "language":"zh-CN"
+}
