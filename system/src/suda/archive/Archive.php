@@ -1,5 +1,5 @@
 <?php
-namespace archive;
+namespace suda\archive;
 
 abstract class Archive extends \base\Value
 {

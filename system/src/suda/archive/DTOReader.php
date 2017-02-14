@@ -1,8 +1,8 @@
 <?php
-namespace archive;
+namespace suda\archive;
 
 use Storage;
-use base\Value;
+use suda\tool\Value;
 
 // 数据表对象文件读取器 
 class DTOReader

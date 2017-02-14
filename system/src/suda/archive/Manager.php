@@ -1,5 +1,5 @@
 <?php
-namespace archive;
+namespace suda\archive;;
 use Query as XQuery;
 /**
 *   储存管理器

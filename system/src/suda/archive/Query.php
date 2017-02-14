@@ -1,5 +1,5 @@
 <?php
-namespace archive;
+namespace suda\archive;
 
 use PDO;
 use Storage;
