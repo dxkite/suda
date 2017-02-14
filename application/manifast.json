@@ -3,5 +3,6 @@
     "application":"suda\\core\\Application",
     "modules":["default"],
     "views":"resource/views",
-    "language":"zh-CN"
+    "language":"zh-CN",
+    "debug":true
 }

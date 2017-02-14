@@ -1,5 +1,5 @@
 <?php
-namespace suda\tools;
+namespace suda\tool;
 
 
 class Json

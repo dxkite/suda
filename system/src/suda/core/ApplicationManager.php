@@ -1,13 +1,13 @@
 <?php
 namespace suda\core;
-
-use suda\tools\Json;
+use suda\tool\Json;
+use suda\tool\Value;
 
 class ApplicationManager
 {
     public static $instance=null;
     public $app=null;
-    
+    public $appliaction;
 
     public static function getInstance()
     {
@@ -20,14 +20,19 @@ class ApplicationManager
     public function run(string $app)
     {
         $this->readManifast($app.'/manifast.json');
-        //$this->app=new Application($app);
+        $this->app=new $this->appliaction($app);
     }
 
     protected function readManifast(string $manifast)
     {
         // App不存在
         if (!Storage::exist($manifast)) {
-            var_dump(Storage::copydir(SYS_RES.'/app_template/', APP_PATH));
+            Storage::copydir(SYS_RES.'/app_template/', APP_PATH);
         }
+        // 设置配置
+        Config::set('app',Json::loadFile($manifast));
+        // 默认应用
+        $this->appliaction=Config::get('app.application','suda\\core\\Application');
+
     }
 }
