@@ -92,8 +92,7 @@ class Router
     protected function buildRouterMap()
     {
         foreach ($this->routers as $name => $router) {
-            $url=$router['url'];
-            self::watch($name, $router['url']);
+            self::watch($name, $router['visit']);
         }
     }
 
@@ -158,13 +157,12 @@ class Router
     }
     protected static function runRouter(array $router)
     {
-        if (!(isset($router['ob']) && $router['ob']===false)){
-            Renderer::getInstance()->obStart();
+        if (! (isset($router['ob']) && $router['ob']===false) ){
+            Response::obStart();
         }
         Application::activeModule($router['module']);
         $name=Config::get('app.namespace').'\\response\\'.$router['class'].'->onRequest';
-        echo $name;
-        (new suda\tool\Command($name))->exec([Request::getInstance()()]);
+        (new \suda\tool\Command($name))->exec([Request::getInstance()]);
     }
 
     public static function error404()

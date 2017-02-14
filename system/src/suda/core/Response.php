@@ -50,7 +50,7 @@ class Response
         505 => 'HTTP Version Not Supported',
         509 => 'Bandwidth Limit Exceeded',
     );
-    private $obstate=false;
+    private static $obstate=false;
     private $content='';
     private $type='html';
     private static $instance=null;
@@ -102,17 +102,17 @@ class Response
         echo $this->content;
     }
 
-    public function obStart()
+    public static function obStart()
     {
-        if (!$this->obstate) {
-            $this->obstate=true;
+        if (!self::$obstate) {
+            self::$obstate=true;
             ob_start();
         }
     }
     public function obEnd()
     {
-        if ($this->obstate) {
-            $this->obstate=false;
+        if (self::$obstate) {
+            self::$obstate=false;
             $this->content.=ob_get_clean();
         }
     }

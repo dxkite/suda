@@ -1,7 +1,7 @@
 <?php
 namespace suda\core;
 require_once __DIR__.'/Storage.php';
-
+require_once __DIR__.'/func.php';
 class System
 {
     protected static $namespace=['suda\\core'];
