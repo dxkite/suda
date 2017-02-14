@@ -27,7 +27,7 @@ class ApplicationManager
     {
         // App不存在
         if (!Storage::exist($manifast)) {
-            var_dump(Storage::copy(SYS_RES.'/app_template/', APP_PATH));
+            var_dump(Storage::copydir(SYS_RES.'/app_template/', APP_PATH));
         }
     }
 }

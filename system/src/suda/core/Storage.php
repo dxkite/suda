@@ -18,12 +18,13 @@ class Storage
         return true;
     }
     
-    public static function path(string $path){
+    public static function path(string $path)
+    {
         self::mkdirs($path);
         return realpath($path);
     }
 
-    public static function readDirFiles(string $dirs,  bool $repeat=false, string $preg='/^.+$/',bool $cut=false):array
+    public static function readDirFiles(string $dirs,  bool $repeat=false, string $preg='/^.+$/', bool $cut=false):array
     {
         $file_totu=[];
         $dirs=realpath($dirs);
@@ -42,17 +43,18 @@ class Storage
                 }
             }
         }
-        if ($cut){
+        if ($cut) {
             $cutfile=[];
-            foreach ($file_totu as $file){
-                $cutfile[]=self::cutPath($file,$dirs);
+            foreach ($file_totu as $file) {
+                $cutfile[]=self::cutPath($file, $dirs);
             }
             return $cutfile;
         }
         return $file_totu;
     }
-    public static function cutPath(string $path,string $basepath=ROOT_PATH){
-        return trim(preg_replace('/^'.preg_quote($basepath,'/').'/','',$path),'\\/');
+    public static function cutPath(string $path, string $basepath=ROOT_PATH)
+    {
+        return trim(preg_replace('/^'.preg_quote($basepath, '/').'/', '', $path), '\\/');
     }
     public static function readDirs(string $dirs, bool $repeat=false, string $preg='/^.+$/'):array
     {
@@ -60,7 +62,7 @@ class Storage
         if (self::isDir($dirs)) {
             $hd=opendir($dirs);
             while ($read=readdir($hd)) {
-                if (strcmp($read ,'.') !== 0 && strcmp($read, '..') !==0) {
+                if (strcmp($read, '.') !== 0 && strcmp($read, '..') !==0) {
                     $path=$dirs.'/'.$read;
                     if (self::isDir($path) && preg_match($preg, $read)) {
                         $reads[]=$read;
@@ -79,7 +81,6 @@ class Storage
     // 递归删除文件夹
     public static function rmdirs(string $dir)
     {
-
         if (self::isDir($dir) && $handle=opendir($dir)) {
             while (false!== ($item=readdir($handle))) {
                 if ($item!="."&&$item!="..") {
@@ -87,7 +88,7 @@ class Storage
                         self::rmdirs("{$dir}/{$item}");
                     } elseif (file_exists("{$dir}/{$item}")) { // Non-Thread-Safe
                         // Need thread-safe version to avoid this error
-                        $errorhandler=function($erron, $error, $file, $line){
+                        $errorhandler=function ($erron, $error, $file, $line) {
                             Debug::w($error);
                         };
                         set_error_handler($errorhandler);
@@ -98,7 +99,24 @@ class Storage
             }
         }
     }
-    
+
+    public static function copydir(string $src, string $dest)
+    {
+        self::mkdirs($dest);
+        $hd=opendir($src);
+        while ($read=readdir($hd)) {
+            if (strcmp($read, '.') !== 0 && strcmp($read, '..') !==0) {
+                if (self::isDir($src.'/'.$read) ) {
+                    self::copydir($src.'/'.$read,$dest.'/'.$read);
+                }
+                else{
+                    self::copy($src.'/'.$read,$dest.'/'.$read);
+                }
+            }
+        }
+        return true;
+    }
+
     public static function copy(string $source, string $dest):bool
     {
         if (self::exist($source)) {
