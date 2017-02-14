@@ -20,10 +20,10 @@ class ApplicationManager
 
     public function run(string $app)
     {
-        $this->readManifast($app.'/manifast.json');
-        $this->app=new $this->appliaction($app);
+        self::console($app);
         Router::getInstance()->dispatch();
     }
+
     public function console(string $app)
     {
         $this->readManifast($app.'/manifast.json');
