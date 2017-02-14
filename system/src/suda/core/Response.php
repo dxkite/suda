@@ -54,18 +54,13 @@ class Response
     private $type='html';
     private static $instance=null;
     private static $mime;
-    private function __construct()
+
+    public function __construct()
     {
        Header('X-Framework: DxCore-Suda');
     }
-    public static function getInstance()
-    {
-        if (is_null(self::$instance)) {
-            return self::$instance=new Renderer;
-        }
-        return self::$instance;
-    }
 
+    public function onRequest(Request $request){}
     public static function state(int $state)
     {
         header('HTTP/1.1 '.$state.' '.self::$status[$state]);

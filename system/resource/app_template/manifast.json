@@ -2,6 +2,6 @@
     "namespace":"cn\\atd3",
     "application":"suda\\core\\Application",
     // 系统加载模块
-    "modules":["system","default"],
+    "modules":["suda","default"],
     "language":"zh-CN"
 }
