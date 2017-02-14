@@ -6,8 +6,9 @@ class Application
     protected $path;
     public function Application(string $app){
         $this->path=$app;
+        define('DATA_DIR',)
     }
-    
+
     public function onRequest(Request $request){
         
     }

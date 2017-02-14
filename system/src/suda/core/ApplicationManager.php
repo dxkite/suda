@@ -31,7 +31,9 @@ class ApplicationManager
         }
         // 设置配置
         Config::set('app',Json::loadFile($manifast));
-        // 默认应用
+        // 载入配置前设置配置
+        Hook::exec('core:loadManifast');
+        // 默认应用控制器
         $this->appliaction=Config::get('app.application','suda\\core\\Application');
 
     }
