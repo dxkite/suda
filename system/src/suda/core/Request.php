@@ -5,12 +5,15 @@ namespace suda\core;
 */
 class Request
 {
-    static $request=new Request();
+    static $request=null;
     private function Request(){
 
     }
 
-    public static function doRequest() {
-        return $request;
+    public static function instance() {
+        if (is_null(self::$request)){
+            self::$request=new Request();
+        }
+        return self::$request;
     }
 }
