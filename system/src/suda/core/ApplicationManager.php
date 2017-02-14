@@ -21,6 +21,7 @@ class ApplicationManager
     {
         $this->readManifast($app.'/manifast.json');
         $this->app=new $this->appliaction($app);
+        Router::getInstance()->dispatch();
     }
 
     protected function readManifast(string $manifast)

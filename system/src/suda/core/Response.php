@@ -2,6 +2,7 @@
 namespace suda\core;
 
 use suda\tool\Json;
+use suda\template\Manager;
 
 class Response
 {
@@ -90,9 +91,12 @@ class Response
 
     public function display(string $template, array $values=[])
     {
+        // 结束缓冲控制
         self::obEnd();
         // 渲染模板
-        \template\Manager::display($template,$values);
+        ob_start();
+        Manager::display($template,$values);
+        $this->content.=ob_get_clean();
         Hook::exec('display:output', [&$this->content, $this->type]);
         Header('Content-Length:'.strlen($this->content));
         echo $this->content;

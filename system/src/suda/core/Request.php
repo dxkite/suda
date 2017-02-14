@@ -19,7 +19,7 @@ final class Request
         self::parseServer();
     }
 
-    public static function instance() {
+    public static function getInstance() {
         if (is_null(self::$request)){
             self::$request=new Request();
         }

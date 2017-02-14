@@ -1,10 +1,11 @@
 <?php
 namespace suda\core;
 use Exception;
+use suda\template\Manager;
 class Application
 {
     protected $path;
-    public function Application(string $app){
+    public function __construct(string $app){
         $this->path=$app;
         // 基本常量
         defined('MODULES_DIR') or define('MODULES_DIR', APP_DIR.'/modules');
@@ -19,6 +20,15 @@ class Application
         set_time_limit(Config::get('timelimit', 0));
         // 设置时区
         date_default_timezone_set(Config::get('timezone', 'PRC'));
+        if (Storage::exist(CONFIG_DIR.'/config.json')) {
+            Config::load(CONFIG_DIR.'/config.json');
+        } 
+        if (Storage::exist(CONFIG_DIR.'/config.sys.json')) {
+            Config::load(CONFIG_DIR.'/config.sys.json');
+        }
+        if (Config::get('debug',false)){
+            Manager::loadCompile();
+        }
     }
 
     public function onRequest(Request $request){
@@ -33,5 +43,11 @@ class Application
     }
     public function uncaughtError(){
 
+    }
+    // 激活模块
+    public static function activeModule(string $module){
+        define('MODULE_RESOURCE',MODULES_DIR.'/'.$module.'/resource');
+        System::addIncludePath(MODULES_DIR.'/'.$module.'/src');
+        System::addIncludePath(MODULES_DIR.'/'.$module.'/libs');
     }
 }

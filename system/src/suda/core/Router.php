@@ -19,20 +19,25 @@ class Router
         Hook::listen('Router:dispatch::error', 'Router::error404');
     }
 
-    public function getInstance()
+    public static function getInstance()
     {
         if (is_null(self::$router)) {
-            return self::$router=new Router;
+            self::$router=new Router;
         }
         return self::$router;
     }
 
     public function load(string $module)
     {
-        $routers=array_merge(
-            Json::loadFile(MODULES_DIR.'/'.$module.'/resource/config/router.json'),
-            Json::loadFile(MODULES_DIR.'/'.$module.'/resource/config/router_admin.json')
-        );
+        $routers=[];
+        // 加载普通路由
+        if (Storage::exist(MODULES_DIR.'/'.$module.'/resource/config/router.json')){
+            $routers=array_merge($routers,Json::loadFile(MODULES_DIR.'/'.$module.'/resource/config/router.json'));
+        }
+        // 加载管理路由
+        if (Storage::exist(MODULES_DIR.'/'.$module.'/resource/config/router.json')){
+            $routers=array_merge($routers,Json::loadFile(MODULES_DIR.'/'.$module.'/resource/config/router_admin.json'));
+        }
         array_walk($routers, function (&$router) use ($module) {
             $router['module']=$module;
         });
@@ -41,7 +46,7 @@ class Router
 
     protected function loadModulesRouter()
     {
-        $modules=App::getModules();
+        $modules=Config::get('app.modules',[]);
         foreach ($modules as $module) {
             self::load($module);
         }
@@ -156,11 +161,12 @@ class Router
         if (!(isset($router['ob']) && $router['ob']===false)){
             Renderer::getInstance()->obStart();
         }
-        App::activeModule($router['module']);
-        $path=MODULE_RENDER.DIRECTORY_SEPARATOR.preg_replace('/[:]/',DIRECTORY_SEPARATOR,$router['render']).'.php';
-        require_once $path;
+        Application::activeModule($router['module']);
+        $name=Config::get('app.namespace').'\\response\\'.$router['class'].'->onRequest';
+        echo $name;
+        (new suda\tool\Command($name))->exec([Request::getInstance()()]);
     }
-    
+
     public static function error404()
     {
         $render=new Response;
