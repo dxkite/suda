@@ -1,6 +1,8 @@
 <?php
 namespace suda\core;
+
 use suda\tool\Value;
+use suda\tool\Json;
 
 final class Request
 {
@@ -30,7 +32,7 @@ final class Request
             return null;
         }
         $str=self::input();
-        return base\Json::decode($str, true);
+        return Json::decode($str, true);
     }
 
     public static function input()
