@@ -49,6 +49,7 @@ class System
 
     public static function onShutdown()
     {
+        Hook::exec('system:shutdown');
     }
 
     public static function uncaughtException($exception)

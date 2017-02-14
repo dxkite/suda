@@ -175,7 +175,7 @@ class Debug
 
     public static function phpShutdown()
     {
-        if (\Config::get('debug')) {
+        if (Config::get('debug')) {
             self::save();
         }
     }
