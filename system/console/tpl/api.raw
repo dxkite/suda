@@ -1,0 +1,41 @@
+
+namespace db;
+
+use Query;
+
+class {{ $_SQL->name }}
+
+{
+    <?php $set_update=[] ; $set_create=[] ;$create_params=[];$update_params=[]; ?>
+    @foreach ($_SQL->fields() as $name => $type)<?php  $type=preg_match('/int/', $type)?'int':'string';$set_update[]= "'$name'=>\${$name}";?>
+      @if ($this->getAuto() == $name)
+        <?php $update_params[]=$type .' $'.$name; ?>
+       @else
+        <?php $set_create[]= "'$name'=>\${$name}"; $create_params[]=$type .' $'.$name; ?>
+       @endif
+    @endforeach
+    <?php $set_update=implode(',',$set_update);  $set_create=implode(',',$set_create);  $update_params=array_merge($update_params, $create_params); $create_params=implode(',', $create_params);$update_params=implode(',', $update_params);?>
+
+    public function create({{$create_params}})
+    {
+        return Query::insert('{{$this->getTableName()}}',[{{!$set_create}}]);
+    }
+    public function delete(int $id){
+        return Query::delete('{{$this->getTableName()}}',['id'=>$id]);
+    }
+	
+	   
+	public function get(int $id)
+    {
+        // 获取储存的验证数据
+        return ($get=Query::where('{{$this->getTableName()}}', {{$this->getFieldsStr()}},['id'=>$id])->fetch()) ? $get  : false;
+    }
+    
+    public function update({{$update_params}}){
+       return Query::update('{{$this->getTableName()}}',[{{!$set_update}}]); 
+    }
+    public function list(int $page=1, int $count=10)
+    {
+        return Query::where('{{$this->getTableName()}}', {{$this->getFieldsStr()}}, '1', [], [$page, $count])->fetchAll();
+    }
+}

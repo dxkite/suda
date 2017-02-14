@@ -1,5 +1,6 @@
 <?php
 namespace suda\core;
+
 use suda\tool\Json;
 use suda\tool\Value;
 
@@ -23,6 +24,11 @@ class ApplicationManager
         $this->app=new $this->appliaction($app);
         Router::getInstance()->dispatch();
     }
+    public function console(string $app)
+    {
+        $this->readManifast($app.'/manifast.json');
+        $this->app=new $this->appliaction($app);
+    }
 
     protected function readManifast(string $manifast)
     {
@@ -31,11 +37,10 @@ class ApplicationManager
             Storage::copydir(SYS_RES.'/app_template/', APP_DIR);
         }
         // 设置配置
-        Config::set('app',Json::loadFile($manifast));
+        Config::set('app', Json::loadFile($manifast));
         // 载入配置前设置配置
         Hook::exec('core:loadManifast');
         // 默认应用控制器
-        $this->appliaction=Config::get('app.application','suda\\core\\Application');
-
+        $this->appliaction=Config::get('app.application', 'suda\\core\\Application');
     }
 }

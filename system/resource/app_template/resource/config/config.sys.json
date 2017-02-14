@@ -1,5 +1,14 @@
 {
     "debug":true,
     "timelimit":0,
-    "timezone":"PRC"
+    "timezone":"PRC",
+    "database":{
+        "prefix":"mc_", // 数据库前缀
+        "name":"test_api",
+        "passwd":"root",
+        "user":"root",
+        "charset":"utf8",
+        "host":"localhost"
+    },
+    "non-static":"php"
 }
