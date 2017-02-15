@@ -66,7 +66,7 @@ class Application
             Config::set('module', Json::loadFile($path));
         }
         // 加载语言包
-        if (Storage::exist($path=MODULE_LANGS.'/'.Config::get('app.language').'.json')) {
+        if (Config::get('app.language') && Storage::exist($path=MODULE_LANGS.'/'.Config::get('app.language').'.json')) {
             Language::load($path);
         }
     }
