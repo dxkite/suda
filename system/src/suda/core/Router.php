@@ -10,7 +10,7 @@ class Router
     protected $mapper;
     protected $matchs=[];
     protected $types;
-    protected $urltype=['int'=>'\d+','string'=>'[^\/]+','longstring'=>'.+'];
+    protected static $urltype=['int'=>'\d+','string'=>'[^\/]+','longstring'=>'.+'];
     protected static $router=null;
     protected $routers=[];
     
@@ -45,11 +45,13 @@ class Router
         $this->routers=array_merge($this->routers, $routers);
     }
 
-    protected function loadFile(){
+    protected function loadFile()
+    {
         $this->routers=require TEMP_DIR.'/router.cache.php';
     }
-    protected function saveFile(){
-        ArrayHelper::export(TEMP_DIR.'/router.cache.php','_router',$this->routers);
+    protected function saveFile()
+    {
+        ArrayHelper::export(TEMP_DIR.'/router.cache.php', '_router', $this->routers);
     }
     protected function loadModulesRouter()
     {
@@ -108,12 +110,90 @@ class Router
         }
     }
 
+    public static function visit(string $url, string $router,bool $admin=false)
+    {
+        $params=self::getParams($url);
+        if (!preg_match('/^(.+?)@(.+?)$/', $router, $matchs)) {
+            return false;
+        }
 
+        // 解析变量
+        list($router, $class_short, $module)=$matchs;
+        // 路由位置
+        $router_file=MODULES_DIR.'/'.$module.'/resource/config/router'.($admin?'_admin':'').'.json';
+        $namespace=conf('app.namespace');
+        // 类名
+        $class=$namespace.'\\response\\'.$class_short;
+        $params_str='//Auto create params getter ...'."\r\n";
+        foreach ($params as $param_name=>$param_type){
+            $params_str.="\t\t\${$param_name}=\$request->get()->{$param_name}(".(preg_match('/int/i',$param_type)?'0':'"hello!"').");\r\n";
+        }
+        $pos=strrpos($class,'\\');
+        $class_namespace=substr($class,0,$pos);
+        $class_name=substr($class,$pos+1);
+        $class_path=MODULES_DIR.'/'.$module.'/src/'.$class_namespace;
+        $class_file=$class_path.'/'.$class_name.'.php';
+        $template_file=MODULES_DIR.'/'.$module.'/resource/template/default/'.strtolower($class_short).'.tpl.html';
+        $template_name=strtolower($class_short);
+        $class_template=<<<CLASS_TEMPLATE
+<?php
+namespace $class_namespace;
+use suda\\core\\Request;
+// Auto generate response class
+class $class_name extends \\suda\\core\\Response {
+    public function onRequest(Request \$request){
+        $params_str
+        \$this->display('$module:$template_name',['helloworld'=>'Hello,World!']);
+    }
+}
+CLASS_TEMPLATE;
+$template=<<< TEMPLATE
+<html>
+    <head>
+        <title>{{ \$v->helloworld }}</title>
+    </head>
+    <body>
+        <div> {{ _T(\$v->helloworld) }} @ $url </div>
+    </body>
+</html>
+TEMPLATE;
+        // 写入Class
+        Storage::path($class_path);
+        Storage::put($class_file,$class_template);
+        // 写入模板
+        Storage::path(dirname($template_file));
+        Storage::put($template_file,$template);
+
+        // 更新路由
+        Storage::path(dirname($router_file));
+        $json=Json::loadFile($router_file);
+        $item=array(
+            'class'=>'response\\'.$class_short,
+            'visit'=>$url,
+        );
+        $rname=preg_replace('/[\\\\]+/','_',$class_short);
+        $json[$rname]=$item;
+        Json::saveFile($router_file,$json);
+        return true;
+    }
+
+    public static function getParams(string $url)
+    {
+        $urltype=self::$urltype;
+        $types=array();
+        $url=preg_replace('/([\/\.\\\\\+\*\[\^\]\$\(\)\=\!\<\>\|\-])/', '\\\\$1', $url);
+        $url=preg_replace_callback('/\{(?:(\w+)(?::(\w+)))\}/', function ($match) use (&$types, $urltype) {
+            $param_name=$match[1]!==''?$match[1]:count($types);
+            $param_type=isset($match[2])?$match[2]:'url';
+            $types[$param_name]=$param_type;
+        }, $url);
+        return $types;
+    }
 
     protected function buildMatch(string $name, string $url)
     {
         $types=&$this->types;
-        $urltype=$this->urltype;
+        $urltype=self::$urltype;
         $url=preg_replace('/([\/\.\\\\\+\*\[\^\]\$\(\)\=\!\<\>\|\-])/', '\\\\$1', $url);
         $url=preg_replace_callback('/\{(?:(\w+)(?::(\w+)))\}/', function ($match) use ($name, &$types, $urltype) {
             $size=isset($types[$name])?count($types[$name]):0;

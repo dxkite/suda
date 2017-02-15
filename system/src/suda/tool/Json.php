@@ -36,7 +36,11 @@ class Json
         $content=file_get_contents($path);
         return self::decode($content, true);
     }
-
+    public static function saveFile(string $path,$jsonable)
+    {
+        $json=json_encode($jsonable);
+        return file_put_contents($path,$json);
+    }
     public static function loadFile(string $path)
     {
         ob_start();

@@ -44,7 +44,4 @@ class ApplicationManager
         $this->appliaction=Config::get('app.application', 'suda\\core\\Application');
     }
 
-    public static function visit(string $url,string $class){
-        var_dump($url,$class);
-    }
 }

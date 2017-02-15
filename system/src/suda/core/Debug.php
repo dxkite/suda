@@ -74,6 +74,7 @@ class Debug
         $erron = $code;
         $error = $message;
         $traces = array();
+        $traces_console=array();
         while ($offset_start--) {
             array_shift($backtrace);
         }
@@ -82,8 +83,10 @@ class Debug
         }
         foreach ($backtrace as $trace) {
             $print = null;
+            $print_d = null;
             if (isset($trace['file'])) {
                 $print = '<a title="'.Storage::cutPath($trace['file']).'">'.basename($trace['file']).'</a>#'.$trace['line'];
+                $print_d=basename($trace['file']).'#'.$trace['line'];
             }
             if (isset($trace['class'])) {
                 $function = $trace['class'].$trace['type'].$trace['function'];
@@ -102,7 +105,9 @@ class Debug
                 $args = rtrim($args, ',');
             }
             $print .= ' '.$function.'('.$args.')';
+            $print_d.=' '.$function;
             $traces[] = $print;
+            $traces_console[]=$print_d;
         }
         $file=Storage::cutPath($file);
         $debug=self::getInfo();
@@ -110,8 +115,8 @@ class Debug
         if (Config::get('console', false)) {
             print "\033[31m# Error>\033[33m $error\033[0m\r\n";
             print "\t\033[34mCause By $file:$line\033[0m\r\n";
-            foreach ($traces as $trace_info) {
-                print "\t\033[35m$trace_info\033[0m\r\n";
+            foreach ($traces_console as $trace_info) {
+                print "\033[36m$trace_info\033[0m\r\n";
             }
         } else {
             $render=new Response;
