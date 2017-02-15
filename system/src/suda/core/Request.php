@@ -19,8 +19,9 @@ final class Request
         self::parseServer();
     }
 
-    public static function getInstance() {
-        if (is_null(self::$request)){
+    public static function getInstance()
+    {
+        if (is_null(self::$request)) {
             self::$request=new Request();
         }
         return self::$request;
@@ -129,7 +130,7 @@ final class Request
         // 预处理
         //  /?/xxxxx
         //  /index.php/xxx
-
+        //  /index.php?/xxx
         if (preg_match('/^\/\?\//', $_SERVER['REQUEST_URI'])) {
             $preg='/^(\/\?(\/[^?]*))(?:[?](.+))?$/';
             preg_match($preg, $_SERVER['REQUEST_URI'], $match);
@@ -138,11 +139,14 @@ final class Request
                 parse_str($match[3], $_GET);
             }
             self::$url=$match[2];
-        } else {
+        } elseif (preg_match('/^(.*)\/index.php\??\//', $_SERVER['REQUEST_URI'])) {
             $preg='/(.*)\/index.php(\/[^?]*)?$/';
             preg_match($preg, $_SERVER['PHP_SELF'], $match);
             self::$url=isset($match[2])?$match[2]:'/';
+        } else {
+            self::$url=$_SERVER['REQUEST_URI'];
         }
+        
         if (!isset($_SERVER['PATH_INFO'])) {
             $_SERVER['PATH_INFO']=self::$url;
         }
@@ -154,5 +158,4 @@ final class Request
             self::$get=new Value($_GET);
         }
     }
-
 }
