@@ -214,8 +214,8 @@ class Debug
 
         $message=(isset($args[0]) && is_string($args[0]))?array_shift($args):'NO MESSAGE';
         $title=(isset($args[0]) && is_string($args[0]))?array_shift($args):$title;
-        $start=(isset($args[0]) && is_numeric($args[0]))?array_shift($args):0;
-        $end=(isset($args[0]) && is_numeric($args[0]))?array_shift($args):0;
+        $start=(isset($args[0]) && is_numeric($args[0]))?array_shift($args)+1:1;
+        $end=(isset($args[0]) && is_numeric($args[0]))?array_shift($args)+1:1;
         self::log($message, $title, $level, $start+1, $end);
     }
     public function __call($method, $args)

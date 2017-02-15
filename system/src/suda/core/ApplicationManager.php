@@ -33,9 +33,11 @@ class ApplicationManager
             Hook::listen('system:shutdown', [$this->app, 'onShutdown']);
             Hook::listen('system:uncaughtException', [$this->app, 'uncaughtException']);
             Hook::listen('system:uncaughtError', [$this->app, 'uncaughtError']);
+            Debug::init();
         }else{
             throw new UnsupportApplication('unsupport application core:'.$this->appliaction);
         }
+        
     }
 
     protected function readManifast(string $manifast)
