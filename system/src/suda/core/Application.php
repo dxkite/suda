@@ -42,7 +42,7 @@ class Application
         if ($modules=Config::get('app.modules')) {
             foreach ($modules as $module) {
                 if (Storage::isDir(MODULES_DIR.'/'.$module.'/share')){
-                    System::setIncludePath(MODULES_DIR.'/'.$module.'/share');
+                    System::addIncludePath(MODULES_DIR.'/'.$module.'/share');
                 }
             }
         }

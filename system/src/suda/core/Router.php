@@ -168,7 +168,7 @@ class Router
             $json=[];
         }
         $item=array(
-            'class'=>'response\\'.$class_short,
+            'class'=>$class,
             'visit'=>$url,
         );
         if (!$ob) {
