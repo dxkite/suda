@@ -1,3 +1,4 @@
 application/resource/config/config.sys.json
 application/data/logs
 application/data/temp
+application/data/cache

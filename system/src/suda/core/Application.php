@@ -17,7 +17,7 @@ class Application
         defined('DATA_DIR') or define('DATA_DIR', APP_DIR.'/data');
         defined('LOG_DIR') or define('LOG_DIR', DATA_DIR.'/logs');
         defined('VIEWS_DIR') or define('VIEWS_DIR', DATA_DIR.'/views');
-        defined('CACHE_DIR') or define('CACHE_DIR', RESOURCE_DIR.'/cache');
+        defined('CACHE_DIR') or define('CACHE_DIR', DATA_DIR.'/cache');
         defined('CONFIG_DIR') or define('CONFIG_DIR', RESOURCE_DIR.'/config');
         defined('TEMP_DIR') or define('TEMP_DIR', DATA_DIR.'/temp');
 
