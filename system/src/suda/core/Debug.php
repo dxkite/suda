@@ -1,6 +1,11 @@
 <?php
 namespace suda\core;
 
+Hook::listen("system:init", "Debug::beforeSystemRun");
+Hook::listen("system:display::after", "Debug::afterSystemRun");
+Hook::listen("system:shutdown", "Debug::phpShutdown");
+Hook::listen("system:debug:printf", "Debug::printf");
+
 // TODO: 记录异常类型
 class Debug
 {
@@ -16,13 +21,7 @@ class Debug
     protected static $count=[];
     protected static $max = 2097152; // 2M
 
-    public static function init()
-    {
-        Hook::listen("system:init", "Debug::beforeSystemRun");
-        Hook::listen("system:display::after", "Debug::afterSystemRun");
-        Hook::listen("system:shutdown", "Debug::phpShutdown");
-        Hook::listen("system:debug:printf", "Debug::printf");
-    }
+
 
     protected static function log(string $message, string $title='Log title', $level = self::E, int $offset_start=0, int $offset_end=0)
     {
