@@ -39,6 +39,11 @@ class Application
 
         System::setNamespace(Config::get('app.namespace'));
         System::addIncludePath(SHRAE_DIR);
+        if ($modules=Config::get('app.modules')) {
+            foreach ($modules as $module) {
+                System::setIncludePath(MODULES_DIR.'/'.$module.'/libs');
+            }
+        }
     }
 
     // 激活模块
