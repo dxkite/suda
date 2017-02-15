@@ -110,7 +110,7 @@ class Router
         }
     }
 
-    public static function visit(array $method, string $url, string $router, bool $ob=true, bool $admin=false)
+    public static function visit(array $method, string $url, string $router, string $tag=null,bool $ob =true, bool $admin=false )
     {
         $params=self::getParams($url);
         if (!preg_match('/^(.+?)@(.+?)$/', $router, $matchs)) {
@@ -177,8 +177,8 @@ class Router
         if (count($method)) {
             $item['method']=$method;
         }
-        $rname=preg_replace('/[\\\\]+/', '_', $class_short);
-        $json[strtolower($rname)]=$item;
+        $tagname=is_null($tag)?preg_replace('/[\\\\]+/', '_', $class_short):$tag;
+        $json[strtolower($tagname)]=$item;
         Json::saveFile($router_file, $json);
         return true;
     }

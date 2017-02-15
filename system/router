@@ -2,15 +2,16 @@
 <?php
 require_once __DIR__ .'/suda-console.php';
 // 获取选项
-$options=getopt('a::m:u:c:o::h::');
+$options=getopt('a::m:u:c:o::h::t:');
 $help=<<<'HELP'
-Usage: router [-a] [-o]  [-m POST,GET..] -u url -c class
+Usage: router [-a] [-o]  [-m POST,GET..] [-t name] -u url -c class
 
     -a create URL as admin
     -m request method,use `,` to split 
     -u the request url, use {name:type} to assign args
     -c the called class when request
     -o disavaliable ob cache
+    -t the tag name of url
 
 HELP;
 
@@ -24,9 +25,9 @@ $admin=isset($options['a']);
 
 $url=$options['u'];
 $class=$options['c'];
-
+$tag=isset($options['t'])?$options['t']:null;
 $ob=!isset($options['o']);
-if (Router::visit($method,$url,$class,$ob,$admin)){
+if (Router::visit($method,$url,$class,$tag,$ob,$admin)){
     echo 'created response:'.$class;
 }else{
     echo 'someting error';
