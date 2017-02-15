@@ -110,7 +110,7 @@ class Debug
         }
         $file=Storage::cutPath($file);
         $debug=self::getInfo();
-        Debug::e($erron.':'.$error);
+        
         if (Config::get('console', false)) {
             print "\033[31m# Error>\033[33m $error\033[0m\r\n";
             print "\t\033[34mCause By $file:$line\033[0m\r\n";
@@ -131,6 +131,12 @@ class Debug
                 'traces'=>$traces,
             ]);
         }
+        $loginfo['file']=$file;
+        $loginfo['line']=$line;
+        $loginfo['title']='Crash:'.$erron;
+        $loginfo['msg']=$error;
+        $loginfo['level']=self::E;
+        self::$log[]=$loginfo;
         exit($erron);
     }
     public static function printf()

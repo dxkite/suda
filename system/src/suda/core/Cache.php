@@ -1,5 +1,6 @@
 <?php
 namespace suda\core;
+
 /**
  * Class Cache
  * 文件缓存
@@ -17,7 +18,7 @@ class Cache
      */
     public static function set(string $name, $value, int $expire=0):bool
     {
-        $path=$storage.self::nam($name);
+        $path=self::$storage.self::nam($name);
         self::$cache[$name]=$value;
         Storage::mkdirs(dirname($path));
         $value=serialize($value);
@@ -29,7 +30,7 @@ class Cache
      * @param string $name 名
      * @return mixed|null
      */
-    public static function get(string $name,$defalut=null)
+    public static function get(string $name, $defalut=null)
     {
         // 有值就获取值
         if (isset(self::$cache[$name])) {
@@ -37,12 +38,12 @@ class Cache
             return $value;
         }
         // 没值就在cache文件中查找
-        $path=$storage.self::nam($name);
+        $path=self::$storage.self::nam($name);
         if (Storage::exist($path)) {
             $value=Storage::get($path);
             $time=explode('|', $value, 2);
             if (time()<intval($time[0]) || intval($time[0])===0) {
-                // 未过期则返回 
+                // 未过期则返回
                 return unserialize($time[1]);
             } else {
                 // 过期则删除
@@ -73,22 +74,24 @@ class Cache
      */
     public static function gc()
     {
-        $files=Storage::readDirFiles($storage, '/^(?!\.)/');
+        $files=Storage::readDirFiles(self::$storage, '/^(?!\.)/');
         foreach ($files as $file) {
-            if (Config::get('NoCache',false)) {
-                Storage::remove($file);
-            } else {
+            if (Config::get('cache', false)) {
                 $value=Storage::get($file);
                 $time=explode('|', $value, 2);
                 if (intval($time[0])!==0 && intval($time[0])<time()) {
                     Storage::remove($file);
                 }
+            } else {
+                Storage::remove($file);
             }
         }
     }
     private static function nam(string $name)
     {
         $str=preg_split('/[.\/]+/', $name, 2, PREG_SPLIT_NO_EMPTY);
-        return $str[0].'_'.md5($name);
+        return $str[0].'_'.md5($name).'.cache';
     }
 }
+
+Hook::listen('system:shutdown', 'suda\\core\\Cache::gc');
