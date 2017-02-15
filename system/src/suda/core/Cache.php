@@ -74,7 +74,7 @@ class Cache
     {
         $files=Storage::readDirFiles($path=CACHE_DIR, '/^(?!\.)/');
         foreach ($files as $file) {
-            if (\Config::get('NoCache', 0)) {
+            if (Config::get('NoCache',false)) {
                 Storage::remove($file);
             } else {
                 $value=Storage::get($file);
