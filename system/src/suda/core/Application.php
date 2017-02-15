@@ -12,14 +12,14 @@ class Application
     {
         $this->path=$app;
         // 基本常量
-        defined('MODULES_DIR') or define('MODULES_DIR', APP_DIR.'/modules');
-        defined('RESOURCE_DIR') or define('RESOURCE_DIR', APP_DIR.'/resource');
-        defined('DATA_DIR') or define('DATA_DIR', APP_DIR.'/data');
-        defined('LOG_DIR') or define('LOG_DIR', DATA_DIR.'/logs');
-        defined('VIEWS_DIR') or define('VIEWS_DIR', DATA_DIR.'/views');
-        defined('CACHE_DIR') or define('CACHE_DIR', DATA_DIR.'/cache');
-        defined('CONFIG_DIR') or define('CONFIG_DIR', RESOURCE_DIR.'/config');
-        defined('TEMP_DIR') or define('TEMP_DIR', DATA_DIR.'/temp');
+        defined('MODULES_DIR') or define('MODULES_DIR', Storage::path(APP_DIR.'/modules'));
+        defined('RESOURCE_DIR') or define('RESOURCE_DIR', Storage::path(APP_DIR.'/resource'));
+        defined('DATA_DIR') or define('DATA_DIR', Storage::path(APP_DIR.'/data'));
+        defined('LOG_DIR') or define('LOG_DIR', Storage::path(DATA_DIR.'/logs'));
+        defined('VIEWS_DIR') or define('VIEWS_DIR', Storage::path(DATA_DIR.'/views'));
+        defined('CACHE_DIR') or define('CACHE_DIR', Storage::path(DATA_DIR.'/cache'));
+        defined('CONFIG_DIR') or define('CONFIG_DIR', Storage::path(RESOURCE_DIR.'/config'));
+        defined('TEMP_DIR') or define('TEMP_DIR', Storage::path(DATA_DIR.'/temp'));
 
         // 设置PHP属性
         set_time_limit(Config::get('timelimit', 0));

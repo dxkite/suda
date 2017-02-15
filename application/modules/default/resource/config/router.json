@@ -1,1 +1,3 @@
-{"default":{"class":"response\\Index","visit":"\/"},"user_Test":{"class":"response\\user\\Test","visit":"\/visit"},"user_Profile":{"class":"response\\user\\Profile","visit":"\/user\/{user:string}\/profile"}}
+{
+    "default":{"class":"cn\\atd3\\response\\Index","visit":"/"}
+}
