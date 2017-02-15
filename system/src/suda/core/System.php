@@ -1,5 +1,6 @@
 <?php
 namespace suda\core;
+
 defined('D_START') or define('D_START', microtime(true));
 defined('D_MEM') or define('D_MEM', memory_get_usage());
 require_once __DIR__.'/Storage.php';
@@ -41,7 +42,9 @@ class System
     
     public static function addIncludePath(string $path)
     {
-        self::$include_path[]=$path;
+        if (!in_array($path, self::$include_path)) {
+            self::$include_path[]=$path;
+        }
     }
 
     public static function getIncludePath()
