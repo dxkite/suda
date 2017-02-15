@@ -40,20 +40,6 @@ class Application
         System::setNamespace(Config::get('app.namespace'));
     }
 
-    public static function onRequest(Request $request)
-    {
-        return false;
-    }
-    public static function onShutdown()
-    {
-    }
-
-    public static function uncaughtException(Exception $e)
-    {
-    }
-    public static function uncaughtError(int $erron, string $error, string $file, int $line)
-    {
-    }
     // 激活模块
     public static function activeModule(string $module)
     {
@@ -69,5 +55,24 @@ class Application
         if (Config::get('app.language') && Storage::exist($path=MODULE_LANGS.'/'.Config::get('app.language').'.json')) {
             Language::load($path);
         }
+    }
+
+
+    public static function onRequest(Request $request)
+    {
+        return true;
+    }
+    
+    public static function onShutdown()
+    {
+    }
+
+    public static function uncaughtException($e)
+    {
+        return false;
+    }
+    public static function uncaughtError($erron,$error, $file,$line)
+    {
+        return false;
     }
 }

@@ -28,6 +28,14 @@ class ApplicationManager
     {
         $this->readManifast($app.'/manifast.json');
         $this->app=new $this->appliaction($app);
+        if ($this->app instanceof Application) {
+            Hook::listen('Router:dispatch::before', [$this->app, 'onRequest']);
+            Hook::listen('system:shutdown', [$this->app, 'onShutdown']);
+            Hook::listen('system:uncaughtException', [$this->app, 'uncaughtException']);
+            Hook::listen('system:uncaughtError', [$this->app, 'uncaughtError']);
+        }else{
+            throw new UnsupportApplication('unsupport application core:'.$this->appliaction);
+        }
     }
 
     protected function readManifast(string $manifast)
@@ -43,5 +51,4 @@ class ApplicationManager
         // 默认应用控制器
         $this->appliaction=Config::get('app.application', 'suda\\core\\Application');
     }
-
 }

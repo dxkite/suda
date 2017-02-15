@@ -56,7 +56,7 @@ class Command
             }
             // 调用接口
             elseif (is_array($this->command) /*&& !is_callable($this->command)*/) {
-                if ($this->static) {
+                if ($this->static  || is_object($this->command[0]) ) {
                 } else {
                     $this->command[0]=new $this->command[0];
                 }
