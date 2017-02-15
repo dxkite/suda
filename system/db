@@ -106,6 +106,9 @@ function generate() {
 
     $params=getopt('r:o:s:p:');
     $src=isset($params['r'])?$params['r']:DATA_DIR.'/dto';
+    if (!is_dir($src)){
+        echo 'no such dir:'.$src;
+    }
     $dist=isset($params['o'])?$params['o']:DATA_DIR.'/db';
     $outsql=isset($params['s'])?$params['s']:DATA_DIR.'/dbcreator.sql';
     $querysql=isset($params['p'])?$params['p']:DATA_DIR.'/dbcreator.php';

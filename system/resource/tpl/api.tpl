@@ -27,7 +27,6 @@ class <?php echo htmlspecialchars($_SQL->name) ?>
 	   
 	public function get(int $id)
     {
-        // 获取储存的验证数据
         return ($get=Query::where('<?php echo htmlspecialchars($this->getTableName()) ?>', <?php echo htmlspecialchars($this->getFieldsStr()) ?>,['id'=>$id])->fetch()) ? $get  : false;
     }
     

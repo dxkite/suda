@@ -27,7 +27,6 @@ class {{ $_SQL->name }}
 	   
 	public function get(int $id)
     {
-        // 获取储存的验证数据
         return ($get=Query::where('{{$this->getTableName()}}', {{$this->getFieldsStr()}},['id'=>$id])->fetch()) ? $get  : false;
     }
     
