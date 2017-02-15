@@ -41,7 +41,9 @@ class Application
         System::addIncludePath(SHRAE_DIR);
         if ($modules=Config::get('app.modules')) {
             foreach ($modules as $module) {
-                System::setIncludePath(MODULES_DIR.'/'.$module.'/libs');
+                if (Storage::isDir(MODULES_DIR.'/'.$module.'/share')){
+                    System::setIncludePath(MODULES_DIR.'/'.$module.'/share');
+                }
             }
         }
     }
@@ -53,7 +55,7 @@ class Application
         define('MODULE_LANGS', Storage::path(MODULE_RESOURCE.'/langs'));
         define('MODULE_CONFIG', Storage::path(MODULE_RESOURCE.'/config'));
         System::addIncludePath(Storage::path(MODULES_DIR.'/'.$module.'/src'));
-        System::addIncludePath(Storage::path(MODULES_DIR.'/'.$module.'/libs'));
+        System::addIncludePath(Storage::path(MODULES_DIR.'/'.$module.'/share'));
         if (Storage::exist($path=MODULE_CONFIG.'/config.json')) {
             Config::set('module', Json::loadFile($path));
         }
