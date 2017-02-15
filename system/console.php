@@ -8,7 +8,7 @@ if (isset($argv[1])) {
     print "\033[33m-----------------------------------\033[0m\r\n";
     print "\033[33m# Function echo\033[0m\r\n";
     print "\033[33m-----------------------------------\033[0m\r\n";
-    $return=(new suda\tool\Command($argv[1]))->exec($params);
+    $return=(new \suda\tool\Command($argv[1]))->exec($params);
     print "\033[33m# return value\033[0m\r\n";
     print "\033[33m-----------------------------------\033[0m\r\n";
     var_dump($return);

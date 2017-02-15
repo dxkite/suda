@@ -1,6 +1,7 @@
 <?php
 namespace suda\core;
 
+// TODO: 记录异常类型
 class Debug
 {
     const T = 'trace'; // 运行跟踪
@@ -106,13 +107,16 @@ class Debug
         $file=Storage::cutPath($file);
         $debug=self::getInfo();
         Debug::e($erron.':'.$error);
-        
-        if (Config::get('console',false)) {
-            echo 'console';
+        if (Config::get('console', false)) {
+            print "\033[31m# Error>\033[33m $error\033[0m\r\n";
+            print "\t\033[34mCause By $file:$line\033[0m\r\n";
+            foreach ($traces as $trace_info) {
+                print "\t\033[35m$trace_info\033[0m\r\n";
+            }
         } else {
             $render=new Response;
             $render->state(404);
-            $render->display('suda:error',[
+            $render->display('suda:error', [
                 'erron'=>$erron,
                 'error'=>$error,
                 'file'=>$file,
