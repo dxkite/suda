@@ -3,6 +3,7 @@ namespace suda\core;
 
 use suda\tool\Command;
 use suda\tool\Json;
+use suda\tool\ArrayHelper;
 
 class Router
 {
@@ -31,12 +32,12 @@ class Router
     {
         $routers=[];
         // 加载普通路由
-        if (Storage::exist(MODULES_DIR.'/'.$module.'/resource/config/router.json')){
-            $routers=array_merge($routers,Json::loadFile(MODULES_DIR.'/'.$module.'/resource/config/router.json'));
+        if (Storage::exist(MODULES_DIR.'/'.$module.'/resource/config/router.json')) {
+            $routers=array_merge($routers, Json::loadFile(MODULES_DIR.'/'.$module.'/resource/config/router.json'));
         }
         // 加载管理路由
-        if (Storage::exist(MODULES_DIR.'/'.$module.'/resource/config/router.json')){
-            $routers=array_merge($routers,Json::loadFile(MODULES_DIR.'/'.$module.'/resource/config/router_admin.json'));
+        if (Storage::exist(MODULES_DIR.'/'.$module.'/resource/config/router.json')) {
+            $routers=array_merge($routers, Json::loadFile(MODULES_DIR.'/'.$module.'/resource/config/router_admin.json'));
         }
         array_walk($routers, function (&$router) use ($module) {
             $router['module']=$module;
@@ -44,11 +45,22 @@ class Router
         $this->routers=array_merge($this->routers, $routers);
     }
 
+    protected function loadFile(){
+        $this->routers=require TEMP_DIR.'/router.cache.php';
+    }
+    protected function saveFile(){
+        ArrayHelper::export(TEMP_DIR.'/router.cache.php','_router',$this->routers);
+    }
     protected function loadModulesRouter()
     {
-        $modules=Config::get('app.modules',[]);
-        foreach ($modules as $module) {
-            self::load($module);
+        if (conf('debug')) {
+            $modules=Config::get('app.modules', []);
+            foreach ($modules as $module) {
+                self::load($module);
+            }
+            self::saveFile();
+        } else {
+            self::loadFile();
         }
     }
 
@@ -157,7 +169,7 @@ class Router
     }
     protected static function runRouter(array $router)
     {
-        if (! (isset($router['ob']) && $router['ob']===false) ){
+        if (! (isset($router['ob']) && $router['ob']===false)) {
             Response::obStart();
         }
         (new \suda\tool\Command(Config::get('app.application').'::activeModule'))->exec([$router['module']]);

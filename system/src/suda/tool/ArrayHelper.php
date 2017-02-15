@@ -107,7 +107,7 @@ class ArrayHelper
     * @param $name 导出的数组名
     * @param $array 导出的数组
     */
-    public function export(string $path, string $name, array $array, bool $sort = true)
+    public static function export(string $path, string $name, array $array, bool $sort = true)
     {
         $name = '$'.ltrim($name, '$');
         $exstr = "<?php\r\n".$name."=array();\r\n";
@@ -116,7 +116,7 @@ class ArrayHelper
             ksort($array);
         }
         $exstr .= self::arr2string($name, $array);
-        $exstr .= 'return '.$name.";\r\n?>";
+        $exstr .= 'return '.$name.';';
         return file_put_contents($path, $exstr) ? true : false;
     }
 
@@ -157,7 +157,7 @@ class ArrayHelper
         return $exstr;
     }
 
-    protected  function parserArraySub(string $parent, array $array)
+    protected static function parserArraySub(string $parent, array $array)
     {
         $line = '';
         foreach ($array as $key => $value) {
