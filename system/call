@@ -1,3 +1,4 @@
+#!/usr/bin/env php
 <?php
 
 require_once __DIR__ .'/suda-console.php';
@@ -13,5 +14,9 @@ if (isset($argv[1])) {
     print "\033[33m-----------------------------------\033[0m\r\n";
     var_dump($return);
 } else {
-    print "\033[31mplease enter caller string\r\n\033[0m";
+    print "Usage: call caller arg1 arg2...\r\n";
+    print "Format:\r\n";
+    print "\tcall class method: namespace\\class#method arg1 arg2...\r\n";
+    print "\tcall class static method: namespace\\class::method arg1 arg2...\r\n";
+    print "\tcall function: function arg1 arg2...\r\n";
 }

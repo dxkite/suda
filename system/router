@@ -30,5 +30,5 @@ $ob=!isset($options['o']);
 if (Router::visit($method,$url,$class,$tag,$ob,$admin)){
     echo 'created response:'.$class;
 }else{
-    echo 'someting error';
+    echo 'something error';
 }

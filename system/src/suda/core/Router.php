@@ -124,7 +124,7 @@ class Router
         $namespace=conf('app.namespace');
         // 类名
         $class=$namespace.'\\response\\'.$class_short;
-        $params_str='//Auto create params getter ...'."\r\n";
+        $params_str='// auto create params getter ...'."\r\n";
         foreach ($params as $param_name=>$param_type) {
             $params_str.="\t\t\${$param_name}=\$request->get()->{$param_name}(".(preg_match('/int/i', $param_type)?'0':'"hello!"').");\r\n";
         }
