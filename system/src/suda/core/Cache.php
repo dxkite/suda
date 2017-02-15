@@ -7,6 +7,7 @@ namespace suda\core;
 class Cache
 {
     public static $cache;
+    public static $storage=CACHE_DIR.'/data/';
     /**
      * 设置
      * @param string $name 名
@@ -16,7 +17,7 @@ class Cache
      */
     public static function set(string $name, $value, int $expire=0):bool
     {
-        $path=CACHE_DIR.'/'.self::nam($name);
+        $path=$storage.self::nam($name);
         self::$cache[$name]=$value;
         Storage::mkdirs(dirname($path));
         $value=serialize($value);
@@ -36,7 +37,7 @@ class Cache
             return $value;
         }
         // 没值就在cache文件中查找
-        $path=CACHE_DIR.'/'.self::nam($name);
+        $path=$storage.self::nam($name);
         if (Storage::exist($path)) {
             $value=Storage::get($path);
             $time=explode('|', $value, 2);
@@ -72,7 +73,7 @@ class Cache
      */
     public static function gc()
     {
-        $files=Storage::readDirFiles($path=CACHE_DIR, '/^(?!\.)/');
+        $files=Storage::readDirFiles($storage, '/^(?!\.)/');
         foreach ($files as $file) {
             if (Config::get('NoCache',false)) {
                 Storage::remove($file);
