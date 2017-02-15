@@ -7,4 +7,5 @@ define('SYS_RES',__DIR__.'/resource');
 suda\core\System::init();
 // 初始化包含路径
 System::addIncludePath(__DIR__.'/src');
+// var_dump(Request::url());
 ApplicationManager::getInstance()->run(APP_DIR);

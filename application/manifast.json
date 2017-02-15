@@ -3,6 +3,6 @@
     "version":"1.0-dev",
     "application":"suda\\core\\Application",
     // 系统加载模块
-    "modules":["suda","default"],
+    "modules":["suda","default","newmodule"],
     "language":"zh-CN"
 }

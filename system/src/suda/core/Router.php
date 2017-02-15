@@ -36,7 +36,7 @@ class Router
             $routers=array_merge($routers, Json::loadFile(MODULES_DIR.'/'.$module.'/resource/config/router.json'));
         }
         // 加载管理路由
-        if (Storage::exist(MODULES_DIR.'/'.$module.'/resource/config/router.json')) {
+        if (Storage::exist(MODULES_DIR.'/'.$module.'/resource/config/router_admin.json')) {
             $routers=array_merge($routers, Json::loadFile(MODULES_DIR.'/'.$module.'/resource/config/router_admin.json'));
         }
         array_walk($routers, function (&$router) use ($module) {
@@ -110,7 +110,7 @@ class Router
         }
     }
 
-    public static function visit(string $url, string $router,bool $admin=false)
+    public static function visit(string $url, string $router, bool $ob=true, bool $admin=false)
     {
         $params=self::getParams($url);
         if (!preg_match('/^(.+?)@(.+?)$/', $router, $matchs)) {
@@ -125,12 +125,12 @@ class Router
         // 类名
         $class=$namespace.'\\response\\'.$class_short;
         $params_str='//Auto create params getter ...'."\r\n";
-        foreach ($params as $param_name=>$param_type){
-            $params_str.="\t\t\${$param_name}=\$request->get()->{$param_name}(".(preg_match('/int/i',$param_type)?'0':'"hello!"').");\r\n";
+        foreach ($params as $param_name=>$param_type) {
+            $params_str.="\t\t\${$param_name}=\$request->get()->{$param_name}(".(preg_match('/int/i', $param_type)?'0':'"hello!"').");\r\n";
         }
-        $pos=strrpos($class,'\\');
-        $class_namespace=substr($class,0,$pos);
-        $class_name=substr($class,$pos+1);
+        $pos=strrpos($class, '\\');
+        $class_namespace=substr($class, 0, $pos);
+        $class_name=substr($class, $pos+1);
         $class_path=MODULES_DIR.'/'.$module.'/src/'.$class_namespace;
         $class_file=$class_path.'/'.$class_name.'.php';
         $template_file=MODULES_DIR.'/'.$module.'/resource/template/default/'.strtolower($class_short).'.tpl.html';
@@ -147,7 +147,7 @@ class $class_name extends \\suda\\core\\Response {
     }
 }
 CLASS_TEMPLATE;
-$template=<<< TEMPLATE
+        $template=<<< TEMPLATE
 <html>
     <head>
         <title>{{ \$v->helloworld }}</title>
@@ -159,21 +159,28 @@ $template=<<< TEMPLATE
 TEMPLATE;
         // 写入Class
         Storage::path($class_path);
-        Storage::put($class_file,$class_template);
+        Storage::put($class_file, $class_template);
         // 写入模板
         Storage::path(dirname($template_file));
-        Storage::put($template_file,$template);
+        Storage::put($template_file, $template);
 
         // 更新路由
         Storage::path(dirname($router_file));
-        $json=Json::loadFile($router_file);
+        if (Storage::exist($router_file)) {
+            $json=Json::loadFile($router_file);
+        } else {
+            $json=[];
+        }
         $item=array(
             'class'=>'response\\'.$class_short,
             'visit'=>$url,
         );
-        $rname=preg_replace('/[\\\\]+/','_',$class_short);
+        if (!$ob) {
+            $item['ob']=false;
+        }
+        $rname=preg_replace('/[\\\\]+/', '_', $class_short);
         $json[$rname]=$item;
-        Json::saveFile($router_file,$json);
+        Json::saveFile($router_file, $json);
         return true;
     }
 
