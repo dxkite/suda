@@ -110,7 +110,7 @@ class Router
         }
     }
 
-    public static function visit(string $url, string $router, bool $ob=true, bool $admin=false)
+    public static function visit(array $method, string $url, string $router, bool $ob=true, bool $admin=false)
     {
         $params=self::getParams($url);
         if (!preg_match('/^(.+?)@(.+?)$/', $router, $matchs)) {
@@ -150,9 +150,9 @@ class Router
                 $params_str,
                 $module,
                 $template_name,
-            ],$class_template);
+            ], $class_template);
         $template=Storage::get(SYS_RES.'/view_template.html');
-        $template=str_replace('#create_url#',$url,$template);
+        $template=str_replace('#create_url#', $url, $template);
         // 写入Class
         Storage::path($class_path);
         Storage::put($class_file, $class_template);
@@ -174,8 +174,11 @@ class Router
         if (!$ob) {
             $item['ob']=false;
         }
+        if (count($method)) {
+            $item['method']=$method;
+        }
         $rname=preg_replace('/[\\\\]+/', '_', $class_short);
-        $json[$rname]=$item;
+        $json[strtolower($rname)]=$item;
         Json::saveFile($router_file, $json);
         return true;
     }

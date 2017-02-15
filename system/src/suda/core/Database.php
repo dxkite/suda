@@ -1,7 +1,6 @@
 <?php
 namespace suda\core;
 
-
 class Database
 {
     public static function import(string $import)
@@ -60,12 +59,12 @@ Table;
                 preg_match('/^'.\Config::get('database.prefix').'(.+?)$/', $tablename, $tbinfo);
                 $export_str.=self::querySQLString('DROP TABLE IF EXISTS #{'.$tbinfo[1].'}');
                 $export_str.=self::querySQLTableStruct(current($table_array));
-            // 0 全部 有则保存指定的
-            if (count($saves_table)===0) {
-                $export_str.=self::querySQLTableValues(current($table_array));
-            } elseif (in_array($tbinfo[1], $saves_table)) {
-                $export_str.=self::querySQLTableValues(current($table_array));
-            }
+                // 0 全部 有则保存指定的
+                if (count($saves_table)===0) {
+                    $export_str.=self::querySQLTableValues(current($table_array));
+                } elseif (in_array($tbinfo[1], $saves_table)) {
+                    $export_str.=self::querySQLTableValues(current($table_array));
+                }
             }
         }
         $end=<<< 'End'
@@ -257,7 +256,9 @@ Table;
                 $sql.=')';
                 $sqlout.=$sql;
             }
-            if ($first) return false;
+            if ($first) {
+                return false;
+            }
             return $sqlout;
         }
         return false;
