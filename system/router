@@ -26,4 +26,8 @@ $url=$options['u'];
 $class=$options['c'];
 
 $ob=!isset($options['o']);
-var_dump(Router::visit($method,$url,$class,$ob,$admin));
+if (Router::visit($method,$url,$class,$ob,$admin)){
+    echo 'created response:'.$class;
+}else{
+    echo 'someting error';
+}
