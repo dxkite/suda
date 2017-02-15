@@ -36,19 +36,22 @@ class Application
         if (Config::get('debug', false)) {
             Manager::loadCompile();
         }
+
+        System::setNamespace(Config::get('app.namespace'));
     }
 
-    public function onRequest(Request $request)
+    public static function onRequest(Request $request)
     {
+        return false;
     }
-    public function onShutdown()
+    public static function onShutdown()
     {
     }
 
-    public function uncaughtException(Exception $e)
+    public static function uncaughtException(Exception $e)
     {
     }
-    public function uncaughtError(int $erron, string $error, string $file, int $line)
+    public static function uncaughtError(int $erron, string $error, string $file, int $line)
     {
     }
     // 激活模块

@@ -1,5 +1,6 @@
 <?php
 namespace suda\tool;
+use suda\tool\exception\UnknownCommandString;
 
 class Command
 {
@@ -80,8 +81,8 @@ class Command
     }
     protected function parseCommand(string $command)
     {
-        preg_match('/^(?:([\w\\\\\.]+))?(?:(#|->|::)(\w+))?(?:\((.+?)\))?(?:@(.+))?$/', $command, $matchs);
-        // 添加参数绑定
+        if (preg_match('/^(?:([\w\\\\]+))?(?:(#|->|::)(\w+))?(?:\((.+?)\))?(?:@(.+))?$/', $command, $matchs)){
+            // 添加参数绑定
         if (isset($matchs[4])) {
             $this->func_bind=explode(',', trim($matchs[4], ','));
         }
@@ -100,6 +101,8 @@ class Command
         } elseif (isset($matchs[1]) && $matchs[1]) {
             return $matchs[1];
         }
-        return null;
+        }else{
+            throw new UnknownCommandString('unknow:'.$command);
+        }
     }
 }

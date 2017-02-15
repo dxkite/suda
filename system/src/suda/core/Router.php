@@ -160,9 +160,8 @@ class Router
         if (! (isset($router['ob']) && $router['ob']===false) ){
             Response::obStart();
         }
-        Application::activeModule($router['module']);
-        $name=Config::get('app.namespace').'\\response\\'.$router['class'].'->onRequest';
-        (new \suda\tool\Command($name))->exec([Request::getInstance()]);
+        (new \suda\tool\Command(Config::get('app.application').'::activeModule'))->exec([$router['module']]);
+        (new \suda\tool\Command($router['class'].'->onRequest'))->exec([Request::getInstance()]);
     }
 
     public static function error404()

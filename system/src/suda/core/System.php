@@ -46,7 +46,9 @@ class System
     {
         return self::$include_path;
     }
-
+    public static function setNamespace(string $namespace){
+        self::$namespace[]=$namespace;
+    }
     public static function onShutdown()
     {
         Hook::exec('system:shutdown');
