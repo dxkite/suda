@@ -20,7 +20,7 @@ class Application
         defined('CACHE_DIR') or define('CACHE_DIR', Storage::path(DATA_DIR.'/cache'));
         defined('CONFIG_DIR') or define('CONFIG_DIR', Storage::path(RESOURCE_DIR.'/config'));
         defined('TEMP_DIR') or define('TEMP_DIR', Storage::path(DATA_DIR.'/temp'));
-
+        defined('SHRAE_DIR') or define('SHRAE_DIR', Storage::path(APP_DIR.'/share'));
         // 设置PHP属性
         set_time_limit(Config::get('timelimit', 0));
         // 设置时区
@@ -38,16 +38,17 @@ class Application
         }
 
         System::setNamespace(Config::get('app.namespace'));
+        System::addIncludePath(SHRAE_DIR);
     }
 
     // 激活模块
     public static function activeModule(string $module)
     {
-        define('MODULE_RESOURCE', MODULES_DIR.'/'.$module.'/resource');
-        define('MODULE_LANGS', MODULE_RESOURCE.'/langs');
-        define('MODULE_CONFIG', MODULE_RESOURCE.'/config');
-        System::addIncludePath(MODULES_DIR.'/'.$module.'/src');
-        System::addIncludePath(MODULES_DIR.'/'.$module.'/libs');
+        define('MODULE_RESOURCE', Storage::path(MODULES_DIR.'/'.$module.'/resource'));
+        define('MODULE_LANGS', Storage::path(MODULE_RESOURCE.'/langs'));
+        define('MODULE_CONFIG', Storage::path(MODULE_RESOURCE.'/config'));
+        System::addIncludePath(Storage::path(MODULES_DIR.'/'.$module.'/src'));
+        System::addIncludePath(Storage::path(MODULES_DIR.'/'.$module.'/libs'));
         if (Storage::exist($path=MODULE_CONFIG.'/config.json')) {
             Config::set('module', Json::loadFile($path));
         }
@@ -71,7 +72,7 @@ class Application
     {
         return false;
     }
-    public static function uncaughtError($erron,$error, $file,$line)
+    public static function uncaughtError($erron, $error, $file, $line)
     {
         return false;
     }
