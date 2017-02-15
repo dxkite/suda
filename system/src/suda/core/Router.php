@@ -135,28 +135,24 @@ class Router
         $class_file=$class_path.'/'.$class_name.'.php';
         $template_file=MODULES_DIR.'/'.$module.'/resource/template/default/'.strtolower($class_short).'.tpl.html';
         $template_name=strtolower($class_short);
-        $class_template=<<<CLASS_TEMPLATE
-<?php
-namespace $class_namespace;
-use suda\\core\\Request;
-// Auto generate response class
-class $class_name extends \\suda\\core\\Response {
-    public function onRequest(Request \$request){
-        $params_str
-        \$this->display('$module:$template_name',['helloworld'=>'Hello,World!']);
-    }
-}
-CLASS_TEMPLATE;
-        $template=<<< TEMPLATE
-<html>
-    <head>
-        <title>{{ \$v->helloworld }}</title>
-    </head>
-    <body>
-        <div> {{ _T(\$v->helloworld) }} @ $url </div>
-    </body>
-</html>
-TEMPLATE;
+        $class_template= Storage::get(SYS_RES.'/class_template.php');
+        $class_template=str_replace(
+            [
+                '#class_namespace#',
+                '#class_name#',
+                '#params_str#',
+                '#module#',
+                '#template_name#',
+            ],
+            [
+                $class_namespace,
+                $class_name,
+                $params_str,
+                $module,
+                $template_name,
+            ],$class_template);
+        $template=Storage::get(SYS_RES.'/view_template.html');
+        $template=str_replace('#create_url#',$url,$template);
         // 写入Class
         Storage::path($class_path);
         Storage::put($class_file, $class_template);
