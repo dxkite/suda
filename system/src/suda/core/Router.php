@@ -125,12 +125,13 @@ class Router
         $class=$namespace.'\\response\\'.$class_short;
         $params_str='// auto create params getter ...'."\r\n";
         $params_mark='';
-
+        $value_get='array(';
         foreach ($params as $param_name=>$param_type) {
             $params_str.="\t\t\${$param_name}=\$request->get()->{$param_name}(".(preg_match('/int/i', $param_type)?'0':"'{$param_name}'").");\r\n";
             $params_mark.="{$param_name}:{$param_type},";
+            $value_get.="'{$param_name}'=>\$request->get()->{$param_name}(".(preg_match('/int/i', $param_type)?'0':"'{$param_name}'")."),";
         }
-
+        $value_get.=')';
         $pos=strrpos($class, '\\');
         $class_namespace=substr($class, 0, $pos);
         $class_name=substr($class, $pos+1);
@@ -151,6 +152,7 @@ class Router
                 '#template_path#',
                 '#router_name#',
                 '#param_mark#',
+                '#param_array#',
             ],
             [
                 $class_namespace,
@@ -162,6 +164,7 @@ class Router
                 'default:'.$template_name.'.tpl.html',
                 $tagname,
                 $params_mark,
+                $value_get,
             ], $class_template);
         $template=Storage::get(SYS_RES.'/view_template.html');
         $template=str_replace('#create_url#', $url, $template);

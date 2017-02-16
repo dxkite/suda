@@ -14,6 +14,9 @@ use suda\core\Cookie;
 class #class_name# extends \suda\core\Response {
     public function onRequest(Request $request){
         #params_str#
-        $this->display('#module#:#template_name#',['helloworld'=>'Hello,World!','_get'=>$request->get()]);
+        // param values array
+        $value=#param_array#;
+        // display template
+        $this->display('#module#:#template_name#',['helloworld'=>'Hello,World!','value'=>$value]);
     }
 }
