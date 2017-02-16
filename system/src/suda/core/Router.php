@@ -188,9 +188,9 @@ class Router
         $urltype=self::$urltype;
         $types=array();
         $url=preg_replace('/([\/\.\\\\\+\*\[\^\]\$\(\)\=\!\<\>\|\-])/', '\\\\$1', $url);
-        $url=preg_replace_callback('/\{(?:(\w+)(?::(\w+)))\}/', function ($match) use (&$types, $urltype) {
+        $url=preg_replace_callback('/\{(?:(\w+)(?::(\w+))?)\}/', function ($match) use (&$types, $urltype) {
             $param_name=$match[1]!==''?$match[1]:count($types);
-            $param_type=isset($match[2])?$match[2]:'url';
+            $param_type=isset($match[2])?$match[2]:'string';
             $types[$param_name]=$param_type;
         }, $url);
         return $types;
@@ -201,15 +201,16 @@ class Router
         $types=&$this->types;
         $urltype=self::$urltype;
         $url=preg_replace('/([\/\.\\\\\+\*\[\^\]\$\(\)\=\!\<\>\|\-])/', '\\\\$1', $url);
-        $url=preg_replace_callback('/\{(?:(\w+)(?::(\w+)))\}/', function ($match) use ($name, &$types, $urltype) {
+        $url=preg_replace_callback('/\{(?:(\w+)(?::(\w+))?)\}([?])?/', function ($match) use ($name, &$types, $urltype) {
             $size=isset($types[$name])?count($types[$name]):0;
             $param_name=$match[1]!==''?$match[1]:$size;
-            $param_type=isset($match[2])?$match[2]:'url';
+            $param_type=isset($match[2])?$match[2]:'string';
+            $ignore=isset($match[3])?'?':'';
             $types[$name][$param_name]=$param_type;
             if (isset($urltype[$param_type])) {
-                return '('.$urltype[$param_type].')';
+                return '('.$urltype[$param_type].')'.$ignore;
             } else {
-                return '(.+)';
+                return '(.+)'.$ignore;
             }
         }, $url);
         return $url;
@@ -219,7 +220,7 @@ class Router
     {
         $url=DIRECTORY_SEPARATOR === '/'?'/':'/?/';
         if (isset($this->routers[$name])) {
-            $url=preg_replace_callback('/\{(?:(\w+)(?::(\w+)))\}/', function ($match) use ($name, $values) {
+            $url=preg_replace_callback('/\{(?:(\w+)(?::(\w+))?)\}/', function ($match) use ($name, $values) {
                 $param_name=$match[1];
                 $param_type=isset($match[2])?$match[2]:'url';
                 if (isset($values[$param_name])) {
