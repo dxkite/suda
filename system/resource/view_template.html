@@ -4,5 +4,12 @@
     </head>
     <body>
         <div> {{ _T($v->helloworld) }}@#create_url# </div>
+        @if (count($v->_get([])))
+        <table>
+            @foreach ($v->_get() as $name => $value)
+            <tr><th>{{$name}}</th><td>{{$value}}</td></tr>
+            @endforeach
+        </table>
+        @endif
     </body>
 </html>

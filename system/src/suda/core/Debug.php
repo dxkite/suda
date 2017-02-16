@@ -84,7 +84,7 @@ class Debug
             $print = null;
             $print_d = null;
             if (isset($trace['file'])) {
-                $print = '<a title="'.Storage::cutPath($trace['file']).'">'.basename($trace['file']).'</a>#'.$trace['line'];
+                $print = '<a title="'.Storage::cut($trace['file']).'">'.basename($trace['file']).'</a>#'.$trace['line'];
                 $print_d=basename($trace['file']).'#'.$trace['line'];
             }
             if (isset($trace['class'])) {
@@ -108,7 +108,7 @@ class Debug
             $traces[] = $print;
             $traces_console[]=$print_d;
         }
-        $file=Storage::cutPath($file);
+        $file=Storage::cut($file);
         $debug=self::getInfo();
         
         if (Config::get('console', false)) {

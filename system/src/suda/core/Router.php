@@ -75,7 +75,6 @@ class Router
         $request=Request::getInstance();
         foreach ($this->matchs as $name=>$preg) {
             if (preg_match('/^'.$preg.'$/', $request->url(), $match)) {
-                
                 // 检验接口参数
                 if (isset($this->routers[$name]['method']) && count($this->routers[$name]['method'])>0) {
                     array_walk($this->routers[$name]['method'], 'strtolower');
@@ -125,17 +124,22 @@ class Router
         // 类名
         $class=$namespace.'\\response\\'.$class_short;
         $params_str='// auto create params getter ...'."\r\n";
+        $params_mark='';
+
         foreach ($params as $param_name=>$param_type) {
-            $params_str.="\t\t\${$param_name}=\$request->get()->{$param_name}(".(preg_match('/int/i', $param_type)?'0':'"hello!"').");\r\n";
+            $params_str.="\t\t\${$param_name}=\$request->get()->{$param_name}(".(preg_match('/int/i', $param_type)?'0':"'{$param_name}'").");\r\n";
+            $params_mark.="{$param_name}:{$param_type},";
         }
+
         $pos=strrpos($class, '\\');
         $class_namespace=substr($class, 0, $pos);
         $class_name=substr($class, $pos+1);
         $class_path=MODULES_DIR.'/'.$module.'/src/'.$class_namespace;
         $class_file=$class_path.'/'.$class_name.'.php';
-        $template_file=MODULES_DIR.'/'.$module.'/resource/template/default/'.strtolower($class_short).'.tpl.html';
-        $template_name=strtolower($class_short);
+        $template_name=self::createTplName($class_short);
+        $template_file=MODULES_DIR.'/'.$module.'/resource/template/default/'.$template_name.'.tpl.html';
         $class_template= Storage::get(SYS_RES.'/class_template.php');
+        $tagname=strtolower(is_null($tag)?preg_replace('/[\\\\]+/', '_', $class_short):$tag);
         $class_template=str_replace(
             [
                 '#class_namespace#',
@@ -143,6 +147,10 @@ class Router
                 '#params_str#',
                 '#module#',
                 '#template_name#',
+                '#create_url#',
+                '#template_path#',
+                '#router_name#',
+                '#param_mark#',
             ],
             [
                 $class_namespace,
@@ -150,6 +158,10 @@ class Router
                 $params_str,
                 $module,
                 $template_name,
+                $url,
+                'default:'.$template_name.'.tpl.html',
+                $tagname,
+                $params_mark,
             ], $class_template);
         $template=Storage::get(SYS_RES.'/view_template.html');
         $template=str_replace('#create_url#', $url, $template);
@@ -177,17 +189,23 @@ class Router
         if (count($method)) {
             $item['method']=$method;
         }
-        $tagname=is_null($tag)?preg_replace('/[\\\\]+/', '_', $class_short):$tag;
-        $json[strtolower($tagname)]=$item;
+        $json[$tagname]=$item;
         Json::saveFile($router_file, $json);
         return true;
     }
-
+    protected static function createTplName(string $name){
+        $name=strtolower(preg_replace('/([A-Z])/','_$1',$name));
+        $names=explode('\\',$name);
+        foreach ($names as $index=>$piece){
+            $names[$index]=trim($piece,'_');
+        }
+        return  implode('/',$names);
+    }
     public static function getParams(string $url)
     {
         $urltype=self::$urltype;
         $types=array();
-        $url=preg_replace('/([\/\.\\\\\+\*\[\^\]\$\(\)\=\!\<\>\|\-])/', '\\\\$1', $url);
+        $url=preg_replace('/([\/\.\\\\\+\*\[\^\]\$\(\)\=\!\<\>\-])/', '\\\\$1', $url);
         $url=preg_replace_callback('/\{(?:(\w+)(?::(\w+))?)\}/', function ($match) use (&$types, $urltype) {
             $param_name=$match[1]!==''?$match[1]:count($types);
             $param_type=isset($match[2])?$match[2]:'string';
@@ -200,7 +218,7 @@ class Router
     {
         $types=&$this->types;
         $urltype=self::$urltype;
-        $url=preg_replace('/([\/\.\\\\\+\*\[\^\]\$\(\)\=\!\<\>\|\-])/', '\\\\$1', $url);
+        $url=preg_replace('/([\/\.\\\\\+\*\[\^\]\$\(\)\=\!\<\>\-])/', '\\\\$1', $url);
         $url=preg_replace_callback('/\{(?:(\w+)(?::(\w+))?)\}([?])?/', function ($match) use ($name, &$types, $urltype) {
             $size=isset($types[$name])?count($types[$name]):0;
             $param_name=$match[1]!==''?$match[1]:$size;

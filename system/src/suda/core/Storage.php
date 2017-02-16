@@ -46,13 +46,13 @@ class Storage
         if ($cut) {
             $cutfile=[];
             foreach ($file_totu as $file) {
-                $cutfile[]=self::cutPath($file, $dirs);
+                $cutfile[]=self::cut($file, $dirs);
             }
             return $cutfile;
         }
         return $file_totu;
     }
-    public static function cutPath(string $path, string $basepath=ROOT_PATH)
+    public static function cut(string $path, string $basepath=ROOT_PATH)
     {
         return trim(preg_replace('/^'.preg_quote($basepath, '/').'/', '', $path), '\\/');
     }
