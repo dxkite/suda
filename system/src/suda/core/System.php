@@ -3,10 +3,15 @@ namespace suda\core;
 
 defined('D_START') or define('D_START', microtime(true));
 defined('D_MEM') or define('D_MEM', memory_get_usage());
+defined('ROOT_PATH') or define('ROOT_PATH',dirname(dirname(dirname(dirname(__DIR__)))));
+defined('SYS_DIR') or define('SYS_DIR',dirname(dirname(dirname(__DIR__))));
+defined('SYS_RES') or define('SYS_RES',SYS_DIR.'/resource');
+
 require_once __DIR__.'/Storage.php';
 require_once __DIR__.'/Hook.php';
 require_once __DIR__.'/Debug.php';
 require_once __DIR__.'/func.php';
+
 class System
 {
     protected static $namespace=['suda\\core'];

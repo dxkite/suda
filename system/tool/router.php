@@ -1,9 +1,9 @@
 <?php
 require_once __DIR__ .'/../suda-console.php';
 // 获取选项
-$options=getopt('a::m:u:c:o::h::t:');
+$options=getopt('a::m:u:c:o::h::t:',['router:']);
 $help=<<<'HELP'
-Usage: router [-a] [-o]  [-m POST,GET..] [-t name] -u url -c class
+Usage: --router name [-a] [-o]  [-m POST,GET..] -u url -c class
 
     -a create URL as admin
     -m request method,use `,` to split 
@@ -24,7 +24,8 @@ $admin=isset($options['a']);
 
 $url=$options['u'];
 $class=$options['c'];
-$tag=isset($options['t'])?$options['t']:null;
+$tag=$options['router'];
+
 $ob=!isset($options['o']);
 if (Router::visit($method,$url,$class,$tag,$ob,$admin)){
     echo 'created response:'.$class;

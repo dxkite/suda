@@ -1,6 +1,6 @@
 # 工具使用方法
-
-## system/router 路由自动生成
+## `app/console`
+## router 路由自动生成
 用以自动生成路由，包括模板，类，和路由注册。
 ### 使用
 ```
@@ -15,8 +15,8 @@ Usage: router [-a] [-o]  [-m POST,GET..] [-t name] -u url -c class
 ```
 ### 示例
 ```
-dxkite@atd3.cn:/workspace>php system/router -u /test/{param:string} -c Test@default
-created response:Test@default
+dxkite@atd3.cn:/workspace>php app\console --router user_admin -u /user/admin -c user\Admin@default
+created response:user\Admin@default
 ```
 该命令会生成如下文件
 
@@ -53,11 +53,11 @@ class Test extends \suda\core\Response {
 ```
 通过浏览器访问url `/test/somestring` 来运行本类的`onRequest`方法
 
-## system/call 系统调用工具
+## call 系统调用工具
 可以调用公用函数和类方法。
 ### 使用
 ```
-Usage: call caller arg1 arg2...
+Usage: app\console --call caller arg1 arg2...
 Format:
         call class method: namespace\class#method arg1 arg2...
         call class static method: namespace\class::method arg1 arg2...
@@ -76,11 +76,11 @@ call conf(app.namespace)
 string(7) "cn\atd3"
 ```
 
-## system/db 数据库工具
+## db 数据库工具
 根据应用config.json配置的数据库信息，用来导出生成备份数据库
 ### 使用
 ```
-Usage: db -bkifgrosp 
+Usage: app\console --db -bkifgrosp 
 
   -b backup database
   -k set install sql file keep tables

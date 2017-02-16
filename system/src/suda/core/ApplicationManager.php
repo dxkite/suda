@@ -44,6 +44,8 @@ class ApplicationManager
         // App不存在
         if (!Storage::exist($manifast)) {
             Storage::copydir(SYS_RES.'/app_template/', APP_DIR);
+            $content=str_replace('__SYS_DIR__',SYS_DIR,Storage::get(APP_DIR.'/console'));
+            Storage::put(APP_DIR.'/console',$content);
         }
         // 设置配置
         Config::set('app', Json::loadFile($manifast));

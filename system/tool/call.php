@@ -1,7 +1,6 @@
 <?php
-#!/usr/bin/env php
-require_once __DIR__ .'/../suda-console.php';
-
+// #!/usr/bin/env php
+// require_once __DIR__ .'/../suda-console.php';
 $params=array_slice($argv, 2);
 if (isset($argv[1])) {
     print "\033[36mcall \033[34m".$argv[1]."(\033[32m".implode(',', $params)."\033[34m)\033[0m\r\n";

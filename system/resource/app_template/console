@@ -1,0 +1,26 @@
+#!/usr/bin/env php
+<?php
+
+require_once '__SYS_DIR__/suda-console.php';
+
+$options=getopt('', ['call:', 'database','db', 'router']);
+
+// 设置目录
+define('TOOL_DIR', SYS_DIR.'/tool');
+
+var_dump($options);
+
+if (isset($options['call'])) {
+    array_shift($argv);
+    $argv[1]=$options['call'];
+    require_once TOOL_DIR.'/call.php';
+} elseif (isset($options['database'])||isset($options['db'])) {
+    require_once TOOL_DIR.'/db.php';
+} elseif (isset($options['router'])) {
+    require_once TOOL_DIR.'/router.php';
+} else {
+    echo 'Usage:'."\r\n";
+    echo "\t".'--call name , call the functions'."\r\n";
+    echo "\t".'--db option do database options'."\r\n";
+    echo "\t".'--router name create router'."\r\n";
+}

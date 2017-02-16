@@ -1,5 +1,4 @@
 <?php
-require_once __DIR__ .'/../suda-console.php';
 // 获取选项
 $options=getopt('i::b::k:f:g::h::');
 /** 
