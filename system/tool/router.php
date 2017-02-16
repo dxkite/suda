@@ -1,6 +1,5 @@
-#!/usr/bin/env php
 <?php
-require_once __DIR__ .'/suda-console.php';
+require_once __DIR__ .'/../suda-console.php';
 // 获取选项
 $options=getopt('a::m:u:c:o::h::t:');
 $help=<<<'HELP'

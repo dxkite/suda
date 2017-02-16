@@ -1,7 +1,6 @@
-#!/usr/bin/env php
 <?php
-
-require_once __DIR__ .'/suda-console.php';
+#!/usr/bin/env php
+require_once __DIR__ .'/../suda-console.php';
 
 $params=array_slice($argv, 2);
 if (isset($argv[1])) {

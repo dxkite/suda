@@ -53,7 +53,9 @@ class System
     }
     public static function setNamespace(string $namespace)
     {
-        self::$namespace[]=$namespace;
+        if (!in_array($namespace, self::$namespace)) {
+            self::$namespace[]=$namespace;
+        }
     }
     public static function onShutdown()
     {
