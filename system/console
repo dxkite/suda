@@ -1,7 +1,8 @@
 #!/usr/bin/env php
 <?php
-define('APP_DIR',__DIR__);
-require_once '__SYS_DIR__/suda-console.php';
+defined('APP_DIR') or define('APP_DIR',__DIR__.'/../app');
+
+require_once  __DIR__.'/suda-console.php';
 
 $options=getopt('', ['call:', 'database','db', 'router']);
 
