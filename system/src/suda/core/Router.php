@@ -286,7 +286,11 @@ class Router
             Response::obStart();
         }
         (new \suda\tool\Command(Config::get('app.application').'::activeModule'))->exec([$router['module']]);
-        (new \suda\tool\Command($router['class'].'->onRequest'))->exec([Request::getInstance()]);
+        if ((new \suda\tool\Command($router['class'].'->onPreTest'))->exec([$router])){
+            (new \suda\tool\Command($router['class'].'->onRequest'))->exec([Request::getInstance()]);
+        }else{
+            (new \suda\tool\Command($router['class'].'->onPreTestError'))->exec([$router]);
+        }
     }
 
     public static function error404()

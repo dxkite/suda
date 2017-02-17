@@ -57,10 +57,21 @@ class Response
     private static $mime;
     public function __construct()
     {
-       Header('X-Framework: DxCore-Suda');
+        Header('X-Framework: DxCore-Suda');
     }
 
-    public function onRequest(Request $request){}
+    public function onRequest(Request $request)
+    {
+    }
+    public function onPreTest($test_data)
+    {
+        return true;
+    }
+    public function onPreTestError($test_data)
+    {
+        echo 'onPreTestError';
+        return true;
+    }
     public static function state(int $state)
     {
         header('HTTP/1.1 '.$state.' '.self::$status[$state]);
@@ -68,7 +79,7 @@ class Response
     }
 
 
-    public  function type(string $type)
+    public function type(string $type)
     {
         $this->type=$type;
         header('Content-Type:'.self::mime($type));
@@ -94,7 +105,7 @@ class Response
         self::obEnd();
         // 渲染模板
         ob_start();
-        Manager::display($template,$values);
+        Manager::display($template, $values);
         $this->content.=ob_get_clean();
         Hook::exec('display:output', [&$this->content, $this->type]);
         Header('Content-Length:'.strlen($this->content));
