@@ -1,5 +1,6 @@
 <?php
 namespace suda\tool;
+
 use suda\tool\exception\UnknownCommandString;
 
 class Command
@@ -56,7 +57,7 @@ class Command
             }
             // 调用接口
             elseif (is_array($this->command) /*&& !is_callable($this->command)*/) {
-                if ($this->static  || is_object($this->command[0]) ) {
+                if ($this->static  || is_object($this->command[0])) {
                 } else {
                     $this->command[0]=new $this->command[0];
                 }
@@ -81,27 +82,27 @@ class Command
     }
     protected function parseCommand(string $command)
     {
-        if (preg_match('/^(?:([\w\\\\]+))?(?:(#|->|::)(\w+))?(?:\((.+?)\))?(?:@(.+))?$/', $command, $matchs)){
+        if (preg_match('/^(?:([\w\\\\]+))?(?:(#|->|::)(\w+))?(?:\((.+?)\))?(?:@(.+))?$/', $command, $matchs)) {
             // 添加参数绑定
-        if (isset($matchs[4])) {
-            $this->func_bind=explode(',', trim($matchs[4], ','));
-        }
-        // 指定文件
-        if (isset($matchs[5]) && $matchs[5]) {
-            $this->file=$matchs[5];
-        }
-        // 调用方式
-        if (isset($matchs[2])) {
-            $this->static=(strcmp($matchs[2], '#')===0 || strcmp($matchs[2], '::')===0);
-        }
-        // 方法名
-        if (isset($matchs[3]) && $matchs[3]) {
-            return [$matchs[1],$matchs[3]];
-            // 函数名
-        } elseif (isset($matchs[1]) && $matchs[1]) {
-            return $matchs[1];
-        }
-        }else{
+            if (isset($matchs[4])) {
+                $this->func_bind=explode(',', trim($matchs[4], ','));
+            }
+            // 指定文件
+            if (isset($matchs[5]) && $matchs[5]) {
+                $this->file=$matchs[5];
+            }
+            // 调用方式
+            if (isset($matchs[2])) {
+                $this->static=(strcmp($matchs[2], '#')===0 || strcmp($matchs[2], '::')===0);
+            }
+            // 方法名
+            if (isset($matchs[3]) && $matchs[3]) {
+                return [$matchs[1],$matchs[3]];
+                // 函数名
+            } elseif (isset($matchs[1]) && $matchs[1]) {
+                return $matchs[1];
+            }
+        } else {
             throw new UnknownCommandString('unknow:'.$command);
         }
     }
