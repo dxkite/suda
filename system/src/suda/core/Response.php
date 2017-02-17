@@ -55,11 +55,9 @@ class Response
     private $type='html';
     private static $instance=null;
     private static $mime;
-    protected $query;
     public function __construct()
     {
        Header('X-Framework: DxCore-Suda');
-       $this->query=new suda\core\Query;
     }
 
     public function onRequest(Request $request){}

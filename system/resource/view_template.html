@@ -3,7 +3,7 @@
         <title>{{ $v->helloworld }}</title>
     </head>
     <body>
-        <div> {{ _T($v->helloworld) }}@#create_url# </div>
+        <div> {{ _T($v->helloworld) }}@__create_url__ </div>
         @if (count($v->value([])))
         <table>
             @foreach ($v->value() as $name => $value)

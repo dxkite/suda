@@ -123,15 +123,17 @@ class Router
         $namespace=conf('app.namespace');
         // 类名
         $class=$namespace.'\\response\\'.$class_short;
-        $params_str='// auto create params getter ...'."\r\n";
+        $params_str=array();
         $params_mark='';
         $value_get='array(';
         foreach ($params as $param_name=>$param_type) {
-            $params_str.="\t\t\${$param_name}=\$request->get()->{$param_name}(".(preg_match('/int/i', $param_type)?'0':"'{$param_name}'").");\r\n";
+            $params_str[]="\${$param_name}=\$request->get()->{$param_name}(".(preg_match('/int/i', $param_type)?'0':"'{$param_name}'").');';
             $params_mark.="{$param_name}:{$param_type},";
             $value_get.="'{$param_name}'=>\$request->get()->{$param_name}(".(preg_match('/int/i', $param_type)?'0':"'{$param_name}'")."),";
         }
         $value_get.=')';
+        $params_str=implode("\r\n\t\t",$params_str);
+        
         $pos=strrpos($class, '\\');
         $class_namespace=substr($class, 0, $pos);
         $class_name=substr($class, $pos+1);
@@ -143,16 +145,16 @@ class Router
         $tagname=strtolower(is_null($tag)?preg_replace('/[\\\\]+/', '_', $class_short):$tag);
         $class_template=str_replace(
             [
-                '#class_namespace#',
-                '#class_name#',
-                '#params_str#',
-                '#module#',
-                '#template_name#',
-                '#create_url#',
-                '#template_path#',
-                '#router_name#',
-                '#param_mark#',
-                '#param_array#',
+                '__class_namespace__',
+                '__class_name__',
+                '__params_str__',
+                '__module__',
+                '__template_name__',
+                '__create_url__',
+                '__template_path__',
+                '__router_name__',
+                '__param_mark__',
+                '__param_array__',
             ],
             [
                 $class_namespace,
@@ -167,7 +169,7 @@ class Router
                 $value_get,
             ], $class_template);
         $template=Storage::get(SYS_RES.'/view_template.html');
-        $template=str_replace('#create_url#', $url, $template);
+        $template=str_replace('__create_url__', $url, $template);
         // 写入Class
         Storage::path($class_path);
         Storage::put($class_file, $class_template);
