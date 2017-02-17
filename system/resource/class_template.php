@@ -11,12 +11,13 @@ use suda\core\Cookie;
 use suda\core\Session;
 
 /**
+* visit url __create_url__ as __methods__ method to run this class.
+* you call use _I('__router_name__',Array) to create path.
 * @template: __template_path__
 * @name: __router_name__
 * @url: __create_url__
 * @param: __param_mark__
 */
-// Auto generate response class
 class __class_name__ extends \suda\core\Response {
     public function onRequest(Request $request){
         // params

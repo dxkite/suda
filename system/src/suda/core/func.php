@@ -19,3 +19,7 @@ function conf(string $name,$default=null){
 function use_namespace(string $namespace){
     return suda\core\System::setNamespace($namespace);
 }
+
+function _I(string $name,array $values=[]){
+    return suda\core\Router::getInstance()->buildUrl($name,$values);
+}

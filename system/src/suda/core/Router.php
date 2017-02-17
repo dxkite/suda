@@ -18,6 +18,7 @@ class Router
     {
         Hook::listen('system:404', 'Router::error404');
         Hook::listen('Router:dispatch::error', 'Router::error404');
+        self::loadModulesRouter();
     }
 
     public static function getInstance()
@@ -155,6 +156,7 @@ class Router
                 '__router_name__',
                 '__param_mark__',
                 '__param_array__',
+                '__methods__',
             ],
             [
                 $class_namespace,
@@ -167,6 +169,7 @@ class Router
                 $tagname,
                 $params_mark,
                 $value_get,
+                count($method)>0?implode(',',$method):'all',
             ], $class_template);
         $template=Storage::get(SYS_RES.'/view_template.html');
         $template=str_replace('__create_url__', $url, $template);
@@ -239,10 +242,11 @@ class Router
         return $url;
     }
 
-    public function buildUrl(string $name, array $values)
+    public function buildUrl(string $name, array $values=[])
     {
         $url=DIRECTORY_SEPARATOR === '/'?'/':'/?/';
         if (isset($this->routers[$name])) {
+            $url=preg_replace('/[?|]/', '',$this->routers[$name]['visit']);
             $url=preg_replace_callback('/\{(?:(\w+)(?::(\w+))?)\}/', function ($match) use ($name, $values) {
                 $param_name=$match[1];
                 $param_type=isset($match[2])?$match[2]:'url';
@@ -254,9 +258,9 @@ class Router
                 } else {
                     return '';
                 }
-            }, $this->routers[$name]['url']);
+            }, $url);
         } else {
-            return '_undefine_router';
+            return '/_undefine_router_';
         }
         return $url;
     }
@@ -264,7 +268,6 @@ class Router
 
     public function dispatch()
     {
-        self::loadModulesRouter();
         self::buildRouterMap();
         // Hook前置路由（自定义过滤器|自定义路由）
         if (Hook::execIf('Router:dispatch::before', [Request::getInstance()], true)) {

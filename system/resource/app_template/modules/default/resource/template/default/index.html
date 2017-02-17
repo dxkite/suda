@@ -1,0 +1,15 @@
+<html>
+    <head>
+        <title>{{ $v->helloworld }}</title>
+    </head>
+    <body>
+        <div> {{ _T($v->helloworld) }}@/ </div>
+        @if (count($v->value([])))
+        <table>
+            @foreach ($v->value() as $name => $value)
+            <tr><th>{{$name}}</th><td>{{$value}}</td></tr>
+            @endforeach
+        </table>
+        @endif
+    </body>
+</html>
