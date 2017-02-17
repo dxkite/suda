@@ -78,9 +78,9 @@ class Router
             if (preg_match('/^'.$preg.'$/', $request->url(), $match)) {
                 // 检验接口参数
                 if (isset($this->routers[$name]['method']) && count($this->routers[$name]['method'])>0) {
-                    array_walk($this->routers[$name]['method'], 'strtolower');
+                    array_walk( $this->routers[$name]['method'], function($value) { return strtoupper($value); });
                     // 方法不匹配
-                    if (!in_array(strtolower($request->method()), $this->routers[$name]['method'])) {
+                    if (!in_array(strtoupper($request->method()), $this->routers[$name]['method'])) {
                         continue;
                     }
                 }

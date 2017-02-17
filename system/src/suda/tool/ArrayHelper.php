@@ -163,7 +163,7 @@ class ArrayHelper
         foreach ($array as $key => $value) {
             if (is_array($value)) {
                 $subpar = $parent."['".$key."']";
-                $line .= parserArraySub($subpar, $value);
+                $line .= self::parserArraySub($subpar, $value);
             } else {
                 $line .= $parent."['".$key."']";
                 if (is_string($value)) {
