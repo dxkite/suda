@@ -11,19 +11,35 @@ use suda\core\Cookie;
 use suda\core\Session;
 
 /**
-* the response when visit url 
+* visit url / as all method to run this class.
+* you call use _I('default',Array) to create path.
 * @template: default:index.tpl.html
 * @name: default
 * @url: /
 * @param: 
 */
-class Index extends \suda\core\Response {
-    public function onRequest(Request $request){
-        // params
+class Index extends \suda\core\Response
+{
+    public function onRequest(Request $request)
+    {
+        // params if had
         ;
         // param values array
         $value=array();
         // display template
-        $this->display('default:index',['helloworld'=>'Hello,World!','value'=>$value]);
+        $this->display('default:index', ['helloworld'=>'Hello,World!', 'value'=>$value]);
+    }
+
+    // pretest router 
+    public function onPreTest($router):bool
+    {
+        return true;
+    }
+
+    // action when error
+    public function onPreTestError($router)
+    {
+        echo 'onPreTestError';
+        return true;
     }
 }

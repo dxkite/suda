@@ -63,7 +63,7 @@ class Response
     public function onRequest(Request $request)
     {
     }
-    public function onPreTest($test_data)
+    public function onPreTest($test_data):bool
     {
         return true;
     }
