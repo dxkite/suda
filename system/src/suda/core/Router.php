@@ -127,12 +127,12 @@ class Router
         $params_mark='';
         $value_get='array(';
         foreach ($params as $param_name=>$param_type) {
-            $params_str[]="\${$param_name}=\$request->get()->{$param_name}(".(preg_match('/int/i', $param_type)?'0':"'{$param_name}'").');';
+            $params_str[]="\${$param_name}=\$request->get()->{$param_name}(".(preg_match('/int/i', $param_type)?'0':"'{$param_name}'").')';
             $params_mark.="{$param_name}:{$param_type},";
             $value_get.="'{$param_name}'=>\$request->get()->{$param_name}(".(preg_match('/int/i', $param_type)?'0':"'{$param_name}'")."),";
         }
         $value_get.=')';
-        $params_str=implode("\r\n\t\t",$params_str);
+        $params_str=implode(";\r\n\t\t",$params_str);
         
         $pos=strrpos($class, '\\');
         $class_namespace=substr($class, 0, $pos);

@@ -1,7 +1,15 @@
 <?php
 namespace __class_namespace__;
+
 // use namespace
-use_namespace('suda\\core');
+use suda\core\Request;
+// database query
+use suda\core\Query;
+// site cookie
+use suda\core\Cookie;
+// site session
+use suda\core\Session;
+
 /**
 * @template: __template_path__
 * @name: __router_name__
@@ -12,7 +20,7 @@ use_namespace('suda\\core');
 class __class_name__ extends \suda\core\Response {
     public function onRequest(Request $request){
         // params
-        __params_str__
+        __params_str__;
         // param values array
         $value=__param_array__;
         // display template
