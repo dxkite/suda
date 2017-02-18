@@ -23,7 +23,7 @@ class Compiler
                 if ($tag == T_INLINE_HTML) {
                     $content=self::compileString($content);
                     $content=self::compileCommand($content);
-                }
+                } 
                 $result .=$content;
             } else {
                 $result .=$token;
@@ -36,7 +36,7 @@ class Compiler
     {
         $callback=function ($match) {
             if (method_exists($this, $method = 'parse'.ucfirst($match[1]))) {
-                $match[0] = $this->$method(isset($match[3])?$match[3]:null);
+                $match[0] = $this->$method(isset($match[3])?preg_replace('/[$]:/','$v->',$match[3]):null);
             }
             return isset($match[3]) ? $match[0] : $match[0].$match[2];
         };
@@ -50,7 +50,7 @@ class Compiler
         $comment=sprintf('/(?<!!)%s(.+)%s/', preg_quote(self::$commentTag[0]), preg_quote(self::$commentTag[1]));
         return preg_replace(
             ['/[$]:/',$rawecho, $echo, $comment],
-            ['$__PAGE_VALUE__->','<?php echo($1) ?>', '<?php echo htmlspecialchars($1) ?>', '<?php /* $1 */ ?>'],
+            ['$v->','<?php echo($1) ?>', '<?php echo htmlspecialchars($1) ?>', '<?php /* $1 */ ?>'],
             $str
         );
     }

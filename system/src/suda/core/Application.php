@@ -4,6 +4,7 @@ namespace suda\core;
 use Exception;
 use suda\template\Manager;
 use suda\template\Language;
+use suda\tool\Json;
 
 class Application
 {
@@ -32,7 +33,7 @@ class Application
         if (Storage::exist($path=CONFIG_DIR.'/config.sys.json')) {
             Config::load($path);
         }
-        
+
         if (Config::get('debug', false)) {
             Manager::loadCompile();
         }
@@ -58,6 +59,10 @@ class Application
         System::addIncludePath(Storage::path(MODULES_DIR.'/'.$module.'/share'));
         if (Storage::exist($path=MODULE_CONFIG.'/config.json')) {
             Config::set('module', Json::loadFile($path));
+        }
+                
+        if (Storage::exist($path=MODULE_CONFIG.'/listener.json')) {
+            Hook::load(Json::loadFile($path)?:[]);
         }
         // 加载语言包
         if (Config::get('app.language') && Storage::exist($path=MODULE_LANGS.'/'.Config::get('app.language').'.json')) {

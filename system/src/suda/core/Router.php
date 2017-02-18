@@ -5,6 +5,8 @@ use suda\tool\Command;
 use suda\tool\Json;
 use suda\tool\ArrayHelper;
 
+// TODO:路由强化
+
 class Router
 {
     protected $mapper;
@@ -74,6 +76,7 @@ class Router
     protected function matchRouterMap()
     {
         $request=Request::getInstance();
+
         foreach ($this->matchs as $name=>$preg) {
             if (preg_match('/^'.$preg.'$/', $request->url(), $match)) {
                 // 检验接口参数
@@ -110,7 +113,7 @@ class Router
         }
     }
 
-    public static function visit(array $method, string $url, string $router, string $tag=null,bool $ob =true, bool $admin=false )
+    public static function visit(array $method, string $url, string $router, string $tag=null,bool $ob =true, bool $admin=false,bool $json=false)
     {
         $params=self::getParams($url);
         if (!preg_match('/^(.+?)@(.+?)$/', $router, $matchs)) {
@@ -142,7 +145,7 @@ class Router
         $class_file=$class_path.'/'.$class_name.'.php';
         $template_name=self::createTplName($class_short);
         $template_file=MODULES_DIR.'/'.$module.'/resource/template/default/'.$template_name.'.tpl.html';
-        $class_template= Storage::get(SYS_RES.'/class_template.php');
+        $class_template= Storage::get(SYS_RES.($json?'/class_json.php':'/class_template.php'));
         $tagname=strtolower(is_null($tag)?preg_replace('/[\\\\]+/', '_', $class_short):$tag);
         $class_template=str_replace(
             [
@@ -176,9 +179,13 @@ class Router
         // 写入Class
         Storage::path($class_path);
         Storage::put($class_file, $class_template);
-        // 写入模板
-        Storage::path(dirname($template_file));
-        Storage::put($template_file, $template);
+        
+        if (!$json){
+            // 写入模板
+            Storage::path(dirname($template_file));
+            Storage::put($template_file, $template);
+        }
+
 
         // 更新路由
         Storage::path(dirname($router_file));

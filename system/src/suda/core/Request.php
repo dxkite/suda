@@ -146,7 +146,7 @@ final class Request
         } else {
             self::$url=$_SERVER['REQUEST_URI'];
         }
-        
+        self::$url=rtrim(self::$url,'/');
         if (!isset($_SERVER['PATH_INFO'])) {
             $_SERVER['PATH_INFO']=self::$url;
         }
