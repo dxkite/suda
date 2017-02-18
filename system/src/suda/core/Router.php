@@ -76,7 +76,6 @@ class Router
     protected function matchRouterMap()
     {
         $request=Request::getInstance();
-
         foreach ($this->matchs as $name=>$preg) {
             if (preg_match('/^'.$preg.'$/', $request->url(), $match)) {
                 // 检验接口参数
@@ -233,7 +232,8 @@ class Router
     {
         $types=&$this->types;
         $urltype=self::$urltype;
-        $url=preg_replace('/([\/\.\\\\\+\*\[\^\]\$\(\)\=\!\<\>\-])/', '\\\\$1', $url);
+        $url=preg_replace('/([\/\.\\\\\+\*\(\^\)\?\$\=\!\<\>\-])/', '\\\\$1', $url);
+        $url=preg_replace('/\[(\S+)\]/','(?:$1)?',$url);
         $url=preg_replace_callback('/\{(?:(\w+)(?::(\w+))?)\}([?])?/', function ($match) use ($name, &$types, $urltype) {
             $size=isset($types[$name])?count($types[$name]):0;
             $param_name=$match[1]!==''?$match[1]:$size;

@@ -27,7 +27,7 @@ class __class_name__ extends \suda\core\Response
         // param values array
         $value=__param_array__;
         // display json code 
-        $this->json(['helloworld'=>'Hello,World!', 'value'=>$value]);
+        return $this->json(['helloworld'=>'Hello,World!', 'value'=>$value]);
     }
 
     // pretest router 

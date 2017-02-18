@@ -27,7 +27,7 @@ class __class_name__ extends \suda\core\Response
         // param values array
         $value=__param_array__;
         // display template
-        $this->display('__module__:__template_name__', ['helloworld'=>'Hello,World!', 'value'=>$value]);
+        return $this->display('__module__:__template_name__', ['helloworld'=>'Hello,World!', 'value'=>$value]);
     }
 
     // pretest router 
