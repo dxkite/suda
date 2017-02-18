@@ -36,7 +36,10 @@ class System
                 // 添加命名空间
                 foreach (self::$namespace as $namespace) {
                     if (Storage::exist($path=$include_path.DIRECTORY_SEPARATOR.$namespace.DIRECTORY_SEPARATOR.$classname.'.php')) {
-                        class_alias($namespace.'\\'.$classname, $classname);
+                        // 最简类名
+                        if (!class_exists($classname)){
+                            class_alias($namespace.'\\'.$classname, $classname);
+                        }
                         require_once $path;
                     }
                 }

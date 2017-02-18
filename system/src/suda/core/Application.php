@@ -71,7 +71,7 @@ class Application
     }
 
 
-    public static function onRequest(Request $request)
+    public function onRequest(Request $request)
     {
         return true;
     }

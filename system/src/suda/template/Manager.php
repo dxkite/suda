@@ -143,7 +143,11 @@ class Manager
             }
         }
         
+        self::displayFile($viewpath,$values);
+    }
+
+    public static function displayFile(string $file,array $values=[]){
         $v=new Value($values);
-        require $viewpath;
+        require $file;
     }
 }

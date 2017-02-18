@@ -9,6 +9,10 @@ class ApplicationManager
     public static $instance=null;
     public $app=null;
     public $appliaction;
+    
+    public function getApplication() {
+        return $app;
+    }
 
     public static function getInstance()
     {
@@ -27,7 +31,9 @@ class ApplicationManager
     public function console(string $app)
     {
         $this->readManifast($app.'/manifast.json');
+
         $this->app=new $this->appliaction($app);
+        
         if ($this->app instanceof Application) {
             Hook::listen('Router:dispatch::before', [$this->app, 'onRequest']);
             Hook::listen('system:shutdown', [$this->app, 'onShutdown']);
@@ -47,6 +53,7 @@ class ApplicationManager
             $content=str_replace('__SYS_DIR__',SYS_DIR,Storage::get(APP_DIR.'/console'));
             Storage::put(APP_DIR.'/console',$content);
         }
+        System::addIncludePath(APP_DIR.'/share');
         // 设置配置
         Config::set('app', Json::loadFile($manifast));
         // 载入配置前设置配置

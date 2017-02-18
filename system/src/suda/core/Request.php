@@ -131,22 +131,29 @@ final class Request
         //  /?/xxxxx
         //  /index.php/xxx
         //  /index.php?/xxx
-        if (preg_match('/^\/\?\//', $_SERVER['REQUEST_URI'])) {
-            $preg='/^(\/\?(\/[^?]*))(?:[?](.+))?$/';
-            preg_match($preg, $_SERVER['REQUEST_URI'], $match);
-            $_SERVER['PHP_SELF']=$match[1];
-            if (isset($match[3])) {
-                parse_str($match[3], $_GET);
+        if (isset($_SERVER['REQUEST_URI'])) {
+            if (preg_match('/^\/\?\//', $_SERVER['REQUEST_URI'])) {
+                $preg='/^(\/\?(\/[^?]*))(?:[?](.+))?$/';
+                preg_match($preg, $_SERVER['REQUEST_URI'], $match);
+                $_SERVER['PHP_SELF']=$match[1];
+                if (isset($match[3])) {
+                    parse_str($match[3], $_GET);
+                }
+                self::$url=$match[2];
+            } elseif (preg_match('/^(.*)\/index.php\??\//', $_SERVER['REQUEST_URI'])) {
+                $preg='/(.*)\/index.php(\/[^?]*)?$/';
+                preg_match($preg, $_SERVER['PHP_SELF'], $match);
+                self::$url=isset($match[2])?$match[2]:'/';
+            } else {
+                self::$url=$_SERVER['REQUEST_URI'];
             }
-            self::$url=$match[2];
-        } elseif (preg_match('/^(.*)\/index.php\??\//', $_SERVER['REQUEST_URI'])) {
-            $preg='/(.*)\/index.php(\/[^?]*)?$/';
-            preg_match($preg, $_SERVER['PHP_SELF'], $match);
-            self::$url=isset($match[2])?$match[2]:'/';
-        } else {
-            self::$url=$_SERVER['REQUEST_URI'];
+            self::$url=self::$url==='/'?self::$url:rtrim(self::$url, '/');
         }
-        self::$url=rtrim(self::$url,'/');
+        else{
+            self::$url='/';
+        }
+        
+
         if (!isset($_SERVER['PATH_INFO'])) {
             $_SERVER['PATH_INFO']=self::$url;
         }
