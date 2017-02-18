@@ -143,7 +143,7 @@ class Manager
             }
         }
         
-        $v=new Value($values);
+        $__PAGE_VALUE__=new Value($values);
         require $viewpath;
     }
 }

@@ -49,8 +49,8 @@ class Compiler
         $rawecho=sprintf('/(?<!!)%s\s*(.+?)\s*?%s/', preg_quote(self::$rawTag[0]), preg_quote(self::$rawTag[1]));
         $comment=sprintf('/(?<!!)%s(.+)%s/', preg_quote(self::$commentTag[0]), preg_quote(self::$commentTag[1]));
         return preg_replace(
-            [$rawecho, $echo, $comment],
-            ['<?php echo($1) ?>', '<?php echo htmlspecialchars($1) ?>', '<?php /* $1 */ ?>'],
+            ['/[$]:/',$rawecho, $echo, $comment],
+            ['$__PAGE_VALUE__->','<?php echo($1) ?>', '<?php echo htmlspecialchars($1) ?>', '<?php /* $1 */ ?>'],
             $str
         );
     }

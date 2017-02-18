@@ -1,12 +1,12 @@
 <html>
     <head>
-        <title>{{ $v->helloworld }}</title>
+        <title>{{ $:helloworld }}</title>
     </head>
     <body>
-        <div> {{ _T($v->helloworld) }}@__create_url__ </div>
-        @if (count($v->value([])))
+        <div> {{ _T($:helloworld) }}@__create_url__ </div>
+        @if (count($:value([])))
         <table>
-            @foreach ($v->value() as $name => $value)
+            @foreach ($:value() as $name => $value)
             <tr><th>{{$name}}</th><td>{{$value}}</td></tr>
             @endforeach
         </table>
