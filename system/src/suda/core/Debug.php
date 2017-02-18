@@ -120,6 +120,7 @@ class Debug
         } else {
             $render=new Response;
             $render->state(404);
+            $render->type('html');
             $render->display('suda:error', [
                 'erron'=>$erron,
                 'error'=>$error,

@@ -102,14 +102,17 @@ function queryCreateSQL(string $sql)
 function generate() {
     compileAll();
 
-    $params=getopt('r:o:s:p:');
-    $src=isset($params['r'])?$params['r']:DATA_DIR.'/dto';
+    $params=getopt('r:o:s:p:m:');
+    $module=isset($params['m'])?$params['m']:'';
+    $src=isset($params['r'])?$params['r']: $module?MODULES_DIR.'/'.$module.'/resource/dto':DATA_DIR.'/dto';
     if (!is_dir($src)){
         echo 'no such dir:'.$src;
     }
-    $dist=isset($params['o'])?$params['o']:DATA_DIR.'/db';
-    $outsql=isset($params['s'])?$params['s']:DATA_DIR.'/dbcreator.sql';
-    $querysql=isset($params['p'])?$params['p']:DATA_DIR.'/dbcreator.php';
+    $path=$module?MODULES_DIR.'/'.$module.'/resource/':DATA_DIR;
+    Storage::path($path);
+    $dist=isset($params['o'])?$params['o']: $path.'/db';
+    $outsql=isset($params['s'])?$params['s']: $path.'/'.$module.'_creator.sql';
+    $querysql=isset($params['p'])?$params['p']: $path.'/'.$module.'_creator.php';
     $tables=Storage::readDirFiles($src, true, '/\.dto$/', true);
     $head=<<< Table
 
