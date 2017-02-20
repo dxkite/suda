@@ -30,23 +30,8 @@ class Query extends AQuery
 
     public static function where(string $table, $wants='*', $condithon='1', array $binds=[], array $page=null, bool $scroll=false):AQuery
     {
-        if (is_array($condithon)) {
-            $count=0;
-            $and=[];
-            $param=[];
-            foreach ($condithon as $name => $value) {
-                $bname=$name.'_'.($count++);
-                // if (is_array($value)){
-                //     $and[]="`{$name}` IN (". $this->arrayQuote($value) . ')';
-                // }else{
-                    $and[]="`{$name}`=:{$bname}";
-                    $param[$bname]=$value;
-                // }
-            }
-            $condithon=implode(' AND ', $and);
-            $binds=array_merge($binds, $param);
-        }
-        return self::select($table, $wants, ' WHERE '.trim($condithon, ';').';', $binds, $page, $scroll);
+        $where=self::prepareWhere($where,$binds);
+        return self::select($table, $wants,$where, $binds, $page, $scroll);
     }
 
     public static function select(string $table, $wants ,  $conditions, array $binds=[], array $page=null, bool $scroll=false)
@@ -68,29 +53,16 @@ class Query extends AQuery
     public static function update(string $table, $set_fields,  $where='1', array $binds=[]):int
     {
         $table=self::table($table);
-        $param=[];
-        $count=0;
-        if (is_array($where)) {
-            $count=0;
-            $and=[];
-            foreach ($where as $name => $value) {
-                $bname=$name.'_'.($count++);
-                $and[]="`{$name}`=:{$bname}";
-                $param[$bname]=$value;
-            }
-            $where=implode(' AND ', $and);
-            $binds=array_merge($binds, $param);
-        }
         if (is_array($set_fields)) {
             $sets=[];
             foreach ($set_fields as $name=>$value) {
                 $bname=$name.'_'.($count++);
                 $sets[]="`{$name}`=:{$bname}";
-                $param[$bname]=$value;
+                $binds[$bname]=$value;
             }
-            $sql='UPDATE `'.$table.'` SET '.implode(',', $sets).' WHERE ' .rtrim($where, ';').';';
+            $sql='UPDATE `'.$table.'` SET '.implode(',', $sets).' '.self::prepareWhere($where,$binds).';';
         } else {
-            $sql='UPDATE `'.$table.'` SET '.$set_fields.' WHERE ' .rtrim($where, ';').';';
+            $sql='UPDATE `'.$table.'` SET '.$set_fields.' '.self::prepareWhere($where,$binds).';';
         }
         
         return (new Query($sql, array_merge($param, $binds)))->exec();
@@ -99,22 +71,11 @@ class Query extends AQuery
     public static function delete(string $table, $where='1', array $binds=[]):int
     {
         $table=self::table($table);
-         if (is_array($where)) {
-            $count=0;
-            $and=[];
-            $param=[];
-            foreach ($where as $name => $value) {
-                $bname=$name.'_'.($count++);
-                $and[]="`{$name}`=:{$bname}";
-                $param[$bname]=$value;
-            }
-            $where=implode(' AND ', $and);
-            $binds=array_merge($binds, $param);
-        }
-        $sql='DELETE FROM `'.$table.'` WHERE '.rtrim($where, ';').';';
+        $sql='DELETE FROM `'.$table.'` '.self::prepareWhere($where,$binds).';';
         return (new AQuery($sql, $binds))->exec();
     }
-    public static function prepareIn(string $name, array $invalues, string $prefix='in_')
+
+    protected static function prepareIn(string $name, array $invalues, string $prefix='in_')
     {
         $count=0;
         $names=[];
@@ -126,6 +87,32 @@ class Query extends AQuery
         }
         $sql=$name.' IN ('.implode(',', $names).')';
         return ['sql'=>$sql,'param'=>$param];
+    }
+
+    protected static function prepareWhere($where,array &$bind){
+        $param=[];
+        $count=0;
+        if (is_array($where)) {
+            $count=0;
+            $and=[];
+            foreach ($where as $name => $value) {
+                $bname=$name.'_'.($count++);
+                // in cause
+                if (is_array($value)){
+                    $in=self::prepareIn($name,$value);
+                    $and[]=$in['sql'];
+                    $param=array_merge($param,$in['param']);
+                }else{
+                    $and[]="`{$name}`=:{$bname}";
+                    $param[$bname]=$value;
+                }
+            }
+
+            $where=implode(' AND ', $and);
+        }
+        $where='` WHERE '.rtrim($where, ';');
+        $bind=array_merge($bind,$param);
+        return $where;
     }
     public static function count(string $table, string $where='1', array $binds=[]):int
     {
