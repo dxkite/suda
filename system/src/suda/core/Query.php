@@ -36,8 +36,12 @@ class Query extends AQuery
             $param=[];
             foreach ($condithon as $name => $value) {
                 $bname=$name.'_'.($count++);
-                $and[]="`{$name}`=:{$bname}";
-                $param[$bname]=$value;
+                if (is_array($value)){
+                    $and[]="`{$name}` IN (". $this->arrayQuote($value) . ')';
+                }else{
+                    $and[]="`{$name}`=:{$bname}";
+                    $param[$bname]=$value;
+                }
             }
             $condithon=implode(' AND ', $and);
             $binds=array_merge($binds, $param);

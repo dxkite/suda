@@ -202,4 +202,18 @@ class Query
         self::connectPdo();
         return  self::$pdo->rollBack();
     }
+
+    public function quote($string)
+    {
+        return self::$pdo->quote($string);
+    }
+
+    public function arrayQuote(array $array)
+    {
+        $temp = array();
+        foreach ($array as $value) {
+            $temp[] = is_int($value) ? $value : self::$pdo->quote($value);
+        }
+        return implode($temp, ',');
+    }
 }
