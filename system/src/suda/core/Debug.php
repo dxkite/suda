@@ -121,7 +121,7 @@ class Debug
             $render=new Response;
             $render->state(404);
             $render->type('html');
-            $render->display('suda:error', [
+            $render->displayFile(SYS_RES.'/tpl/error.tpl', [
                 'erron'=>$erron,
                 'error'=>$error,
                 'file'=>$file,

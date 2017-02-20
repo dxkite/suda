@@ -112,6 +112,18 @@ class Response
         echo $this->content;
     }
 
+    public function displayFile(string $path,array $values=[]){
+        // 结束缓冲控制
+        self::obEnd();
+        // 渲染模板
+        ob_start();
+        Manager::displayFile($path, $values);
+        $this->content.=ob_get_clean();
+        Hook::exec('display:output', [&$this->content, $this->type]);
+        Header('Content-Length:'.strlen($this->content));
+        echo $this->content;
+    }
+
     public static function obStart()
     {
         if (!self::$obstate) {
