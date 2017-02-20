@@ -85,7 +85,9 @@ class Response
         header('Content-Type:'.self::mime($type));
     }
 
-
+    public function noCache(){
+        header('Cache-Control: no-cache');
+    }
     public function json($values)
     {
         self::obEnd();

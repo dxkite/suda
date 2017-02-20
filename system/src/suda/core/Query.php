@@ -30,7 +30,7 @@ class Query extends AQuery
 
     public static function where(string $table, $wants='*', $condithon='1', array $binds=[], array $page=null, bool $scroll=false):AQuery
     {
-        $where=self::prepareWhere($where,$binds);
+        $where=self::prepareWhere($condithon,$binds);
         return self::select($table, $wants,$where, $binds, $page, $scroll);
     }
 
@@ -53,6 +53,7 @@ class Query extends AQuery
     public static function update(string $table, $set_fields,  $where='1', array $binds=[]):int
     {
         $table=self::table($table);
+        $count=0;
         if (is_array($set_fields)) {
             $sets=[];
             foreach ($set_fields as $name=>$value) {
@@ -65,7 +66,7 @@ class Query extends AQuery
             $sql='UPDATE `'.$table.'` SET '.$set_fields.' '.self::prepareWhere($where,$binds).';';
         }
         
-        return (new Query($sql, array_merge($param, $binds)))->exec();
+        return (new Query($sql, $binds ))->exec();
     }
 
     public static function delete(string $table, $where='1', array $binds=[]):int
@@ -110,7 +111,7 @@ class Query extends AQuery
 
             $where=implode(' AND ', $and);
         }
-        $where='` WHERE '.rtrim($where, ';');
+        $where=' WHERE '.rtrim($where, ';');
         $bind=array_merge($bind,$param);
         return $where;
     }

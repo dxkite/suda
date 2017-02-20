@@ -98,9 +98,9 @@ final class Request
         return $ip;
     }
 
-    public static function hasPost()
+    public static function isPost()
     {
-        return count($_POST);
+        return self::method()==='POST';
     }
     public static function hasGet()
     {
@@ -145,7 +145,9 @@ final class Request
                 preg_match($preg, $_SERVER['PHP_SELF'], $match);
                 self::$url=isset($match[2])?$match[2]:'/';
             } else {
-                self::$url=$_SERVER['REQUEST_URI'];
+                $preg='/^([^?]*)/';
+                preg_match($preg,$_SERVER['REQUEST_URI'],$match);
+                self::$url=$match[1];
             }
             self::$url=self::$url==='/'?self::$url:rtrim(self::$url, '/');
         }
