@@ -144,7 +144,7 @@ class Response
     public static function mime(string $name='')
     {
         if (!self::$mime) {
-            self::$mime=parse_ini_file(DATA_DIR.'/type.mime');
+            self::$mime=parse_ini_file(SYS_RES.'/type.mime');
         }
         if ($name) {
             return isset(self::$mime[$name])?self::$mime[$name]:'text/plain';

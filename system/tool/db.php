@@ -1,6 +1,6 @@
 <?php
 // 获取选项
-$options=getopt('i::b::k:f:g::h::');
+$options=getopt('i::b::k:f:g::h::',['struct::']);
 /** 
 -b 备份
 -k 选择性导出
@@ -40,10 +40,11 @@ if (isset($options['k'])) {
 $backup=isset($options['b']);
 
 if ($backup) {
+    $struct=isset($options['struct']);
     Storage::path(DATA_DIR.'/backup');
     $time=date('Y_m_d_H_i_s');
-    Database::export(DATA_DIR.'/backup/backup_'.$time.'.php');
-    Database::exportSQL(DATA_DIR.'/backup/backup_'.$time.'.sql');
+    Database::export(DATA_DIR.'/backup/backup_'.$time.'.php', [],$struct);
+    Database::exportSQL(DATA_DIR.'/backup/backup_'.$time.'.sql', [],$struct);
     echo 'backup to '.DATA_DIR.'/backup/'."\r\n";
 }
 

@@ -16,7 +16,7 @@ class Database
         $sql='SELECT `schema_name` FROM `information_schema`.`schemata` WHERE `schema_name`=:name LIMIT 1;';
         return (new Query($sql, ['name'=>$name]))->fetch();
     }
-    public static function export(string $export, array $saves_table=[])
+    public static function export(string $export, array $saves_table=[], bool $struct=true)
     {
         // $version=APP_VERSION;
         $date=date('Y-m-d H:i:s');
@@ -57,8 +57,11 @@ Table;
             foreach ($tables as $table_array) {
                 $tablename=current($table_array);
                 preg_match('/^'.\Config::get('database.prefix').'(.+?)$/', $tablename, $tbinfo);
-                $export_str.=self::querySQLString('DROP TABLE IF EXISTS #{'.$tbinfo[1].'}');
-                $export_str.=self::querySQLTableStruct(current($table_array));
+                
+                if ($struct) {
+                    $export_str.=self::querySQLString('DROP TABLE IF EXISTS #{'.$tbinfo[1].'}');
+                    $export_str.=self::querySQLTableStruct(current($table_array));
+                }
                 // 0 全部 有则保存指定的
                 if (count($saves_table)===0) {
                     $export_str.=self::querySQLTableValues(current($table_array));
@@ -81,7 +84,7 @@ End;
         $export_str.=$end;
         return Storage::put($export, $export_str);
     }
-    public static function exportSQL(string $output, array $saves_table=[])
+    public static function exportSQL(string $output, array $saves_table=[], bool $struct=true)
     {
         // $version=APP_VERSION;
         $date=date('Y-m-d H:i:s');
@@ -100,7 +103,7 @@ End;
 
 Table;
         Storage::put($output, $head);
-        return self::saveSQLTables($output, $saves_table);
+        return self::saveSQLTables($output, $saves_table, $struct);
     }
 
     public static function querySQLTableStruct(string $table)
@@ -151,7 +154,7 @@ queryInsertTable;
         return $insert;
     }
 
-    public static function saveSQLTables(string $fileout, array $saves_table=[])
+    public static function saveSQLTables(string $fileout, array $saves_table=[], bool $struct=true)
     {
         $tables=($q=new Query("show tables;"))->fetchAll();
         if (is_array($tables)) {
@@ -163,16 +166,16 @@ queryInsertTable;
 --
 Table;
                 if ($str=self::getTableStruct($table)) {
-                    $sql='DROP TABLE IF EXISTS `'.$table.'`;'."\r\n";
-                    Storage::put($fileout, $doc."\r\n\r\n".$sql.$str.";\r\n\r\n\r\n", FILE_APPEND);
-                // var_dump($table, $saves_table);
-                preg_match('/^'.\Config::get('database.prefix').'(.+?)$/', $table, $tbinfo);
-                // 0 全部 有则保存指定的
-                if (count($saves_table)===0) {
-                    self::saveSQLData($fileout, $table);
-                } elseif (in_array($tbinfo[1], $saves_table)) {
-                    self::saveSQLData($fileout, $table);
-                }
+                    if ($struct) {
+                        $sql='DROP TABLE IF EXISTS `'.$table.'`;'."\r\n";
+                        Storage::put($fileout, $doc."\r\n\r\n".$sql.$str.";\r\n\r\n\r\n", FILE_APPEND);
+                    }
+                    preg_match('/^'.\Config::get('database.prefix').'(.+?)$/', $table, $tbinfo);
+                    if (count($saves_table)===0) {
+                        self::saveSQLData($fileout, $table);
+                    } elseif (in_array($tbinfo[1], $saves_table)) {
+                        self::saveSQLData($fileout, $table);
+                    }
                 } else {
                     return false;
                 }
@@ -189,14 +192,18 @@ Table;
             $key.='`'.$column['Field'].'`,';
         }
         $key=rtrim($key, ',').')';
+
+
         if ($q) {
             //$sql="\r\n\r\nLOCK TABLES `$table` WRITE;\r\n/*!40000 ALTER TABLE `$table` DISABLE KEYS */;\r\n".'INSERT INTO `'.$table.'` VALUES ';
             $sql="\r\n\r\n".'INSERT INTO `'.$table.'` '.$key.' VALUES ';
-            Storage::put($file, $sql, FILE_APPEND);
+            
+
             $first=true;
             while ($values=$q->fetch()) {
                 $sql='';
                 if ($first) {
+                    Storage::put($file, $sql, FILE_APPEND);
                     $first=false;
                 } else {
                     $sql.=',';
@@ -211,7 +218,12 @@ Table;
                 $sql.=')';
                 Storage::put($file, $sql, FILE_APPEND);
             }
-            Storage::put($file, ";\r\n\n\r\n", FILE_APPEND);
+              if ($first){
+                    Storage::put($file, "/** Table {$table} is empty **/\r\n\n\r\n", FILE_APPEND);
+                }else{
+                   Storage::put($file, ";\r\n\n\r\n", FILE_APPEND);
+                }
+            
             //Storage::put($file, ";\r\n/*!40000 ALTER TABLE `atd_comment` ENABLE KEYS */;\r\nUNLOCK TABLES;\r\n\r\n", FILE_APPEND);
         } else {
             Storage::put($file, "/** Table {$table}  Save Failed **/\r\n\n\r\n", FILE_APPEND);

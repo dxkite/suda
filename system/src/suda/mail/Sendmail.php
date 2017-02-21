@@ -123,6 +123,7 @@ class Sendmail implements Mailer
     private function renderBody()
     {
         if ($this->use) {
+            
             $file=Manager::viewPath('__mail__/'.$this->use);
             ob_start();
             $_Mail=new Core\Value($this->values);
