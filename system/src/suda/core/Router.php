@@ -80,7 +80,9 @@ class Router
             if (preg_match('/^'.$preg.'$/', $request->url(), $match)) {
                 // 检验接口参数
                 if (isset($this->routers[$name]['method']) && count($this->routers[$name]['method'])>0) {
-                    array_walk( $this->routers[$name]['method'], function($value) { return strtoupper($value); });
+                    array_walk($this->routers[$name]['method'], function ($value) {
+                        return strtoupper($value);
+                    });
                     // 方法不匹配
                     if (!in_array(strtoupper($request->method()), $this->routers[$name]['method'])) {
                         continue;
@@ -112,7 +114,7 @@ class Router
         }
     }
 
-    public static function visit(array $method, string $url, string $router, string $tag=null,bool $ob =true, bool $admin=false,bool $json=false)
+    public static function visit(array $method, string $url, string $router, string $tag=null, bool $ob =true, bool $admin=false, bool $json=false)
     {
         $params=self::getParams($url);
         if (!preg_match('/^(.+?)@(.+?)$/', $router, $matchs)) {
@@ -135,7 +137,7 @@ class Router
             $value_get.="'{$param_name}'=>\$request->get()->{$param_name}(".(preg_match('/int/i', $param_type)?'0':"'{$param_name}'")."),";
         }
         $value_get.=')';
-        $params_str=implode(";\r\n\t\t",$params_str);
+        $params_str=implode(";\r\n\t\t", $params_str);
         
         $pos=strrpos($class, '\\');
         $class_namespace=substr($class, 0, $pos);
@@ -171,7 +173,7 @@ class Router
                 $tagname,
                 $params_mark,
                 $value_get,
-                count($method)>0?implode(',',$method):'all',
+                count($method)>0?implode(',', $method):'all',
             ], $class_template);
         $template=Storage::get(SYS_RES.'/view_template.html');
         $template=str_replace('__create_url__', $url, $template);
@@ -179,7 +181,7 @@ class Router
         Storage::path($class_path);
         Storage::put($class_file, $class_template);
         
-        if (!$json){
+        if (!$json) {
             // 写入模板
             Storage::path(dirname($template_file));
             Storage::put($template_file, $template);
@@ -207,13 +209,14 @@ class Router
         Json::saveFile($router_file, $json);
         return true;
     }
-    protected static function createTplName(string $name){
-        $name=strtolower(preg_replace('/([A-Z])/','_$1',$name));
-        $names=explode('\\',$name);
-        foreach ($names as $index=>$piece){
-            $names[$index]=trim($piece,'_');
+    protected static function createTplName(string $name)
+    {
+        $name=strtolower(preg_replace('/([A-Z])/', '_$1', $name));
+        $names=explode('\\', $name);
+        foreach ($names as $index=>$piece) {
+            $names[$index]=trim($piece, '_');
         }
-        return  implode('/',$names);
+        return  implode('/', $names);
     }
     public static function getParams(string $url)
     {
@@ -233,7 +236,7 @@ class Router
         $types=&$this->types;
         $urltype=self::$urltype;
         $url=preg_replace('/([\/\.\\\\\+\*\(\^\)\?\$\=\!\<\>\-])/', '\\\\$1', $url);
-        $url=preg_replace('/\[(\S+)\]/','(?:$1)?',$url);
+        $url=preg_replace('/\[(\S+)\]/', '(?:$1)?', $url);
         $url=preg_replace_callback('/\{(?:(\w+)(?::(\w+))?)\}([?])?/', function ($match) use ($name, &$types, $urltype) {
             $size=isset($types[$name])?count($types[$name]):0;
             $param_name=$match[1]!==''?$match[1]:$size;
@@ -253,21 +256,26 @@ class Router
     {
         $url=DIRECTORY_SEPARATOR === '/'?'/':'/?/';
         if (isset($this->routers[$name])) {
-            $url=preg_replace('/[?|]/', '',$this->routers[$name]['visit']);
-            $url=preg_replace_callback('/\{(?:(\w+)(?::(\w+))?)\}/', function ($match) use ($name, $values) {
+            $url=preg_replace('/[?|]/', '', $this->routers[$name]['visit']);
+            $url=preg_replace_callback('/\{(?:(\w+)(?::(\w+))?)\}/', function ($match) use ($name, & $values) {
                 $param_name=$match[1];
                 $param_type=isset($match[2])?$match[2]:'url';
                 if (isset($values[$param_name])) {
                     if ($param_type==='int') {
-                        return intval($values[$param_name]);
+                        $val= intval($values[$param_name]);
                     }
-                    return $values[$param_name];
+                    $val=$values[$param_name];
+                    unset($values[$param_name]);
+                    return $val;
                 } else {
                     return '';
                 }
             }, $url);
         } else {
             return '/_undefine_router_';
+        }
+        if(count($values)){
+            return $url.'?'.http_build_query($values,'v','&',PHP_QUERY_RFC3986);
         }
         return $url;
     }
@@ -293,9 +301,9 @@ class Router
             Response::obStart();
         }
         (new \suda\tool\Command(Config::get('app.application').'::activeModule'))->exec([$router['module']]);
-        if ((new \suda\tool\Command($router['class'].'->onPreTest'))->exec([$router])){
+        if ((new \suda\tool\Command($router['class'].'->onPreTest'))->exec([$router])) {
             (new \suda\tool\Command($router['class'].'->onRequest'))->exec([Request::getInstance()]);
-        }else{
+        } else {
             (new \suda\tool\Command($router['class'].'->onPreTestError'))->exec([$router]);
         }
     }
