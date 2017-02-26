@@ -3,9 +3,9 @@ namespace suda\core;
 
 defined('D_START') or define('D_START', microtime(true));
 defined('D_MEM') or define('D_MEM', memory_get_usage());
-defined('ROOT_PATH') or define('ROOT_PATH',dirname(dirname(dirname(dirname(__DIR__)))));
-defined('SYS_DIR') or define('SYS_DIR',dirname(dirname(dirname(__DIR__))));
-defined('SYS_RES') or define('SYS_RES',SYS_DIR.'/resource');
+defined('ROOT_PATH') or define('ROOT_PATH', dirname(dirname(dirname(dirname(__DIR__)))));
+defined('SYS_DIR') or define('SYS_DIR', dirname(dirname(dirname(__DIR__))));
+defined('SYS_RES') or define('SYS_RES', SYS_DIR.'/resource');
 
 require_once __DIR__.'/Storage.php';
 require_once __DIR__.'/Hook.php';
@@ -31,13 +31,17 @@ class System
         // 搜索路径
         foreach (self::$include_path as $include_path) {
             if (Storage::exist($path=$include_path.DIRECTORY_SEPARATOR.$classname.'.php')) {
-                require_once $path;
+                if (!class_exists($classname)) {
+                    require_once $path;
+                }
             } else {
                 // 添加命名空间
                 foreach (self::$namespace as $namespace) {
                     if (Storage::exist($path=$include_path.DIRECTORY_SEPARATOR.$namespace.DIRECTORY_SEPARATOR.$classname.'.php')) {
+                        // var_dump(get_included_files());
+                        // var_dump(class_exists($classname),$classname);
                         // 最简类名
-                        if (!class_exists($classname)){
+                        if (!class_exists($classname)) {
                             class_alias($namespace.'\\'.$classname, $classname);
                         }
                         require_once $path;
