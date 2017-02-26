@@ -42,7 +42,11 @@ class Router
         if (Storage::exist(MODULES_DIR.'/'.$module.'/resource/config/router_admin.json')) {
             $routers=array_merge($routers, Json::loadFile(MODULES_DIR.'/'.$module.'/resource/config/router_admin.json'));
         }
-        array_walk($routers, function (&$router) use ($module) {
+        $prefix=conf('router-prefix.'.$module, null);
+        array_walk($routers, function (&$router) use ($module, $prefix) {
+            if (!is_null($prefix)) {
+                $router['visit']=$prefix.$router['visit'];
+            }
             $router['module']=$module;
         });
         $this->routers=array_merge($this->routers, $routers);
@@ -274,8 +278,8 @@ class Router
         } else {
             return '/_undefine_router_';
         }
-        if(count($values)){
-            return $url.'?'.http_build_query($values,'v','&',PHP_QUERY_RFC3986);
+        if (count($values)) {
+            return $url.'?'.http_build_query($values, 'v', '&', PHP_QUERY_RFC3986);
         }
         return $url;
     }
