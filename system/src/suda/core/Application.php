@@ -9,6 +9,7 @@ use suda\tool\Json;
 class Application
 {
     protected $path;
+    public static $active_module;
     public function __construct(string $app)
     {
         $this->path=$app;
@@ -42,16 +43,20 @@ class Application
         System::addIncludePath(SHRAE_DIR);
         if ($modules=Config::get('app.modules')) {
             foreach ($modules as $module) {
-                if (Storage::isDir(MODULES_DIR.'/'.$module.'/share')){
+                if (Storage::isDir(MODULES_DIR.'/'.$module.'/share')) {
                     System::addIncludePath(MODULES_DIR.'/'.$module.'/share');
                 }
             }
         }
     }
-
+    public static function getActiveModule()
+    {
+        return self::$active_module;
+    }
     // 激活模块
     public static function activeModule(string $module)
     {
+        self::$active_module=$module;
         define('MODULE_RESOURCE', Storage::path(MODULES_DIR.'/'.$module.'/resource'));
         define('MODULE_LANGS', Storage::path(MODULE_RESOURCE.'/langs'));
         define('MODULE_CONFIG', Storage::path(MODULE_RESOURCE.'/config'));

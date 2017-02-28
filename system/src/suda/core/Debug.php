@@ -93,18 +93,22 @@ class Debug
                 $function = $trace['function'];
             }
             $args = '';
+            $args_d='';
             if (!empty($trace['args'])) {
                 foreach ($trace['args'] as $arg) {
                     if (is_object($arg)) {
                         $args .= 'class '.get_class($arg).',';
+                        $args_d .= 'class '.get_class($arg).',';
                     } else {
                         $args .= stripcslashes(var_export($arg, true)).',';
+                        $args_d.=json_encode($arg).',';
                     }
                 }
                 $args = rtrim($args, ',');
+                $args_d = rtrim($args_d, ',');
             }
             $print .= ' '.$function.'('.$args.')';
-            $print_d.=' '.$function;
+            $print_d.=' '.$function.'('.$args_d.')';
             $traces[] = $print;
             $traces_console[]=$print_d;
         }

@@ -57,7 +57,7 @@ class Response
     private static $mime;
     public function __construct()
     {
-        Header('X-Framework: DxCore-Suda');
+        Header('X-Framework: Suda/'.Application::getActiveModule());
     }
 
     public function onRequest(Request $request)
