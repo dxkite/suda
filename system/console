@@ -4,7 +4,7 @@ defined('APP_DIR') or define('APP_DIR',__DIR__.'/../app');
 
 require_once  __DIR__.'/suda-console.php';
 
-$options=getopt('', ['call:', 'database','db', 'router']);
+$options=getopt('', ['call:', 'database','db', 'router','run']);
 
 // 设置目录
 define('TOOL_DIR', SYS_DIR.'/tool');
@@ -17,7 +17,9 @@ if (isset($options['call'])) {
     require_once TOOL_DIR.'/db.php';
 } elseif (isset($options['router'])) {
     require_once TOOL_DIR.'/router.php';
-} else {
+} elseif (isset($options['run'])) {
+    require_once TOOL_DIR.'/run.php';
+}else{
     echo 'Usage:'."\r\n";
     echo "\t".'--call name , call the functions'."\r\n";
     echo "\t".'--db option do database options'."\r\n";
