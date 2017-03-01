@@ -124,6 +124,14 @@ final class Request
             $_SERVER['REQUEST_URI']=$command['r'];
         }
     }
+    
+    public static function getHeader(string $name,string $default=null){
+        $name='HTTP_'.strtoupper($name);
+        if(isset($_SERVER[$name])){
+            return $_SERVER[$name];
+        }
+        return $default;
+    }
 
     protected static function parseServer()
     {
