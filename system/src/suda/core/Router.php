@@ -47,6 +47,7 @@ class Router
             if (!is_null($prefix)) {
                 $router['visit']=$prefix.$router['visit'];
             }
+            $router['visit']='/'.trim($router['visit'], '/');
             $router['module']=$module;
         });
         $this->routers=array_merge($this->routers, $routers);
@@ -81,6 +82,7 @@ class Router
     {
         $request=Request::getInstance();
         foreach ($this->matchs as $name=>$preg) {
+            // _D()->d('url:'.$request->url().'; preg:'.'/^'.$preg.'$/');
             if (preg_match('/^'.$preg.'$/', $request->url(), $match)) {
                 // 检验接口参数
                 if (isset($this->routers[$name]['method']) && count($this->routers[$name]['method'])>0) {
