@@ -124,9 +124,9 @@ final class Request
             $_SERVER['REQUEST_URI']=$command['r'];
         }
     }
-    
+
     public static function getHeader(string $name,string $default=null){
-        $name='HTTP_'.strtoupper($name);
+        $name='HTTP_'.strtoupper(preg_replace('/[^\w]/','_',$name));
         if(isset($_SERVER[$name])){
             return $_SERVER[$name];
         }
