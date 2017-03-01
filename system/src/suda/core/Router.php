@@ -56,10 +56,12 @@ class Router
     protected function loadFile()
     {
         $this->routers=require TEMP_DIR.'/router.cache.php';
+        $this->matchs=require TEMP_DIR.'/matchs.cache.php';
     }
     protected function saveFile()
     {
         ArrayHelper::export(TEMP_DIR.'/router.cache.php', '_router', $this->routers);
+        ArrayHelper::export(TEMP_DIR.'/matchs.cache.php', '_matchs', $this->matchs);
     }
     protected function loadModulesRouter()
     {
@@ -68,8 +70,11 @@ class Router
             foreach ($modules as $module) {
                 self::load($module);
             }
+            self::buildRouterMap();
+            // 缓存路由信息
             self::saveFile();
         } else {
+            // 提取路由信息
             self::loadFile();
         }
     }
