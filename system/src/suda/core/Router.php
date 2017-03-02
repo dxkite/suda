@@ -12,7 +12,7 @@ class Router
     protected $mapper;
     protected $matchs=[];
     protected $types;
-    protected static $urltype=['int'=>'\d+','string'=>'[^\/]+','longstring'=>'.+'];
+    protected static $urltype=['int'=>'\d+','string'=>'[^\/]+','url'=>'.+'];
     protected static $router=null;
     protected $routers=[];
     
@@ -109,6 +109,8 @@ class Router
                         } else {
                             $value=urldecode($value);
                         }
+                        // 填充$_GET
+                        $_GET[$param_name]=$value;
                         $request->set($param_name, $value);
                     }
                 }
