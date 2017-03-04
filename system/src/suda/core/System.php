@@ -14,9 +14,10 @@ spl_autoload_register('suda\\core\\System::classLoader');
 // require_once __DIR__.'/../tool/ArrayHelper.php';
 // require_once __DIR__.'/Storage.php';
 // require_once __DIR__.'/Config.php';
+
 require_once __DIR__.'/Storage.php';
-// require_once __DIR__.'/Hook.php';
-// require_once __DIR__.'/Debug.php';
+require_once __DIR__.'/Hook.php';
+require_once __DIR__.'/Debug.php';
 require_once __DIR__.'/func.php';
 
 
