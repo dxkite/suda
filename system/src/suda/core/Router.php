@@ -159,7 +159,7 @@ class Router
         $class_file=$class_path.'/'.$class_name.'.php';
         $template_name=self::createTplName($class_short);
         $template_file=MODULES_DIR.'/'.$module.'/resource/template/default/'.$template_name.'.tpl.html';
-        $class_template= Storage::get(SYS_RES.($json?'/class_json.php':'/class_template.php'));
+        $class_template= Storage::get(SYS_RES.($json?'/class_json.php':($ob?'/class_template.php':'/class_obcache.php')));
         $tagname=strtolower(is_null($tag)?preg_replace('/[\\\\]+/', '_', $class_short):$tag);
         $class_template=str_replace(
             [
@@ -194,7 +194,7 @@ class Router
         Storage::path($class_path);
         Storage::put($class_file, $class_template);
         
-        if (!$json) {
+        if (!$json &&  !$ob) {
             // 写入模板
             Storage::path(dirname($template_file));
             Storage::put($template_file, $template);

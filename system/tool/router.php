@@ -26,7 +26,8 @@ $url=$options['u'];
 $class=$options['c'];
 $tag=$options['router'];
 
-$ob=!isset($options['o']);
+$ob= !isset($options['o']);
+
 if (Router::visit($method,$url,$class,$tag,$ob,$admin,$json)){
     echo 'created response:'.$class;
 }else{
