@@ -15,6 +15,8 @@ require_once __DIR__.'/../tool/ArrayHelper.php';
 require_once __DIR__.'/../template/Manager.php';
 
 require_once __DIR__.'/Config.php';
+require_once __DIR__.'/Application.php';
+require_once __DIR__.'/ApplicationManager.php';
 require_once __DIR__.'/Response.php';
 require_once __DIR__.'/Storage.php';
 require_once __DIR__.'/Hook.php';
