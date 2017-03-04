@@ -7,14 +7,14 @@ defined('ROOT_PATH') or define('ROOT_PATH', dirname(dirname(dirname(dirname(__DI
 defined('SYS_DIR') or define('SYS_DIR', dirname(dirname(dirname(__DIR__))));
 defined('SYS_RES') or define('SYS_RES', SYS_DIR.'/resource');
 
-spl_autoload_register('suda\\core\\System::classLoader');
 
-// require_once __DIR__.'/../tool/Command.php';
-// require_once __DIR__.'/../tool/Json.php';
-// require_once __DIR__.'/../tool/ArrayHelper.php';
-// require_once __DIR__.'/Storage.php';
-// require_once __DIR__.'/Config.php';
 
+require_once __DIR__.'/../tool/Command.php';
+require_once __DIR__.'/../tool/Json.php';
+require_once __DIR__.'/../tool/ArrayHelper.php';
+require_once __DIR__.'/../template/Manager.php';
+
+require_once __DIR__.'/Config.php';
 require_once __DIR__.'/Storage.php';
 require_once __DIR__.'/Hook.php';
 require_once __DIR__.'/Debug.php';
@@ -31,6 +31,7 @@ class System
     {
         class_alias('suda\\core\\System', 'System');
         register_shutdown_function('suda\\core\\System::onShutdown');
+        spl_autoload_register('suda\\core\\System::classLoader');
         set_error_handler('suda\\core\\System::uncaughtError');
         set_exception_handler('suda\\core\\System::uncaughtException');
     }
@@ -47,8 +48,6 @@ class System
                 // 添加命名空间
                 foreach (self::$namespace as $namespace) {
                     if (Storage::exist($path=$include_path.DIRECTORY_SEPARATOR.$namespace.DIRECTORY_SEPARATOR.$classname.'.php')) {
-                        // var_dump(get_included_files());
-                        // var_dump(class_exists($classname),$classname);
                         // 最简类名
                         if (!class_exists($classname)) {
                             class_alias($namespace.'\\'.$classname, $classname);
