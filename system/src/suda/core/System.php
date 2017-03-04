@@ -7,15 +7,19 @@ defined('ROOT_PATH') or define('ROOT_PATH', dirname(dirname(dirname(dirname(__DI
 defined('SYS_DIR') or define('SYS_DIR', dirname(dirname(dirname(__DIR__))));
 defined('SYS_RES') or define('SYS_RES', SYS_DIR.'/resource');
 
-require_once __DIR__.'/../tool/Command.php';
-require_once __DIR__.'/../tool/Json.php';
-require_once __DIR__.'/../tool/ArrayHelper.php';
+spl_autoload_register('suda\\core\\System::classLoader');
 
-require_once __DIR__.'/Config.php';
+// require_once __DIR__.'/../tool/Command.php';
+// require_once __DIR__.'/../tool/Json.php';
+// require_once __DIR__.'/../tool/ArrayHelper.php';
+// require_once __DIR__.'/Storage.php';
+// require_once __DIR__.'/Config.php';
 require_once __DIR__.'/Storage.php';
-require_once __DIR__.'/Hook.php';
-require_once __DIR__.'/Debug.php';
+// require_once __DIR__.'/Hook.php';
+// require_once __DIR__.'/Debug.php';
 require_once __DIR__.'/func.php';
+
+
 
 class System
 {
@@ -25,7 +29,6 @@ class System
     public static function init()
     {
         class_alias('suda\\core\\System', 'System');
-        spl_autoload_register('suda\\core\\System::classLoader');
         register_shutdown_function('suda\\core\\System::onShutdown');
         set_error_handler('suda\\core\\System::uncaughtError');
         set_exception_handler('suda\\core\\System::uncaughtException');
