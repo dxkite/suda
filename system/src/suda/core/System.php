@@ -8,6 +8,9 @@ defined('SYS_DIR') or define('SYS_DIR', dirname(dirname(dirname(__DIR__))));
 defined('SYS_RES') or define('SYS_RES', SYS_DIR.'/resource');
 
 require_once __DIR__.'/../tool/Command.php';
+require_once __DIR__.'/../tool/Json.php';
+require_once __DIR__.'/../tool/ArrayHelper.php';
+
 require_once __DIR__.'/Config.php';
 require_once __DIR__.'/Storage.php';
 require_once __DIR__.'/Hook.php';
