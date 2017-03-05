@@ -1,5 +1,8 @@
 <?php
 
+
+
+
 // 语言翻译
 function _T(string $message){
     return call_user_func_array('suda\template\Language::trans',func_get_args());
@@ -17,7 +20,7 @@ function conf(string $name,$default=null){
 
 // 使用命名空间
 function use_namespace(string $namespace){
-    return suda\core\System::setNamespace($namespace);
+    return suda\core\Autoloader::setNamespace($namespace);
 }
 
 function _I(string $name,array $values=[]){
