@@ -39,12 +39,12 @@ class Application
             Manager::loadCompile();
         }
 
-        System::setNamespace(Config::get('app.namespace'));
-        System::addIncludePath(SHRAE_DIR);
+        Autoloader::setNamespace(Config::get('app.namespace'));
+        Autoloader::addIncludePath(SHRAE_DIR);
         if ($modules=Config::get('app.modules')) {
             foreach ($modules as $module) {
                 if (Storage::isDir(MODULES_DIR.'/'.$module.'/share')) {
-                    System::addIncludePath(MODULES_DIR.'/'.$module.'/share');
+                    Autoloader::addIncludePath(MODULES_DIR.'/'.$module.'/share');
                 }
             }
         }
@@ -60,8 +60,8 @@ class Application
         define('MODULE_RESOURCE', Storage::path(MODULES_DIR.'/'.$module.'/resource'));
         define('MODULE_LANGS', Storage::path(MODULE_RESOURCE.'/langs'));
         define('MODULE_CONFIG', Storage::path(MODULE_RESOURCE.'/config'));
-        System::addIncludePath(Storage::path(MODULES_DIR.'/'.$module.'/src'));
-        System::addIncludePath(Storage::path(MODULES_DIR.'/'.$module.'/share'));
+        Autoloader::addIncludePath(Storage::path(MODULES_DIR.'/'.$module.'/src'));
+        Autoloader::addIncludePath(Storage::path(MODULES_DIR.'/'.$module.'/share'));
         if (Storage::exist($path=MODULE_CONFIG.'/config.json')) {
             Config::set('module', Json::loadFile($path));
         }

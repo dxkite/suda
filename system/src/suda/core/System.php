@@ -7,16 +7,16 @@ defined('ROOT_PATH') or define('ROOT_PATH', dirname(dirname(dirname(dirname(__DI
 defined('SYS_DIR') or define('SYS_DIR', dirname(dirname(dirname(__DIR__))));
 defined('SYS_RES') or define('SYS_RES', SYS_DIR.'/resource');
 
-
-
-
+require_once __DIR__.'/Autoloader.php';  
+Autoloader::init();
+// 初始化包含路径
+Autoloader::addIncludePath(SYS_DIR.'/src');
 
 require_once __DIR__.'/func.php';  
+
+
 class System
 {
-    protected static $namespace=['suda\\core'];
-    protected static $include_path=[];
-
     public static function init()
     {
         class_alias('suda\\core\\System', 'System');
@@ -26,28 +26,7 @@ class System
         set_exception_handler('suda\\core\\System::uncaughtException');
     }
 
-    public static function addIncludePath(string $path)
-    {
-        if (!in_array($path, self::$include_path)) {
-            self::$include_path[]=$path;
-        }
-    }
-
-    public static function getIncludePath()
-    {
-        return self::$include_path;
-    }
-
-    public static function getNamespace()
-    {
-        return self::$namespace;
-    }
-    public static function setNamespace(string $namespace)
-    {
-        if (!in_array($namespace, self::$namespace)) {
-            self::$namespace[]=$namespace;
-        }
-    }
+   
     public static function onShutdown()
     {
         Hook::exec('system:shutdown');
