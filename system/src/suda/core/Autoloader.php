@@ -24,8 +24,6 @@ class Autoloader
                 // 添加命名空间
                 foreach (self::$namespace as $namespace) {
                     if (file_exists($path=$include_path.DIRECTORY_SEPARATOR.$namespace.DIRECTORY_SEPARATOR.$classname.'.php')) {
-                        // var_dump(get_included_files());
-                        // var_dump(class_exists($classname),$classname);
                         // 最简类名
                         if (!class_exists($classname)) {
                             class_alias($namespace.'\\'.$classname, $classname);
