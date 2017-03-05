@@ -7,11 +7,6 @@ defined('ROOT_PATH') or define('ROOT_PATH', dirname(dirname(dirname(dirname(__DI
 defined('SYS_DIR') or define('SYS_DIR', dirname(dirname(dirname(__DIR__))));
 defined('SYS_RES') or define('SYS_RES', SYS_DIR.'/resource');
 
-require_once __DIR__.'/Autoloader.php';  
-Autoloader::init();
-// 初始化包含路径
-Autoloader::addIncludePath(SYS_DIR.'/src');
-
 require_once __DIR__.'/func.php';  
 
 
@@ -20,7 +15,6 @@ class System
     public static function init()
     {
         class_alias('suda\\core\\System', 'System');
-        
         register_shutdown_function('suda\\core\\System::onShutdown');
         set_error_handler('suda\\core\\System::uncaughtError');
         set_exception_handler('suda\\core\\System::uncaughtException');
