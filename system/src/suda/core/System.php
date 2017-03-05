@@ -15,7 +15,6 @@ class System
     {
         class_alias('suda\\core\\System', 'System');
         register_shutdown_function('suda\\core\\System::onShutdown');
-        spl_autoload_register('suda\\core\\System::classLoader');
         set_error_handler('suda\\core\\System::uncaughtError');
         set_exception_handler('suda\\core\\System::uncaughtException');
     }
