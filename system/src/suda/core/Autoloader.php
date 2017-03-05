@@ -13,17 +13,18 @@ class Autoloader
 
     public static function Classloader(string $classname)
     {
-        $classfile=preg_replace('/[\\\\]+/', DIRECTORY_SEPARATOR, $classname);
         // 搜索路径
         foreach (self::$include_path as $include_path) {
-            if (file_exists($path=$include_path.DIRECTORY_SEPARATOR.$classname.'.php')) {
+            $path=preg_replace('/[\\\\]+/', DIRECTORY_SEPARATOR, $include_path.DIRECTORY_SEPARATOR.$classname.'.php');
+            if (file_exists($path)) {
                 if (!class_exists($classname)) {
                     require_once $path;
                 }
             } else {
                 // 添加命名空间
                 foreach (self::$namespace as $namespace) {
-                    if (file_exists($path=$include_path.DIRECTORY_SEPARATOR.$namespace.DIRECTORY_SEPARATOR.$classname.'.php')) {
+                    $path=preg_replace('/[\\\\]+/', DIRECTORY_SEPARATOR, $include_path.DIRECTORY_SEPARATOR.$namespace.DIRECTORY_SEPARATOR.$classname.'.php');
+                    if (file_exists($path)) {
                         // 最简类名
                         if (!class_exists($classname)) {
                             class_alias($namespace.'\\'.$classname, $classname);
