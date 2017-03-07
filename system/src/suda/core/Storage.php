@@ -54,7 +54,7 @@ class Storage
     }
     public static function cut(string $path, string $basepath=ROOT_PATH)
     {
-        return trim(preg_replace('/^'.preg_quote($basepath, '/').'/', '', $path), '\\/');
+        return trim(preg_replace('/[\\\\\\/]+/', DIRECTORY_SEPARATOR, preg_replace('/^'.preg_quote($basepath, '/').'/', '', $path)),'\\/');
     }
     public static function readDirs(string $dirs, bool $repeat=false, string $preg='/^.+$/'):array
     {

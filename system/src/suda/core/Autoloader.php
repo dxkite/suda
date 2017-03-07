@@ -15,7 +15,7 @@ class Autoloader
     {
         // 搜索路径
         foreach (self::$include_path as $include_path) {
-            $path=preg_replace('/[\\\\]+/', DIRECTORY_SEPARATOR, $include_path.DIRECTORY_SEPARATOR.$classname.'.php');
+            $path=preg_replace('/[\\\\\\/]+/', DIRECTORY_SEPARATOR, $include_path.DIRECTORY_SEPARATOR.$classname.'.php');
             if (file_exists($path)) {
                 if (!class_exists($classname)) {
                     require_once $path;
