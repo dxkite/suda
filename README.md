@@ -22,14 +22,14 @@
 
 1. 下载框架
 
-```
-git clone https://github.com/DXkite/suda 
-```
-并复制public文件夹的路径
+  ```
+  git clone https://github.com/DXkite/suda 
+  ```
+  并复制public文件夹的路径
 
 2. 设置网站根目录     
 
-把服务器的网站根目录调整为刚刚下载的框架的 public 目录，把public目录作为网站的根目录。
+  把服务器的网站根目录调整为刚刚下载的框架的 public 目录，把public目录作为网站的根目录。
 
 3. 访问网站
 
