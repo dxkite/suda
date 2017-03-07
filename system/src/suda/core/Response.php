@@ -55,11 +55,9 @@ class Response
     private $type='html';
     private static $instance=null;
     private static $mime;
-    public function __construct()
-    {
-        Header('X-Framework: Suda/'.Application::getActiveModule());
+    public function __construct(){
+        self::mark();
     }
-
     public function onRequest(Request $request)
     {
     }
@@ -85,11 +83,13 @@ class Response
         header('Content-Type:'.self::mime($type));
     }
 
-    public function noCache(){
+    public function noCache()
+    {
         header('Cache-Control: no-cache');
     }
     public function json($values)
     {
+        self::mark();
         self::obEnd();
         $jsonstr=json_encode($values);
         if (Config::get('debug')) {
@@ -98,11 +98,13 @@ class Response
         self::type('json');
         Hook::exec('display:output', [&$jsonstr, $this->type]);
         Header('Content-Length:'.strlen($jsonstr));
+        self::etag(md5($jsonstr));
         echo $jsonstr;
     }
 
     public function display(string $template, array $values=[])
     {
+        self::mark();
         // 结束缓冲控制
         self::obEnd();
         // 渲染模板
@@ -111,10 +113,13 @@ class Response
         $this->content.=ob_get_clean();
         Hook::exec('display:output', [&$this->content, $this->type]);
         Header('Content-Length:'.strlen($this->content));
+        self::etag(md5($this->content));
         echo $this->content;
     }
 
-    public function displayFile(string $path,array $values=[]){
+    public function displayFile(string $path, array $values=[])
+    {
+        self::mark();
         // 结束缓冲控制
         self::obEnd();
         // 渲染模板
@@ -123,9 +128,31 @@ class Response
         $this->content.=ob_get_clean();
         Hook::exec('display:output', [&$this->content, $this->type]);
         Header('Content-Length:'.strlen($this->content));
+        self::etag(md5($this->content));
         echo $this->content;
     }
-
+    public static function etag(string $etag)
+    {
+        if (conf('app.etag',true)) {
+            header('Etag:'.$etag);
+            $request=Request::getInstance();
+            if ($str=$request->getHeader('If-None-Match')) {
+                if (strcasecmp($etag, $str)===0) {
+                    _D()->d('Etag:'.$etag, 'Response 304');
+                    self::state(304);
+                    self::close();
+                    // 直接结束访问
+                    exit(0);
+                }
+            }
+        }
+    }
+    protected static function mark(){
+        header('X-Framework: '.conf('app.name','suda').'-'.Application::getActiveModule().'/'.conf('app.version'));
+    }
+    public static function close() {
+        header('Connection: close');
+    }
     public static function obStart()
     {
         if (!self::$obstate) {

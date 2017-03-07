@@ -123,7 +123,7 @@ class Debug
             }
         } else {
             $render=new Response;
-            $render->state(404);
+            $render->state(500);
             $render->type('html');
             $render->displayFile(SYS_RES.'/tpl/error.tpl', [
                 'erron'=>$erron,
