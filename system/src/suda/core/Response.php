@@ -4,6 +4,10 @@ namespace suda\core;
 use suda\tool\Json;
 use suda\template\Manager;
 
+// TODO: If-Modified-Since
+// TODO: Access-Control
+
+
 class Response
 {
     // 状态输出
@@ -117,6 +121,9 @@ class Response
         echo $this->content;
     }
 
+    public static function time(int $time){
+
+    }
     public function displayFile(string $path, array $values=[])
     {
         self::mark();
