@@ -6,8 +6,10 @@
 运行命令：
 
 ```
-php ./app/console --router simple_page -c test\Page1@default -u /simple-page-with-html
+> php .\app\console --router simple_page -c test\Page1@default -u /simple-page-with-html
 created response:test\Page1@default
+class file at :APP_DIR/modules/default/src/cn\atd3\response\test/Page1.php
+template file at :APP_DIR/modules/default/resource/template/default/test/page1.tpl.html
 ```
 
 访问页面：
@@ -17,8 +19,9 @@ created response:test\Page1@default
 ## 创建一个返回JSON数据的页面
 
 ```
-php ./app/console --router simple_page_2 -c test\Page2@default -u /simple-page-with-json -j
+> php ./app/console --router simple_page_2 -c test\Page2@default -u /simple-page-with-json -j
 created response:test\Page2@default
+class file at :APP_DIR/modules/default/src/cn\atd3\response\test/Page2.php
 ```
 
 ![simple-page-with-json](imgs/simple-page-with-json.png)

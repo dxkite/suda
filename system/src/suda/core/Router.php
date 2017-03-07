@@ -134,6 +134,8 @@ class Router
             return false;
         }
 
+        $return=[];
+
         // 解析变量
         list($router, $class_short, $module)=$matchs;
         // 路由位置
@@ -157,6 +159,7 @@ class Router
         $class_name=substr($class, $pos+1);
         $class_path=MODULES_DIR.'/'.$module.'/src/'.$class_namespace;
         $class_file=$class_path.'/'.$class_name.'.php';
+        $return['class']=$class_file;
         $template_name=self::createTplName($class_short);
         $template_file=MODULES_DIR.'/'.$module.'/resource/template/default/'.$template_name.'.tpl.html';
         $class_template= Storage::get(SYS_RES.($json?'/class_json.php':($ob?'/class_template.php':'/class_obcache.php')));
@@ -200,6 +203,7 @@ class Router
             // 写入模板
             Storage::path(dirname($template_file));
             Storage::put($template_file, $template);
+            $return['template']=$template_file;
         }
 
 
@@ -222,7 +226,8 @@ class Router
         }
         $json[$tagname]=$item;
         Json::saveFile($router_file, $json);
-        return true;
+        
+        return $return;
     }
     protected static function createTplName(string $name)
     {

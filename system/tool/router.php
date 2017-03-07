@@ -28,8 +28,12 @@ $tag=$options['router'];
 
 $ob= !isset($options['o']);
 
-if (Router::visit($method,$url,$class,$tag,$ob,$admin,$json)){
-    echo 'created response:'.$class;
+if ($return=Router::visit($method,$url,$class,$tag,$ob,$admin,$json)){
+    echo 'created response:'.$class ."\r\n";
+    echo 'class file at :' ."\033[34mAPP_DIR/" . Storage::cut($return['class'],APP_DIR)."\033[0m\r\n";
+    if (isset( $return['template'])){
+        echo 'template file at :'."\033[34mAPP_DIR/" . Storage::cut($return['template'],APP_DIR)."\033[0m\r\n";
+    }
 }else{
     echo 'something error';
 }
