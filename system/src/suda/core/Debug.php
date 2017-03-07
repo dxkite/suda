@@ -54,6 +54,7 @@ class Debug
         $loginfo['msg']=$message;
         $loginfo['level']=$level;
         $loginfo['time']=microtime(true)-D_START;
+        $loginfo['mem']=memory_get_usage() - D_MEM;
         if (isset(self::$count[$level])) {
             self::$count[$level]++ ;
         } else {
@@ -186,7 +187,7 @@ class Debug
 
         $str=Hook::execTail("system:debug:printf");
         foreach (self::$log as $log) {
-            $str.="\t[".number_format($log['time'],10).']'."\t".$log['level'].'>In '.$log['file'].'#'.$log['line']."\t\t".$log['title']."\t".$log['msg']."\r\n";
+            $str.="\t[".number_format($log['time'],10).':'.$log['mem'].']'."\t".$log['level'].'>In '.$log['file'].'#'.$log['line']."\t\t".$log['title']."\t".$log['msg']."\r\n";
         }
 
         return file_put_contents(LOG_DIR.'/'.$file, $str, FILE_APPEND);
