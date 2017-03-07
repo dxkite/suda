@@ -33,11 +33,8 @@
 
 3. 访问网站
 
-
-
-## [文档参考](docs/)
-
-[开始使用](docs/start.md)
+## 文档
+[文档参考](docs/readme.md)
 [路由使用](docs/tools/router.md)
 
 
