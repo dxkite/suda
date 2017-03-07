@@ -22,15 +22,17 @@ class Debug
     protected static $max = 2097152; // 2M
     protected static $time=[];
     protected static $timer=[];
-    public static function time(string $name){
+    public static function time(string $name)
+    {
         self::$time[$name]=microtime(true);
     }
-    public static function timeEnd(string $name){
-        if (isset(self::$time[$name])){
+    public static function timeEnd(string $name)
+    {
+        if (isset(self::$time[$name])) {
             $pass=microtime(true)-self::$time[$name];
             $timer[$name]=$pass;
         }
-        self::log('use '. number_format($pass,10).' s', $name , self::T,1);
+        self::log('use '. number_format($pass, 10).' s', $name, self::T, 1);
     }
     protected static function log(string $message, string $title='Log title', $level = self::E, int $offset_start=0, int $offset_end=0)
     {
@@ -133,22 +135,28 @@ class Debug
                 print "\033[36m$trace_info\033[0m\r\n";
             }
         } else {
-
             $render=new class extends Response {
                 protected $values;
                 protected $tpl;
-                public function set(array $values){
+                public function set(array $values)
+                {
                     $this->values=$values;
                 }
-                public function tpl(string $tpl){
+                public function tpl(string $tpl)
+                {
                     $this->tpl=$tpl;
                 }
-                public function onRequest(Request $request){
+                public function onRequest(Request $request)
+                {
                     $this->state(500);
-                    $this->displayFile($this->tpl,$this->values);
+                    $this->displayFile($this->tpl, $this->values);
                 }
-                public  function onPreTest($test_data):bool {}
-                public  function onPreTestError($test_data){}
+                public  function onPreTest($test_data):bool
+                {
+                }
+                public  function onPreTestError($test_data)
+                {
+                }
             };
             $render->tpl(SYS_RES.'/tpl/error.tpl');
             $render->set([
@@ -187,7 +195,7 @@ class Debug
 
         $str=Hook::execTail("system:debug:printf");
         foreach (self::$log as $log) {
-            $str.="\t[".number_format($log['time'],10).':'.$log['mem'].']'."\t".$log['level'].'>In '.$log['file'].'#'.$log['line']."\t\t".$log['title']."\t".$log['msg']."\r\n";
+            $str.="\t[".number_format($log['time'], 10).':'.$log['mem'].']'."\t".$log['level'].'>In '.$log['file'].'#'.$log['line']."\t\t".$log['title']."\t".$log['msg']."\r\n";
         }
 
         return file_put_contents(LOG_DIR.'/'.$file, $str, FILE_APPEND);
@@ -221,9 +229,9 @@ class Debug
 
     public static function phpShutdown()
     {
-        if (Config::get('debug')) {
+        // if (Config::get('debug')) {
             self::save();
-        }
+        // }
     }
 
     public static function __callStatic($method, $args)
@@ -260,3 +268,4 @@ class Debug
         self::aliasMethod($method, $args);
     }
 }
+
