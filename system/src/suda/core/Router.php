@@ -174,6 +174,7 @@ class Router
                 '__param_mark__',
                 '__param_array__',
                 '__methods__',
+                '__parent__'
             ],
             [
                 $class_namespace,
@@ -187,6 +188,7 @@ class Router
                 $params_mark,
                 $value_get,
                 count($method)>0?implode(',', $method):'all',
+                conf('app.response','suda\\core\\Response'),
             ], $class_template);
         $template=Storage::get(SYS_RES.'/view_template.html');
         $template=str_replace('__create_url__', $url, $template);

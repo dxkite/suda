@@ -18,7 +18,7 @@ use suda\core\Session;
 * @url: __create_url__
 * @param: __param_mark__
 */
-class __class_name__ extends \suda\core\Response
+class __class_name__ extends \__parent__
 {
     public function onRequest(Request $request)
     {
