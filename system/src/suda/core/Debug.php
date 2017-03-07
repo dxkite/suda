@@ -20,9 +20,18 @@ class Debug
     protected static $log=[];
     protected static $count=[];
     protected static $max = 2097152; // 2M
-
-
-
+    protected static $time=[];
+    protected static $timer=[];
+    public static function time(string $name){
+        self::$time[$name]=microtime(true);
+    }
+    public static function timeEnd(string $name){
+        if (isset(self::$time[$name])){
+            $pass=microtime(true)-self::$time[$name];
+            $timer[$name]=$pass;
+        }
+        self::log('use '. number_format($pass,10).' s', $name , self::T,1);
+    }
     protected static function log(string $message, string $title='Log title', $level = self::E, int $offset_start=0, int $offset_end=0)
     {
         if (in_array(strtolower($level), ['debug', 'trace', 'info', 'notice', 'warning', 'error'])) {
@@ -44,6 +53,7 @@ class Debug
         $loginfo['title']=$title;
         $loginfo['msg']=$message;
         $loginfo['level']=$level;
+        $loginfo['time']=microtime(true)-D_START;
         if (isset(self::$count[$level])) {
             self::$count[$level]++ ;
         } else {
@@ -176,7 +186,7 @@ class Debug
 
         $str=Hook::execTail("system:debug:printf");
         foreach (self::$log as $log) {
-            $str.="\t\\-".$log['level'].'>In '.$log['file'].'#'.$log['line']."\t\t".$log['title']."\t".$log['msg']."\r\n";
+            $str.="\t[".number_format($log['time'],10).']'."\t".$log['level'].'>In '.$log['file'].'#'.$log['line']."\t\t".$log['title']."\t".$log['msg']."\r\n";
         }
 
         return file_put_contents(LOG_DIR.'/'.$file, $str, FILE_APPEND);

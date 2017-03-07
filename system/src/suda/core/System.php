@@ -8,7 +8,7 @@ defined('SYS_DIR') or define('SYS_DIR', dirname(dirname(dirname(__DIR__))));
 defined('SYS_RES') or define('SYS_RES', SYS_DIR.'/resource');
 
 require_once __DIR__.'/func.php';  
-
+_D()->time('Load System');
 class System
 {
     public static function init()
@@ -38,3 +38,4 @@ class System
         }
     }
 }
+_D()->timeEnd('Load System');
