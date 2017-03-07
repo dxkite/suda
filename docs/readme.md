@@ -9,7 +9,9 @@
     - [Request类](core/request.md)
     - [Response类](core/response.md)
     - [Storage类](core/storage.md)
-    
+    - [Query类](core/query.md)
+
+
 - [使用工具](tools)
     - [路由命令使用](tools/router.md)
     - [模板教程](tools/template.md)
