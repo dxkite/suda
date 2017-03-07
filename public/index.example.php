@@ -6,5 +6,5 @@
     // 当系统和应用处在同一目录下时，请保证APP_DIR的一致性
     define('APP_DIR',__DIR__.'/../app');
     // 系统所在目录
-    define('SYSTEM',__DIR__.'/../system/');
+    define('SYSTEM',"Clone下来的项目/system目录");
     require_once SYSTEM.'/suda.php';
