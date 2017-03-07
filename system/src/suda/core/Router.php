@@ -188,7 +188,7 @@ class Router
                 $params_mark,
                 $value_get,
                 count($method)>0?implode(',', $method):'all',
-                conf('app.response','suda\\core\\Response'),
+                conf('app.response', 'suda\\core\\Response'),
             ], $class_template);
         $template=Storage::get(SYS_RES.'/view_template.html');
         $template=str_replace('__create_url__', $url, $template);
@@ -325,8 +325,13 @@ class Router
 
     public static function error404()
     {
-        $render=new Response;
-        $render->state(404);
-        $render->display('suda:error404', ['path'=>Request::url()]);
+        $render=new class extends Response {
+            public   function onRequest(Request $request)
+            {
+                $this->state(404);
+                $this->display('suda:error404', ['path'=>$request->url()]);
+            }
+        };
+        $render->onRequest(Request::getInstance());
     }
 }

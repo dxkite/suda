@@ -122,10 +122,25 @@ class Debug
                 print "\033[36m$trace_info\033[0m\r\n";
             }
         } else {
-            $render=new Response;
-            $render->state(500);
-            $render->type('html');
-            $render->displayFile(SYS_RES.'/tpl/error.tpl', [
+
+            $render=new class extends Response {
+                protected $values;
+                protected $tpl;
+                public function set(array $values){
+                    $this->values=$values;
+                }
+                public function tpl(string $tpl){
+                    $this->tpl=$tpl;
+                }
+                public function onRequest(Request $request){
+                    $this->state(500);
+                    $this->displayFile($this->tpl,$this->values);
+                }
+                public  function onPreTest($test_data):bool {}
+                public  function onPreTestError($test_data){}
+            };
+            $render->tpl(SYS_RES.'/tpl/error.tpl');
+            $render->set([
                 'erron'=>$erron,
                 'error'=>$error,
                 'file'=>$file,
@@ -135,6 +150,7 @@ class Debug
                 'pos_num'=>$pos_num,
                 'traces'=>$traces,
             ]);
+            $render->onRequest(Request::getInstance());
         }
         $loginfo['file']=$file;
         $loginfo['line']=$line;

@@ -8,7 +8,7 @@ use suda\template\Manager;
 // TODO: Access-Control
 
 
-class Response
+abstract class Response
 {
     // 状态输出
     private static $status = array(
@@ -59,12 +59,11 @@ class Response
     private $type='html';
     private static $instance=null;
     private static $mime;
-    public function __construct(){
+    public function __construct()
+    {
         self::mark();
     }
-    public function onRequest(Request $request)
-    {
-    }
+    abstract public function onRequest(Request $request);
     public function onPreTest($test_data):bool
     {
         return true;
@@ -121,8 +120,8 @@ class Response
         echo $this->content;
     }
 
-    public static function time(int $time){
-
+    public static function time(int $time)
+    {
     }
     public function displayFile(string $path, array $values=[])
     {
@@ -140,12 +139,12 @@ class Response
     }
     public static function etag(string $etag)
     {
-        if (conf('app.etag',true)) {
+        if (conf('app.etag', true)) {
             header('Etag:'.$etag);
             $request=Request::getInstance();
             if ($str=$request->getHeader('If-None-Match')) {
                 if (strcasecmp($etag, $str)===0) {
-                    _D()->d('Etag:'.$etag, 'Response 304');
+                    // _D()->d('Etag:'.$etag, 'Response 304');
                     self::state(304);
                     self::close();
                     // 直接结束访问
@@ -154,10 +153,12 @@ class Response
             }
         }
     }
-    protected static function mark(){
-        header('X-Framework: '.conf('app.name','suda').'-'.Application::getActiveModule().'/'.conf('app.version'));
+    protected static function mark()
+    {
+        header('X-Framework: '.conf('app.name', 'suda').'-'.Application::getActiveModule().'/'.conf('app.version'));
     }
-    public static function close() {
+    public static function close()
+    {
         header('Connection: close');
     }
     public static function obStart()
