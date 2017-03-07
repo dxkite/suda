@@ -196,7 +196,7 @@ class Router
         Storage::path($class_path);
         Storage::put($class_file, $class_template);
         
-        if (!$json &&  !$ob) {
+        if (!$json ||  !$ob) {
             // 写入模板
             Storage::path(dirname($template_file));
             Storage::put($template_file, $template);
