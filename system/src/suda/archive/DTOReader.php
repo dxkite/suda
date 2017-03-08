@@ -73,6 +73,7 @@ class DTOReader
         $create=[];
         $sets=[];
         foreach ($this->fields as $name => $type) {
+            $type=strtoupper($type);
             $auto=isset($this->sets[$name]['auto'])?'AUTO_INCREMENT':'';
             $null=isset($this->sets[$name]['null'])?'NULL':'NOT NULL';
             $comment=isset($this->sets[$name]['comment'])?('COMMENT \''.$this->sets[$name]['comment'].'\''):'';
