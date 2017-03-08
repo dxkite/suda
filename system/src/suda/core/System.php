@@ -7,14 +7,14 @@ defined('ROOT_PATH') or define('ROOT_PATH', dirname(dirname(dirname(dirname(__DI
 defined('SYS_DIR') or define('SYS_DIR', dirname(dirname(dirname(__DIR__))));
 defined('SYS_RES') or define('SYS_RES', SYS_DIR.'/resource');
 
-require_once __DIR__.'/func.php'; 
+require_once __DIR__.'/func.php';
 
-if (Config::get('debug')) {
+if (defined("DEBUG") && DEBUG) {
     require_once __DIR__.'/Debug.php';
-} else{
+} else {
     require_once __DIR__.'/Debug.empty.php';
 }
-_D()->time('Load System');
+
 class System
 {
     public static function init()
@@ -44,4 +44,3 @@ class System
         }
     }
 }
-_D()->timeEnd('Load System');

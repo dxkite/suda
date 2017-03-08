@@ -229,9 +229,7 @@ class Debug
 
     public static function phpShutdown()
     {
-        // if (Config::get('debug')) {
-            self::save();
-        // }
+        self::save();
     }
 
     public static function __callStatic($method, $args)

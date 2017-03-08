@@ -7,4 +7,5 @@
     define('APP_DIR',__DIR__.'/../app');
     // 系统所在目录
     define('SYSTEM',__DIR__.'/../system/');
+    define('DEBUG',true);
     require_once SYSTEM.'/suda.php';

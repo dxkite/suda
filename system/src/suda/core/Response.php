@@ -92,6 +92,7 @@ abstract class Response
     }
     public function json($values)
     {
+        _D()->I('Log Json:'.json_encode($values));
         self::mark();
         self::obEnd();
         $jsonstr=json_encode($values);
@@ -139,7 +140,7 @@ abstract class Response
     }
     public static function etag(string $etag)
     {
-        if (conf('app.etag', true)) {
+        if (conf('app.etag',conf('debug'))) {
             header('Etag:'.$etag);
             $request=Request::getInstance();
             if ($str=$request->getHeader('If-None-Match')) {
