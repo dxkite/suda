@@ -77,6 +77,7 @@ return true;
 } 
 catch (Exception $e)
 {
+    echo "\t{$e->getLine()}:\033[31m{$e->getMessage()}\033[0m\n";
     Query::rollBack();
    return false;
 }
@@ -143,6 +144,7 @@ queryCreateTable;
         $table=preg_replace('/^'.\Config::get('database.prefix').'/', '', $table);
         $sql=addslashes($sql);
         $insert=<<< queryInsertTable
+        (new Query('TRUNCATE #{{$table}}'))->exec();
         \$effect=(\$query_{$table}_insert=new Query('$sql'))->exec();
         if (\$query_{$table}_insert->erron()==0){
             echo 'Insert Table:'.\Config::get('database.prefix').'{$table} Data Ok!,effect '.\$effect.' rows'."\\r\\n";

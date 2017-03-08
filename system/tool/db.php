@@ -108,12 +108,12 @@ function generate() {
     compileAll();
 
     $params=getopt('r:o:s:p:m:');
-    $module=isset($params['m'])?$params['m']:'';
+    $module=isset($params['m'])?$params['m']:'application';
     $src=isset($params['r'])?$params['r']: $module?MODULES_DIR.'/'.$module.'/resource/dto':DATA_DIR.'/dto';
     if (!is_dir($src)){
         echo 'no such dir:'.$src;
     }
-    $path=$module?MODULES_DIR.'/'.$module.'/resource/':DATA_DIR;
+    $path=isset($params['m'])?MODULES_DIR.'/'.$params['m'].'/resource/':DATA_DIR;
     Storage::path($path);
     $dist=isset($params['o'])?$params['o']: $path.'/db';
     $outsql=isset($params['s'])?$params['s']: $path.'/'.$module.'_creator.sql';
@@ -143,8 +143,9 @@ Table;
     } 
     catch (Exception $e)
     {
+        echo "\t{$e->getLine()}:\033[31m{$e->getMessage()}\033[0m\n";
         Query::rollBack();
-    return false;
+        return false;
     }
 End;
     file_put_contents($outsql, '-- create:'.date('Y-m-d H:i:s')."\r\n");
