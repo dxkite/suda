@@ -113,7 +113,8 @@ function generate() {
     if (!is_dir($src)){
         echo 'no such dir:'.$src;
     }
-    $path=isset($params['m'])?MODULES_DIR.'/'.$params['m'].'/resource/':DATA_DIR;
+    $path=isset($params['m'])?MODULES_DIR.'/'.$params['m'].'/resource':DATA_DIR;
+    echo 'export to '.$path."\r\n";
     Storage::path($path);
     $dist=isset($params['o'])?$params['o']: $path.'/db';
     $outsql=isset($params['s'])?$params['s']: $path.'/'.$module.'_creator.sql';
@@ -148,6 +149,7 @@ Table;
         return false;
     }
 End;
+    
     file_put_contents($outsql, '-- create:'.date('Y-m-d H:i:s')."\r\n");
     file_put_contents($querysql, '<?php  /* create:'.date('Y-m-d H:i:s')."*/\r\n".$head);
 
@@ -176,6 +178,8 @@ End;
         file_put_contents($querysql, "\r\n".$query."\r\n\r\n", FILE_APPEND);
     }
     file_put_contents($querysql, $end, FILE_APPEND);
+    echo 'output sql  file: '.$outsql."\r\n";
+    echo 'output file: '.$querysql."\r\n";
 }
 
 if (isset($options['g'])){
