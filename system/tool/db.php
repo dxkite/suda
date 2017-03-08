@@ -1,14 +1,14 @@
 <?php
 // 获取选项
-$options=getopt('i::b::k:f:g::h::',['struct::']);
-/** 
+$options=getopt('i::b::k:f:g::h::', ['struct::']);
+/**
 -b 备份
 -k 选择性导出
 -i 导出安装sql
 -f 导入文件
 */
-if (isset($options['h']) || count($options)===0){
-$help=<<<'help'
+if (isset($options['h']) || count($options)===0) {
+    $help=<<<'help'
 
 Usage: db -bkifgrosp 
 
@@ -43,9 +43,11 @@ if ($backup) {
     $struct=isset($options['struct']);
     Storage::path(DATA_DIR.'/backup');
     $time=date('Y_m_d_H_i_s');
-    Database::export(DATA_DIR.'/backup/backup_'.$time.'.php', [],$struct);
-    Database::exportSQL(DATA_DIR.'/backup/backup_'.$time.'.sql', [],$struct);
+    Database::export($querysql=DATA_DIR.'/backup/backup_'.$time.'.php', [], $struct);
+    Database::exportSQL($outsql=DATA_DIR.'/backup/backup_'.$time.'.sql', [], $struct);
     echo 'backup to '.DATA_DIR.'/backup/'."\r\n";
+    echo 'output sql  file: '.$outsql."\r\n";
+    echo 'output file: '.$querysql."\r\n";
 }
 
 if (isset($options['i'])) {
@@ -55,14 +57,16 @@ if (isset($options['i'])) {
     Database::exportSQL($bksql=TEMP_DIR.'/database/install_temp.sql', $keep);
     $php=Storage::get($bkphp);
     $php=preg_replace('/AUTO_INCREMENT=\d+/', 'AUTO_INCREMENT=0', $php);
-    Storage::put(DATA_DIR.'/install.php', $php);
+    Storage::put($querysql=DATA_DIR.'/install.php', $php);
     $sql=Storage::get($bksql);
     $sql=preg_replace('/AUTO_INCREMENT=\d+/', 'AUTO_INCREMENT=0', $sql);
-    Storage::put(DATA_DIR.'/install.sql', $sql);
+    Storage::put($outsql=DATA_DIR.'/install.sql', $sql);
+    echo 'output sql  file: '.$outsql."\r\n";
+    echo 'output file: '.$querysql."\r\n";
     echo 'created install database file'."\r\n";
 }
 
-if (isset($options['f'])){
+if (isset($options['f'])) {
     print 'import file>'.$options['f']."\r\n";
     Database::import($options['f']);
 }
@@ -86,11 +90,10 @@ function tablename($namespace, $name)
     if ($namespace==='.') {
         return $name;
     }
-    if (preg_match('/'.preg_quote(DIRECTORY_SEPARATOR.$name).'$/i',$namespace)){
-        $namespace=preg_replace('/'.preg_quote(DIRECTORY_SEPARATOR.$name).'$/i','',$namespace);
+    if (preg_match('/'.preg_quote(DIRECTORY_SEPARATOR.$name).'$/i', $namespace)) {
+        $namespace=preg_replace('/'.preg_quote(DIRECTORY_SEPARATOR.$name).'$/i', '', $namespace);
     }
     return ($name===$namespace?$name:preg_replace_callback('/(\\\\|[A-Z])/', function ($match) {
-
         if ($match[0]==='\\') {
             return '_';
         } else {
@@ -104,13 +107,14 @@ function queryCreateSQL(string $sql)
     return preg_replace('/CREATE TABLE `(.+?)` /', 'CREATE TABLE `#{$1}` ', $sql);
 }
 
-function generate() {
+function generate()
+{
     compileAll();
 
     $params=getopt('r:o:s:p:m:');
     $module=isset($params['m'])?$params['m']:'application';
     $src=isset($params['r'])?$params['r']: $module?MODULES_DIR.'/'.$module.'/resource/dto':DATA_DIR.'/dto';
-    if (!is_dir($src)){
+    if (!is_dir($src)) {
         echo 'no such dir:'.$src;
     }
     $path=isset($params['m'])?MODULES_DIR.'/'.$params['m'].'/resource':DATA_DIR;
@@ -182,6 +186,6 @@ End;
     echo 'output file: '.$querysql."\r\n";
 }
 
-if (isset($options['g'])){
+if (isset($options['g'])) {
     generate();
 }
