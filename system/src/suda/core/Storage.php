@@ -23,7 +23,10 @@ class Storage
         self::mkdirs($path);
         return realpath($path);
     }
-
+    public static function abspath(string $path)
+    {
+        return realpath($path);
+    }
     public static function readDirFiles(string $dirs,  bool $repeat=false, string $preg='/^.+$/', bool $cut=false):array
     {
         $file_totu=[];
@@ -54,7 +57,7 @@ class Storage
     }
     public static function cut(string $path, string $basepath=ROOT_PATH)
     {
-        return trim(preg_replace('/[\\\\\\/]+/', DIRECTORY_SEPARATOR, preg_replace('/^'.preg_quote($basepath, '/').'/', '', $path)),'\\/');
+        return trim(preg_replace('/[\\\\\\/]+/', DIRECTORY_SEPARATOR, preg_replace('/^'.preg_quote($basepath, '/').'/', '', $path)), '\\/');
     }
     public static function readDirs(string $dirs, bool $repeat=false, string $preg='/^.+$/'):array
     {
@@ -106,11 +109,10 @@ class Storage
         $hd=opendir($src);
         while ($read=readdir($hd)) {
             if (strcmp($read, '.') !== 0 && strcmp($read, '..') !==0) {
-                if (self::isDir($src.'/'.$read) ) {
-                    self::copydir($src.'/'.$read,$dest.'/'.$read);
-                }
-                else{
-                    self::copy($src.'/'.$read,$dest.'/'.$read);
+                if (self::isDir($src.'/'.$read)) {
+                    self::copydir($src.'/'.$read, $dest.'/'.$read);
+                } else {
+                    self::copy($src.'/'.$read, $dest.'/'.$read);
                 }
             }
         }
