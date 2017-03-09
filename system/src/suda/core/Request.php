@@ -143,6 +143,7 @@ final class Request
 
     protected static function parseServer()
     {
+        $index=pathinfo(get_included_files()[0],PATHINFO_BASENAME);
         // 预处理
         //  /?/xxxxx
         //  /index.php/xxx
@@ -156,8 +157,8 @@ final class Request
                     parse_str($match[3], $_GET);
                 }
                 self::$url=$match[2];
-            } elseif (preg_match('/^(.*)\/index.php\??\//', $_SERVER['REQUEST_URI'])) {
-                $preg='/(.*)\/index.php(\/[^?]*)?$/';
+            } elseif (preg_match('/^(.*)\/'.$index.'(\??\/)?/', $_SERVER['REQUEST_URI'])) {
+                $preg='/(.*)\/'.$index.'(\/[^?]*)?$/';
                 preg_match($preg, $_SERVER['PHP_SELF'], $match);
                 self::$url=isset($match[2])?$match[2]:'/';
             } else {
