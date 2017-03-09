@@ -8,6 +8,7 @@ final class Request
 {
     private static $get=null;
     private static $post=null;
+    private static $files=null;
     private static $url;
     private static $request=null;
 
@@ -72,7 +73,14 @@ final class Request
             return self::$post;
         }
     }
-
+    public static function files(string $name='')
+    {
+        if ($name) {
+            return self::$files->$name;
+        } else {
+            return self::$files;
+        }
+    }
     public static function ip()
     {
         if (getenv('HTTP_CLIENT_IP')) {
@@ -173,6 +181,9 @@ final class Request
         }
         if (is_null(self::$get)) {
             self::$get=new Value($_GET);
+        }
+        if (is_null(self::$files)) {
+            self::$files=new Value($_FILES);
         }
     }
 }

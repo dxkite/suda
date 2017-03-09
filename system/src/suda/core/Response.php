@@ -102,10 +102,19 @@ abstract class Response
         self::type('json');
         Hook::exec('display:output', [&$jsonstr, $this->type]);
         Header('Content-Length:'.strlen($jsonstr));
-        self::etag(md5($jsonstr));
+        self::_etag(md5($jsonstr));
         echo $jsonstr;
     }
 
+    public function file(string $path,string $type,int $size)
+    {
+        $hash=md5_file($path);
+        $this->etag($hash);
+        $this->type($type);
+        Header('Content-Length:'.$size);
+        echo file_get_contents($path);
+    }
+    
     public function display(string $template, array $values=[])
     {
         self::mark();
@@ -117,7 +126,7 @@ abstract class Response
         $this->content.=ob_get_clean();
         Hook::exec('display:output', [&$this->content, $this->type]);
         Header('Content-Length:'.strlen($this->content));
-        self::etag(md5($this->content));
+        self::_etag(md5($this->content));
         echo $this->content;
     }
 
@@ -135,23 +144,27 @@ abstract class Response
         $this->content.=ob_get_clean();
         Hook::exec('display:output', [&$this->content, $this->type]);
         Header('Content-Length:'.strlen($this->content));
-        self::etag(md5($this->content));
+        self::_etag(md5($this->content));
         echo $this->content;
     }
     public static function etag(string $etag)
     {
-        if (conf('app.etag',conf('debug'))) {
-            header('Etag:'.$etag);
-            $request=Request::getInstance();
-            if ($str=$request->getHeader('If-None-Match')) {
-                if (strcasecmp($etag, $str)===0) {
-                    // _D()->d('Etag:'.$etag, 'Response 304');
+        header('Etag:'.$etag);
+        $request=Request::getInstance();
+        if ($str=$request->getHeader('If-None-Match')) {
+            if (strcasecmp($etag, $str)===0) {
+                // _D()->d('Etag:'.$etag, 'Response 304');
                     self::state(304);
-                    self::close();
+                self::close();
                     // 直接结束访问
                     exit(0);
-                }
             }
+        }
+    }
+    protected static function _etag(string $etag)
+    {
+        if (conf('app.etag', conf('debug'))) {
+            self::etag($etag);
         }
     }
     protected static function mark()
