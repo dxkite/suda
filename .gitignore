@@ -3,3 +3,4 @@ new
 public/new.php
 public/hello/new.php
 public/phpinfo.php
+app/resource/config/config.json

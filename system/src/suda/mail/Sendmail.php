@@ -96,7 +96,6 @@ class Sendmail implements Mailer
         $header='MIME-Version: 1.0' . "\r\n";
         $header.='Content-Type:'.mime($this->type)."\r\n";
         $header.=self::parseFrom();
-        //$header.='To: '.self::parseTo()."\r\n";
         $header.='X-Mailer: DxSite/'.conf("app.verison",'dev')."\r\n";
         return $header;
     }

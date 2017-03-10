@@ -2,7 +2,9 @@
 
 
 
-
+function mime(string $type){
+    return suda\core\Response::mime($type);
+}
 // 语言翻译
 function _T(string $message){
     return call_user_func_array('suda\template\Language::trans',func_get_args());
