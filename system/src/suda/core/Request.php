@@ -187,4 +187,11 @@ final class Request
             self::$files=new Value($_FILES);
         }
     }
+    public function baseUrl(){
+        $script=$_SERVER['SCRIPT_NAME'];
+        if (ltrim($script,'/')===conf('app.index','index.php')){
+            return DIRECTORY_SEPARATOR ===  '/' ? '/':'/?/';
+        }
+        return $script.'?/';
+    }
 }

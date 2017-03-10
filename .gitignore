@@ -1,3 +1,5 @@
 app
 new
 public/new.php
+public/hello/new.php
+public/phpinfo.php

@@ -274,9 +274,10 @@ class Router
 
     public function buildUrl(string $name, array $values=[])
     {
-        $url=DIRECTORY_SEPARATOR === '/'?'/':'/?/';
+        $url= '';
         if (isset($this->routers[$name])) {
-            $url=preg_replace('/[?|]/', '', $this->routers[$name]['visit']);
+            // 路由存在
+            $url.=preg_replace('/[?|]/', '\\\1', $this->routers[$name]['visit']);
             $url=preg_replace_callback('/\{(?:(\w+)(?::(\w+))?)\}/', function ($match) use ($name, & $values) {
                 $param_name=$match[1];
                 $param_type=isset($match[2])?$match[2]:'url';
@@ -297,7 +298,7 @@ class Router
         if (count($values)) {
             return $url.'?'.http_build_query($values, 'v', '&', PHP_QUERY_RFC3986);
         }
-        return $url;
+        return Request::getInstance()->baseUrl(). ltrim($url,'/');
     }
 
 
