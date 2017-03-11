@@ -1,6 +1,8 @@
 <?php
 namespace suda\mail;
+
 use suda\template\Manager;
+
 class Smtp implements Mailer
 {
     // 发送至
@@ -27,8 +29,8 @@ class Smtp implements Mailer
     private $passwd;
     private $sock=null;
     private $timeout;
-
-    public function __construct(string $host, int $port = 25, int $timeout=30, bool $auth = false, string $user, string $pass)
+    private $log;
+    public function __construct(string $host=null, int $port = 25, int $timeout=30, bool $auth = false, string $user, string $pass)
     {
         $this->port = $port;
         $this->host = $host;
@@ -86,6 +88,9 @@ class Smtp implements Mailer
     {
         return $this->errstr;
     }
+    public function log(){
+        return $this->log;
+    }
     // 发送邮件
     public function send(array $value_map=[])
     {
@@ -97,16 +102,14 @@ class Smtp implements Mailer
         $return=true;
         // 对每个邮箱
         foreach ($this->to as $email) {
-            if (!$this->smtpSockopen()) {
-                $this->errstr.='Error: Cannot send email to '.$email."\n";
-                $this->errno=11;
+            if (!$this->smtpSockopen($email)) {
+                $this->setError(11, 'Cannot send email to '.$email);
                 $return=false;
                 continue;
             }
             // 发送
             if (!$this->smtpSend($this->host, $this->from[0], $email, $header, $message)) {
-                $this->errstr.='Error: Cannot send email to '.$email."\n";
-                $this->errno=11;
+                $this->setError(11, 'Cannot send email to '.$email);
                 $return=false;
             }
 
@@ -168,57 +171,81 @@ class Smtp implements Mailer
     {
         // 验证链接
         if (!$this->stmpCmd("HELO", $helo)) {
-            $this->setError(2,'sending HELO command');
+            $this->setError(2, 'sending HELO command error');
             return false;
         }
         if ($this->auth) {
             if (!$this->stmpCmd("AUTH LOGIN", base64_encode($this->user))) {
-                $this->setError(3,'AUTH LOGIN command');
+                $this->setError(3, 'AUTH LOGIN command error');
                 return false;
             }
             if (!$this->stmpCmd(base64_encode($this->passwd))) {
-                $this->setError(4,'AUTH PASSWD command');
+                $this->setError(4, 'AUTH PASSWD command error');
                 return false;
             }
         }
         if (!$this->stmpCmd("MAIL", "FROM:<".$from.">")) {
-            $this->setError(5,'sending MAIL FROM command');
+            $this->setError(5, 'sending MAIL FROM command error');
             return false;
         }
         if (!$this->stmpCmd("RCPT", "TO:<".$to.">")) {
-            $this->setError(6,'sending RCPT TO command');
+            $this->setError(6, 'sending RCPT TO command error');
             return false;
         }
         if (!$this->stmpCmd("DATA")) {
-            $this->setError(7,'sending DATA command');
+            $this->setError(7, 'sending DATA command error');
             return false;
         }
         if (!$this->smtpMessage($header, $body)) {
-            $this->setError(8,'sending message');
+            $this->setError(8, 'sending message error');
             return false;
         }
         if (!$this->smtpEom()) {
-            $this->setError(9,'sending <CR><LF>.<CR><LF> [EOM]');
+            $this->setError(9, 'sending <CR><LF>.<CR><LF> [EOM] error');
             return false;
         }
         if (!$this->stmpCmd("QUIT")) {
-            $this->setError(10,'sending QUIT command');
+            $this->setError(10, 'sending QUIT command error');
             return false;
         }
         return true;
     }
 
-    private function smtpSockopen()
+    private function smtpSockopen(string $email)
     {
-        $this->sock = @fsockopen($this->host, $this->port, $errno, $errstr, $this->timeout);
-        if (!($this->sock && $this->smtpCheck())) {
-            $this->setError($errno,$errstr);
+        if ($this->host) {
+            $this->sock = @fsockopen($this->host, $this->port, $errno, $errstr, $this->timeout);
+            if (!($this->sock && $this->smtpCheck())) {
+                $this->setError($errno, $errstr);
+            }
+            return true;
+        } elseif ($sock=self::smtpSockopenMX($email)) {
+            $this->sock =$sock;
+            return true;
+        }
+        return  false;
+    }
+
+    private function smtpSockopenMX($email)
+    {
+        $domain = preg_replace('/^.+@([^@]+)$/', '\1', $email);
+        if (!@getmxrr($domain, $MXhosts)) {
+            $this->setError(13, 'cannot resolve MX '.$domain);
             return false;
         }
-        return true;
+        
+        foreach ($MXhosts as $host) {
+            $this->sock = @fsockopen($host, $this->port, $errno, $errstr, $this->timeout);
+            if (!($this->sock && $this->smtpCheck())) {
+                 $this->log($errno.'>'.$host.':'.$errstr);
+                continue;
+            }
+            $this->host=$host;
+            return $this->sock;
+        }
+        return false;
     }
-    // TODO: MX OPEN
-    // private function stmpOpenMX($domain){}
+
     private function smtpMessage($header, $body)
     {
         fputs($this->sock, $header."\r\n".$body);
@@ -243,21 +270,25 @@ class Smtp implements Mailer
     }
 
     // 检测命令
-    public function smtpCheck()
+    private function smtpCheck()
     {
         $response = str_replace("\r\n", "", fgets($this->sock, 512));
         if (!preg_match("/^[23]/", $response)) {
             fputs($this->sock, "QUIT\r\n");
             fgets($this->sock, 512);
-            $this->setError(1,'Remote host returned '.$response);
+            $this->_log('remote host returned '.$response);
             return false;
         }
         return true;
     }
-    private function setError(int $errno,string $errstr){
-        if (!$this->errno){
+    private function setError(int $errno, string $errstr)
+    {
+        if (!$this->errno) {
             $this->errno=$errno;
             $this->errstr=$errstr;
         }
+    }
+    private function _log(string $message){
+        $this->log[]=$message;
     }
 }

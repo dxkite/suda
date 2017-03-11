@@ -12,4 +12,5 @@ interface Mailer
     public function send(array $value_map=[]);
     public function errno();
     public function error();
+    public function log();
 }
