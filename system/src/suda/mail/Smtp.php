@@ -1,7 +1,6 @@
 <?php
-
 namespace suda\mail;
-
+use suda\template\Manager;
 class Smtp implements Mailer
 {
     // 发送至
@@ -134,7 +133,7 @@ class Smtp implements Mailer
         if ($this->subject) {
             $header.= 'Subject: '.$this->subject."\r\n";
         }
-        $header.='X-Mailer: Suda-App/'.conf("app.verison", 'dev')."\r\n";
+        $header.='X-Mailer: Suda-App/'.conf("app.name", 'suda').'-'.conf("app.verison", 'dev')."\r\n";
         list($msec, $sec) = explode(" ", microtime());
         $header .= "Message-ID: <".date("YmdHis", $sec).".".($msec*1000000).".".$this->from[0].">\r\n";
         return $header;
@@ -155,6 +154,12 @@ class Smtp implements Mailer
 
     private function renderBody()
     {
+        if ($this->use) {
+            $this->type='html';
+            ob_start();
+            Manager::display($this->use, $this->values);
+            $this->msg=ob_get_clean();
+        }
         return $this->msg;
     }
 
@@ -163,50 +168,41 @@ class Smtp implements Mailer
     {
         // 验证链接
         if (!$this->stmpCmd("HELO", $helo)) {
-            $this->errstr.="sending HELO command"."\n";
-            $this->errno=2;
+            $this->setError(2,'sending HELO command');
             return false;
         }
         if ($this->auth) {
             if (!$this->stmpCmd("AUTH LOGIN", base64_encode($this->user))) {
-                $this->errstr.="AUTH LOGIN command"."\n";
-                $this->errno=3;
+                $this->setError(3,'AUTH LOGIN command');
                 return false;
             }
             if (!$this->stmpCmd(base64_encode($this->passwd))) {
-                $this->errstr.="AUTH PASSWD command"."\n";
-                $this->errno=4;
+                $this->setError(4,'AUTH PASSWD command');
                 return false;
             }
         }
         if (!$this->stmpCmd("MAIL", "FROM:<".$from.">")) {
-            $this->errstr.="sending MAIL FROM command"."\n";
-            $this->errno=5;
+            $this->setError(5,'sending MAIL FROM command');
             return false;
         }
         if (!$this->stmpCmd("RCPT", "TO:<".$to.">")) {
-            $this->errstr.="sending RCPT TO command"."\n";
-            $this->errno=6;
+            $this->setError(6,'sending RCPT TO command');
             return false;
         }
         if (!$this->stmpCmd("DATA")) {
-            $this->errstr.="sending DATA command"."\n";
-            $this->errno=7;
+            $this->setError(7,'sending DATA command');
             return false;
         }
         if (!$this->smtpMessage($header, $body)) {
-            $this->errstr.="sending message"."\n";
-            $this->errno=8;
+            $this->setError(8,'sending message');
             return false;
         }
         if (!$this->smtpEom()) {
-            $this->errstr.="sending <CR><LF>.<CR><LF> [EOM]"."\n";
-            $this->errno=9;
+            $this->setError(9,'sending <CR><LF>.<CR><LF> [EOM]');
             return false;
         }
         if (!$this->stmpCmd("QUIT")) {
-            $this->errstr.="sending QUIT command"."\n";
-            $this->errno=10;
+            $this->setError(10,'sending QUIT command');
             return false;
         }
         return true;
@@ -216,8 +212,7 @@ class Smtp implements Mailer
     {
         $this->sock = @fsockopen($this->host, $this->port, $errno, $errstr, $this->timeout);
         if (!($this->sock && $this->smtpCheck())) {
-            $this->errno=$errno;
-            $this->errstr.=$errstr;
+            $this->setError($errno,$errstr);
             return false;
         }
         return true;
@@ -254,10 +249,15 @@ class Smtp implements Mailer
         if (!preg_match("/^[23]/", $response)) {
             fputs($this->sock, "QUIT\r\n");
             fgets($this->sock, 512);
-            $this->errstr.= 'Remote host returned '.$response."\n";
-            $this->erron=1;
+            $this->setError(1,'Remote host returned '.$response);
             return false;
         }
         return true;
+    }
+    private function setError(int $errno,string $errstr){
+        if (!$this->errno){
+            $this->errno=$errno;
+            $this->errstr=$errstr;
+        }
     }
 }

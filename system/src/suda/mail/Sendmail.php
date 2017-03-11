@@ -1,6 +1,6 @@
 <?php
 namespace suda\mail;
-
+use suda\template\Manager;
 class Sendmail implements Mailer
 {
     // 发送至
@@ -96,7 +96,7 @@ class Sendmail implements Mailer
         $header='MIME-Version: 1.0' . "\r\n";
         $header.='Content-Type:'.mime($this->type)."\r\n";
         $header.=self::parseFrom();
-        $header.='X-Mailer: DxSite/'.conf("app.verison",'dev')."\r\n";
+        $header.='X-Mailer: Suda-App/'.conf("app.name", 'suda').'-'.conf("app.verison", 'dev')."\r\n";
         return $header;
     }
 
@@ -122,13 +122,11 @@ class Sendmail implements Mailer
     private function renderBody()
     {
         if ($this->use) {
-            
-            $file=Manager::viewPath('__mail__/'.$this->use);
+            $this->type='html';
             ob_start();
-            $_Mail=new Core\Value($this->values);
-            require $file;
-            $this->message=ob_get_clean();
+            Manager::display($this->use,$this->values);
+            $this->msg=ob_get_clean();
         }
-        return $this->message;
+        return $this->msg;
     }
 }

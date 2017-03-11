@@ -134,8 +134,11 @@ class Manager
     */
     protected static function _display(string $name, string $viewpath, array $values)
     {
-        if (Config::get('debug')) {
-            self::compile($name);
+        if (Config::get('debug', true)) {
+            if (!self::compile($name)) {
+                echo '<b>compile error: '.$name.':missing raw template </b>';
+                return;
+            }
         } elseif (!Storage::exist($viewpath)) {
             if (!self::compile($name)) {
                 echo '<b>missing '.$name.'</b>';
@@ -143,10 +146,11 @@ class Manager
             }
         }
         
-        self::displayFile($viewpath,$values);
+        self::displayFile($viewpath, $values);
     }
 
-    public static function displayFile(string $file,array $values=[]){
+    public static function displayFile(string $file, array $values=[])
+    {
         $v=new Value($values);
         require $file;
     }
