@@ -188,10 +188,16 @@ final class Request
         }
     }
     public function baseUrl(){
+        $scheme=isset($_SERVER['REQUEST_SCHEME'])?$_SERVER['REQUEST_SCHEME']:'//';
+        $host=isset($_SERVER['HTTP_HOST'])?$_SERVER['HTTP_HOST']:'';
+        $base='';
         $script=$_SERVER['SCRIPT_NAME'];
-        if (ltrim($script,'/')===conf('app.index','index.php')){
-            return DIRECTORY_SEPARATOR ===  '/' ? '/':'/?/';
+        if ($host){
+            $base=$scheme.'://'.$host;   
         }
-        return $script.'?/';
+        if (ltrim($script,'/')===conf('app.index','index.php')){
+            return $base. (DIRECTORY_SEPARATOR ===  '/' ? '/':'/?/') ;
+        }
+        return $base. $script.'?/';
     }
 }
