@@ -11,7 +11,50 @@ final class Request
     private static $files=null;
     private static $url;
     private static $request=null;
-
+    private static $crawlers=[
+            'TencentTraveler', 
+            'Baiduspider+', 
+            'BaiduGame', 
+            'Googlebot', 
+            'Baiduspider',
+            'msnbot', 
+            'Sosospider+', 
+            'Sogou web spider', 
+            'ia_archiver', 
+            'Yahoo! Slurp', 
+            'YoudaoBot', 
+            'Yahoo Slurp', 
+            'MSNBot', 
+            'Java (Often spam bot)', 
+            'BaiDuSpider', 
+            'Voila', 
+            'Yandex bot', 
+            'BSpider', 
+            'twiceler', 
+            'Sogou Spider', 
+            'Speedy Spider', 
+            'Google AdSense', 
+            'Heritrix', 
+            'Python-urllib', 
+            'Alexa (IA Archiver)', 
+            'Ask', 
+            'Exabot', 
+            'Custo', 
+            'OutfoxBot/YodaoBot', 
+            'yacy', 
+            'SurveyBot', 
+            'legs', 
+            'lwp-trivial', 
+            'Nutch', 
+            'StackRambler', 
+            'The web archive (IA Archiver)', 
+            'Perl tool', 
+            'MJ12bot', 
+            'Netcraft', 
+            'MSIECrawler', 
+            'WGet tools', 
+            'larbin', 
+            'Fish search',];
     private function __construct()
     {
         if (!isset($_SERVER['REQUEST_URI'])) {
@@ -199,5 +242,14 @@ final class Request
             return $base. (DIRECTORY_SEPARATOR ===  '/' ? '/':'/?/') ;
         }
         return $base. $script.'?/';
+    }
+    public function isCrawler(){
+        $agent=$_SERVER['HTTP_USER_AGENT']?:'';
+        foreach(self::$crawlers as $crawler){
+            if( preg_match('/'.preg_quote($crawler).'/i',$agent)) {
+                return true;
+            }
+        }
+        return false;
     }
 }
