@@ -49,8 +49,6 @@ class Manager
     {
         if (!is_null($theme)) {
             self::$theme=$theme;
-            // 添加扫描路径
-            self::addPath(APP_TEMPLATE.'/'.$theme);
         }
         return self::$theme;
     }
@@ -105,11 +103,6 @@ class Manager
         self::$hooks[$name][]=new  \base\Command($callback);
     }
 
-    public static function addPath(string $path)
-    {
-        array_unshift(self::$path, $path);
-    }
-    
     public static function exec(string $name)
     {
         if (isset(self::$hooks[$name])) {
