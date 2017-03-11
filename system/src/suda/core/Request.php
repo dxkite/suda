@@ -244,7 +244,7 @@ final class Request
         return $base. $script.'?/';
     }
     public function isCrawler(){
-        $agent=$_SERVER['HTTP_USER_AGENT']?:'';
+        $agent=isset($_SERVER['HTTP_USER_AGENT'])?$_SERVER['HTTP_USER_AGENT']:'';
         foreach(self::$crawlers as $crawler){
             if( preg_match('/'.preg_quote($crawler).'/i',$agent)) {
                 return true;
