@@ -1,6 +1,8 @@
 <?php
 namespace suda\mail;
+
 use suda\template\Manager;
+
 class Sendmail implements Mailer
 {
     // 发送至
@@ -19,7 +21,7 @@ class Sendmail implements Mailer
     private $subject='';
     private $errno=0;
     private $errstr='';
-
+    private $log;
     // Mail To
     public function to(string $email, string $name='')
     {
@@ -66,6 +68,10 @@ class Sendmail implements Mailer
     public function error()
     {
         return $this->errstr;
+    }
+    public function log()
+    {
+        return $this->log;
     }
     // 发送邮件
     public function send(array $value_map=[])
@@ -117,6 +123,7 @@ class Sendmail implements Mailer
     {
         $this->errno=$errno;
         $this->errstr=$errstr;
+        self::_log($errno.':'.$errstr);
     }
 
     private function renderBody()
@@ -124,9 +131,12 @@ class Sendmail implements Mailer
         if ($this->use) {
             $this->type='html';
             ob_start();
-            Manager::display($this->use,$this->values);
+            Manager::display($this->use, $this->values);
             $this->msg=ob_get_clean();
         }
         return $this->msg;
+    }
+        private function _log(string $message){
+        $this->log[]=$message;
     }
 }
