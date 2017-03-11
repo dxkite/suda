@@ -29,17 +29,4 @@ class __class_name__ extends \__parent__
         // display template
         return $this->display('__module__:__template_name__', ['helloworld'=>'Hello,World!', 'value'=>$value]);
     }
-
-    // pretest router 
-    public function onPreTest($router):bool
-    {
-        return true;
-    }
-
-    // action when error
-    public function onPreTestError($router)
-    {
-        echo 'onPreTestError';
-        return true;
-    }
 }

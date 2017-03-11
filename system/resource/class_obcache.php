@@ -46,17 +46,4 @@ class __class_name__ extends \__parent__
             sleep(1);
         }
     }
-
-    // pretest router 
-    public function onPreTest($router):bool
-    {
-        return true;
-    }
-
-    // action when error
-    public function onPreTestError($router)
-    {
-        echo 'onPreTestError';
-        return true;
-    }
 }

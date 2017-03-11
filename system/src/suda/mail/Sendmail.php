@@ -136,7 +136,8 @@ class Sendmail implements Mailer
         }
         return $this->msg;
     }
-        private function _log(string $message){
+    private function _log(string $message)
+    {
         $this->log[]=$message;
     }
 }
