@@ -68,7 +68,12 @@ if (isset($options['i'])) {
 
 if (isset($options['f'])) {
     print 'import file>'.$options['f']."\r\n";
-    Database::import($options['f']);
+    if(Storage::exist($options['f'])){
+         Database::import($options['f']);
+    }
+   else{
+       print 'file '.$options['f'].' not exist!';
+   }
 }
 
 defined('DTA_TPL') or define('DTA_TPL', SYS_RES.'/tpl');
