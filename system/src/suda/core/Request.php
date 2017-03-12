@@ -247,7 +247,7 @@ final class Request
         $agent=isset($_SERVER['HTTP_USER_AGENT'])?$_SERVER['HTTP_USER_AGENT']:'';
         foreach(self::$crawlers as $crawler){
             if( preg_match('/'.preg_quote($crawler).'/i',$agent)) {
-                return true;
+                return $crawler;
             }
         }
         return false;
