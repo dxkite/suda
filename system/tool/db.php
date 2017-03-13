@@ -45,9 +45,9 @@ if ($backup) {
     $time=date('Y_m_d_H_i_s');
     Database::export($querysql=DATA_DIR.'/backup/backup_'.$time.'.php', [], $struct);
     Database::exportSQL($outsql=DATA_DIR.'/backup/backup_'.$time.'.sql', [], $struct);
-    echo 'backup to '.DATA_DIR.'/backup/'."\r\n";
-    echo 'output sql  file: '.$outsql."\r\n";
-    echo 'output file: '.$querysql."\r\n";
+    echo 'backup to '."\033[34m".DATA_DIR.'/backup/'."\033[0m\r\n";
+    echo 'output sql  file: '."\033[34m".$outsql."\033[0m\r\n";
+    echo 'output file: '."\033[34m".$querysql."\033[0m\r\n";
 }
 
 if (isset($options['i'])) {
@@ -61,19 +61,18 @@ if (isset($options['i'])) {
     $sql=Storage::get($bksql);
     $sql=preg_replace('/AUTO_INCREMENT=\d+/', 'AUTO_INCREMENT=0', $sql);
     Storage::put($outsql=DATA_DIR.'/install.sql', $sql);
-    echo 'output sql  file: '.$outsql."\r\n";
-    echo 'output file: '.$querysql."\r\n";
+    echo 'output sql  file: '."\033[34m".$outsql."\033[0m\r\n";
+    echo 'output file: '."\033[34m".$querysql."\033[0m\r\n";
     echo 'created install database file'."\r\n";
 }
 
 if (isset($options['f'])) {
     print 'import file>'.$options['f']."\r\n";
-    if(Storage::exist($options['f'])){
-         Database::import($options['f']);
+    if (Storage::exist($options['f'])) {
+        Database::import($options['f']);
+    } else {
+        print 'file '.$options['f'].' not exist!';
     }
-   else{
-       print 'file '.$options['f'].' not exist!';
-   }
 }
 
 defined('DTA_TPL') or define('DTA_TPL', SYS_RES.'/tpl');
@@ -123,7 +122,7 @@ function generate()
         echo 'no such dir:'.$src;
     }
     $path=isset($params['m'])?MODULES_DIR.'/'.$params['m'].'/resource':DATA_DIR;
-    echo 'export to '.$path."\r\n";
+    echo 'export to '."\033[34m".$path."\033[0m\r\n";
     Storage::path($path);
     $dist=isset($params['o'])?$params['o']: $path.'/db';
     $outsql=isset($params['s'])?$params['s']: $path.'/'.$module.'_creator.sql';
@@ -153,7 +152,7 @@ Table;
     } 
     catch (Exception $e)
     {
-        echo "\t{$e->getLine()}:\033[31m{$e->getMessage()}\033[0m\n";
+        echo "\t{$e->getLine()}:\033[31m{$e->getMessage()}\033[0m\r\n";
         Query::rollBack();
         return false;
     }
@@ -187,8 +186,8 @@ End;
         file_put_contents($querysql, "\r\n".$query."\r\n\r\n", FILE_APPEND);
     }
     file_put_contents($querysql, $end, FILE_APPEND);
-    echo 'output sql  file: '.$outsql."\r\n";
-    echo 'output file: '.$querysql."\r\n";
+    echo 'output sql  file: '."\033[34m".$outsql."\033[0m\r\n";
+    echo 'output file: '."\033[34m".$querysql."\033[0m\r\n";
 }
 
 if (isset($options['g'])) {
