@@ -6,6 +6,10 @@ class Autoloader
     protected static $namespace=['suda\\core'];
     protected static $include_path=[];
 
+    public static function realName(string $name) {
+        return preg_replace('/[.\/]+/','\\',$name);
+    }
+
     public static function init()
     {
         spl_autoload_register(array('suda\\core\\Autoloader', 'Classloader'));
@@ -13,6 +17,7 @@ class Autoloader
 
     public static function Classloader(string $classname)
     {
+        $classname=self::realName($classname);
         // 搜索路径
         foreach (self::$include_path as $include_path) {
             $path=preg_replace('/[\\\\\\/]+/', DIRECTORY_SEPARATOR, $include_path.DIRECTORY_SEPARATOR.$classname.'.php');

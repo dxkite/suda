@@ -82,7 +82,7 @@ class Command
     }
     protected function parseCommand(string $command)
     {
-        if (preg_match('/^(?:([\w\\\\]+))?(?:(#|->|::)(\w+))?(?:\((.+?)\))?(?:@(.+))?$/', $command, $matchs)) {
+        if (preg_match('/^(?:([\w\\\\\/.]+))?(?:(#|->|::)(\w+))?(?:\((.+?)\))?(?:@(.+))?$/', $command, $matchs)) {
             // 添加参数绑定
             if (isset($matchs[4])) {
                 $this->func_bind=explode(',', trim($matchs[4], ','));
@@ -95,6 +95,7 @@ class Command
             if (isset($matchs[2])) {
                 $this->static=(strcmp($matchs[2], '#')===0 || strcmp($matchs[2], '::')===0);
             }
+            $matchs[1]=preg_replace('/[.\/]+/','\\',$matchs[1]);
             // 方法名
             if (isset($matchs[3]) && $matchs[3]) {
                 return [$matchs[1],$matchs[3]];

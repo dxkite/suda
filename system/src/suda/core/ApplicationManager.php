@@ -31,9 +31,8 @@ class ApplicationManager
     public function console(string $app)
     {
         $this->readManifast($app.'/manifast.json');
-
-        $this->app=new $this->appliaction($app);
-        
+        $name=Autoloader::realName($this->appliaction);
+        $this->app=new $name($app);
         if ($this->app instanceof Application) {
             Hook::listen('Router:dispatch::before', [$this->app, 'onRequest']);
             Hook::listen('system:shutdown', [$this->app, 'onShutdown']);
