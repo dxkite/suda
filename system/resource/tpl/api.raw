@@ -29,7 +29,15 @@ class {{ $_SQL->name }}
     {
         return ($get=Query::where('{{$this->getTableName()}}', {{$this->getFieldsStr()}},['id'=>$id])->fetch()) ? $get  : false;
     }
-    
+	
+
+	@foreach  ($_SQL->keys as $key => $sqltype)<?php $type=preg_match('/int/', $sqltype)?'int':'string'; ?>
+   	
+	public function getBy{{ ucfirst($key) }}({{$type}} ${{$key}})
+    {
+        return ($get=Query::where('{{$this->getTableName()}}', {{$this->getFieldsStr($key)}},['{{$key}}'=>${{$key}}])->fetch()) ? $get  : false;
+    }@endforeach
+
     public function update({{$update_params}}){
        return Query::update('{{$this->getTableName()}}',[{{!$set_update}}]); 
     }

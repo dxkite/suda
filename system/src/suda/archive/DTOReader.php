@@ -4,7 +4,7 @@ namespace suda\archive;
 use Storage;
 use suda\tool\Value;
 
-// 数据表对象文件读取器 
+// 数据表对象文件读取器
 class DTOReader
 {
     protected $fields;
@@ -15,20 +15,38 @@ class DTOReader
     protected $file;
     protected $tableName;
     protected $exset=[];
+
     protected $unique=[];
+    protected $primary=[];
+    protected $keys=[];
 
     public function export(string $template, string $path)
     {
         ob_start();
-        $_SQL=new Value(['fields'=>$this->fields, 'sets'=>$this->sets, 'name'=>$this->name, 'namespace'=>$this->namespace]);
+        
+        $_SQL=new Value([
+            'fields'=>$this->fields,
+            'sets'=>$this->sets,
+            'name'=>$this->name,
+            'namespace'=>$this->namespace,
+            'keys'=>$this->keys,
+            'unique'=>$this->unique,
+            'primary'=>$this->primary,
+        ]);
+
         require $template;
         $class=ob_get_clean();
         file_put_contents($path, "<?php\r\n".$class."\r\n\r\n/**\r\n* DTA FILE:\r\n".$this->file."\r\n*/");
+        return $path;
     }
 
-    public function getFieldsStr()
+    public function getFieldsStr(string $key=null)
     {
-        return '[\''.implode('\',\'', array_keys($this->fields)).'\']';
+        $fields=$this->fields;
+        if ($key && isset($fields[$key])){
+            unset($fields[$key]);
+        }
+        return '[\''.implode('\',\'', array_keys($fields)).'\']';
     }
 
     public function load(string $path)
@@ -40,8 +58,21 @@ class DTOReader
                 if (preg_match('/^(?:\s*)(?!;)(\w+)\s+(\S+)(?:\s+(.+?))?(;(.*))?$/', $line, $match)) {
                     $this->fields[$match[1]]=$match[2];
                     $this->sets[$match[1]]=self::parser_str($match[3]);
-                    if (isset($this->sets[$match[1]]['auto'])) {
-                        $this->auto=$match[1];
+                    $name=$match[1];
+                    $type=$match[2];
+                    if (isset($this->sets[$name]['auto'])) {
+                        $this->auto=$name;
+                    } 
+                    if (isset($this->sets[$name]['primary'])) {
+                        $this->primary[$name]=$type;
+                        $this->keys[$name]=$type;
+                    } 
+                    if (isset($this->sets[$name]['unique'])) {
+                        $this->unique[$name]=$type;
+                        $this->keys[$name]=[$type];
+                    } 
+                    if (isset($this->sets[$name]['key'])) {
+                       $this->keys[$name]=[$type];
                     }
                 } elseif (preg_match('/^#\s*(.+)\s*$/', $line, $exset)) {
                     $this->exset=array_merge($this->exset, self::parser_str($exset[1]));

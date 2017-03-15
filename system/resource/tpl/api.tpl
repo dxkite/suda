@@ -29,7 +29,15 @@ class <?php echo htmlspecialchars($_SQL->name) ?>
     {
         return ($get=Query::where('<?php echo htmlspecialchars($this->getTableName()) ?>', <?php echo htmlspecialchars($this->getFieldsStr()) ?>,['id'=>$id])->fetch()) ? $get  : false;
     }
-    
+	
+
+	<?php foreach($_SQL->keys as $key => $sqltype): ?><?php $type=preg_match('/int/', $sqltype)?'int':'string'; ?>
+   	
+	public function getBy<?php echo htmlspecialchars(ucfirst($key)) ?>(<?php echo htmlspecialchars($type) ?> $<?php echo htmlspecialchars($key) ?>)
+    {
+        return ($get=Query::where('<?php echo htmlspecialchars($this->getTableName()) ?>', <?php echo htmlspecialchars($this->getFieldsStr($key)) ?>,['<?php echo htmlspecialchars($key) ?>'=>$<?php echo htmlspecialchars($key) ?>])->fetch()) ? $get  : false;
+    }<?php endforeach; ?>
+
     public function update(<?php echo htmlspecialchars($update_params) ?>){
        return Query::update('<?php echo htmlspecialchars($this->getTableName()) ?>',[<?php echo($set_update) ?>]); 
     }
