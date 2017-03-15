@@ -111,6 +111,11 @@ class Compiler
         return "<?php suda\\template\\Manager::include('{$match[2]}',\$v->_getVar()) ?>";
     }
 
+       // include
+    protected function parseUrl($exp)
+    {
+        return "<?php echo _I$exp ?>";
+    }
     // View echo
     public static function echo($something)
     {
