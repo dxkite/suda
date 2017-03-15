@@ -48,7 +48,17 @@ class DTOReader
         }
         return '[\''.implode('\',\'', array_keys($fields)).'\']';
     }
-
+    public function updataParams(){
+        $str=[];
+     
+        foreach ($this->fields as $name =>$type){
+            $type=preg_match('/int/',$type)?'int':'string'; 
+            if(!isset($this->primary[$name])){
+                $str[]=$type.' $'.$name.'=null';
+            }
+        }
+        return implode(',',$str);
+    }
     public function load(string $path)
     {
         if (file_exists($path)) {
@@ -65,7 +75,6 @@ class DTOReader
                     } 
                     if (isset($this->sets[$name]['primary'])) {
                         $this->primary[$name]=$type;
-                        $this->keys[$name]=$type;
                     } 
                     if (isset($this->sets[$name]['unique'])) {
                         $this->unique[$name]=$type;

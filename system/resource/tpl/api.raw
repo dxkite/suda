@@ -6,6 +6,7 @@ use Query;
 class {{ $_SQL->name }}
 
 {
+	<?php $primary_key=key($_SQL->primary); $primary_type=preg_match('/int/', current($_SQL->primary))?'int':'string'; ?>
     <?php $set_update=[] ; $set_create=[] ;$create_params=[];$update_params=[]; ?>
     @foreach ($_SQL->fields() as $name => $type)<?php  $type=preg_match('/int/', $type)?'int':'string';$set_update[]= "'$name'=>\${$name}";?>
       @if ($this->getAuto() == $name)
@@ -20,14 +21,15 @@ class {{ $_SQL->name }}
     {
         return Query::insert('{{$this->getTableName()}}',[{{!$set_create}}]);
     }
-    public function delete(int $id){
-        return Query::delete('{{$this->getTableName()}}',['id'=>$id]);
+	
+	public function delete({{$primary_type}} ${{$primary_key}}){
+        return Query::delete('{{$this->getTableName()}}',['{{$primary_key}}'=>${{$primary_key}}]);
     }
 	
 	   
-	public function get(int $id)
+	public function get({{$primary_type}} ${{$primary_key}})
     {
-        return ($get=Query::where('{{$this->getTableName()}}', {{$this->getFieldsStr()}},['id'=>$id])->fetch()) ? $get  : false;
+        return ($get=Query::where('{{$this->getTableName()}}', {{$this->getFieldsStr()}},['{{$primary_key}}'=>${{$primary_key}}])->fetch()) ? $get  : false;
     }
 	
 
@@ -38,8 +40,13 @@ class {{ $_SQL->name }}
         return ($get=Query::where('{{$this->getTableName()}}', {{$this->getFieldsStr($key)}},['{{$key}}'=>${{$key}}])->fetch()) ? $get  : false;
     }@endforeach
 
-    public function update({{$update_params}}){
-       return Query::update('{{$this->getTableName()}}',[{{!$set_update}}]); 
+
+
+    public function update({{$primary_type}} ${{$primary_key}},{{ $this->updataParams() }}){
+	   $sets=[];
+	   @foreach ($_SQL->fields() as $name => $type)if  (!is_null(${{$name}})){$sets['{{$name}}']=${{$name}};}@endforeach
+	   
+       return Query::update('{{$this->getTableName()}}',$sets,['{{$primary_key}}'=>${{$primary_key}}]); 
     }
     public function list(int $page=1, int $count=10)
     {

@@ -6,6 +6,7 @@ use Query;
 class <?php echo htmlspecialchars($_SQL->name) ?>
 
 {
+	<?php $primary_key=key($_SQL->primary); $primary_type=preg_match('/int/', current($_SQL->primary))?'int':'string'; ?>
     <?php $set_update=[] ; $set_create=[] ;$create_params=[];$update_params=[]; ?>
     <?php foreach($_SQL->fields() as $name => $type): ?><?php  $type=preg_match('/int/', $type)?'int':'string';$set_update[]= "'$name'=>\${$name}";?>
       <?php if($this->getAuto() == $name): ?>
@@ -20,14 +21,15 @@ class <?php echo htmlspecialchars($_SQL->name) ?>
     {
         return Query::insert('<?php echo htmlspecialchars($this->getTableName()) ?>',[<?php echo($set_create) ?>]);
     }
-    public function delete(int $id){
-        return Query::delete('<?php echo htmlspecialchars($this->getTableName()) ?>',['id'=>$id]);
+	
+	public function delete(<?php echo htmlspecialchars($primary_type) ?> $<?php echo htmlspecialchars($primary_key) ?>){
+        return Query::delete('<?php echo htmlspecialchars($this->getTableName()) ?>',['<?php echo htmlspecialchars($primary_key) ?>'=>$<?php echo htmlspecialchars($primary_key) ?>]);
     }
 	
 	   
-	public function get(int $id)
+	public function get(<?php echo htmlspecialchars($primary_type) ?> $<?php echo htmlspecialchars($primary_key) ?>)
     {
-        return ($get=Query::where('<?php echo htmlspecialchars($this->getTableName()) ?>', <?php echo htmlspecialchars($this->getFieldsStr()) ?>,['id'=>$id])->fetch()) ? $get  : false;
+        return ($get=Query::where('<?php echo htmlspecialchars($this->getTableName()) ?>', <?php echo htmlspecialchars($this->getFieldsStr()) ?>,['<?php echo htmlspecialchars($primary_key) ?>'=>$<?php echo htmlspecialchars($primary_key) ?>])->fetch()) ? $get  : false;
     }
 	
 
@@ -38,8 +40,13 @@ class <?php echo htmlspecialchars($_SQL->name) ?>
         return ($get=Query::where('<?php echo htmlspecialchars($this->getTableName()) ?>', <?php echo htmlspecialchars($this->getFieldsStr($key)) ?>,['<?php echo htmlspecialchars($key) ?>'=>$<?php echo htmlspecialchars($key) ?>])->fetch()) ? $get  : false;
     }<?php endforeach; ?>
 
-    public function update(<?php echo htmlspecialchars($update_params) ?>){
-       return Query::update('<?php echo htmlspecialchars($this->getTableName()) ?>',[<?php echo($set_update) ?>]); 
+
+
+    public function update(<?php echo htmlspecialchars($primary_type) ?> $<?php echo htmlspecialchars($primary_key) ?>,<?php echo htmlspecialchars($this->updataParams()) ?>){
+	   $sets=[];
+	   <?php foreach($_SQL->fields() as $name => $type): ?>if  (!is_null($<?php echo htmlspecialchars($name) ?>)){$sets['<?php echo htmlspecialchars($name) ?>']=$<?php echo htmlspecialchars($name) ?>;}<?php endforeach; ?>
+	   
+       return Query::update('<?php echo htmlspecialchars($this->getTableName()) ?>',$sets,['<?php echo htmlspecialchars($primary_key) ?>'=>$<?php echo htmlspecialchars($primary_key) ?>]); 
     }
     public function list(int $page=1, int $count=10)
     {

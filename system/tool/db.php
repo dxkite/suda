@@ -184,7 +184,7 @@ End;
         $query="(new Query('DROP TABLE IF EXISTS #{{$table_name}}'))->exec();".Database::queryCreateTable(queryCreateSQL($sql), $table_name);
         file_put_contents($outsql, "\r\n".$sql."\r\n\r\n", FILE_APPEND);
         file_put_contents($querysql, "\r\n".$query."\r\n\r\n", FILE_APPEND);
-        echo 'output builder manager class file: '."\033[34m".$autopath."\033[0m\r\n";
+        echo 'output  manager class template file: '."\033[34m".$autopath."\033[0m\r\n";
     }
     file_put_contents($querysql, $end, FILE_APPEND);
     echo 'output sql  file: '."\033[34m".$outsql."\033[0m\r\n";
