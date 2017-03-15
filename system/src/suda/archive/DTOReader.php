@@ -78,10 +78,10 @@ class DTOReader
                     } 
                     if (isset($this->sets[$name]['unique'])) {
                         $this->unique[$name]=$type;
-                        $this->keys[$name]=[$type];
+                        $this->keys[$name]=$type;
                     } 
                     if (isset($this->sets[$name]['key'])) {
-                       $this->keys[$name]=[$type];
+                       $this->keys[$name]=$type;
                     }
                 } elseif (preg_match('/^#\s*(.+)\s*$/', $line, $exset)) {
                     $this->exset=array_merge($this->exset, self::parser_str($exset[1]));
@@ -121,10 +121,8 @@ class DTOReader
             $create[]=trim("`{$name}` {$type} {$null} {$default} {$auto} {$comment}");
             if (isset($this->sets[$name]['primary'])) {
                 $sets[]="PRIMARY KEY (`{$name}`)";
-                $this->unique[]=$name;
             } elseif (isset($this->sets[$name]['unique'])) {
                 $sets[]="UNIQUE KEY `{$name}` (`{$name}`)";
-                $this->unique[]=$name;
             } elseif (isset($this->sets[$name]['key'])) {
                 $sets[]="KEY `{$name}` (`{$name}`)";
             }
