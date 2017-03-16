@@ -1,8 +1,11 @@
-# 最终PHP坑：苏打 简易PHP框架
+#  苏打 简易PHP框架
 此框架的目的是简化PHP程序的构建过程，不包含太多东西。是我尝试使用面向对象的思路去编写的`DxCore`,
 老式的处理思路导致我在面向对象设计的过程中还保留很多过去面向函数编程的习惯。因此，本程序尝试使用新的思路
 去编写代码，而且，如标题所言，这个是我最后的PHP自用辅助类库。
 
+> 框架使用模式参考了 ThinkPHP,Zend,Symfony，Laravel
+> 但是实现和他们半毛钱关系都没有，只有用法类似  
+>> 传送门: [ThinkPHP](https://github.com/top-think/think) [Zend Framework](https://github.com/zendframework/zendframework) [Symfony](https://github.com/symfony/symfony) [Laravel](https://github.com/laravel/laravel)
 ## 框架功能
 - 单入口
 - MVC
