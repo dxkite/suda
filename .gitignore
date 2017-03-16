@@ -1,6 +1,7 @@
 app
 new
 public/new.php
+public/static/
 public/hello/new.php
 public/phpinfo.php
 app/resource/config/config.json

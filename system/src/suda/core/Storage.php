@@ -103,12 +103,12 @@ class Storage
         }
     }
 
-    public static function copydir(string $src, string $dest)
+    public static function copydir(string $src, string $dest, string $preg='/^.+$/')
     {
         self::mkdirs($dest);
         $hd=opendir($src);
         while ($read=readdir($hd)) {
-            if (strcmp($read, '.') !== 0 && strcmp($read, '..') !==0) {
+            if (strcmp($read, '.') !== 0 && strcmp($read, '..') !==0 && preg_match($preg, $read)) {
                 if (self::isDir($src.'/'.$read)) {
                     self::copydir($src.'/'.$read, $dest.'/'.$read);
                 } else {
@@ -134,12 +134,12 @@ class Storage
         return false;
     }
     // 创建文件夹
-    public static function mkdir(string $dirname, int $mode=0777):bool
+    public static function mkdir(string $path, int $mode=0777):bool
     {
         return mkdir($path, $mode);
     }
     // 删除文件夹
-    public static function rmdir(string $dirname):bool
+    public static function rmdir(string $path):bool
     {
         return rmdir($path);
     }

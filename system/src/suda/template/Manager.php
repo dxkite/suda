@@ -147,4 +147,37 @@ class Manager
         $v=new Value($values);
         require $file;
     }
+
+    public static function prepareResource()
+    {
+        // 向下兼容
+        defined('APP_PUBLIC') or define('APP_PUBLIC', '.');
+        $static_path=MODULES_DIR.'/'.\suda\core\Application::getActiveModule().'/resource/template/'.self::$theme.'/static';
+        $path=Storage::path(APP_PUBLIC.'/static/');
+        if (self::hasChanged($static_path,$path)) {
+            self::copyStatic($static_path,$path);
+        }
+    }
+
+    protected static function hasChanged(string $static, string $tpl)
+    {
+        var_dump(filemtime($tpl), filemtime($static));
+        if (conf('debug', false)) {
+            return true;
+        } else {
+            // 模板内容比静态文件夹内容新
+            if (filemtime($tpl)>filemtime($static)) {
+                return true;
+            }
+        }
+        return false;
+    }
+    protected static function copyStatic(string $static_path ,string $path)
+    {
+        Storage::rmdirs($path);
+        // 复制静态资源
+        $non_static=trim(str_replace(',', '|', Config::get('non-static', 'php')), '|');
+        $non_static_preg='/(?<!(\.tpl\.html)|(\.('.$non_static.')))$/';
+        Storage::copydir($static_path, $path, $non_static_preg);
+    }
 }

@@ -73,6 +73,7 @@ class Application
         if (Config::get('app.language') && Storage::exist($path=MODULE_LANGS.'/'.Config::get('app.language').'.json')) {
             Language::load($path);
         }
+        \suda\template\Manager::prepareResource();
     }
 
 
