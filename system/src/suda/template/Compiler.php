@@ -115,6 +115,15 @@ class Compiler
     {
         return "<?php echo _I$exp ?>";
     }
+
+    protected function parseStatic()
+    {
+        $static_url=Storage::cut(APP_STATIC,APP_PUBLIC);
+        $static_url=preg_replace('/[\\\\\/]+/','/', $static_url);
+        return '/'.$static_url;
+    }
+
+    
     protected function parseUrl($exp)
     {
         return "<?php echo _I$exp ?>";

@@ -1,4 +1,5 @@
-<IfModule mod_rewrite.c>
+# LoadModule rewrite_module modules/mod_rewrite.so
+<IfModule rewrite_module>
   RewriteEngine On
   AddDefaultCharset utf-8
   Options +FollowSymLinks 

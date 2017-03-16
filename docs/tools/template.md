@@ -53,3 +53,4 @@
 
 ## 模板静态资源
 模板的静态资源统一放置在模板文件夹下的`static`目录，在激活模块时，会自动复制到`public/static`目录。
+引用模板的资源：`static/path/to/resource.type`

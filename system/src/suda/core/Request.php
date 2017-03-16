@@ -230,7 +230,8 @@ final class Request
             self::$files=new Value($_FILES);
         }
     }
-    public function baseUrl(){
+    
+    public static function baseUrl(){
         $scheme=isset($_SERVER['REQUEST_SCHEME'])?$_SERVER['REQUEST_SCHEME']:'//';
         $host=isset($_SERVER['HTTP_HOST'])?$_SERVER['HTTP_HOST']:'';
         $base='';

@@ -154,6 +154,7 @@ class Manager
         defined('APP_PUBLIC') or define('APP_PUBLIC', '.');
         $static_path=MODULES_DIR.'/'.\suda\core\Application::getActiveModule().'/resource/template/'.self::$theme.'/static';
         $path=Storage::path(APP_PUBLIC.'/static/');
+        defined('APP_STATIC') or define('APP_STATIC',$path);
         if (self::hasChanged($static_path,$path)) {
             self::copyStatic($static_path,$path);
         }
@@ -161,7 +162,6 @@ class Manager
 
     protected static function hasChanged(string $static, string $tpl)
     {
-        var_dump(filemtime($tpl), filemtime($static));
         if (conf('debug', false)) {
             return true;
         } else {
