@@ -22,11 +22,12 @@ class BarCode
     private $size=20;
     private $text;
 
-    public function __construct(int $type=BarCode::TYPE_CODE128, bool $print=true, int $factor=1)
+    public function __construct(int $type=BarCode::TYPE_CODE128, bool $print=true,int $size=20, int $factor=1)
     {
         $this->type=$type;
         $this->print=$print;
         $this->factor=$factor;
+        $this->size;
     }
 
     public function generate(string $text)
@@ -67,7 +68,6 @@ class BarCode
 
     public function display(string $path=null)
     {
-
         $code_length = 20;
 
         if ($this->print) {
@@ -80,8 +80,8 @@ class BarCode
             $code_length += intval(substr($this->code, ($i-1), 1));
         }
 
-        $img_width = $code_length*$this->factor;
-        $img_height = $this->size;
+        $img_width = $code_length * $this->factor;
+        $img_height = $this->size * $this->factor;
 
         $image = imagecreate($img_width, $img_height + $text_height);
         $black = imagecolorallocate($image, 0, 0, 0);
