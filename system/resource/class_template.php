@@ -1,14 +1,7 @@
 <?php
 namespace __class_namespace__;
 
-// use namespace
-use suda\core\Request;
-// database query
-use suda\core\Query;
-// site cookie
-use suda\core\Cookie;
-// site session
-use suda\core\Session;
+use suda\core\{Session,Cookie,Request,Query};
 
 /**
 * visit url __create_url__ as __methods__ method to run this class.
