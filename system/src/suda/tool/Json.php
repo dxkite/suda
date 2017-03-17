@@ -18,7 +18,7 @@ class Json
         $json=self::parseComments($json);
         $value=json_decode($json, $assoc, $depth, $options);
         if (json_last_error()!==JSON_ERROR_NONE){
-            throw new \RuntimeException(isset(self::$error[json_last_error()])?self::$error[json_last_error()]:'Unknown error');
+            throw new \RuntimeException(  self::$error[json_last_error()] ?? 'Unknown error');
         }
         return $value;
     }

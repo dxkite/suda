@@ -27,7 +27,7 @@ class Session
     public static function get(string $name='', $default=null)
     {
         if ($name) {
-            return isset($_SESSION[$name])?$_SESSION[$name]:$default;
+            return  $_SESSION[$name] ?? $default;
         } else {
             return $_SESSION;
         }

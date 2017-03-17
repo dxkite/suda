@@ -87,7 +87,7 @@ final class Request
     
     public static function method()
     {
-        return isset($_SERVER['REQUEST_METHOD'])?$_SERVER['REQUEST_METHOD']:'GET';
+        return  $_SERVER['REQUEST_METHOD'] ?? 'GET';
     }
     public static function url()
     {
@@ -137,7 +137,7 @@ final class Request
         } elseif (getenv('HTTP_FORWARDED')) {
             $ip = getenv('HTTP_FORWARDED');
         } else {
-            $ip = isset($_SERVER['REMOTE_ADDR'])?$_SERVER['REMOTE_ADDR']:'127.0.0.1';
+            $ip =  $_SERVER['REMOTE_ADDR'] ?? '127.0.0.1';
         }
         return $ip;
     }
@@ -203,7 +203,7 @@ final class Request
             } elseif (preg_match('/^(.*)\/'.$index.'(\??\/)?/', $_SERVER['REQUEST_URI'])) {
                 $preg='/(.*)\/'.$index.'(\/[^?]*)?$/';
                 preg_match($preg, $_SERVER['PHP_SELF'], $match);
-                self::$url=isset($match[2])?$match[2]:'/';
+                self::$url= $match[2] ?? '/';
             } else {
                 $preg='/^([^?]*)/';
                 preg_match($preg,$_SERVER['REQUEST_URI'],$match);
@@ -232,8 +232,8 @@ final class Request
     }
     
     public static function baseUrl(){
-        $scheme=isset($_SERVER['REQUEST_SCHEME'])?$_SERVER['REQUEST_SCHEME']:'//';
-        $host=isset($_SERVER['HTTP_HOST'])?$_SERVER['HTTP_HOST']:'';
+        $scheme = $_SERVER['REQUEST_SCHEME'] ?? '//';
+        $host= $_SERVER['HTTP_HOST'] ?? '';
         $base='';
         $script=$_SERVER['SCRIPT_NAME'];
         if ($host){
@@ -245,7 +245,7 @@ final class Request
         return $base. $script.'?/';
     }
     public function isCrawler(){
-        $agent=isset($_SERVER['HTTP_USER_AGENT'])?$_SERVER['HTTP_USER_AGENT']:'';
+        $agent= $_SERVER['HTTP_USER_AGENT'] ?? '';
         foreach(self::$crawlers as $crawler){
             if( preg_match('/'.preg_quote($crawler).'/i',$agent)) {
                 return $crawler;

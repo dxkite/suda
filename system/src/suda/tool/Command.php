@@ -44,7 +44,7 @@ class Command
         if (count($this->func_bind)>0) {
             $args=[];
             foreach ($this->func_bind as $index=>$bind) {
-                $args[$index]=isset($this->params[$bind])?$this->params[$bind]:null;
+                $args[$index]= $this->params[$bind] ?? null;
             }
             $this->params=$args;
         }

@@ -43,7 +43,7 @@ class Value implements \Iterator,\JsonSerializable
      */
     public function __get(string $name)
     {
-        return isset($this->var[$name])?$this->var[$name]:null;
+        return  $this->var[$name] ?? null;
     }
 
     /**
@@ -72,7 +72,8 @@ class Value implements \Iterator,\JsonSerializable
      */
     public function __call(string $name, $args)
     {
-        $fmt=isset($this->var[$name])?$this->var[$name]:(isset($args[0])?$args[0]:null);
+        // NOTICE
+        $fmt= $this->var[$name] ?? $args[0] ?? null;
         if (count($args)>1) {
             $args[0]=$fmt;
             return call_user_func_array('sprintf', $args);

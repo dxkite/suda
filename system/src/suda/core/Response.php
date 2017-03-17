@@ -196,7 +196,7 @@ abstract class Response
             self::$mime=parse_ini_file(SYS_RES.'/type.mime');
         }
         if ($name) {
-            return isset(self::$mime[$name])?self::$mime[$name]:'text/plain';
+            return self::$mime[$name] ?? 'text/plain';
         } else {
             return self::$mime;
         }

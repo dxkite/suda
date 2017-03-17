@@ -29,7 +29,7 @@ class ArrayHelper
             // 取值的键
             $aim = array_pop($path);
             // 数组偏移到下一级
-            $array = isset($array[$next]) ? $array[$next] : null;
+            $array =   $array[$next] ?? null;
 
             if (count($path) > 1) {
                 # >4级
@@ -39,19 +39,19 @@ class ArrayHelper
                         break;
                     }
 
-                    $array = isset($array[$next]) ? $array[$next] : null;
+                    $array =   $array[$next] ??  null;
                 }
 
                 if ($array === null) {
                     return $def;
                 }
 
-                $value = isset($array[$aim]) ? $array[$aim] : $def;
+                $value =  $array[$aim] ?? $def;
             } elseif (count($path) === 1) {
                 #3级
 
                 if (isset($array[$path[0]]) && is_array($array[$path[0]])) {
-                    $value = isset($array[$path[0]][$aim]) ? $array[$path[0]][$aim] : $def;
+                    $value =   $array[$path[0]][$aim] ?? $def;
                 } else {
                     $value = $def;
                 }
@@ -59,13 +59,13 @@ class ArrayHelper
                 #2级
 
                 if (is_array($array)) {
-                    $value = isset($array[$aim]) ? $array[$aim] : $def;
+                    $value =  $array[$aim] ?? $def;
                 } else {
                     $value = $def;
                 }
             }
         } else {
-            $value = isset($array[$name]) ? $array[$name] : $def;
+            $value =  $array[$name] ?? $def;
         }
         return $value;
     }

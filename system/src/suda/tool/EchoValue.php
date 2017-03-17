@@ -18,7 +18,7 @@ class EchoValue extends Value
     {
         // 获取值
         $value=parent::__get($name);
-        $args[0]=is_null($value)?(isset($args[0])?$args[0]:"[:{$name}:]"):$value;
+        $args[0]=is_null($value)?(  $args[0] ?? "[:{$name}:]"):$value;
         return parent::__call($name, $args);
     }
 }

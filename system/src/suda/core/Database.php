@@ -20,7 +20,7 @@ class Database
     {
         // $version=APP_VERSION;
         $date=date('Y-m-d H:i:s');
-        $host=isset($_SERVER['SERVER_NAME'])?$_SERVER['SERVER_NAME']:'localhost';
+        $host= $_SERVER['SERVER_NAME'] ?? 'localhost';
         $datebase=\Config::get('database.name');
         $tables=($q=new Query("show tables;"))->fetchAll();
         $tables_count=count($tables);
@@ -89,7 +89,7 @@ End;
     {
         // $version=APP_VERSION;
         $date=date('Y-m-d H:i:s');
-        $host=isset($_SERVER['SERVER_NAME'])?$_SERVER['SERVER_NAME']:'localhost';
+        $host= $_SERVER['SERVER_NAME'] ?? 'localhost';
         $datebase=\Config::get('database.name');
         $server_version=(new Query('select version() as version;'))->fetch()['version'];
         $head=<<< Table
