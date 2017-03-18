@@ -62,6 +62,12 @@ abstract class Response
     public function __construct()
     {
         self::mark();
+        if(conf('debug')){
+            // 设置无缓存头
+            self::noCache();
+            // 强制刷新index文件来避免缓存
+            touch('index.php');
+        }
     }
     abstract public function onRequest(Request $request);
     public function onPreTest($test_data):bool
