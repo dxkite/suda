@@ -107,7 +107,9 @@ final class Request
             return self::$get;
         }
     }
-
+    public static function cookie(string $name,$default){
+        return Cookie::get($name,$default);
+    }
     public static function post(string $name='')
     {
         if ($name) {

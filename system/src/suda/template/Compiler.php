@@ -113,7 +113,7 @@ class Compiler
 
     protected function parseU($exp)
     {
-        return "<?php echo _I$exp ?>";
+        return "<?php echo u$exp ?>";
     }
 
     protected function parseStatic()
@@ -126,7 +126,7 @@ class Compiler
     
     protected function parseUrl($exp)
     {
-        return "<?php echo _I$exp ?>";
+        return "<?php echo u$exp ?>";
     }
     // View echo
     public static function echo($something)

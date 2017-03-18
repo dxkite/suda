@@ -25,6 +25,6 @@ function use_namespace(string $namespace){
     return suda\core\Autoloader::setNamespace($namespace);
 }
 
-function _I(string $name,array $values=[]){
+function u(string $name,array $values=[]){
     return suda\core\Router::getInstance()->buildUrl($name,$values);
 }

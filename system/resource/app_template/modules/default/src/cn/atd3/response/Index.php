@@ -12,7 +12,7 @@ use suda\core\Session;
 
 /**
 * visit url / as all method to run this class.
-* you call use _I('default',Array) to create path.
+* you call use u('default',Array) to create path.
 * @template: default:index.tpl.html
 * @name: default
 * @url: /
