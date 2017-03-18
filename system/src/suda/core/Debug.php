@@ -151,12 +151,6 @@ class Debug
                     $this->state(500);
                     $this->displayFile($this->tpl, $this->values);
                 }
-                public  function onPreTest($test_data):bool
-                {
-                }
-                public  function onPreTestError($test_data)
-                {
-                }
             };
             $render->tpl(SYS_RES.'/tpl/error.tpl');
             $render->set([
@@ -176,6 +170,8 @@ class Debug
         $loginfo['title']='Crash:'.$erron;
         $loginfo['msg']=$error;
         $loginfo['level']=self::E;
+        $loginfo['time']=microtime(true)-D_START;
+        $loginfo['mem']=memory_get_usage() - D_MEM;
         self::$log[]=$loginfo;
         exit($erron);
     }

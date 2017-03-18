@@ -11,7 +11,7 @@ class Session
     ];
     public static function start()
     {
-        $path=DATE_DIR.'/'.conf('session.save_path','session');
+        $path=DATA_DIR.'/'.conf('session.save_path','session');
         Storage::mkdirs($path);
         session_save_path($path);
         session_name(conf('session.name', 'suda_session'));
