@@ -193,7 +193,7 @@ final class Request
         //  /index.php?/xxx
         if (isset($_SERVER['REQUEST_URI'])) {
             if (preg_match('/^\/\?\//', $_SERVER['REQUEST_URI'])) {
-                $preg='/^(\/\?(\/[^?]*))(?:[?](.+))?$/';
+                $preg='/^(\/\?(\/[^?]*))(?:[?](.+)?)?$/';
                 preg_match($preg, $_SERVER['REQUEST_URI'], $match);
                 $_SERVER['PHP_SELF']=$match[1];
                 if (isset($match[3])) {

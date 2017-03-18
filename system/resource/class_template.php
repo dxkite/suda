@@ -20,6 +20,6 @@ class __class_name__ extends \__parent__
         // param values array
         $value=__param_array__;
         // display template
-        return $this->display('__module__:__template_name__', ['helloworld'=>'Hello,World!', 'value'=>$value]);
+        return $this->display('__module__:__template_name__', ['title'=>'Welcome to use Suda!','helloworld'=>'Hello,World!', 'value'=>$value]);
     }
 }
