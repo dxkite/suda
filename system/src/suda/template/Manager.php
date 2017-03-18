@@ -152,11 +152,11 @@ class Manager
     {
         // 向下兼容
         defined('APP_PUBLIC') or define('APP_PUBLIC', '.');
-        $static_path=MODULES_DIR.'/'.\suda\core\Application::getActiveModule().'/resource/template/'.self::$theme.'/static';
+        $static_path=Storage::path(MODULES_DIR.'/'.\suda\core\Application::getActiveModule().'/resource/template/'.self::$theme.'/static');
         $path=Storage::path(APP_PUBLIC.'/static/');
-        defined('APP_STATIC') or define('APP_STATIC',$path);
-        if (self::hasChanged($static_path,$path)) {
-            self::copyStatic($static_path,$path);
+        defined('APP_STATIC') or define('APP_STATIC', $path);
+        if (self::hasChanged($static_path, $path)) {
+            self::copyStatic($static_path, $path);
         }
     }
 
@@ -172,13 +172,13 @@ class Manager
         }
         return false;
     }
-    protected static function copyStatic(string $static_path ,string $path)
+    protected static function copyStatic(string $static_path, string $path)
     {
         Storage::rmdirs($path);
         // 复制静态资源
         $non_static=trim(str_replace(',', '|', Config::get('non-static', 'php')), '|');
         $non_static_preg='/(?<!(\.tpl\.html)|(\.('.$non_static.')))$/';
-        if (Storage::isDir($static_path)){
+        if (Storage::isDir($static_path)) {
             Storage::copydir($static_path, $path, $non_static_preg);
         }
     }
