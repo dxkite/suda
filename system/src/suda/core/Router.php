@@ -291,7 +291,7 @@ class Router
                 } else {
                     return '';
                 }
-            }, $url);
+            }, preg_replace('/\[(.+?)\]/', '$1', $url));
         } else {
             return '/_undefine_router_';
         }
