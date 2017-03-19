@@ -139,7 +139,7 @@ class Compiler
     protected function parseStartInsert($exp)
     {
         preg_match('/\((.+)\)/', $exp, $v);
-        return '<?php suda\\template\\Manager::hook('.$v[1].',function () { ?>';
+        return '<?php suda\\template\\Manager::hook('.$v[1].',function ($v) { ?>';
     }
     
     protected function parseEndInsert()
@@ -148,7 +148,8 @@ class Compiler
     }
     protected function parseInsert($exp)
     {
-        return "<?php suda\\template\\Manager::exec($exp) ?>";
+        preg_match('/^\(([\'"])(.+)(?1)/', $exp, $match);
+        return "<?php suda\\template\\Manager::exec('{$match[2]}',\$v) ?>";
     }
 
     // 错误报错

@@ -87,7 +87,7 @@ class {{ $_SQL->name }}
 	/**
 	* list By {{$key}} {{$type}}  
 	*/<?php $type=preg_match('/int/i', $type)?'int':'string'; ?> 
-	public function listBy{{ ucfirst($key) }}({{$type}} ${{$key}},int $page=1, int $count=10)
+	public static function listBy{{ ucfirst($key) }}({{$type}} ${{$key}},int $page=1, int $count=10)
     {@if ($type==='int') 
         return ($get=Query::where('{{$this->getTableName()}}', {{$this->getFieldsStr($key)}},['{{$key}}'=>${{$key}}],[],[$page, $count])->fetchAll()) ? $get  : false;@elseif ($type==='string') 
 		return ($get=Query::where('{{$this->getTableName()}}', {{$this->getFieldsStr()}}, ' `{{$key}}` LIKE CONCAT("%",:{{$key}},"%") ',['{{$key}}'=>${{$key}}],[$page, $count])->fetchAll()) ? $get  : false;@endif 
