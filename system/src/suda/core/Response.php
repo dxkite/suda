@@ -2,6 +2,7 @@
 namespace suda\core;
 
 use suda\tool\Json;
+use suda\tool\ArrayHelper;
 use suda\template\Manager;
 
 // TODO: If-Modified-Since
@@ -59,10 +60,13 @@ abstract class Response
     private $type='html';
     private static $instance=null;
     private static $mime;
+
+    protected $_values=[];
+
     public function __construct()
     {
         self::mark();
-        if(conf('debug')){
+        if (conf('debug')) {
             // 设置无缓存头
             self::noCache();
             // 强制刷新index文件来避免缓存
@@ -101,6 +105,7 @@ abstract class Response
         _D()->I('Log Json:'.json_encode($values));
         self::mark();
         self::obEnd();
+        $values=array_merge(self::$_values,$values);
         $jsonstr=json_encode($values);
         if (Config::get('debug')) {
             $jsonstr.=$this->content;
@@ -112,7 +117,7 @@ abstract class Response
         echo $jsonstr;
     }
 
-    public function file(string $path,string $type,int $size)
+    public function file(string $path, string $type, int $size)
     {
         $hash=md5_file($path);
         $this->etag($hash);
@@ -126,6 +131,7 @@ abstract class Response
         self::mark();
         // 结束缓冲控制
         self::obEnd();
+        $values=array_merge(self::$_values,$values);
         // 渲染模板
         ob_start();
         Manager::display($template, $values);
@@ -146,6 +152,7 @@ abstract class Response
         self::obEnd();
         // 渲染模板
         ob_start();
+        $values=array_merge(self::$_values,$values);
         Manager::displayFile($path, $values);
         $this->content.=ob_get_clean();
         Hook::exec('display:output', [&$this->content, $this->type]);
@@ -188,6 +195,17 @@ abstract class Response
             ob_start();
         }
     }
+
+    public static function set(string $name, $value)
+    {
+        return self::$_values=ArrayHelper::set(self::$_values, $name, $value);
+    }
+
+    public static function assign(array $values)
+    {
+        return self::$_values=array_merge(self::$_values, $values);
+    }
+
     public function obEnd()
     {
         if (self::$obstate) {
