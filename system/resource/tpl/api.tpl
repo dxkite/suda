@@ -1,7 +1,7 @@
 
 namespace db;
 
-use Query;
+use suda\core\Query;
 
 class <?php echo htmlspecialchars($_SQL->name) ?>
 
@@ -67,8 +67,26 @@ class <?php echo htmlspecialchars($_SQL->name) ?>
        <?php endforeach; ?> 
        return Query::update('<?php echo htmlspecialchars($this->getTableName()) ?>',$sets,['<?php echo htmlspecialchars($primary_key) ?>'=>$<?php echo htmlspecialchars($primary_key) ?>]); 
     }
+	
+	
     public function list(int $page=1, int $count=10)
     {
         return Query::where('<?php echo htmlspecialchars($this->getTableName()) ?>', <?php echo htmlspecialchars($this->getFieldsStr()) ?>, '1', [], [$page, $count])->fetchAll();
     }
+	
+		<?php foreach($_SQL->keys as $key => $type): ?> 
+	
+	/**
+	* list By <?php echo htmlspecialchars($key) ?> <?php echo htmlspecialchars($type) ?>  
+	*/<?php $type=preg_match('/int/i', $type)?'int':'string'; ?> 
+	public function listBy<?php echo htmlspecialchars(ucfirst($key)) ?>(<?php echo htmlspecialchars($type) ?> $<?php echo htmlspecialchars($key) ?>,int $page=1, int $count=10)
+    {
+		<?php if($type==='int'): ?>
+        return ($get=Query::where('<?php echo htmlspecialchars($this->getTableName()) ?>', <?php echo htmlspecialchars($this->getFieldsStr($key)) ?>,['<?php echo htmlspecialchars($key) ?>'=>$<?php echo htmlspecialchars($key) ?>],[],[$page, $count])->fetchAll()) ? $get  : false;
+		<?php elseif ($type==='string'): ?>
+		return ($get=Query::where('<?php echo htmlspecialchars($this->getTableName()) ?>', <?php echo htmlspecialchars($this->getFieldsStr()) ?>, ' `<?php echo htmlspecialchars($key) ?>` LIKE CONCAT("%",:<?php echo htmlspecialchars($key) ?>,"%") ',['<?php echo htmlspecialchars($key) ?>'=>$<?php echo htmlspecialchars($key) ?>],[$page, $count])->fetchAll()) ? $get  : false;
+		<?php endif; ?>
+	}
+	
+	<?php endforeach; ?> 
 }
