@@ -61,7 +61,7 @@ abstract class Response
     private static $instance=null;
     private static $mime;
 
-    protected $_values=[];
+    protected static $_values=[];
 
     public function __construct()
     {
