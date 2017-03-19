@@ -196,7 +196,7 @@ class Router
                 $class_namespace,
                 $class_name,
                 $params_str,
-                $module,
+                Application::aliasModule($module),
                 $template_name,
                 $url,
                 'default:'.$template_name.'.tpl.html',
