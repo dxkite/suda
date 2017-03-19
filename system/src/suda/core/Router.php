@@ -287,7 +287,7 @@ class Router
 
     public function buildUrl(string $name, array $values=[])
     {
-        preg_match('/^(?:(.+?):)?(.+)$/', $name, $match);
+        preg_match('/^(?:(.+?)[:])?(.+)$/', $name, $match);
         $name=$match[2];
         $module=$match[1]?:Application::getActiveModule();
         $module=Application::aliasModule($module);

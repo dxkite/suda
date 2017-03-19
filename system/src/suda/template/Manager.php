@@ -112,6 +112,7 @@ class Manager
     public static function display(string $name, array $values=[])
     {
         list($module, $basename)=preg_split('/[:]/', $name, 2);
+        $module=Application::moduleName($module);
         self::_display($name, VIEWS_DIR.'/'.$module. DIRECTORY_SEPARATOR .$basename.self::$extCpl, $values);
     }
 
@@ -126,6 +127,7 @@ class Manager
     */
     protected static function _display(string $name, string $viewpath, array $values)
     {
+        
         if (Config::get('debug', true)) {
             if (!self::compile($name)) {
                 echo '<b>compile error: '.$name.': missing raw template </b>';
