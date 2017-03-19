@@ -61,7 +61,7 @@ class Manager
     protected static function path(string $name, bool $ext=true):string
     {
         list($module, $name)=preg_split('/[:]/', $name, 2);
-        $path=MODULES_DIR.'/'.$module.'/resource/template/'.self::$theme;
+        $path=MODULES_DIR.'/'.self::alias($module).'/resource/template/'.self::$theme;
         if ($ext) {
             $tpl=$path.'/'.$name.self::$extRaw;
         } else {
@@ -82,8 +82,8 @@ class Manager
     public static function compile(string $name)
     {
         list($module, $basename)=preg_split('/[:]/', $name, 2);
-        $prefix=MODULES_DIR.'/'.$module.'/resource/template/'.self::$theme;
-        $output=VIEWS_DIR.'/'.$module.'/'.$basename.self::$extCpl;
+        $prefix=MODULES_DIR.'/'.self::alias($module).'/resource/template/'.self::$theme;
+        $output=VIEWS_DIR.'/'.self::alias($module).'/'.$basename.self::$extCpl;
 
         $input=$prefix.'/'.$basename.self::$extRaw;
         
@@ -184,5 +184,8 @@ class Manager
         if (Storage::isDir($static_path)) {
             Storage::copydir($static_path, $path, $non_static_preg);
         }
+    }
+    public function alias(string $name){
+        return conf('template.alias.'.$name,$name); 
     }
 }
