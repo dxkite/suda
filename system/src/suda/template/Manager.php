@@ -174,7 +174,10 @@ class Manager
     }
     protected static function copyStatic(string $static_path, string $path)
     {
-        Storage::rmdirs($path);
+        // 默认不删除模板更新
+        if (conf('template.refreshAll',false)){
+            Storage::rmdirs($path);
+        }
         // 复制静态资源
         $non_static=trim(str_replace(',', '|', Config::get('non-static', 'php')), '|');
         $non_static_preg='/(?<!(\.tpl\.html)|(\.('.$non_static.')))$/';
