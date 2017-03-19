@@ -70,7 +70,7 @@ abstract class Response
         }
     }
     abstract public function onRequest(Request $request);
-    public function onPreTest($test_data):bool
+    public function onPreTest($test_data)
     {
         return true;
     }

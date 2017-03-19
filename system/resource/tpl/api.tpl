@@ -21,10 +21,10 @@ class <?php echo htmlspecialchars($_SQL->name) ?>
     <?php $set_update=implode(',',$set_update);  $set_create=implode(',',$set_create);  $update_params=array_merge($update_params, $create_params); $create_params=implode(',', $create_params);$update_params=implode(',', $update_params);?>
 	
 	/**
-	* Create A Item
+	* add A Item
 	* @return  the id of item
 	*/
-    public static function create(<?php echo htmlspecialchars($create_params) ?>)
+    public static function add(<?php echo htmlspecialchars($create_params) ?>)
     {
         return Query::insert('<?php echo htmlspecialchars($this->getTableName()) ?>',[<?php echo($set_create) ?>]);
     }
@@ -76,8 +76,15 @@ class <?php echo htmlspecialchars($_SQL->name) ?>
        <?php endforeach; ?> 
        return Query::update('<?php echo htmlspecialchars($this->getTableName()) ?>',$sets,['<?php echo htmlspecialchars($primary_key) ?>'=>$<?php echo htmlspecialchars($primary_key) ?>]); 
     }
-	
-	
+	 
+    public static function set(<?php echo htmlspecialchars($primary_type) ?> $<?php echo htmlspecialchars($primary_key) ?>,array $data){
+	   foreach($data as $name=>$value){
+			if (!in_array($name,<?php echo htmlspecialchars($this->getFieldsStr( )) ?>)){
+				return false;
+			}
+	   }
+       return Query::update('<?php echo htmlspecialchars($this->getTableName()) ?>',$data,['<?php echo htmlspecialchars($primary_key) ?>'=>$<?php echo htmlspecialchars($primary_key) ?>]); 
+    }
     public static function list(int $page=1, int $count=10)
     {
         return Query::where('<?php echo htmlspecialchars($this->getTableName()) ?>', <?php echo htmlspecialchars($this->getFieldsStr()) ?>, '1', [], [$page, $count])->fetchAll();
@@ -87,7 +94,7 @@ class <?php echo htmlspecialchars($_SQL->name) ?>
 	/**
 	* list By <?php echo htmlspecialchars($key) ?> <?php echo htmlspecialchars($type) ?>  
 	*/<?php $type=preg_match('/int/i', $type)?'int':'string'; ?> 
-	public function listBy<?php echo htmlspecialchars(ucfirst($key)) ?>(<?php echo htmlspecialchars($type) ?> $<?php echo htmlspecialchars($key) ?>,int $page=1, int $count=10)
+	public static function listBy<?php echo htmlspecialchars(ucfirst($key)) ?>(<?php echo htmlspecialchars($type) ?> $<?php echo htmlspecialchars($key) ?>,int $page=1, int $count=10)
     {<?php if($type==='int'): ?> 
         return ($get=Query::where('<?php echo htmlspecialchars($this->getTableName()) ?>', <?php echo htmlspecialchars($this->getFieldsStr($key)) ?>,['<?php echo htmlspecialchars($key) ?>'=>$<?php echo htmlspecialchars($key) ?>],[],[$page, $count])->fetchAll()) ? $get  : false;<?php elseif ($type==='string'): ?> 
 		return ($get=Query::where('<?php echo htmlspecialchars($this->getTableName()) ?>', <?php echo htmlspecialchars($this->getFieldsStr()) ?>, ' `<?php echo htmlspecialchars($key) ?>` LIKE CONCAT("%",:<?php echo htmlspecialchars($key) ?>,"%") ',['<?php echo htmlspecialchars($key) ?>'=>$<?php echo htmlspecialchars($key) ?>],[$page, $count])->fetchAll()) ? $get  : false;<?php endif; ?> 

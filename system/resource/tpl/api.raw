@@ -21,10 +21,10 @@ class {{ $_SQL->name }}
     <?php $set_update=implode(',',$set_update);  $set_create=implode(',',$set_create);  $update_params=array_merge($update_params, $create_params); $create_params=implode(',', $create_params);$update_params=implode(',', $update_params);?>
 	
 	/**
-	* Create A Item
+	* add A Item
 	* @return the id of item
 	*/
-    public static function create({{$create_params}})
+    public static function add({{$create_params}})
     {
         return Query::insert('{{$this->getTableName()}}',[{{!$set_create}}]);
     }
@@ -76,8 +76,15 @@ class {{ $_SQL->name }}
        @endforeach 
        return Query::update('{{$this->getTableName()}}',$sets,['{{$primary_key}}'=>${{$primary_key}}]); 
     }
-	
-	
+	 
+    public static function set({{$primary_type}} ${{$primary_key}},array $data){
+	   foreach($data as $name=>$value){
+			if (!in_array($name,{{$this->getFieldsStr( )}})){
+				return false;
+			}
+	   }
+       return Query::update('{{$this->getTableName()}}',$data,['{{$primary_key}}'=>${{$primary_key}}]); 
+    }
     public static function list(int $page=1, int $count=10)
     {
         return Query::where('{{$this->getTableName()}}', {{$this->getFieldsStr()}}, '1', [], [$page, $count])->fetchAll();
