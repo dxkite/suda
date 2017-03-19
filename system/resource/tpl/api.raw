@@ -24,7 +24,7 @@ class {{ $_SQL->name }}
 	* Create A Item
 	* @return the id of item
 	*/
-    public function create({{$create_params}})
+    public static function create({{$create_params}})
     {
         return Query::insert('{{$this->getTableName()}}',[{{!$set_create}}]);
     }
@@ -33,7 +33,7 @@ class {{ $_SQL->name }}
 	*  	Delete A Item By Primary Key
 	*	@return rows
 	*/
-	public function delete({{$primary_type}} ${{$primary_key}}){
+	public static function delete({{$primary_type}} ${{$primary_key}}){
         return Query::delete('{{$this->getTableName()}}',['{{$primary_key}}'=>${{$primary_key}}]);
     }
 	
@@ -41,9 +41,18 @@ class {{ $_SQL->name }}
 	*  	get A Item By Primary Key 
 	* 	@return item
 	*/  
-	public function get({{$primary_type}} ${{$primary_key}})
+	public static function get({{$primary_type}} ${{$primary_key}})
     {
         return ($get=Query::where('{{$this->getTableName()}}', {{$this->getFieldsStr()}},['{{$primary_key}}'=>${{$primary_key}}])->fetch()) ? $get  : false;
+    }
+	
+	/**
+	*  	get A Item By Primary Key 
+	* 	@return item
+	*/  
+	public static function count()
+    {
+        return Query::count('{{$this->getTableName()}}');
     }
 	
 	@foreach  ($_SQL->keys as $key => $type) 
@@ -51,13 +60,13 @@ class {{ $_SQL->name }}
 	/**
 	* Get By {{$key}} {{$type}}  
 	*/<?php $type=preg_match('/int/i', $type)?'int':'string'; ?> 
-	public function getBy{{ ucfirst($key) }}({{$type}} ${{$key}})
+	public static function getBy{{ ucfirst($key) }}({{$type}} ${{$key}})
     {
         return ($get=Query::where('{{$this->getTableName()}}', {{$this->getFieldsStr($key)}},['{{$key}}'=>${{$key}}])->fetch()) ? $get  : false;
     }
 	
 	@endforeach 
-    public function update({{$primary_type}} ${{$primary_key}},{{ $this->updataParams() }}){
+    public static function update({{$primary_type}} ${{$primary_key}},{{ $this->updataParams() }}){
 	   $sets=[];
 	   @foreach ($_SQL->fields() as $name => $type) 
 	   if  (!is_null(${{$name}}))
@@ -69,24 +78,30 @@ class {{ $_SQL->name }}
     }
 	
 	
-    public function list(int $page=1, int $count=10)
+    public static function list(int $page=1, int $count=10)
     {
         return Query::where('{{$this->getTableName()}}', {{$this->getFieldsStr()}}, '1', [], [$page, $count])->fetchAll();
     }
 	
-		@foreach  ($_SQL->keys as $key => $type) 
-	
+ @foreach  ($_SQL->keys as $key => $type) 
 	/**
 	* list By {{$key}} {{$type}}  
 	*/<?php $type=preg_match('/int/i', $type)?'int':'string'; ?> 
 	public function listBy{{ ucfirst($key) }}({{$type}} ${{$key}},int $page=1, int $count=10)
-    {
-		@if ($type==='int')
-        return ($get=Query::where('{{$this->getTableName()}}', {{$this->getFieldsStr($key)}},['{{$key}}'=>${{$key}}],[],[$page, $count])->fetchAll()) ? $get  : false;
-		@elseif ($type==='string')
-		return ($get=Query::where('{{$this->getTableName()}}', {{$this->getFieldsStr()}}, ' `{{$key}}` LIKE CONCAT("%",:{{$key}},"%") ',['{{$key}}'=>${{$key}}],[$page, $count])->fetchAll()) ? $get  : false;
-		@endif
+    {@if ($type==='int') 
+        return ($get=Query::where('{{$this->getTableName()}}', {{$this->getFieldsStr($key)}},['{{$key}}'=>${{$key}}],[],[$page, $count])->fetchAll()) ? $get  : false;@elseif ($type==='string') 
+		return ($get=Query::where('{{$this->getTableName()}}', {{$this->getFieldsStr()}}, ' `{{$key}}` LIKE CONCAT("%",:{{$key}},"%") ',['{{$key}}'=>${{$key}}],[$page, $count])->fetchAll()) ? $get  : false;@endif 
 	}
-	
-	@endforeach 
+@endforeach 
+
+ @foreach  ($_SQL->keys as $key => $type) 
+	/**
+	* list By {{$key}} {{$type}}  
+	*/<?php $type=preg_match('/int/i', $type)?'int':'string'; ?> 
+	public static function countIf{{ ucfirst($key) }}({{$type}} ${{$key}})
+    {@if ($type==='int') 
+        return Query::count('{{$this->getTableName()}}', ['{{$key}}'=>${{$key}}] );@elseif ($type==='string') 
+		return Query::count('{{$this->getTableName()}}', ' `{{$key}}` LIKE CONCAT("%",:{{$key}},"%") ',['{{$key}}'=>${{$key}}] );@endif 
+	}
+@endforeach 
 }

@@ -98,7 +98,7 @@ class Manager
 
     public static function hook(string $name, $callback)
     {
-        self::$hooks[$name][]=new  \base\Command($callback);
+        self::$hooks[$name][]=new  \suda\tool\Command($callback);
     }
 
     public static function exec(string $name)

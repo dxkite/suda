@@ -3,7 +3,7 @@
     $classname=$options['class'];
     $share= isset($options['share']) || isset($options['s']);
     if ($path=createClassFile($classname,$share)) {
-        print 'class create at>'.$path."\r\n";
+        print 'class create at>'."\033[34m".$path."\033[0m\r\n";
     } else {
         print 'class  format error!';
     }

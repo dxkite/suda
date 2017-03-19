@@ -24,7 +24,7 @@ class <?php echo htmlspecialchars($_SQL->name) ?>
 	* Create A Item
 	* @return  the id of item
 	*/
-    public function create(<?php echo htmlspecialchars($create_params) ?>)
+    public static function create(<?php echo htmlspecialchars($create_params) ?>)
     {
         return Query::insert('<?php echo htmlspecialchars($this->getTableName()) ?>',[<?php echo($set_create) ?>]);
     }
@@ -33,7 +33,7 @@ class <?php echo htmlspecialchars($_SQL->name) ?>
 	*  	Delete A Item By Primary Key
 	*	@return  rows
 	*/
-	public function delete(<?php echo htmlspecialchars($primary_type) ?> $<?php echo htmlspecialchars($primary_key) ?>){
+	public static function delete(<?php echo htmlspecialchars($primary_type) ?> $<?php echo htmlspecialchars($primary_key) ?>){
         return Query::delete('<?php echo htmlspecialchars($this->getTableName()) ?>',['<?php echo htmlspecialchars($primary_key) ?>'=>$<?php echo htmlspecialchars($primary_key) ?>]);
     }
 	
@@ -41,9 +41,18 @@ class <?php echo htmlspecialchars($_SQL->name) ?>
 	*  	get A Item By Primary Key 
 	* 	@return  item
 	*/  
-	public function get(<?php echo htmlspecialchars($primary_type) ?> $<?php echo htmlspecialchars($primary_key) ?>)
+	public static function get(<?php echo htmlspecialchars($primary_type) ?> $<?php echo htmlspecialchars($primary_key) ?>)
     {
         return ($get=Query::where('<?php echo htmlspecialchars($this->getTableName()) ?>', <?php echo htmlspecialchars($this->getFieldsStr()) ?>,['<?php echo htmlspecialchars($primary_key) ?>'=>$<?php echo htmlspecialchars($primary_key) ?>])->fetch()) ? $get  : false;
+    }
+	
+	/**
+	*  	get A Item By Primary Key 
+	* 	@return  item
+	*/  
+	public static function count()
+    {
+        return Query::count('<?php echo htmlspecialchars($this->getTableName()) ?>');
     }
 	
 	<?php foreach($_SQL->keys as $key => $type): ?> 
@@ -51,13 +60,13 @@ class <?php echo htmlspecialchars($_SQL->name) ?>
 	/**
 	* Get By <?php echo htmlspecialchars($key) ?> <?php echo htmlspecialchars($type) ?>  
 	*/<?php $type=preg_match('/int/i', $type)?'int':'string'; ?> 
-	public function getBy<?php echo htmlspecialchars(ucfirst($key)) ?>(<?php echo htmlspecialchars($type) ?> $<?php echo htmlspecialchars($key) ?>)
+	public static function getBy<?php echo htmlspecialchars(ucfirst($key)) ?>(<?php echo htmlspecialchars($type) ?> $<?php echo htmlspecialchars($key) ?>)
     {
         return ($get=Query::where('<?php echo htmlspecialchars($this->getTableName()) ?>', <?php echo htmlspecialchars($this->getFieldsStr($key)) ?>,['<?php echo htmlspecialchars($key) ?>'=>$<?php echo htmlspecialchars($key) ?>])->fetch()) ? $get  : false;
     }
 	
 	<?php endforeach; ?> 
-    public function update(<?php echo htmlspecialchars($primary_type) ?> $<?php echo htmlspecialchars($primary_key) ?>,<?php echo htmlspecialchars($this->updataParams()) ?>){
+    public static function update(<?php echo htmlspecialchars($primary_type) ?> $<?php echo htmlspecialchars($primary_key) ?>,<?php echo htmlspecialchars($this->updataParams()) ?>){
 	   $sets=[];
 	   <?php foreach($_SQL->fields() as $name => $type): ?> 
 	   if  (!is_null($<?php echo htmlspecialchars($name) ?>))
@@ -69,24 +78,30 @@ class <?php echo htmlspecialchars($_SQL->name) ?>
     }
 	
 	
-    public function list(int $page=1, int $count=10)
+    public static function list(int $page=1, int $count=10)
     {
         return Query::where('<?php echo htmlspecialchars($this->getTableName()) ?>', <?php echo htmlspecialchars($this->getFieldsStr()) ?>, '1', [], [$page, $count])->fetchAll();
     }
 	
-		<?php foreach($_SQL->keys as $key => $type): ?> 
-	
+ <?php foreach($_SQL->keys as $key => $type): ?> 
 	/**
 	* list By <?php echo htmlspecialchars($key) ?> <?php echo htmlspecialchars($type) ?>  
 	*/<?php $type=preg_match('/int/i', $type)?'int':'string'; ?> 
 	public function listBy<?php echo htmlspecialchars(ucfirst($key)) ?>(<?php echo htmlspecialchars($type) ?> $<?php echo htmlspecialchars($key) ?>,int $page=1, int $count=10)
-    {
-		<?php if($type==='int'): ?>
-        return ($get=Query::where('<?php echo htmlspecialchars($this->getTableName()) ?>', <?php echo htmlspecialchars($this->getFieldsStr($key)) ?>,['<?php echo htmlspecialchars($key) ?>'=>$<?php echo htmlspecialchars($key) ?>],[],[$page, $count])->fetchAll()) ? $get  : false;
-		<?php elseif ($type==='string'): ?>
-		return ($get=Query::where('<?php echo htmlspecialchars($this->getTableName()) ?>', <?php echo htmlspecialchars($this->getFieldsStr()) ?>, ' `<?php echo htmlspecialchars($key) ?>` LIKE CONCAT("%",:<?php echo htmlspecialchars($key) ?>,"%") ',['<?php echo htmlspecialchars($key) ?>'=>$<?php echo htmlspecialchars($key) ?>],[$page, $count])->fetchAll()) ? $get  : false;
-		<?php endif; ?>
+    {<?php if($type==='int'): ?> 
+        return ($get=Query::where('<?php echo htmlspecialchars($this->getTableName()) ?>', <?php echo htmlspecialchars($this->getFieldsStr($key)) ?>,['<?php echo htmlspecialchars($key) ?>'=>$<?php echo htmlspecialchars($key) ?>],[],[$page, $count])->fetchAll()) ? $get  : false;<?php elseif ($type==='string'): ?> 
+		return ($get=Query::where('<?php echo htmlspecialchars($this->getTableName()) ?>', <?php echo htmlspecialchars($this->getFieldsStr()) ?>, ' `<?php echo htmlspecialchars($key) ?>` LIKE CONCAT("%",:<?php echo htmlspecialchars($key) ?>,"%") ',['<?php echo htmlspecialchars($key) ?>'=>$<?php echo htmlspecialchars($key) ?>],[$page, $count])->fetchAll()) ? $get  : false;<?php endif; ?> 
 	}
-	
-	<?php endforeach; ?> 
+<?php endforeach; ?> 
+
+ <?php foreach($_SQL->keys as $key => $type): ?> 
+	/**
+	* list By <?php echo htmlspecialchars($key) ?> <?php echo htmlspecialchars($type) ?>  
+	*/<?php $type=preg_match('/int/i', $type)?'int':'string'; ?> 
+	public static function countIf<?php echo htmlspecialchars(ucfirst($key)) ?>(<?php echo htmlspecialchars($type) ?> $<?php echo htmlspecialchars($key) ?>)
+    {<?php if($type==='int'): ?> 
+        return Query::count('<?php echo htmlspecialchars($this->getTableName()) ?>', ['<?php echo htmlspecialchars($key) ?>'=>$<?php echo htmlspecialchars($key) ?>] );<?php elseif ($type==='string'): ?> 
+		return Query::count('<?php echo htmlspecialchars($this->getTableName()) ?>', ' `<?php echo htmlspecialchars($key) ?>` LIKE CONCAT("%",:<?php echo htmlspecialchars($key) ?>,"%") ',['<?php echo htmlspecialchars($key) ?>'=>$<?php echo htmlspecialchars($key) ?>] );<?php endif; ?> 
+	}
+<?php endforeach; ?> 
 }

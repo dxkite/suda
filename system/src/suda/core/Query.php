@@ -115,10 +115,11 @@ class Query extends AQuery
         $bind=array_merge($bind,$param);
         return $where;
     }
-    public static function count(string $table, string $where='1', array $binds=[]):int
+    public static function count(string $table,  $where='1', array $binds=[]):int
     {
         $table=self::table($table);
-        $sql='SELECT count(*) as `count` FROM `'.$table.'` WHERE '.rtrim($where, ';').';';
+        $where=self::prepareWhere($where,$binds);
+        $sql='SELECT count(*) as `count` FROM `'.$table.'` '.$where.';';
         if ($query=(new AQuery($sql, $binds))->fetch()) {
             return intval($query['count']);
         }
