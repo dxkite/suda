@@ -20,39 +20,12 @@ if (isset($options['call'])) {
 } elseif (isset($options['run'])) {
     require_once TOOL_DIR.'/run.php';
 } elseif (isset($options['class'])) {
-    $classname=$options['class'];
-    if ($path=createClassFile($classname)){
-        print 'class create at>'.$path."\r\n";
-    }else{
-        print 'class  format error!';
-    }
+    require_once TOOL_DIR.'/class.php';
 } else {
     echo 'Usage:'."\r\n";
     echo "\t".'--call name , call the functions'."\r\n";
     echo "\t".'--db option do database options'."\r\n";
     echo "\t".'--router name create router'."\r\n";
-}
-
-function createClassFile(string $classname)
-{
-    if (!preg_match('/^(.+?)@(.+?)$/', $classname, $matchs)) {
-        return false;
-    }
-    list($all, $class_short, $module)=$matchs;
-    $namespace=conf('app.namespace');
-    $class=$namespace.'\\'.$class_short;
-    $pos=strrpos($class, '\\');
-    $class_namespace=substr($class, 0, $pos);
-    $class_name=substr($class, $pos+1);
-    $class_path=MODULES_DIR.'/'.$module.'/src/'.$class_namespace;
-    $class_file=$class_path.'/'.$class_name.'.php';
-    
-    $class_template= Storage::get(SYS_RES. '/class_controller.php');
-    $class_template=str_replace(
-            ['__class_namespace__', '__class_name__','__module__',],
-            [$class_namespace,$class_name,$module,], $class_template);
-    // 写入Class
-    Storage::path($class_path);
-    Storage::put($class_file, $class_template);
-    return $class_file;
+    echo "\t".'--class name create a class'."\r\n";
+    echo "\t".'--run name#method run a class method'."\r\n";
 }
