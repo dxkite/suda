@@ -1,9 +1,9 @@
 <?php
 namespace suda\template;
 
-use Storage;
+
 use suda\tool\Value;
-use suda\core\Config;
+use suda\core\{Config,Application,Storage};
 
 class Manager
 {
@@ -61,7 +61,7 @@ class Manager
     protected static function path(string $name, bool $ext=true):string
     {
         list($module, $name)=preg_split('/[:]/', $name, 2);
-        $path=MODULES_DIR.'/'.self::alias($module).'/resource/template/'.self::$theme;
+        $path=MODULES_DIR.'/'.Application::aliasModule($module).'/resource/template/'.self::$theme;
         if ($ext) {
             $tpl=$path.'/'.$name.self::$extRaw;
         } else {
@@ -82,11 +82,9 @@ class Manager
     public static function compile(string $name)
     {
         list($module, $basename)=preg_split('/[:]/', $name, 2);
-        $prefix=MODULES_DIR.'/'.self::alias($module).'/resource/template/'.self::$theme;
-        $output=VIEWS_DIR.'/'.self::alias($module).'/'.$basename.self::$extCpl;
-
+        $prefix=MODULES_DIR.'/'. Application::moduleName($module) .'/resource/template/'.self::$theme;
+        $output=VIEWS_DIR.'/'. Application::moduleName($module).'/'.$basename.self::$extCpl;
         $input=$prefix.'/'.$basename.self::$extRaw;
-        
         if (!Storage::exist($input)) {
             return false;
         }
@@ -113,7 +111,8 @@ class Manager
     }
     public static function display(string $name, array $values=[])
     {
-        self::_display($name, VIEWS_DIR.'/'.preg_replace('/[:\\\\\/]/', DIRECTORY_SEPARATOR, $name).self::$extCpl, $values);
+        list($module, $basename)=preg_split('/[:]/', $name, 2);
+        self::_display($name, VIEWS_DIR.'/'.$module. DIRECTORY_SEPARATOR .$basename.self::$extCpl, $values);
     }
 
     public static function include(string $tplname, array $values)
@@ -129,7 +128,7 @@ class Manager
     {
         if (Config::get('debug', true)) {
             if (!self::compile($name)) {
-                echo '<b>compile error: '.$name.':missing raw template </b>';
+                echo '<b>compile error: '.$name.': missing raw template </b>';
                 return;
             }
         } elseif (!Storage::exist($viewpath)) {
@@ -175,7 +174,7 @@ class Manager
     protected static function copyStatic(string $static_path, string $path)
     {
         // 默认不删除模板更新
-        if (conf('template.refreshAll',false)){
+        if (conf('template.refreshAll', false)) {
             Storage::rmdirs($path);
         }
         // 复制静态资源
@@ -184,8 +183,5 @@ class Manager
         if (Storage::isDir($static_path)) {
             Storage::copydir($static_path, $path, $non_static_preg);
         }
-    }
-    public function alias(string $name){
-        return conf('template.alias.'.$name,$name); 
     }
 }

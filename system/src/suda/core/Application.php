@@ -94,4 +94,14 @@ class Application
     {
         return false;
     }
+    public static function aliasModule(string $name)
+    {
+        return conf('module-alias.'.$name, $name);
+    }
+
+    public static function moduleName(string $name)
+    {
+        $modules= conf('module-alias', []);
+        return array_search($name, $modules)?:$name;
+    }
 }

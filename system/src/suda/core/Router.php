@@ -6,6 +6,7 @@ use suda\tool\Json;
 use suda\tool\ArrayHelper;
 
 // TODO:路由强化
+// TODO:路由模块化（添加命名空间）
 
 class Router
 {
@@ -36,11 +37,11 @@ class Router
         $routers=[];
         // 加载普通路由
         if (Storage::exist(MODULES_DIR.'/'.$module.'/resource/config/router.json')) {
-            $routers=array_merge($routers, Json::loadFile(MODULES_DIR.'/'.$module.'/resource/config/router.json'));
+            $routers=array_merge($routers,self::loadModuleJson($module,MODULES_DIR.'/'.$module.'/resource/config/router.json'));
         }
         // 加载管理路由
         if (Storage::exist(MODULES_DIR.'/'.$module.'/resource/config/router_admin.json')) {
-            $routers=array_merge($routers, Json::loadFile(MODULES_DIR.'/'.$module.'/resource/config/router_admin.json'));
+            $routers=array_merge($routers, self::loadModuleJson($module,MODULES_DIR.'/'.$module.'/resource/config/router_admin.json'));
         }
         $prefix=conf('router-prefix.'.$module, null);
         array_walk($routers, function (&$router) use ($module, $prefix) {
@@ -52,7 +53,18 @@ class Router
         });
         $this->routers=array_merge($this->routers, $routers);
     }
+    
+    protected function loadModuleJson(string $module,string $jsonfile){
+        $module=Application::aliasModule($module);
+        $routers=Json::loadFile($jsonfile);
+        $router=[];
+        foreach ($routers as $name => $value){
+            $router[$module.':'.$name]=$value;
+        }
+        return $router;
+    }
 
+    
     protected function loadFile()
     {
         $this->routers=require TEMP_DIR.'/router.cache.php';
@@ -67,6 +79,7 @@ class Router
     {
         if (conf('debug')) {
             $modules=Config::get('app.modules', []);
+            
             foreach ($modules as $module) {
                 self::load($module);
             }
@@ -274,6 +287,11 @@ class Router
 
     public function buildUrl(string $name, array $values=[])
     {
+        preg_match('/^(?:(.+?):)?(.+)$/', $name, $match);
+        $name=$match[2];
+        $module=$match[1]?:Application::getActiveModule();
+        $module=Application::aliasModule($module);
+        $name=$module.':'.$name;
         $url= '';
         if (isset($this->routers[$name])) {
             // 路由存在
@@ -293,12 +311,12 @@ class Router
                 }
             }, preg_replace('/\[(.+?)\]/', '$1', $url));
         } else {
-            return '/_undefine_router_';
+            return '/?undefine_router';
         }
         if (count($values)) {
             return $url.'?'.http_build_query($values, 'v', '&', PHP_QUERY_RFC3986);
         }
-        return Request::getInstance()->baseUrl(). ltrim($url,'/');
+        return Request::getInstance()->baseUrl(). ltrim($url, '/');
     }
 
 
