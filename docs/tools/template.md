@@ -27,12 +27,14 @@
 | @while(exp)           | while --> `<?php while(exp): ?>`          |
 | @endwhile             | endwhile -->`<?php endwhile; ?>`          |
 
-### 扩展控制符
+### 控制符
 | 控制符                | 说明                                          |
 |----------------------|-----------------------------------------------|
 | @include(name)| 包含模板 |
-
-
+| @data(commandstr)| 调用函数生成数据 |
+| @insert(insertname)| 添加页面插入点 |
+| @startInsert(insertname) |开始插入块 |
+| @endInsert|　结束插入块|
 
 ## 页面赋值
 1. 设置的变量获取值   
@@ -53,4 +55,4 @@
 
 ## 模板静态资源
 模板的静态资源统一放置在模板文件夹下的`static`目录，在激活模块时，会自动复制到`public/static`目录。
-引用模板的资源：`static/path/to/resource.type`
+引用模板的资源：`@static/path/to/resource.type` 注意`@`，
