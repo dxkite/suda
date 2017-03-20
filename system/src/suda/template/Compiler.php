@@ -128,7 +128,10 @@ class Compiler
     {
         return "<?php echo u$exp ?>";
     }
-
+    protected function parseSet($exp)
+    {
+        return "<?php suda\\core\\Response::set$exp ?>";
+    }
     protected function parseStatic()
     {
         $static_url=Storage::cut(APP_STATIC, APP_PUBLIC);
