@@ -34,25 +34,32 @@ class Router
 
     public function load(string $module)
     {
-        $routers=[];
-        // 加载普通路由
+        $simple_routers=[];
+        $admin_routers=[];
         if (Storage::exist(MODULES_DIR.'/'.$module.'/resource/config/router.json')) {
-            $routers=array_merge($routers, self::loadModuleJson($module, MODULES_DIR.'/'.$module.'/resource/config/router.json'));
+            $simple_routers= self::loadModuleJson($module, MODULES_DIR.'/'.$module.'/resource/config/router.json');
+            array_walk($simple_routers, function (&$router) use ($module) {
+                $prefix= conf('router-prefix.'.$module, null);
+                if (!is_null($prefix)) {
+                    $router['visit']=$prefix.$router['visit'];
+                }
+                $router['visit']='/'.trim($router['visit'], '/');
+                $router['module']=$module;
+            });
         }
-        // 加载管理路由
+
+        // 加载后台路由
         if (Storage::exist(MODULES_DIR.'/'.$module.'/resource/config/router_admin.json')) {
-            $routers=array_merge($routers, self::loadModuleJson($module, MODULES_DIR.'/'.$module.'/resource/config/router_admin.json'));
+            $admin_routers= self::loadModuleJson($module, MODULES_DIR.'/'.$module.'/resource/config/router_admin.json');
+            array_walk($admin_routers, function (&$router) use ($module) {
+                $prefix= conf('app.admin', '/suda-admin');
+                $router['visit']=$prefix.$router['visit'];
+                $router['visit']='/'.trim($router['visit'], '/');
+                $router['module']=$module;
+            });
         }
        
-        array_walk($routers, function (&$router) use ($module) {
-            $prefix= conf('router-prefix.'.$module, null);
-            if (!is_null($prefix)) {
-                $router['visit']=$prefix.$router['visit'];
-            }
-            $router['visit']='/'.trim($router['visit'], '/');
-            $router['module']=$module;
-        });
-        $this->routers=array_merge($this->routers, $routers);
+        $this->routers=array_merge($this->routers, $admin_routers, $simple_routers);
     }
     
     protected function loadModuleJson(string $module, string $jsonfile)
@@ -342,7 +349,7 @@ class Router
         if (! (isset($router['ob']) && $router['ob']===false)) {
             Response::obStart();
         }
-        (new \suda\tool\Command(Config::get('app.application','suda\\core\\Application').'::activeModule'))->exec([$router['module']]);
+        (new \suda\tool\Command(Config::get('app.application', 'suda\\core\\Application').'::activeModule'))->exec([$router['module']]);
         if ((new \suda\tool\Command($router['class'].'->onPreTest'))->exec([$router])) {
             (new \suda\tool\Command($router['class'].'->onRequest'))->exec([Request::getInstance()]);
         } else {
