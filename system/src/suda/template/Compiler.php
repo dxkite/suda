@@ -6,7 +6,6 @@ use suda\tool\Value;
 
 class Compiler
 {
-
     protected static $rawTag=['{{!','}}'];
     protected static $echoTag=['{{','}}'];
     protected static $commentTag=['{--','--}'];
@@ -24,7 +23,7 @@ class Compiler
                     $content=self::compileString($content);
                     $content=self::compileCommand($content);
                     $content=self::echoV($content);
-                } 
+                }
                 $result .=$content;
             } else {
                 $result .=$token;
@@ -37,7 +36,7 @@ class Compiler
     {
         $callback=function ($match) {
             if (method_exists($this, $method = 'parse'.ucfirst($match[1]))) {
-                $match[0] = $this->$method( $match[3] ?? '' );
+                $match[0] = $this->$method($match[3] ?? '');
             }
             return isset($match[3]) ? $match[0] : $match[0].$match[2];
         };
@@ -56,16 +55,22 @@ class Compiler
         ));
     }
 
-    protected static function echoV($var) {
-        return preg_replace_callback('/\B[$][:]([\w.:]+)(\s*)(\( ( (?>[^()]+) | (?3) )* \) )?/x', function($matchs){
+    protected static function echoV($var)
+    {
+        return preg_replace_callback('/\B[$][:]([\w.:]+)(\s*)(\( ( (?>[^()]+) | (?3) )* \) )?/x', function ($matchs) {
             $name=$matchs[1];
             $args=isset($matchs[4])?','.$matchs[4]:'';
-            return '$v->_("'.$name.'"'.$args.')';
-        },$var);
+            return 'Response::get("'.$name.'"'.$args.')';
+        }, $var);
     }
     protected function parseEcho($exp)
     {
         return "<?php echo htmlspecialchars{$exp} ?>";
+    }
+
+    protected function parseData($exp)
+    {
+        return "<?php suda\\template\\Manager::dataset{$exp} ?>";
     }
     // IF 语句
     protected function parseIf($exp)
@@ -127,8 +132,8 @@ class Compiler
 
     protected function parseStatic()
     {
-        $static_url=Storage::cut(APP_STATIC,APP_PUBLIC);
-        $static_url=preg_replace('/[\\\\\/]+/','/', $static_url);
+        $static_url=Storage::cut(APP_STATIC, APP_PUBLIC);
+        $static_url=preg_replace('/[\\\\\/]+/', '/', $static_url);
         return '/'.$static_url;
     }
 

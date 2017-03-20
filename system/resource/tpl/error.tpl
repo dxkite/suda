@@ -20,25 +20,25 @@
     pre{padding:0;margin:0}
     h2{padding-left:1em;}
     </style>
-    <title>Error :<?php echo htmlspecialchars($v->erron(0)) ?></title>
+    <title>Error :<?php echo htmlspecialchars(Response::get("erron",0)) ?></title>
 </head>
 <body>
-<div title="Runtime" style="position:fixed;top:0;right:0;z-index:99999;padding:3px 5px;background:rgba(0,0,0,.3);color:#FFF;font-size:12px;border-radius:0 0 0 3px ;"><?php echo htmlspecialchars($v->debuginfo('made by dxkite')) ?></div>
+<div title="Runtime" style="position:fixed;top:0;right:0;z-index:99999;padding:3px 5px;background:rgba(0,0,0,.3);color:#FFF;font-size:12px;border-radius:0 0 0 3px ;"><?php echo htmlspecialchars(Response::get("debuginfo",'made by dxkite')) ?></div>
 <div class="container">
-<div class="erron"><?php echo htmlspecialchars($v->erron(0)) ?></div>
-<div class="error"><?php echo htmlspecialchars(_T($v->error('Unknow Error'))) ?></div>
+<div class="erron"><?php echo htmlspecialchars(Response::get("erron",0)) ?></div>
+<div class="error"><?php echo htmlspecialchars(_T(Response::get("error",'Unknow Error'))) ?></div>
 </div>
 <div class="file_content">
-<div class="file"><?php echo htmlspecialchars($v->file) ?>#<?php echo htmlspecialchars($v->line(0)) ?></div>
+<div class="file"><?php echo htmlspecialchars(Response::get("file")) ?>#<?php echo htmlspecialchars(Response::get("line",0)) ?></div>
 <table class="code-table">
-<?php  foreach ($v->lines as $num =>$line_code) {?>
-<tr><td class="line"><?php echo $num+1; ?></td><td class="code"><pre <?php if ($num===$v->pos_num) echo 'class="on"';?>><?php echo htmlspecialchars($line_code) ?></pre></td><tr>
+<?php  foreach (Response::get("lines") as $num =>$line_code) {?>
+<tr><td class="line"><?php echo $num+1; ?></td><td class="code"><pre <?php if ($num===Response::get("pos_num")) echo 'class="on"';?>><?php echo htmlspecialchars($line_code) ?></pre></td><tr>
 <?php } ?>
 </table>
 </div>
 <div class="backtrace">
 <ol class="backtrace_print">
-<?php  foreach ($v->traces as $trace_info) {?>
+<?php  foreach (Response::get("traces") as $trace_info) {?>
 <li><?php echo $trace_info; ?> </li>
 <?php } ?>
 </ol>

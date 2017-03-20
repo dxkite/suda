@@ -72,7 +72,9 @@ abstract class Response
             // 强制刷新index文件来避免缓存
             touch('index.php');
         }
+        self::$instance=$this;
     }
+    
     abstract public function onRequest(Request $request);
     public function onPreTest($test_data)
     {
@@ -134,7 +136,8 @@ abstract class Response
         $values=array_merge(self::$_values,$values);
         // 渲染模板
         ob_start();
-        Manager::display($template, $values);
+        self::assign($values);
+        Manager::display($template);
         $this->content.=ob_get_clean();
         Hook::exec('display:output', [&$this->content, $this->type]);
         Header('Content-Length:'.strlen($this->content));
@@ -152,8 +155,8 @@ abstract class Response
         self::obEnd();
         // 渲染模板
         ob_start();
-        $values=array_merge(self::$_values,$values);
-        Manager::displayFile($path, $values);
+        self::assign($values);
+        Manager::displayFile($path);
         $this->content.=ob_get_clean();
         Hook::exec('display:output', [&$this->content, $this->type]);
         Header('Content-Length:'.strlen($this->content));
@@ -198,12 +201,23 @@ abstract class Response
 
     public static function set(string $name, $value)
     {
-        return self::$_values=ArrayHelper::set(self::$_values, $name, $value);
+        return self::$_values[$name]=$value;
     }
 
     public static function assign(array $values)
     {
         return self::$_values=array_merge(self::$_values, $values);
+    }
+
+    public static function get(string $name,$default=null)
+    {
+        $fmt= self::$_values[$name] ?? $default ?? $name;
+        if (func_num_args() > 2) {
+            $args=array_slice(func_get_args(),2);
+            array_unshift($args,$fmt);
+            return call_user_func_array('sprintf', $args);
+        }
+        return $fmt;
     }
 
     public function obEnd()

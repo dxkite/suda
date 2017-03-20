@@ -1,9 +1,10 @@
 <?php
 namespace suda\template;
 
-
 use suda\tool\EchoValue;
-use suda\core\{Config,Application,Storage};
+use suda\core\Config;
+use suda\core\Application;
+use suda\core\Storage;
 
 class Manager
 {
@@ -29,7 +30,6 @@ class Manager
     protected static $error='';
     protected static $erron=0;
     protected static $current=null;
-
     /**
      * 载入模板编译器
      */
@@ -101,7 +101,7 @@ class Manager
         self::$hooks[$name][]=new  \suda\tool\Command($callback);
     }
 
-    public static function exec(string $name,$var)
+    public static function exec(string $name, $var)
     {
         if (isset(self::$hooks[$name])) {
             foreach (self::$hooks[$name] as $hook) {
@@ -109,25 +109,30 @@ class Manager
             }
         }
     }
-    public static function display(string $name, array $values=[])
+
+    public static function dataset(string $name)
+    {
+        return (new  \suda\tool\Command($name))->exec(array_slice(func_get_args(), 1));
+    }
+    
+    public static function display(string $name)
     {
         list($module, $basename)=preg_split('/[:]/', $name, 2);
         $module=Application::moduleName($module);
-        self::_display($name, VIEWS_DIR.'/'.$module. DIRECTORY_SEPARATOR .$basename.self::$extCpl, $values);
+        self::_display($name, VIEWS_DIR.'/'.$module. DIRECTORY_SEPARATOR .$basename.self::$extCpl);
     }
 
-    public static function include(string $tplname, array $values)
+    public static function include(string $tplname)
     {
-        Manager::display($tplname, $values);
+        Manager::display($tplname);
     }
     
     /**
     *  $name 模板名称
     *  $path 编译后路径
     */
-    protected static function _display(string $name, string $viewpath, array $values)
+    protected static function _display(string $name, string $viewpath)
     {
-        
         if (Config::get('debug', true)) {
             if (!self::compile($name)) {
                 echo '<b>compile error: '.$name.': missing raw template </b>';
@@ -140,12 +145,11 @@ class Manager
             }
         }
         
-        self::displayFile($viewpath, $values);
+        self::displayFile($viewpath);
     }
 
-    public static function displayFile(string $file, array $values=[])
+    public static function displayFile(string $file)
     {
-        $v=new EchoValue($values);
         require $file;
     }
 
