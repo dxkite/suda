@@ -342,7 +342,7 @@ class Router
         if (! (isset($router['ob']) && $router['ob']===false)) {
             Response::obStart();
         }
-        (new \suda\tool\Command(Config::get('app.application').'::activeModule'))->exec([$router['module']]);
+        (new \suda\tool\Command(Config::get('app.application','suda\\core\\Application').'::activeModule'))->exec([$router['module']]);
         if ((new \suda\tool\Command($router['class'].'->onPreTest'))->exec([$router])) {
             (new \suda\tool\Command($router['class'].'->onRequest'))->exec([Request::getInstance()]);
         } else {
