@@ -119,10 +119,9 @@ class Compiler
     }
 
     // include
-    protected function parseInclude($exp, array $includes=[])
+    protected function parseInclude($exp)
     {
-        preg_match('/^\(([\'"])(.+)(?1)/', $exp, $match);
-        return "<?php suda\\template\\Manager::include('{$match[2]}',\$v->_getVar()) ?>";
+        return "<?php suda\\template\\Manager::include{$exp} ?>";
     }
 
     protected function parseU($exp)
@@ -153,7 +152,7 @@ class Compiler
     protected function parseStartInsert($exp)
     {
         preg_match('/\((.+)\)/', $exp, $v);
-        return '<?php suda\\template\\Manager::hook('.$v[1].',function ($v) { ?>';
+        return '<?php suda\\template\\Manager::hook('.$v[1].',function () { ?>';
     }
     
     protected function parseEndInsert()
@@ -163,7 +162,7 @@ class Compiler
     protected function parseInsert($exp)
     {
         preg_match('/^\(([\'"])(.+)(?1)/', $exp, $match);
-        return "<?php suda\\template\\Manager::exec('{$match[2]}',\$v) ?>";
+        return "<?php suda\\template\\Manager::exec('{$match[2]}') ?>";
     }
 
     // 错误报错

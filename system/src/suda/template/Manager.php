@@ -101,11 +101,11 @@ class Manager
         self::$hooks[$name][]=new  \suda\tool\Command($callback);
     }
 
-    public static function exec(string $name, $var)
+    public static function exec(string $name)
     {
         if (isset(self::$hooks[$name])) {
             foreach (self::$hooks[$name] as $hook) {
-                $hook->exec([$var]);
+                $hook->exec();
             }
         }
     }
