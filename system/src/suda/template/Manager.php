@@ -2,7 +2,7 @@
 namespace suda\template;
 
 
-use suda\tool\Value;
+use suda\tool\EchoValue;
 use suda\core\{Config,Application,Storage};
 
 class Manager
@@ -145,7 +145,7 @@ class Manager
 
     public static function displayFile(string $file, array $values=[])
     {
-        $v=new Value($values);
+        $v=new EchoValue($values);
         require $file;
     }
 

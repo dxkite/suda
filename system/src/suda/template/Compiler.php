@@ -23,6 +23,7 @@ class Compiler
                 if ($tag == T_INLINE_HTML) {
                     $content=self::compileString($content);
                     $content=self::compileCommand($content);
+                    $content=self::echoV($content);
                 } 
                 $result .=$content;
             } else {
@@ -36,7 +37,7 @@ class Compiler
     {
         $callback=function ($match) {
             if (method_exists($this, $method = 'parse'.ucfirst($match[1]))) {
-                $match[0] = $this->$method(isset($match[3])?preg_replace('/[$]:/','$v->',$match[3]):null);
+                $match[0] = $this->$method( $match[3] ?? '' );
             }
             return isset($match[3]) ? $match[0] : $match[0].$match[2];
         };
@@ -48,11 +49,19 @@ class Compiler
         $echo=sprintf('/(?<!!)%s\s*(.+?)\s*?%s/', preg_quote(self::$echoTag[0]), preg_quote(self::$echoTag[1]));
         $rawecho=sprintf('/(?<!!)%s\s*(.+?)\s*?%s/', preg_quote(self::$rawTag[0]), preg_quote(self::$rawTag[1]));
         $comment=sprintf('/(?<!!)%s(.+)%s/', preg_quote(self::$commentTag[0]), preg_quote(self::$commentTag[1]));
-        return preg_replace(
-            ['/[$]:/',$rawecho, $echo, $comment],
-            ['$v->','<?php echo($1) ?>', '<?php echo htmlspecialchars($1) ?>', '<?php /* $1 */ ?>'],
+        return self::echoV(preg_replace(
+            [$rawecho, $echo, $comment],
+            ['<?php echo($1) ?>', '<?php echo htmlspecialchars($1) ?>', '<?php /* $1 */ ?>'],
             $str
-        );
+        ));
+    }
+
+    protected static function echoV($var) {
+        return preg_replace_callback('/\B[$][:]([\w.:]+)(\s*)(\( ( (?>[^()]+) | (?3) )* \) )?/x', function($matchs){
+            $name=$matchs[1];
+            $args=isset($matchs[4])?','.$matchs[4]:'';
+            return '$v->_("'.$name.'"'.$args.')';
+        },$var);
     }
     protected function parseEcho($exp)
     {

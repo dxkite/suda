@@ -136,12 +136,7 @@ class Debug
             }
         } else {
             $render=new class extends Response {
-                protected $values;
                 protected $tpl;
-                public function set(array $values)
-                {
-                    $this->values=$values;
-                }
                 public function tpl(string $tpl)
                 {
                     $this->tpl=$tpl;
@@ -149,11 +144,11 @@ class Debug
                 public function onRequest(Request $request)
                 {
                     $this->state(500);
-                    $this->displayFile($this->tpl, $this->values);
+                    $this->displayFile($this->tpl);
                 }
             };
             $render->tpl(SYS_RES.'/tpl/error.tpl');
-            $render->set([
+            $render->assign([
                 'erron'=>$erron,
                 'error'=>$error,
                 'file'=>$file,
