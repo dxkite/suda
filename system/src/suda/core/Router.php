@@ -177,6 +177,7 @@ class Router
         $template_file=MODULES_DIR.'/'.$module.'/resource/template/default/'.$template_name.'.tpl.html';
         $class_template= Storage::get(SYS_RES.($json?'/class_json.php':($ob?'/class_template.php':'/class_obcache.php')));
         $tagname=strtolower(is_null($tag)?preg_replace('/[\\\\]+/', '_', $class_short):$tag);
+        $parent=$admin?conf('app.response.admin', 'suda\\core\\Response'):conf('app.response.normal', 'suda\\core\\Response');
         $class_template=str_replace(
             [
                 '__class_namespace__',
@@ -204,7 +205,7 @@ class Router
                 $params_mark,
                 $value_get,
                 count($method)>0?implode(',', $method):'all',
-                conf('app.response', 'suda\\core\\Response'),
+                $parent,
             ], $class_template);
         $template=Storage::get(SYS_RES.'/view_template.html');
         $template=str_replace('__create_url__', $url, $template);
