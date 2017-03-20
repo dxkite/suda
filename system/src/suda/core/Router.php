@@ -220,10 +220,16 @@ class Router
         $template=str_replace('__create_url__', $url, $template);
         // 写入Class
         Storage::path($class_path);
+        if (Storage::exist($class_file)) {
+            Storage::move($class_file, $class_file.'.bk');
+        }
         Storage::put($class_file, $class_template);
         
         if (!$json ||  !$ob) {
             // 写入模板
+            if (Storage::exist($template_file)) {
+                Storage::move($template_file, $template_file.'.bk');
+            }
             Storage::path(dirname($template_file));
             Storage::put($template_file, $template);
             $return['template']=$template_file;
