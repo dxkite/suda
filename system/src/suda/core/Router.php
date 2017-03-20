@@ -144,17 +144,15 @@ class Router
 
     public static function visit(array $method, string $url, string $router, string $tag=null, bool $ob =true, bool $admin=false, bool $json=false)
     {
-        // 激活模块
-        Application::activeModule($module);
         $params=self::getParams($url);
         if (!preg_match('/^(.+?)@(.+?)$/', $router, $matchs)) {
             return false;
         }
-
         $return=[];
-
         // 解析变量
         list($router, $class_short, $module)=$matchs;
+        // 激活模块
+        Application::activeModule($module);
         // 路由位置
         $router_file=MODULES_DIR.'/'.$module.'/resource/config/router'.($admin?'_admin':'').'.json';
         $namespace=conf('module.namespace', conf('app.namespace'));
