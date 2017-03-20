@@ -37,14 +37,15 @@ class Router
         $routers=[];
         // 加载普通路由
         if (Storage::exist(MODULES_DIR.'/'.$module.'/resource/config/router.json')) {
-            $routers=array_merge($routers,self::loadModuleJson($module,MODULES_DIR.'/'.$module.'/resource/config/router.json'));
+            $routers=array_merge($routers, self::loadModuleJson($module, MODULES_DIR.'/'.$module.'/resource/config/router.json'));
         }
         // 加载管理路由
         if (Storage::exist(MODULES_DIR.'/'.$module.'/resource/config/router_admin.json')) {
-            $routers=array_merge($routers, self::loadModuleJson($module,MODULES_DIR.'/'.$module.'/resource/config/router_admin.json'));
+            $routers=array_merge($routers, self::loadModuleJson($module, MODULES_DIR.'/'.$module.'/resource/config/router_admin.json'));
         }
-        $prefix=conf('router-prefix.'.$module, null);
-        array_walk($routers, function (&$router) use ($module, $prefix) {
+       
+        array_walk($routers, function (&$router) use ($module) {
+            $prefix= conf('router-prefix.'.$module, null);
             if (!is_null($prefix)) {
                 $router['visit']=$prefix.$router['visit'];
             }
@@ -54,11 +55,12 @@ class Router
         $this->routers=array_merge($this->routers, $routers);
     }
     
-    protected function loadModuleJson(string $module,string $jsonfile){
+    protected function loadModuleJson(string $module, string $jsonfile)
+    {
         $module=Application::aliasModule($module);
         $routers=Json::loadFile($jsonfile);
         $router=[];
-        foreach ($routers as $name => $value){
+        foreach ($routers as $name => $value) {
             $router[$module.':'.$name]=$value;
         }
         return $router;
@@ -142,6 +144,8 @@ class Router
 
     public static function visit(array $method, string $url, string $router, string $tag=null, bool $ob =true, bool $admin=false, bool $json=false)
     {
+        // 激活模块
+        Application::activeModule($module);
         $params=self::getParams($url);
         if (!preg_match('/^(.+?)@(.+?)$/', $router, $matchs)) {
             return false;
@@ -153,7 +157,7 @@ class Router
         list($router, $class_short, $module)=$matchs;
         // 路由位置
         $router_file=MODULES_DIR.'/'.$module.'/resource/config/router'.($admin?'_admin':'').'.json';
-        $namespace=conf('app.namespace');
+        $namespace=conf('module.namespace', conf('app.namespace'));
         // 类名
         $class=$namespace.'\\response\\'.$class_short;
         $params_str=array();
@@ -177,7 +181,7 @@ class Router
         $template_file=MODULES_DIR.'/'.$module.'/resource/template/default/'.$template_name.'.tpl.html';
         $class_template= Storage::get(SYS_RES.($json?'/class_json.php':($ob?'/class_template.php':'/class_obcache.php')));
         $tagname=strtolower(is_null($tag)?preg_replace('/[\\\\]+/', '_', $class_short):$tag);
-        $parent=$admin?conf('app.response.admin', 'suda\\core\\Response'):conf('app.response.normal', 'suda\\core\\Response');
+        $parent=$admin? conf('module.response.admin', conf('app.response.admin', 'suda\\core\\Response')): conf('module.response.normal', conf('app.response.normal', 'suda\\core\\Response'));
         $class_template=str_replace(
             [
                 '__class_namespace__',

@@ -62,17 +62,23 @@ class Application
         define('MODULE_CONFIG', Storage::path(MODULE_RESOURCE.'/config'));
         Autoloader::addIncludePath(Storage::path(MODULES_DIR.'/'.$module.'/src'));
         Autoloader::addIncludePath(Storage::path(MODULES_DIR.'/'.$module.'/share'));
+
+        // 加载模块配置到 module命名空间
         if (Storage::exist($path=MODULE_CONFIG.'/config.json')) {
             Config::set('module', Json::loadFile($path));
         }
-                
+        
+        // 加载监听器
         if (Storage::exist($path=MODULE_CONFIG.'/listener.json')) {
             Hook::load(Json::loadFile($path)?:[]);
         }
+
         // 加载语言包
         if (Config::get('app.language') && Storage::exist($path=MODULE_LANGS.'/'.Config::get('app.language').'.json')) {
             Language::load($path);
         }
+
+        // 模块资源准备
         \suda\template\Manager::prepareResource();
     }
 
