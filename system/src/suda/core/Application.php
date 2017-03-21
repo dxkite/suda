@@ -68,6 +68,9 @@ class Application
             Config::set('module', Json::loadFile($path));
             $name=Config::get('module.name',$module);
             Config::set('module-alias.'.$module,$name);
+            if ($namespace=Config::get('module.namespace',false)){
+                Autoloader::setNamespace($namespace);
+            }
         }
         
         // 加载监听器
