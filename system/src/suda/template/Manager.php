@@ -64,7 +64,7 @@ class Manager
     protected static function path(string $name, bool $ext=true):string
     {
         list($module, $name)=preg_split('/[:]/', $name, 2);
-        $path=MODULES_DIR.'/'.Application::aliasModule($module).'/resource/template/'.self::$theme;
+        $path=MODULES_DIR.'/'.Application::moduleDir($module).'/resource/template/'.self::$theme;
         if ($ext) {
             $tpl=$path.'/'.$name.self::$extRaw;
         } else {

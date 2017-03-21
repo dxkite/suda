@@ -160,8 +160,9 @@ class Router
         list($router, $class_short, $module)=$matchs;
         // 激活模块
         Application::activeModule($module);
+        $module_dir=Application::moduleDir($module);
         // 路由位置
-        $router_file=MODULES_DIR.'/'.$module.'/resource/config/router'.($admin?'_admin':'').'.json';
+        $router_file=MODULES_DIR.'/'.$module_dir.'/resource/config/router'.($admin?'_admin':'').'.json';
         $namespace=conf('module.namespace', conf('app.namespace'));
         // 类名
         $class=$namespace.'\\response\\'.$class_short;
@@ -179,11 +180,11 @@ class Router
         $pos=strrpos($class, '\\');
         $class_namespace=substr($class, 0, $pos);
         $class_name=substr($class, $pos+1);
-        $class_path=MODULES_DIR.'/'.$module.'/src/'.$class_namespace;
+        $class_path=MODULES_DIR.'/'.$module_dir.'/src/'.$class_namespace;
         $class_file=$class_path.'/'.$class_name.'.php';
         $return['class']=$class_file;
         $template_name=self::createTplName($class_short);
-        $template_file=MODULES_DIR.'/'.$module.'/resource/template/default/'.$template_name.'.tpl.html';
+        $template_file=MODULES_DIR.'/'.$module_dir.'/resource/template/default/'.$template_name.'.tpl.html';
         $class_template= Storage::get(SYS_RES.($json?'/class_json.php':($ob?'/class_template.php':'/class_obcache.php')));
         $tagname=strtolower(is_null($tag)?preg_replace('/[\\\\]+/', '_', $class_short):$tag);
         $parent=$admin? conf('module.response.admin', conf('app.response.admin', 'suda\\core\\Response')): conf('module.response.normal', conf('app.response.normal', 'suda\\core\\Response'));
@@ -206,7 +207,7 @@ class Router
                 $class_namespace,
                 $class_name,
                 $params_str,
-                Application::aliasModule($module),
+                $module,
                 $template_name,
                 $url,
                 'default:'.$template_name.'.tpl.html',
@@ -306,7 +307,6 @@ class Router
         preg_match('/^(?:(.+?)[:])?(.+)$/', $name, $match);
         $name=$match[2];
         $module=$match[1]?:Application::getActiveModule();
-        $module=Application::aliasModule($module);
         $name=$module.':'.$name;
         $url= '';
         if (isset($this->routers[$name])) {
