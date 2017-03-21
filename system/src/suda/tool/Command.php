@@ -76,7 +76,7 @@ class Command
         }
         return false;
     }
-    public function args($vargs)
+    public function args()
     {
         return self::exec(func_get_args());
     }

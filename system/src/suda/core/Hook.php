@@ -1,10 +1,16 @@
 <?php
 namespace suda\core;
-use suda\tool\Command;
+use suda\tool\{Command,Json};
 
 class Hook
 {
     private static $hooks=[];
+
+    public static function loadJson(string $path){
+        $hooks=Json::loadFile($path);
+        self::load($hooks?:[]);
+    }
+
     public static function load(array $arrays)
     {
         self::$hooks=array_merge(self::$hooks, $arrays);

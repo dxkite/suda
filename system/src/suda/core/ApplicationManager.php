@@ -30,6 +30,7 @@ class ApplicationManager
 
     public function console(string $app)
     {
+        // 加载配置
         $this->readManifast($app.'/manifast.json');
         $name=Autoloader::realName($this->appliaction);
         $this->app=new $name($app);

@@ -35,8 +35,8 @@ class Application
             Config::load($path);
         }
 
-        if (Config::get('debug', false)) {
-            Manager::loadCompile();
+        if (Storage::exist($path=CONFIG_DIR.'/listener.json')) {
+            Hook::loadJson($path);
         }
 
         Autoloader::setNamespace(Config::get('app.namespace'));
@@ -70,14 +70,17 @@ class Application
         
         // 加载监听器
         if (Storage::exist($path=MODULE_CONFIG.'/listener.json')) {
-            Hook::load(Json::loadFile($path)?:[]);
+            Hook::loadJson($path);
         }
 
         // 加载语言包
         if (Config::get('app.language') && Storage::exist($path=MODULE_LANGS.'/'.Config::get('app.language').'.json')) {
             Language::load($path);
         }
-
+        
+        Hook::exec('Manager:loadCompile::before');
+        Manager::loadCompile();
+        Hook::exec('Manager:prepareResource::before');
         // 模块资源准备
         \suda\template\Manager::prepareResource();
     }

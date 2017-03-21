@@ -30,6 +30,7 @@ class Manager
     protected static $error='';
     protected static $erron=0;
     protected static $current=null;
+    protected static $command=[];
     /**
      * 载入模板编译器
      */
@@ -189,5 +190,27 @@ class Manager
         if (Storage::isDir($static_path)) {
             Storage::copydir($static_path, $path, $non_static_preg);
         }
+    }
+
+    public static function addCommand(string $name, string $callback, bool $echo=true)
+    {
+        $name=ucfirst($name);
+        self::$command[$name]=['command'=>$callback,'echo'=>$echo];
+    }
+    
+    public static function hasCommand(string $name)
+    {
+        $name=ucfirst($name);
+        return isset(self::$command[$name]);
+    }
+    public static function buildCommand(string $name, string $exp)
+    {
+        $name=ucfirst($name);
+        if (self::hasCommand($name)) {
+            $echo=self::$command[$name]['echo']?'echo':'';
+            $command=self::$command[$name]['command'];
+            return '<?php '.$echo.' (new \suda\tool\Command("'.$command.'"))->args'. ($exp?:'()').' ?>';
+        }
+        return '';
     }
 }

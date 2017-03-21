@@ -12,10 +12,10 @@ class Autoloader
 
     public static function init()
     {
-        spl_autoload_register(array('suda\\core\\Autoloader', 'Classloader'));
+        spl_autoload_register(array('suda\\core\\Autoloader', 'classLoader'));
     }
 
-    public static function Classloader(string $classname)
+    public static function classLoader(string $classname)
     {
         $classname=self::realName($classname);
         // 搜索路径
