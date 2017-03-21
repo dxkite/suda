@@ -217,7 +217,7 @@ final class Request
             self::$url='/';
         }
         
-
+        // var_dump($_GET,self::$url);
         if (!isset($_SERVER['PATH_INFO'])) {
             $_SERVER['PATH_INFO']=self::$url;
         }

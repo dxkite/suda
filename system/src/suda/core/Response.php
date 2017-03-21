@@ -62,9 +62,12 @@ abstract class Response
     private static $mime;
 
     protected static $_values=[];
-
-    public function __construct()
+    
+    // 必须要调用
+    /*final*/ public function __construct()
     {
+        Hook::exec('Manager:loadCompile::before');
+        Manager::loadCompile();
         self::mark();
         if (conf('debug')) {
             // 设置无缓存头
@@ -107,7 +110,7 @@ abstract class Response
         _D()->I('Log Json:'.json_encode($values));
         self::mark();
         self::obEnd();
-        $values=array_merge(self::$_values,$values);
+        $values=array_merge(self::$_values, $values);
         $jsonstr=json_encode($values);
         if (Config::get('debug')) {
             $jsonstr.=$this->content;
@@ -133,7 +136,7 @@ abstract class Response
         self::mark();
         // 结束缓冲控制
         self::obEnd();
-        $values=array_merge(self::$_values,$values);
+        $values=array_merge(self::$_values, $values);
         // 渲染模板
         ob_start();
         self::assign($values);
@@ -209,12 +212,12 @@ abstract class Response
         return self::$_values=array_merge(self::$_values, $values);
     }
 
-    public static function get(string $name,$default=null)
+    public static function get(string $name, $default=null)
     {
         $fmt= self::$_values[$name] ?? $default ?? $name;
         if (func_num_args() > 2) {
-            $args=array_slice(func_get_args(),2);
-            array_unshift($args,$fmt);
+            $args=array_slice(func_get_args(), 2);
+            array_unshift($args, $fmt);
             return call_user_func_array('sprintf', $args);
         }
         return $fmt;

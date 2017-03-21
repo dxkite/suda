@@ -158,6 +158,7 @@ class Debug
                 'pos_num'=>$pos_num,
                 'traces'=>$traces,
             ]);
+            \suda\template\Manager::loadCompile();
             $render->onRequest(Request::getInstance());
         }
         $loginfo['file']=$file;

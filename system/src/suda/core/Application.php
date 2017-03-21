@@ -78,8 +78,6 @@ class Application
             Language::load($path);
         }
         
-        Hook::exec('Manager:loadCompile::before');
-        Manager::loadCompile();
         Hook::exec('Manager:prepareResource::before');
         // 模块资源准备
         \suda\template\Manager::prepareResource();

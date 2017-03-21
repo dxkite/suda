@@ -44,7 +44,8 @@ class Compiler
             }
             return isset($match[3]) ? $match[0] : $match[0].$match[2];
         };
-        return preg_replace_callback('/\B@([^()\s\'"]+)(\s*)(\( ( (?>[^()]+) | (?3) )* \) )? /x', $callback, $str);
+        // \x{4e00}-\x{9aff} 为中文字符集范围
+        return preg_replace_callback('/\B@([\w\x{4e00}-\x{9aff}]+)(\s*)(\( ( (?>[^()]+) | (?3) )* \) )? /ux', $callback, $str);
     }
 
     private function compileCommand(string $str)
@@ -61,6 +62,7 @@ class Compiler
 
     protected static function echoValue($var)
     {
+        // 任意变量名(除空格,和字符串界定符号)
         return preg_replace_callback('/\B[$][:]([^()\s\'"]+)(\s*)(\( ( (?>[^()]+) | (?3) )* \) )?/x', function ($matchs) {
             $name=$matchs[1];
             $args=isset($matchs[4])?','.$matchs[4]:'';
