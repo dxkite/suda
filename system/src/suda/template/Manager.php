@@ -88,8 +88,8 @@ class Manager
         preg_match('/^(?:(.+?)[:])?(.+)$/', $name, $match);
         $basename=$match[2];
         $module=$match[1]?:Application::getActiveModule();
-        $prefix=MODULES_DIR.'/'. Application::moduleName($module) .'/resource/template/'.self::$theme;
-        $output=VIEWS_DIR.'/'. Application::moduleName($module).'/'.$basename.self::$extCpl;
+        $prefix=MODULES_DIR.'/'. Application::moduleDir($module) .'/resource/template/'.self::$theme;
+        $output=VIEWS_DIR.'/'. $module .'/'.$basename.self::$extCpl;
         $input=$prefix.'/'.$basename.self::$extRaw;
         if (!Storage::exist($input)) {
             return false;
@@ -124,7 +124,6 @@ class Manager
     public static function display(string $name)
     {
         list($module, $basename)=preg_split('/[:]/', $name, 2);
-        $module=Application::moduleName($module);
         self::_display($name, VIEWS_DIR.'/'.$module. DIRECTORY_SEPARATOR .$basename.self::$extCpl);
     }
 
@@ -163,8 +162,8 @@ class Manager
     {
         // 向下兼容
         defined('APP_PUBLIC') or define('APP_PUBLIC', Storage::path('.'));
-        $static_path=Storage::path(MODULES_DIR.'/'.\suda\core\Application::getActiveModule().'/resource/template/'.self::$theme.'/static');
-        $path=Storage::path(APP_PUBLIC.'/static/'.\suda\core\Application::getActiveModule());
+        $static_path=Storage::path(MODULES_DIR.'/'. Application::moduleDir(Application::getActiveModule()).'/resource/template/'.self::$theme.'/static');
+        $path=Storage::path(APP_PUBLIC.'/static/'.   Application::getActiveModule()  );
         defined('APP_STATIC') or define('APP_STATIC', $path);
         if (self::hasChanged($static_path, $path)) {
             self::copyStatic($static_path, $path);

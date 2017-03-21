@@ -36,8 +36,9 @@ class Router
     {
         $simple_routers=[];
         $admin_routers=[];
-        if (Storage::exist(MODULES_DIR.'/'.$module.'/resource/config/router.json')) {
-            $simple_routers= self::loadModuleJson($module, MODULES_DIR.'/'.$module.'/resource/config/router.json');
+        $module_dir=Application::moduleDir($module);
+        if (Storage::exist(MODULES_DIR.'/'.$module_dir.'/resource/config/router.json')) {
+            $simple_routers= self::loadModuleJson($module, MODULES_DIR.'/'.$module_dir.'/resource/config/router.json');
             array_walk($simple_routers, function (&$router) use ($module) {
                 $prefix= conf('router-prefix.'.$module, null);
                 if (!is_null($prefix)) {
@@ -49,8 +50,8 @@ class Router
         }
 
         // 加载后台路由
-        if (Storage::exist(MODULES_DIR.'/'.$module.'/resource/config/router_admin.json')) {
-            $admin_routers= self::loadModuleJson($module, MODULES_DIR.'/'.$module.'/resource/config/router_admin.json');
+        if (Storage::exist(MODULES_DIR.'/'.$module_dir.'/resource/config/router_admin.json')) {
+            $admin_routers= self::loadModuleJson($module, MODULES_DIR.'/'.$module_dir.'/resource/config/router_admin.json');
             array_walk($admin_routers, function (&$router) use ($module) {
                 $prefix= conf('app.admin', '/suda-admin');
                 $router['visit']=$prefix.$router['visit'];
@@ -64,7 +65,6 @@ class Router
     
     protected function loadModuleJson(string $module, string $jsonfile)
     {
-        $module=Application::aliasModule($module);
         $routers=Json::loadFile($jsonfile);
         $router=[];
         foreach ($routers as $name => $value) {

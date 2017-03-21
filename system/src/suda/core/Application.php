@@ -43,8 +43,9 @@ class Application
         Autoloader::addIncludePath(SHRAE_DIR);
         if ($modules=Config::get('app.modules')) {
             foreach ($modules as $module) {
-                if (Storage::isDir(MODULES_DIR.'/'.$module.'/share')) {
-                    Autoloader::addIncludePath(MODULES_DIR.'/'.$module.'/share');
+                $module_dir=conf('module-dirs.'.$module,$module);
+                if (Storage::isDir(MODULES_DIR.'/'.$module_dir.'/share')) {
+                    Autoloader::addIncludePath(MODULES_DIR.'/'.$module_dir.'/share');
                 }
             }
         }
@@ -57,17 +58,15 @@ class Application
     public static function activeModule(string $module)
     {
         self::$active_module=$module;
-        define('MODULE_RESOURCE', Storage::path(MODULES_DIR.'/'.$module.'/resource'));
+        $module_dir=conf('module-dirs.'.$module,$module);
+        define('MODULE_RESOURCE', Storage::path(MODULES_DIR.'/'.$module_dir.'/resource'));
         define('MODULE_LANGS', Storage::path(MODULE_RESOURCE.'/langs'));
         define('MODULE_CONFIG', Storage::path(MODULE_RESOURCE.'/config'));
-        Autoloader::addIncludePath(Storage::path(MODULES_DIR.'/'.$module.'/src'));
-        Autoloader::addIncludePath(Storage::path(MODULES_DIR.'/'.$module.'/share'));
-
+        // 自动加载私有库
+        Autoloader::addIncludePath(Storage::path(MODULES_DIR.'/'.$module_dir.'/src'));
         // 加载模块配置到 module命名空间
         if (Storage::exist($path=MODULE_CONFIG.'/config.json')) {
             Config::set('module', Json::loadFile($path));
-            $name=Config::get('module.name',$module);
-            Config::set('module-alias.'.$module,$name);
             if ($namespace=Config::get('module.namespace',false)){
                 Autoloader::setNamespace($namespace);
             }
@@ -102,14 +101,14 @@ class Application
     {
         return false;
     }
-    public static function aliasModule(string $name)
+    public static function moduleDir(string $name)
     {
-        return  conf('module.name',conf('module-alias.'.$name, $name));
+        return  conf('module-dirs.'.$name, $name);
     }
 
     public static function moduleName(string $name)
     {
-        $modules= conf('module-alias', []);
+        $modules= conf('module-dirs', []);
         return array_search($name, $modules)?:$name;
     }
 }
