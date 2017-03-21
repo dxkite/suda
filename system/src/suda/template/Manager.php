@@ -37,9 +37,6 @@ class Manager
         if (is_null(self::$compiler)) {
             Hook::exec('Manager:loadCompile::before');
             self::$compiler=new Compiler;
-            Hook::exec('Manager:prepareResource::before');
-            // 模块资源准备
-            self::prepareResource();
         }
     }
 
@@ -158,12 +155,13 @@ class Manager
         require $file;
     }
 
-    public static function prepareResource()
+    public static function prepareResource(string $module)
     {
+        $module_dir=Application::moduleDir($module);
         // 向下兼容
         defined('APP_PUBLIC') or define('APP_PUBLIC', Storage::path('.'));
-        $static_path=Storage::path(MODULES_DIR.'/'. Application::moduleDir(Application::getActiveModule()).'/resource/template/'.self::$theme.'/static');
-        $path=Storage::path(APP_PUBLIC.'/static/'.   Application::getActiveModule()  );
+        $static_path=Storage::path(MODULES_DIR.'/'.$module_dir.'/resource/template/'.self::$theme.'/static');
+        $path=Storage::path(APP_PUBLIC.'/static/'. $module );
         defined('APP_STATIC') or define('APP_STATIC', $path);
         if (self::hasChanged($static_path, $path)) {
             self::copyStatic($static_path, $path);

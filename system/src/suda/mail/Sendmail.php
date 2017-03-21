@@ -2,6 +2,7 @@
 namespace suda\mail;
 
 use suda\template\Manager;
+use suda\core\Response;
 
 class Sendmail implements Mailer
 {
