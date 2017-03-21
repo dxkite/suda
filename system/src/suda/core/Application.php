@@ -66,6 +66,8 @@ class Application
         // 加载模块配置到 module命名空间
         if (Storage::exist($path=MODULE_CONFIG.'/config.json')) {
             Config::set('module', Json::loadFile($path));
+            $name=Config::get('module.name',$module);
+            Config::set('module-alias.'.$module,$name);
         }
         
         // 加载监听器
@@ -99,7 +101,7 @@ class Application
     }
     public static function aliasModule(string $name)
     {
-        return conf('module-alias.'.$name, $name);
+        return  conf('module.name',conf('module-alias.'.$name, $name));
     }
 
     public static function moduleName(string $name)

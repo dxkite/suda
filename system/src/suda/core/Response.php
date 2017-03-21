@@ -71,7 +71,7 @@ abstract class Response
             // 设置无缓存头
             self::noCache();
             // 强制刷新index文件来避免缓存
-            touch('index.php');
+            touch(get_included_files()[0]);
         }
         self::$instance=$this;
     }

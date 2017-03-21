@@ -85,7 +85,9 @@ class Manager
     public static function compile(string $name)
     {
         self::loadCompile();
-        list($module, $basename)=preg_split('/[:]/', $name, 2);
+        preg_match('/^(?:(.+?)[:])?(.+)$/', $name, $match);
+        $basename=$match[2];
+        $module=$match[1]?:Application::getActiveModule();
         $prefix=MODULES_DIR.'/'. Application::moduleName($module) .'/resource/template/'.self::$theme;
         $output=VIEWS_DIR.'/'. Application::moduleName($module).'/'.$basename.self::$extCpl;
         $input=$prefix.'/'.$basename.self::$extRaw;
