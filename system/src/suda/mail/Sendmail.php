@@ -131,7 +131,8 @@ class Sendmail implements Mailer
         if ($this->use) {
             $this->type='html';
             ob_start();
-            Manager::display($this->use, $this->values);
+            Response::assign($this->values);
+            Manager::display($this->use);
             $this->msg=ob_get_clean();
         }
         return $this->msg;

@@ -11,6 +11,7 @@ final class Request
     private static $files=null;
     private static $url;
     private static $request=null;
+    private static $query='';
     private static $crawlers=[
             'TencentTraveler',
             'Baiduspider+',
@@ -203,6 +204,7 @@ final class Request
                 if (isset($match[3])) {
                     parse_str($match[3], $_GET);
                 }
+                self::$query=$match[3]??'';
                 self::$url=$match[2];
             } elseif (preg_match('/^(.*)\/'.$index.'(\??\/)?/', $_SERVER['REQUEST_URI'])) {
                 $preg='/(.*)\/'.$index.'(\/[^?]*)?$/';
@@ -237,7 +239,7 @@ final class Request
         }
     }
     public static function virtualUrl(){
-        return self::$url.(count($_GET)?'?'.http_build_query($_GET, 'v', '&', PHP_QUERY_RFC3986):'');
+        return self::$url.(self::$query?'?'.self::$query:'');
     }
     public static function baseUrl()
     {

@@ -66,11 +66,6 @@ abstract class Response
     // 必须要调用
     /*final*/ public function __construct()
     {
-        Hook::exec('Manager:loadCompile::before');
-        Manager::loadCompile();
-        Hook::exec('Manager:prepareResource::before');
-        // 模块资源准备
-        \suda\template\Manager::prepareResource();
         self::mark();
         if (conf('debug')) {
             // 设置无缓存头
@@ -113,7 +108,9 @@ abstract class Response
         _D()->I('Log Json:'.json_encode($values));
         self::mark();
         self::obEnd();
-        $values=array_merge(self::$_values, $values);
+        if (is_array($values)) {
+            $values=array_merge(self::$_values, $values);
+        }
         $jsonstr=json_encode($values);
         if (Config::get('debug')) {
             $jsonstr.=$this->content;

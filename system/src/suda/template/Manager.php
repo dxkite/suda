@@ -2,9 +2,7 @@
 namespace suda\template;
 
 use suda\tool\EchoValue;
-use suda\core\Config;
-use suda\core\Application;
-use suda\core\Storage;
+use suda\core\{Config,Application,Storage,Hook};
 
 class Manager
 {
@@ -37,7 +35,11 @@ class Manager
     public static function loadCompile()
     {
         if (is_null(self::$compiler)) {
+            Hook::exec('Manager:loadCompile::before');
             self::$compiler=new Compiler;
+            Hook::exec('Manager:prepareResource::before');
+            // 模块资源准备
+            self::prepareResource();
         }
     }
 
@@ -82,6 +84,7 @@ class Manager
      */
     public static function compile(string $name)
     {
+        self::loadCompile();
         list($module, $basename)=preg_split('/[:]/', $name, 2);
         $prefix=MODULES_DIR.'/'. Application::moduleName($module) .'/resource/template/'.self::$theme;
         $output=VIEWS_DIR.'/'. Application::moduleName($module).'/'.$basename.self::$extCpl;
