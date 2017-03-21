@@ -173,7 +173,7 @@ class Debug
     }
     public static function printf()
     {
-        return Request::ip() . "\t" . date('Y-m-d H:i:s') . "\t" .Request::method()."\t\t".Request::url() . "\r\n";
+        return Request::ip() . "\t" . date('Y-m-d H:i:s') . "\t" .Request::method()."\t\t".Request::virtualUrl() . "\r\n";
     }
     protected static function save($file = 'debug.log')
     {

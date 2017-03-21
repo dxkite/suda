@@ -12,48 +12,48 @@ final class Request
     private static $url;
     private static $request=null;
     private static $crawlers=[
-            'TencentTraveler', 
-            'Baiduspider+', 
-            'BaiduGame', 
-            'Googlebot', 
+            'TencentTraveler',
+            'Baiduspider+',
+            'BaiduGame',
+            'Googlebot',
             'Baiduspider',
-            'msnbot', 
-            'Sosospider+', 
-            'Sogou web spider', 
-            'ia_archiver', 
-            'Yahoo! Slurp', 
-            'YoudaoBot', 
-            'Yahoo Slurp', 
-            'MSNBot', 
-            'Java (Often spam bot)', 
-            'BaiDuSpider', 
-            'Voila', 
-            'Yandex bot', 
-            'BSpider', 
-            'twiceler', 
-            'Sogou Spider', 
-            'Speedy Spider', 
-            'Google AdSense', 
-            'Heritrix', 
-            'Python-urllib', 
-            'Alexa (IA Archiver)', 
-            'Ask', 
-            'Exabot', 
-            'Custo', 
-            'OutfoxBot/YodaoBot', 
-            'yacy', 
-            'SurveyBot', 
-            'legs', 
-            'lwp-trivial', 
-            'Nutch', 
-            'StackRambler', 
-            'The web archive (IA Archiver)', 
-            'Perl tool', 
-            'MJ12bot', 
-            'Netcraft', 
-            'MSIECrawler', 
-            'WGet tools', 
-            'larbin', 
+            'msnbot',
+            'Sosospider+',
+            'Sogou web spider',
+            'ia_archiver',
+            'Yahoo! Slurp',
+            'YoudaoBot',
+            'Yahoo Slurp',
+            'MSNBot',
+            'Java (Often spam bot)',
+            'BaiDuSpider',
+            'Voila',
+            'Yandex bot',
+            'BSpider',
+            'twiceler',
+            'Sogou Spider',
+            'Speedy Spider',
+            'Google AdSense',
+            'Heritrix',
+            'Python-urllib',
+            'Alexa (IA Archiver)',
+            'Ask',
+            'Exabot',
+            'Custo',
+            'OutfoxBot/YodaoBot',
+            'yacy',
+            'SurveyBot',
+            'legs',
+            'lwp-trivial',
+            'Nutch',
+            'StackRambler',
+            'The web archive (IA Archiver)',
+            'Perl tool',
+            'MJ12bot',
+            'Netcraft',
+            'MSIECrawler',
+            'WGet tools',
+            'larbin',
             'Fish search',];
     private function __construct()
     {
@@ -107,8 +107,9 @@ final class Request
             return self::$get;
         }
     }
-    public static function cookie(string $name,$default){
-        return Cookie::get($name,$default);
+    public static function cookie(string $name, $default)
+    {
+        return Cookie::get($name, $default);
     }
     public static function post(string $name='')
     {
@@ -178,9 +179,10 @@ final class Request
         }
     }
 
-    public static function getHeader(string $name,string $default=null){
-        $name='HTTP_'.strtoupper(preg_replace('/[^\w]/','_',$name));
-        if(isset($_SERVER[$name])){
+    public static function getHeader(string $name, string $default=null)
+    {
+        $name='HTTP_'.strtoupper(preg_replace('/[^\w]/', '_', $name));
+        if (isset($_SERVER[$name])) {
             return $_SERVER[$name];
         }
         return $default;
@@ -188,7 +190,7 @@ final class Request
 
     protected static function parseServer()
     {
-        $index=pathinfo(get_included_files()[0],PATHINFO_BASENAME);
+        $index=pathinfo(get_included_files()[0], PATHINFO_BASENAME);
         // 预处理
         //  /?/xxxxx
         //  /index.php/xxx
@@ -208,16 +210,18 @@ final class Request
                 self::$url= $match[2] ?? '/';
             } else {
                 $preg='/^([^?]*)/';
-                preg_match($preg,$_SERVER['REQUEST_URI'],$match);
+                preg_match($preg, $_SERVER['REQUEST_URI'], $match);
                 self::$url=$match[1];
             }
             self::$url=self::$url==='/'?self::$url:rtrim(self::$url, '/');
-        }
-        else{
+        } else {
             self::$url='/';
         }
         
-        // var_dump($_GET,self::$url);
+        if (isset($_GET[self::$url])) {
+            unset($_GET[self::$url]);
+        }
+        
         if (!isset($_SERVER['PATH_INFO'])) {
             $_SERVER['PATH_INFO']=self::$url;
         }
@@ -232,24 +236,28 @@ final class Request
             self::$files=new Value($_FILES);
         }
     }
-    
-    public static function baseUrl(){
+    public static function virtualUrl(){
+        return self::$url.(count($_GET)?'?'.http_build_query($_GET, 'v', '&', PHP_QUERY_RFC3986):'');
+    }
+    public static function baseUrl()
+    {
         $scheme = $_SERVER['REQUEST_SCHEME'] ?? '//';
         $host= $_SERVER['HTTP_HOST'] ?? '';
         $base='';
         $script=$_SERVER['SCRIPT_NAME'];
-        if ($host){
-            $base=$scheme.'://'.$host;   
+        if ($host) {
+            $base=$scheme.'://'.$host;
         }
-        if (ltrim($script,'/')===conf('app.index','index.php')){
+        if (ltrim($script, '/')===conf('app.index', 'index.php')) {
             return $base. (DIRECTORY_SEPARATOR ===  '/' ? '/':'/?/') ;
         }
         return $base. $script.'?/';
     }
-    public function isCrawler(){
+    public function isCrawler()
+    {
         $agent= $_SERVER['HTTP_USER_AGENT'] ?? '';
-        foreach(self::$crawlers as $crawler){
-            if( preg_match('/'.preg_quote($crawler).'/i',$agent)) {
+        foreach (self::$crawlers as $crawler) {
+            if (preg_match('/'.preg_quote($crawler).'/i', $agent)) {
                 return $crawler;
             }
         }

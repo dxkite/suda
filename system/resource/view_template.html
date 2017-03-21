@@ -5,12 +5,14 @@
     </head>
     <body>
         <div> {{ _T($:helloworld) }}@__create_url__ </div>
-        @if (count($:value([])))
+        @if (count($_GET))
         <table>
-            @foreach ($:value() as $name => $value)
+            @foreach ($_GET as $name => $value)
             <tr><th>{{$name}}</th><td>{{$value}}</td></tr>
             @endforeach
         </table>
+        @else
+        <div>No GET value</div>
         @endif
     </body>
 </html>

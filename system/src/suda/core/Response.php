@@ -68,6 +68,9 @@ abstract class Response
     {
         Hook::exec('Manager:loadCompile::before');
         Manager::loadCompile();
+        Hook::exec('Manager:prepareResource::before');
+        // 模块资源准备
+        \suda\template\Manager::prepareResource();
         self::mark();
         if (conf('debug')) {
             // 设置无缓存头
