@@ -204,7 +204,7 @@ abstract class Response
 
     public static function set(string $name, $value)
     {
-        return self::$_values[$name]=$value;
+        return self::$_values=ArrayHelper::set( self::$_values,$name,$value);
     }
 
     public static function assign(array $values)
@@ -214,7 +214,7 @@ abstract class Response
 
     public static function get(string $name, $default=null)
     {
-        $fmt= self::$_values[$name] ?? $default ?? $name;
+        $fmt= ArrayHelper::get(self::$_values,$name,$default ?? $name);
         if (func_num_args() > 2) {
             $args=array_slice(func_get_args(), 2);
             array_unshift($args, $fmt);
