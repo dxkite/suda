@@ -147,7 +147,12 @@ abstract class Response
         self::_etag(md5($this->content));
         echo $this->content;
     }
-
+    public function redirect(string $url)
+    {
+        $this->set('url', $url);
+        $this->display('suda:redirect');
+        $this->noCache();
+    }
     public static function time(int $time)
     {
     }
