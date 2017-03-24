@@ -157,15 +157,17 @@ class Manager
 
     public static function prepareResource(string $module)
     {
+        Hook::exec('Manager:prepareResource::before',[$module]);
         $module_dir=Application::moduleDir($module);
         // 向下兼容
         defined('APP_PUBLIC') or define('APP_PUBLIC', Storage::path('.'));
         $static_path=Storage::path(MODULES_DIR.'/'.$module_dir.'/resource/template/'.self::$theme.'/static');
         $path=Storage::path(APP_PUBLIC.'/static/'. $module );
-        defined('APP_STATIC') or define('APP_STATIC', $path);
         if (self::hasChanged($static_path, $path)) {
             self::copyStatic($static_path, $path);
         }
+        defined('APP_STATIC') or define('APP_STATIC', $path);
+        return $path;
     }
 
     protected static function hasChanged(string $static, string $tpl)

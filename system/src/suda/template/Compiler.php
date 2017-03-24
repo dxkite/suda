@@ -36,7 +36,6 @@ class Compiler
     private function compileString(string $str)
     {
         $callback=function ($match) {
-            
             if (Manager::hasCommand(ucfirst($match[1]))) {
                 $match[0]=Manager::buildCommand($match[1], $match[3] ?? '');
             } elseif (method_exists($this, $method = 'parse'.ucfirst($match[1]))) {
@@ -144,10 +143,19 @@ class Compiler
     {
         return "<?php suda\\core\\Response::set$exp ?>";
     }
-    protected function parseStatic()
+    protected function parseStatic($exp)
     {
-        $static_url=Storage::cut(APP_STATIC, APP_PUBLIC);
-        $static_url=preg_replace('/[\\\\\/]+/', '/', $static_url);
+        preg_match('/^\((.+?)\)$/', $exp, $match);
+        $module=$match[1]??null;
+        if ($module) {
+            $module=trim($module,'"\'');
+            $path=Manager::prepareResource($module);
+            $static_url=Storage::cut($path, APP_PUBLIC);
+            $static_url=preg_replace('/[\\\\\/]+/', '/', $static_url);
+        } else {
+            $static_url=Storage::cut(APP_STATIC, APP_PUBLIC);
+            $static_url=preg_replace('/[\\\\\/]+/', '/', $static_url);
+        }
         return '/'.$static_url;
     }
 
@@ -167,7 +175,8 @@ class Compiler
     protected function parseStartInsert($exp)
     {
         preg_match('/\((.+)\)/', $exp, $v);
-        return '<?php suda\\template\\Manager::hook('.$v[1].',function () { ?>';
+        $name=str_replace('\'','-',trim($v[1],'"\''));
+        return '<?php suda\\template\\Manager::hook(\''.$name.'\',function () { ?>';
     }
     
     protected function parseEndInsert()
@@ -176,8 +185,9 @@ class Compiler
     }
     protected function parseInsert($exp)
     {
-        preg_match('/^\(([\'"])(.+)(?1)/', $exp, $match);
-        return "<?php suda\\template\\Manager::exec('{$match[2]}') ?>";
+        preg_match('/\((.+)\)/', $exp, $v);
+        $name=str_replace('\'','-',trim($v[1],'"\''));
+        return "<?php suda\\template\\Manager::exec('{$name}') ?>";
     }
 
     // 错误报错
