@@ -23,22 +23,32 @@ class Application
         defined('CONFIG_DIR') or define('CONFIG_DIR', Storage::path(RESOURCE_DIR.'/config'));
         defined('TEMP_DIR') or define('TEMP_DIR', Storage::path(DATA_DIR.'/temp'));
         defined('SHRAE_DIR') or define('SHRAE_DIR', Storage::path(APP_DIR.'/share'));
-        // 设置PHP属性
-        set_time_limit(Config::get('timelimit', 0));
-        // 设置时区
-        date_default_timezone_set(Config::get('timezone', 'PRC'));
+
+
+        // 获取基本配置信息
         if (Storage::exist($path=CONFIG_DIR.'/config.json')) {
             Config::load($path);
-        }
-
+        }   
+        
+        // 系统必须配置信息
         if (Storage::exist($path=CONFIG_DIR.'/config.sys.json')) {
             Config::load($path);
         }
 
+        // 开发时配置信息
+        if (Storage::exist($path=CONFIG_DIR.'/config.dev.json')) {
+            Config::load($path);
+        }
+
+        // 监听器
         if (Storage::exist($path=CONFIG_DIR.'/listener.json')) {
             Hook::loadJson($path);
         }
 
+        // 设置PHP属性
+        set_time_limit(Config::get('timelimit', 0));
+        // 设置时区
+        date_default_timezone_set(Config::get('timezone', 'PRC'));
         Autoloader::setNamespace(Config::get('app.namespace'));
         Autoloader::addIncludePath(SHRAE_DIR);
         if ($modules=Config::get('app.modules')) {
