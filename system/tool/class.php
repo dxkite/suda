@@ -14,15 +14,16 @@ function createClassFile(string $classname, bool $share=false)
         return false;
     }
     list($all, $class_short, $module)=$matchs;
+    $module_dir=Application::moduleDir($module);
     $namespace=conf('app.namespace');
     $class=$namespace.'\\'.$class_short;
     $pos=strrpos($class, '\\');
     $class_namespace=substr($class, 0, $pos);
     $class_name=substr($class, $pos+1);
     if ($share) {
-        $class_path=MODULES_DIR.'/'.$module.'/share/'.$class_namespace;
+        $class_path=MODULES_DIR.'/'.$module_dir.'/share/'.$class_namespace;
     } else {
-        $class_path=MODULES_DIR.'/'.$module.'/src/'.$class_namespace;
+        $class_path=MODULES_DIR.'/'.$module_dir.'/src/'.$class_namespace;
     }
 
     $class_file=$class_path.'/'.$class_name.'.php';
