@@ -37,10 +37,11 @@ class Router
         $simple_routers=[];
         $admin_routers=[];
         $module_dir=Application::moduleDir($module);
+        $prefix= conf('router-prefix.'.$module, null);
+               
         if (Storage::exist(MODULES_DIR.'/'.$module_dir.'/resource/config/router.json')) {
             $simple_routers= self::loadModuleJson($module, MODULES_DIR.'/'.$module_dir.'/resource/config/router.json');
-            array_walk($simple_routers, function (&$router) use ($module) {
-                $prefix= conf('router-prefix.'.$module, null);
+            array_walk($simple_routers, function (&$router) use ($module, $prefix) {
                 if (!is_null($prefix)) {
                     $router['visit']=$prefix.$router['visit'];
                 }
@@ -52,9 +53,12 @@ class Router
         // 加载后台路由
         if (Storage::exist(MODULES_DIR.'/'.$module_dir.'/resource/config/router_admin.json')) {
             $admin_routers= self::loadModuleJson($module, MODULES_DIR.'/'.$module_dir.'/resource/config/router_admin.json');
-            array_walk($admin_routers, function (&$router) use ($module) {
-                $prefix= conf('app.admin', '/suda-admin');
-                $router['visit']=$prefix.$router['visit'];
+            array_walk($admin_routers, function (&$router) use ($module, $prefix) {
+                $admin_prefix= conf('app.admin', '/suda-admin');
+                if (!is_null($prefix)) {
+                    $admin_prefix =$admin_prefix . $prefix;
+                }
+                $router['visit']=$admin_prefix.$router['visit'];
                 $router['visit']='/'.trim($router['visit'], '/');
                 $router['module']=$module;
             });
