@@ -117,11 +117,12 @@ function generate()
 
     $params=getopt('r:o:s:p:m:');
     $module=isset($params['m'])?$params['m']:'application';
-    $src=isset($params['r'])?$params['r']: $module?MODULES_DIR.'/'.$module.'/resource/dto':DATA_DIR.'/dto';
+    $module_dir=Application::moduleDir($module);
+    $src=isset($params['r'])?$params['r']: $module?MODULES_DIR.'/'.$module_dir.'/resource/dto':DATA_DIR.'/dto';
     if (!is_dir($src)) {
         echo 'no such dir:'.$src;
     }
-    $path=isset($params['m'])?MODULES_DIR.'/'.$params['m'].'/resource':DATA_DIR;
+    $path=isset($params['m'])?MODULES_DIR.'/'.$module_dir.'/resource':DATA_DIR;
     echo 'export to '."\033[34m".$path."\033[0m\r\n";
     Storage::path($path);
     $dist=isset($params['o'])?$params['o']: $path.'/db';
