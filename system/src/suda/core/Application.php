@@ -92,7 +92,7 @@ class Application
             Language::load($path);
         }
         // 模块资源准备
-        Manager::prepareResource($module);
+        // Manager::prepareResource($module);
     }
 
 
