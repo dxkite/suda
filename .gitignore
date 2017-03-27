@@ -6,3 +6,4 @@ public/static/
 public/hello/new.php
 public/phpinfo.php
 app/resource/config/config.json
+system/tool/db.1.php
