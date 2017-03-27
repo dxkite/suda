@@ -166,7 +166,6 @@ class Manager
         if (self::hasChanged($static_path, $path)) {
             self::copyStatic($static_path, $path);
         }
-        defined('APP_STATIC') or define('APP_STATIC', $path);
         return $path;
     }
 

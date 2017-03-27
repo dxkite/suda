@@ -2,6 +2,7 @@
 namespace suda\template;
 
 use Storage;
+use suda\core\Application;
 use suda\tool\Value;
 
 class Compiler
@@ -146,16 +147,11 @@ class Compiler
     protected function parseStatic($exp)
     {
         preg_match('/^\((.+?)\)$/', $exp, $match);
-        $module=$match[1]??null;
-        if ($module) {
-            $module=trim($module,'"\'');
-            $path=Manager::prepareResource($module);
-            $static_url=Storage::cut($path, APP_PUBLIC);
-            $static_url=preg_replace('/[\\\\\/]+/', '/', $static_url);
-        } else {
-            $static_url=Storage::cut(APP_STATIC, APP_PUBLIC);
-            $static_url=preg_replace('/[\\\\\/]+/', '/', $static_url);
-        }
+        $module=$match[1]??Application::getActiveModule();
+        $module=trim($module,'"\'');
+        $path=Manager::prepareResource($module);
+        $static_url=Storage::cut($path, APP_PUBLIC);
+        $static_url=preg_replace('/[\\\\\/]+/', '/', $static_url);
         return '/'.$static_url;
     }
 
