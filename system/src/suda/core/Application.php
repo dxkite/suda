@@ -28,7 +28,7 @@ class Application
         // 获取基本配置信息
         if (Storage::exist($path=CONFIG_DIR.'/config.json')) {
             Config::load($path);
-        }   
+        }
         
         // 系统必须配置信息
         if (Storage::exist($path=CONFIG_DIR.'/config.sys.json')) {
@@ -50,15 +50,22 @@ class Application
         // 设置时区
         date_default_timezone_set(Config::get('timezone', 'PRC'));
         Autoloader::setNamespace(Config::get('app.namespace'));
+        // 系统共享库
         Autoloader::addIncludePath(SHRAE_DIR);
-        if ($modules=Config::get('app.modules')) {
-            foreach ($modules as $module) {
-                $module_dir=conf('module-dirs.'.$module,$module);
-                if (Storage::isDir(MODULES_DIR.'/'.$module_dir.'/share')) {
-                    Autoloader::addIncludePath(MODULES_DIR.'/'.$module_dir.'/share');
-                }
+        // 模块共享库
+        $modules=self::getModuleDirs();
+        foreach ($modules as $module_dir) {
+            if (Storage::isDir(MODULES_DIR.'/'.$module_dir.'/share')) {
+                Autoloader::addIncludePath(MODULES_DIR.'/'.$module_dir.'/share');
             }
         }
+    }
+
+    public static function getModules(){
+        return array_keys(conf('module-dirs',[]));
+    }
+    public static function getModuleDirs(){
+        return array_values(conf('module-dirs',[]));
     }
     public static function getActiveModule()
     {
@@ -68,7 +75,7 @@ class Application
     public static function activeModule(string $module)
     {
         self::$active_module=$module;
-        $module_dir=conf('module-dirs.'.$module,$module);
+        $module_dir=conf('module-dirs.'.$module, $module);
         define('MODULE_RESOURCE', Storage::path(MODULES_DIR.'/'.$module_dir.'/resource'));
         define('MODULE_LANGS', Storage::path(MODULE_RESOURCE.'/langs'));
         define('MODULE_CONFIG', Storage::path(MODULE_RESOURCE.'/config'));
@@ -77,7 +84,7 @@ class Application
         // 加载模块配置到 module命名空间
         if (Storage::exist($path=MODULE_CONFIG.'/config.json')) {
             Config::set('module', Json::loadFile($path));
-            if ($namespace=Config::get('module.namespace',false)){
+            if ($namespace=Config::get('module.namespace', false)) {
                 Autoloader::setNamespace($namespace);
             }
         }

@@ -42,7 +42,7 @@ Table;
 End;
     public static function parserDto(string $module=null)
     {
-        $modules=conf('app.modules');
+        $modules=Application::getModules();
         Storage::rmDirs(TEMP_DIR.'/database/');
         foreach ($modules as $module) {
             echo 'parser module '.$module."\r\n";
@@ -52,7 +52,7 @@ End;
 
     public static function importData()
     {
-        $modules=conf('app.modules');
+        $modules=Application::getModules();
         foreach ($modules as $module) {
             echo 'importData '.$module."\r\n";
             self::importModuleData($module);
@@ -61,7 +61,7 @@ End;
 
     public static function importStruct()
     {
-        $modules=conf('app.modules');
+        $modules=Application::getModules();
         foreach ($modules as $module) {
             echo 'importStruct '.$module."\r\n";
             self::importModuleStruct($module);
@@ -156,7 +156,8 @@ End;
 
     public static function backup(bool $struct=falses)
     {
-        $modules=conf('app.modules');
+        $modules=Application::getModules();
+        Storage::path(DATA_DIR.'/backup/');
         Storage::copydir(DATA_DIR.'/backup/', TEMP_DIR.'/backup/'.time());
         Storage::rmdirs(DATA_DIR.'/backup/');
         foreach ($modules as $module) {
