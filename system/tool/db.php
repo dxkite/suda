@@ -47,8 +47,8 @@ if (count($opt)<=0) {
 Usage: db -gbid
     -m  set module  
 
-    -g 
-    -p      parser dto date_add
+    -g
+    -p      parser dto data
 
     -b 
     --backup backup data 
@@ -59,8 +59,7 @@ Usage: db -gbid
     -d 
     -data  import data 
 
-
 help;
-echo $help;
+    echo $help;
 }
 
