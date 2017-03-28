@@ -65,4 +65,4 @@ class Cookie
     }
 }
 
-register_shutdown_function(['Cookie', 'write']);
+register_shutdown_function(['suda\\core\\Cookie', 'write']);
