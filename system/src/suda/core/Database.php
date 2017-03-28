@@ -188,6 +188,8 @@ Table;
     public static function saveSQLData(string $file, string $table)
     {
         $q=new Query('SELECT * FROM '.$table.' WHERE 1;', [], true);
+        $count=(new Query('SELECT count(*) as `nums` FROM '.$table.' WHERE 1;'))->fetch()['nums'];
+        
         $columns=(new Query('SHOW COLUMNS FROM '.$table.';'))->fetchAll();
         $key='(';
         foreach ($columns  as $column) {
@@ -195,13 +197,16 @@ Table;
         }
         $key=rtrim($key, ',').')';
 
-
+        if ($count<=0) {
+            Storage::put($file, "/** Table {$table} is empty **/\r\n\n\r\n", FILE_APPEND);
+            return;
+        }
         if ($q) {
             //$sql="\r\n\r\nLOCK TABLES `$table` WRITE;\r\n/*!40000 ALTER TABLE `$table` DISABLE KEYS */;\r\n".'INSERT INTO `'.$table.'` VALUES ';
             $sql="\r\n\r\n".'INSERT INTO `'.$table.'` '.$key.' VALUES ';
-            
-
             $first=true;
+
+            Storage::put($file, $sql, FILE_APPEND);
             while ($values=$q->fetch()) {
                 $sql='';
                 if ($first) {
@@ -220,13 +225,7 @@ Table;
                 $sql.=')';
                 Storage::put($file, $sql, FILE_APPEND);
             }
-              if ($first){
-                    Storage::put($file, "/** Table {$table} is empty **/\r\n\n\r\n", FILE_APPEND);
-                }else{
-                   Storage::put($file, ";\r\n\n\r\n", FILE_APPEND);
-                }
-            
-            //Storage::put($file, ";\r\n/*!40000 ALTER TABLE `atd_comment` ENABLE KEYS */;\r\nUNLOCK TABLES;\r\n\r\n", FILE_APPEND);
+            Storage::put($file, ";\r\n\n\r\n", FILE_APPEND);
         } else {
             Storage::put($file, "/** Table {$table}  Save Failed **/\r\n\n\r\n", FILE_APPEND);
         }

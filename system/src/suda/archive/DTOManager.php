@@ -3,8 +3,10 @@
 namespace suda\archive;
 
 use Storage;
-use suda\core\{Application,Database};
+use suda\core\Application;
+use suda\core\Database;
 use suda\tool\Value;
+use suda\tool\ArrayHelper;
 
 // 数据表对象文件读取器
 class DTOManager
@@ -38,14 +40,16 @@ Table;
         return false;
     }
 End;
-    public static function parserDto()
+    public static function parserDto(string $module=null)
     {
         $modules=conf('app.modules');
+        Storage::rmDirs(TEMP_DIR.'/database/');
         foreach ($modules as $module) {
             echo 'parser module '.$module."\r\n";
             self::parserModuleDto($module);
         }
     }
+
     public static function importData()
     {
     }
@@ -61,8 +65,9 @@ End;
             print "not exist {$dto_path}\r\n";
             return;
         }
-
-        $create_path=TEMP_DIR.'/db-creater/';
+        $create_path=TEMP_DIR.'/database/structs';
+        $table_path=TEMP_DIR.'/database/table-info';
+        $table_names=[];
         $phpfile=$create_path.'/'.$module.'-dto.php';
         Storage::path($create_path);
         $tables=Storage::readDirFiles($dto_path, true, '/\.dto$/', true);
@@ -73,14 +78,19 @@ End;
             $table_name=self::tablename($namespace, $name);
             $name=ucfirst($name);
 
-
+            if ($namespace!==$name) {
+                $namespace='dto\\'.$namespace;
+            } else {
+                $namespace='dto';
+            }
             $builder=new DTOReader;
             $builder->load($dto_path.'/'.$table);
             $builder->setName($name);
             $builder->setNamespace($namespace);
             $builder->setTableName($table_name);
-
-            $output=TEMP_DIR.'/db-option/'.preg_replace('/\\\\/', DIRECTORY_SEPARATOR, $namespace).'/'.$name.'.php';
+            $table_names[]=$table_name;
+            
+            $output=TEMP_DIR.'/database/php/'.preg_replace('/\\\\/', DIRECTORY_SEPARATOR, $namespace).'/'.$name.'.php';
             Storage::path(dirname($output));
 
             $autopath=$builder->export(DTA_TPL.'/api.tpl', $output);
@@ -90,10 +100,28 @@ End;
             file_put_contents($phpfile, "\r\n".$query."\r\n\r\n", FILE_APPEND);
             echo 'output  manager class template file: '."\033[34m".$autopath."\033[0m\r\n";
         }
+        Storage::path($table_path);
+        ArrayHelper::export($table_path.'/'.$module.'.php', '_tables', $table_names);
         file_put_contents($phpfile, self::$dtoend, FILE_APPEND);
         echo 'output file: '."\033[34m".$phpfile."\033[0m\r\n";
     }
 
+    public static function backupModuleData(string $module=null, bool $struct=false)
+    {
+        Storage::path(DATA_DIR.'/backup/');
+        $tables=[];
+        if ($module) {
+            if (!$tables=self::modulesTables($module)) {
+                return false;
+            }
+        }
+        $bk=$module?:'app-data';
+        Database::export($querysql=DATA_DIR.'/backup/'.$bk.'.php',$tables, $struct);
+        Database::exportSQL($outsql=DATA_DIR.'/backup/'.$bk.'.sql',$tables, $struct);
+        echo 'backup to '."\033[34m".DATA_DIR.'/backup/'."\033[0m\r\n";
+        echo 'output sql  file: '."\033[34m".$outsql."\033[0m\r\n";
+        echo 'output file: '."\033[34m".$querysql."\033[0m\r\n";
+    }
 
     public static function importModuleData(string $module)
     {
@@ -101,8 +129,21 @@ End;
     public static function importModuleStruct(string $module)
     {
     }
-    public static function backupOld(string $module)
+    public static function backup()
     {
+        $modules=conf('app.modules');
+        foreach ($modules as $module) {
+            echo 'backup module '.$module."\r\n";
+            self::backupModuleData($module);
+        }
+    }
+
+    protected static function modulesTables(string $module)
+    {
+        if (file_exists($path=TEMP_DIR.'/database/table-info/'.$module.'.php')) {
+            return require $path;
+        }
+        return false;
     }
 
     protected static function sql(string $sql)
