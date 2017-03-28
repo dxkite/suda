@@ -52,9 +52,20 @@ End;
 
     public static function importData()
     {
+        $modules=conf('app.modules');
+        foreach ($modules as $module) {
+            echo 'importData '.$module."\r\n";
+            self::importModuleData($module);
+        }
     }
+
     public static function importStruct()
     {
+        $modules=conf('app.modules');
+        foreach ($modules as $module) {
+            echo 'importStruct '.$module."\r\n";
+            self::importModuleStruct($module);
+        }
     }
     public static function parserModuleDto(string $module)
     {
@@ -116,8 +127,8 @@ End;
             }
         }
         $bk=$module?:'app-data';
-        Database::export($querysql=DATA_DIR.'/backup/'.$bk.'.php',$tables, $struct);
-        Database::exportSQL($outsql=DATA_DIR.'/backup/'.$bk.'.sql',$tables, $struct);
+        Database::export($querysql=DATA_DIR.'/backup/'.$bk.'.php', $tables, $struct);
+        Database::exportSQL($outsql=DATA_DIR.'/backup/'.$bk.'.sql', $tables, $struct);
         echo 'backup to '."\033[34m".DATA_DIR.'/backup/'."\033[0m\r\n";
         echo 'output sql  file: '."\033[34m".$outsql."\033[0m\r\n";
         echo 'output file: '."\033[34m".$querysql."\033[0m\r\n";
@@ -125,16 +136,32 @@ End;
 
     public static function importModuleData(string $module)
     {
+        $file=DATA_DIR.'/backup/'.$module.'.php';
+        if (Storage::exist($file)) {
+            Database::import($file);
+        } else {
+            echo "file no found :${file} \r\n";
+        }
     }
+
     public static function importModuleStruct(string $module)
     {
+        $file=TEMP_DIR.'/database/structs/'. $module.'-dto.php';
+        if (Storage::exist($file)) {
+            Database::import($file);
+        } else {
+            echo "file no found :${file} \r\n";
+        }
     }
-    public static function backup()
+
+    public static function backup(bool $struct=falses)
     {
         $modules=conf('app.modules');
+        Storage::copydir(DATA_DIR.'/backup/', TEMP_DIR.'/backup/'.time());
+        Storage::rmdirs(DATA_DIR.'/backup/');
         foreach ($modules as $module) {
             echo 'backup module '.$module."\r\n";
-            self::backupModuleData($module);
+            self::backupModuleData($module, $struct);
         }
     }
 
