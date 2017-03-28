@@ -155,7 +155,11 @@ final class Request
 
     public static function isPost()
     {
-        return self::method()==='POST';
+        return strtoupper(self::method())==='POST';
+    }
+    public static function isGet()
+    {
+        return strtoupper(self::method())==='GET';
     }
     public static function hasGet()
     {
@@ -188,7 +192,11 @@ final class Request
         }
         return $default;
     }
-
+    public static function hasHeader(string $name, string $default=null)
+    {
+        $name='HTTP_'.strtoupper(preg_replace('/[^\w]/', '_', $name));
+        return isset($_SERVER[$name]);
+    }
     protected static function parseServer()
     {
         $index=pathinfo(get_included_files()[0], PATHINFO_BASENAME);
@@ -238,7 +246,8 @@ final class Request
             self::$files=new Value($_FILES);
         }
     }
-    public static function virtualUrl(){
+    public static function virtualUrl()
+    {
         return self::$url.(self::$query?'?'.self::$query:'');
     }
     public static function baseUrl()
