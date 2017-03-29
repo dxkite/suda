@@ -184,7 +184,7 @@ End;
         if ($namespace==='.') {
             return $name;
         }
-        if (preg_match('/'.preg_quote(DIRECTORY_SEPARATOR.$name).'$/i', $namespace)) {
+        if (preg_match('/'.preg_quote(DIRECTORY_SEPARATOR.$name,'/').'$/i', $namespace)) {
             $namespace=preg_replace('/'.preg_quote(DIRECTORY_SEPARATOR.$name).'$/i', '', $namespace);
         }
         return ($name===$namespace?$name:preg_replace_callback('/(\\\\|[A-Z])/', function ($match) {
