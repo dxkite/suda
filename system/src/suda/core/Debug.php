@@ -114,7 +114,7 @@ class Debug
                         $args_d .= 'class '.get_class($arg).',';
                     } else {
                         $args .= stripcslashes(var_export($arg, true)).',';
-                        $args_d.=json_encode($arg).',';
+                        $args_d.= (is_array($arg)?json_encode($arg):$arg) .',';
                     }
                 }
                 $args = rtrim($args, ',');
