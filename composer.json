@@ -1,0 +1,12 @@
+{
+    "name": "dxkite/suda",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "DXkite",
+            "email": "DXkite@163.com"
+        }
+    ],
+    "require": {}
+}
