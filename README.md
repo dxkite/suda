@@ -1,23 +1,23 @@
-#  苏打 简易PHP框架
-此框架的目的是简化PHP程序的构建过程，不包含太多东西。是我尝试使用面向对象的思路去编写的`DxCore`,
-老式的处理思路导致我在面向对象设计的过程中还保留很多过去面向函数编程的习惯。因此，本程序尝试使用新的思路
-去编写代码，而且，如标题所言，这个是我最后的PHP自用辅助类库。
+#  苏打PHP框架
 
-> 框架使用模式参考了[ThinkPHP](https://github.com/top-think/think),[Zend Framework](https://github.com/zendframework/zendframework),[Symfony](https://github.com/symfony/symfony),[Laravel](https://github.com/laravel/laravel)
-> 但是实现和他们半毛钱关系都没有，只有某些用法类似
-> 框架不支持 PHP<7.+ 不要问我为什么,已经拥抱PHP7好久了。   
-## 框架功能
-- 单入口
-- MVC
-- 模块化
+该框架是学习网站开发后的产物，作为一名业余的开发人员，造轮子对我们来说是一个很好的学习技巧的方式，我们时间
+充足不是么？现行的PHP框架用的不是很开心就是。所以有了这个框架，按照自己的思路，想法去开发网站，感觉不是一般的
+开心。框架的模式基本应用的MVC的思路，但是却不被认为是MVC~拥有强大的路由规则和完善的网页模板生成器，可以很容易的
+开发出现有的网站出来。
 
+## 框架主要实现的功能
 
-## 主要辅助功能：
-- 控制台自动构建功能
-- 应用路由
-- 事件监听器
-- 简易PHP模板
-- 日志记录工具
+- [x] 应用模块机制
+- [x] 页面路由
+- [x] 数据操作辅助类
+- [x] Debug工具
+- [x] 控制台自动构建功能
+- [x] 事件监听器
+- [x] 简易PHP模板
+- [x] 日志记录工具
+- [ ] 网页控制器
+- [ ] Docme工具
+
 
 
 
@@ -41,7 +41,7 @@
 [路由使用](docs/tools/router.md)
 
 
-## 历史版本
+## 历史版本 Or Demo
 
 - [DxSite](https://github.com/DXkite/DxSite)   
 - [ATD_MINI](https://github.com/DXkite/atd_mini)   
