@@ -1,0 +1,45 @@
+@set('title', $:title('跳转中。。。')  )
+@set('lang','Zh-cn')
+@startInsert('bs-head')
+  <style>
+    body {
+      padding-top: 40px;
+      padding-bottom: 40px;
+      background-color: #eee;
+    }
+  </style>
+@endInsert
+@startInsert('bs-content')
+  <div class="container">
+
+    <div class="jumbotron">
+      <h1 class="display-3"> {{ $:title('跳转中。。。') }} </h1>
+      <p class="lead"> 页面跳转至 <a id="href" href="{{ $:url }}">{{ $:url }}</a> 中。</p>
+          <hr class="my-4">
+      <p class="lead">
+        <a class="btn btn-primary btn-lg" href="{{ $:url }}" role="button">立即跳转 (<span id="time">{{$:time(1)}}</span>)</a>
+      </p>
+    </div>
+  </div>
+@endInsert
+@startInsert('bs-footer')
+<script type="text/javascript">
+(function(){
+href = document.getElementById('href').href;
+var time_counter= document.getElementById('time');
+var time = time_counter.innerText || 0;
+var interval = setInterval(function(){
+    if (time<=0){
+        clearInterval(interval);
+        time_counter.innerText='0';
+        location.href = href;
+    }
+	else{
+        time_counter.innerText=time-1;
+        time--;
+    }
+}, 1000);
+})();
+</script>
+@endInsert
+@include('suda:bootstrap')

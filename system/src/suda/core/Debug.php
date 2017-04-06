@@ -22,6 +22,27 @@ class Debug
     protected static $max = 2097152; // 2M
     protected static $time=[];
     protected static $timer=[];
+    protected static $traces=null;
+    public static function setTrace(array $traces)
+    {
+        self::$traces=$traces;
+    }
+    public static function getTrace($offset_start, $offset_end)
+    {
+        if (self::$traces) {
+            return self::$traces;
+        }
+        $trace = debug_backtrace();
+
+        while ($offset_start--) {
+            array_shift($trace);
+        }
+        while ($offset_end--) {
+            array_pop($trace);
+        }
+        return $trace;
+    }
+    
     public static function time(string $name)
     {
         self::$time[$name]=microtime(true);
@@ -41,17 +62,17 @@ class Debug
         }
         $mark  = '';
         $loginfo=[];
-        $trace = debug_backtrace();
-
+        
+        $trace=self::getTrace($offset_start, $offset_end);
+        $trace_line = debug_backtrace();
         while ($offset_start--) {
-            array_shift($trace);
+            array_shift($trace_line);
         }
         while ($offset_end--) {
-            array_pop($trace);
+            array_pop($trace_line);
         }
-        
-        $loginfo['file']=$trace[0]['file'];
-        $loginfo['line']=$trace[0]['line'];
+        $loginfo['file']=$trace_line[0]['file'];
+        $loginfo['line']=$trace_line[0]['line'];
         $loginfo['title']=$title;
         $loginfo['msg']=$message;
         $loginfo['level']=$level;
@@ -78,7 +99,7 @@ class Debug
 
     public static function printError($message, $code, $file, $line, $offset_start=0, $offset_end=0)
     {
-        $backtrace = debug_backtrace();
+
         $pos_num = $line - 1;
         $code_file = file($file);
         $start = $line - 5 < 0 ? 0 : $line - 5;
@@ -89,12 +110,7 @@ class Debug
         $traces_console=array();
         $start_trace=[];
         $end_trace=[];
-        while ($offset_start--) {
-            $start_trace[]=array_shift($backtrace);
-        }
-        while ($offset_end--) {
-            $end_trace[]=array_pop($backtrace);
-        }
+        $backtrace=self::getTrace($offset_start, $offset_end);
         foreach ($backtrace as $trace) {
             $print = null;
             $print_d = null;

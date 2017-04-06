@@ -33,6 +33,7 @@ class System
     public static function uncaughtException($exception)
     {
         if (Hook::execIf('system:uncaughtException', [$exception], false)) {
+            Debug::setTrace($exception->getTrace());
             Debug::printError($exception->getMessage(),(new \ReflectionClass($exception))->getName(). ($exception->getCode()?'['.$exception->getCode().']':''), $exception->getFile(), $exception->getLine(), 2);
         }
     }
