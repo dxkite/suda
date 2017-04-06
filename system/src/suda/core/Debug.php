@@ -90,7 +90,7 @@ class Debug
         $start_trace=[];
         $end_trace=[];
         while ($offset_start--) {
-             $start_trace[]=array_shift($backtrace);
+            $start_trace[]=array_shift($backtrace);
         }
         while ($offset_end--) {
             $end_trace[]=array_pop($backtrace);
@@ -138,18 +138,17 @@ class Debug
             }
         } else {
             $render=new class extends Response {
-                protected $tpl;
-                public function tpl(string $tpl)
-                {
-                    $this->tpl=$tpl;
-                }
                 public function onRequest(Request $request)
                 {
                     $this->state(500);
-                    $this->displayFile($this->tpl);
+                    if (\suda\template\Manager::compile('suda:error')) {
+                        $this->display('suda:error');
+                    } else {
+                        $this->displayFile(SYS_RES.'/tpl/error.tpl');
+                    }
                 }
             };
-            $render->tpl(SYS_RES.'/tpl/error.tpl');
+
             $render->assign([
                 'erron'=>$erron,
                 'error'=>$error,
@@ -260,4 +259,3 @@ class Debug
         self::aliasMethod($method, $args);
     }
 }
-

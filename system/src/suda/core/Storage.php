@@ -11,7 +11,7 @@ class Storage
             if (!self::mkdirs(dirname($dir), $mode)) {
                 return false;
             }
-            if (!@mkdir($dir, $mode)) {
+            if (!self::mkdir($dir, $mode)) {
                 return false;
             }
         }
@@ -136,7 +136,7 @@ class Storage
     // 创建文件夹
     public static function mkdir(string $path, int $mode=0777):bool
     {
-        return mkdir($path, $mode);
+        return !self::isDir($path) && mkdir($path, $mode);
     }
     // 删除文件夹
     public static function rmdir(string $path):bool

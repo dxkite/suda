@@ -33,7 +33,7 @@ class System
     public static function uncaughtException($exception)
     {
         if (Hook::execIf('system:uncaughtException', [$exception], false)) {
-            Debug::printError($exception->getMessage(), $exception->getCode(), $exception->getFile(), $exception->getLine(), 2);
+            Debug::printError($exception->getMessage(),(new \ReflectionClass($exception))->getName(). ($exception->getCode()?'['.$exception->getCode().']':''), $exception->getFile(), $exception->getLine(), 2);
         }
     }
     // 错误处理函数

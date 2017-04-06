@@ -1,56 +1,88 @@
-<!DOCTYPE html>
-<html>
-    <head>
-    <style>
-    body,html{margin:0;padding:0;background:#f8f8ff;font-size:16px;font-family:"微软雅黑",Arial,Helvetica,sans-serif}
-    .container:after,.container:before{display:table;content:"";line-height:0}
-    .container:after{clear:both}
-    .erron{background:#3FA9F5;text-align:center;padding:1em;border-radius:.5em;transition:.3s;float:left;color:#fff;font-size:1em;word-wrap:break-word;overflow:hidden;margin:1em}
-    .erron:hover{box-shadow:0 0 .2em .2em #FF4D52}
-    .error{padding:1em;margin:1em 0 1em 0;color:red;float:left}
-    .backtrace li{padding:.2em}
-    .backtrace li:nth-child(odd){background:#fff}
-    .backtrace li:nth-child(even){background:#eee}
-    .backtrace_print{list-style:none;margin:1em;padding:0}
-    .code-table{list-style:none;margin:1em;padding:0;border:1px #ccc solid}
-    .line{width:4em}
-    .code{width:90%}
-    .on{background:rgba(255,0,0,.5)}
-    .file{padding:0;margin:0 0 0 1em}
-    pre{padding:0;margin:0}
-    h2{padding-left:1em;}
-    </style>
-    <title>Error :{{ $v->erron(0) }}</title>
-</head>
-<body>
-<div title="Runtime" style="position:fixed;top:0;right:0;z-index:99999;padding:3px 5px;background:rgba(0,0,0,.3);color:#FFF;font-size:12px;border-radius:0 0 0 3px ;">{{$v->debuginfo('made by dxkite')}}</div>
-<div class="container">
-<div class="erron">{{ $v->erron(0) }}</div>
-<div class="error">{{ _T($v->error('Unknow Error')) }}</div>
+@set('title','Error ['. $:erron(0) .'] - '. $:error ) @set('lang','Zh-cn') @startInsert('bs-head')
+<link rel="stylesheet" href="@static('suda')/google-code-prettify/prettify.css">
+<style>
+    .error-line {
+        background: #f8cbcb;
+    }
+    
+    pre.prettyprint {
+        border: none;
+    }
+    
+    pre {
+        background-color: #fff;
+    }
+    
+    pre ol {
+        margin: 0;
+        color: #4288ce;
+        display: inline-block;
+        min-width: 100%;
+        box-sizing: border-box;
+        padding-left: 56px;
+    }
+    
+    pre li {
+        border-left: 1px solid #ddd;
+        height: 18px;
+        line-height: 18px;
+    }
+    
+    pre code {
+        color: #333;
+        height: 100%;
+        padding-left: 6px;
+        display: inline-block;
+        border-left: 1px solid #fff;
+    }
+    
+    .panel {
+        padding: 1em;
+    }
+    
+    .info-panel {
+        padding-top: 1em;
+    }
+</style>
+@endInsert @startInsert('bs-content')
+<div class="panel">
+    <div class="alert alert-danger" role="alert">
+        <button class="btn btn-danger">{{ $:erron('Unknow Error') }} </button> {{ $:error }}
+    </div>
+    <div class="card">
+        <div class="card-header">{{ $:file }}#{{$:line(0) }}</div>
+        <pre class="prettyprint lang-php"><ol start="{{ key($:lines) }}">@foreach( $:lines as $num =>$line_code )<li class="line-{{$num}} @if ($num==$:pos_num) error-line @endif "><code>{{$line_code}}</code></li>@endforeach</ol></pre>
+    </div>
+    <div class="info-panel">
+        @if(count($:traces))
+        <ul class="list-group">
+            <li class="list-group-item active"><strong>backtrace</strong></li>
+            @foreach ($:traces as $trace_info)
+            <li class="list-group-item">{{! $trace_info }}</li>
+            @endforeach
+        </ul>
+        @endif
+        <div style="padding-top:1em" id="accordion" role="tablist" aria-multiselectable="true">
+            <div class="card-header" role="tab" id="include">
+                <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne"><span class="badge badge-default">{{ count(get_included_files())}}</span><strong>Includes</strong></a>
+            </div>
+            <div id="collapseOne" class="collapse @if(!count($:traces)) show @endif" role="tabpanel" aria-labelledby="include">
+                <ul class="list-group">
+                @foreach( get_included_files() as $file)
+                <li class="list-group-item">{{ $file }}</li>
+                @endforeach
+                </ul>
+            </div>
+        </div>
+    </div>
 </div>
-<div class="file_content">
-<div class="file">{{ $v->file }}#{{$v->line(0) }}</div>
-<table class="code-table">
-<?php  foreach ($v->lines as $num =>$line_code) {?>
-<tr><td class="line"><?php echo $num+1; ?></td><td class="code"><pre <?php if ($num===$v->pos_num) echo 'class="on"';?>><?php echo htmlspecialchars($line_code) ?></pre></td><tr>
-<?php } ?>
-</table>
+@endInsert @startInsert('bs-footer')
+<script src="@static('suda')/google-code-prettify/prettify.js"></script>
+<script>
+    window.addEventListener('load', function () {
+        prettyPrint();
+    });
+</script>
 </div>
-<div class="backtrace">
-<ol class="backtrace_print">
-<?php  foreach ($v->traces as $trace_info) {?>
-<li><?php echo $trace_info; ?> </li>
-<?php } ?>
-</ol>
 </div>
-<h2>Include-Files(<?php  $file=get_included_files(); echo count($file) ?>)</h2>
-<div class="backtrace">
-<ol class="backtrace_print">
-<?php 
-foreach ($file as $file_name) {?>
-<li><?php echo suda\core\Storage::cut($file_name); ?> </li>
-<?php } ?>
-</ol>
-</div>
-</body>
-</html>
+@endInsert @include('suda:bootstrap')

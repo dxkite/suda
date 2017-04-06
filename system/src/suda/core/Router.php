@@ -377,7 +377,7 @@ class Router
         $render=new class extends Response {
             public   function onRequest(Request $request)
             {
-                $this->name='404page';
+                self::$name='404page';
                 $this->state(404);
                 $this->display('suda:error404', ['path'=>$request->url()]);
             }
