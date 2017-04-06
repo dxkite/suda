@@ -1,5 +1,5 @@
 {
-    "name": "dxkite/suda",
+    "name": "dxkite/suda-framework",
     "type": "library",
     "license": "MIT",
     "authors": [
@@ -8,5 +8,7 @@
             "email": "DXkite@163.com"
         }
     ],
-    "require": {}
+    "require": {
+         "php": "^7.0"
+    }
 }
