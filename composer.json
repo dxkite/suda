@@ -1,14 +1,14 @@
 {
-    "name": "dxkite/suda-framework",
+    "name": "dxkite/suda",
+    "description": "a php7 only framework!",
     "type": "library",
     "license": "MIT",
+    "version": "1.1.2-dev",
     "authors": [
         {
             "name": "DXkite",
             "email": "DXkite@163.com"
         }
     ],
-    "require": {
-         "php": "^7.0"
-    }
+    "require": {}
 }
