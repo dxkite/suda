@@ -60,7 +60,7 @@ abstract class Response
     private $type='html';
     private static $instance=null;
     private static $mime;
-
+    protected static $name=null;
     protected static $_values=[];
     
     // 必须要调用
@@ -193,7 +193,7 @@ abstract class Response
     }
     protected static function mark()
     {
-        header('X-Framework: '.conf('app.name', 'suda').'-'.Application::getActiveModule().'/'.conf('app.version'));
+        header('X-Framework: '.conf('app.name', 'suda').'-'.Application::getActiveModule().'/'.conf('app.version') .'-'.self::$name );
     }
     public static function close()
     {
@@ -206,7 +206,9 @@ abstract class Response
             ob_start();
         }
     }
-
+    public static function setName(string $name){
+        self::$name=$name;
+    }
     public static function set(string $name, $value)
     {
         return self::$_values=ArrayHelper::set( self::$_values,$name,$value);

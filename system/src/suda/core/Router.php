@@ -350,6 +350,7 @@ class Router
         // Hook前置路由（自定义过滤器|自定义路由）
         if (Hook::execIf('Router:dispatch::before', [Request::getInstance()], true)) {
             if (($router_name=self::matchRouterMap())!==false) {
+                Response::setName($router_name);
                 self::runRouter($this->routers[$router_name]);
             } else {
                 Hook::exec('system:404');
@@ -376,6 +377,7 @@ class Router
         $render=new class extends Response {
             public   function onRequest(Request $request)
             {
+                $this->name='404page';
                 $this->state(404);
                 $this->display('suda:error404', ['path'=>$request->url()]);
             }

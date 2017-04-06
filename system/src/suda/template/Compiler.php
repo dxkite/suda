@@ -66,13 +66,13 @@ class Compiler
         return preg_replace_callback('/\B[$][:]([^()\s\'"]+)(\s*)(\( ( (?>[^()]+) | (?3) )* \) )?/x', function ($matchs) {
             $name=$matchs[1];
             $args=isset($matchs[4])?','.$matchs[4]:'';
-            return 'Response::get("'.$name.'"'.$args.')';
+            return 'suda\\core\\Response::get("'.$name.'"'.$args.')';
         }, $var);
     }
 
     protected static function parseValue($var)
     {
-        return '<?php echo Response::get'.self::echoValue($var) .'?>';
+        return '<?php echo suda\\core\\Response::get'.self::echoValue($var) .'?>';
     }
     
     protected function parseEcho($exp)

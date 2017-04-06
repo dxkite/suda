@@ -17,7 +17,7 @@ function _D(){
 
 // 获取配置
 function conf(string $name,$default=null){
-    return Config::get($name,$default);
+    return suda\core\Config::get($name,$default);
 }
 
 // 使用命名空间
