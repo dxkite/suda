@@ -13,6 +13,7 @@ class Autoloader
     public static function init()
     {
         spl_autoload_register(array('suda\\core\\Autoloader', 'classLoader'));
+        self::addIncludePath(dirname(dirname(__DIR__)));
     }
 
     public static function classLoader(string $classname)
