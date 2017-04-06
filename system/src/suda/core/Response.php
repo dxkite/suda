@@ -62,11 +62,12 @@ abstract class Response
     private static $mime;
     protected static $name=null;
     protected static $_values=[];
-    
+    protected static $info=null;
     // 必须要调用
     /*final*/ public function __construct()
     {
-        self::mark();
+        // Mark
+        header('X-Suda: '.conf('app.name', 'suda').'/'.conf('app.version').' ['.self::$name .']');
         if (conf('debug')) {
             // 设置无缓存头
             self::noCache();
@@ -74,6 +75,9 @@ abstract class Response
             //@touch(get_included_files()[0]);
         }
         self::$instance=$this;
+        self::$info['time']=microtime(true);
+        self::$info['mem']=memory_get_usage();
+        Debug::time('response');
     }
     
     abstract public function onRequest(Request $request);
@@ -153,9 +157,7 @@ abstract class Response
         $this->display('suda:redirect');
         $this->noCache();
     }
-    public static function time(int $time)
-    {
-    }
+
     public function displayFile(string $path, array $values=[])
     {
         self::mark();
@@ -178,10 +180,10 @@ abstract class Response
         if ($str=$request->getHeader('If-None-Match')) {
             if (strcasecmp($etag, $str)===0) {
                 // _D()->d('Etag:'.$etag, 'Response 304');
-                    self::state(304);
+                self::state(304);
                 self::close();
-                    // 直接结束访问
-                    exit(0);
+                // 直接结束访问
+                exit(0);
             }
         }
     }
@@ -193,7 +195,10 @@ abstract class Response
     }
     protected static function mark()
     {
-        header('X-Framework: '.conf('app.name', 'suda').'-'.Application::getActiveModule().'/'.conf('app.version') .'-'.self::$name );
+        Debug::timeEnd('response');
+        $time=microtime(true) - self::$info['time'];
+        $mem=memory_get_usage() - self::$info['mem'] ;
+        header('X-Suda: '.conf('app.name', 'suda').'/'.conf('app.version').' ['.self::$name .'] '."{$time}S {$mem}B");
     }
     public static function close()
     {

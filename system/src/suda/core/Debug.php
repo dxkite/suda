@@ -31,8 +31,8 @@ class Debug
         if (isset(self::$time[$name])) {
             $pass=microtime(true)-self::$time[$name];
             $timer[$name]=$pass;
+            self::log('use '. number_format($pass, 10).' s', $name, self::T, 1);
         }
-        self::log('use '. number_format($pass, 10).' s', $name, self::T, 1);
     }
     protected static function log(string $message, string $title='Log title', $level = self::E, int $offset_start=0, int $offset_end=0)
     {
