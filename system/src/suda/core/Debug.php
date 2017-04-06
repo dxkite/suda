@@ -87,11 +87,13 @@ class Debug
         $error = $message;
         $traces = array();
         $traces_console=array();
+        $start_trace=[];
+        $end_trace=[];
         while ($offset_start--) {
-            array_shift($backtrace);
+             $start_trace[]=array_shift($backtrace);
         }
         while ($offset_end--) {
-            array_pop($backtrace);
+            $end_trace[]=array_pop($backtrace);
         }
         foreach ($backtrace as $trace) {
             $print = null;
