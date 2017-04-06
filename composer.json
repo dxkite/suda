@@ -10,5 +10,10 @@
             "email": "DXkite@163.com"
         }
     ],
+    "autoload": {
+        "psr-4": {
+            "": "system/src/"
+        }
+    },
     "require": {}
 }
