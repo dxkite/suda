@@ -57,7 +57,6 @@ Table;
             foreach ($tables as $table_array) {
                 $tablename=current($table_array);
                 preg_match('/^'.\Config::get('database.prefix').'(.+?)$/', $tablename, $tbinfo);
-                
                 if ($struct) {
                     $export_str.=self::querySQLString('DROP TABLE IF EXISTS #{'.$tbinfo[1].'}');
                     $export_str.=self::querySQLTableStruct(current($table_array));
@@ -118,16 +117,17 @@ Table;
 
     public static function querySQLString(string $sql)
     {
-        return ' (new Query(\''.addslashes($sql).'\'))->exec();'."\r\n\r\n";
+        $data=base64_encode($sql);
+        return ' (new Query(base64_decode(\''.$data.'\')))->exec();'."\r\n\r\n";
     }
 
     public static function queryCreateTable(string $sql, string $table)
     {
         echo 'export '.$table.' struct ... '."\r\n";
         $table=preg_replace('/^'.\Config::get('database.prefix').'/', '', $table);
-        $sql=addslashes($sql);
+        $sql=base64_encode($sql);
         $create=<<< queryCreateTable
-        \$effect=(\$query_{$table}=new Query('$sql'))->exec();
+        \$effect=(\$query_{$table}=new Query(base64_decode('$sql')))->exec();
         if (\$query_{$table}->erron()==0){
             echo 'Create Table:'.\Config::get('database.prefix').'$table Ok,effect '.\$effect.' rows'."\\r\\n";
         }
@@ -142,10 +142,10 @@ queryCreateTable;
     {
         echo 'export '.$table.' data  ... '."\r\n";
         $table=preg_replace('/^'.\Config::get('database.prefix').'/', '', $table);
-        $sql=addslashes($sql);
+        $sql=base64_encode($sql);
         $insert=<<< queryInsertTable
         (new Query('TRUNCATE #{{$table}}'))->exec();
-        \$effect=(\$query_{$table}_insert=new Query('$sql'))->exec();
+        \$effect=(\$query_{$table}_insert=new Query(base64_decode('$sql')))->exec();
         if (\$query_{$table}_insert->erron()==0){
             echo 'Insert Table:'.\Config::get('database.prefix').'{$table} Data Ok!,effect '.\$effect.' rows'."\\r\\n";
         }
@@ -185,6 +185,7 @@ Table;
         }
         return true;
     }
+    
     public static function saveSQLData(string $file, string $table)
     {
         $q=new Query('SELECT * FROM '.$table.' WHERE 1;', [], true);
