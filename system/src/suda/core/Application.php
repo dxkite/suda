@@ -54,11 +54,19 @@ class Application
         Autoloader::addIncludePath(SHRAE_DIR);
         // 模块共享库
         $modules=self::getModuleDirs();
+        $module_use=self::getLiveModules();
         foreach ($modules as $module_dir) {
             if (Storage::isDir(MODULES_DIR.'/'.$module_dir.'/share')) {
                 Autoloader::addIncludePath(MODULES_DIR.'/'.$module_dir.'/share');
             }
+            if (in_array(self::moduleName($module_dir),$module_use)){
+                // 监听器
+                if (Storage::exist($path=MODULES_DIR.'/'.$module_dir.'/resource/config/listener.json')) {
+                    Hook::loadJson($path);
+                }
+            }
         }
+        Hook::exec('Application:init');
     }
 
     public static function getModules(){
@@ -70,6 +78,10 @@ class Application
     public static function getActiveModule()
     {
         return self::$active_module;
+    }
+    public static function getLiveModules()
+    {
+        return conf('app.modules',[]);
     }
     // 激活模块
     public static function activeModule(string $module)

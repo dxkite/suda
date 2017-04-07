@@ -100,10 +100,14 @@ final class Request
         self::$get->$name=$value;
     }
 
-    public static function get(string $name='')
+    public static function get(string $name='', $default=null)
     {
         if ($name) {
-            return self::$get->$name;
+            if (isset(self::$get->$name)) {
+                return self::$get->$name;
+            } else {
+                return $default;
+            }
         } else {
             return self::$get;
         }
