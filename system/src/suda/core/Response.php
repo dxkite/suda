@@ -63,6 +63,8 @@ abstract class Response
     protected static $name=null;
     protected static $_values=[];
     protected static $info=null;
+    protected static $spaces;
+    protected static $space_name='master';
     // 必须要调用
     /*final*/ public function __construct()
     {
@@ -134,7 +136,7 @@ abstract class Response
         Header('Content-Length:'.$size);
         echo file_get_contents($path);
     }
-    
+
     public function display(string $template, array $values=[])
     {
         self::mark();
@@ -151,10 +153,10 @@ abstract class Response
         self::_etag(md5($this->content));
         echo $this->content;
     }
-    public function redirect(string $url,int $time=1)
+    public function redirect(string $url, int $time=1)
     {
         $this->set('url', $url);
-        $this->set('time',$time);
+        $this->set('time', $time);
         $this->display('suda:redirect');
         $this->noCache();
     }
@@ -212,12 +214,24 @@ abstract class Response
             ob_start();
         }
     }
-    public static function setName(string $name){
+    public static function setName(string $name)
+    {
         self::$name=$name;
+    }
+    public static function space(string $name='master')
+    {
+        self::$spaces[self::$space_name]=self::$_values;
+        self::$_values=[];
+        self::$space_name=$name;
+    }
+    public static function reset(string $name='master')
+    {
+        self::$_values=self::$spaces[$name];
+        self::$space_name=$name;
     }
     public static function set(string $name, $value)
     {
-        return self::$_values=ArrayHelper::set( self::$_values,$name,$value);
+        return self::$_values=ArrayHelper::set(self::$_values, $name, $value);
     }
 
     public static function assign(array $values)
@@ -227,7 +241,7 @@ abstract class Response
 
     public static function get(string $name, $default=null)
     {
-        $fmt= ArrayHelper::get(self::$_values,$name,$default ?? $name);
+        $fmt= ArrayHelper::get(self::$_values, $name, $default ?? $name);
         if (func_num_args() > 2) {
             $args=array_slice(func_get_args(), 2);
             array_unshift($args, $fmt);

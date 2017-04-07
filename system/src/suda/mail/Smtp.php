@@ -161,8 +161,10 @@ class Smtp implements Mailer
         if ($this->use) {
             $this->type='html';
             ob_start();
+            Response::space('email');
             Response::assign($this->values);
             Manager::display($this->use);
+            Response::reset();
             $this->msg=ob_get_clean();
         }
         return $this->msg;
