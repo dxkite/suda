@@ -59,21 +59,27 @@ class Application
             if (Storage::isDir(MODULES_DIR.'/'.$module_dir.'/share')) {
                 Autoloader::addIncludePath(MODULES_DIR.'/'.$module_dir.'/share');
             }
-            if (in_array(self::moduleName($module_dir),$module_use)){
-                // 监听器
+            if (in_array(self::moduleName($module_dir), $module_use)) {
+                // 加载监听器
                 if (Storage::exist($path=MODULES_DIR.'/'.$module_dir.'/resource/config/listener.json')) {
                     Hook::loadJson($path);
+                }
+                // 加载语言包
+                if (Config::get('app.language') && Storage::exist($path=MODULES_DIR.'/'.$module_dir.'/resource/langs/'.Config::get('app.language').'.json')) {
+                    Language::load($path);
                 }
             }
         }
         Hook::exec('Application:init');
     }
 
-    public static function getModules(){
-        return array_keys(conf('module-dirs',[]));
+    public static function getModules()
+    {
+        return array_keys(conf('module-dirs', []));
     }
-    public static function getModuleDirs(){
-        return array_values(conf('module-dirs',[]));
+    public static function getModuleDirs()
+    {
+        return array_values(conf('module-dirs', []));
     }
     public static function getActiveModule()
     {
@@ -81,11 +87,12 @@ class Application
     }
     public static function getLiveModules()
     {
-        return conf('app.modules',[]);
+        return conf('app.modules', []);
     }
     // 激活模块
     public static function activeModule(string $module)
     {
+        Hook::exec('Application:active', [$module]);
         self::$active_module=$module;
         $module_dir=conf('module-dirs.'.$module, $module);
         define('MODULE_RESOURCE', Storage::path(MODULES_DIR.'/'.$module_dir.'/resource'));
@@ -100,18 +107,6 @@ class Application
                 Autoloader::setNamespace($namespace);
             }
         }
-        
-        // 加载监听器
-        if (Storage::exist($path=MODULE_CONFIG.'/listener.json')) {
-            Hook::loadJson($path);
-        }
-
-        // 加载语言包
-        if (Config::get('app.language') && Storage::exist($path=MODULE_LANGS.'/'.Config::get('app.language').'.json')) {
-            Language::load($path);
-        }
-        // 模块资源准备
-        // Manager::prepareResource($module);
     }
 
 
