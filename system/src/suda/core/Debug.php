@@ -131,7 +131,7 @@ class Debug
                         $args .= 'class '.get_class($arg).',';
                         $args_d .= 'class '.get_class($arg).',';
                     } else {
-                        $args .= stripcslashes(var_export($arg, true)).',';
+                        $args .=   var_export($arg, true).',';
                         $args_d.= (is_array($arg)?json_encode($arg):$arg) .',';
                     }
                 }

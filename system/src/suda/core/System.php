@@ -9,12 +9,6 @@ defined('SYS_RES') or define('SYS_RES', SYS_DIR.'/resource');
 
 require_once __DIR__.'/func.php';
 
-if (defined("DEBUG") && DEBUG) {
-    require_once __DIR__.'/Debug.php';
-} else {
-    require_once __DIR__.'/Debug.empty.php';
-}
-
 class System
 {
     public static function init()
