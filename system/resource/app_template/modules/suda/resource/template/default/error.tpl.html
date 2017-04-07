@@ -45,6 +45,7 @@
     }
 </style>
 @endInsert @startInsert('bs-content')
+<div title="Runtime" style="position:fixed;top:0;right:0;z-index:99999;padding:3px 5px;background:rgba(0,0,0,.3);color:#FFF;font-size:12px;border-radius:0 0 0 3px ;">{{$:debuginfo('made by dxkite')}}</div>
 <div class="panel">
     <div class="alert alert-danger" role="alert">
         <button class="btn btn-danger">{{ $:erron('Unknow Error') }} </button> {{ $:error }}
