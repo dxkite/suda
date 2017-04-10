@@ -37,8 +37,8 @@ class Router
         $simple_routers=[];
         $admin_routers=[];
         $module_dir=Application::moduleDir($module);
-        $prefix= conf('router-prefix.'.$module, null);
-        $admin_prefix=null;
+        $prefix= conf('module-prefix.'.$module, null);
+        $admin_prefix='';
         if (is_array($prefix)) {
             $admin_prefix=$prefix['admin'] ?? array_shift($prefix);
             $prefix=$prefix['simple'] ?? array_shift($prefix);
@@ -58,7 +58,7 @@ class Router
         if (Storage::exist(MODULES_DIR.'/'.$module_dir.'/resource/config/router_admin.json')) {
             $admin_routers= self::loadModuleJson($module, MODULES_DIR.'/'.$module_dir.'/resource/config/router_admin.json');
             array_walk($admin_routers, function (&$router) use ($module, $admin_prefix) {
-                $prefix= conf('app.admin', '/suda-admin');
+                $prefix= conf('app.admin', '/admin');
                 if (!is_null($admin_prefix)) {
                     $prefix = $prefix . $admin_prefix;
                 }
