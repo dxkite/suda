@@ -69,7 +69,7 @@ abstract class Response
     /*final*/ public function __construct()
     {
         // Mark
-        header('X-Suda: '.conf('app.name', 'suda').'/'.conf('app.version').' ['.self::$name .']');
+        self::setHeader('X-Suda: '.conf('app.name', 'suda').'/'.conf('app.version').' ['.self::$name .']');
         if (conf('debug')) {
             // 设置无缓存头
             self::noCache();
@@ -94,20 +94,20 @@ abstract class Response
     }
     public static function state(int $state)
     {
-        header('HTTP/1.1 '.$state.' '.self::$status[$state]);
-        header('Status:'.$state.' '.self::$status[$state]);
+        self::setHeader('HTTP/1.1 '.$state.' '.self::$status[$state]);
+        self::setHeader('Status:'.$state.' '.self::$status[$state]);
     }
 
 
     public function type(string $type)
     {
         $this->type=$type;
-        header('Content-Type:'.self::mime($type));
+        self::setHeader('Content-Type:'.self::mime($type));
     }
 
     public function noCache()
     {
-        header('Cache-Control: no-cache');
+        self::setHeader('Cache-Control: no-cache');
     }
     public function json($values)
     {
@@ -123,7 +123,7 @@ abstract class Response
         }
         self::type('json');
         Hook::exec('display:output', [&$jsonstr, $this->type]);
-        Header('Content-Length:'.strlen($jsonstr));
+        self::setHeader('Content-Length:'.strlen($jsonstr));
         self::_etag(md5($jsonstr));
         echo $jsonstr;
     }
@@ -133,7 +133,7 @@ abstract class Response
         $hash=md5_file($path);
         $this->etag($hash);
         $this->type($type);
-        Header('Content-Length:'.$size);
+        self::setHeader('Content-Length:'.$size);
         echo file_get_contents($path);
     }
 
@@ -149,7 +149,7 @@ abstract class Response
         Manager::display($template);
         $this->content.=ob_get_clean();
         Hook::exec('display:output', [&$this->content, $this->type]);
-        Header('Content-Length:'.strlen($this->content));
+        self::setHeader('Content-Length:'.strlen($this->content));
         self::_etag(md5($this->content));
         echo $this->content;
     }
@@ -172,13 +172,13 @@ abstract class Response
         Manager::displayFile($path);
         $this->content.=ob_get_clean();
         Hook::exec('display:output', [&$this->content, $this->type]);
-        Header('Content-Length:'.strlen($this->content));
+        self::setHeader('Content-Length:'.strlen($this->content));
         self::_etag(md5($this->content));
         echo $this->content;
     }
     public static function etag(string $etag)
     {
-        header('Etag:'.$etag);
+        self::setHeader('Etag:'.$etag);
         $request=Request::getInstance();
         if ($str=$request->getHeader('If-None-Match')) {
             if (strcasecmp($etag, $str)===0) {
@@ -201,11 +201,11 @@ abstract class Response
         Debug::timeEnd('response');
         $time=microtime(true) - self::$info['time'];
         $mem=memory_get_usage() - self::$info['mem'] ;
-        header('X-Suda: '.conf('app.name', 'suda').'/'.conf('app.version').' ['.self::$name .'] '."{$time}S {$mem}B");
+        self::setHeader('X-Suda: '.conf('app.name', 'suda').'/'.conf('app.version').' ['.self::$name .'] '."{$time}S {$mem}B");
     }
     public static function close()
     {
-        header('Connection: close');
+        self::setHeader('Connection: close');
     }
     public static function obStart()
     {
@@ -267,6 +267,12 @@ abstract class Response
             return self::$mime[$name] ?? 'text/plain';
         } else {
             return self::$mime;
+        }
+    }
+
+    protected static function setHeader(string $header , bool $replace = true) {
+        if (!headers_sent()){
+            header($header,$replace);
         }
     }
 }
