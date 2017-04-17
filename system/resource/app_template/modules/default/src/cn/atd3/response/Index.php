@@ -1,14 +1,7 @@
 <?php
 namespace cn\atd3\response;
 
-// use namespace
-use suda\core\Request;
-// database query
-use suda\core\Query;
-// site cookie
-use suda\core\Cookie;
-// site session
-use suda\core\Session;
+use suda\core\{Session,Cookie,Request,Query};
 
 /**
 * visit url / as all method to run this class.
@@ -27,19 +20,6 @@ class Index extends \suda\core\Response
         // param values array
         $value=array();
         // display template
-        $this->display('default:index', ['helloworld'=>'Hello,World!', 'value'=>$value]);
-    }
-
-    // pretest router 
-    public function onPreTest($router):bool
-    {
-        return true;
-    }
-
-    // action when error
-    public function onPreTestError($router)
-    {
-        echo 'onPreTestError';
-        return true;
+        return $this->display('default:index', ['title'=>'Welcome to use Suda!','helloworld'=>'Hello,World!', 'value'=>$value]);
     }
 }
