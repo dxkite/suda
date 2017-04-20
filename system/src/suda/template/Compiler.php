@@ -82,8 +82,11 @@ class Compiler
 
     protected function parseData($exp)
     {
-        return "<?php suda\\template\\Manager::dataset{$exp} ?>";
+        preg_match('/\((.+)\)/', $exp, $v);
+        $name=str_replace('\'', '-', trim($v[1], '"\''));
+        return "<?php suda\\template\\Manager::dataset({$name},\$this) ?>";
     }
+    
     // IF 语句
     protected function parseIf($exp)
     {
@@ -140,15 +143,16 @@ class Compiler
     {
         return "<?php echo u$exp ?>";
     }
+
     protected function parseSet($exp)
     {
-        return "<?php suda\\core\\Response::set$exp ?>";
+        return "<?php suda\\core\\Response::get{$exp} ?>";
     }
     protected function parseStatic($exp)
     {
         preg_match('/^\((.+?)\)$/', $exp, $match);
         $module=$match[1]??Application::getActiveModule();
-        $module=trim($module,'"\'');
+        $module=trim($module, '"\'');
         $path=Manager::prepareResource($module);
         $static_url=Storage::cut($path, APP_PUBLIC);
         $static_url=preg_replace('/[\\\\\/]+/', '/', $static_url);
@@ -158,7 +162,7 @@ class Compiler
     
     protected function parseUrl($exp)
     {
-        return "<?php echo u$exp ?>";
+        return "<?php echo u{$exp} ?>";
     }
     // View echo
     public static function echo($something)
@@ -171,7 +175,7 @@ class Compiler
     protected function parseStartInsert($exp)
     {
         preg_match('/\((.+)\)/', $exp, $v);
-        $name=str_replace('\'','-',trim($v[1],'"\''));
+        $name=str_replace('\'', '-', trim($v[1], '"\''));
         return '<?php suda\\template\\Manager::hook(\''.$name.'\',function () { ?>';
     }
     
@@ -182,7 +186,7 @@ class Compiler
     protected function parseInsert($exp)
     {
         preg_match('/\((.+)\)/', $exp, $v);
-        $name=str_replace('\'','-',trim($v[1],'"\''));
+        $name=str_replace('\'', '-', trim($v[1], '"\''));
         return "<?php suda\\template\\Manager::exec('{$name}') ?>";
     }
 

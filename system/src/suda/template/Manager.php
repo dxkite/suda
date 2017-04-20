@@ -2,7 +2,10 @@
 namespace suda\template;
 
 use suda\tool\EchoValue;
-use suda\core\{Config,Application,Storage,Hook};
+use suda\core\Config;
+use suda\core\Application;
+use suda\core\Storage;
+use suda\core\Hook;
 
 class Manager
 {
@@ -95,6 +98,9 @@ class Manager
         if (!Storage::isDir($dir=dirname($output))) {
             Storage::mkdirs(dirname($output));
         }
+
+        $classname='Template_'.md5($name);
+        $content='<?php  class '.$classname.' extends suda\template\Template { public function render() { ?>'.$content.'<?php }}';
         Storage::put($output, $content);
         return true;
     }
@@ -113,9 +119,9 @@ class Manager
         }
     }
 
-    public static function dataset(string $name)
+    public static function dataset(string $name, Template $template)
     {
-        return (new  \suda\tool\Command($name))->exec(array_slice(func_get_args(), 1));
+        return (new  \suda\tool\Command($name))->exec([$name, $template]);
     }
     
     public static function display(string $name)
@@ -146,23 +152,25 @@ class Manager
                 return;
             }
         }
-        
-        self::displayFile($viewpath);
+        self::displayFile($viewpath, $name);
     }
 
-    public static function displayFile(string $file)
+    public static function displayFile(string $file, string $name)
     {
-        require $file;
+        $name='Template_'.md5($name);
+        require_once $file;
+        $template=new $name;
+        $template->render();
     }
 
     public static function prepareResource(string $module)
     {
-        Hook::exec('Manager:prepareResource::before',[$module]);
+        Hook::exec('Manager:prepareResource::before', [$module]);
         $module_dir=Application::moduleDir($module);
         // 向下兼容
         defined('APP_PUBLIC') or define('APP_PUBLIC', Storage::path('.'));
         $static_path=Storage::path(MODULES_DIR.'/'.$module_dir.'/resource/template/'.self::$theme.'/static');
-        $path=Storage::path(APP_PUBLIC.'/static/'. $module );
+        $path=Storage::path(APP_PUBLIC.'/static/'. $module);
         if (self::hasChanged($static_path, $path)) {
             self::copyStatic($static_path, $path);
         }
