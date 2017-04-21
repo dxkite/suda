@@ -17,6 +17,7 @@ class System
         register_shutdown_function('suda\\core\\System::onShutdown');
         set_error_handler('suda\\core\\System::uncaughtError');
         set_exception_handler('suda\\core\\System::uncaughtException');
+        Locale::path(SYS_RES.'/locales');
     }
 
     public static function onShutdown()

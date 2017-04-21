@@ -7,7 +7,7 @@ function mime(string $type){
 }
 // 语言翻译
 function _T(string $message){
-    return call_user_func_array('suda\template\Language::trans',func_get_args());
+    return call_user_func_array('suda\core\Locale::_',func_get_args());
 }
 
 // 获取debug记录

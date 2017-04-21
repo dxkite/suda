@@ -3,13 +3,13 @@ namespace suda\core;
 
 use Exception;
 use suda\template\Manager;
-use suda\template\Language;
 use suda\tool\Json;
 
 class Application
 {
     protected $path;
     public static $active_module;
+    public static $module_dirs;
     public function __construct(string $app)
     {
         $this->path=$app;
@@ -52,22 +52,25 @@ class Application
         Autoloader::setNamespace(Config::get('app.namespace'));
         // 系统共享库
         Autoloader::addIncludePath(SHRAE_DIR);
+
+        self::$module_dirs=Storage::readDirs(MODULES_DIR);
+        self::$module_dirs=array_combine(self::$module_dirs,self::$module_dirs);
         // 模块共享库
         $modules=self::getModuleDirs();
         $module_use=self::getLiveModules();
+
         foreach ($modules as $module_dir) {
             if (Storage::isDir(MODULES_DIR.'/'.$module_dir.'/share')) {
                 Autoloader::addIncludePath(MODULES_DIR.'/'.$module_dir.'/share');
             }
+            
             if (in_array(self::moduleName($module_dir), $module_use)) {
                 // 加载监听器
                 if (Storage::exist($path=MODULES_DIR.'/'.$module_dir.'/resource/config/listener.json')) {
                     Hook::loadJson($path);
                 }
-                // 加载语言包
-                if (Config::get('app.language') && Storage::exist($path=MODULES_DIR.'/'.$module_dir.'/resource/langs/'.Config::get('app.language').'.json')) {
-                    Language::load($path);
-                }
+                // 设置语言包库
+                Locale::path(MODULES_DIR.'/'.$module_dir.'/resource/locales/');
             }
         }
         Hook::exec('Application:init');
@@ -79,7 +82,7 @@ class Application
     }
     public static function getModuleDirs()
     {
-        return array_values(conf('module-dirs', []));
+        return array_values(conf('module-dirs',self::$module_dirs));
     }
     public static function getActiveModule()
     {
@@ -87,12 +90,13 @@ class Application
     }
     public static function getLiveModules()
     {
-        return conf('app.modules', []);
+        return conf('app.modules',self::$module_dirs);
     }
     // 激活模块
     public static function activeModule(string $module)
     {
         Hook::exec('Application:active', [$module]);
+        Locale::set(Config::get('app.locale','zh-CN'));
         self::$active_module=$module;
         $module_dir=conf('module-dirs.'.$module, $module);
         define('MODULE_RESOURCE', Storage::path(MODULES_DIR.'/'.$module_dir.'/resource'));

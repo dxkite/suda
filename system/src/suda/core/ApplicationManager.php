@@ -35,6 +35,8 @@ class ApplicationManager
         $name=Autoloader::realName($this->appliaction);
         $this->app=new $name($app);
         if ($this->app instanceof Application) {
+            // 设置语言包库
+            Locale::path(Storage::path($app.'/resource/locales/'));
             Hook::listen('Router:dispatch::before', [$this->app, 'onRequest']);
             Hook::listen('system:shutdown', [$this->app, 'onShutdown']);
             Hook::listen('system:uncaughtException', [$this->app, 'uncaughtException']);
