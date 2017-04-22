@@ -96,10 +96,84 @@ class Debug
         self::printError($message, $code, $file, $line, $offset+2, $offend);
     }
 
+    public static function displayException(Exception $e)
+    {
+        if (Config::get('console', false)) {
+            return self::printConsole($e);
+        } else {
+            return self::printHTML($e);
+        }
+    }
+
+    protected static function printConsole(Exception $e)
+    {
+        
+    }
+
+    protected static function printHTML(Exception $e)
+    {
+        $line=$e->getLine();
+        $file=$e->getFile();
+
+        $pos_num = $line - 1;
+        $code_file = file($file);
+        $start = $line - 5 < 0 ? 0 : $line - 5;
+        $lines = array_slice($code_file, $start, 10, true);
+        $backtrace=$e->getBacktrace();
+        
+        foreach ($backtrace as $trace) {
+            $print = null;
+            if (isset($trace['file'])) {
+                $print = '<a title="'.Storage::cut($trace['file']).'">'.basename($trace['file']).'</a>#'.$trace['line'];
+            }
+            if (isset($trace['class'])) {
+                $function = $trace['class'].$trace['type'].$trace['function'];
+            } else {
+                $function = $trace['function'];
+            }
+            $args = '';
+            if (!empty($trace['args'])) {
+                foreach ($trace['args'] as $arg) {
+                    if (is_object($arg)) {
+                        $args .= 'class '.get_class($arg).',';
+                    } else {
+                        $args .=   var_export($arg, true).',';
+                    }
+                }
+                $args = rtrim($args, ',');
+            }
+            $print .= ' '.$function.'('.$args.')';
+            $traces[] = $print;
+        }
+
+        $render=new class extends Response {
+            public function onRequest(Request $request)
+            {
+                $this->state(500);
+                if (\suda\template\Manager::compile('suda:error')) {
+                    $this->display('suda:error');
+                } else {
+                    $this->displayFile(SYS_RES.'/tpl/error.tpl');
+                }
+            }
+        };
+        $debug=self::getInfo();
+        $render->assign([
+                'erron'=>$e->getName(),
+                'error'=>$e->getMessage(),
+                'file'=>$file,
+                'line'=>$line,
+                'debuginfo'=>$debuginfo="time:{$debug['time']}  memory:{$debug['memory']}",
+                'lines'=>$lines,
+                'pos_num'=>$pos_num,
+                'traces'=>$traces,
+            ]);
+        \suda\template\Manager::loadCompile();
+        $render->onRequest(Request::getInstance());
+    }
 
     public static function printError($message, $code, $file, $line, $offset_start=0, $offset_end=0)
     {
-
         $pos_num = $line - 1;
         $code_file = file($file);
         $start = $line - 5 < 0 ? 0 : $line - 5;
@@ -247,8 +321,6 @@ class Debug
     }
     private static function aliasMethod($method, $args)
     {
-        // var_dump($args);
-        // string $message, string $title='Log title',int $offset_start=0,int $offset_end=0
         static $mpk=['d','t','i','n','w','e','u'];
         static $map=['d'=>'debug','t'=>'trace','i'=>'info','n'=>'notice','w'=>'warning','e'=>'error','u'=>'user'];
 

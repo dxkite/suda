@@ -7,7 +7,7 @@ defined('ROOT_PATH') or define('ROOT_PATH', dirname(dirname(dirname(dirname(__DI
 defined('SYS_DIR') or define('SYS_DIR', dirname(dirname(dirname(__DIR__))));
 defined('SYS_RES') or define('SYS_RES', SYS_DIR.'/resource');
 
-require_once __DIR__.'/func.php';
+require_once __DIR__.'/alias.php';
 
 class System
 {
@@ -27,16 +27,19 @@ class System
 
     public static function uncaughtException($exception)
     {
-        if (Hook::execIf('system:uncaughtException', [$exception], false)) {
-            Debug::setTrace($exception->getTrace());
-            Debug::printError($exception->getMessage(),(new \ReflectionClass($exception))->getName(). ($exception->getCode()?'['.$exception->getCode().']':''), $exception->getFile(), $exception->getLine(), 2);
+        if (!$exception instanceof Exception){
+            $exception=new Exception($exception);
+        }
+        if (Hook::execIf('system:displayException', [$exception], false)) {
+            Debug::displayException($exception);
+            // Debug::setTrace($exception->getBacktrace());
+            // Debug::printError($exception->getMessage(), $exception ->getName(). ($exception->getCode()?'['.$exception->getCode().']':''), $exception->getFile(), $exception->getLine(), 2);
         }
     }
-    // 错误处理函数
-    public static function uncaughtError($erron, $error, $file, $line)
+
+    // 错误托管
+    public static function uncaughtError($errno,$errstr, $errfile, $errline)
     {
-        if (Hook::execIf('system:uncaughtError', [$erron, $error, $file, $line], false)) {
-            Debug::printError($error, $erron, $file, $line, 2);
-        }
+        self::uncaughtException(new \ErrorException($errstr, 0, $errno, $errfile, $errline));
     }
 }
