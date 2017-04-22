@@ -90,6 +90,10 @@ final class Request
     {
         return  $_SERVER['REQUEST_METHOD'] ?? 'GET';
     }
+    public static function getMethod()
+    {
+        return  self::method();
+    }
     public static function url()
     {
         return self::$url;

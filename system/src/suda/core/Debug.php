@@ -9,40 +9,18 @@ Hook::listen("system:debug:printf", "Debug::printf");
 // TODO: 记录异常类型
 class Debug
 {
-    const T = 'trace'; // 运行跟踪
-    const D = 'debug'; // 调试记录
-    const I = 'info'; // 普通消息
-    const N = 'notice'; // 注意的消息
-    const W = 'warning'; // 警告消息
-    const E = 'error'; // 错误消息
+    const MAX_LOG_SIZE=2097152;
+    const TRACE = 'trace'; // 运行跟踪
+    const DEBUG = 'debug'; // 调试记录
+    const INFO = 'info'; // 普通消息
+    const NOTICE = 'notice'; // 注意的消息
+    const WARNING = 'warning'; // 警告消息
+    const ERROR = 'error'; // 错误消息
 
     protected static $run_info;
     protected static $log=[];
-    protected static $count=[];
-    protected static $max = 2097152; // 2M
     protected static $time=[];
-    protected static $timer=[];
-    protected static $traces=null;
-    public static function setTrace(array $traces)
-    {
-        self::$traces=$traces;
-    }
-    public static function getTrace($offset_start, $offset_end)
-    {
-        if (self::$traces) {
-            return self::$traces;
-        }
-        $trace = debug_backtrace();
 
-        while ($offset_start--) {
-            array_shift($trace);
-        }
-        while ($offset_end--) {
-            array_pop($trace);
-        }
-        return $trace;
-    }
-    
     public static function time(string $name)
     {
         self::$time[$name]=microtime(true);
@@ -51,49 +29,22 @@ class Debug
     {
         if (isset(self::$time[$name])) {
             $pass=microtime(true)-self::$time[$name];
-            $timer[$name]=$pass;
-            self::log('use '. number_format($pass, 10).' s', $name, self::T, 1);
+            $backtrace=debug_backtrace();
+            $call=(isset($backtrace[2]['class'])?$backtrace[2]['class'].'#':'').$backtrace[2]['function'];
+            self::_loginfo('info',$call,_T('运行过程 “%s” 耗时%f秒',$name,$pass), $backtrace[1]['file'], $backtrace[1]['line']);
         }
     }
-    protected static function log(string $message, string $title='Log title', $level = self::E, int $offset_start=0, int $offset_end=0)
+
+    protected static function _loginfo(string $level, string $name, string $message, string $file, int $line)
     {
-        if (in_array(strtolower($level), ['debug', 'trace', 'info', 'notice', 'warning', 'error'])) {
-            $level = strtolower($level);
-        }
-        $mark  = '';
-        $loginfo=[];
-        
-        $trace=self::getTrace($offset_start, $offset_end);
-        $trace_line = debug_backtrace();
-        while ($offset_start--) {
-            array_shift($trace_line);
-        }
-        while ($offset_end--) {
-            array_pop($trace_line);
-        }
-        $loginfo['file']=$trace_line[0]['file'];
-        $loginfo['line']=$trace_line[0]['line'];
-        $loginfo['title']=$title;
-        $loginfo['msg']=$message;
+        $loginfo['file']=$file;
+        $loginfo['line']=$line;
+        $loginfo['message']=$message;
+        $loginfo['name']=$name;
         $loginfo['level']=$level;
         $loginfo['time']=microtime(true)-D_START;
         $loginfo['mem']=memory_get_usage() - D_MEM;
-        if (isset(self::$count[$level])) {
-            self::$count[$level]++ ;
-        } else {
-            self::$count[$level]=1;
-        }
         self::$log[]=$loginfo;
-    }
-
-
-
-    protected static function error($message, $code=":(", $offset=0, $offend=0)
-    {
-        $backtrace = debug_backtrace();
-        $file = $backtrace[$offset]['file'];
-        $line = $backtrace[$offset]['line'];
-        self::printError($message, $code, $file, $line, $offset+2, $offend);
     }
 
     public static function displayException(Exception $e)
@@ -204,15 +155,17 @@ class Debug
         \suda\template\Manager::loadCompile();
         $render->onRequest(Request::getInstance());
     }
+
     public static function logException(Exception $e)
     {
-        $loginfo['file']=$file;
-        $loginfo['line']=$line;
-        $loginfo['title']='Crash:'.$erron;
-        $loginfo['msg']=$error;
-        $loginfo['level']=$e->getName();
+        $loginfo['file']=$e->getFile();
+        $loginfo['line']=$e->getLine();
+        $loginfo['message']=$e->getMessage();
+        $loginfo['name']=$e->getName();
         $loginfo['time']=microtime(true)-D_START;
         $loginfo['mem']=memory_get_usage() - D_MEM;
+        $loginfo['hash']=md5(microtime(true).$loginfo['file'].$loginfo['line']);
+        $loginfo['level']=Debug::ERROR;
         self::$log[]=$loginfo;
     }
 
@@ -223,16 +176,16 @@ class Debug
     protected static function save($file = 'debug.log')
     {
         if (!is_dir(dirname($file))) {
-            mkdir_r(dirname($file));
+            Storage::mkdirs(dirname($file));
         }
 
-        if (is_file($file) && filesize($file) > self::$max) {
+        if (is_file($file) && filesize($file) > self::MAX_LOG_SIZE) {
             rename($file, dirname($file) . '/' . time() . '-' . basename($file));
         }
 
         $str=Hook::execTail("system:debug:printf");
         foreach (self::$log as $log) {
-            $str.="\t[".number_format($log['time'], 10).':'.$log['mem'].']'."\t".$log['level'].'>In '.$log['file'].'#'.$log['line']."\t\t".$log['title']."\t".$log['msg']."\r\n";
+            $str.="\t[".number_format($log['time'], 10).':'.$log['mem'].']'."\t".$log['level'].'>In '.$log['file'].'#'.$log['line']."\t\t".$log['name']."\t".$log['message']."\r\n";
         }
 
         return file_put_contents(LOG_DIR.'/'.$file, $str, FILE_APPEND);
@@ -273,6 +226,7 @@ class Debug
     {
         self::aliasMethod($method, $args);
     }
+    
     private static function aliasMethod($method, $args)
     {
         static $mpk=['d','t','i','n','w','e','u'];
@@ -284,18 +238,12 @@ class Debug
             } else {
                 $level=strtolower($method);
             }
-            $title=$method;
-        } else {
-            $level='user';
-            $title=$method;
         }
-
-        $message=(isset($args[0]) && is_string($args[0]))?array_shift($args):'NO MESSAGE';
-        $title=(isset($args[0]) && is_string($args[0]))?array_shift($args):$title;
-        $start=(isset($args[0]) && is_numeric($args[0]))?array_shift($args)+1:1;
-        $end=(isset($args[0]) && is_numeric($args[0]))?array_shift($args)+1:1;
-        self::log($message, $title, $level, $start+1, $end);
+        $backtrace=debug_backtrace();
+        $name=(isset($backtrace[2]['class'])?$backtrace[2]['class'].'#':'').$backtrace[2]['function'];
+        self::_loginfo($level, isset($args[1])?$args[0]:$name, $args[1]??$args[0], $backtrace[1]['file'], $backtrace[1]['line']);
     }
+
     public function __call($method, $args)
     {
         self::aliasMethod($method, $args);
