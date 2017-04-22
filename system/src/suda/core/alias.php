@@ -1,7 +1,5 @@
 <?php
 
-
-
 function mime(string $type){
     return suda\core\Response::mime($type);
 }

@@ -53,7 +53,7 @@ class Command
         if ($this->command) {
             // 是函数调用&指定了文件&函数不存在
             if (is_string($this->command) && !function_exists($this->command) && $this->file) {
-                self::loadCommand($this->file);
+                require_once $this->file;
             }
             // 调用接口
             elseif (is_array($this->command) /*&& !is_callable($this->command)*/) {
@@ -72,10 +72,11 @@ class Command
             $params=array_unshift($params, $this->file);
             $_SERVER['argv']=$params;
             $_SERVER['args']=count($params);
-            return self::loadCommand($this->file);
+            return include $this->file;
         }
         return false;
     }
+
     public function args()
     {
         return self::exec(func_get_args());
@@ -83,7 +84,7 @@ class Command
     protected function parseCommand(string $command)
     {
         if (preg_match('/^(?:([\w\\\\\/.]+))?(?:(#|->|::)(\w+))?(?:\((.+?)\))?(?:@(.+))?$/', $command, $matchs)) {
-            _D()->trace(_T('处理指令 %s',$command));
+            _D()->trace(_T('处理指令 %s', $command));
             // 添加参数绑定
             if (isset($matchs[4])) {
                 $this->func_bind=explode(',', trim($matchs[4], ','));
@@ -96,7 +97,7 @@ class Command
             if (isset($matchs[2])) {
                 $this->static=(strcmp($matchs[2], '#')===0 || strcmp($matchs[2], '::')===0);
             }
-            $matchs[1]=preg_replace('/[.\/]+/','\\',$matchs[1]);
+            $matchs[1]=preg_replace('/[.\/]+/', '\\', $matchs[1]);
             // 方法名
             if (isset($matchs[3]) && $matchs[3]) {
                 return [$matchs[1],$matchs[3]];

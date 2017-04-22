@@ -107,7 +107,39 @@ class Debug
 
     protected static function printConsole(Exception $e)
     {
-        
+        $line=$e->getLine();
+        $file=$e->getFile();
+        $error=$e->getMessage();
+        $backtrace=$e->getBacktrace();
+        foreach ($backtrace as $trace) {
+            $print_d = null;
+            if (isset($trace['file'])) {
+                $print_d=basename($trace['file']).'#'.$trace['line'];
+            }
+            if (isset($trace['class'])) {
+                $function = $trace['class'].$trace['type'].$trace['function'];
+            } else {
+                $function = $trace['function'];
+            }
+            $args_d='';
+            if (!empty($trace['args'])) {
+                foreach ($trace['args'] as $arg) {
+                    if (is_object($arg)) {
+                        $args_d .= 'class '.get_class($arg).',';
+                    } else {
+                        $args_d.= (is_array($arg)?json_encode($arg):$arg) .',';
+                    }
+                }
+                $args_d = rtrim($args_d, ',');
+            }
+            $print_d.=' '.$function.'('.$args_d.')';
+            $traces_console[]=$print_d;
+        }
+        print "\033[31m# Error>\033[33m $error\033[0m\r\n";
+        print "\t\033[34mCause By $file:$line\033[0m\r\n";
+        foreach ($traces_console as $trace_info) {
+            print "\033[36m$trace_info\033[0m\r\n";
+        }
     }
 
     protected static function printHTML(Exception $e)
