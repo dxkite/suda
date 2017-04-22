@@ -98,6 +98,7 @@ class Debug
 
     public static function displayException(Exception $e)
     {
+        self::logException($e);
         if (Config::get('console', false)) {
             return self::printConsole($e);
         } else {
@@ -203,97 +204,18 @@ class Debug
         \suda\template\Manager::loadCompile();
         $render->onRequest(Request::getInstance());
     }
-
-    public static function printError($message, $code, $file, $line, $offset_start=0, $offset_end=0)
+    public static function logException(Exception $e)
     {
-        $pos_num = $line - 1;
-        $code_file = file($file);
-        $start = $line - 5 < 0 ? 0 : $line - 5;
-        $lines = array_slice($code_file, $start, 10, true);
-        $erron = $code;
-        $error = $message;
-        $traces = array();
-        $traces_console=array();
-        $start_trace=[];
-        $end_trace=[];
-        $backtrace=self::getTrace($offset_start, $offset_end);
-        foreach ($backtrace as $trace) {
-            $print = null;
-            $print_d = null;
-            if (isset($trace['file'])) {
-                $print = '<a title="'.Storage::cut($trace['file']).'">'.basename($trace['file']).'</a>#'.$trace['line'];
-                $print_d=basename($trace['file']).'#'.$trace['line'];
-            }
-            if (isset($trace['class'])) {
-                $function = $trace['class'].$trace['type'].$trace['function'];
-            } else {
-                $function = $trace['function'];
-            }
-            $args = '';
-            $args_d='';
-            if (!empty($trace['args'])) {
-                foreach ($trace['args'] as $arg) {
-                    if (is_object($arg)) {
-                        $args .= 'class '.get_class($arg).',';
-                        $args_d .= 'class '.get_class($arg).',';
-                    } else {
-                        $args .=   var_export($arg, true).',';
-                        $args_d.= (is_array($arg)?json_encode($arg):$arg) .',';
-                    }
-                }
-                $args = rtrim($args, ',');
-                $args_d = rtrim($args_d, ',');
-            }
-            $print .= ' '.$function.'('.$args.')';
-            $print_d.=' '.$function.'('.$args_d.')';
-            $traces[] = $print;
-            $traces_console[]=$print_d;
-        }
-        $file=Storage::cut($file);
-        $debug=self::getInfo();
-        
-        if (Config::get('console', false)) {
-            print "\033[31m# Error>\033[33m $error\033[0m\r\n";
-            print "\t\033[34mCause By $file:$line\033[0m\r\n";
-            foreach ($traces_console as $trace_info) {
-                print "\033[36m$trace_info\033[0m\r\n";
-            }
-        } else {
-            $render=new class extends Response {
-                public function onRequest(Request $request)
-                {
-                    $this->state(500);
-                    if (\suda\template\Manager::compile('suda:error')) {
-                        $this->display('suda:error');
-                    } else {
-                        $this->displayFile(SYS_RES.'/tpl/error.tpl');
-                    }
-                }
-            };
-
-            $render->assign([
-                'erron'=>$erron,
-                'error'=>$error,
-                'file'=>$file,
-                'line'=>$line,
-                'debuginfo'=>$debuginfo="time:{$debug['time']}  memory:{$debug['memory']}",
-                'lines'=>$lines,
-                'pos_num'=>$pos_num,
-                'traces'=>$traces,
-            ]);
-            \suda\template\Manager::loadCompile();
-            $render->onRequest(Request::getInstance());
-        }
         $loginfo['file']=$file;
         $loginfo['line']=$line;
         $loginfo['title']='Crash:'.$erron;
         $loginfo['msg']=$error;
-        $loginfo['level']=self::E;
+        $loginfo['level']=$e->getName();
         $loginfo['time']=microtime(true)-D_START;
         $loginfo['mem']=memory_get_usage() - D_MEM;
         self::$log[]=$loginfo;
-        exit($erron);
     }
+
     public static function printf()
     {
         return Request::ip() . "\t" . date('Y-m-d H:i:s') . "\t" .Request::method()."\t\t".Request::virtualUrl() . "\r\n";
