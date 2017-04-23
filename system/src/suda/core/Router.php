@@ -342,6 +342,7 @@ class Router
                 }
             }, preg_replace('/\[(.+?)\]/', '$1', $url));
         } else {
+            _D()->warning(_T('反向路由：%s 解析失败[%s]参数：%s',$name,$module,json_encode($values)));
             return '/?undefine_router';
         }
         if (count($values)) {

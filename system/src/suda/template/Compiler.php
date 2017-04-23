@@ -84,7 +84,7 @@ class Compiler
     {
         preg_match('/\((.+)\)/', $exp, $v);
         $name=str_replace('\'', '-', trim($v[1], '"\''));
-        return "<?php suda\\template\\Manager::dataset({$name},\$this) ?>";
+        return "<?php suda\\template\\Manager::dataset('{$name}',\$this) ?>";
     }
     
     // IF 语句
