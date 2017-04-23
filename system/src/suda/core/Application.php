@@ -207,7 +207,7 @@ class Application
             $modulemap[$name]=$dir;
         }
         
-        ArrayHelper::export(TEMP_DIR.'/module2dir.php', '_module_map', $modulemap);
+        ArrayHelper::export(TEMP_DIR.'/module-dir.php', '_module_map', $modulemap);
         return $modulemap;
     }
 }

@@ -37,15 +37,19 @@ class Router
         $simple_routers=[];
         $admin_routers=[];
         $module_dir=Application::getModuleDir($module);
-        _D()->trace(_T('启用模块：%s %s',$module,Application::getModuleFillName($module)));
+        _D()->trace(_T('启用模块：%s 全称：%s 路径：%s',$module,Application::getModuleFillName($module),MODULES_DIR.'/'.$module_dir));
         $prefix= conf('module-prefix.'.$module, null);
+        $module=Application::getModuleFillName($module);
         $admin_prefix='';
         if (is_array($prefix)) {
             $admin_prefix=$prefix['admin'] ?? array_shift($prefix);
             $prefix=$prefix['simple'] ?? array_shift($prefix);
         }
-        if (Storage::exist(MODULES_DIR.'/'.$module_dir.'/resource/config/router.json')) {
-            $simple_routers= self::loadModuleJson($module, MODULES_DIR.'/'.$module_dir.'/resource/config/router.json');
+
+
+        if (Storage::exist($file=MODULES_DIR.'/'.$module_dir.'/resource/config/router.json')) {
+            $simple_routers= self::loadModuleJson($module,$file);
+            _D()->trace(_T('加载路由 %s',$file));
             array_walk($simple_routers, function (&$router) use ($module, $prefix) {
                 if (!is_null($prefix)) {
                     $router['visit']=$prefix.$router['visit'];
@@ -56,8 +60,9 @@ class Router
         }
 
         // 加载后台路由
-        if (Storage::exist(MODULES_DIR.'/'.$module_dir.'/resource/config/router_admin.json')) {
-            $admin_routers= self::loadModuleJson($module, MODULES_DIR.'/'.$module_dir.'/resource/config/router_admin.json');
+        if (Storage::exist($file=MODULES_DIR.'/'.$module_dir.'/resource/config/router_admin.json')) {
+            $admin_routers= self::loadModuleJson($module,$file);
+            _D()->trace(_T('加载路由 %s',$file));
             array_walk($admin_routers, function (&$router) use ($module, $admin_prefix) {
                 $prefix= conf('app.admin', '/admin');
                 if (!is_null($admin_prefix)) {
@@ -313,9 +318,10 @@ class Router
 
     public function buildUrl(string $name, array $values=[])
     {
+        
         preg_match('/^(?:(.+?)[:])?(.+)$/', $name, $match);
         $name=$match[2];
-        $module=$match[1]?:Application::getActiveModule();
+        $module=$match[1]?Application::getModuleFillName($match[1]):Application::getActiveModule();
         $name=$module.':'.$name;
         $url= '';
         if (isset($this->routers[$name])) {
