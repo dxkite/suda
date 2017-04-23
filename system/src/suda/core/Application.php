@@ -4,12 +4,15 @@ namespace suda\core;
 use Exception;
 use suda\template\Manager;
 use suda\tool\Json;
+use suda\tool\ArrayHelper;
+use suda\core\exception\ApplicationException;
 
 class Application
 {
     protected $path;
     public static $active_module;
     public static $module_dirs;
+    public static $module_cache;
     public function __construct(string $app)
     {
         $this->path=$app;
@@ -24,7 +27,8 @@ class Application
         defined('TEMP_DIR') or define('TEMP_DIR', Storage::path(DATA_DIR.'/temp'));
         defined('SHRAE_DIR') or define('SHRAE_DIR', Storage::path(APP_DIR.'/share'));
 
-
+        // 解析模块
+        self::moduleMap();
         // 获取基本配置信息
         if (Storage::exist($path=CONFIG_DIR.'/config.json')) {
             Config::load($path);
@@ -53,13 +57,11 @@ class Application
         // 系统共享库
         Autoloader::addIncludePath(SHRAE_DIR);
 
-        self::$module_dirs=Storage::readDirs(MODULES_DIR);
-        self::$module_dirs=array_combine(self::$module_dirs,self::$module_dirs);
         // 模块共享库
-        $modules=self::getModuleDirs();
+        $module_dirs=self::getModuleDirs();
         $module_use=self::getLiveModules();
-
-        foreach ($modules as $module_dir) {
+        // 安装 启用 活动
+        foreach ($module_dirs as $module_dir) {
             if (Storage::isDir(MODULES_DIR.'/'.$module_dir.'/share')) {
                 Autoloader::addIncludePath(MODULES_DIR.'/'.$module_dir.'/share');
             }
@@ -78,30 +80,38 @@ class Application
 
     public static function getModules()
     {
-        return array_keys(conf('module-dirs', []));
+        return array_keys(self::$module_dirs);
     }
     public static function getModuleDirs()
     {
-        return array_values(conf('module-dirs',self::$module_dirs));
+        return array_values(self::$module_dirs);
     }
     public static function getActiveModule()
     {
         return self::$active_module;
     }
+
     public static function getLiveModules()
     {
-        return conf('app.modules',self::$module_dirs);
+        $modules=conf('app.modules', self::getModules());
+        array_walk($modules,function(&$name){
+             $name=Application::getModuleFillName($name);
+        });
+        return $modules;
     }
+
     // 激活模块
     public static function activeModule(string $module)
     {
         Hook::exec('Application:active', [$module]);
-        Locale::set(Config::get('app.locale','zh-CN'));
+        _D()->trace(_T('运行模块 %s', $module));
         self::$active_module=$module;
-        $module_dir=conf('module-dirs.'.$module, $module);
+        $module_dir=self::getModuleDir($module);
         define('MODULE_RESOURCE', Storage::path(MODULES_DIR.'/'.$module_dir.'/resource'));
-        define('MODULE_LANGS', Storage::path(MODULE_RESOURCE.'/langs'));
+        define('MODULE_LOCALES', Storage::path(MODULE_RESOURCE.'/locales'));
         define('MODULE_CONFIG', Storage::path(MODULE_RESOURCE.'/config'));
+        _D()->trace(_T('设置语言 %s', Config::get('app.locale', 'zh-CN')));
+        Locale::set(Config::get('app.locale', 'zh-CN'));
         // 自动加载私有库
         Autoloader::addIncludePath(Storage::path(MODULES_DIR.'/'.$module_dir.'/src'));
         // 加载模块配置到 module命名空间
@@ -127,18 +137,77 @@ class Application
     {
         return false;
     }
-    public static function uncaughtError($erron, $error, $file, $line)
+
+    public static function getModuleFillName(string $name)
     {
-        return false;
+        return self::moduleName(self::getModuleDir($name));
     }
-    public static function moduleDir(string $name)
+    /**
+    * 从模块名调整到模块文件夹
+    */
+    public static function getModuleDir(string $name)
     {
-        return  conf('module-dirs.'.$name, $name);
+        if (isset(self::$module_cache[$name])) {
+            return self::$module_cache[$name];
+        }
+        // 全部匹配
+        if (isset(self::$module_dirs[$name])) {
+            return self::$module_dirs[$name];
+        }
+        // 缩略匹配
+        preg_match('/^([^#]+?)(?:#([^@]+))?(?:@(.+?))?$/', $name, $matchname);
+        $preg='/^'.preg_quote($matchname[1]);
+        $version=isset($matchname[2])&&$matchname[2]?'(#'.preg_quote($matchname[2]).')?':'(#[^@]+)?';
+        $author=isset($matchname[3])?'(@'.preg_quote($matchname[3]).')?':'(@.+?)?';
+        $preg.=$version.$author.'$/i';
+        $targets=[];
+        foreach (self::$module_dirs as $modulename=>$moduledir) {
+            if (preg_match($preg, $modulename)) {
+                preg_match('/^([^#]+?)(?:#([^@]+))?(?:@(.+?))?$/', $modulename, $matchname);
+                if (isset($matchname[2])&&$matchname[2]) {
+                    $targets[$matchname[2]]=$moduledir;
+                } else {
+                    $targets[]=$moduledir;
+                }
+            }
+        }
+        // 排序版本
+        uksort($targets, 'version_compare');
+        // 获取最新版本
+        return  self::$module_cache[$name]=count($targets)>0?array_pop($targets):$name;
     }
 
     public static function moduleName(string $name)
     {
-        $modules= conf('module-dirs', []);
-        return array_search($name, $modules)?:$name;
+        return array_search($name, self::$module_dirs)?:$name;
+    }
+
+    public static function moduleMap()
+    {
+        if (Config::get('debug', false) && Storage::exist(TEMP_DIR.'/module-dir.php')) {
+            self::$module_dirs=require TEMP_DIR.'/module-dir.php';
+        } else {
+            self::$module_dirs=self::refreshMap();
+        }
+    }
+
+    protected static function refreshMap()
+    {
+        $dirs=Storage::readDirs(MODULES_DIR);
+        $modulemap=[];
+        foreach ($dirs as $dir) {
+            if (Storage::exist($file=MODULES_DIR.'/'.$dir.'/module.json')) {
+                $json=Json::parseFile($file);
+                $name=$json['name'] ?? $dir;
+                $name.=isset($json['version'])?'#'.$json['version']:'';
+                $name.=isset($json['author'])?'@'.$json['author']:'';
+            } else {
+                $name=$dir;
+            }
+            $modulemap[$name]=$dir;
+        }
+        
+        ArrayHelper::export(TEMP_DIR.'/module2dir.php', '_module_map', $modulemap);
+        return $modulemap;
     }
 }

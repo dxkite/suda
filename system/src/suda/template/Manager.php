@@ -64,7 +64,7 @@ class Manager
     protected static function path(string $name, bool $ext=true):string
     {
         list($module, $name)=preg_split('/[:]/', $name, 2);
-        $path=MODULES_DIR.'/'.Application::moduleDir($module).'/resource/template/'.self::$theme;
+        $path=MODULES_DIR.'/'.Application::getModuleDir($module).'/resource/template/'.self::$theme;
         if ($ext) {
             $tpl=$path.'/'.$name.self::$extRaw;
         } else {
@@ -88,7 +88,7 @@ class Manager
         preg_match('/^(?:(.+?)[:])?(.+)$/', $name, $match);
         $basename=$match[2];
         $module=$match[1]?:Application::getActiveModule();
-        $prefix=MODULES_DIR.'/'. Application::moduleDir($module) .'/resource/template/'.self::$theme;
+        $prefix=MODULES_DIR.'/'. Application::getModuleDir($module) .'/resource/template/'.self::$theme;
         $output=VIEWS_DIR.'/'. $module .'/'.$basename.self::$extCpl;
         $input=$prefix.'/'.$basename.self::$extRaw;
         if (!Storage::exist($input)) {
@@ -152,6 +152,7 @@ class Manager
                 return;
             }
         }
+        
         self::displayFile($viewpath, $name);
     }
 
@@ -166,7 +167,7 @@ class Manager
     public static function prepareResource(string $module)
     {
         Hook::exec('Manager:prepareResource::before', [$module]);
-        $module_dir=Application::moduleDir($module);
+        $module_dir=Application::getModuleDir($module);
         // 向下兼容
         defined('APP_PUBLIC') or define('APP_PUBLIC', Storage::path('.'));
         $static_path=Storage::path(MODULES_DIR.'/'.$module_dir.'/resource/template/'.self::$theme.'/static');

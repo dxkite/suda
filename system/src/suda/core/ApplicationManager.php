@@ -3,6 +3,7 @@ namespace suda\core;
 
 use suda\tool\Json;
 use suda\tool\Value;
+use suda\core\exception\ApplicationException;
 
 class ApplicationManager
 {
@@ -31,8 +32,10 @@ class ApplicationManager
     public function console(string $app)
     {
         // 加载配置
+        $app=Storage::path($app);
         $this->readManifast($app.'/manifast.json');
         $name=Autoloader::realName($this->appliaction);
+        _D()->trace(_T('构建应用 %s 路径：%s',$name,$app));
         $this->app=new $name($app);
         if ($this->app instanceof Application) {
             // 设置语言包库
@@ -42,15 +45,16 @@ class ApplicationManager
             Hook::listen('system:uncaughtException', [$this->app, 'uncaughtException']);
             Hook::listen('system:uncaughtError', [$this->app, 'uncaughtError']);
         }else{
-            throw new UnsupportApplication('unsupport application core:'.$this->appliaction);
+            throw new ApplicationException(_T('不支持的应用基类:%s',$this->appliaction));
         }
-        
     }
 
     protected function readManifast(string $manifast)
     {
+        _D()->trace(_T('读取应用设置'));
         // App不存在
         if (!Storage::exist($manifast)) {
+            _D()->trace(_T('创建基本应用'));
             Storage::copydir(SYS_RES.'/app_template/', APP_DIR);
             Storage::put(APP_DIR.'/modules/default/resource/config/config.json','{"name":"default"}');
             $content=str_replace('__SYS_DIR__',SYS_DIR,Storage::get(APP_DIR.'/console'));

@@ -69,7 +69,7 @@ End;
     }
     public static function parserModuleDto(string $module)
     {
-        $module_dir=Application::moduleDir($module);
+        $module_dir=Application::getModuleDir($module);
         $dto_path=MODULES_DIR.'/'.$module_dir.'/resource/dto';
 
         if (!Storage::isDir($dto_path)) {

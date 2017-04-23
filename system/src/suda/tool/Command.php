@@ -84,7 +84,7 @@ class Command
     protected function parseCommand(string $command)
     {
         if (preg_match('/^(?:([\w\\\\\/.]+))?(?:(#|->|::)(\w+))?(?:\((.+?)\))?(?:@(.+))?$/', $command, $matchs)) {
-            _D()->trace(_T('处理指令 %s', $command));
+            _D()->trace(_T('运行命令 %s', $command));
             // 添加参数绑定
             if (isset($matchs[4])) {
                 $this->func_bind=explode(',', trim($matchs[4], ','));

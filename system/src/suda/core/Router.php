@@ -36,7 +36,8 @@ class Router
     {
         $simple_routers=[];
         $admin_routers=[];
-        $module_dir=Application::moduleDir($module);
+        $module_dir=Application::getModuleDir($module);
+        _D()->trace(_T('启用模块：%s %s',$module,Application::getModuleFillName($module)));
         $prefix= conf('module-prefix.'.$module, null);
         $admin_prefix='';
         if (is_array($prefix)) {
@@ -168,7 +169,7 @@ class Router
         list($router, $class_short, $module)=$matchs;
         // 激活模块
         Application::activeModule($module);
-        $module_dir=Application::moduleDir($module);
+        $module_dir=Application::getModuleDir($module);
         // 路由位置
         $router_file=MODULES_DIR.'/'.$module_dir.'/resource/config/router'.($admin?'_admin':'').'.json';
         $namespace=conf('module.namespace', conf('app.namespace'));

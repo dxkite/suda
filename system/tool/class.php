@@ -14,7 +14,7 @@ function createClassFile(string $classname, bool $share=false)
         return false;
     }
     list($all, $class_short, $module)=$matchs;
-    $module_dir=Application::moduleDir($module);
+    $module_dir=Application::getModuleDir($module);
     $namespace=conf('app.namespace');
     $class=$namespace.'\\'.$class_short;
     $pos=strrpos($class, '\\');
