@@ -104,13 +104,13 @@ class Application
     public static function activeModule(string $module)
     {
         Hook::exec('Application:active', [$module]);
-        _D()->trace(_T('运行模块 %s', $module));
+        _D()->trace(_T('active module %s', $module));
         self::$active_module=$module;
         $module_dir=self::getModuleDir($module);
         define('MODULE_RESOURCE', Storage::path(MODULES_DIR.'/'.$module_dir.'/resource'));
         define('MODULE_LOCALES', Storage::path(MODULE_RESOURCE.'/locales'));
         define('MODULE_CONFIG', Storage::path(MODULE_RESOURCE.'/config'));
-        _D()->trace(_T('设置语言 %s', Config::get('app.locale', 'zh-CN')));
+        _D()->trace(_T('set locale %s', Config::get('app.locale', 'zh-CN')));
         Locale::set(Config::get('app.locale', 'zh-CN'));
         // 自动加载私有库
         Autoloader::addIncludePath(Storage::path(MODULES_DIR.'/'.$module_dir.'/src'));

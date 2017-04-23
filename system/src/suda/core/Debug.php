@@ -31,7 +31,7 @@ class Debug
             $pass=microtime(true)-self::$time[$name];
             $backtrace=debug_backtrace();
             $call=(isset($backtrace[2]['class'])?$backtrace[2]['class'].'#':'').$backtrace[2]['function'];
-            self::_loginfo('info',$call,_T('过程 %s 耗时%f秒',$name,$pass), $backtrace[1]['file'], $backtrace[1]['line']);
+            self::_loginfo('info',$call,_T('process %s %fs',$name,$pass), $backtrace[1]['file'], $backtrace[1]['line']);
         }
     }
 

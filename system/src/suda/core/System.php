@@ -18,12 +18,12 @@ class System
         set_error_handler('suda\\core\\System::uncaughtError');
         set_exception_handler('suda\\core\\System::uncaughtException');
         Locale::path(SYS_RES.'/locales');
-        _D()->trace(_T('系统初始化'));
+        _D()->trace(_T('system init'));
     }
 
     public static function onShutdown()
     {
-        _D()->trace(_T('系统退出'));
+        _D()->trace(_T('system shutdown'));
         Hook::exec('system:shutdown');
     }
 

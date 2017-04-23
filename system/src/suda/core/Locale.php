@@ -52,7 +52,7 @@ class Locale
     {
         // 清空历史
         self::$langs=[];
-        _D()->trace(_T('加载的路径: %s',implode(';',self::$paths)));
+        _D()->trace(_T('loaded paths %s',implode(';',self::$paths)));
         // 重写
         foreach (self::$paths as $path){
             if (file_exists($file=$path.'/'.$locale.'.json')){
