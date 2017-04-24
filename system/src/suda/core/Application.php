@@ -10,9 +10,10 @@ use suda\core\exception\ApplicationException;
 class Application
 {
     protected $path;
-    public static $active_module;
-    public static $module_dirs;
-    public static $module_cache;
+    protected static $active_module;
+    protected static $module_dirs=null;
+    protected static $module_cache;
+    protected static $module_configs=[];
     public function __construct(string $app)
     {
         $this->path=$app;
@@ -26,7 +27,7 @@ class Application
         defined('CONFIG_DIR') or define('CONFIG_DIR', Storage::path(RESOURCE_DIR.'/config'));
         defined('TEMP_DIR') or define('TEMP_DIR', Storage::path(DATA_DIR.'/temp'));
         defined('SHRAE_DIR') or define('SHRAE_DIR', Storage::path(APP_DIR.'/share'));
-
+        
         // 解析模块
         self::moduleMap();
         // 获取基本配置信息
@@ -80,22 +81,38 @@ class Application
 
     public static function getModules()
     {
+        if (is_null(self::$module_dirs)) {
+            // 解析模块
+            self::moduleMap();
+        }
         return array_keys(self::$module_dirs);
     }
     public static function getModuleDirs()
     {
+        if (is_null(self::$module_dirs)) {
+            // 解析模块
+            self::moduleMap();
+        }
         return array_values(self::$module_dirs);
     }
     public static function getActiveModule()
     {
         return self::$active_module;
     }
+    public static function getModulePrefix(string $module)
+    {
+        $prefix=conf('module-prefix.'.$module, null);
+        if (is_null($prefix)) {
+            $prefix=self::$module_configs[self::getModuleFillName($module)]['prefix']??null;
+        }
+        return $prefix;
+    }
 
     public static function getLiveModules()
     {
         $modules=conf('app.modules', self::getModules());
-        array_walk($modules,function(&$name){
-             $name=Application::getModuleFillName($name);
+        array_walk($modules, function (&$name) {
+            $name=Application::getModuleFillName($name);
         });
         return $modules;
     }
@@ -147,6 +164,10 @@ class Application
     */
     public static function getModuleDir(string $name)
     {
+        if (is_null(self::$module_dirs)) {
+            // 解析模块
+            self::moduleMap();
+        }
         if (isset(self::$module_cache[$name])) {
             return self::$module_cache[$name];
         }
@@ -161,6 +182,7 @@ class Application
         $author=isset($matchname[3])?'(@'.preg_quote($matchname[3]).')?':'(@.+?)?';
         $preg.=$version.$author.'$/i';
         $targets=[];
+       
         foreach (self::$module_dirs as $modulename=>$moduledir) {
             if (preg_match($preg, $modulename)) {
                 preg_match('/^([^#]+?)(?:#([^@]+))?(?:@(.+?))?$/', $modulename, $matchname);
@@ -201,6 +223,7 @@ class Application
                 $name=$json['name'] ?? $dir;
                 $name.=isset($json['version'])?'#'.$json['version']:'';
                 $name.=isset($json['author'])?'@'.$json['author']:'';
+                self::$module_configs[$name]=$json;
             } else {
                 $name=$dir;
             }
