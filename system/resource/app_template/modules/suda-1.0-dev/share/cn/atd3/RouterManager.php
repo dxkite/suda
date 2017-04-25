@@ -18,7 +18,7 @@ class RouterManager
     /**
     * 删除路由
     */
-    public static function delete(string $module, string $id)
+    public static function delete(string $module, string $id,bool $delete=false)
     {
         $info=self::getInfo($module)[$id]??null;
         if (!$info) {
@@ -58,9 +58,9 @@ class RouterManager
                 $prefix=$prefix['simple'] ?? array_shift($prefix);
             }
             if ($admin) {
-                return  substr($url, strlen('/'.$admin_prefix));
+                return  substr($url, strlen($admin_prefix));
             }
-            return  substr($url, strlen('/'.$prefix));
+            return  substr($url, strlen($prefix));
         }
         return $url;
     }
