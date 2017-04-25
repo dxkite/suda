@@ -339,7 +339,7 @@ class Router
             }, preg_replace('/\[(.+?)\]/', '$1', $url));
         } else {
             _D()->warning(_T('get url for %s failed,module:%s args:%s', $name, $module, json_encode($values)));
-            return '/?undefine_router';
+            return '#the-router-['.$name.']-is-undefined--please-check-out-router-list';
         }
         if (count($values)) {
             return $url.'?'.http_build_query($values, 'v', '&', PHP_QUERY_RFC3986);

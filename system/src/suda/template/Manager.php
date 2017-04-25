@@ -123,7 +123,7 @@ class Manager
 
     public static function dataset(string $name, Template $template)
     {
-        return (new  \suda\tool\Command($name))->exec([$name, $template]);
+        return (new  \suda\tool\Command($name))->exec([$template]);
     }
     
     public static function display(string $name)
