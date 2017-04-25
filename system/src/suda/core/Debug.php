@@ -96,6 +96,7 @@ class Debug
 
     protected static function printHTML(Exception $e)
     {
+
         $line=$e->getLine();
         $file=$e->getFile();
 

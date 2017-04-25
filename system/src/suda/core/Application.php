@@ -176,16 +176,16 @@ class Application
             return self::$module_dirs[$name];
         }
         // 缩略匹配
-        preg_match('/^([^#]+?)(?:#([^@]+))?(?:@(.+?))?$/', $name, $matchname);
+        preg_match('/^([^#]+?)(?:\$([^@]+))?(?:@(.+?))?$/', $name, $matchname);
         $preg='/^'.preg_quote($matchname[1]);
-        $version=isset($matchname[2])&&$matchname[2]?'(#'.preg_quote($matchname[2]).')?':'(#[^@]+)?';
+        $version=isset($matchname[2])&&$matchname[2]?'(#'.preg_quote($matchname[2]).')?':'(\$[^@]+)?';
         $author=isset($matchname[3])?'(@'.preg_quote($matchname[3]).')?':'(@.+?)?';
         $preg.=$version.$author.'$/i';
         $targets=[];
        
         foreach (self::$module_dirs as $modulename=>$moduledir) {
             if (preg_match($preg, $modulename)) {
-                preg_match('/^([^#]+?)(?:#([^@]+))?(?:@(.+?))?$/', $modulename, $matchname);
+                preg_match('/^([^#]+?)(?:\$([^@]+))?(?:@(.+?))?$/', $modulename, $matchname);
                 if (isset($matchname[2])&&$matchname[2]) {
                     $targets[$matchname[2]]=$moduledir;
                 } else {
@@ -221,7 +221,7 @@ class Application
             if (Storage::exist($file=MODULES_DIR.'/'.$dir.'/module.json')) {
                 $json=Json::parseFile($file);
                 $name=$json['name'] ?? $dir;
-                $name.=isset($json['version'])?'#'.$json['version']:'';
+                $name.=isset($json['version'])?'$'.$json['version']:'';
                 $name.=isset($json['author'])?'@'.$json['author']:'';
                 self::$module_configs[$name]=$json;
             } else {

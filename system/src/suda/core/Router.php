@@ -76,7 +76,6 @@ class Router
        
         $this->routers=array_merge($this->routers, $admin_routers, $simple_routers);
     }
-
     protected function loadModuleJson(string $module, string $jsonfile)
     {
         $routers=Json::loadFile($jsonfile);
