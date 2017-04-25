@@ -66,13 +66,13 @@ class Compiler
         return preg_replace_callback('/\B[$][:]([\w\x{4e00}-\x{9aff}]+)(\s*)(\( ( (?>[^()]+) | (?3) )* \) )?/ux', function ($matchs) {
             $name=$matchs[1];
             $args=isset($matchs[4])?','.$matchs[4]:'';
-            return 'suda\\core\\Response::get("'.$name.'"'.$args.')';
+            return '$this->get("'.$name.'"'.$args.')';
         }, $var);
     }
 
     protected static function parseValue($var)
     {
-        return '<?php echo suda\\core\\Response::get'.self::echoValue($var) .'?>';
+        return '<?php echo $this->get'.self::echoValue($var) .'?>';
     }
     
     protected function parseEcho($exp)
@@ -136,7 +136,9 @@ class Compiler
     // include
     protected function parseInclude($exp)
     {
-        return "<?php suda\\template\\Manager::include{$exp} ?>";
+        preg_match('/\((.+)\)/', $exp, $v);
+        $name=str_replace('\'', '-', trim($v[1], '"\''));
+        return "<?php suda\\template\\Manager::display('{$name}')->setResponse(\$this->response)->assign(\$this->value)->render(); ?>";
     }
 
     protected function parseU($exp)
@@ -146,7 +148,7 @@ class Compiler
 
     protected function parseSet($exp)
     {
-        return "<?php suda\\core\\Response::get{$exp} ?>";
+        return "<?php \$this->get{$exp} ?>";
     }
     protected function parseStatic($exp)
     {

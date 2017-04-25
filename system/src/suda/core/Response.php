@@ -1,8 +1,7 @@
 <?php
 namespace suda\core;
 
-use suda\tool\Json;
-use suda\tool\ArrayHelper;
+use suda\tool\{Json,ArrayHelper};
 use suda\template\Manager;
 
 // TODO: If-Modified-Since
@@ -55,49 +54,29 @@ abstract class Response
         505 => 'HTTP Version Not Supported',
         509 => 'Bandwidth Limit Exceeded',
     );
-    private static $obstate=false;
-    private $content='';
-    private $type='html';
-    private static $instance=null;
+    
     private static $mime;
-    protected static $name=null;
-    protected static $_values=[];
-    protected static $info=null;
-    protected static $spaces;
-    protected static $space_name='master';
-    // 必须要调用
-    /*final*/ public function __construct()
+    protected static $name;
+
+    public function __construct()
     {
         // Mark
-        self::setHeader('X-Suda: '.conf('app.name', 'suda').'/'.conf('app.version').' ['.self::$name .']');
+        self::setHeader('X-Suda: '.conf('app.name', 'suda').'/'.conf('app.version').':'.self::$name);
         if (conf('debug')) {
-            // 设置无缓存头
             self::noCache();
-            // 强制刷新index文件来避免缓存
-            //@touch(get_included_files()[0]);
         }
-        self::$instance=$this;
-        self::$info['time']=microtime(true);
-        self::$info['mem']=memory_get_usage();
-        Debug::time('response');
     }
     
     abstract public function onRequest(Request $request);
-    public function onPreTest($test_data)
-    {
-        return true;
-    }
-    public function onPreTestError($test_data)
-    {
-        echo 'onPreTestError';
-        return true;
-    }
+    
     public static function state(int $state)
     {
         self::setHeader('HTTP/1.1 '.$state.' '.self::$status[$state]);
         self::setHeader('Status:'.$state.' '.self::$status[$state]);
     }
-
+    public static function setName(string $name){
+        self::$name=$name;
+    }
 
     public function type(string $type)
     {
@@ -109,18 +88,13 @@ abstract class Response
     {
         self::setHeader('Cache-Control: no-cache');
     }
+
+    /**
+    * 构建JSON输出
+    */
     public function json($values)
     {
-        _D()->I('Log Json:'.json_encode($values));
-        self::mark();
-        self::obEnd();
-        if (is_array($values)) {
-            $values=array_merge(self::$_values, $values);
-        }
         $jsonstr=json_encode($values);
-        if (Config::get('debug')) {
-            $jsonstr.=$this->content;
-        }
         self::type('json');
         Hook::exec('display:output', [&$jsonstr, $this->type]);
         self::setHeader('Content-Length:'.strlen($jsonstr));
@@ -128,6 +102,9 @@ abstract class Response
         echo $jsonstr;
     }
 
+    /**
+    *  直接输出文件
+    */
     public function file(string $path, string $type, int $size)
     {
         $hash=md5_file($path);
@@ -137,52 +114,40 @@ abstract class Response
         echo file_get_contents($path);
     }
 
-    public function display(string $template, array $values=[])
+    /**
+    * 输出HTML页面
+    * $template HTML页面模板
+    * $values 页面模板的值
+    */ 
+    public function page(string $template, array $values=[])
     {
-        self::mark();
-        // 结束缓冲控制
-        self::obEnd();
-        $values=array_merge(self::$_values, $values);
-        // 渲染模板
-        ob_start();
-        self::assign($values);
-        Manager::display($template);
-        $this->content.=ob_get_clean();
-        Hook::exec('display:output', [&$this->content, $this->type]);
-        self::setHeader('Content-Length:'.strlen($this->content));
-        self::_etag(md5($this->content));
-        echo $this->content;
+        return Manager::display($template)->setResponse($this)->assign($values);
     }
-    public function redirect(string $url, int $time=1)
+        /**
+    * 输出HTML页面
+    * $template HTML页面模板
+    * $values 页面模板的值
+    */ 
+    public function pagefile(string $template, string $name,array $values=[])
     {
-        $this->set('url', $url);
-        $this->set('time', $time);
-        $this->display('suda:redirect');
-        $this->noCache();
+        return Manager::displayFile($template,$name)->setResponse($this)->assign($values);
     }
 
-    public function displayFile(string $path, array $values=[])
+    public function redirect(string $url, int $time=1)
     {
-        self::mark();
-        // 结束缓冲控制
-        self::obEnd();
-        // 渲染模板
-        ob_start();
-        self::assign($values);
-        Manager::displayFile($path);
-        $this->content.=ob_get_clean();
-        Hook::exec('display:output', [&$this->content, $this->type]);
-        self::setHeader('Content-Length:'.strlen($this->content));
-        self::_etag(md5($this->content));
-        echo $this->content;
+        $this->noCache();
+        $page=$this->page('suda:redirect');
+        $page->set('url', $url);
+        $page->set('time', $time);
+        $page->render();
     }
+
     public static function etag(string $etag)
     {
         self::setHeader('Etag:'.$etag);
         $request=Request::getInstance();
         if ($str=$request->getHeader('If-None-Match')) {
             if (strcasecmp($etag, $str)===0) {
-                // _D()->d('Etag:'.$etag, 'Response 304');
                 self::state(304);
                 self::close();
                 // 直接结束访问
@@ -190,74 +155,22 @@ abstract class Response
             }
         }
     }
+
     protected static function _etag(string $etag)
     {
         if (conf('app.etag', conf('debug'))) {
             self::etag($etag);
         }
     }
-    protected static function mark()
-    {
-        Debug::timeEnd('response');
-        $time=microtime(true) - self::$info['time'];
-        $mem=memory_get_usage() - self::$info['mem'] ;
-        self::setHeader('X-Suda: '.conf('app.name', 'suda').'/'.conf('app.version').' ['.self::$name .'] '."{$time}S {$mem}B");
-    }
+    
     public static function close()
     {
         self::setHeader('Connection: close');
     }
-    public static function obStart()
-    {
-        if (!self::$obstate) {
-            self::$obstate=true;
-            ob_start();
-        }
-    }
-    public static function setName(string $name)
-    {
-        self::$name=$name;
-    }
-    public static function space(string $name='master')
-    {
-        self::$spaces[self::$space_name]=self::$_values;
-        self::$_values=[];
-        self::$space_name=$name;
-    }
-    public static function reset(string $name='master')
-    {
-        self::$_values=self::$spaces[$name];
-        self::$space_name=$name;
-    }
-    public static function set(string $name, $value)
-    {
-        return self::$_values=ArrayHelper::set(self::$_values, $name, $value);
-    }
 
-    public static function assign(array $values)
-    {
-        return self::$_values=array_merge(self::$_values, $values);
-    }
-
-    public static function get(string $name, $default=null)
-    {
-        $fmt= ArrayHelper::get(self::$_values, $name, $default ?? $name);
-        if (func_num_args() > 2) {
-            $args=array_slice(func_get_args(), 2);
-            array_unshift($args, $fmt);
-            return call_user_func_array('sprintf', $args);
-        }
-        return $fmt;
-    }
-
-    public function obEnd()
-    {
-        if (self::$obstate) {
-            self::$obstate=false;
-            $this->content.=ob_get_clean();
-        }
-    }
-
+    /**
+    *  页面MIME类型
+    */
     public static function mime(string $name='')
     {
         if (!self::$mime) {
@@ -270,7 +183,10 @@ abstract class Response
         }
     }
 
-    protected static function setHeader(string $header , bool $replace = true) {
+    /**
+    * 安全设置Header值
+    */
+    public static function setHeader(string $header , bool $replace = true) {
         if (!headers_sent()){
             header($header,$replace);
         }

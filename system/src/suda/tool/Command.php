@@ -10,19 +10,17 @@ class Command
     public $static=false;
     public $params=[];
     public $func_bind=[];
-    public $name;
+    public $name='command';
 
     public function __construct($command, array $params=[])
     {
         $this->command=$command;
         $this->params=$params;
     }
-    public function name(string $name='')
+    public function name(string $name)
     {
-        if ($name) {
-            $this->name=$name;
-        }
-        return $this->name;
+        $this->name=$name;
+        return $this;
     }
     public function params(array $params)
     {
@@ -32,7 +30,7 @@ class Command
 
     public function exec(array $params=[])
     {
-        _D()->trace(_T('exec command %s with args %s', is_string($this->command)?$this->command:'[Object]',json_encode($params)));
+        _D()->trace(_T('exec command %s with args %s', is_string($this->command)?$this->command:$this->name, json_encode($params)));
         if (is_string($this->command)) {
             $this->command= self::parseCommand($this->command);
         }

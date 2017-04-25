@@ -365,15 +365,10 @@ class Router
     }
     protected static function runRouter(array $router)
     {
-        if (! (isset($router['ob']) && $router['ob']===false)) {
-            Response::obStart();
-        }
         (new \suda\tool\Command(Config::get('app.application', 'suda\\core\\Application').'::activeModule'))->exec([$router['module']]);
-        if ((new \suda\tool\Command($router['class'].'->onPreTest'))->exec([$router])) {
-            (new \suda\tool\Command($router['class'].'->onRequest'))->exec([Request::getInstance()]);
-        } else {
-            (new \suda\tool\Command($router['class'].'->onPreTestError'))->exec([$router]);
-        }
+        _D()->time('request');
+        (new \suda\tool\Command($router['class'].'->onRequest'))->exec([Request::getInstance()]);
+        _D()->timeEnd('request');
     }
 
     public static function error404()
@@ -381,9 +376,8 @@ class Router
         $render=new class extends Response {
             public   function onRequest(Request $request)
             {
-                self::$name='404page';
                 $this->state(404);
-                $this->display('suda:error404', ['path'=>$request->url()]);
+                $this->page('suda:error404', ['path'=>$request->url()])->render();
             }
         };
         $render->onRequest(Request::getInstance());

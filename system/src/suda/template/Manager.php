@@ -85,6 +85,7 @@ class Manager
     public static function compile(string $name)
     {
         self::loadCompile();
+        _D()->time('compile '.$name);
         preg_match('/^(?:(.+?)[:])?(.+)$/', $name, $match);
         $basename=$match[2];
         $module=$match[1]?:Application::getActiveModule();
@@ -100,14 +101,15 @@ class Manager
         }
 
         $classname='Template_'.md5($name);
-        $content='<?php  class '.$classname.' extends suda\template\Template { public function render() { ?>'.$content.'<?php }}';
+        $content='<?php  class '.$classname.' extends suda\template\Template { protected $name="'.$name.'"; protected function _render_template() {  ?>'.$content.'<?php }}';
         Storage::put($output, $content);
+        _D()->timeEnd('compile '.$name);
         return true;
     }
 
     public static function hook(string $name, $callback)
     {
-        self::$hooks[$name][]=new  \suda\tool\Command($callback);
+        self::$hooks[$name][]=(new  \suda\tool\Command($callback))->name($name);
     }
 
     public static function exec(string $name)
@@ -127,14 +129,9 @@ class Manager
     public static function display(string $name)
     {
         list($module, $basename)=preg_split('/[:]/', $name, 2);
-        self::_display($name, VIEWS_DIR.'/'.$module. DIRECTORY_SEPARATOR .$basename.self::$extCpl);
+        return self::_display($name, VIEWS_DIR.'/'.$module. DIRECTORY_SEPARATOR .$basename.self::$extCpl);
     }
 
-    public static function include(string $tplname)
-    {
-        Manager::display($tplname);
-    }
-    
     /**
     *  $name 模板名称
     *  $path 编译后路径
@@ -152,18 +149,19 @@ class Manager
                 return;
             }
         }
-        
-        self::displayFile($viewpath, $name);
+        return self::displayFile($viewpath, $name);
     }
 
     public static function displayFile(string $file, string $name)
     {
         $name='Template_'.md5($name);
         require_once $file;
-        $template=new $name;
-        $template->render();
+        return $template=new $name;
     }
 
+    /**
+    * 准备静态资源
+    */
     public static function prepareResource(string $module)
     {
         Hook::exec('Manager:prepareResource::before', [$module]);
@@ -190,6 +188,7 @@ class Manager
         }
         return false;
     }
+
     protected static function copyStatic(string $static_path, string $path)
     {
         // 默认不删除模板更新
@@ -215,6 +214,7 @@ class Manager
         $name=ucfirst($name);
         return isset(self::$command[$name]);
     }
+
     public static function buildCommand(string $name, string $exp)
     {
         $name=ucfirst($name);

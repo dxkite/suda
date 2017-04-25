@@ -31,7 +31,7 @@ class Debug
             $pass=microtime(true)-self::$time[$name];
             $backtrace=debug_backtrace();
             $call=(isset($backtrace[2]['class'])?$backtrace[2]['class'].'#':'').$backtrace[2]['function'];
-            self::_loginfo('info',$call,_T('process %s %fs',$name,$pass), $backtrace[1]['file'], $backtrace[1]['line']);
+            self::_loginfo('info', $call, _T('process %s %fs', $name, $pass), $backtrace[1]['file'], $backtrace[1]['line']);
         }
     }
 
@@ -96,7 +96,11 @@ class Debug
 
     protected static function printHTML(Exception $e)
     {
-
+        // 非致命错误
+        if ($e->getSeverity()!=E_ERROR) {
+            echo "<div class=\"suda-error\"><b>{$e->getName()}</b>: {$e->getMessage()} at {$e->getFile()}#{$e->getLine()}</div>";
+            return;
+        }
         $line=$e->getLine();
         $file=$e->getFile();
 
@@ -132,18 +136,20 @@ class Debug
         }
 
         $render=new class extends Response {
+            public $template=null;
             public function onRequest(Request $request)
             {
                 $this->state(500);
                 if (\suda\template\Manager::compile('suda:error')) {
-                    $this->display('suda:error');
+                    $this->template=$this->page('suda:error');
                 } else {
-                    $this->displayFile(SYS_RES.'/tpl/error.tpl');
+                    $this->template=$this->pagefile(SYS_RES.'/tpl/error.tpl');
                 }
             }
         };
+        $render->onRequest(Request::getInstance());
         $debug=self::getInfo();
-        $render->assign([
+        $render->template->assign([
                 'erron'=>$e->getName(),
                 'error'=>$e->getMessage(),
                 'file'=>$file,
@@ -154,7 +160,9 @@ class Debug
                 'traces'=>$traces,
             ]);
         \suda\template\Manager::loadCompile();
-        $render->onRequest(Request::getInstance());
+        
+        $render->template->render();
+        exit($e->getMessage());
     }
 
     public static function logException(Exception $e)
