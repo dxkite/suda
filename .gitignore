@@ -1,10 +1,7 @@
 app
-new
-public/new.php
-public/hello/static/
+public/dev.php
+system/resource/app_template/data
 public/static/
-public/hello/new.php
 public/phpinfo.php
 app/resource/config/config.json
-system/tool/db.1.php
 /vendor/

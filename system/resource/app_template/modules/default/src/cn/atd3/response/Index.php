@@ -20,6 +20,10 @@ class Index extends \suda\core\Response
         // param values array
         $value=array();
         // display template
-        return $this->display('default:index', ['title'=>'Welcome to use Suda!','helloworld'=>'Hello,World!', 'value'=>$value]);
+        return $this->page('default:index')
+        ->set('title','Welcome to use Suda!')
+        ->set('helloworld','Hello,World!')
+        ->set('value',$value)
+        ->render();
     }
 }

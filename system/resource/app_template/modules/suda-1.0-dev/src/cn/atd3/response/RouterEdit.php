@@ -17,8 +17,6 @@ use cn\atd3\RouterManager;
 */
 class RouterEdit extends \suda\core\Response
 {
-
-
     public function onRequest(Request $request)
     {
         $edit=$request->get('edit');
@@ -34,8 +32,13 @@ class RouterEdit extends \suda\core\Response
                     $method=[$method];
                 }
             }
-            RouterManager::add($method,$post->url, RouterManager::className($post->class).'@'.$post->module,$post->router);
-            return $this->display('suda:router_edit_ok');
+            RouterManager::add($method, $post->url,
+            RouterManager::className($post->class).'@'.$post->module,
+            $post->router,
+            strtolower($post->role)=='admin',
+             false,
+             strtolower($post->new)=='on');
+            return $this->page('suda:router_edit_ok')->render();
         }
 
         if ($edit && $module) {
@@ -44,7 +47,7 @@ class RouterEdit extends \suda\core\Response
             $page->set('module', $module);
             $page->set('router', $edit);
             $page->set('class', RouterManager::className($router['class']));
-            $page->set('visit', RouterManager::urlPrefix($module,strtolower($router['role'])=='admin',$router['visit']));
+            $page->set('visit', RouterManager::urlPrefix($module, strtolower($router['role'])=='admin', $router['visit']));
             $page->set('role', $router['role']);
             $methods=['ALL'=>false,'GET'=>false,'POST'=>false,'PUT'=>false,'DELETE'=>false];
             if (isset($router['method'])) {
@@ -54,9 +57,9 @@ class RouterEdit extends \suda\core\Response
             } else {
                 $methods['ALL']=true;
             }
-            $page->set('method', $methods);
+            $page->set('method', $methods)->set('header_select', 'router_list');
             $page->set('modules', RouterManager::getModules());
             return $page->render();
-        }   
+        }
     }
 }

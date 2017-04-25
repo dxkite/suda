@@ -4,7 +4,7 @@
         <title>{{ $:title }}</title>
     </head>
     <body>
-        <div> {{ _T($:helloworld) }}@/ </div>
+        <div> {{ _T($:helloworld) }}@__create_url__ </div>
         @if (count($_GET))
         <table>
             @foreach ($_GET as $name => $value)

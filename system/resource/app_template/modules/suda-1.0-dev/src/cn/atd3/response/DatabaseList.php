@@ -15,6 +15,6 @@ class DatabaseList extends \suda\core\Response
 {
     public function onRequest(Request $request)
     {
-        return $this->page('suda:database_list', ['title'=>'Welcome to use Suda!','helloworld'=>'Hello,World!', 'value'=>$value]);
+        return $this->page('suda:database_list', ['header_select'=>'database_list','title'=>'数据库管理'])->render();
     }
 }

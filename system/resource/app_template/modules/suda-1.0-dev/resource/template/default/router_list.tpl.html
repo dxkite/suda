@@ -47,8 +47,8 @@
                             <td> {{ $item['role'] }} </td>
                             <td> {{ $item['class'] }} </td>
                             <td> 
-                                <a href="@u('router_edit',['edit'=>$id,'module'=>$module])">编辑</a>
-                                <a href="@u('router_list',['delete'=>$id,'module'=>$module])">删除</a>
+                                <a href="@u('suda:router_edit',['edit'=>$id,'module'=>$module])">编辑</a>
+                                <a href="@u('suda:router_list',['delete'=>$id,'module'=>$module])">删除</a>
                              </td>
                         </tr>
                         @endforeach

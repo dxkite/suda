@@ -12,6 +12,6 @@
     },
     "non-static":"php",
     "module-prefix":{
-        "suda":["-suda","/suda"]
+        // "suda":["-suda","/suda"]
     }
 }

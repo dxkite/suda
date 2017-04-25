@@ -162,135 +162,6 @@ class Router
         }
     }
 
-    public static function visit(array $method, string $url, string $router, string $tag=null, bool $ob =true, bool $admin=false, bool $json=false)
-    {
-        $params=self::getParams($url);
-        if (!preg_match('/^(.+?)@(.+?)$/', $router, $matchs)) {
-            return false;
-        }
-        $return=[];
-        // 解析变量
-        list($router, $class_short, $module)=$matchs;
-        // 激活模块
-        // Application::activeModule($module);
-        $module_dir=Application::getModuleDir($module);
-        // 路由位置
-        $router_file=MODULES_DIR.'/'.$module_dir.'/resource/config/router'.($admin?'_admin':'').'.json';
-        $namespace=conf('module.namespace', conf('app.namespace'));
-        // 类名
-        $class=$namespace.'\\response\\'.$class_short;
-        $params_str=array();
-        $params_mark='';
-        $value_get='array(';
-        foreach ($params as $param_name=>$param_type) {
-            $params_str[]="\${$param_name}=\$request->get()->{$param_name}(".(preg_match('/int/i', $param_type)?'0':"'{$param_name}'").')';
-            $params_mark.="{$param_name}:{$param_type},";
-            $value_get.="'{$param_name}'=>\$request->get()->{$param_name}(".(preg_match('/int/i', $param_type)?'0':"'{$param_name}'")."),";
-        }
-        $value_get.=')';
-        $params_str=implode(";\r\n\t\t", $params_str);
-        
-        $pos=strrpos($class, '\\');
-        $class_namespace=substr($class, 0, $pos);
-        $class_name=substr($class, $pos+1);
-        $class_path=MODULES_DIR.'/'.$module_dir.'/src/'.$class_namespace;
-        $class_file=$class_path.'/'.$class_name.'.php';
-        $return['class']=$class_file;
-        $template_name=self::createTplName($class_short);
-        $template_file=MODULES_DIR.'/'.$module_dir.'/resource/template/default/'.$template_name.'.tpl.html';
-        $class_template= Storage::get(SYS_RES.($json?'/class_json.php':($ob?'/class_template.php':'/class_obcache.php')));
-        $tagname=strtolower(is_null($tag)?preg_replace('/[\\\\]+/', '_', $class_short):$tag);
-        $parent=$admin? conf('module.response.admin', conf('app.response.admin', 'suda\\core\\Response')): conf('module.response.normal', conf('app.response.normal', 'suda\\core\\Response'));
-        $class_template=str_replace(
-            [
-                '__class_namespace__',
-                '__class_name__',
-                '__params_str__',
-                '__module__',
-                '__template_name__',
-                '__create_url__',
-                '__template_path__',
-                '__router_name__',
-                '__param_mark__',
-                '__param_array__',
-                '__methods__',
-                '__parent__'
-            ],
-            [
-                $class_namespace,
-                $class_name,
-                $params_str,
-                $module,
-                $template_name,
-                $url,
-                'default:'.$template_name.'.tpl.html',
-                $tagname,
-                $params_mark,
-                $value_get,
-                count($method)>0?implode(',', $method):'all',
-                $parent,
-            ], $class_template);
-        $template=Storage::get(SYS_RES.'/view_template.html');
-        $template=str_replace('__create_url__', $url, $template);
-        // 写入Class
-        Storage::path($class_path);
-        if (!Storage::exist($class_file)) {
-            Storage::put($class_file, $class_template);
-        }
-        
-        if (!$json ||  !$ob) {
-            // 写入模板
-            if (!Storage::exist($template_file)) {
-                Storage::path(dirname($template_file));
-                Storage::put($template_file, $template);
-            }
-            $return['template']=$template_file;
-        }
-
-
-        // 更新路由
-        Storage::path(dirname($router_file));
-        if (Storage::exist($router_file)) {
-            $json=Json::loadFile($router_file);
-        } else {
-            $json=[];
-        }
-        $item=array(
-            'class'=>$class,
-            'visit'=>$url,
-        );
-        if (!$ob) {
-            $item['ob']=false;
-        }
-        if (count($method)) {
-            $item['method']=$method;
-        }
-        $json[$tagname]=$item;
-        Json::saveFile($router_file, $json);
-        
-        return $return;
-    }
-    protected static function createTplName(string $name)
-    {
-        $name=strtolower(preg_replace('/([A-Z])/', '_$1', $name));
-        $names=explode('\\', $name);
-        foreach ($names as $index=>$piece) {
-            $names[$index]=trim($piece, '_');
-        }
-        return  implode('/', $names);
-    }
-    public static function getParams(string $url)
-    {
-        $urltype=self::$urltype;
-        $types=array();
-        $url=preg_replace('/([\/\.\\\\\+\*\[\^\]\$\(\)\=\!\<\>\-])/', '\\\\$1', $url);
-        $url=preg_replace_callback('/\{(?:(\w+)(?::(\w+))?)\}/', function ($match) use (&$types, $urltype) {
-            $param_name=$match[1]!==''?$match[1]:count($types);
-            $param_type= $match[2] ?? 'string';
-            $types[$param_name]=$param_type;
-        }, $url);
-        return $types;
-    }
 
     protected function buildMatch(string $name, string $url)
     {
@@ -342,7 +213,7 @@ class Router
             return '#the-router-['.$name.']-is-undefined--please-check-out-router-list';
         }
         if (count($values)) {
-            return $url.'?'.http_build_query($values, 'v', '&', PHP_QUERY_RFC3986);
+            return Request::getInstance()->baseUrl(). ltrim($url, '/').'?'.http_build_query($values, 'v', '&', PHP_QUERY_RFC3986);
         }
         return Request::getInstance()->baseUrl(). ltrim($url, '/');
     }

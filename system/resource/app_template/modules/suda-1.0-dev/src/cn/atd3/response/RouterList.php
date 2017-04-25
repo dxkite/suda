@@ -17,7 +17,7 @@ class RouterList extends \suda\core\Response
 {
     public function onRequest(Request $request)
     {
-        $page=$this->page('suda:router_list', ['title'=>'路由列表']);
+        $page=$this->page('suda:router_list', ['title'=>'路由列表'])->set('header_select','router_list');
         $delete=$request->get('delete');
         $module=$request->get('module');
         if ($delete && $module) {

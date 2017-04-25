@@ -208,25 +208,34 @@ final class Request
     protected static function parseServer()
     {
         $index=pathinfo(get_included_files()[0], PATHINFO_BASENAME);
-        // 预处理
-        //  /?/xxxxx
-        //  /index.php/xxx
-        //  /index.php?/xxx
+        // 预处理 请求
         if (isset($_SERVER['REQUEST_URI'])) {
+            //  /?/xxxxx
             if (preg_match('/^\/\?\//', $_SERVER['REQUEST_URI'])) {
                 $preg='/^(\/\?(\/[^?]*))(?:[?](.+)?)?$/';
                 preg_match($preg, $_SERVER['REQUEST_URI'], $match);
                 $_SERVER['PHP_SELF']=$match[1];
+                // 处理查询字符
                 if (isset($match[3])) {
                     parse_str($match[3], $_GET);
                 }
                 self::$query=$match[3]??'';
                 self::$url=$match[2];
-            } elseif (preg_match('/^(.*)\/'.$index.'(\??\/)?/', $_SERVER['REQUEST_URI'])) {
-                $preg='/(.*)\/'.$index.'(\/[^?]*)?$/';
-                preg_match($preg, $_SERVER['PHP_SELF'], $match);
+            } elseif 
+            // 匹配 /index.php?/
+            // 匹配 /index.php/xx
+            (preg_match('/^(.*)\/'.$index.'(\??\/)?/', $_SERVER['REQUEST_URI'])) {
+                $preg='/(.*)\/'.$index.'\??(\/[^?]*)?(?:[?](.+)?)?$/';
+                preg_match($preg,$_SERVER['REQUEST_URI'], $match);
+                // _D()->trace($preg,$_SERVER['REQUEST_URI'].' '. serialize($match));
+                // 处理查询字符
+                if (isset($match[3])) {
+                    parse_str($match[3], $_GET);
+                }
+                self::$query=$match[3]??'';
                 self::$url= $match[2] ?? '/';
             } else {
+                // 匹配 /
                 $preg='/^([^?]*)/';
                 preg_match($preg, $_SERVER['REQUEST_URI'], $match);
                 self::$url=$match[1];
