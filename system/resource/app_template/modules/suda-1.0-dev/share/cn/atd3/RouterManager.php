@@ -1,9 +1,7 @@
 <?php
 namespace cn\atd3;
 
-use suda\core\Router;
-use suda\core\Application;
-use suda\core\Storage;
+use suda\core\{Router,Application,Storage};
 use suda\tool\Json;
 
 /**
@@ -89,10 +87,11 @@ class RouterManager
         return self::$routerinfos[$gmod]??null;
     }
 
-    public static function add(array $method, string $url, string $class, string $router=null, bool $ob =true, bool $admin=false, bool $json=false)
+    public static function add(array $method, string $url, string $class, string $router=null,  bool $admin=false, bool $json=false)
     {
-        return Router::visit($method,  $url,  $class, $router,  $ob,  $admin, $json);
+
     }
+
     /* getInfo 辅助函数 */
     private static function loadModuleJson(string $module, string $jsonfile)
     {

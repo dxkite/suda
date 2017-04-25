@@ -17,19 +17,15 @@ class RouterList extends \suda\core\Response
 {
     public function onRequest(Request $request)
     {
-        
+        $page=$this->page('suda:router_list', ['title'=>'路由列表']);
         $delete=$request->get('delete');
         $module=$request->get('module');
         if ($delete && $module) {
-            $this->set('result', true);
             $result=RouterManager::delete($module,$delete);
-            $this->set('success',$result);
-            $this->set('delete_info', $result?_T('删除路由 %s 成功!', $delete):_T('删除路由 %s 失败!', $delete));
-            // Header('Location:'.u('router_list'));
+            $page->set('result', true);
+            $page->set('success',$result);
+            $page->set('delete_info', $result?_T('删除路由 %s 成功!', $delete):_T('删除路由 %s 失败!', $delete));
         }
-        
-        $router=RouterManager::getInfo();
-       
-        return $this->display('suda:router_list', ['title'=>'路由列表', 'router'=>$router]);
+        return $page->set('router',RouterManager::getInfo())->render();
     }
 }

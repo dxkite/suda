@@ -37,13 +37,15 @@ class RouterEdit extends \suda\core\Response
             RouterManager::add($method,$post->url, RouterManager::className($post->class).'@'.$post->module,$post->router);
             return $this->display('suda:router_edit_ok');
         }
+
         if ($edit && $module) {
+            $page=$this->page('suda:router_edit');
             $router=RouterManager::getRouter($module, $edit);
-            $this->set('module', $module);
-            $this->set('router', $edit);
-            $this->set('class', RouterManager::className($router['class']));
-            $this->set('visit', RouterManager::urlPrefix($module,strtolower($router['role'])=='admin',$router['visit']));
-            $this->set('role', $router['role']);
+            $page->set('module', $module);
+            $page->set('router', $edit);
+            $page->set('class', RouterManager::className($router['class']));
+            $page->set('visit', RouterManager::urlPrefix($module,strtolower($router['role'])=='admin',$router['visit']));
+            $page->set('role', $router['role']);
             $methods=['ALL'=>false,'GET'=>false,'POST'=>false,'PUT'=>false,'DELETE'=>false];
             if (isset($router['method'])) {
                 foreach ($router['method'] as $method) {
@@ -52,9 +54,9 @@ class RouterEdit extends \suda\core\Response
             } else {
                 $methods['ALL']=true;
             }
-            $this->set('method', $methods);
-            $this->set('modules', RouterManager::getModules());
-        }
-        return $this->display('suda:router_edit');
+            $page->set('method', $methods);
+            $page->set('modules', RouterManager::getModules());
+            return $page->render();
+        }   
     }
 }

@@ -36,12 +36,14 @@ class RouterAdd extends \suda\core\Response
              strtolower($post->response)=='admin',
              strtolower($post->type)=='json'
              );
-            $this->set('class',$result['class']);
-            $this->set('template',$result['template']);
-            return $this->display('suda:router_add_ok');
+             
+            return $this->page('suda:router_add_ok') 
+            ->set('class',$result['class'])
+            ->set('template',$result['template'])->render();
         }
-        $this->set('modules', RouterManager::getModules());
-        $this->set('title', _T('模块添加'));
-        return $this->display('suda:router_add');
+
+        return $this->page('suda:router_add')
+        ->set('modules', RouterManager::getModules())
+        ->set('title', _T('模块添加'))->render();
     }
 }
