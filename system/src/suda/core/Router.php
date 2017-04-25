@@ -172,7 +172,7 @@ class Router
         // 解析变量
         list($router, $class_short, $module)=$matchs;
         // 激活模块
-        Application::activeModule($module);
+        // Application::activeModule($module);
         $module_dir=Application::getModuleDir($module);
         // 路由位置
         $router_file=MODULES_DIR.'/'.$module_dir.'/resource/config/router'.($admin?'_admin':'').'.json';
@@ -234,18 +234,16 @@ class Router
         $template=str_replace('__create_url__', $url, $template);
         // 写入Class
         Storage::path($class_path);
-        if (Storage::exist($class_file)) {
-            Storage::move($class_file, $class_file.'.bk');
+        if (!Storage::exist($class_file)) {
+            Storage::put($class_file, $class_template);
         }
-        Storage::put($class_file, $class_template);
         
         if (!$json ||  !$ob) {
             // 写入模板
-            if (Storage::exist($template_file)) {
-                Storage::move($template_file, $template_file.'.bk');
+            if (!Storage::exist($template_file)) {
+                Storage::path(dirname($template_file));
+                Storage::put($template_file, $template);
             }
-            Storage::path(dirname($template_file));
-            Storage::put($template_file, $template);
             $return['template']=$template_file;
         }
 

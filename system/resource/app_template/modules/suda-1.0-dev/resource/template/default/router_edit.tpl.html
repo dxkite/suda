@@ -1,0 +1,72 @@
+@include ('suda:header') @startInsert('bs-head')
+<link href="@static/dev-panel.css" rel="stylesheet"> @endInsert @startInsert('bs-content')
+<!--　侧边栏　　-->
+<div class="container-fluid">
+    <div class="row">
+        <nav class="col-sm-3 col-md-2 hidden-xs-down bg-faded sidebar">
+            <ul class="nav nav-pills flex-column">
+                <li class="nav-item">
+                    <a class="nav-link" href="@u('router_list')">路由列表</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="@u('router_add')">添加路由</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link  active" href="@u('router_edit')">编辑路由</a>
+                </li>
+            </ul>
+        </nav>
+
+        <main class="col-sm-9 offset-sm-3 col-md-10 offset-md-2 pt-3">
+            <form method="POST" action="{{ $_SERVER['REQUEST_URI'] }}">
+                <fieldset>
+                    <legend>路由：{{ $:router }} 模块 {{ $:module }}</legend>
+                    <div class="form-group row">
+                        <label for="exampleSelect2" class="col-2 col-form-label">访问方式</label>
+                         @foreach ($:method as $name=> $ok)
+                        <div class="col-2 ">
+                            <label class="form-check-label">
+                        <input name="method" value="{{$name}}" type="checkbox" class="form-check-input" @if($ok) checked @endif>
+                        {{$name}}
+                        </label>
+                        </div>
+                        @endforeach
+                    </div>
+                    <div class="form-group row">
+                        <label for="example-text-input" class="col-2 col-form-label">路由ID</label>
+                        <div class="col-10">
+                            <input name="router" value="{{ $:router }}" class="form-control" type="text" id="example-text-input" required>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="example-text-input" class="col-2 col-form-label">URL表达式</label>
+                        <div class="col-10">
+                            <input name="url" value="{{ $:visit }}" class="form-control" type="text" id="example-text-input" required>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="example-text-input" class="col-2 col-form-label">访问类</label>
+                        <div class="col-10">
+                            <input name="class" value="{{ $:class }}" class="form-control" type="text" id="example-text-input" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label for="exampleSelect1" class="col-2 col-form-label">应用模块</label>
+                        <div class="col-10">
+                            <select name="module" class="form-control" id="exampleSelect1">
+                                @foreach($:modules([]) as $set)
+                                <option value="{{$set}}" @if( $:module == $set ) selected @endif>{{ $set }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                    </div>
+                    <input name="role" value="{{ $:role }}"  hidden>
+                </fieldset>
+                <button type="submit" class="btn btn-primary">修改路由</button>
+            </form>
+        </main>
+    </div>
+</div>
+@endInsert @include('suda:bootstrap')

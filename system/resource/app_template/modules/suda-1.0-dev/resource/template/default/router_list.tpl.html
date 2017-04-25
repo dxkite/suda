@@ -1,0 +1,62 @@
+@include ('suda:header') @startInsert('bs-head')
+<link href="@static/dev-panel.css" rel="stylesheet"> @endInsert @startInsert('bs-content')
+<!--　侧边栏　　-->
+<div class="container-fluid">
+    <div class="row">
+        <nav class="col-sm-3 col-md-2 hidden-xs-down bg-faded sidebar">
+            <ul class="nav nav-pills flex-column">
+                <li class="nav-item">
+                    <a class="nav-link active" href="@u('router_list')">路由列表</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="@u('router_add')">添加路由</a>
+                </li>
+            </ul>
+        </nav>
+
+        <main class="col-sm-9 offset-sm-3 col-md-10 offset-md-2 pt-3">
+            @if ($:result(false))
+            <div class="alert alert-{{ $:success?'success' : 'danger'  }} alert-dismissible fade show" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                {{ $:delete_info(_T('路由删除成功')) }}
+            </div>
+            @endif
+            
+            <div class="table-responsive">
+                @foreach ($:router as $module => $infos)
+                <h2> {{ $module }}</h2>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>引用ID</th>
+                            <th>请求</th>
+                            <th>URL</th>
+                            <th>权限</th>
+                            <th>响应</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($infos as $id=>$item)
+                        <tr>
+                            <td>{{$id}}</td>
+                            <td> @if(isset($item['method'])) {{ implode(',',$item['method']) }} @else ALL @endif</td>
+                            <td> <a href="@u($module.':'.$id)">{{ $item['visit'] }}</a></td>
+                            <td> {{ $item['role'] }} </td>
+                            <td> {{ $item['class'] }} </td>
+                            <td> 
+                                <a href="@u('router_edit',['edit'=>$id,'module'=>$module])">编辑</a>
+                                <a href="@u('router_list',['delete'=>$id,'module'=>$module])">删除</a>
+                             </td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+                @endforeach
+            </div>
+        </main>
+    </div>
+</div>
+@endInsert @include('suda:bootstrap')
