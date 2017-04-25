@@ -20,6 +20,6 @@ class DatabaseList extends \suda\core\Response
         // param values array
         $value=array();
         // display template
-        return $this->display('suda$3.2.0@dxkite:database_list', ['title'=>'Welcome to use Suda!','helloworld'=>'Hello,World!', 'value'=>$value]);
+        return $this->display('suda:database_list', ['title'=>'Welcome to use Suda!','helloworld'=>'Hello,World!', 'value'=>$value]);
     }
 }

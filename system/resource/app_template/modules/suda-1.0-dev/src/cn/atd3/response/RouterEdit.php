@@ -55,6 +55,6 @@ class RouterEdit extends \suda\core\Response
             $this->set('method', $methods);
             $this->set('modules', RouterManager::getModules());
         }
-        return $this->display('suda$3.2.0@dxkite:router_edit');
+        return $this->display('suda:router_edit');
     }
 }
