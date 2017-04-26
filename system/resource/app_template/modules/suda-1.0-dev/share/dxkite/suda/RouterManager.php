@@ -19,8 +19,10 @@ class RouterManager
     /**
     * 删除路由
     */
-    public static function delete(string $module, string $id,bool $deleteall=false)
+    public static function delete(string $module, string $id, bool $deleteall=false)
     {
+        $module=trim($module);
+        $id=trim($id);
         $info=self::getInfo($module)[$id]??null;
         if (!$info) {
             return false;
@@ -43,8 +45,10 @@ class RouterManager
         return Json::saveFile($router_file, $json);
     }
 
-    public static function className(string $module,string $name)
+    public static function className(string $module, string $name)
     {
+        $module=trim($module);
+        $name=trim($name);
         $module_config=Application::getModuleConfig($module);
         $namespace=$module_config['namespace'] ?? conf('app.namespace');
         return  str_replace($namespace.'\\response\\', '', $name);
@@ -52,6 +56,7 @@ class RouterManager
 
     public static function urlPrefix(string $module, bool $admin, string $url)
     {
+        $module=trim($module);
         $prefix=Application::getModulePrefix($module);
         if ($prefix) {
             $admin_prefix='';
@@ -112,8 +117,8 @@ class RouterManager
         $class_template_file=MODULE_RESOURCE.'/data/'.($json?'/class_json.php':'/class_html.php');
         $class_template= Storage::get($class_template_file);
         
-        $parent=$admin? 
-        $module_config['response']['admin']??conf('app.response.admin', 'suda\\core\\Response'): 
+        $parent=$admin?
+        $module_config['response']['admin']??conf('app.response.admin', 'suda\\core\\Response'):
         $module_config['response']['normal']??conf('app.response.normal', 'suda\\core\\Response');
         $class_template=str_replace(
             [
@@ -150,7 +155,7 @@ class RouterManager
         // 写入类模板
         if (
             !Storage::exist($class_file) // 模板文件不存在
-            ||( Storage::exist($class_file) && $overwrite) // 存在但是选择重写
+            ||(Storage::exist($class_file) && $overwrite) // 存在但是选择重写
         ) {
             Storage::path($class_path);
             Storage::put($class_file, $class_template);
@@ -160,7 +165,7 @@ class RouterManager
         if (
             !$json && //返回HTML
             (!Storage::exist($template_file) // 不存在模板
-             || ( Storage::exist($template_file) && $overwrite)) // 存在模板选择重写
+             || (Storage::exist($template_file) && $overwrite)) // 存在模板选择重写
             ) {
             Storage::path(dirname($template_file));
             Storage::put($template_file, $template);

@@ -23,6 +23,11 @@ abstract class Mailer
     private $errno=0;
     private $errstr='';
     private $log;
+    protected static $instance;
+    
+    public static function instance() {
+        return 'mailer';
+    }
      // Mail To
     public function to(string $email, string $name='')
     {

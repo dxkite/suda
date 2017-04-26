@@ -1,0 +1,28 @@
+@include ('suda:header') @startInsert('bs-head')
+<link href="@static/dev-panel.css" rel="stylesheet"> @endInsert @startInsert('bs-content')
+<!--　侧边栏　　-->
+<div class="container-fluid">
+    <div class="row">
+        <nav class="col-sm-3 col-md-2 hidden-xs-down bg-faded sidebar">
+            <ul class="nav nav-pills flex-column">
+                <li class="nav-item">
+                    <a class="nav-link" href="@u('suda:system_admin')">模块管理</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="@u('suda:admin_database')">数据库管理</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="@u('suda:config_database')">数据库配置</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="@u('suda:config_mailer')">邮件配置</a>
+                </li>
+            </ul>
+        </nav>
+
+        <main class="col-sm-9 offset-sm-3 col-md-10 offset-md-2 pt-3">
+             
+        </main>
+    </div>
+</div>
+@endInsert @include('suda:bootstrap')

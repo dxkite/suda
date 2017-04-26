@@ -1,0 +1,51 @@
+@include ('suda:header') @startInsert('bs-head')
+<link href="@static/dev-panel.css" rel="stylesheet"> @endInsert @startInsert('bs-content')
+<!--　侧边栏　　-->
+<div class="container-fluid">
+    <div class="row">
+        <nav class="col-sm-3 col-md-2 hidden-xs-down bg-faded sidebar">
+            <ul class="nav nav-pills flex-column">
+                <li class="nav-item">
+                    <a class="nav-link" href="@u('suda:system_admin')">模块管理</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="@u('suda:admin_database')">数据库管理</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="@u('suda:config_database')">数据库配置</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="@u('suda:config_mailer')">邮件配置</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="@u('suda:sendmail')">发送邮件</a>
+                </li>
+            </ul>
+        </nav>
+
+        <main class="col-sm-9 offset-sm-3 col-md-10 offset-md-2 pt-3">
+
+            <div class="form-group row">
+                <label for="example-text-input" class="col-2 col-form-label">邮件标题</label>
+                <div class="col-10">
+                    <input type="text" class="form-control" aria-label="Text input with checkbox" value="ATD邮箱中心-邮件发送测试">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="example-email-input" class="col-2 col-form-label">收件人</label>
+                <div class="col-10">
+                    <input class="form-control" type="email" value="dxkite@qq.com" id="example-email-input">
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-12">
+                    <textarea class="form-control" id="exampleTextarea" rows="10">这是测试邮件的内容</textarea>
+                </div>
+            </div>
+            <div class="form-group">
+                    <button type="button" class="btn btn-info">发送邮件</button>
+            </div>
+        </main>
+    </div>
+</div>
+@endInsert @include('suda:bootstrap')
