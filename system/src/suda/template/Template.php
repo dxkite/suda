@@ -62,8 +62,9 @@ abstract class Template
     protected function _render_end()
     {
         array_pop(self::$render);
-        _D()->trace('free render', $this->name);
-        return ob_get_clean();
+        $content=ob_get_clean();
+        _D()->trace('free render ['.strlen($content).']', $this->name);
+        return $content;
     }
     /**
     * 获取当前模板的字符串
@@ -101,7 +102,7 @@ abstract class Template
     public function parent(Template $template)
     {
         $this->parent=$template;
-        self::response($this->parent->response);
+        $this->response=$this->parent->response;
         return $this;
     }
     /**
@@ -128,17 +129,25 @@ abstract class Template
 
     public function data(string $name)
     {
-        return (new  \suda\tool\Command($name))->exec([$his]);
+        return (new  \suda\tool\Command($name))->exec([$this]);
     }
     
     public function hook(string $name, $callback)
     {
-        $this->hooks[$name][]=(new  \suda\tool\Command($callback))->name($name);
+        // 存在父模板
+        if ($this->parent) {
+            return $this->parent->hook($name, $callback);
+        } else {
+            $this->hooks[$name][]=(new  \suda\tool\Command($callback))->name($name);
+        }
     }
 
     public function exec(string $name)
     {
-        if (isset($this->hooks[$name])) {
+        // 存在父模板
+        if ($this->parent) {
+            $this->parent->exec($name);
+        } elseif (isset($this->hooks[$name])) {
             foreach ($this->hooks[$name] as $hook) {
                 $hook->exec();
             }
