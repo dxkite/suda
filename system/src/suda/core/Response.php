@@ -121,7 +121,7 @@ abstract class Response
     */ 
     public function page(string $template, array $values=[])
     {
-        return Manager::display($template)->setResponse($this)->assign($values);
+        return Manager::display($template)->response($this)->assign($values);
     }
         /**
     * 输出HTML页面
@@ -130,7 +130,7 @@ abstract class Response
     */ 
     public function pagefile(string $template, string $name,array $values=[])
     {
-        return Manager::displayFile($template,$name)->setResponse($this)->assign($values);
+        return Manager::displayFile($template,$name)->response($this)->assign($values);
     }
 
     public function redirect(string $url, int $time=1)

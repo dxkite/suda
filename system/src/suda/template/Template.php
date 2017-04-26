@@ -15,7 +15,9 @@ abstract class Template
     */
     protected $response=null;
     protected $name=null;
-
+    protected $parent=null;
+    protected $hooks=[];
+    protected static $render=[];
     /**
     * 渲染页面
     */
@@ -44,13 +46,25 @@ abstract class Template
     public function getRenderedString()
     {
         _D()->time('render '.$this->name);
-        ob_start();
+        self::_render_start();
         $this->_render_template();
-        $content=ob_get_clean();
+        $content=self::_render_end();
         _D()->timeEnd('render '.$this->name);
-        return $content; 
+        return $content;
+    }
+    protected function _render_start()
+    {
+        array_push(self::$render, $this->name);
+        _D()->trace('start render', $this->name);
+        ob_start();
     }
 
+    protected function _render_end()
+    {
+        array_pop(self::$render);
+        _D()->trace('free render', $this->name);
+        return ob_get_clean();
+    }
     /**
     * 获取当前模板的字符串
     */
@@ -59,6 +73,10 @@ abstract class Template
         return self::getRenderedString();
     }
 
+    public function getRenderStack()
+    {
+        return self::$render;
+    }
     /**
     * 单个设置值
     */
@@ -80,12 +98,20 @@ abstract class Template
     /**
     * 创建模板
     */
-    public function setResponse(Response $response)
+    public function parent(Template $template)
+    {
+        $this->parent=$template;
+        self::response($this->parent->response);
+        return $this;
+    }
+    /**
+    * 创建模板
+    */
+    public function response(Response $response)
     {
         $this->response=$response;
         return $this;
     }
-
     /**
     * 创建模板获取值
     */
@@ -98,5 +124,24 @@ abstract class Template
             return call_user_func_array('sprintf', $args);
         }
         return $fmt;
+    }
+
+    public function data(string $name)
+    {
+        return (new  \suda\tool\Command($name))->exec([$his]);
+    }
+    
+    public function hook(string $name, $callback)
+    {
+        $this->hooks[$name][]=(new  \suda\tool\Command($callback))->name($name);
+    }
+
+    public function exec(string $name)
+    {
+        if (isset($this->hooks[$name])) {
+            foreach ($this->hooks[$name] as $hook) {
+                $hook->exec();
+            }
+        }
     }
 }

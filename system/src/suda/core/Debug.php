@@ -35,13 +35,14 @@ class Debug
         }
     }
 
-    protected static function _loginfo(string $level, string $name, string $message, string $file, int $line)
+    protected static function _loginfo(string $level, string $name, string $message, string $file, int $line, string $backtrace=null)
     {
         $loginfo['file']=$file;
         $loginfo['line']=$line;
         $loginfo['message']=$message;
         $loginfo['name']=$name;
         $loginfo['level']=$level;
+        $loginfo['backtrace']=$backtrace;
         $loginfo['time']=microtime(true)-D_START;
         $loginfo['mem']=memory_get_usage() - D_MEM;
         self::$log[]=$loginfo;
@@ -56,13 +57,9 @@ class Debug
             return self::printHTML($e);
         }
     }
-
-    protected static function printConsole(Exception $e)
+    protected static function printTrace(array $backtrace, bool $str=true)
     {
-        $line=$e->getLine();
-        $file=$e->getFile();
-        $error=$e->getMessage();
-        $backtrace=$e->getBacktrace();
+        $traces_console=[];
         foreach ($backtrace as $trace) {
             $print_d = null;
             if (isset($trace['file'])) {
@@ -87,6 +84,23 @@ class Debug
             $print_d.=' '.$function.'('.$args_d.')';
             $traces_console[]=$print_d;
         }
+        if ($str) {
+            $str='';
+            foreach ($traces_console as $trace_info) {
+                $str.=$trace_info."\r\n";
+            }
+            return $str;
+        }
+        return  $traces_console;
+    }
+
+    protected static function printConsole(Exception $e)
+    {
+        $line=$e->getLine();
+        $file=$e->getFile();
+        $error=$e->getMessage();
+        $backtrace=$e->getBacktrace();
+        $traces_console=self::printTrace($backtrace,false);
         print "\033[31m# Error>\033[33m $error\033[0m\r\n";
         print "\t\033[34mCause By $file:$line\033[0m\r\n";
         foreach ($traces_console as $trace_info) {
@@ -146,6 +160,15 @@ class Debug
                     $this->template=$this->pagefile(SYS_RES.'/tpl/error.tpl');
                 }
             }
+            public function render()
+            {
+                $stack=$this->template->getRenderStack();
+                while ($name=array_pop($stack)) {
+                    $get=ob_get_clean();
+                    _D()->trace('free render', $name);
+                }
+                $this->template->render();
+            }
         };
         $render->onRequest(Request::getInstance());
         $debug=self::getInfo();
@@ -160,7 +183,7 @@ class Debug
                 'traces'=>$traces,
             ]);
         \suda\template\Manager::loadCompile();
-        $render->template->render();
+        $render->render();
         exit;
     }
 
@@ -174,6 +197,7 @@ class Debug
         $loginfo['mem']=memory_get_usage() - D_MEM;
         $loginfo['hash']=md5(microtime(true).$loginfo['file'].$loginfo['line']);
         $loginfo['level']=Debug::ERROR;
+        $loginfo['backtrace']=$e->getTraceAsString();
         self::$log[]=$loginfo;
     }
 
@@ -191,11 +215,13 @@ class Debug
             rename($file, dirname($file) . '/' . time() . '-' . basename($file));
         }
 
-        $str=Hook::execTail("system:debug:printf");
+        $str="\n".str_repeat('-', 64) ."\n" .Hook::execTail("system:debug:printf");
         foreach (self::$log as $log) {
             $str.="\t[".number_format($log['time'], 10).':'.$log['mem'].']'."\t".$log['level'].'>In '.$log['file'].'#'.$log['line']."\t\t".$log['name']."\t".$log['message']."\r\n";
+            if (Debug::ERROR===$log['level']) {
+                $str.=$log['backtrace']."\r\n";
+            }
         }
-
         return file_put_contents(LOG_DIR.'/'.$file, $str, FILE_APPEND);
     }
 
@@ -248,8 +274,9 @@ class Debug
             }
         }
         $backtrace=debug_backtrace();
+        $trace=self::printTrace($backtrace);
         $name=(isset($backtrace[2]['class'])?$backtrace[2]['class'].'#':'').$backtrace[2]['function'];
-        self::_loginfo($level, isset($args[1])?$args[0]:$name, $args[1]??$args[0], $backtrace[1]['file'], $backtrace[1]['line']);
+        self::_loginfo($level, isset($args[1])?$args[0]:$name, $args[1]??$args[0], $backtrace[1]['file'], $backtrace[1]['line'],$trace);
     }
 
     public function __call($method, $args)

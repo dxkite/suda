@@ -82,9 +82,7 @@ class Compiler
 
     protected function parseData($exp)
     {
-        preg_match('/\((.+)\)/', $exp, $v);
-        $name=str_replace('\'', '-', trim($v[1], '"\''));
-        return "<?php suda\\template\\Manager::dataset('{$name}',\$this) ?>";
+        return "<?php \$this->data{$exp} ?>";
     }
     
     // IF 语句
@@ -138,7 +136,7 @@ class Compiler
     {
         preg_match('/\((.+)\)/', $exp, $v);
         $name=str_replace('\'', '-', trim($v[1], '"\''));
-        return "<?php suda\\template\\Manager::display('{$name}')->setResponse(\$this->response)->assign(\$this->value)->render(); ?>";
+        return "<?php suda\\template\\Manager::display('{$name}')->parent(\$this)->assign(\$this->value)->render(); ?>";
     }
 
     protected function parseU($exp)
@@ -178,7 +176,7 @@ class Compiler
     {
         preg_match('/\((.+)\)/', $exp, $v);
         $name=str_replace('\'', '-', trim($v[1], '"\''));
-        return '<?php suda\\template\\Manager::hook(\''.$name.'\',function () { ?>';
+        return '<?php $this->hook(\''.$name.'\',function () { ?>';
     }
     
     protected function parseEndInsert()
@@ -189,7 +187,7 @@ class Compiler
     {
         preg_match('/\((.+)\)/', $exp, $v);
         $name=str_replace('\'', '-', trim($v[1], '"\''));
-        return "<?php suda\\template\\Manager::exec('{$name}') ?>";
+        return "<?php \$this->exec('{$name}') ?>";
     }
 
     // 错误报错

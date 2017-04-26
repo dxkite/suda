@@ -19,7 +19,7 @@ class Manager
     private static $path=[];
     // 样式
     protected static $theme='default';
-    protected static $hooks=[];
+
     public static $extRaw='.tpl.html';
     public static $extCpl='.tpl';
     private static $values=[];
@@ -107,25 +107,7 @@ class Manager
         return true;
     }
 
-    public static function hook(string $name, $callback)
-    {
-        self::$hooks[$name][]=(new  \suda\tool\Command($callback))->name($name);
-    }
 
-    public static function exec(string $name)
-    {
-        if (isset(self::$hooks[$name])) {
-            foreach (self::$hooks[$name] as $hook) {
-                $hook->exec();
-            }
-        }
-    }
-
-    public static function dataset(string $name, Template $template)
-    {
-        return (new  \suda\tool\Command($name))->exec([$template]);
-    }
-    
     public static function display(string $name)
     {
         list($module, $basename)=preg_split('/[:]/', $name, 2);
