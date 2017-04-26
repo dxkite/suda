@@ -38,7 +38,7 @@ class RouterEdit extends \suda\core\Response
             strtolower($post->role)=='admin',
              false,
              strtolower($post->new)=='on');
-            return $this->page('suda:router_edit_ok')->render();
+            return $this->page('suda:router_edit_ok',['title'=>_T('编辑 %s 成功',$edit)])->render();
         }
 
         if ($edit && $module) {
@@ -57,6 +57,7 @@ class RouterEdit extends \suda\core\Response
             } else {
                 $methods['ALL']=true;
             }
+            $page->set('title',_T('编辑路由 %s',$edit));
             $page->set('method', $methods)->set('header_select', 'router_list');
             $page->set('modules', RouterManager::getModules());
             return $page->render();

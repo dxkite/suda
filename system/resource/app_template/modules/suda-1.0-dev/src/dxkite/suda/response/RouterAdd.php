@@ -44,6 +44,6 @@ class RouterAdd extends \suda\core\Response
 
         return $this->page('suda:router_add')->set('header_select','router_list')
         ->set('modules', RouterManager::getModules())
-        ->set('title', _T('模块添加'))->render();
+        ->set('title', _T('添加路由'))->render();
     }
 }
