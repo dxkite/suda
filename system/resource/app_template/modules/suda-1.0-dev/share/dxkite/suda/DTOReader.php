@@ -1,7 +1,7 @@
 <?php
-namespace suda\archive;
+namespace dxkite\suda;
 
-use Storage;
+use suda\core\Storage;
 use suda\tool\Value;
 
 // 数据表对象文件读取器

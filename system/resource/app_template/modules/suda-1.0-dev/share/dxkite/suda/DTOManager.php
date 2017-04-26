@@ -1,12 +1,9 @@
 <?php
 
-namespace suda\archive;
+namespace dxkite\suda;
 
-use Storage;
-use suda\core\Application;
-use suda\core\Database;
-use suda\tool\Value;
-use suda\tool\ArrayHelper;
+use suda\core\{Storage,Application,Database};
+use suda\tool\{Value,ArrayHelper};
 
 // 数据表对象文件读取器
 class DTOManager
