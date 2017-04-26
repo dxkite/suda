@@ -15,15 +15,10 @@ class AdminDb extends \suda\core\Response
 {
     public function onRequest(Request $request)
     {
-        // params if had
-        ;
-        // param values array
-        $value=array();
-        // display template
-        return $this->page('suda$1.0.0-dev@dxkite:admin_db')
-        ->set('title','Welcome to use Suda!')
-        ->set('helloworld','Hello,World!')
-        ->set('value',$value)
-        ->render();
+        
+        $page=$this->page('suda:admin_db')
+        ->set('title',_T('数据管理'))
+        ->set('header_select','system_admin');
+        return $page->render();
     }
 }
