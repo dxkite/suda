@@ -131,11 +131,16 @@ class Application
         _D()->trace(_T('active module %s', $module));
         self::$active_module=$module;
         $module_dir=self::getModuleDir($module);
+        $module_config=self::getModuleConfig($module);
         define('MODULE_RESOURCE', Storage::path(MODULES_DIR.'/'.$module_dir.'/resource'));
         define('MODULE_LOCALES', Storage::path(MODULE_RESOURCE.'/locales'));
         define('MODULE_CONFIG', Storage::path(MODULE_RESOURCE.'/config'));
         _D()->trace(_T('set locale %s', Config::get('app.locale', 'zh-CN')));
         Locale::set(Config::get('app.locale', 'zh-CN'));
+        if (isset($module_config['namespace'])) {
+            // 缩减命名空间
+            Autoloader::setNamespace($module_config['namespace']);
+        }
         // 自动加载私有库
         Autoloader::addIncludePath(Storage::path(MODULES_DIR.'/'.$module_dir.'/src'));
         // 加载模块配置到 module命名空间

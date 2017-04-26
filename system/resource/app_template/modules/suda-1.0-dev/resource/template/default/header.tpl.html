@@ -10,7 +10,7 @@
 
     <div class="collapse navbar-collapse" id="navbarsExampleDefault">
         <ul class="navbar-nav mr-auto">
-            @data('dxkite\suda\Dataset->header')
+            @data('Dataset->header')
             @foreach($:header as $id => $item)
             <li class="nav-item @if($:header_select == $id) active @endif">
                 <a class="nav-link" href="{{ $item['url'] }}">{{ $item['name'] }}</a>
