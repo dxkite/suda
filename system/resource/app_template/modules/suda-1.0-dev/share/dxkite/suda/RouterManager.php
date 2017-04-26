@@ -59,11 +59,11 @@ class RouterManager
                 $prefix=$prefix['simple'] ?? array_shift($prefix);
             }
             if ($admin) {
-                return  substr($url, strlen('/'.$admin_prefix));
+                $url=substr($url, strlen('/'.$admin_prefix));
             }
-            return  substr($url, strlen('/'.$prefix));
+            $url=substr($url, strlen('/'.$prefix));
         }
-        return $url;
+        return strlen($url)===0?'/':$url;
     }
 
 
