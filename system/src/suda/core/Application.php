@@ -99,6 +99,13 @@ class Application
     {
         return self::$active_module;
     }
+
+
+    public static function getModuleConfig(string $module)
+    {
+        return self::$module_configs[self::getModuleFillName($module)]??[];
+    }
+
     public static function getModulePrefix(string $module)
     {
         $prefix=conf('module-prefix.'.$module, null);

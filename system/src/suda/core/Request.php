@@ -217,6 +217,7 @@ final class Request
                 $_SERVER['PHP_SELF']=$match[1];
                 // 处理查询字符
                 if (isset($match[3])) {
+                    $_GET=array();
                     parse_str($match[3], $_GET);
                 }
                 self::$query=$match[3]??'';
@@ -230,6 +231,7 @@ final class Request
                 // _D()->trace($preg,$_SERVER['REQUEST_URI'].' '. serialize($match));
                 // 处理查询字符
                 if (isset($match[3])) {
+                    $_GET=array();
                     parse_str($match[3], $_GET);
                 }
                 self::$query=$match[3]??'';

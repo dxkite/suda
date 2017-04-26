@@ -1,1 +1,22 @@
-{"index":{"class":"cn\\atd3\\response\\RouterList","visit":"\/"},"router_add":{"class":"cn\\atd3\\response\\RouterAdd","visit":"\/router\/add"},"router_edit":{"class":"cn\\atd3\\response\\RouterEdit","visit":"\/router\/edit"},"router_list":{"class":"cn\\atd3\\response\\RouterList","visit":"\/router[\/list]"},"database_list":{"class":"cn\\atd3\\response\\DatabaseList","visit":"\/database[\/list]"}}
+{
+    "index": {
+        "class": "dxkite\\suda\\response\\RouterList",
+        "visit": "\/"
+    },
+    "router_add": {
+        "class": "dxkite\\suda\\response\\RouterAdd",
+        "visit": "\/router\/add"
+    },
+    "router_edit": {
+        "class": "dxkite\\suda\\response\\RouterEdit",
+        "visit": "\/router\/edit"
+    },
+    "router_list": {
+        "class": "dxkite\\suda\\response\\RouterList",
+        "visit": "\/router[\/list]"
+    },
+    "database_list": {
+        "class": "dxkite\\suda\\response\\DatabaseList",
+        "visit": "\/database[\/list]"
+    }
+}

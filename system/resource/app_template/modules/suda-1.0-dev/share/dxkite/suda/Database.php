@@ -1,5 +1,5 @@
 <?php
-namespace suda\core;
+namespace dxkite\suda;
 
 class Database
 {

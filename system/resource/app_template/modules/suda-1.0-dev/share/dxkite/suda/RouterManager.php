@@ -1,5 +1,5 @@
 <?php
-namespace cn\atd3;
+namespace dxkite\suda;
 
 use suda\core\Router;
 use suda\core\Application;
@@ -14,11 +14,12 @@ use suda\tool\Json;
 class RouterManager
 {
     protected static $routerinfos=[];
+    protected static $configs=[];
     protected static $urltype=['int'=>'\d+','string'=>'[^\/]+','url'=>'.+'];
     /**
     * 删除路由
     */
-    public static function delete(string $module, string $id,bool $delete=false)
+    public static function delete(string $module, string $id)
     {
         $info=self::getInfo($module)[$id]??null;
         if (!$info) {
@@ -58,13 +59,15 @@ class RouterManager
                 $prefix=$prefix['simple'] ?? array_shift($prefix);
             }
             if ($admin) {
-                return  substr($url, strlen($admin_prefix));
+                return  substr($url, strlen('/'.$admin_prefix));
             }
-            return  substr($url, strlen($prefix));
+            return  substr($url, strlen('/'.$prefix));
         }
         return $url;
     }
-    
+
+
+
     public static function add(array $method, string $url, string $router, string $router_id, bool $admin=false, bool $json=false, bool $overwrite=false)
     {
         // 获取URL中的变量
@@ -77,10 +80,12 @@ class RouterManager
         list($router, $class_short, $module)=$matchs;
         // 激活模块
         $module_dir=Application::getModuleDir($module);
+        $module_config=Application::getModuleConfig($module);
         // 路由位置
         $router_file=MODULES_DIR.'/'.$module_dir.'/resource/config/router'.($admin?'_admin':'').'.json';
         // 命名空间
-        $namespace=conf('module.namespace', conf('app.namespace'));
+        $namespace=$module_config['namespace']??conf('app.namespace');
+
         $class=$namespace.'\\response\\'.$class_short;
 
         // 构建模板
@@ -105,7 +110,10 @@ class RouterManager
         $template_file=MODULES_DIR.'/'.$module_dir.'/resource/template/default/'.$template_name.'.tpl.html';
         $class_template_file=MODULE_RESOURCE.'/data/'.($json?'/class_json.php':'/class_html.php');
         $class_template= Storage::get($class_template_file);
-        $parent=$admin? conf('module.response.admin', conf('app.response.admin', 'suda\\core\\Response')): conf('module.response.normal', conf('app.response.normal', 'suda\\core\\Response'));
+        
+        $parent=$admin? 
+        $module_config['response']['admin']??conf('app.response.admin', 'suda\\core\\Response'): 
+        $module_config['response']['normal']??conf('app.response.normal', 'suda\\core\\Response');
         $class_template=str_replace(
             [
                 '__class_namespace__',

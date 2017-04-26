@@ -1,11 +1,11 @@
 <?php
-namespace cn\atd3\response;
+namespace dxkite\suda\response;
 
 use suda\core\Session;
 use suda\core\Cookie;
 use suda\core\Request;
 use suda\core\Query;
-use cn\atd3\RouterManager;
+use dxkite\suda\RouterManager;
 
 /**
 * visit url /router/edit as all method to run this class.

@@ -1,5 +1,5 @@
 <?php
-namespace cn\atd3;
+namespace dxkite\suda;
 use suda\template\Template;
 
 

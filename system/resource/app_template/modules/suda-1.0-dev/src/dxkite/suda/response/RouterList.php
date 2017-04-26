@@ -1,8 +1,8 @@
 <?php
-namespace cn\atd3\response;
+namespace dxkite\suda\response;
 
 use suda\core\{Session,Cookie,Request,Query};
-use cn\atd3\RouterManager;
+use dxkite\suda\RouterManager;
 
 
 /**

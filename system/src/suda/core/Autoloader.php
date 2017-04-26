@@ -44,7 +44,7 @@ class Autoloader
 
     public static function addIncludePath(string $path)
     {
-        if (!in_array($path, self::$include_path)) {
+        if (!in_array($path, self::$include_path) && $path=realpath($path)) {
             self::$include_path[]=$path;
         }
     }

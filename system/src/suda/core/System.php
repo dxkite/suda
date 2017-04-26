@@ -23,6 +23,7 @@ class System
 
     public static function onShutdown()
     {
+        _D()->trace('include paths:'.json_encode(Autoloader::getIncludePath()));
         _D()->trace(_T('system shutdown'));
         Hook::exec('system:shutdown');
     }

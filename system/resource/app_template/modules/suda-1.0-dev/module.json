@@ -1,5 +1,6 @@
 {
     "name":"suda",
+    "namespace": "dxkite\\suda",
     "author":"dxkite",
     "version":"1.0.0-dev",
     "prefix":"/@panel"

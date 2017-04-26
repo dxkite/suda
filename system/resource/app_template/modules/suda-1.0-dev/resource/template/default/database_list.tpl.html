@@ -15,27 +15,18 @@
         </nav>
 
         <main class="col-sm-9 offset-sm-3 col-md-10 offset-md-2 pt-3">
-            @if ($:result(false))
-            <div class="alert alert-{{ $:success?'success' : 'danger'  }} alert-dismissible fade show" role="alert">
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-                {{ $:delete_info(_T('路由删除成功')) }}
-            </div>
-            @endif
-            
+
             <div class="table-responsive">
                 @foreach ($:router as $module => $infos)
                 <h2> {{ $module }}</h2>
                 <table class="table table-striped">
                     <thead>
                         <tr>
-                            <th>引用ID</th>
-                            <th>请求</th>
-                            <th>URL</th>
-                            <th>权限</th>
-                            <th>响应</th>
-                            <th>操作</th>
+                            <th>模块</th>
+                            <th>生成数据库结构</th>
+                            <th>导出数据</th>
+                            <th>导入数据</th>
+                            <th>清空数据</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -46,10 +37,6 @@
                             <td> <a href="@u($module.':'.$id)">{{ $item['visit'] }}</a></td>
                             <td> {{ $item['role'] }} </td>
                             <td> {{ $item['class'] }} </td>
-                            <td> 
-                                <a href="@u('router_edit',['edit'=>$id,'module'=>$module])">编辑</a>
-                                <a href="@u('router_list',['delete'=>$id,'module'=>$module])">删除</a>
-                             </td>
                         </tr>
                         @endforeach
                     </tbody>

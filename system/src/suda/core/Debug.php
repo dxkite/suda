@@ -160,9 +160,8 @@ class Debug
                 'traces'=>$traces,
             ]);
         \suda\template\Manager::loadCompile();
-        
         $render->template->render();
-        exit($e->getMessage());
+        exit;
     }
 
     public static function logException(Exception $e)
