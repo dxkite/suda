@@ -32,8 +32,12 @@ class RouterEdit extends \suda\core\Response
                     $method=[$method];
                 }
             }
+            // 新的路由ID和原先的不一样
+            if ($post->name!=$post->router){
+                RouterManager::delete($post->module,$post->name,strtolower($post->new)=='on');
+            }
             RouterManager::add($method, $post->url,
-            RouterManager::className($post->class).'@'.$post->module,
+            RouterManager::className($post->module,$post->class).'@'.$post->module,
             $post->router,
             strtolower($post->role)=='admin',
              false,
@@ -46,7 +50,7 @@ class RouterEdit extends \suda\core\Response
             $router=RouterManager::getRouter($module, $edit);
             $page->set('module', $module);
             $page->set('router', $edit);
-            $page->set('class', RouterManager::className($router['class']));
+            $page->set('class', RouterManager::className($module,$router['class']));
             $page->set('visit', RouterManager::urlPrefix($module, strtolower($router['role'])=='admin', $router['visit']));
             $page->set('role', $router['role']);
             $methods=['ALL'=>false,'GET'=>false,'POST'=>false,'PUT'=>false,'DELETE'=>false];

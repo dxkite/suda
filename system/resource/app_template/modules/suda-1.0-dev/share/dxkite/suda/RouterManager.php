@@ -19,7 +19,7 @@ class RouterManager
     /**
     * 删除路由
     */
-    public static function delete(string $module, string $id)
+    public static function delete(string $module, string $id,bool $deleteall=false)
     {
         $info=self::getInfo($module)[$id]??null;
         if (!$info) {
@@ -43,9 +43,10 @@ class RouterManager
         return Json::saveFile($router_file, $json);
     }
 
-    public static function className(string $name)
+    public static function className(string $module,string $name)
     {
-        $namespace=conf('module.namespace', conf('app.namespace'));
+        $module_config=Application::getModuleConfig($module);
+        $namespace=$module_config['namespace'] ?? conf('app.namespace');
         return  str_replace($namespace.'\\response\\', '', $name);
     }
 
@@ -59,9 +60,9 @@ class RouterManager
                 $prefix=$prefix['simple'] ?? array_shift($prefix);
             }
             if ($admin) {
-                $url=substr($url, strlen('/'.$admin_prefix));
+                $url=substr($url, strlen($admin_prefix));
             }
-            $url=substr($url, strlen('/'.$prefix));
+            $url=substr($url, strlen($prefix));
         }
         return strlen($url)===0?'/':$url;
     }
