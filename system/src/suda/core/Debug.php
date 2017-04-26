@@ -100,7 +100,7 @@ class Debug
         $file=$e->getFile();
         $error=$e->getMessage();
         $backtrace=$e->getBacktrace();
-        $traces_console=self::printTrace($backtrace,false);
+        $traces_console=self::printTrace($backtrace, false);
         print "\033[31m# Error>\033[33m $error\033[0m\r\n";
         print "\t\033[34mCause By $file:$line\033[0m\r\n";
         foreach ($traces_console as $trace_info) {
@@ -205,14 +205,14 @@ class Debug
     {
         return Request::ip() . "\t" . date('Y-m-d H:i:s') . "\t" .Request::method()."\t\t".Request::virtualUrl() . "\r\n";
     }
-    protected static function save($file = 'debug.log')
+    protected static function save(string $file)
     {
         if (!is_dir(dirname($file))) {
             Storage::mkdirs(dirname($file));
         }
-
+        _D()->trace('max log size '.Debug::MAX_LOG_SIZE, $file.':'.filesize($file));
         if (is_file($file) && filesize($file) > self::MAX_LOG_SIZE) {
-            rename($file, dirname($file) . '/' . time() . '-' . basename($file));
+            rename($file, dirname($file) . '/' . date('Y-m-d'). '-' . basename($file));
         }
 
         $str="\n".str_repeat('-', 64) ."\n" .Hook::execTail("system:debug:printf");
@@ -222,7 +222,7 @@ class Debug
                 $str.=$log['backtrace']."\r\n";
             }
         }
-        return file_put_contents(LOG_DIR.'/'.$file, $str, FILE_APPEND);
+        return file_put_contents($file, $str, FILE_APPEND);
     }
 
 
@@ -253,7 +253,7 @@ class Debug
 
     public static function phpShutdown()
     {
-        self::save();
+        self::save(LOG_DIR.'/debug.log');
     }
 
     public static function __callStatic($method, $args)
@@ -276,7 +276,7 @@ class Debug
         $backtrace=debug_backtrace();
         $trace=self::printTrace($backtrace);
         $name=(isset($backtrace[2]['class'])?$backtrace[2]['class'].'#':'').$backtrace[2]['function'];
-        self::_loginfo($level, isset($args[1])?$args[0]:$name, $args[1]??$args[0], $backtrace[1]['file'], $backtrace[1]['line'],$trace);
+        self::_loginfo($level, isset($args[1])?$args[0]:$name, $args[1]??$args[0], $backtrace[1]['file'], $backtrace[1]['line'], $trace);
     }
 
     public function __call($method, $args)
