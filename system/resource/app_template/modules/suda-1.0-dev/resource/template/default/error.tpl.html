@@ -1,4 +1,4 @@
-@set('title',(is_numeric($:erron)? 'Error ['. $:erron(0) .'] ': $:erron ).'- ' . $:error ) @set('lang','Zh-cn') @startInsert('bs-head')
+@set('title', $:error ) @set('lang','Zh-cn') @startInsert('bs-head')
 <link rel="stylesheet" href="@static('suda')/google-code-prettify/prettify.css">
 <style>
     .error-line {

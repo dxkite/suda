@@ -9,9 +9,11 @@ class Config
 
     public static function load(string $file)
     {
-        self::$config=array_merge(self::$config,Json::loadFile($file));
+        return self::assign(Json::loadFile($file));
     }
-
+    public static function assign(array $config){
+        return self::$config=array_merge(self::$config,$config);
+    }
     public static function get(string $name=null, $default=null)
     {
         if(is_null( $name)) return self::$config;

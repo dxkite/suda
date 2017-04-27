@@ -2,7 +2,7 @@
 namespace suda\mail;
 
 use suda\template\Manager;
-use suda\core\Response;
+use suda\core\{Response,Config};
 
 abstract class Mailer
 {
@@ -24,9 +24,25 @@ abstract class Mailer
     private $errstr='';
     private $log;
     protected static $instance;
+    const SENDMAIL=0;
+    const SMTP=1;
     
-    public static function instance() {
-        return 'mailer';
+    public static function instance(int $type)
+    {
+        if (!isset(self::$instance[$type])) {
+            if ($type==Mailer::SMTP) {
+                // 不存在配置则加载
+                if (!conf('smtp', false) && file_exists($path=DATA_DIR.'/mailer.php')) {
+                    $config=include $path;
+                    Config::assign($config);
+                    // var_dump($config);
+                }
+                self::$instance[Mailer::SMTP]=new Smtp(conf('smtp.server'), conf('smtp.port'), conf('smtp.timeout'), conf('smtp.auth'), conf('smtp.email'), conf('smtp.password'),conf('smtp.name'));
+            } else {
+                self::$instance[Mailer::SENDMAIL]=new Sendmail();
+            }
+        }
+        return self::$instance[$type];
     }
      // Mail To
     public function to(string $email, string $name='')
@@ -54,6 +70,7 @@ abstract class Mailer
         $this->msg=$msg;
         $this->type='txt';
         $this->use=null;
+        return $this;
     }
     // 使用模板
     public function use(string $tpl)
@@ -96,8 +113,9 @@ abstract class Mailer
 
     protected function parseFrom()
     {
-        if ($this->from[1]) {
-            return "From: {$this->from[1]}<{$this->from[0]}>\r\n";
+        if (isset($this->from[1])) {
+            $name=self::encode($this->from[1]);
+            return "From: {$name}<{$this->from[0]}>\r\n";
         } else {
             return 'From: '.$this->from[0] . "\r\n" ;
         }
@@ -129,12 +147,7 @@ abstract class Mailer
     {
         if ($this->use) {
             $this->type='html';
-            ob_start();
-            Response::space('email');
-            Response::assign($this->values);
-            Manager::display($this->use);
-            Response::reset();
-            $this->msg=ob_get_clean();
+            $this->msg=Manager::display($this->use)->assign($this->values)->getRenderedString();
         }
         return $this->msg;
     }
@@ -150,6 +163,10 @@ abstract class Mailer
     protected function _log(string $message)
     {
         $this->log[]=$message;
+        _D()->trace($message);
+    }
+    protected function encode(string $text){
+        return  '=?UTF-8?B?'. base64_encode($text) .'?=';
     }
 
     protected function setError(int $errno, string $errstr)
@@ -157,6 +174,7 @@ abstract class Mailer
         if (!$this->errno) {
             $this->errno=$errno;
             $this->errstr=$errstr;
+            _D()->error($errno,$errstr);
         }
     }
 }

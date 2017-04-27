@@ -17,7 +17,6 @@ class Sendmail extends Mailer
         set_error_handler(array($this, 'errorHander'));
         $return=mail($to, $this->subject, $message, $header);
         restore_error_handler();
-        // var_dump($message);
         return $return;
     }
 }

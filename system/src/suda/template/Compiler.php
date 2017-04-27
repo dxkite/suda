@@ -146,8 +146,9 @@ class Compiler
 
     protected function parseSet($exp)
     {
-        return "<?php \$this->get{$exp} ?>";
+        return "<?php \$this->set{$exp} ?>";
     }
+    
     protected function parseStatic($exp)
     {
         preg_match('/^\((.+?)\)$/', $exp, $match);

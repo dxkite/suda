@@ -6,7 +6,6 @@ use suda\core\Response;
 
 class Smtp extends Mailer
 {
-
     private $host;
     private $port;
     private $auth;
@@ -15,7 +14,7 @@ class Smtp extends Mailer
     private $sock=null;
     private $timeout;
 
-    public function __construct(string $host=null, int $port = 25, int $timeout=30, bool $auth = false, string $user, string $pass)
+    public function __construct(string $host=null, int $port = 25, int $timeout=30, bool $auth = false, string $user, string $pass, string $name=null)
     {
         $this->port = $port;
         $this->host = $host;
@@ -23,8 +22,26 @@ class Smtp extends Mailer
         $this->auth = $auth;
         $this->user = $user;
         $this->passwd = $pass;
+        $this->from[0]=$user;
+        if ($name) {
+            $this->from[1]=$name;
+        }
     }
 
+    public function from(string $email, string $name='')
+    {
+        if ($name) {
+            $this->from[1]=$name;
+        }
+        return $this;
+    }
+
+    protected function parseHeader()
+    {
+        $header=parent::parseHeader();
+        $header.='Subject:'.self::encode($this->subject)."\r\n";
+        return $header;
+    }
     // 发送邮件
     public function send(array $value_map=[])
     {
@@ -122,7 +139,7 @@ class Smtp extends Mailer
         foreach ($MXhosts as $host) {
             $this->sock = @fsockopen($host, $this->port, $errno, $errstr, $this->timeout);
             if (!($this->sock && $this->smtpCheck())) {
-                 $this->log($errno.'>'.$host.':'.$errstr);
+                $this->log($errno.'>'.$host.':'.$errstr);
                 continue;
             }
             $this->host=$host;
@@ -149,6 +166,7 @@ class Smtp extends Mailer
     {
         if (!is_null($arg)) {
             $cmd = $cmd." ".$arg;
+            $this->_log('send command ' .$cmd);
         }
         fputs($this->sock, $cmd."\r\n");
         return $this->smtpCheck();
