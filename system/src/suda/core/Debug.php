@@ -276,7 +276,17 @@ class Debug
         $backtrace=debug_backtrace();
         $trace=self::printTrace($backtrace);
         $name=(isset($backtrace[2]['class'])?$backtrace[2]['class'].'#':'').$backtrace[2]['function'];
-        self::_loginfo($level, isset($args[1])?$args[0]:$name, $args[1]??$args[0], $backtrace[1]['file'], $backtrace[1]['line'], $trace);
+        self::_loginfo($level, self::strify(isset($args[1])?$args[0]:$name), self::strify($args[1]??$args[0]), $backtrace[1]['file'], $backtrace[1]['line'], $trace);
+    }
+
+    protected static function strify($object)
+    {
+        if (is_object($object)) {
+            return serialize($object);
+        }else if(is_array($object)){
+            return json_encode($object);
+        }
+        return $object;
     }
 
     public function __call($method, $args)

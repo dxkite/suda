@@ -37,7 +37,7 @@ abstract class Mailer
                     Config::assign($config);
                     // var_dump($config);
                 }
-                self::$instance[Mailer::SMTP]=new Smtp(conf('smtp.server'), conf('smtp.port'), conf('smtp.timeout'), conf('smtp.auth'), conf('smtp.email'), conf('smtp.password'),conf('smtp.name'));
+                self::$instance[Mailer::SMTP]=new Smtp(conf('smtp.server'), conf('smtp.port'), conf('smtp.timeout'), conf('smtp.auth'), conf('smtp.email'), conf('smtp.passwd'),conf('smtp.name'));
             } else {
                 self::$instance[Mailer::SENDMAIL]=new Sendmail();
             }

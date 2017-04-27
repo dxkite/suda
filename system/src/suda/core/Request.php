@@ -10,6 +10,7 @@ final class Request
     private static $post=null;
     private static $files=null;
     private static $url;
+    private static $type=0;
     private static $request=null;
     private static $query='';
     private static $crawlers=[
@@ -136,6 +137,7 @@ final class Request
             return self::$files;
         }
     }
+
     public static function ip()
     {
         if (getenv('HTTP_CLIENT_IP')) {
@@ -165,14 +167,17 @@ final class Request
     {
         return strtoupper(self::method())==='POST';
     }
+
     public static function isGet()
     {
         return strtoupper(self::method())==='GET';
     }
+
     public static function hasGet()
     {
         return count($_GET);
     }
+
     public static function isJson()
     {
         return isset($_SERVER['CONTENT_TYPE']) && preg_match('/json/i', $_SERVER['CONTENT_TYPE']);
@@ -210,7 +215,7 @@ final class Request
         $index=pathinfo(get_included_files()[0], PATHINFO_BASENAME);
         // 预处理 请求
         if (isset($_SERVER['REQUEST_URI'])) {
-            //  /?/xxxxx
+            //  匹配 [1] /?/xxxxx
             if (preg_match('/^\/\?\//', $_SERVER['REQUEST_URI'])) {
                 $preg='/^(\/\?(\/[^?]*))(?:[?](.+)?)?$/';
                 preg_match($preg, $_SERVER['REQUEST_URI'], $match);
@@ -222,11 +227,14 @@ final class Request
                 }
                 self::$query=$match[3]??'';
                 self::$url=$match[2];
+                self::$type=1;
             } elseif 
-            // 匹配 /index.php?/
-            // 匹配 /index.php/xx
-            (preg_match('/^(.*)\/'.$index.'(\??\/)?/', $_SERVER['REQUEST_URI'])) {
+            // 匹配 [2] /index.php?/
+            // 匹配 [3] /index.php/xx
+            (preg_match('/^(.*)\/'.$index.'(?:(\?)?\/)?/', $_SERVER['REQUEST_URI'],$check)) {
+                // _D()->trace($check,$check[2]);
                 $preg='/(.*)\/'.$index.'\??(\/[^?]*)?(?:[?](.+)?)?$/';
+                self::$type=strlen($check[2]??false)>0?2:3;
                 preg_match($preg,$_SERVER['REQUEST_URI'], $match);
                 // _D()->trace($preg,$_SERVER['REQUEST_URI'].' '. serialize($match));
                 // 处理查询字符
@@ -237,7 +245,8 @@ final class Request
                 self::$query=$match[3]??'';
                 self::$url= $match[2] ?? '/';
             } else {
-                // 匹配 /
+                // 匹配 [0] /
+                self::$type=0;
                 $preg='/^([^?]*)/';
                 preg_match($preg, $_SERVER['REQUEST_URI'], $match);
                 self::$url=$match[1];
@@ -281,8 +290,10 @@ final class Request
         if (ltrim($script, '/')===conf('app.index', 'index.php')) {
             return $base. (DIRECTORY_SEPARATOR ===  '/' ? '/':'/?/') ;
         }
-        return $base. $script.'?/';
+        // _D()->trace(self::$type);
+        return $base. $script.(self::$type==2?'?':'').'/';
     }
+
     public function isCrawler()
     {
         $agent= $_SERVER['HTTP_USER_AGENT'] ?? '';

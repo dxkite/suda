@@ -2,7 +2,7 @@
 namespace suda\archive;
 
 use PDO;
-use Storage;
+use suda\core\{Config,Storage};
 
 // 数据库查询方案
 class Query
@@ -124,8 +124,8 @@ class Query
                 die('Could not select database:'.$this->database);
             }
         } elseif (is_null($this->database)) {
-            if (self::$pdo->query('USE '.\Config::get('database.name', 'test'))) {
-                $this->database=\Config::get('database.name', 'test');
+            if (self::$pdo->query('USE '.Config::get('database.name', 'test'))) {
+                $this->database=Config::get('database.name', 'test');
             }
         }
 
@@ -153,7 +153,7 @@ class Query
         // 检查成功
         $path=realpath($path);
         if ($return) {
-            if (\Config::get('debug')) {
+            if (Config::get('debug')) {
                 Storage::put($path.'/query_'.date('Y_m_d').'_query', date('Y-m-d H:i:s ').$stmt->queryString.' '.$stmt->errorInfo()[2]."\r\n", FILE_APPEND);
             }
         } else {
@@ -167,18 +167,18 @@ class Query
     {
         // 链接数据库
         if (!self::$pdo) {
-            $pdo='mysql:host='.\Config::get('database.host', 'localhost').';charset='.\Config::get('database.charset', 'utf8');
-            self::$prefix=\Config::get('database.prefix', '');
+            $pdo='mysql:host='.Config::get('database.host', 'localhost').';charset='.Config::get('database.charset', 'utf8').';port='.Config::get('database.port',3306);
+            self::$prefix=Config::get('database.prefix', '');
             try {
-                self::$pdo = new PDO($pdo, \Config::get('database.user', 'root'), \Config::get('database.passwd', 'root'));
-            } catch (Exception $e) {
+                self::$pdo = new PDO($pdo, Config::get('database.user', 'root'), Config::get('database.passwd', 'root'));
+            } catch (\PDOException $e) {
                 self::$good=false;
             }
         }
     }
     public function good() :bool
     {
-        return $this->good;
+        return self::$good;
     }
     // 事务系列
     public static function begin()

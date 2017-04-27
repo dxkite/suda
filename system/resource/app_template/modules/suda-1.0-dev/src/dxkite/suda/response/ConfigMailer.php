@@ -25,9 +25,9 @@ class ConfigMailer extends \suda\core\Response
             $config['smtp']=$request->post()->smtp;
             $config['smtp']['auth']=$config['smtp']['auth']??false;
             $config['sendmail']=$request->post()->sendmail;
-            ArrayHelper::export(DATA_DIR.'/mailer.php', '_mailer_set', $config);
+            ArrayHelper::export(DATA_DIR.'/mailer.runtime.config.php', '_mailer_runtime_config', $config);
         } else {
-            if (file_exists($path=DATA_DIR.'/mailer.php')) {
+            if (file_exists($path=DATA_DIR.'/mailer.runtime.config.php')) {
                 $config=include $path;
             }
             

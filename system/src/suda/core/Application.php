@@ -35,15 +35,8 @@ class Application
             Config::load($path);
         }
         
-        // 系统必须配置信息
-        if (Storage::exist($path=CONFIG_DIR.'/config.sys.json')) {
-            Config::load($path);
-        }
-
-        // 开发时配置信息
-        if (Storage::exist($path=CONFIG_DIR.'/config.dev.json')) {
-            Config::load($path);
-        }
+        // 加载外部数据库配置
+        self::configDBify();
 
         // 监听器
         if (Storage::exist($path=CONFIG_DIR.'/listener.json')) {
@@ -253,5 +246,8 @@ class Application
         
         ArrayHelper::export(TEMP_DIR.'/module-dir.php', '_module_map', $modulemap);
         return $modulemap;
+    }
+    public static function configDBify(){
+        
     }
 }

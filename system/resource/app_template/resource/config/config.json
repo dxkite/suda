@@ -3,7 +3,7 @@
     "timelimit":0,
     "timezone":"PRC",
     "database":{
-        "prefix":"mc_", // 数据库前缀
+        "prefix":"dx_", // 数据库前缀
         "name":"test_api",
         "passwd":"root",
         "user":"root",
