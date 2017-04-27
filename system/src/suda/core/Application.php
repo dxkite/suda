@@ -103,14 +103,14 @@ class Application
 
     public static function getModuleConfig(string $module)
     {
-        return self::$module_configs[self::getModuleFillName($module)]??[];
+        return self::$module_configs[self::getModuleFullName($module)]??[];
     }
 
     public static function getModulePrefix(string $module)
     {
         $prefix=conf('module-prefix.'.$module, null);
         if (is_null($prefix)) {
-            $prefix=self::$module_configs[self::getModuleFillName($module)]['prefix']??null;
+            $prefix=self::$module_configs[self::getModuleFullName($module)]['prefix']??null;
         }
         return $prefix;
     }
@@ -118,9 +118,18 @@ class Application
     public static function getLiveModules()
     {
         $modules=conf('app.modules', self::getModules());
-        array_walk($modules, function (&$name) {
-            $name=Application::getModuleFillName($name);
-        });
+        $exclude=defined('DISALLOW_MODULES')?explode(',', trim(DISALLOW_MODULES, ',')):[];
+        _D()->trace('exclude', json_encode($exclude));
+        foreach ($modules as $index => $name) {
+            $fullname=Application::getModuleFullName($name);
+            _D()->trace($name, $fullname.':'.in_array($name, $exclude).':'.in_array($fullname, $exclude));
+            if (in_array($name, $exclude) || in_array($fullname, $exclude)) {
+                unset($modules[$index]);
+            } else {
+                $modules[$index]=$fullname;
+            }
+        }
+        _D()->trace('live modules', json_encode($modules));
         return $modules;
     }
 
@@ -167,7 +176,7 @@ class Application
         return false;
     }
 
-    public static function getModuleFillName(string $name)
+    public static function getModuleFullName(string $name)
     {
         return self::moduleName(self::getModuleDir($name));
     }

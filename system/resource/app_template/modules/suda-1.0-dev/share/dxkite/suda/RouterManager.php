@@ -251,7 +251,7 @@ class RouterManager
         $admin_routers=[];
         $module_dir=Application::getModuleDir($module);
         $prefix= Application::getModulePrefix($module);
-        $module=Application::getModuleFillName($module);
+        $module=Application::getModuleFullName($module);
         $admin_prefix='';
         if (is_array($prefix)) {
             $admin_prefix=$prefix['admin'] ?? array_shift($prefix);

@@ -37,9 +37,9 @@ class Router
         $simple_routers=[];
         $admin_routers=[];
         $module_dir=Application::getModuleDir($module);
-        _D()->trace(_T('load module:%s [%s] path:%s', $module, Application::getModuleFillName($module), MODULES_DIR.'/'.$module_dir));
+        _D()->trace(_T('load module:%s [%s] path:%s', $module, Application::getModuleFullName($module), MODULES_DIR.'/'.$module_dir));
         $prefix= Application::getModulePrefix($module);
-        $module=Application::getModuleFillName($module);
+        $module=Application::getModuleFullName($module);
         $admin_prefix='';
         if (is_array($prefix)) {
             $admin_prefix=$prefix['admin'] ?? array_shift($prefix);
@@ -100,8 +100,7 @@ class Router
     protected function loadModulesRouter()
     {
         if (conf('debug')) {
-            $modules=Config::get('app.modules', []);
-            
+            $modules=Application::getLiveModules();
             foreach ($modules as $module) {
                 self::load($module);
             }
@@ -188,7 +187,7 @@ class Router
     {
         preg_match('/^(?:(.+?)[:])?(.+)$/', $name, $match);
         $name=$match[2];
-        $module=$match[1]?Application::getModuleFillName($match[1]):Application::getActiveModule();
+        $module=$match[1]?Application::getModuleFullName($match[1]):Application::getActiveModule();
         $name=$module.':'.$name;
         $url= '';
         if (isset($this->routers[$name])) {

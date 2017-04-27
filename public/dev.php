@@ -5,6 +5,6 @@
     define('SYSTEM',__DIR__.'/../system/');
     // 网站更目录位置
     define('APP_PUBLIC',__DIR__);
-    // 关闭开发者模块
-    define('DISALLOW_MODULES','suda');
+    // 开发者模式
+    define('DEBUG',true);
     require_once SYSTEM.'/suda.php';
