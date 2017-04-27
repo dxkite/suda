@@ -1,7 +1,15 @@
 {
-    "name":"suda",
+    "icon": "icon.png",
+    "name": "dxkite/suda",
+    "version": "1.0.0-dev",
     "namespace": "dxkite\\suda",
-    "author":"dxkite",
-    "version":"1.0.0-dev",
-    "prefix":"/suda-panel"
+    "livemod": 1,
+    "authors": [{
+        "name": "dxkite",
+        "email": "dxktie@163.com",
+        "homepage": "http://dx.atd3.cn"
+    }],
+    "discription": "suda buidin developer helper module",
+    "require": {},
+    "prefix": "/suda-panel"
 }
