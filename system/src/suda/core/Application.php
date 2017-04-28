@@ -199,7 +199,7 @@ class Application
         .preg_quote($matchname[2]). // 名称
         (isset($matchname[3])&&$matchname[3]?':'.$matchname[3]:'(:.+)?').'$/'; // 版本号
         $targets=[];
-        // _D()->trace($matchname, $preg);
+        _D()->trace($matchname, $preg);
         foreach (self::$module_dirs as $modulename=>$moduledir) {
             if (preg_match($preg, $modulename)) {
                 preg_match('/^(?:(\w+)\/)?(\w+)(?::(.+))?$/', $modulename, $matchname);
@@ -213,9 +213,11 @@ class Application
         }
         // 排序版本
         uksort($targets, 'version_compare');
-        // _D()->trace($targets);
+        _D()->trace($targets);
         // 获取最新版本
-        return  self::$module_cache[$name]=count($targets)>0?array_pop($targets):$name;
+        $dir=self::$module_cache[$name]=count($targets)>0?array_pop($targets):$name;
+        _D()->trace($name.' : '.$dir);
+        return $dir;
     }
 
     public static function moduleName(string $name)

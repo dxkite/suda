@@ -26,6 +26,7 @@ class AdminModules extends \suda\core\Response
             ModuleManager::setModuleStatu($request->get()->module,
             strtolower($request->get()->set(''))==='off'?
             ModuleManager::MODULE_OFF:ModuleManager::MODULE_ON);
+            $this->setHeader('Location:'.u('suda:system_admin'));
         }
         $module_infos=ModuleManager::getModulesInfo();
         $page->set('module_infos', $module_infos);

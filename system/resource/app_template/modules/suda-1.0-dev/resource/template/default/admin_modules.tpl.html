@@ -50,9 +50,9 @@
                             </td>
                             <td>
                                 @if ($module['on'])
-                                <a href="@u('suda:system_admin',['module'=>$module['name'],'set'=>'off'])">禁用</a>
+                                <a href="@u('suda:system_admin',['module'=>$module['name'].':'.$module['version'] ,'set'=>'off'])">禁用</a>
                                 @else
-                                <a href="@u('suda:system_admin',['module'=>$module['name'],'set'=>'on'])">启用</a>
+                                <a href="@u('suda:system_admin',['module'=>$module['name'].':'.$module['version'],'set'=>'on'])">启用</a>
                                 @endif
                             </td>
                         </tr>

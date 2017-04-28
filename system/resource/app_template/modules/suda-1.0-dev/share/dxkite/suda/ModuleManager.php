@@ -2,6 +2,7 @@
 namespace dxkite\suda;
 
 use suda\core\Application;
+use suda\core\Storage;
 use suda\tool\Json;
 
 class ModuleManager
@@ -21,15 +22,14 @@ class ModuleManager
                     unset($manifast['modules'][$index]);
                 }
             }
-            _D()->trace('module dead',$module);
-            return Json::saveFile($manifast_file,$manifast);
-        }
-        else{
-            if (!in_array($module,$manifast['modules'])){
+            _D()->trace('module dead', $module);
+            return Json::saveFile($manifast_file, $manifast);
+        } else {
+            if (!in_array($module, $manifast['modules'])) {
                 $manifast['modules'][]=$module;
             }
-            _D()->trace('module live',$module);
-            return Json::saveFile($manifast_file,$manifast);
+            _D()->trace('module live', $module);
+            return Json::saveFile($manifast_file, $manifast);
         }
     }
     
@@ -45,5 +45,32 @@ class ModuleManager
             }
         }
         return $all;
+    }
+
+    public static function createModule(string $name, string $version, string $locale, string $namespace, string $require, string $authors, string $discription)
+    {
+        $config['name']=$name;
+        $config['version']=$version;
+        $config['locale']=$locale;
+        $config['namespace']=$namespace;
+        $config['discription']=$discription;
+        $requires=explode(',', trim($require, ','));
+        foreach ($requires as $require) {
+            if (preg_match('/^(.+?):(.+)$/', $require, $match)) {
+                $config['require'][$match[1]]=$match[2];
+            }
+        }
+        $authors=explode(',', trim($authors, ','));
+        foreach ($authors as $author) {
+            if (preg_match('/(.+?)<(.+?)>/', $author, $match)) {
+                $add['name']=$match[1];
+                $add['email']=$match[2];
+                $config['authors'][]=$add;
+            }
+        }
+        $dirname=preg_replace('/[\\\\\/]+/','-',$name).'-'.$version;
+        $path=MODULES_DIR.'/'.$dirname;
+        Storage::path($path);
+        return Json::saveFile($path.'/module.json', $config);
     }
 }
