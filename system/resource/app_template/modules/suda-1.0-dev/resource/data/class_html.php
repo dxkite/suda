@@ -18,7 +18,7 @@ class __class_name__ extends \__parent__
 {
     public function onRequest(Request $request)
     {
-        $page->$this->page('__module__:__template_name__');
+        $page=$this->page('__module__:__template_name__');
 
         // params if had
         __params_str__;

@@ -195,7 +195,7 @@ class Application
 
         _D()->info('match name', (isset($matchname[1])&&$matchname[1]?$matchname[1]:'(\w+\/)?'));
 
-        $preg='/^'.(isset($matchname[1])&&$matchname[1]?$matchname[1]:'(\w+\/)?') // 限制域
+        $preg='/^'.(isset($matchname[1])&&$matchname[1]?$matchname[1].'\/':'(\w+\/)?') // 限制域
         .preg_quote($matchname[2]). // 名称
         (isset($matchname[3])&&$matchname[3]?':'.$matchname[3]:'(:.+)?').'$/'; // 版本号
         $targets=[];

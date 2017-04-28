@@ -86,8 +86,9 @@ class Manager
         _D()->time('compile '.$name);
         list($module, $basename)=Router::parseName($name);
         _D()->trace($module,Application::getModuleDir($module));
-        $prefix=MODULES_DIR.'/'. Application::getModuleDir($module) .'/resource/template/'.self::$theme;
-        $output=VIEWS_DIR.'/'. $module .'/'.$basename.self::$extCpl;
+        $module_dir=Application::getModuleDir($module);
+        $prefix=MODULES_DIR.'/'.  $module_dir.'/resource/template/'.self::$theme;
+        $output=VIEWS_DIR.'/'. $module_dir .'/'.$basename.self::$extCpl;
         $input=$prefix.'/'.$basename.self::$extRaw;
         _D()->trace('compile '.$name, $input);
         if (!Storage::exist($input)) {
@@ -109,7 +110,8 @@ class Manager
     public static function display(string $name)
     {
         list($module, $basename)=Router::parseName($name);
-        return self::_display($name, VIEWS_DIR.'/'.$module. DIRECTORY_SEPARATOR .$basename.self::$extCpl);
+        $module_dir=Application::getModuleDir($module);
+        return self::_display($name, VIEWS_DIR.'/'.$module_dir. DIRECTORY_SEPARATOR .$basename.self::$extCpl);
     }
 
     /**
@@ -120,12 +122,12 @@ class Manager
     {
         if (Config::get('debug', true)) {
             if (!self::compile($name)) {
-                echo '<b>compile error: '.$name.': missing raw template </b>';
+                echo '<b>compile error: '.$name.': '.$viewpath. 'missing raw template </b>';
                 return;
             }
         } elseif (!Storage::exist($viewpath)) {
             if (!self::compile($name)) {
-                echo '<b>missing '.$name.'</b>';
+                echo '<b>missing '.$name.': '.$viewpath. '</b>';
                 return;
             }
         }

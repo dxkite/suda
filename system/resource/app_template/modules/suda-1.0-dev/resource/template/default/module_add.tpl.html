@@ -1,0 +1,72 @@
+@include ('suda:header') @startInsert('bs-head')
+<link href="@static/dev-panel.css" rel="stylesheet"> @endInsert @startInsert('bs-content')
+<!--　侧边栏　　-->
+<div class="container-fluid">
+    <div class="row">
+        <nav class="col-sm-3 col-md-2 hidden-xs-down bg-faded sidebar">
+            <ul class="nav nav-pills flex-column">
+                <li class="nav-item">
+                    <a class="nav-link" href="@u('suda:system_admin')">模块管理</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="@u('suda:module_add')">模块添加</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="@u('suda:admin_database')">数据库管理</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="@u('suda:config_database')">数据库配置</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="@u('suda:config_mailer')">邮件配置</a>
+                </li>
+            </ul>
+        </nav>
+
+        <main class="col-sm-9 offset-sm-3 col-md-10 offset-md-2 pt-3">
+            <form method="POST" action="{{ $_SERVER['REQUEST_URI'] }}">
+
+                <div class="form-group row">
+                    <label for="module_name" class="col-2 col-form-label">模块名称</label>
+                    <div class="col-10">
+                        <input name="module[name]" class="form-control" type="text" id="module_name" placeholder="domain/name" required>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="module_version" class="col-2 col-form-label">模块版本</label>
+                    <div class="col-10">
+                        <input name="module[version]" class="form-control" type="text" id="module_version" placeholder="major.minor.patch" required>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="module_locale" class="col-2 col-form-label">模块语言</label>
+                    <div class="col-10">
+                        <input name="module[locale]" class="form-control" type="text" id="module_locale" value="zh-CN" required>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="module_namespace" class="col-2 col-form-label">命名空间</label>
+                    <div class="col-10">
+                        <input name="module[namespace]" class="form-control" type="text" id="module_namespace" value="cn\atd3" required>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label for="authors" class="col-2 col-form-label">作者</label>
+                    <div class="col-10">
+                        <input name="module[authors]" class="form-control" type="text" placeholder="author1 <email1@example.com>,author2 <email2@example.com>"
+                            id="authors" required>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="discription" class="col-2 col-form-label">模块描述</label>
+                    <div class="col-10">
+                        <textarea name="module[discription]" class="form-control" id="discription" rows="10">这是一个普通的模块</textarea>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary">添加模块</button>
+            </form>
+        </main>
+    </div>
+</div>
+@endInsert @include('suda:bootstrap')
