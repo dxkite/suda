@@ -193,7 +193,7 @@ class Application
         // 缩略匹配
         preg_match('/^(?:(\w+)\/)?(\w+)(?::(.+))?$/', $name, $matchname);
 
-        _D()->info('match name',(isset($matchname[1])&&$matchname[1]?$matchname[1]:'(\w+\/)?'));
+        _D()->info('match name', (isset($matchname[1])&&$matchname[1]?$matchname[1]:'(\w+\/)?'));
 
         $preg='/^'.(isset($matchname[1])&&$matchname[1]?$matchname[1]:'(\w+\/)?') // 限制域
         .preg_quote($matchname[2]). // 名称
@@ -252,7 +252,16 @@ class Application
         ArrayHelper::export(TEMP_DIR.'/module-dir.php', '_module_map', $modulemap);
         return $modulemap;
     }
+    public static function getModulesInfo()
+    {
+        return self::$module_configs;
+    }
+
     public static function configDBify()
     {
+        if (file_exists($path=DATA_DIR.'/database.runtime.config.php')) {
+            $config=include $path;
+            Config::assign(['database'=>$config]);
+        }
     }
 }

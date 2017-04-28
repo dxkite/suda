@@ -23,6 +23,7 @@ abstract class Template
     */
     public function render()
     {
+        _D()->trace('echo '.$this->name);
         // 渲染页面
         $cotent=self::getRenderedString();
         // 输出页面

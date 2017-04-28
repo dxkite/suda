@@ -34,17 +34,29 @@
                         </tr>
                     </thead>
                     <tbody>
+                        @foreach($:module_infos as $module)
                         <tr>
-                            <td>suda</td>
-                            <td>1.0</td>
-                            <td>DXkite</td>
-                            <td>系统核心管理模块</td>
-                            <td>无</td>
+                            <td> {{ $module['name'] }}</td>
+                            <td> {{ $module['version'] ?? _T('未知版本')}} </td>
                             <td>
-                                <a href="#">启用</a>
-                                <a href="#">删除</a>
+                                @foreach ( ($module['authors']??[] ) as $author ) @if(isset($author['homepage']))
+                                <a href="{{$author['homepage']}}">{{ $author['name'] }}</a> @elseif(isset($author['email']))
+                                <a href="mailto://{{$author['email']}}">{{ $author['name'] }}</a> @else {{ $author['name']
+                                }} @endif @endforeach
+                            </td>
+                            <td>{{ $module['discription'] ?? _T('无描述') }}</td>
+                            <td>@if (isset($module['require']) && count($module['require']) >0) @foreach ( ($module['require'] ) as $name=> $version )
+                                <span>{{$name}}-{{$version}}</span> @endforeach @else 无 @endif
+                            </td>
+                            <td>
+                                @if ($module['on'])
+                                <a href="@u('suda:system_admin',['module'=>$module['name'],'set'=>'off'])">禁用</a>
+                                @else
+                                <a href="@u('suda:system_admin',['module'=>$module['name'],'set'=>'on'])">启用</a>
+                                @endif
                             </td>
                         </tr>
+                        @endforeach
                     </tbody>
                 </table>
             </div>

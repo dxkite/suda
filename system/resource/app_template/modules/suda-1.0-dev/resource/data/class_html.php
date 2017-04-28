@@ -1,7 +1,10 @@
 <?php
 namespace __class_namespace__;
 
-use suda\core\{Session,Cookie,Request,Query};
+use suda\core\Session;
+use suda\core\Cookie;
+use suda\core\Request;
+use suda\core\Query;
 
 /**
 * visit url __create_url__ as __methods__ method to run this class.
@@ -15,15 +18,18 @@ class __class_name__ extends \__parent__
 {
     public function onRequest(Request $request)
     {
+        $page->$this->page('__module__:__template_name__');
+
         // params if had
         __params_str__;
         // param values array
         $value=__param_array__;
         // display template
-        return $this->page('__module__:__template_name__')
-        ->set('title','Welcome to use Suda!')
-        ->set('helloworld','Hello,World!')
-        ->set('value',$value)
-        ->render();
+
+        $page->set('title', 'Welcome to use Suda!')
+        ->set('helloworld', 'Hello,World!')
+        ->set('value', $value);
+
+        return $page->render();
     }
 }

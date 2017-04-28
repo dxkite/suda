@@ -7,9 +7,9 @@
     "authors": [{
         "name": "dxkite",
         "email": "dxktie@163.com",
-        "homepage": "http://dx.atd3.cn"
+        "homepage": "http://atd3.cn"
     }],
-    "discription": "suda buidin developer helper module",
+    "discription": "内置框架核心管理模块",
     "require": {},
     "prefix": "/suda-panel"
 }

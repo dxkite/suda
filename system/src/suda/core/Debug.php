@@ -210,8 +210,9 @@ class Debug
         if (!is_dir(dirname($file))) {
             Storage::mkdirs(dirname($file));
         }
-        _D()->trace('max log size '.Debug::MAX_LOG_SIZE, $file.':'.filesize($file));
-        if (is_file($file) && filesize($file) > self::MAX_LOG_SIZE) {
+        
+        if (file_exists($file)  && filesize($file) > self::MAX_LOG_SIZE) {
+            _D()->trace('max log size '.Debug::MAX_LOG_SIZE, $file.':'.filesize($file));
             rename($file, dirname($file) . '/' . date('Y-m-d'). '-' . basename($file));
         }
 
