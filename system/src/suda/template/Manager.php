@@ -2,10 +2,7 @@
 namespace suda\template;
 
 use suda\tool\EchoValue;
-use suda\core\Config;
-use suda\core\Application;
-use suda\core\Storage;
-use suda\core\Hook;
+use suda\core\{Config,Application,Storage,Hook,Router};
 
 class Manager
 {
@@ -56,6 +53,7 @@ class Manager
         return self::$theme;
     }
 
+
     /**
      * 获取编译后的模板路径
      * @param string $name
@@ -63,7 +61,7 @@ class Manager
      */
     protected static function path(string $name, bool $ext=true):string
     {
-        list($module, $name)=preg_split('/[:]/', $name, 2);
+        list($module, $name)=Router::parseName($name);
         $path=MODULES_DIR.'/'.Application::getModuleDir($module).'/resource/template/'.self::$theme;
         if ($ext) {
             $tpl=$path.'/'.$name.self::$extRaw;
@@ -86,12 +84,12 @@ class Manager
     {
         self::loadCompile();
         _D()->time('compile '.$name);
-        preg_match('/^(?:(.+?)[:])?(.+)$/', $name, $match);
-        $basename=$match[2];
-        $module=$match[1]?:Application::getActiveModule();
+        list($module, $basename)=Router::parseName($name);
+        _D()->trace($module,Application::getModuleDir($module));
         $prefix=MODULES_DIR.'/'. Application::getModuleDir($module) .'/resource/template/'.self::$theme;
         $output=VIEWS_DIR.'/'. $module .'/'.$basename.self::$extCpl;
         $input=$prefix.'/'.$basename.self::$extRaw;
+        _D()->trace('compile '.$name, $input);
         if (!Storage::exist($input)) {
             return false;
         }
@@ -110,7 +108,7 @@ class Manager
 
     public static function display(string $name)
     {
-        list($module, $basename)=preg_split('/[:]/', $name, 2);
+        list($module, $basename)=Router::parseName($name);
         return self::_display($name, VIEWS_DIR.'/'.$module. DIRECTORY_SEPARATOR .$basename.self::$extCpl);
     }
 
@@ -151,7 +149,7 @@ class Manager
         // 向下兼容
         defined('APP_PUBLIC') or define('APP_PUBLIC', Storage::path('.'));
         $static_path=Storage::path(MODULES_DIR.'/'.$module_dir.'/resource/template/'.self::$theme.'/static');
-        $path=Storage::path(APP_PUBLIC.'/static/'. $module);
+        $path=Storage::path(APP_PUBLIC.'/static/'. $module_dir);
         if (self::hasChanged($static_path, $path)) {
             self::copyStatic($static_path, $path);
         }

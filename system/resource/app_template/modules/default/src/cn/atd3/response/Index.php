@@ -20,7 +20,7 @@ class Index extends \suda\core\Response
         // param values array
         $value=array();
         // display template
-        return $this->page('default$1.0.0-dev@dxkite:index')
+        return $this->page('default:index')
         ->set('title','Welcome to use Suda!')
         ->set('helloworld','Hello,World!')
         ->set('value',$value)

@@ -281,9 +281,11 @@ class Debug
 
     protected static function strify($object)
     {
-        if (is_object($object)) {
+        if (is_null($object)) {
+            return '[NULL]';
+        } elseif (is_object($object)) {
             return serialize($object);
-        }else if(is_array($object)){
+        } elseif (is_array($object)) {
             return json_encode($object);
         }
         return $object;

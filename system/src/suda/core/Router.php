@@ -182,13 +182,39 @@ class Router
         }, $url);
         return $url;
     }
+    /**
+    * 解析模板名
+    */
+    public static function parseName(string $name)
+    {
+        // [模块前缀名称/]模块名[:版本号]:(模板名|路由ID)
+        preg_match('/^((?:\w+\/)?\w+)(?::([^:]+))?(?::(.+))?$/', $name, $match);
+        _D()->trace($match);
+
+        // 单纯路由或者模板
+        if (isset($match[1]) && count($match)==2) {
+            $module=Application::getActiveModule();
+            $info=$match[0];
+        } else {
+            $info=isset($match[3])?$match[3]:$match[2];
+            $module=isset($match[3])?
+                        (isset($match[1])?
+                            $match[1].(
+                                $match[2]?
+                                ':'.$match[2]
+                                :'')
+                            :Application::getActiveModule())
+                    :$match[1];
+        }
+        return [$module,$info];
+    }
 
     public function buildUrl(string $name, array $values=[])
     {
-        preg_match('/^(?:(.+?)[:])?(.+)$/', $name, $match);
-        $name=$match[2];
-        $module=$match[1]?Application::getModuleFullName($match[1]):Application::getActiveModule();
+        list($module, $name)=self::parseName($name);
+        $module=Application::getModuleFullName($module);
         $name=$module.':'.$name;
+        _D()->trace($name);
         $url= '';
         if (isset($this->routers[$name])) {
             // 路由存在
@@ -247,7 +273,7 @@ class Router
             public   function onRequest(Request $request)
             {
                 $this->state(404);
-                $this->page('suda:error404', ['title'=>'404 Error','path'=>$request->url()])->render();
+                $this->page('suda:error404', ['title'=>'404 Error', 'path'=>$request->url()])->render();
             }
         };
         $render->onRequest(Request::getInstance());

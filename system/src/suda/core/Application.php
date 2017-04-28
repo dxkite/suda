@@ -53,6 +53,7 @@ class Application
 
         // 模块共享库
         $module_dirs=self::getModuleDirs();
+
         $module_use=self::getLiveModules();
         // 安装 启用 活动
         foreach ($module_dirs as $module_dir) {
@@ -148,9 +149,6 @@ class Application
         // 加载模块配置到 module命名空间
         if (Storage::exist($path=MODULE_CONFIG.'/config.json')) {
             Config::set('module', Json::loadFile($path));
-            if ($namespace=Config::get('module.namespace', false)) {
-                Autoloader::setNamespace($namespace);
-            }
         }
     }
 
@@ -178,10 +176,12 @@ class Application
     */
     public static function getModuleDir(string $name)
     {
+        // 历史记录不存在
         if (is_null(self::$module_dirs)) {
             // 解析模块
             self::moduleMap();
         }
+        // 存在则从缓存调用
         if (isset(self::$module_cache[$name])) {
             return self::$module_cache[$name];
         }
@@ -189,19 +189,23 @@ class Application
         if (isset(self::$module_dirs[$name])) {
             return self::$module_dirs[$name];
         }
+
         // 缩略匹配
-        preg_match('/^([^#]+?)(?:\$([^@]+))?(?:@(.+?))?$/', $name, $matchname);
-        $preg='/^'.preg_quote($matchname[1]);
-        $version=isset($matchname[2])&&$matchname[2]?'(#'.preg_quote($matchname[2]).')?':'(\$[^@]+)?';
-        $author=isset($matchname[3])?'(@'.preg_quote($matchname[3]).')?':'(@.+?)?';
-        $preg.=$version.$author.'$/i';
+        preg_match('/^(?:(\w+)\/)?(\w+)(?::(.+))?$/', $name, $matchname);
+
+        _D()->info('match name',(isset($matchname[1])&&$matchname[1]?$matchname[1]:'(\w+\/)?'));
+
+        $preg='/^'.(isset($matchname[1])&&$matchname[1]?$matchname[1]:'(\w+\/)?') // 限制域
+        .preg_quote($matchname[2]). // 名称
+        (isset($matchname[3])&&$matchname[3]?':'.$matchname[3]:'(:.+)?').'$/'; // 版本号
         $targets=[];
-       
+        // _D()->trace($matchname, $preg);
         foreach (self::$module_dirs as $modulename=>$moduledir) {
             if (preg_match($preg, $modulename)) {
-                preg_match('/^([^#]+?)(?:\$([^@]+))?(?:@(.+?))?$/', $modulename, $matchname);
-                if (isset($matchname[2])&&$matchname[2]) {
-                    $targets[$matchname[2]]=$moduledir;
+                preg_match('/^(?:(\w+)\/)?(\w+)(?::(.+))?$/', $modulename, $matchname);
+                // 获取版本号
+                if (isset($matchname[3])&&$matchname[3]) {
+                    $targets[$matchname[3]]=$moduledir;
                 } else {
                     $targets[]=$moduledir;
                 }
@@ -209,6 +213,7 @@ class Application
         }
         // 排序版本
         uksort($targets, 'version_compare');
+        // _D()->trace($targets);
         // 获取最新版本
         return  self::$module_cache[$name]=count($targets)>0?array_pop($targets):$name;
     }
@@ -229,14 +234,14 @@ class Application
 
     protected static function refreshMap()
     {
+        // [限制名/]模块名:版本号
         $dirs=Storage::readDirs(MODULES_DIR);
         $modulemap=[];
         foreach ($dirs as $dir) {
             if (Storage::exist($file=MODULES_DIR.'/'.$dir.'/module.json')) {
                 $json=Json::parseFile($file);
                 $name=$json['name'] ?? $dir;
-                $name.=isset($json['version'])?'$'.$json['version']:'';
-                $name.=isset($json['author'])?'@'.$json['author']:'';
+                $name.=isset($json['version'])?':'.$json['version']:'';
                 self::$module_configs[$name]=$json;
             } else {
                 $name=$dir;
@@ -247,7 +252,7 @@ class Application
         ArrayHelper::export(TEMP_DIR.'/module-dir.php', '_module_map', $modulemap);
         return $modulemap;
     }
-    public static function configDBify(){
-        
+    public static function configDBify()
+    {
     }
 }
