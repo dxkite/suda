@@ -15,18 +15,17 @@
         </nav>
 
         <main class="col-sm-9 offset-sm-3 col-md-10 offset-md-2 pt-3">
-            @if ($:result(false))
-            <div class="alert alert-{{ $:success?'success' : 'danger'  }} alert-dismissible fade show" role="alert">
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-                {{ $:delete_info(_T('路由删除成功')) }}
-            </div>
-            @endif
-            
+            @foreach ($:router as $module => $infos)
+            <ul class="nav">
+                <li class="nav-item">
+                    <h2> {{ $module }}</h2>
+                </li>
+                <li class="nav-item">
+                    <a href="@u('router_add',['module'=>$module])" class="btn btn-link">添加路由</a>
+                </li>
+
+            </ul>
             <div class="table-responsive">
-                @foreach ($:router as $module => $infos)
-                <h2> {{ $module }}</h2>
                 <table class="table table-striped">
                     <thead>
                         <tr>
@@ -43,13 +42,13 @@
                         <tr>
                             <td>{{$id}}</td>
                             <td> @if(isset($item['method'])) {{ implode(',',$item['method']) }} @else ALL @endif</td>
-                            <td> <a href="@u($module.':'.$id)">{{ $item['visit'] }}</a></td>
+                            <td> <a href="@u($module.':'.$id)" target="_blank">{{ $item['visit'] }}</a></td>
                             <td> {{ $item['role'] }} </td>
                             <td> {{ $item['class'] }} </td>
-                            <td> 
+                            <td>
                                 <a href="@u('suda:router_edit',['edit'=>$id,'module'=>$module])">编辑</a>
                                 <a href="@u('suda:router_list',['delete'=>$id,'module'=>$module])">删除</a>
-                             </td>
+                            </td>
                         </tr>
                         @endforeach
                     </tbody>

@@ -22,10 +22,10 @@ class ModuleAdd extends \suda\core\Response
         if ($request->isPost()){
             $p=$request->post();
             // var_dump($p);
-            $result=ModuleManager::createModule($p->name,$p->version,$p->locale,$p->namespace,$p->require,$p->authors,$p->discription);
+            $result=ModuleManager::createModule($p->name,$p->version,$p->homepage,$p->locale,$p->namespace,$p->require,$p->authors,$p->discription);
             $this->setHeader('Location:'.u('suda:system_admin'));
         }
-        $page->set('title', 'Welcome to use Suda!')->set('header_select','system_admin');
+        $page->set('title', '添加模块')->set('header_select','system_admin');
         return $page->render();
     }
 }

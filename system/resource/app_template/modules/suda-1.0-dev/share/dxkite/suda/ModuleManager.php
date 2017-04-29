@@ -47,9 +47,10 @@ class ModuleManager
         return $all;
     }
 
-    public static function createModule(string $name, string $version, string $locale, string $namespace, string $require, string $authors, string $discription)
+    public static function createModule(string $name,string $homepage, string $version, string $locale, string $namespace, string $require, string $authors, string $discription)
     {
         $config['name']=$name;
+        $config['homepage']=$homepage;
         $config['version']=$version;
         $config['locale']=$locale;
         $config['namespace']=$namespace;

@@ -3,11 +3,11 @@
     "name": "dxkite/suda",
     "version": "1.0.0-dev",
     "namespace": "dxkite\\suda",
+    "homepage": "http://atd3.cn",
     "livemod": 1,
     "authors": [{
         "name": "dxkite",
-        "email": "dxktie@163.com",
-        "homepage": "http://atd3.cn"
+        "email": "dxktie@163.com"
     }],
     "discription": "内置框架核心管理模块",
     "require": {},

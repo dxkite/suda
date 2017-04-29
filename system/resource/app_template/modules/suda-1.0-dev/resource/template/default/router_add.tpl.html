@@ -73,7 +73,11 @@
                     </div>
 
                     <div class="form-group row">
-                        <label for="exampleSelect1" class="col-2 col-form-label">应用模块</label>
+                        <label for="exampleSelect1" class="col-2 col-form-label">应用模块</label> @if($:module_selected(false))
+                        <div class="col-sm-10">
+                            <p class="form-control-static">{{ $:module_selected }}</p>
+                        </div>
+                        <input type="text" value="{{$:module_selected}}" name="module" hidden> @else
                         <div class="col-10">
                             <select name="module" class="form-control" id="exampleSelect1">
                                 @foreach($:modules([]) as $set)
@@ -81,7 +85,7 @@
                                 @endforeach
                             </select>
                         </div>
-
+                        @endif
                     </div>
                 </fieldset>
                 <fieldset class="form-group">

@@ -31,19 +31,23 @@ class RouterAdd extends \suda\core\Response
                 }
             }
             
-            $result=RouterManager::add($method,$post->url,$post->class.'@'.$post->module,$post->router,
+            $result=RouterManager::add($method, $post->url, $post->class.'@'.$post->module, $post->router,
              strtolower($post->response)=='admin',
              strtolower($post->type)=='json',
              strtolower($post->over)=='on'
              );
              
-            return $this->page('suda:router_add_ok')->set('header_select','router_list')
-            ->set('class',$result['class'])
-            ->set('template',$result['template']??'无模板')->render();
+            return $this->page('suda:router_add_ok')->set('header_select', 'router_list')
+            ->set('class', $result['class'])
+            ->set('template', $result['template']??'无模板')->render();
         }
 
-        return $this->page('suda:router_add')->set('header_select','router_list')
+        $page=$this->page('suda:router_add')->set('header_select', 'router_list')
         ->set('modules', RouterManager::getModules())
-        ->set('title', _T('添加路由'))->render();
+        ->set('title', _T('添加路由'));
+        if ($request->get()->module) {
+            $page->set('module_selected',$request->get()->module);
+        }
+        return $page->render();
     }
 }

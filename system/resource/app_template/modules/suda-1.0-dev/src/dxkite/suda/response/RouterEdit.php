@@ -42,7 +42,7 @@ class RouterEdit extends \suda\core\Response
             strtolower($post->role)=='admin',
              false,
              strtolower($post->new)=='on');
-            return $this->page('suda:router_edit_ok',['title'=>_T('编辑 %s 成功',$edit)])->render();
+             $this->setHeader('Location:'.u('suda:router_list'));
         }
 
         if ($edit && $module) {
