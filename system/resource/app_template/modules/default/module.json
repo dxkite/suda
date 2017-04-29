@@ -1,0 +1,11 @@
+{
+    "name": "default",
+    "namespace": "cn\\atd3",
+    "authors": [{
+        "name": "dxkite",
+        "email": "dxkite@qq.com"
+    }],
+    "discription":"网站默认测试模块",
+    "require": {},
+    "version": "1.0.0-dev"
+}

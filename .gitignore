@@ -1,7 +1,6 @@
 app
 public/dev-suda.php
 system/resource/app_template/data
-system/resource/app_template/modules/default
 public/static/
 public/phpinfo.php
 app/resource/config/config.json
