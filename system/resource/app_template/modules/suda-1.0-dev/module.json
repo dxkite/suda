@@ -9,7 +9,7 @@
         "name": "dxkite",
         "email": "dxktie@163.com"
     }],
-    "discription": "内置框架核心管理模块",
+    "discription": "Suda框架开发面板模块",
     "require": {},
     "prefix": "/suda-panel"
 }

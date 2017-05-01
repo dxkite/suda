@@ -1,6 +1,6 @@
 <?php
 namespace dxkite\suda;
-
+use suda\archive\Query;
 class Database
 {
     public static function import(string $import)
@@ -21,7 +21,7 @@ class Database
         // $version=APP_VERSION;
         $date=date('Y-m-d H:i:s');
         $host= $_SERVER['SERVER_NAME'] ?? 'localhost';
-        $datebase=\Config::get('database.name');
+        $datebase=conf('database.name');
         $tables=($q=new Query("show tables;"))->fetchAll();
         $tables_count=count($tables);
         $server_version=(new Query('select version() as version;'))->fetch()['version'];
@@ -43,12 +43,12 @@ try {
 Query::beginTransaction();
 
 
-\$effect=(\$create=new Query('CREATE DATABASE IF NOT EXISTS '.\Config::get('database.name').';'))->exec();
+\$effect=(\$create=new Query('CREATE DATABASE IF NOT EXISTS '.conf('database.name').';'))->exec();
 if (\$create->erron()==0){
-        echo 'Create Database '.\Config::get('database.name').' Ok,effect '.\$effect.' rows'."\\r\\n";
+        echo 'Create Database '.conf('database.name').' Ok,effect '.\$effect.' rows'."\\r\\n";
     }
     else{
-        die('Database '.\Config::get('database.name').'create filed!');   
+        die('Database '.conf('database.name').'create filed!');   
     }
 
 Table;
@@ -56,7 +56,7 @@ Table;
         if (is_array($tables)) {
             foreach ($tables as $table_array) {
                 $tablename=current($table_array);
-                preg_match('/^'.\Config::get('database.prefix').'(.+?)$/', $tablename, $tbinfo);
+                preg_match('/^'.conf('database.prefix').'(.+?)$/', $tablename, $tbinfo);
                 if ($struct) {
                     $export_str.=self::querySQLString('DROP TABLE IF EXISTS #{'.$tbinfo[1].'}');
                     $export_str.=self::querySQLTableStruct(current($table_array));
@@ -89,7 +89,7 @@ End;
         // $version=APP_VERSION;
         $date=date('Y-m-d H:i:s');
         $host= $_SERVER['SERVER_NAME'] ?? 'localhost';
-        $datebase=\Config::get('database.name');
+        $datebase=conf('database.name');
         $server_version=(new Query('select version() as version;'))->fetch()['version'];
         $head=<<< Table
 -- ----------------------------------------------------------
@@ -109,7 +109,7 @@ Table;
     public static function querySQLTableStruct(string $table)
     {
         if ($struct=self::getTableStruct($table)) {
-            $struct=preg_replace('/^CREATE TABLE `'.\Config::get('database.prefix').'(.+?)`/', 'CREATE TABLE `#{$1}`', $struct);
+            $struct=preg_replace('/^CREATE TABLE `'.conf('database.prefix').'(.+?)`/', 'CREATE TABLE `#{$1}`', $struct);
             return self::queryCreateTable($struct, $table);
         }
         return '/* Error Export Table Struct : '.$table.' */';
@@ -124,15 +124,15 @@ Table;
     public static function queryCreateTable(string $sql, string $table)
     {
         echo 'export '.$table.' struct ... '."\r\n";
-        $table=preg_replace('/^'.\Config::get('database.prefix').'/', '', $table);
+        $table=preg_replace('/^'.conf('database.prefix').'/', '', $table);
         $sql=base64_encode($sql);
         $create=<<< queryCreateTable
         \$effect=(\$query_{$table}=new Query(base64_decode('$sql')))->exec();
         if (\$query_{$table}->erron()==0){
-            echo 'Create Table:'.\Config::get('database.prefix').'$table Ok,effect '.\$effect.' rows'."\\r\\n";
+            echo 'Create Table:'.conf('database.prefix').'$table Ok,effect '.\$effect.' rows'."\\r\\n";
         }
         else{
-             echo 'Create Table:'.\Config::get('database.prefix').'$table Error!,effect '.\$effect.' rows'."\\r\\n";   
+             echo 'Create Table:'.conf('database.prefix').'$table Error!,effect '.\$effect.' rows'."\\r\\n";   
         }
 queryCreateTable;
         return $create;
@@ -141,16 +141,16 @@ queryCreateTable;
     public static function queryInsertTable(string $sql, string $table)
     {
         echo 'export '.$table.' data  ... '."\r\n";
-        $table=preg_replace('/^'.\Config::get('database.prefix').'/', '', $table);
+        $table=preg_replace('/^'.conf('database.prefix').'/', '', $table);
         $sql=base64_encode($sql);
         $insert=<<< queryInsertTable
         (new Query('TRUNCATE #{{$table}}'))->exec();
         \$effect=(\$query_{$table}_insert=new Query(base64_decode('$sql')))->exec();
         if (\$query_{$table}_insert->erron()==0){
-            echo 'Insert Table:'.\Config::get('database.prefix').'{$table} Data Ok!,effect '.\$effect.' rows'."\\r\\n";
+            echo 'Insert Table:'.conf('database.prefix').'{$table} Data Ok!,effect '.\$effect.' rows'."\\r\\n";
         }
         else{
-             echo 'Insert Table:'.\Config::get('database.prefix').'{$table} Data  Error!,effect '.\$effect.' rows'."\\r\\n";   
+             echo 'Insert Table:'.conf('database.prefix').'{$table} Data  Error!,effect '.\$effect.' rows'."\\r\\n";   
         }
 queryInsertTable;
         return $insert;
@@ -172,7 +172,7 @@ Table;
                         $sql='DROP TABLE IF EXISTS `'.$table.'`;'."\r\n";
                         Storage::put($fileout, $doc."\r\n\r\n".$sql.$str.";\r\n\r\n\r\n", FILE_APPEND);
                     }
-                    preg_match('/^'.\Config::get('database.prefix').'(.+?)$/', $table, $tbinfo);
+                    preg_match('/^'.conf('database.prefix').'(.+?)$/', $table, $tbinfo);
                     if (count($saves_table)===0) {
                         self::saveSQLData($fileout, $table);
                     } elseif (in_array($tbinfo[1], $saves_table)) {
@@ -235,7 +235,7 @@ Table;
     public static function querySQLTableValues(string $table)
     {
         if ($sql=self::getTableValues($table)) {
-            $sql=preg_replace('/^INSERT INTO `'.\Config::get('database.prefix').'(.+?)`/', 'INSERT INTO  `#{$1}`', $sql);
+            $sql=preg_replace('/^INSERT INTO `'.conf('database.prefix').'(.+?)`/', 'INSERT INTO  `#{$1}`', $sql);
             return self::queryInsertTable($sql, $table);
         }
         return '/* Table ' .$table .'\'s Values Cann\'t Get */';

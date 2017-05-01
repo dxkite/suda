@@ -41,6 +41,12 @@ class RouterManager
             _D()->waring(_T('无法找到路由%s', $name));
             return false;
         }
+        
+        $class_path=MODULES_DIR.'/'.$module_dir.'/src/'.$info['class'].'.php';
+        if (($class_path=Storage::abspath($class_path)) && $deleteall) {
+            _D()->info($class_path);
+            Storage::remove($class_path);
+        }
         unset($json[$name]);
         return Json::saveFile($router_file, $json);
     }

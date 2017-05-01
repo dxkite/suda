@@ -15,12 +15,12 @@ class DTOManager
     Query::beginTransaction();
 
 
-    \$effect=(\$create=new Query('CREATE DATABASE IF NOT EXISTS '.Config::get('database.name').';'))->exec();
+    \$effect=(\$create=new Query('CREATE DATABASE IF NOT EXISTS '.conf('database.name').';'))->exec();
     if (\$create->erron()==0){
-            echo 'Create Database '.Config::get('database.name').' Ok,effect '.\$effect.' rows'."\\r\\n";
+            echo 'Create Database '.conf('database.name').' Ok,effect '.\$effect.' rows'."\\r\\n";
         }
         else{
-            die('Database '.Config::get('database.name').'create filed!');   
+            die('Database '.conf('database.name').'create filed!');   
         }
 
 Table;
