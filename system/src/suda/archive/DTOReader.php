@@ -1,5 +1,5 @@
 <?php
-namespace dxkite\suda;
+namespace suda\archive;
 
 use suda\core\Storage;
 use suda\tool\Value;

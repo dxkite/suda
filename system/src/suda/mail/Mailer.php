@@ -32,10 +32,9 @@ abstract class Mailer
         if (!isset(self::$instance[$type])) {
             if ($type==Mailer::SMTP) {
                 // 不存在配置则加载
-                if (!conf('smtp', false) && file_exists($path=DATA_DIR.'/mailer.php')) {
+                if (!conf('smtp', false) && file_exists($path=DATA_DIR.'/mailer.runtime.config.php')) {
                     $config=include $path;
                     Config::assign($config);
-                    // var_dump($config);
                 }
                 self::$instance[Mailer::SMTP]=new Smtp(conf('smtp.server'), conf('smtp.port'), conf('smtp.timeout'), conf('smtp.auth'), conf('smtp.email'), conf('smtp.passwd'),conf('smtp.name'));
             } else {

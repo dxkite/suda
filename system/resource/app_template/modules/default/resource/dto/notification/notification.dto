@@ -1,0 +1,8 @@
+; 通知表
+id bigint(20) auto primary comment="通知ID"
+send bigint(20) key comment="发送人"
+recv bigint(20) key comment="接受人"
+type int(11) comment="通知类型"
+time int(11) comment="通知时间"
+state tinyint(1) comment="状态"
+data bigint(20) comment="通知内容"

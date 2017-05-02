@@ -8,19 +8,18 @@ use suda\tool\{Value,ArrayHelper};
 // 数据表对象文件读取器
 class DTOManager
 {
-    public static $dtohead=<<< Table
+    public static $dtohead=<<< 'Table'
 
     try {
     /** Open Transaction Avoid Error **/
     Query::beginTransaction();
-
-
-    \$effect=(\$create=new Query('CREATE DATABASE IF NOT EXISTS '.conf('database.name').';'))->exec();
+    $effect=($create=new Query('CREATE DATABASE IF NOT EXISTS '.conf('database.name').';'))->exec();
     if (\$create->erron()==0){
-            echo 'Create Database '.conf('database.name').' Ok,effect '.\$effect.' rows'."\\r\\n";
+           $this->log('Create Database '.conf('database.name').' Ok,effect '.\$effect.' rows');
         }
         else{
-            die('Database '.conf('database.name').'create filed!');   
+            $this->log('Database '.conf('database.name').'create filed!');
+            _D()->error('Database '.conf('database.name').'create filed!');
         }
 
 Table;
@@ -32,7 +31,8 @@ Table;
     } 
     catch (Exception $e)
     {
-        echo "\t{$e->getLine()}:\033[31m{$e->getMessage()}\033[0m\r\n";
+        _D()->logException($e);
+        $this->log($e->getLine().':'.$e->getMessage());
         Query::rollBack();
         return false;
     }

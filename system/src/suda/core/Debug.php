@@ -31,11 +31,11 @@ class Debug
             $pass=microtime(true)-self::$time[$name];
             $backtrace=debug_backtrace();
             $call=(isset($backtrace[2]['class'])?$backtrace[2]['class'].'#':'').$backtrace[2]['function'];
-            self::_loginfo('info', $call, _T('process %s %fs', $name, $pass), $backtrace[1]['file'], $backtrace[1]['line']);
+            self::_loginfo('info', $call, _T('process %s %fs', $name, $pass), $backtrace[1]['file'], $backtrace[1]['line'], $backtrace);
         }
     }
 
-    protected static function _loginfo(string $level, string $name, string $message, string $file, int $line, string $backtrace=null)
+    protected static function _loginfo(string $level, string $name, string $message, string $file, int $line, array $backtrace=null)
     {
         $loginfo['file']=$file;
         $loginfo['line']=$line;
@@ -187,8 +187,11 @@ class Debug
         exit;
     }
 
-    public static function logException(Exception $e)
+    public static function logException(\Exception $e)
     {
+        if (!$e instanceof Exception) {
+            $e=new Exception($e);
+        }
         $loginfo['file']=$e->getFile();
         $loginfo['line']=$e->getLine();
         $loginfo['message']=$e->getMessage();
@@ -220,7 +223,7 @@ class Debug
         foreach (self::$log as $log) {
             $str.="\t[".number_format($log['time'], 10).':'.$log['mem'].']'."\t".$log['level'].'>In '.$log['file'].'#'.$log['line']."\t\t".$log['name']."\t".$log['message']."\r\n";
             if (Debug::ERROR===$log['level']) {
-                $str.=$log['backtrace']."\r\n";
+                $str.=self::printTrace($log['backtrace'])."\r\n";
             }
         }
         return file_put_contents($file, $str, FILE_APPEND);
@@ -275,9 +278,9 @@ class Debug
             }
         }
         $backtrace=debug_backtrace();
-        $trace=self::printTrace($backtrace);
+        
         $name=(isset($backtrace[2]['class'])?$backtrace[2]['class'].'#':'').$backtrace[2]['function'];
-        self::_loginfo($level, self::strify(isset($args[1])?$args[0]:$name), self::strify($args[1]??$args[0]), $backtrace[1]['file'], $backtrace[1]['line'], $trace);
+        self::_loginfo($level, self::strify(isset($args[1])?$args[0]:$name), self::strify($args[1]??$args[0]), $backtrace[1]['file'], $backtrace[1]['line'], $backtrace);
     }
 
     protected static function strify($object)

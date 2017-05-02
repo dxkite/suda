@@ -4,7 +4,7 @@
     "timezone":"PRC",
     "database":{
         "prefix":"dx_", // 数据库前缀
-        "name":"test_api",
+        "name":"test_suda",
         "passwd":"root",
         "user":"root",
         "charset":"utf8",

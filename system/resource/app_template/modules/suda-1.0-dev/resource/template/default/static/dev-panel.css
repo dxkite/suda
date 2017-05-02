@@ -74,3 +74,6 @@ h1 {
 {
   padding-bottom: 0.5em;
 }
+.console{
+  word-break:break-all;
+}
