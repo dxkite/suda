@@ -72,6 +72,32 @@ End;
         }
     }
 
+    public static function deleteTables(array $modules=null)
+    {
+        $modules= $modules ?? Application::getModules();
+        $config_path=self::$root.'/config.php';
+        if (Storage::exist($config_path)) {
+            $config= include $config_path;
+            foreach ($modules as $module) {
+                _D()->info($module,array_search($module,$config['module']));
+                if (($key=array_search($module,$config['module']))!==false){
+                    self::log('delete data:'.$module);
+                    unset($config['module'][$key]);
+                    $module_dir=Application::getModuleDir($module);
+                    $datafile=self::$root.'/data/'.$module_dir.'.php';
+                    $tablefile=self::$root.'/table/'.$module_dir.'.php';
+                    $createfile=self::$root.'/create/'.$module_dir.'.php';
+                    Storage::remove($datafile);
+                    Storage::remove($tablefile);
+                    Storage::remove($createfile);
+                }
+            }
+            _D()->info($config['module']);
+            ArrayHelper::export(self::$root.'/config.php', '_config', $config);
+        }
+        return false;
+    }
+
     public static function importTables(array $modules=null)
     {
         $modules= $modules ?? Application::getModules();

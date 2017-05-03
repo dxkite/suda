@@ -24,5 +24,6 @@ class DbProgress extends \suda\core\Response
         // DBManager::createTables();
         // DBManager::importTables();
         DBManager::backupTables();
+        // DBManager::deleteTables();
     }
 }
