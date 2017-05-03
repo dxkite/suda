@@ -154,10 +154,10 @@ class Query
         $path=realpath($path);
         if ($return) {
             if (Config::get('debug')) {
-                Storage::put($path.'/query_'.date('Y_m_d').'_query', date('Y-m-d H:i:s ').$stmt->queryString.' '.$stmt->errorInfo()[2]."\r\n", FILE_APPEND);
+                Storage::put($path.'/query_'.date('Y_m_d').'.query', date('Y-m-d H:i:s ').$stmt->queryString.' '.$stmt->errorInfo()[2]."\r\n", FILE_APPEND);
             }
         } else {
-            Storage::put($path.'/query_'.date('Y_m_d').'_error', date('Y-m-d H:i:s ').$stmt->queryString.' '.$stmt->errorInfo()[2]."\r\n", FILE_APPEND);
+            Storage::put($path.'/query_'.date('Y_m_d').'.error', date('Y-m-d H:i:s ').$stmt->queryString.' '.$stmt->errorInfo()[2]."\r\n", FILE_APPEND);
             throw new \Exception($stmt->errorInfo()[2], intval($stmt->errorCode()));
         }
         $this->stmt=$stmt;
