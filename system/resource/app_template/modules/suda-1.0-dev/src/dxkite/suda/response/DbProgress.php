@@ -20,6 +20,9 @@ class DbProgress extends \suda\core\Response
     public function onRequest(Request $request)
     {
         $this->type('html');
+        $option=$request->get()->option;
+        $all=$request->get()->all('false');
+        
         // DBManager::parseDTOs();
         // DBManager::createTables();
         // DBManager::importTables();

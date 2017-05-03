@@ -61,12 +61,19 @@ End;
     public static function backupTables(array $modules=null)
     {
         $modules= $modules ?? Application::getModules();
+        $config_path=self::$root.'/config.php';
+        
+        if (Storage::exist($config_path)) {
+            $config= include $config_path;
+            Storage::movedir(self::$root, DATA_DIR.'/backup/'.($config['time']??time()));
+        }
+
         foreach ($modules as $module) {
             self::parseDTOs($modules);
             $config['time']=time();
             $config['module']=$modules;
             Storage::path(self::$root);
-            ArrayHelper::export(self::$root.'/config.php', '_config', $config);
+            ArrayHelper::export($config_path, '_config', $config);
             self::log('backup module:'.$module);
             self::backupModule($module);
         }

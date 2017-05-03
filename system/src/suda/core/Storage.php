@@ -118,7 +118,22 @@ class Storage
         }
         return true;
     }
-
+    
+    public static function movedir(string $src, string $dest, string $preg='/^.+$/')
+    {
+        self::mkdirs($dest);
+        $hd=opendir($src);
+        while ($read=readdir($hd)) {
+            if (strcmp($read, '.') !== 0 && strcmp($read, '..') !==0 && preg_match($preg, $read)) {
+                if (self::isDir($src.'/'.$read)) {
+                    self::movedir($src.'/'.$read, $dest.'/'.$read);
+                } else {
+                    self::move($src.'/'.$read, $dest.'/'.$read);
+                }
+            }
+        }
+        return true;
+    }
     public static function copy(string $source, string $dest):bool
     {
         if (self::exist($source)) {
