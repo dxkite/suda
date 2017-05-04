@@ -21,13 +21,13 @@
         </nav>
 
         <main class="col-sm-9 offset-sm-3 col-md-10 offset-md-2 pt-3">
-            <h3>当前备份点 2017-04-26 17:49:16</h3>
+            <h3>当前备份点 {{ date('Y-m-d H:i:s',$:time) }}</h3>
             <div class="table-responsive">
                 <div class="backup-bar">
-                    <button type="button" class="btn btn-primary" data-url="@u('datebase_progress',['option'=>'backup'])">备份选中</button>
-                    <button type="button" class="btn btn-info" data-url="@u('datebase_progress',['option'=>'recovery'])">恢复选中</button>
-                    <button type="button" class="btn btn-danger" data-url="@u('datebase_progress',['option'=>'delete'])">删除选中</button>
-                    <button type="button" class="btn btn-success" data-url-all="@u('datebase_progress',['option'=>'backup','all'=>'yes'])">新建备份</button>
+                    <button type="button" class="btn btn-primary" data-op-url="@u('datebase_progress',['option'=>'backup'])">备份选中</button>
+                    <button type="button" class="btn btn-info" data-op-url="@u('datebase_progress',['option'=>'recovery'])">恢复选中</button>
+                    <button type="button" class="btn btn-danger" data-op-url="@u('datebase_progress',['option'=>'delete'])">删除选中</button>
+                    <button type="button" class="btn btn-success" data-url="@u('datebase_progress',['option'=>'backup','all'=>'yes'])">新建备份</button>
                 </div>
                 <form>
                     <table class="table table-striped">
@@ -36,21 +36,22 @@
                                 <th>#</th>
                                 <th>选项</th>
                                 <th>模块</th>
-                                <th>时间</th>
                                 <th>操作</th>
                             </tr>
                         </thead>
                         <tbody>
+                            @foreach( $:current as $id=>$name)
                             <tr>
-                                <td>1</td>
-                                <td> <input type="checkbox" name="select['suda$1.0@dxkite']"> </td>
-                                <td>suda$1.0@dxkite</td>
+                                <td>{{ $id }}</td>
+                                <td> <input type="checkbox" name="select[{{$name}}]"> </td>
+                                <td>{{ $name }}</td>
                                 <td>
-                                    <a href="#">备份</a>
-                                    <a href="#">恢复</a>
-                                    <a href="#">删除</a>
+                                    <a href="#" data-url="@u('suda:datebase_progress',['option'=>'backup','module'=>$name,'backup'=>$:current_name])">备份</a>
+                                    <a href="#" data-url="@u('suda:datebase_progress',['option'=>'recovery','module'=>$name,'backup'=>$:current_name])">恢复</a>
+                                    <a href="#" data-url="@u('suda:datebase_progress',['option'=>'delete','module'=>$name,'backup'=>$:current_name])">删除</a>
                                 </td>
                             </tr>
+                            @endforeach
                         </tbody>
                     </table>
                 </form>
@@ -65,15 +66,17 @@
                             </tr>
                         </thead>
                         <tbody>
+                            @foreach ($:backup_list as $name => $item )
                             <tr>
-                                <td>1</td>
-                                <td>2017-04-26 17:48:04</td>
+                                <td>{{$name}}</td>
+                                <td>{{ date('Y-m-d H:i:s',$item['time']) }}</td>
                                 <td>
-                                    <a href="#">操作</a>
-                                    <a href="#">全部恢复</a>
-                                    <a href="#">删除</a>
+                                    <a href="@u('suda:admin_database',['current'=>$name])">操作</a>
+                                    <a href="#" data-url="@u('suda:datebase_progress',['option'=>'recovery','name'=>$name])">恢复</a>
+                                    <a href="#" data-url="@u('suda:datebase_progress',['option'=>'delete','name'=>$name])">删除</a>
                                 </td>
                             </tr>
+                            @endforeach
                         </tbody>
                     </table>
                 </div>

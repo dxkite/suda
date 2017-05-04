@@ -158,7 +158,9 @@ class Query
             }
         } else {
             Storage::put($path.'/query_'.date('Y_m_d').'.error', date('Y-m-d H:i:s ').$stmt->queryString.' '.$stmt->errorInfo()[2]."\r\n", FILE_APPEND);
-            throw new \Exception($stmt->errorInfo()[2], intval($stmt->errorCode()));
+            if (!conf('database.ignoreError',false)){
+                throw new \Exception($stmt->errorInfo()[2], intval($stmt->errorCode()));
+            }
         }
         $this->stmt=$stmt;
         return $return;

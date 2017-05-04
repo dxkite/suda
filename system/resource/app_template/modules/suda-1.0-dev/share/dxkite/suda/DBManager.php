@@ -9,7 +9,9 @@ use suda\archive\DTOReader;
 
 class DBManager
 {
-    public static $root=DATA_DIR.'/backup/laster';
+    const LASTER='laster';
+    public static $laster=DATA_DIR.'/backup/'.DBManager::LASTER;
+    public static $root=DATA_DIR.'/backup';
     public static $dtohead=<<< 'Table'
 
     try {
@@ -39,7 +41,10 @@ Table;
         return false;
     }
 End;
-
+    public static function archive(string $name)
+    {
+        self::$laster=self::$root.'/'.$name;
+    }
     public static function parseDTOs(array $modules=null)
     {
         $modules= $modules ?? Application::getModules();
@@ -57,22 +62,47 @@ End;
             self::createTable($module);
         }
     }
+    
+    
+    public static function read(string $backup)
+    {
+        $config_path=self::$root.'/'.$backup.'/config.php';
+        _D()->trace($config_path);
+        if (Storage::exist($config_path)) {
+            return include $config_path;
+        }
+        return  false;
+    }
+
+
+    public static function readList()
+    {
+        $readDirs=Storage::readDirs(self::$root);
+        $config=[];
+        foreach ($readDirs as $dir) {
+            $config_path=self::$root.'/'.$dir.'/config.php';
+            if (Storage::exist($config_path)) {
+                $config[$dir]= include $config_path;
+            }
+        }
+        return $config;
+    }
 
     public static function backupTables(array $modules=null)
     {
         $modules= $modules ?? Application::getModules();
-        $config_path=self::$root.'/config.php';
+        $config_path=self::$laster.'/config.php';
         
         if (Storage::exist($config_path)) {
             $config= include $config_path;
-            Storage::movedir(self::$root, DATA_DIR.'/backup/'.($config['time']??time()));
+            Storage::movedir(self::$laster, self::$root.'/'.($config['time']??time()));
         }
 
         foreach ($modules as $module) {
             self::parseDTOs($modules);
             $config['time']=time();
             $config['module']=$modules;
-            Storage::path(self::$root);
+            Storage::path(self::$laster);
             ArrayHelper::export($config_path, '_config', $config);
             self::log('backup module:'.$module);
             self::backupModule($module);
@@ -81,26 +111,28 @@ End;
 
     public static function deleteTables(array $modules=null)
     {
-        $modules= $modules ?? Application::getModules();
-        $config_path=self::$root.'/config.php';
+        if (is_null($modules)){
+            Storage::rmdirs(self::$laster);
+            return true;
+        }
+        $config_path=self::$laster.'/config.php';
         if (Storage::exist($config_path)) {
             $config= include $config_path;
             foreach ($modules as $module) {
-                _D()->info($module,array_search($module,$config['module']));
-                if (($key=array_search($module,$config['module']))!==false){
+                _D()->info($module, array_search($module, $config['module']));
+                if (($key=array_search($module, $config['module']))!==false) {
                     self::log('delete data:'.$module);
                     unset($config['module'][$key]);
                     $module_dir=Application::getModuleDir($module);
-                    $datafile=self::$root.'/data/'.$module_dir.'.php';
-                    $tablefile=self::$root.'/table/'.$module_dir.'.php';
-                    $createfile=self::$root.'/create/'.$module_dir.'.php';
+                    $datafile=self::$laster.'/data/'.$module_dir.'.php';
+                    $tablefile=self::$laster.'/table/'.$module_dir.'.php';
+                    $createfile=self::$laster.'/create/'.$module_dir.'.php';
                     Storage::remove($datafile);
                     Storage::remove($tablefile);
                     Storage::remove($createfile);
                 }
             }
-            _D()->info($config['module']);
-            ArrayHelper::export(self::$root.'/config.php', '_config', $config);
+            ArrayHelper::export(self::$laster.'/config.php', '_config', $config);
         }
         return false;
     }
@@ -110,7 +142,7 @@ End;
         $modules= $modules ?? Application::getModules();
         foreach ($modules as $module) {
             $module_dir=Application::getModuleDir($module);
-            $datafile=self::$root.'/data/'.$module_dir.'.php';
+            $datafile=self::$laster.'/data/'.$module_dir.'.php';
             if (Storage::exist($datafile)) {
                 self::log('import module:'.$module);
                 self::execFile($datafile);
@@ -124,11 +156,11 @@ End;
     public static function backupModule(string $module)
     {
         $module_dir=Application::getModuleDir($module);
-        $tablefile=self::$root.'/table/'.$module_dir.'.php';
+        $tablefile=self::$laster.'/table/'.$module_dir.'.php';
 
         if (Storage::exist($tablefile)) {
-            Storage::path(self::$root.'/data/');
-            $datafile=self::$root.'/data/'.$module_dir.'.php';
+            Storage::path(self::$laster.'/data/');
+            $datafile=self::$laster.'/data/'.$module_dir.'.php';
             $tables=include $tablefile;
             file_put_contents($datafile, '<?php  /* create:'.date('Y-m-d H:i:s')."*/\r\n".self::$dtohead);
             foreach ($tables as $table) {
@@ -152,7 +184,7 @@ End;
     public static function createTable(string $module)
     {
         $module_dir=Application::getModuleDir($module);
-        $create=self::$root.'/create/'.$module_dir.'.php';
+        $create=self::$laster.'/create/'.$module_dir.'.php';
         if (Storage::exist($create)) {
             self::execFile($create);
         } else {
@@ -168,7 +200,7 @@ End;
             self::log("not exist {$dto_path}\r\n");
             return;
         }
-        $create=self::$root.'/create/'.$module_dir.'.php';
+        $create=self::$laster.'/create/'.$module_dir.'.php';
         Storage::path(dirname($create));
         $tables=Storage::readDirFiles($dto_path, true, '/\.dto$/', true);
         file_put_contents($create, '<?php  /* create:'.date('Y-m-d H:i:s')."*/\r\n".self::$dtohead);
@@ -187,7 +219,7 @@ End;
             .self::createQueryMessage(self::sql($sql), 'create table '.$table_name);
             file_put_contents($create, '/* table '.$table_name.'*/'.$query."\r\n", FILE_APPEND);
         }
-        $tablefile=self::$root.'/table/'.$module_dir.'.php';
+        $tablefile=self::$laster.'/table/'.$module_dir.'.php';
         Storage::path(dirname($tablefile));
         ArrayHelper::export($tablefile, '_tables', $table_names);
         file_put_contents($create, self::$dtoend, FILE_APPEND);

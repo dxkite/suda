@@ -6,6 +6,7 @@ $(function () {
     function showpocess(url, data) {
         var process = $('#process').modal('show').on('shown.bs.modal', function () {
             var body = process.find('.modal-body');
+            body.text("正在操作中...");
             var ajax = new XMLHttpRequest();
             if (data) {
                 ajax.open('POST', url);
@@ -29,15 +30,14 @@ $(function () {
             location.reload(true);
         });;
     }
-    $('[data-url-all]').on('click', function () {
-        url = this.dataset.urlAll;
-        showpocess(url);
+    $('[data-op-url]').on('click', function () {
+        url = this.dataset.opUrl;
+        var form=new FormData(document.querySelector('form'));
+        showpocess(url,form);
+        
     });
     $('[data-url').on('click', function () {
         url = this.dataset.url;
-        var form=new FormData(document.querySelector('form'));
-        form.append('name','dxkite');
-        console.log(form);
-        showpocess(url,form);
+        showpocess(url);
     });
 });

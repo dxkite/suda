@@ -134,6 +134,7 @@ class Storage
         }
         return true;
     }
+    
     public static function copy(string $source, string $dest):bool
     {
         if (self::exist($source)) {
