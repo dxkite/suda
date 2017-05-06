@@ -100,9 +100,15 @@ class Storage
                     }
                 }
             }
+            if (self::emptyDir($dir)){
+                rmdir($dir);
+            }
         }
+        return true;
     }
-
+    public static function emptyDir(string $dir){
+        return count(scandir($dir))===2;
+    }
     public static function copydir(string $src, string $dest, string $preg='/^.+$/')
     {
         self::mkdirs($dest);

@@ -20,6 +20,10 @@ class DbProgress extends \suda\core\Response
     public function onRequest(Request $request)
     {
         $this->type('html');
+        
+        //var_dump(DBManager::getInstance()->archive(DBManager::selectLaster() ?? time())->parseDTOs());
+
+
         // 操作
         $option=strtolower($request->get()->option);
         // 操作全部
@@ -32,9 +36,9 @@ class DbProgress extends \suda\core\Response
             if ($option==='recovery') {
                 DBManager::importTables();
             } elseif ($option==='delete') {
-                DBManager::deleteTables();
+                DBManager::getInstance()->deleteTables();
             } elseif ($option==='backup') {
-                DBManager::backupTables();
+                DBManager::getInstance()->backupTables();
             }
         } else {
             // 操作多个模块
