@@ -34,7 +34,7 @@ class DbProgress extends \suda\core\Response
                 DBManager::archive($name);
             }
             if ($option==='recovery') {
-                DBManager::importTables();
+                DBManager::getInstance()->importTables();
             } elseif ($option==='delete') {
                 DBManager::getInstance()->deleteTables();
             } elseif ($option==='backup') {

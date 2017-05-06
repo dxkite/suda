@@ -200,7 +200,7 @@ class Debug
         $loginfo['mem']=memory_get_usage() - D_MEM;
         $loginfo['hash']=md5(microtime(true).$loginfo['file'].$loginfo['line']);
         $loginfo['level']=Debug::ERROR;
-        $loginfo['backtrace']=$e->getTraceAsString();
+        $loginfo['backtrace']=$e->getBacktrace();
         self::$log[]=$loginfo;
     }
 
