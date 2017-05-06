@@ -18,7 +18,7 @@ class DBManager
     protected static $dtohead=<<< 'Table'
     try {
     Query::beginTransaction();
-    $effect=($create=new Query('CREATE DATABASE IF NOT EXISTS '.conf('database.name').';'))->exec();
+    $effect=($create=new Query('CREATE DATABASE IF NOT EXISTS `'.conf('database.name').'` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;'))->exec();
     if ($create->erron()==0){
         dxkite\suda\DBManager::log('Create Database '.conf('database.name').' Ok,effect '.$effect.' rows');
     }
@@ -263,23 +263,35 @@ End;
         }
         $create= $this->dirname.'/create/'.$module_dir.'.php';
         Storage::path(dirname($create));
-        $tables=Storage::readDirFiles($dto_path, true, '/\.dto$/', true);
+        // 支持 DTO SQL
+        $tables=Storage::readDirFiles($dto_path, true, '/\.(dto|sql)$/i', true);
         file_put_contents($create, '<?php  /* create:'.date('Y-m-d H:i:s')."*/\r\n".self::$dtohead."\r\n".str_repeat('#', 64)."\r\n");
         foreach ($tables as $table) {
-            self::log('parse dto > '.$dto_path.'/'.$table);
-            $name=pathinfo($table, PATHINFO_FILENAME);
-            $namespace=preg_replace('/\\\\\//', '\\', dirname($table));
-            $table_name=self::tablename($namespace, $name);
-            $name=ucfirst($name);
-            $builder=new DTOReader;
-            $builder->load($dto_path.'/'.$table);
-            $builder->setName($name);
-            $builder->setTableName($table_name);
-            $table_names[]=$table_name;
-            $sql=$builder->getCreateSQL();
-            $query=self::createQuery("DROP TABLE IF EXISTS #{{$table_name}}")
-            .self::createQueryMessage(self::sqlNameChange($sql), 'create table '.$table_name);
-            file_put_contents($create, '/* table '.$table_name.'*/'.$query."\r\n", FILE_APPEND);
+            // DTO File
+            if (preg_match('/\.dto$/i', $table)) {
+                self::log('parse dto > '.$dto_path.'/'.$table);
+                $name=pathinfo($table, PATHINFO_FILENAME);
+                $namespace=preg_replace('/\\\\\//', '\\', dirname($table));
+                $table_name=self::tablename($namespace, $name);
+                $name=ucfirst($name);
+                $builder=new DTOReader;
+                $builder->load($dto_path.'/'.$table);
+                $builder->setName($name);
+                $builder->setTableName($table_name);
+                $table_names[]=$table_name;
+                $sql=$builder->getCreateSQL();
+                $query=self::createQuery("DROP TABLE IF EXISTS #{{$table_name}}").self::createQueryMessage(self::sqlNameChange($sql), 'create table '.$table_name);
+                file_put_contents($create, '/* table '.$table_name.'*/'.$query."\r\n", FILE_APPEND);
+            } else {
+                self::log('parse sql > '.$dto_path.'/'.$table);
+                $name=pathinfo($table, PATHINFO_FILENAME);
+                $namespace=preg_replace('/\\\\\//', '\\', dirname($table));
+                $table_name=self::tablename($namespace, $name);
+                $sql=Storage::get($dto_path.'/'.$table);
+                $sql=preg_replace('/CREATE\s+TABLE\s+([`"\'])?'.$name.'(?(1)["\'`])/i', 'CREATE TABLE `#{'.$table_name.'}` ', $sql);
+                $query=self::createQuery("DROP TABLE IF EXISTS #{{$table_name}}").self::createQueryMessage($sql, 'create table '.$table_name);
+                file_put_contents($create, '/* table '.$table_name.'*/'.$query."\r\n", FILE_APPEND);
+            }
         }
         $tablefile=$this->dirname.'/table/'.$module_dir.'.php';
         Storage::path(dirname($tablefile));
@@ -315,7 +327,7 @@ End;
         $message=base64_encode($message);
         $name=md5($sql);
         $string='$rows=($_'.$name.'=new Query(base64_decode(\''.$data.'\')))->exec();';
-        $string.='dxkite\suda\DBManager::log($_'.$name.'->erron()==0? base64_decode(\''.$message.'\'). "effect {$rows} rows"  :\'query\'.base64_decode(\''.$data.'\').\' error\');';
+        $string.='dxkite\suda\DBManager::log($_'.$name.'->erron()==0? base64_decode(\''.$message.'\'). " effect {$rows} rows"  :\'query\'.base64_decode(\''.$data.'\').\' error\');';
         return $string;
     }
 
@@ -344,7 +356,7 @@ End;
 
     protected static function sqlNameChange(string $sql)
     {
-        return preg_replace('/CREATE TABLE `(.+?)` /', 'CREATE TABLE `#{$1}` ', $sql);
+        return preg_replace('/CREATE\s+TABLE\s+([`])?(\w+)(?(1)[`])/i', 'CREATE TABLE `#{$2}` ', $sql);
     }
 
     public static function createDataString(string $table)
