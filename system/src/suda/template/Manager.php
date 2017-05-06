@@ -11,7 +11,6 @@ class Manager
      * @var null
      */
     private static $compiler=null;
-    public static $lang='zh-CN';
     // 模板目录
     private static $path=[];
     // 样式
@@ -19,12 +18,6 @@ class Manager
 
     public static $extRaw='.tpl.html';
     public static $extCpl='.tpl';
-    private static $values=[];
-    protected static $errorInfo=[
-        0=>'No Error',
-        1=>'File %s Not Exist',
-        2=>'Compile Include %s Error',
-    ];
     protected static $error='';
     protected static $erron=0;
     protected static $current=null;

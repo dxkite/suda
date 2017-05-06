@@ -1,5 +1,8 @@
 <?php
 require_once __DIR__ .'/../suda-console.php';
+use dxkite\suda\RouterManager;
+use suda\core\Application;
+
 // 获取选项
 $options=getopt('a::m:u:c:o::h::t:j::',['router:']);
 $help=<<<'HELP'
@@ -13,6 +16,7 @@ Usage: --router name [-a] [-o]  [-m POST,GET..] -u url -c class
     -t the tag name of url
 
 HELP;
+Application::activeModule('suda');
 
 if (isset($options['h']) || !isset($options['u']) || !isset($options['c'])){
     echo $help;
@@ -28,7 +32,7 @@ $tag=$options['router'];
 
 $ob= !isset($options['o']);
 
-if ($return=Router::visit($method,$url,$class,$tag,$ob,$admin,$json)){
+if ($return=RouterManager::add($method,$url,$class,$tag,$ob,$admin,$json)){
     echo 'created response:'.$class ."\r\n";
     echo 'class file at :' ."\033[34m " . Storage::abspath($return['class']) ."\033[0m\r\n";
     if (isset( $return['template'])){
