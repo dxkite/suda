@@ -63,8 +63,11 @@ End;
      * @param string $name 文档名
      * @return $this
      */
-    public function archive(string $name)
+    public function archive(string $name=null)
     {
+        if (is_null($name)) {
+            $name=$this->name??time();
+        }
         $this->name=$name;
         $this->dirname=self::$root.'/'.$name;
         return $this;
@@ -89,27 +92,38 @@ End;
     {
         $modules= $modules ?? Application::getModules();
         foreach ($modules as $module) {
-            self::log('parse module dtos:'.$module);
+            self::log('parse module dtos > '.$module);
             self::parseModuleDTOs($module);
         }
+        return $this;
     }
 
     public function createTables(array $modules=null)
     {
         $modules= $modules ?? Application::getModules();
         foreach ($modules as $module) {
-            self::log('create module tables:'.$module);
+            self::log('create module tables > '.$module);
             self::createTable($module);
         }
+        return $this;
     }
     
     
     public static function read(string $backup)
     {
         $config_path=self::$root.'/'.$backup.'/config.php';
-        _D()->trace($config_path);
         if (Storage::exist($config_path)) {
-            return include $config_path;
+            $config=include $config_path;
+            foreach ($config['module'] as $index=>$name) {
+                $module_dir=Application::getModuleDir($name);
+                $datafile=self::$root.'/'.$backup.'/data/'.$module_dir.'.php';
+                if (file_exists($datafile)) {
+                    $config['module_size'][$index]=filesize($datafile);
+                } else {
+                    $config['module_size'][$index]=0;
+                }
+            }
+            return $config;
         }
         return  false;
     }
@@ -122,7 +136,12 @@ End;
         foreach ($readDirs as $dir) {
             $config_path=self::$root.'/'.$dir.'/config.php';
             if (Storage::exist($config_path)) {
-                $config[$dir]= include $config_path;
+                $conf=include $config_path;
+                if (isset($conf['module'])) {
+                    $config[$dir]= $conf;
+                } else {
+                    Storage::rmdirs(self::$root.'/'.$dir);
+                }
             }
         }
         return $config;
@@ -132,17 +151,18 @@ End;
     {
         $modules= $modules ?? Application::getModules();
         // 新建备份
-        self::archive(time());
+        self::archive();
         $config_path=$this->dirname .'/config.php';
         foreach ($modules as $module) {
-            self::parseDTOs($modules);
-            $config['time']=time();
+            $config['time']=intval($this->name);
             $config['module']=$modules;
             Storage::path($this->dirname);
             ArrayHelper::export($config_path, '_config', $config);
-            self::log('backup module:'.$module);
+            self::log('backup module > '.$module);
+            self::parseModuleDTOs($module);
             self::backupModule($module);
         }
+        return $this;
     }
 
     public function deleteTables(array $modules=null)
@@ -150,8 +170,9 @@ End;
         if (is_null($modules) && $this->dirname) {
             self::log('delete > '.$this->dirname);
             Storage::rmdirs($this->dirname);
-            return true;
+            return $this;
         }
+
         $config_path=$this->dirname.'/config.php';
         if (Storage::exist($config_path)) {
             $config= include $config_path;
@@ -171,7 +192,7 @@ End;
             }
             ArrayHelper::export($this->dirname.'/config.php', '_config', $config);
         }
-        return false;
+        return $this;
     }
 
     public function importTables(array $modules=null)
@@ -181,12 +202,13 @@ End;
             $module_dir=Application::getModuleDir($module);
             $datafile=$this->dirname.'/data/'.$module_dir.'.php';
             if (Storage::exist($datafile)) {
-                self::log('import module:'.$module);
+                self::log('import module >  '.$module);
                 self::execFile($datafile);
             } else {
                 self::log("file no found :${datafile}");
             }
         }
+        return $this;
     }
 
 
@@ -200,6 +222,7 @@ End;
             $tables=include $tablefile;
             file_put_contents($datafile, '<?php  /* create:'.date('Y-m-d H:i:s')."*/\r\n".self::$dtohead."\r\n".str_repeat('#', 64)."\r\n");
             foreach ($tables as $table) {
+                self::log('backup '.$module.' table > '.$table);
                 $data=self::createDataString($table);
                 file_put_contents($datafile, '/* table '.$table.'*/'.$data."\r\n", FILE_APPEND);
             }
@@ -222,6 +245,7 @@ End;
         $module_dir=Application::getModuleDir($module);
         $create=$this->dirname.'/create/'.$module_dir.'.php';
         if (Storage::exist($create)) {
+            self::log('create module tables > '.$create);
             self::execFile($create);
         } else {
             self::log("file no found :${create}");
@@ -242,6 +266,7 @@ End;
         $tables=Storage::readDirFiles($dto_path, true, '/\.dto$/', true);
         file_put_contents($create, '<?php  /* create:'.date('Y-m-d H:i:s')."*/\r\n".self::$dtohead."\r\n".str_repeat('#', 64)."\r\n");
         foreach ($tables as $table) {
+            self::log('parse dto > '.$dto_path.'/'.$table);
             $name=pathinfo($table, PATHINFO_FILENAME);
             $namespace=preg_replace('/\\\\\//', '\\', dirname($table));
             $table_name=self::tablename($namespace, $name);
@@ -260,7 +285,8 @@ End;
         Storage::path(dirname($tablefile));
         ArrayHelper::export($tablefile, '_tables', $table_names);
         file_put_contents($create, str_repeat('#', 64)."\r\n".self::$dtoend, FILE_APPEND);
-        self::log('output file: '.$create);
+        self::log('output file > '.$create);
+        self::log('output tablefile > '.$tablefile);
         return true;
     }
 

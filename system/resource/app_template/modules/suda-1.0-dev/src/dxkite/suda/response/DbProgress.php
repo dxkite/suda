@@ -20,25 +20,21 @@ class DbProgress extends \suda\core\Response
     public function onRequest(Request $request)
     {
         $this->type('html');
-        
-        //var_dump(DBManager::getInstance()->archive(DBManager::selectLaster() ?? time())->parseDTOs());
-
-
         // 操作
         $option=strtolower($request->get()->option);
         // 操作全部
         $all=strtolower($request->get()->all('no'));
+        if ($name=$request->get()->name) {
+            DBManager::getInstance()->archive($name);
+        }
         // 操作全部
-        if ($all==='yes' || $request->get()->name) {
-            if ($name=$request->get()->name){
-                DBManager::archive($name);
-            }
+        if ($all==='yes') {
             if ($option==='recovery') {
-                DBManager::getInstance()->importTables();
+                DBManager::getInstance()->createTables()->importTables();
             } elseif ($option==='delete') {
                 DBManager::getInstance()->deleteTables();
             } elseif ($option==='backup') {
-                DBManager::getInstance()->backupTables();
+                DBManager::getInstance()->archive(time())->backupTables();
             }
         } else {
             // 操作多个模块
@@ -47,22 +43,22 @@ class DbProgress extends \suda\core\Response
                 _D()->info($select);
                 $tables=array_keys($select);
                 if ($option==='recovery') {
-                    DBManager::importTables($tables);
+                    DBManager::getInstance()->createTables($tables)->importTables($tables);
                 } elseif ($option==='delete') {
-                    DBManager::deleteTables($tables);
+                    DBManager::getInstance()->deleteTables($tables);
                 } elseif ($option==='backup') {
-                    DBManager::backupTables($tables);
+                    DBManager::getInstance()->backupTables($tables);
                 }
             }
             // 操作单个模块
-            else if ($module=$request->get()->module){
+            elseif ($module=$request->get()->module) {
                 $tables=[$module];
                 if ($option==='recovery') {
-                    DBManager::importTables($tables);
+                    DBManager::getInstance()->createTables($tables)->importTables($tables);
                 } elseif ($option==='delete') {
-                    DBManager::deleteTables($tables);
+                    DBManager::getInstance()->deleteTables($tables);
                 } elseif ($option==='backup') {
-                    DBManager::backupTables($tables);
+                    DBManager::getInstance()->backupTables($tables);
                 }
             }
         }
