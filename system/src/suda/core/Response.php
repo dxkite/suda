@@ -1,7 +1,8 @@
 <?php
 namespace suda\core;
 
-use suda\tool\{Json,ArrayHelper};
+use suda\tool\Json;
+use suda\tool\ArrayHelper;
 use suda\template\Manager;
 
 // TODO: If-Modified-Since
@@ -74,7 +75,8 @@ abstract class Response
         self::setHeader('HTTP/1.1 '.$state.' '.self::$status[$state]);
         self::setHeader('Status:'.$state.' '.self::$status[$state]);
     }
-    public static function setName(string $name){
+    public static function setName(string $name)
+    {
         self::$name=$name;
     }
 
@@ -118,7 +120,7 @@ abstract class Response
     * 输出HTML页面
     * $template HTML页面模板
     * $values 页面模板的值
-    */ 
+    */
     public function page(string $template, array $values=[])
     {
         return Manager::display($template)->response($this)->assign($values);
@@ -127,16 +129,22 @@ abstract class Response
     * 输出HTML页面
     * $template HTML页面模板
     * $values 页面模板的值
-    */ 
-    public function pagefile(string $template, string $name,array $values=[])
+    */
+    public function pagefile(string $template, string $name, array $values=[])
     {
-        return Manager::displayFile($template,$name)->response($this)->assign($values);
+        return Manager::displayFile($template, $name)->response($this)->assign($values);
     }
 
-    public function redirect(string $url, int $time=1)
+    public function refresh() {
+        $this->setHeader('Location:'.u(self::$name));
+    }
+    public function redirect(string $url, int $time=1, string $message=null)
     {
         $this->noCache();
         $page=$this->page('suda:redirect');
+        if ($message) {
+            $page->set('message', $message);
+        }
         $page->set('url', $url);
         $page->set('time', $time);
         $page->render();
@@ -186,9 +194,10 @@ abstract class Response
     /**
     * 安全设置Header值
     */
-    public static function setHeader(string $header , bool $replace = true) {
-        if (!headers_sent()){
-            header($header,$replace);
+    public static function setHeader(string $header, bool $replace = true)
+    {
+        if (!headers_sent()) {
+            header($header, $replace);
         }
     }
 }
