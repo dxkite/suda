@@ -62,7 +62,7 @@ abstract class Response
     public function __construct()
     {
         // Mark
-        self::setHeader('X-Suda: '.conf('app.name', 'suda').'/'.conf('app.version').':'.self::$name);
+        self::setHeader('X-Suda : Suda/'.SUDA_VERSION.' '.conf('app.name', 'suda-app').'/'.conf('app.version').' '.self::$name);
         if (conf('debug')) {
             self::noCache();
         }
@@ -182,7 +182,7 @@ abstract class Response
     public static function mime(string $name='')
     {
         if (!self::$mime) {
-            self::$mime=parse_ini_file(SYS_RES.'/type.mime');
+            self::$mime=parse_ini_file(SYSTEM_RESOURCE.'/type.mime');
         }
         if ($name) {
             return self::$mime[$name] ?? 'text/plain';

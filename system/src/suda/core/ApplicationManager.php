@@ -55,7 +55,7 @@ class ApplicationManager
         // App不存在
         if (!Storage::exist($manifast)) {
             _D()->trace(_T('create base app'));
-            Storage::copydir(SYS_RES.'/app_template/', APP_DIR);
+            Storage::copydir(SYSTEM_RESOURCE.'/app_template/', APP_DIR);
             Storage::put(APP_DIR.'/modules/default/resource/config/config.json','{"name":"default"}');
         }
         Autoloader::addIncludePath(APP_DIR.'/share');

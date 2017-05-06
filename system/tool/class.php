@@ -28,7 +28,7 @@ function createClassFile(string $classname, bool $share=false)
 
     $class_file=$class_path.'/'.$class_name.'.php';
     
-    $class_template= Storage::get(SYS_RES. '/class_controller.php');
+    $class_template= Storage::get(SYSTEM_RESOURCE. '/class_controller.php');
     $class_template=str_replace(
             ['__class_namespace__', '__class_name__', '__module__', ],
             [$class_namespace, $class_name, $module, ], $class_template);

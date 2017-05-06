@@ -1,7 +1,7 @@
 {
     "icon": "icon.png",
     "name": "dxkite/suda",
-    "version": "1.0.0-dev",
+    "version": "1.0.1",
     "namespace": "dxkite\\suda",
     "homepage": "http://atd3.cn",
     "livemod": 1,

@@ -2,7 +2,7 @@
 
 use suda\archive\DTOManager;
 
-defined('DTA_TPL') or define('DTA_TPL', SYS_RES.'/tpl');
+defined('DTA_TPL') or define('DTA_TPL', SYSTEM_RESOURCE.'/tpl');
 $opt=getopt('m:g::p::b::i::d::', ['backup::','import::','data::']);
 
 $module=$opt['m']??null;

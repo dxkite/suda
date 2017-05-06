@@ -7,7 +7,7 @@ require_once  __DIR__.'/suda-console.php';
 $options=getopt('', ['call:', 'database', 'db', 'router', 'run', 'class:']);
 
 // 设置目录
-define('TOOL_DIR', SYS_DIR.'/tool');
+define('TOOL_DIR', SYSTEM_DIR.'/tool');
 
 if (isset($options['call'])) {
     array_shift($argv);
