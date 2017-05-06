@@ -15,15 +15,10 @@ class Index extends \suda\core\Response
 {
     public function onRequest(Request $request)
     {
-        // params if had
-        ;
-        // param values array
-        $value=array();
-        // display template
+        throw new \RuntimeException("系统发生严重错误！");
         return $this->page('default:index')
         ->set('title','Welcome to use Suda!')
         ->set('helloworld','Hello,World!')
-        ->set('value',$value)
         ->render();
     }
 }

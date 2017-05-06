@@ -155,7 +155,11 @@ class Debug
             {
                 $this->state(500);
                 if (\suda\template\Manager::compile('suda:error')) {
-                    $this->template=$this->page('suda:error');
+                    if (conf('debug', false)) {
+                        $this->template=$this->page('suda:error');
+                    } else {
+                        $this->template=$this->page('suda:alert');
+                    }
                 } else {
                     $this->template=$this->pagefile(SYS_RES.'/tpl/error.tpl');
                 }
@@ -216,7 +220,7 @@ class Debug
         
         if (file_exists($file)  && filesize($file) > self::MAX_LOG_SIZE) {
             _D()->trace('max log size '.Debug::MAX_LOG_SIZE, $file.':'.filesize($file));
-            rename($file, dirname($file) . '/' . date('Y-m-d'). '-' . basename($file));
+            rename($file, dirname($file) . '/' . date('Y-m-d'). '-'. sha1_file($file).'-'.basename($file));
         }
 
         $str="\n".str_repeat('-', 64) ."\n" .Hook::execTail("system:debug:printf");
