@@ -47,7 +47,7 @@ class ModuleManager
         return $all;
     }
 
-    public static function createModule(string $name,string $homepage, string $version, string $locale, string $namespace, string $require, string $authors, string $discription)
+    public static function createModule(string $name, string $version,string $homepage, string $locale, string $namespace, string $require, string $authors, string $discription)
     {
         $config['name']=$name;
         $config['homepage']=$homepage;
@@ -69,7 +69,7 @@ class ModuleManager
                 $config['authors'][]=$add;
             }
         }
-        $dirname=preg_replace('/[\\\\\/]+/','-',$name).'-'.$version;
+        $dirname=preg_replace('/[\\\\\/]+/','-',$name);
         $path=MODULES_DIR.'/'.$dirname;
         Storage::path($path);
         return Json::saveFile($path.'/module.json', $config);
