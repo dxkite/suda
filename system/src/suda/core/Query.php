@@ -1,8 +1,8 @@
 <?php
 namespace suda\core;
-use suda\archive\Query as AQuery;
+use suda\archive\Query as SQLQuery;
 
-class Query extends AQuery
+class Query extends SQLQuery
 {
     public static function insert(string $table, $values, array $binds=[]):int
     {
@@ -20,15 +20,15 @@ class Query extends AQuery
             $binds=$values;
             $sql='INSERT INTO `'.$table.'` ('.trim($names, ',').') VALUES ('.trim($bind, ',').');';
         }
-        if (($count=(new AQuery($sql, $binds))->exec()) === 1) {
-            return AQuery::lastInsertId();
+        if (($count=(new SQLQuery($sql, $binds))->exec()) === 1) {
+            return SQLQuery::lastInsertId();
         } else {
             return $count;
         }
         return -1;
     }
 
-    public static function where(string $table, $wants='*', $condithon='1', array $binds=[], array $page=null, bool $scroll=false):AQuery
+    public static function where(string $table, $wants='*', $condithon='1', array $binds=[], array $page=null, bool $scroll=false):SQLQuery
     {
         $where=self::prepareWhere($condithon,$binds);
         return self::select($table, $wants,$where, $binds, $page, $scroll);
@@ -47,7 +47,7 @@ class Query extends AQuery
             $fields=implode(',', $field);
         }
         $limit=is_null($page)?'': ' LIMIT '.self::page($page[0], $page[1]);
-        return new AQuery('SELECT '.$fields.' FROM `'.$table.'` '.trim($conditions, ';').$limit.';', $binds, $scroll);
+        return new SQLQuery('SELECT '.$fields.' FROM `'.$table.'` '.trim($conditions, ';').$limit.';', $binds, $scroll);
     }
 
     public static function update(string $table, $set_fields,  $where='1', array $binds=[]):int
@@ -73,7 +73,7 @@ class Query extends AQuery
     {
         $table=self::table($table);
         $sql='DELETE FROM `'.$table.'` '.self::prepareWhere($where,$binds).';';
-        return (new AQuery($sql, $binds))->exec();
+        return (new SQLQuery($sql, $binds))->exec();
     }
 
     protected static function prepareIn(string $name, array $invalues, string $prefix='in_')
@@ -120,7 +120,7 @@ class Query extends AQuery
         $table=self::table($table);
         $where=self::prepareWhere($where,$binds);
         $sql='SELECT count(*) as `count` FROM `'.$table.'` '.$where.';';
-        if ($query=(new AQuery($sql, $binds))->fetch()) {
+        if ($query=(new SQLQuery($sql, $binds))->fetch()) {
             return intval($query['count']);
         }
         return 0;
@@ -130,7 +130,7 @@ class Query extends AQuery
     {
         $sql='SELECT `AUTO_INCREMENT` FROM `information_schema`.`TABLES` WHERE `TABLE_SCHEMA`=:database AND `TABLE_NAME`=:table LIMIT 1;';
         $table=self::table($table);
-        if ($query=(new AQuery($sql,['database'=>is_null($database)?\Config::get('database.name'):$database,'table'=>$table]))->fetch()) {
+        if ($query=(new SQLQuery($sql,['database'=>is_null($database)?Config::get('database.name'):$database,'table'=>$table]))->fetch()) {
             return intval($query['AUTO_INCREMENT']);
         }
         return 0;
@@ -138,7 +138,7 @@ class Query extends AQuery
 
     protected static function table(string $name)
     {
-        return \Config::get('database.prefix', '').$name;
+        return Config::get('database.prefix', '').$name;
     }
 
     protected static function page(int $page=0, int $percount=1)
