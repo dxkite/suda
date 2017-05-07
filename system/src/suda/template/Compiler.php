@@ -31,6 +31,8 @@ class Compiler
                 $result .=$token;
             }
         }
+        // 合并相邻标签
+        $result=preg_replace('/\?\>(\s*?)\<\?php/i','',$result);
         return $result;
     }
 
@@ -55,7 +57,7 @@ class Compiler
         $comment=sprintf('/(?<!!)%s(.+)%s/', preg_quote(self::$commentTag[0]), preg_quote(self::$commentTag[1]));
         return self::echoValue(preg_replace(
             [$rawecho, $echo, $comment],
-            ['<?php echo($1) ?>', '<?php echo htmlspecialchars($1) ?>', '<?php /* $1 */ ?>'],
+            ['<?php echo $1; ?>', '<?php echo htmlspecialchars($1); ?>', '<?php /* $1 */ ?>'],
             $str
         ));
     }
@@ -72,17 +74,17 @@ class Compiler
 
     protected static function parseValue($var)
     {
-        return '<?php echo $this->get'.self::echoValue($var) .'?>';
+        return '<?php echo $this->get'.self::echoValue($var) .'; ?>';
     }
     
     protected function parseEcho($exp)
     {
-        return "<?php echo htmlspecialchars{$exp} ?>";
+        return "<?php echo htmlspecialchars{$exp}; ?>";
     }
 
     protected function parseData($exp)
     {
-        return "<?php \$this->data{$exp} ?>";
+        return "<?php \$this->data{$exp}; ?>";
     }
     
     // IF 语句
@@ -141,12 +143,12 @@ class Compiler
 
     protected function parseU($exp)
     {
-        return "<?php echo u$exp ?>";
+        return "<?php echo u$exp; ?>";
     }
 
     protected function parseSet($exp)
     {
-        return "<?php \$this->set{$exp} ?>";
+        return "<?php \$this->set{$exp}; ?>";
     }
     
     protected function parseStatic($exp)
@@ -163,7 +165,7 @@ class Compiler
     
     protected function parseUrl($exp)
     {
-        return "<?php echo u{$exp} ?>";
+        return "<?php echo u{$exp}; ?>";
     }
     // View echo
     public static function echo($something)
@@ -188,7 +190,7 @@ class Compiler
     {
         preg_match('/\((.+)\)/', $exp, $v);
         $name=str_replace('\'', '-', trim($v[1], '"\''));
-        return "<?php \$this->exec('{$name}') ?>";
+        return "<?php \$this->exec('{$name}'); ?>";
     }
 
     // 错误报错
