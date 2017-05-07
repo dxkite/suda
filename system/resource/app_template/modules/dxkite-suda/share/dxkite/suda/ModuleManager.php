@@ -18,7 +18,7 @@ class ModuleManager
             $module=Application::getModuleFullName($module);
             foreach ($manifast['modules'] as $index => $mname) {
                 $mname=Application::getModuleFullName($mname);
-                if ($module===$mname) {
+                if ($module===$mname || !Application::checkModuleExist($mname)) {
                     unset($manifast['modules'][$index]);
                 }
             }

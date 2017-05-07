@@ -109,6 +109,11 @@ class Application
         return $prefix;
     }
 
+    public static function checkModuleExist(string $name){
+        $module_dir=Application::getModuleDir($name);
+        return Storage::isDir(MODULES_DIR.'/'.$module_dir);
+    }
+
     public static function getLiveModules()
     {
         $modules=conf('app.modules', self::getModules());
@@ -116,10 +121,10 @@ class Application
         _D()->trace('exclude', json_encode($exclude));
         foreach ($modules as $index => $name) {
             $fullname=Application::getModuleFullName($name);
-            _D()->trace($name, $fullname.':'.in_array($name, $exclude).':'.in_array($fullname, $exclude));
-            if (in_array($name, $exclude) || in_array($fullname, $exclude)) {
+            // _D()->trace($name, $fullname.':'.in_array($name, $exclude).':'.in_array($fullname, $exclude).':exist['.self::checkModuleExist($name).']');
+            if ( !self::checkModuleExist($name) || in_array($name, $exclude) || in_array($fullname, $exclude) ) {
                 unset($modules[$index]);
-            } else {
+            } else{
                 $modules[$index]=$fullname;
             }
         }

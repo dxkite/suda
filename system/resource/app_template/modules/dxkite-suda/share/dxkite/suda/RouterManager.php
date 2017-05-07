@@ -220,7 +220,7 @@ class RouterManager
     }
     public static function getModules()
     {
-        return Application::getLiveModules();
+        return Application::getLiveModules()??[];
     }
     /**
     * 列出路由
@@ -228,7 +228,7 @@ class RouterManager
     public static function getInfo(string $gmod=null)
     {
         self::$routerinfos=[];
-        $modules=conf('app.modules', []);
+        $modules=self::getModules();
         foreach ($modules as $module) {
             self::load($module);
         }

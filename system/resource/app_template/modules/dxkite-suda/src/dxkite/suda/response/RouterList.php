@@ -24,7 +24,7 @@ class RouterList extends \suda\core\Response
         $module=$request->get('module');
         if ($delete && $module) {
             $result=RouterManager::delete($module, $delete,strtolower($request->get()->all('no'))==='yes');
-            $this->setHeader('Location:'.u('suda:router_list'));
+            $this->refresh();
         }
         return $page->set('router', RouterManager::getInfo())->render();
     }
