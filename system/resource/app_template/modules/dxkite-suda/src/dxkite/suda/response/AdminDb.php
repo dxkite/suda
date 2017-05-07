@@ -19,12 +19,13 @@ class AdminDb extends \suda\core\Response
 {
     public function onRequest(Request $request)
     {
-        $backupname= $request->get()->current ?? DBManager::selectLaster();
+        
         $page=$this->page('suda:admin_db')
         ->set('title', _T('数据管理'))
         ->set('header_select', 'system_admin');
-
-        if ($backupname) {
+        $list=DBManager::readList();
+        if (count($list)) {
+            $backupname= $request->get()->current ?? DBManager::selectLaster();
             $read=DBManager::read($backupname);
             $page->set('time', $read['time']??0);
             $page->set('current_name', $backupname);
@@ -34,7 +35,7 @@ class AdminDb extends \suda\core\Response
         }else{
             $page->set('no_current', true);
         }
-        $list=DBManager::readList();
+        
         $page->set('backup_list', $list);
         return $page->render();
     }

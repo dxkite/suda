@@ -25,10 +25,11 @@
             <div class="container">
                 <div class="jumbotron">
                     <h1 class="display-3">无备份文件</h1>
-                    <p class="lead"> 备份目录下没有发现备份文件，你可以<a href="javascript:;" data-url="@u('datebase_progress',['option'=>'backup','all'=>'yes'])">创建</a>新的备份</p>
+                    <p class="lead"> 备份目录下没有发现备份文件，你可以<a href="javascript:;" data-url="@u('datebase_progress',['option'=>'backup','all'=>'yes'])">创建</a>新的备份，如果还没有建立数据库，请<a href="javascript:" data-url="@u('datebase_progress',['option'=>'refresh','all'=>'yes'])">创建</a>数据库 </p>
                     <hr class="my-4">
                     <p class="lead">
                       <button type="button" class="btn btn-success" data-url="@u('datebase_progress',['option'=>'backup','all'=>'yes'])">新建备份</button>
+                      <button type="button" class="btn btn-primary" data-url="@u('datebase_progress',['option'=>'refresh','all'=>'yes'])">创建数据库</button>
                     </p>
                 </div>
             </div>
@@ -40,7 +41,7 @@
                     <button type="button" class="btn btn-info" data-op-url="@u('datebase_progress',['option'=>'recovery','name'=>$:current_name])">恢复选中</button>
                     <button type="button" class="btn btn-danger" data-op-url="@u('datebase_progress',['option'=>'delete','name'=>$:current_name])">删除选中</button>
                     <button type="button" class="btn btn-success" data-url="@u('datebase_progress',['option'=>'backup','all'=>'yes'])">新建备份</button>
-                    <button type="button" class="btn btn-success" data-url="@u('datebase_progress',['option'=>'refresh','all'=>'yes'])">重建数据库</button>
+                    <button type="button" class="btn btn-danger" data-url="@u('datebase_progress',['option'=>'refresh','all'=>'yes'])">重建数据库</button>
                 </div>
                 <form>
                     <table class="table table-striped">
