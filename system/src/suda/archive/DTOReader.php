@@ -65,6 +65,7 @@ class DTOReader
             $this->file=file_get_contents($path);
             $file=file($path);
             foreach ($file as $line) {
+                // 空白 注释 字段名 附加属性 注释
                 if (preg_match('/^(?:\s*)(?!;)(\w+)\s+(\S+)(?:\s+(.+?))?(;(.*))?$/', $line, $match)) {
                     $this->fields[$match[1]]=$match[2];
                     $this->sets[$match[1]]=self::parser_str($match[3]);
@@ -116,9 +117,10 @@ class DTOReader
             $type=strtoupper($type);
             $auto=isset($this->sets[$name]['auto'])?'AUTO_INCREMENT':'';
             $null=isset($this->sets[$name]['null'])?'NULL':'NOT NULL';
+            $unsigned=isset($this->sets[$name]['unsigned'])?'UNSIGNED':'';
             $comment=isset($this->sets[$name]['comment'])?('COMMENT \''.$this->sets[$name]['comment'].'\''):'';
             $default=isset($this->sets[$name]['default'])?'DEFAULT \''.addcslashes($this->sets[$name]['default'], '\'').'\'':'';
-            $create[]=trim("`{$name}` {$type} {$null} {$default} {$auto} {$comment}");
+            $create[]=trim("`{$name}` {$type} {$unsigned} {$null} {$default} {$auto} {$comment}");
             if (isset($this->sets[$name]['primary'])) {
                 $sets[]="PRIMARY KEY (`{$name}`)";
             } elseif (isset($this->sets[$name]['unique'])) {
