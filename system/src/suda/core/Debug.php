@@ -220,7 +220,7 @@ class Debug
         
         if (file_exists($file)  && filesize($file) > self::MAX_LOG_SIZE) {
             _D()->trace('max log size '.Debug::MAX_LOG_SIZE, $file.':'.filesize($file));
-            rename($file, dirname($file) . '/' . date('Y-m-d'). '-'. sha1_file($file).'-'.basename($file));
+            rename($file, dirname($file) . '/' . date('Y-m-d'). '-'. substr(md5_file($file),0,8).'-'.basename($file));
         }
 
         $str="\n".str_repeat('-', 64) ."\n" .Hook::execTail("system:debug:printf");
