@@ -40,6 +40,7 @@
                     <button type="button" class="btn btn-info" data-op-url="@u('datebase_progress',['option'=>'recovery','name'=>$:current_name])">恢复选中</button>
                     <button type="button" class="btn btn-danger" data-op-url="@u('datebase_progress',['option'=>'delete','name'=>$:current_name])">删除选中</button>
                     <button type="button" class="btn btn-success" data-url="@u('datebase_progress',['option'=>'backup','all'=>'yes'])">新建备份</button>
+                    <button type="button" class="btn btn-success" data-url="@u('datebase_progress',['option'=>'refresh','all'=>'yes'])">刷新数据库</button>
                 </div>
                 <form>
                     <table class="table table-striped">
@@ -63,6 +64,7 @@
                                     <a href="#" data-url="@u('suda:datebase_progress',['option'=>'backup','module'=>$name,'name'=>$:current_name])">备份</a>
                                     <a href="#" data-url="@u('suda:datebase_progress',['option'=>'recovery','module'=>$name,'name'=>$:current_name])">恢复</a>
                                     <a href="#" data-url="@u('suda:datebase_progress',['option'=>'delete','module'=>$name,'name'=>$:current_name])">删除</a>
+                                    <a href="#" data-url="@u('suda:datebase_progress',['option'=>'refresh','module'=>$name,'name'=>$:current_name])">重建</a>
                                 </td>
                             </tr>
                             @endforeach

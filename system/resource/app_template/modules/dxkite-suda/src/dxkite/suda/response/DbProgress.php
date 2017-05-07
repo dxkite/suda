@@ -35,6 +35,8 @@ class DbProgress extends \suda\core\Response
                 DBManager::getInstance()->deleteTables();
             } elseif ($option==='backup') {
                 DBManager::getInstance()->archive(time())->backupTables();
+            } elseif ($option==='refresh') {
+                DBManager::getInstance()->parseDTOs()->createTables();
             }
         } else {
             // 操作多个模块
@@ -48,6 +50,8 @@ class DbProgress extends \suda\core\Response
                     DBManager::getInstance()->deleteTables($tables);
                 } elseif ($option==='backup') {
                     DBManager::getInstance()->backupTables($tables);
+                } elseif ($option==='refresh') {
+                    DBManager::getInstance()->parseDTOs($tables)->createTables($tables);
                 }
             }
             // 操作单个模块
@@ -59,6 +63,8 @@ class DbProgress extends \suda\core\Response
                     DBManager::getInstance()->deleteTables($tables);
                 } elseif ($option==='backup') {
                     DBManager::getInstance()->backupTables($tables);
+                } elseif ($option==='refresh') {
+                    DBManager::getInstance()->parseDTOs($tables)->createTables($tables);
                 }
             }
         }
