@@ -11,7 +11,8 @@ class ApplicationManager
     public $app=null;
     public $appliaction;
     
-    public function getApplication() {
+    public function getApplication()
+    {
         return $app;
     }
 
@@ -35,7 +36,7 @@ class ApplicationManager
         $app=Storage::path($app);
         $this->readManifast($app.'/manifast.json');
         $name=Autoloader::realName($this->appliaction);
-        _D()->trace(_T('loading application %s from %s',$name,$app));
+        _D()->trace(_T('loading application %s from %s', $name, $app));
         $this->app=new $name($app);
         if ($this->app instanceof Application) {
             // 设置语言包库
@@ -44,8 +45,8 @@ class ApplicationManager
             Hook::listen('system:shutdown', [$this->app, 'onShutdown']);
             Hook::listen('system:uncaughtException', [$this->app, 'uncaughtException']);
             Hook::listen('system:uncaughtError', [$this->app, 'uncaughtError']);
-        }else{
-            throw new ApplicationException(_T('unsupport base application class %s',$this->appliaction));
+        } else {
+            throw new ApplicationException(_T('unsupport base application class %s', $this->appliaction));
         }
     }
 
@@ -56,11 +57,15 @@ class ApplicationManager
         if (!Storage::exist($manifast)) {
             _D()->trace(_T('create base app'));
             Storage::copydir(SYSTEM_RESOURCE.'/app_template/', APP_DIR);
-            Storage::put(APP_DIR.'/modules/default/resource/config/config.json','{"name":"default"}');
+            Storage::put(APP_DIR.'/modules/default/resource/config/config.json', '{"name":"default"}');
         }
         Autoloader::addIncludePath(APP_DIR.'/share');
         // 设置配置
         Config::set('app', Json::loadFile($manifast));
+        // 开发状态覆盖
+        if (defined('DEBUG')) {
+            Config::set('app.debug', DEBUG);
+        }
         // 载入配置前设置配置
         Hook::exec('core:loadManifast');
         // 默认应用控制器

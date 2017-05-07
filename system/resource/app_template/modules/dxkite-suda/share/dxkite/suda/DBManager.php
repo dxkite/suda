@@ -160,6 +160,10 @@ End;
             ArrayHelper::export($config_path, '_config', $config);
             self::log('backup module > '.$module);
             self::parseModuleDTOs($module);
+            // 数据表不存在
+            if (!(new Query('SELECT SCHEMA_NAME FROM information_schema.SCHEMATA WHERE SCHEMA_NAME=\''.conf('database.name').'\''))->fetch()) {
+                self::createTable($module);
+            }
             self::backupModule($module);
         }
         return $this;

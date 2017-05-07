@@ -15,7 +15,7 @@ class Index extends \suda\core\Response
 {
     public function onRequest(Request $request)
     {
-        throw new \RuntimeException("系统发生严重错误！");
+        // throw new \RuntimeException("系统发生严重错误！");
         return $this->page('default:index')
         ->set('title','Welcome to use Suda!')
         ->set('helloworld','Hello,World!')

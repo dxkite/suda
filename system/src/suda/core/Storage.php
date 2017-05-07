@@ -96,19 +96,23 @@ class Storage
                         };
                         set_error_handler($errorhandler);
                         unlink("{$dir}/{$item}");
+                        // echo  "rmfile> {$dir}/{$item}\r\n";
                         restore_error_handler();
                     }
                 }
             }
             if (self::emptyDir($dir)){
+                // echo 'rmdir> '.$dir."\r\n";
                 rmdir($dir);
             }
         }
         return true;
     }
+
     public static function emptyDir(string $dir){
         return count(scandir($dir))===2;
     }
+
     public static function copydir(string $src, string $dest, string $preg='/^.+$/')
     {
         self::mkdirs($dest);
