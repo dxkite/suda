@@ -25,16 +25,17 @@ class AdminDb extends \suda\core\Response
         ->set('header_select', 'system_admin');
 
         if ($backupname) {
-            $list=DBManager::readList();
             $read=DBManager::read($backupname);
-            $page->set('backup_list', $list);
             $page->set('time', $read['time']??0);
             $page->set('current_name', $backupname);
             $page->set('current', $read['module'] ?? []);
+            $page->set('no_current', false);
             $page->set('current_size', $read['module_size'] ?? []);
-        } else {
-            $this->setHeader('Location:'.u('config_database'));
+        }else{
+            $page->set('no_current', true);
         }
+        $list=DBManager::readList();
+        $page->set('backup_list', $list);
         return $page->render();
     }
 }

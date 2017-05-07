@@ -69,7 +69,7 @@ class ModuleManager
                 $config['authors'][]=$add;
             }
         }
-        $dirname=preg_replace('/[\\\\\/]+/','-',$name);
+        $dirname=preg_replace('/[\\\\\/]+/','-',$name).'-'.$version;
         $path=MODULES_DIR.'/'.$dirname;
         Storage::path($path);
         return Json::saveFile($path.'/module.json', $config);

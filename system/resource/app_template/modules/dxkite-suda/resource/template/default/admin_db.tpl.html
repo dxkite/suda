@@ -21,6 +21,18 @@
         </nav>
 
         <main class="col-sm-9 offset-sm-3 col-md-10 offset-md-2 pt-3">
+            @if ($:no_current(true))
+            <div class="container">
+                <div class="jumbotron">
+                    <h1 class="display-3">无备份文件</h1>
+                    <p class="lead"> 备份目录下没有发现备份文件，你可以<a href="javascript:;" data-url="@u('datebase_progress',['option'=>'backup','all'=>'yes'])">创建</a>新的备份</p>
+                    <hr class="my-4">
+                    <p class="lead">
+                      <button type="button" class="btn btn-success" data-url="@u('datebase_progress',['option'=>'backup','all'=>'yes'])">新建备份</button>
+                    </p>
+                </div>
+            </div>
+            @else
             <h3>当前备份点 {{ date('Y-m-d H:i:s',$:time) }}</h3>
             <div class="table-responsive">
                 <div class="backup-bar">
@@ -82,8 +94,7 @@
                         </tbody>
                     </table>
                 </div>
-
-
+                @endif
                 <div class="modal fade" id="process" tabindex="-1" role="dialog" data-backdrop="static" aria-labelledby="processWindow" aria-hidden="true">
                     <div class="modal-dialog" role="document">
                         <div class="modal-content">
