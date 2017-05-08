@@ -187,8 +187,9 @@ class Router
     */
     public static function parseName(string $name)
     {
+        // MODULE_NAME_PREG
         // [模块前缀名称/]模块名[:版本号]:(模板名|路由ID)
-        preg_match('/^((?:\w+\/)?\w+)(?::([^:]+))?(?::(.+))?$/', $name, $match);
+        preg_match('/^((?:[a-zA-Z0-9_-]+\/)?[a-zA-Z0-9_-]+)(?::([^:]+))?(?::(.+))?$/', $name, $match);
         _D()->trace($match);
 
         // 单纯路由或者模板

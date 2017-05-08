@@ -194,9 +194,9 @@ class Application
         if (isset(self::$module_dirs[$name])) {
             return self::$module_dirs[$name];
         }
-
+        // MODULE_NAME_PREG
         // 缩略匹配
-        preg_match('/^(?:(\w+)\/)?(\w+)(?::(.+))?$/', $name, $matchname);
+        preg_match('/^(?:([a-zA-Z0-9_-]+)\/)?([a-zA-Z0-9_-]+)(?::(.+))?$/', $name, $matchname);
 
         _D()->info('match name', (isset($matchname[1])&&$matchname[1]?$matchname[1]:'(\w+\/)?'));
 
