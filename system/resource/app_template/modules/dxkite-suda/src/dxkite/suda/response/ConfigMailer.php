@@ -16,9 +16,9 @@ use suda\tool\Json;
 * @url: /system/config/Mailer
 * @param:
 */
-class ConfigMailer extends \suda\core\Response
+class ConfigMailer extends \dxkite\suda\ACResponse
 {
-    public function onRequest(Request $request)
+    public function onAction(Request $request)
     {
         $config=[];
         if ($request->isPost()) {

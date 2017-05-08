@@ -15,9 +15,9 @@ use dxkite\suda\RouterManager;
 * @url: /router/add
 * @param:
 */
-class RouterAdd extends \suda\core\Response
+class RouterAdd extends \dxkite\suda\ACResponse
 {
-    public function onRequest(Request $request)
+    public function onAction(Request $request)
     {
         if ($request->isPost()) {
             $post=$request->post();

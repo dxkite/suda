@@ -12,9 +12,9 @@ use suda\mail\Mailer;
 * @url: /sendmail
 * @param: 
 */
-class SendMail extends \suda\core\Response
+class SendMail extends \dxkite\suda\ACResponse
 {
-    public function onRequest(Request $request)
+    public function onAction(Request $request)
     {
         $page=$this->page('suda:send_mail');
         if ($request->isPost()){

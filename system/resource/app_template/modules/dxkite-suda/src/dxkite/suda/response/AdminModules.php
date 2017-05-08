@@ -15,9 +15,9 @@ use dxkite\suda\ModuleManager;
 * @url: /system[/modules]
 * @param:
 */
-class AdminModules extends \suda\core\Response
+class AdminModules extends \dxkite\suda\ACResponse
 {
-    public function onRequest(Request $request)
+    public function onAction(Request $request)
     {
         $page=$this->page('suda:admin_modules')
         ->set('title', _T('模块管理'))

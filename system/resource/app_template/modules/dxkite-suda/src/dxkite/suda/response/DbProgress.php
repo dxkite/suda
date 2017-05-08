@@ -15,9 +15,9 @@ use dxkite\suda\DBManager;
 * @url: /database-process
 * @param:
 */
-class DbProgress extends \suda\core\Response
+class DbProgress extends \dxkite\suda\ACResponse
 {
-    public function onRequest(Request $request)
+    public function onAction(Request $request)
     {
         $this->type('html');
         // 操作

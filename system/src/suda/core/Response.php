@@ -110,7 +110,7 @@ abstract class Response
     public function file(string $path, string $type, int $size)
     {
         $hash=md5_file($path);
-        $this->etag($hash);
+        $this->_etag($hash);
         $this->type($type);
         self::setHeader('Content-Length:'.$size);
         echo file_get_contents($path);

@@ -1,5 +1,6 @@
 {
     "debug":true,
+    "debug-passwd":"dxkite",
     "timelimit":0,
     "timezone":"PRC",
     "database":{

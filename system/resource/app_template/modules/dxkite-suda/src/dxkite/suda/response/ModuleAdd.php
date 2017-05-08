@@ -14,9 +14,9 @@ use dxkite\suda\ModuleManager;
 * @url: /add/moduel
 * @param: 
 */
-class ModuleAdd extends \suda\core\Response
+class ModuleAdd extends \dxkite\suda\ACResponse
 {
-    public function onRequest(Request $request)
+    public function onAction(Request $request)
     {
         $page=$this->page('dxkite/suda:module_add');
         if ($request->isPost()){

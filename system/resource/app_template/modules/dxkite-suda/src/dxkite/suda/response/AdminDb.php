@@ -15,9 +15,9 @@ use dxkite\suda\DBManager;
 * @url: /system/database
 * @param:
 */
-class AdminDb extends \suda\core\Response
+class AdminDb extends \dxkite\suda\ACResponse
 {
-    public function onRequest(Request $request)
+    public function onAction(Request $request)
     {
         
         $page=$this->page('suda:admin_db')

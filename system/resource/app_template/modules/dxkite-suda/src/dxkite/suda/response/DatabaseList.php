@@ -11,9 +11,9 @@ use suda\core\{Session,Cookie,Request,Query};
 * @url: /database
 * @param: 
 */
-class DatabaseList extends \suda\core\Response
+class DatabaseList extends \dxkite\suda\ACResponse
 {
-    public function onRequest(Request $request)
+    public function onAction(Request $request)
     {
         return $this->page('suda:database_list', ['header_select'=>'database_list','title'=>'数据库管理'])->render();
     }

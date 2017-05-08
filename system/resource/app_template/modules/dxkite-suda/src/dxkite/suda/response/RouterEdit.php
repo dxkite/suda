@@ -15,9 +15,9 @@ use dxkite\suda\RouterManager;
 * @url: /router/edit
 * @param:
 */
-class RouterEdit extends \suda\core\Response
+class RouterEdit extends \dxkite\suda\ACResponse
 {
-    public function onRequest(Request $request)
+    public function onAction(Request $request)
     {
         $edit=$request->get('edit');
         $module=$request->get('module');

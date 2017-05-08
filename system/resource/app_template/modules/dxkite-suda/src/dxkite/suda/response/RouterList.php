@@ -15,9 +15,9 @@ use dxkite\suda\RouterManager;
 * @url: /router/list
 * @param:
 */
-class RouterList extends \suda\core\Response
+class RouterList extends \dxkite\suda\ACResponse
 {
-    public function onRequest(Request $request)
+    public function onAction(Request $request)
     {
         $page=$this->page('suda:router_list', ['title'=>'路由列表'])->set('header_select', 'router_list');
         $delete=$request->get('delete');

@@ -12,14 +12,14 @@ use suda\tool\ArrayHelper;
 * @url: /system/config/database
 * @param:
 */
-class ConfigDb extends \suda\core\Response
+class ConfigDb extends \dxkite\suda\ACResponse
 {
     protected function checkConfig()
     {
         return (new Query('SET NAMES UTF8'))->good();
     }
 
-    public function onRequest(Request $request)
+    public function onAction(Request $request)
     {
         $page= $this->page('suda:config_db')
         ->set('title', 'Welcome to use Suda!')

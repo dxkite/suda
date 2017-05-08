@@ -11,5 +11,10 @@
     }],
     "discription": "Suda框架开发面板模块",
     "require": {},
-    "prefix": "/suda-panel"
+    "prefix": {
+        "admin": "-panel"
+    },
+    "response": {
+        "admin": "dxkite\\suda\\ACResponse"
+    }
 }
