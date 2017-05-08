@@ -190,7 +190,7 @@ class Router
         // MODULE_NAME_PREG
         // [模块前缀名称/]模块名[:版本号]:(模板名|路由ID)
         preg_match('/^((?:[a-zA-Z0-9_-]+\/)?[a-zA-Z0-9_-]+)(?::([^:]+))?(?::(.+))?$/', $name, $match);
-        _D()->trace($match);
+        _D()->debug($match);
 
         // 单纯路由或者模板
         if (isset($match[1]) && count($match)==2) {
@@ -215,7 +215,7 @@ class Router
         list($module, $name)=self::parseName($name);
         $module=Application::getModuleFullName($module);
         $name=$module.':'.$name;
-        _D()->trace($name);
+        _D()->debug($name);
         $url= '';
         if (isset($this->routers[$name])) {
             // 路由存在

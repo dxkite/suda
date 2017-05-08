@@ -16,7 +16,14 @@ class Debug
     const NOTICE = 'notice'; // 注意的消息
     const WARNING = 'warning'; // 警告消息
     const ERROR = 'error'; // 错误消息
-
+    protected static $level=[
+        Debug::TRACE=>1,
+        Debug::DEBUG=>2,
+        Debug::INFO=>3,
+        Debug::NOTICE=>4,
+        Debug::WARNING=>5,
+        Debug::ERROR=>6,
+    ];
     protected static $run_info;
     protected static $log=[];
     protected static $time=[];
@@ -220,14 +227,16 @@ class Debug
         
         if (file_exists($file)  && filesize($file) > self::MAX_LOG_SIZE) {
             _D()->trace('max log size '.Debug::MAX_LOG_SIZE, $file.':'.filesize($file));
-            rename($file, dirname($file) . '/' . date('Y-m-d'). '-'. substr(md5_file($file),0,8).'-'.basename($file));
+            rename($file, dirname($file) . '/' . date('Y-m-d'). '-'. substr(md5_file($file), 0, 8).'-'.basename($file));
         }
 
         $str="\n".str_repeat('-', 64) ."\n" .Hook::execTail("system:debug:printf");
         foreach (self::$log as $log) {
-            $str.="\t[".number_format($log['time'], 10).':'.$log['mem'].']'."\t".$log['level'].'>In '.$log['file'].'#'.$log['line']."\t\t".$log['name']."\t".$log['message']."\r\n";
-            if (Debug::ERROR===$log['level']) {
-                $str.=self::printTrace($log['backtrace'])."\r\n";
+            if (self::$level[strtolower($log['level'])] >= self::$level[strtolower(conf('debug-level'))]) {
+                $str.="\t[".number_format($log['time'], 10).':'.$log['mem'].']'."\t".$log['level'].'>In '.$log['file'].'#'.$log['line']."\t\t".$log['name']."\t".$log['message']."\r\n";
+                if (Debug::ERROR===$log['level']) {
+                    $str.=self::printTrace($log['backtrace'])."\r\n";
+                }
             }
         }
         return file_put_contents($file, $str, FILE_APPEND);

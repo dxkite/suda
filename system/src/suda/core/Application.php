@@ -198,13 +198,13 @@ class Application
         // 缩略匹配
         preg_match('/^(?:([a-zA-Z0-9_-]+)\/)?([a-zA-Z0-9_-]+)(?::(.+))?$/', $name, $matchname);
 
-        _D()->info('match name', (isset($matchname[1])&&$matchname[1]?$matchname[1]:'(\w+\/)?'));
+        _D()->debug('match name', (isset($matchname[1])&&$matchname[1]?$matchname[1]:'(\w+\/)?'));
 
         $preg='/^'.(isset($matchname[1])&&$matchname[1]?$matchname[1].'\/':'(\w+\/)?') // 限制域
         .preg_quote($matchname[2]). // 名称
         (isset($matchname[3])&&$matchname[3]?':'.$matchname[3]:'(:.+)?').'$/'; // 版本号
         $targets=[];
-        _D()->trace($matchname, $preg);
+        _D()->debug($matchname, $preg);
         foreach (self::$module_dirs as $modulename=>$moduledir) {
             if (preg_match($preg, $modulename)) {
                 preg_match('/^(?:(\w+)\/)?(\w+)(?::(.+))?$/', $modulename, $matchname);
@@ -218,7 +218,7 @@ class Application
         }
         // 排序版本
         uksort($targets, 'version_compare');
-        _D()->trace($targets);
+        _D()->debug($targets);
         // 获取最新版本
         $dir=self::$module_cache[$name]=count($targets)>0?array_pop($targets):$name;
         _D()->trace($name.' : '.$dir);
