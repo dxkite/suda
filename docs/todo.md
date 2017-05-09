@@ -7,3 +7,5 @@
 
 # 开发者IP限制
     define('DEBUG_ACCESS','127.0.0.1,::1');
+
+# ETAG生成有时会出现问题BUG
