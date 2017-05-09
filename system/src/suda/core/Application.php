@@ -13,6 +13,7 @@ class Application
     protected static $active_module;
     protected static $module_dirs=null;
     protected static $module_cache;
+    protected static $module_live=null;
     protected static $module_configs=[];
     public function __construct(string $app)
     {
@@ -116,20 +117,28 @@ class Application
 
     public static function getLiveModules()
     {
+        if (self::$module_live){
+            return self::$module_live;
+        }
         $modules=conf('app.modules', self::getModules());
         $exclude=defined('DISALLOW_MODULES')?explode(',', trim(DISALLOW_MODULES, ',')):[];
+        foreach($exclude as $index=>$name){
+            $exclude[$index]=Application::getModuleFullName($name);
+        }
         _D()->trace('exclude', json_encode($exclude));
         foreach ($modules as $index => $name) {
             $fullname=Application::getModuleFullName($name);
-            // _D()->trace($name, $fullname.':'.in_array($name, $exclude).':'.in_array($fullname, $exclude).':exist['.self::checkModuleExist($name).']');
-            if ( !self::checkModuleExist($name) || in_array($name, $exclude) || in_array($fullname, $exclude) ) {
+            // _D()->notice($name, 'fullname> ['.$fullname.'] name in  array exclude> ['.in_array($name, $exclude).'] fullname in  array exclude> ['.in_array($fullname, $exclude).'] exist['.self::checkModuleExist($name).']');
+            if ( !self::checkModuleExist($name) || in_array($fullname, $exclude) ) {
+                // _D()->notice('exclude',$exclude);
                 unset($modules[$index]);
             } else{
                 $modules[$index]=$fullname;
             }
         }
+        sort($modules);
         _D()->trace('live modules', json_encode($modules));
-        return $modules;
+        return self::$module_live=$modules;
     }
 
     // 激活模块
