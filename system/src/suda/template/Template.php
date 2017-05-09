@@ -29,7 +29,7 @@ abstract class Template
         // 输出页面
         $this->response->setHeader('Content-Length:'.strlen($cotent));
         $this->response->type('html');
-        if (conf('app.etag', conf('debug'))) {
+        if (conf('app.etag',!conf('debug'))) {
             $this->response->etag(md5($cotent));
         }
         echo $cotent;

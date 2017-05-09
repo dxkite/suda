@@ -166,7 +166,7 @@ abstract class Response
 
     protected static function _etag(string $etag)
     {
-        if (conf('app.etag', conf('debug'))) {
+        if (conf('app.etag',!conf('debug'))) {
             self::etag($etag);
         }
     }
