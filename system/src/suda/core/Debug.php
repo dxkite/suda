@@ -44,6 +44,10 @@ class Debug
 
     protected static function _loginfo(string $level, string $name, string $message, string $file, int $line, array $backtrace=null)
     {
+        if (conf('debug-level') && self::$level[$level] < self::$level[strtolower(conf('debug-level'))]) {
+            return;
+        }
+        
         $loginfo['file']=$file;
         $loginfo['line']=$line;
         $loginfo['message']=$message;
@@ -219,31 +223,38 @@ class Debug
     {
         return Request::ip() . "\t" . date('Y-m-d H:i:s') . "\t" .Request::method()."\t\t".Request::virtualUrl() . "\r\n";
     }
+
     protected static function save(string $file)
     {
         if (!is_dir(dirname($file))) {
             Storage::mkdirs(dirname($file));
         }
-        
+        $file=dirname($file) . '/' . date('Y-m-d').'-'.basename($file);
         if (file_exists($file)  && filesize($file) > self::MAX_LOG_SIZE) {
-            _D()->trace('max log size '.Debug::MAX_LOG_SIZE, $file.':'.filesize($file));
             rename($file, dirname($file) . '/' . date('Y-m-d'). '-'. substr(md5_file($file), 0, 8).'-'.basename($file));
         }
-
         $str="\n".str_repeat('-', 64) ."\n" .Hook::execTail("system:debug:printf");
         foreach (self::$log as $log) {
-            if (self::$level[strtolower($log['level'])] >= self::$level[strtolower(conf('debug-level'))]) {
-                $str.="\t[".number_format($log['time'], 10).':'.$log['mem'].']'."\t".$log['level'].'>In '.$log['file'].'#'.$log['line']."\t\t".$log['name']."\t".$log['message']."\r\n";
-                if (Debug::ERROR===$log['level']) {
-                    $str.=self::printTrace($log['backtrace'])."\r\n";
-                }
+            $str.="\t[".number_format($log['time'], 10).'S:'.self::memshow($log['mem'], 2).']'."\t".$log['level'].'>In '.$log['file'].'#'.$log['line']."\t\t".$log['name']."\t".$log['message']."\r\n";
+            if (Debug::ERROR===$log['level']) {
+                $str.=self::printTrace($log['backtrace'])."\r\n";
             }
         }
         return file_put_contents($file, $str, FILE_APPEND);
     }
 
 
-
+    protected static function memshow(int $mem, int $dec)
+    {
+        $human= ['B', 'KB', 'MB', 'GB', 'TB'];
+        $pos= 0;
+        while ($mem >= 1024) {
+            $mem /= 1024;
+            $pos++;
+        }
+        return round($mem, $dec) . $human[$pos];
+    }
+    
     public static function beforeSystemRun()
     {
         Hook::listen('system:debug::start');
