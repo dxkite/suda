@@ -9,3 +9,14 @@
     define('DEBUG_ACCESS','127.0.0.1,::1');
 
 # ETAG生成有时会出现问题BUG
+
+# 插件机制
+加载-卸载-激活-禁用
+```json
+{
+    "mount":"",
+    "umount":"",
+    "active":"",
+    "dactive":""
+}
+```

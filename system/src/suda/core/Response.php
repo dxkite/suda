@@ -140,7 +140,10 @@ abstract class Response
     }
 
     public function refresh() {
-        $this->setHeader('Location:'.u(self::$name));
+        $this->go(u(self::$name));
+    }
+    public function go(string $url) {
+        $this->setHeader('Location:'.$url);
     }
     public function redirect(string $url, int $time=1, string $message=null)
     {
