@@ -251,6 +251,7 @@ class Router
         // Hook前置路由（自定义过滤器|自定义路由）
         if (Hook::execIf('Router:dispatch::before', [Request::getInstance()], true)) {
             if (($router_name=self::matchRouterMap())!==false) {
+                _D()->info('dispatch match '.$router_name);
                 Response::setName($router_name);
                 self::runRouter($this->routers[$router_name]);
             } else {

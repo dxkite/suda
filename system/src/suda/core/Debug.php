@@ -27,6 +27,7 @@ class Debug
     protected static $run_info;
     protected static $log=[];
     protected static $time=[];
+    protected static $hash;
 
     public static function time(string $name)
     {
@@ -44,10 +45,12 @@ class Debug
 
     protected static function _loginfo(string $level, string $name, string $message, string $file, int $line, array $backtrace=null)
     {
-        if (conf('debug-level') && self::$level[$level] < self::$level[strtolower(conf('debug-level'))]) {
-            return;
+        if (defined('LOG_LEVEL')) {
+            $level_num=is_numeric(LOG_LEVEL)?LOG_LEVEL:self::$level[strtolower(LOG_LEVEL)];
+            if (self::$level[$level] < $level_num) {
+                return;
+            }
         }
-        
         $loginfo['file']=$file;
         $loginfo['line']=$line;
         $loginfo['message']=$message;
@@ -192,7 +195,8 @@ class Debug
                 'error'=>$e->getMessage(),
                 'file'=>$file,
                 'line'=>$line,
-                'debuginfo'=>$debuginfo="time:{$debug['time']}  memory:{$debug['memory']}",
+                'time'=> $debug['time'].'S',
+                'mem'=> self::memshow($debug['memory'], 2),
                 'lines'=>$lines,
                 'pos_num'=>$pos_num,
                 'traces'=>$traces,
@@ -221,7 +225,11 @@ class Debug
 
     public static function printf()
     {
-        return Request::ip() . "\t" . date('Y-m-d H:i:s') . "\t" .Request::method()."\t\t".Request::virtualUrl() . "\r\n";
+        $info=self::getInfo();
+        $time=number_format($info['time'], 10);
+        $mem=self::memshow($info['memory'], 2);
+        self::$hash=substr(md5($mem.$time), 0, 8);
+        return Request::ip() . "\t" . date('Y-m-d H:i:s') . "\t" .Request::method()."\t".Request::virtualUrl() ."\t".$time.'s '.$mem.' '.self::$hash. "\r\n";
     }
 
     protected static function save(string $file)
@@ -233,12 +241,34 @@ class Debug
         if (file_exists($file)  && filesize($file) > self::MAX_LOG_SIZE) {
             rename($file, dirname($file) . '/' . date('Y-m-d'). '-'. substr(md5_file($file), 0, 8).'-'.basename($file));
         }
-        $str="\n".str_repeat('-', 64) ."\n" .Hook::execTail("system:debug:printf");
+        $str=Hook::execTail("system:debug:printf");
+        
+        if (defined('LOG_JSON') && LOG_JSON) {
+            $loginfo=self::getInfo();
+            $loginfo['request']=[
+                'ip'=>Request::ip(),
+                'method'=>Request::method(),
+                'url'=>Request::virtualUrl(),
+            ];
+            $loginfo['logs']=self::$log;
+            $filejson=DATA_DIR.'/runtime/log-json/'.self::$hash.'.json';
+            Storage::mkdirs(dirname($filejson));
+            file_put_contents($filejson, json_encode($loginfo));
+        }
+        $outerror=false;
+        
         foreach (self::$log as $log) {
-            $str.="\t[".number_format($log['time'], 10).'S:'.self::memshow($log['mem'], 2).']'."\t".$log['level'].'>In '.$log['file'].'#'.$log['line']."\t\t".$log['name']."\t".$log['message']."\r\n";
-            if (Debug::ERROR===$log['level']) {
-                $str.=self::printTrace($log['backtrace'])."\r\n";
+            // 允许添加错误到日志后 或者发生了致命错误
+            if ((defined('LOG_FILE_APPEND') && LOG_FILE_APPEND) || Debug::ERROR===$log['level']) {
+                $str.="\t[".number_format($log['time'], 10).'S:'.self::memshow($log['mem'], 2).']'."\t".$log['level'].'>In '.$log['file'].'#'.$log['line']."\t\t".$log['name']."\t".$log['message']."\r\n";
+                if (Debug::ERROR===$log['level']) {
+                    $str.=self::printTrace($log['backtrace'])."\r\n";
+                }
             }
+        }
+
+        if ((defined('LOG_FILE_APPEND') && LOG_FILE_APPEND && count(self::$log) )||  $outerror) {
+            $str.="\r\n";
         }
         return file_put_contents($file, $str, FILE_APPEND);
     }

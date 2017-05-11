@@ -7,4 +7,10 @@
     define('APP_PUBLIC',__DIR__);
     // 开发者模式
     define('DEBUG',true);
+    // 日志纪录等级
+    define('LOG_LEVEL', 'trace');
+    // 输出日志详细信息到json文档
+    define('LOG_JSON',true);
+    // 输出详细信息添加到日志末尾
+    define('LOG_FILE_APPEND',true);
     require_once SYSTEM.'/suda.php';
