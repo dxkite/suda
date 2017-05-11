@@ -32,7 +32,7 @@ abstract class Mailer
         if (!isset(self::$instance[$type])) {
             if ($type==Mailer::SMTP) {
                 // 不存在配置则加载
-                if (!conf('smtp', false) && file_exists($path=DATA_DIR.'/mailer.runtime.config.php')) {
+                if (!conf('smtp', false) && file_exists($path=RUNTIME_DIR.'/mailer.config.php')) {
                     $config=include $path;
                     Config::assign($config);
                 }

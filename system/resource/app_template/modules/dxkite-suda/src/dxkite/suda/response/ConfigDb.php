@@ -35,7 +35,7 @@ class ConfigDb extends \dxkite\suda\ACResponse
             // 验证配置是否可用
             if ($check=self::checkConfig()) {
                 $config=$request->post()->database;
-                ArrayHelper::export(DATA_DIR.'/database.runtime.config.php', '_database_runtime', $request->post()->database);
+                ArrayHelper::export(RUNTIME_DIR.'/database.config.php', '_database_runtime', $request->post()->database);
             } else {
                 $page->set('check', false);
                 Config::assign(['database'=>$config]);

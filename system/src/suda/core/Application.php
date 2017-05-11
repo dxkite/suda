@@ -23,6 +23,7 @@ class Application
         defined('RESOURCE_DIR') or define('RESOURCE_DIR', Storage::path(APP_DIR.'/resource'));
         defined('DATA_DIR') or define('DATA_DIR', Storage::path(APP_DIR.'/data'));
         defined('LOG_DIR') or define('LOG_DIR', Storage::path(DATA_DIR.'/logs'));
+        defined('RUNTIME_DIR') or define('RUNTIME_DIR', Storage::path(DATA_DIR.'/runtime'));
         defined('VIEWS_DIR') or define('VIEWS_DIR', Storage::path(DATA_DIR.'/views'));
         defined('CACHE_DIR') or define('CACHE_DIR', Storage::path(DATA_DIR.'/cache'));
         defined('CONFIG_DIR') or define('CONFIG_DIR', Storage::path(RESOURCE_DIR.'/config'));
@@ -275,7 +276,7 @@ class Application
 
     public static function configDBify()
     {
-        if (file_exists($path=DATA_DIR.'/database.runtime.config.php')) {
+        if (file_exists($path=RUNTIME_DIR.'/database.config.php')) {
             $config=include $path;
             Config::assign(['database'=>$config]);
         }

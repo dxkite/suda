@@ -25,9 +25,9 @@ class ConfigMailer extends \dxkite\suda\ACResponse
             $config['smtp']=$request->post()->smtp;
             $config['smtp']['auth']=$config['smtp']['auth']??false;
             $config['sendmail']=$request->post()->sendmail;
-            ArrayHelper::export(DATA_DIR.'/mailer.runtime.config.php', '_mailer_runtime_config', $config);
+            ArrayHelper::export(RUNTIME_DIR.'/mailer.config.php', '_mailer_runtime_config', $config);
         } else {
-            if (file_exists($path=DATA_DIR.'/mailer.runtime.config.php')) {
+            if (file_exists($path=RUNTIME_DIR.'/mailer.config.php')) {
                 $config=include $path;
             }
             

@@ -251,7 +251,7 @@ class Debug
                 'url'=>Request::virtualUrl(),
             ];
             $loginfo['logs']=self::$log;
-            $filejson=DATA_DIR.'/runtime/log-json/'.self::$hash.'.json';
+            $filejson=RUNTIME_DIR.'/log-json/'.self::$hash.'.json';
             Storage::mkdirs(dirname($filejson));
             file_put_contents($filejson, json_encode($loginfo));
         }
