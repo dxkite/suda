@@ -3,6 +3,7 @@ namespace suda\archive;
 
 use PDO;
 use suda\core\{Config,Storage};
+use suda\exception\SQLException;
 
 // 数据库查询方案
 class Query
@@ -159,7 +160,7 @@ class Query
         } else {
             Storage::put($path.'/query_'.date('Y_m_d').'.error', date('Y-m-d H:i:s ').$stmt->queryString.' '.$stmt->errorInfo()[2]."\r\n", FILE_APPEND);
             if (!conf('database.ignoreError',false)){
-                throw new \Exception($stmt->errorInfo()[2], intval($stmt->errorCode()));
+                throw new SQLException($stmt->errorInfo()[2], intval($stmt->errorCode()));
             }
         }
         $this->stmt=$stmt;

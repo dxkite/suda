@@ -1,3 +1,3 @@
 <?php
-namespace suda\core\exception;
+namespace suda\exception;
 class ApplicationException extends \Exception {}

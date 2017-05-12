@@ -1,7 +1,7 @@
 <?php
 namespace suda\tool;
 
-use suda\tool\exception\UnknownCommandString;
+use suda\exception\CommandException;
 
 class Command
 {
@@ -105,7 +105,7 @@ class Command
                 return $matchs[1];
             }
         } else {
-            throw new UnknownCommandString('unknow:'.$command);
+            throw new CommandException('unknow:'.$command);
         }
     }
 }

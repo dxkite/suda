@@ -5,7 +5,7 @@ use Exception;
 use suda\template\Manager;
 use suda\tool\Json;
 use suda\tool\ArrayHelper;
-use suda\core\exception\ApplicationException;
+use suda\exception\ApplicationException;
 
 class Application
 {
