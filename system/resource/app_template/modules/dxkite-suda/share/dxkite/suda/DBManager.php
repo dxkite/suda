@@ -270,6 +270,11 @@ End;
         // 支持 DTO SQL
         $tables=Storage::readDirFiles($dto_path, true, '/\.(dto|sql)$/i', true);
         file_put_contents($create, '<?php  /* create:'.date('Y-m-d H:i:s')."*/\r\n".self::$dtohead."\r\n".str_repeat('#', 64)."\r\n");
+        if (file_exists($path=$dto_path.'/__addon_before.sql')) {
+            $sqls=file_get_contents($path);
+            $query=self::createQueryMessage($sqls, 'query addon before sql');
+            file_put_contents($create, '/* __addon__before */'.$query."\r\n", FILE_APPEND);
+        }
         foreach ($tables as $table) {
             // DTO File
             if (preg_match('/\.dto$/i', $table)) {
@@ -296,6 +301,11 @@ End;
                 $query=self::createQuery("DROP TABLE IF EXISTS #{{$table_name}}").self::createQueryMessage($sql, 'create table '.$table_name);
                 file_put_contents($create, '/* table '.$table_name.'*/'.$query."\r\n", FILE_APPEND);
             }
+        }
+        if (file_exists($path=$dto_path.'/__addon_after.sql')) {
+            $sqls=file_get_contents($path);
+            $query=self::createQueryMessage($sqls, 'query addon after sql');
+            file_put_contents($create, '/* __addon_after */'.$query."\r\n", FILE_APPEND);
         }
         $tablefile=$this->dirname.'/table/'.$module_dir.'.php';
         Storage::path(dirname($tablefile));
