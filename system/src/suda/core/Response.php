@@ -66,7 +66,7 @@ abstract class Response
         if (conf('debug')) {
             self::noCache();
             // for windows debug touch file to avoid 304 by server
-            if (DIRECTORY_SEPARATOR==='\\'){
+            if (DIRECTORY_SEPARATOR==='\\') {
                 touch('dev.php');
             }
         }
@@ -111,13 +111,16 @@ abstract class Response
     /**
     *  直接输出文件
     */
-    public function file(string $path, string $type, int $size)
+    public function file(string $path, string $type=null)
     {
-        $hash=md5_file($path);
+        $content=file_get_contents($path);
+        $hash   = md5($content);
+        $size   = strlen($content);
         $this->_etag($hash);
+        $type   = $type || pathinfo($path, PATHINFO_EXTENSION);
         $this->type($type);
         self::setHeader('Content-Length:'.$size);
-        echo file_get_contents($path);
+        echo $content;
     }
 
     /**
@@ -139,10 +142,12 @@ abstract class Response
         return Manager::displayFile($template, $name)->response($this)->assign($values);
     }
 
-    public function refresh() {
+    public function refresh()
+    {
         $this->go(u(self::$name));
     }
-    public function go(string $url) {
+    public function go(string $url)
+    {
         $this->setHeader('Location:'.$url);
     }
     public function redirect(string $url, int $time=1, string $message=null)
@@ -173,7 +178,7 @@ abstract class Response
 
     protected static function _etag(string $etag)
     {
-        if (conf('app.etag',!conf('debug'))) {
+        if (conf('app.etag', !conf('debug'))) {
             self::etag($etag);
         }
     }
