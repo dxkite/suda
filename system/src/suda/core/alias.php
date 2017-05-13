@@ -23,6 +23,13 @@ function use_namespace(string $namespace){
     return suda\core\Autoloader::setNamespace($namespace);
 }
 
-function u(string $name,array $values=[]){
-    return suda\core\Router::getInstance()->buildUrl($name,$values);
+function u($name=null,array $values=[]){
+    if (is_string($name)){
+        return suda\core\Router::getInstance()->buildUrl($name,$values);
+    }
+    elseif (is_array($name)){
+        return suda\core\Router::getInstance()->buildUrl(suda\core\Response::$name,$name);
+    }else{
+        return suda\core\Router::getInstance()->buildUrl(suda\core\Response::$name);
+    }
 }

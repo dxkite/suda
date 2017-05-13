@@ -57,7 +57,7 @@ abstract class Response
     );
     
     private static $mime;
-    protected static $name;
+    public static $name;
 
     public function __construct()
     {
