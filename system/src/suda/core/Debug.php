@@ -1,10 +1,10 @@
 <?php
 namespace suda\core;
 
-Hook::listen("system:init", "Debug::beforeSystemRun");
-Hook::listen("system:display::after", "Debug::afterSystemRun");
-Hook::listen("system:shutdown", "Debug::phpShutdown");
-Hook::listen("system:debug:printf", "Debug::printf");
+Hook::listen('system:init', 'suda\core\Debug::beforeSystemRun');
+Hook::listen('system:display::after', 'suda\core\Debug::afterSystemRun');
+Hook::listen('system:shutdown', 'suda\core\Debug::phpShutdown');
+Hook::listen('system:debug:printf', 'suda\core\Debug::printf');
 
 // TODO: 记录异常类型
 class Debug
@@ -229,7 +229,7 @@ class Debug
         $time=number_format($info['time'], 10);
         $mem=self::memshow($info['memory'], 2);
         self::$hash=substr(md5($mem.$time), 0, 8);
-        return Request::ip() . "\t" . date('Y-m-d H:i:s') . "\t" .Request::method()."\t".Request::virtualUrl() ."\t".$time.'s '.$mem.' '.self::$hash. "\r\n";
+        return Request::ip() . "\t" . date('Y-m-d H:i:s') . "\t" .Request::method()."\t".Request::virtualUrl() ."\t".$time.'s '.$mem.' '.self::$hash;
     }
 
     protected static function save(string $file)
@@ -241,7 +241,7 @@ class Debug
         if (file_exists($file)  && filesize($file) > self::MAX_LOG_SIZE) {
             rename($file, dirname($file) . '/' . date('Y-m-d'). '-'. substr(md5_file($file), 0, 8).'-'.basename($file));
         }
-        $str=Hook::execTail("system:debug:printf");
+        $str=Hook::execTail("system:debug:printf"). "\r\n";
         
         if (defined('LOG_JSON') && LOG_JSON) {
             $loginfo=self::getInfo();
