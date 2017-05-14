@@ -42,5 +42,10 @@
     "datebase_progress": {
         "class": "dxkite\\suda\\response\\DbProgress",
         "visit": "\/database-process"
+    },
+    "self_check": {
+        "class": "dxkite\\suda\\response\\SelfCheck",
+        "visit": "\/self_check",
+        "method": ["GET"]
     }
 }
