@@ -3,6 +3,7 @@ namespace suda\mail;
 
 use suda\template\Manager;
 use suda\core\{Response,Config};
+use suda\exception\MailException;
 
 abstract class Mailer
 {
@@ -105,7 +106,7 @@ abstract class Mailer
         // PHP IP 乱入 使用　gethostbyname
         if (!dns_check_record($domain)) {
             _D()->error('dns '.$email.' no found '.$domain);
-            throw new DNSnoFound('no such dns in has mail mx '.$email);
+            throw new MailException('no such dns in has mail mx '.$email,1);
         }
         _D()->trace('dns '.$email.' found '.$domain.' '.gethostbyname($domain));
     }
