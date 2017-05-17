@@ -1,5 +1,5 @@
 <?php
-namespace atd3\image;
+namespace cn\atd3\image;
 
 /**
 * 验证码生成器
@@ -59,15 +59,19 @@ class VeCode
         $max_height= $this->heigth+$this->fontsize;
         $img = imagecreate($max_width, $max_height);
         $bgColor =  imagecolorallocate($img, mt_rand(245, 255), mt_rand(245, 255), mt_rand(245, 255)) ;
+        $last_offset=5;
         for ($i = 0; $i < $this->leng; $i++) {
-            $ic=$i * $this->fontsize + 10;
+            $ic=$last_offset;
+            $last_offset+=$this->fontsize;
             $fz=$this->fontsize * 1.5;
-            $x = mt_rand($ic -5, $ic +5);
+            $x = $ic;
             $y = mt_rand($fz-5, $fz+5);
             $text_color = imagecolorallocate($img, mt_rand(30, 180), mt_rand(10, 100), mt_rand(40, 250));
-            imagettftext($img, $this->fontsize, 0, $x, $y, $text_color, $this->fontfile, $this->verifycode[$i]);
+            $rd=mt_rand(0,30);
+            imagettftext($img, $this->fontsize,$rd, $x, $y, $text_color, $this->fontfile, $this->verifycode[$i]);
             imagearc($img,  mt_rand(0, 80) ,  mt_rand(30, 80), mt_rand(30, 180),  mt_rand(40, 180),  mt_rand($max_width, 180),  mt_rand($max_height, 180), $text_color);
         }
+        // 杂点
         for ($j = 0; $j < 100; $j++) {
             $pixColor = imagecolorallocate($img, mt_rand(0, 255), mt_rand(0, 200), mt_rand(40, 250));
             $x = mt_rand(0, $max_width);

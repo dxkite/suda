@@ -1,5 +1,5 @@
 <?php
-namespace atd3\image;
+namespace cn\atd3\image;
 
 class BarCode
 {
