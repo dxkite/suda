@@ -11,6 +11,7 @@ class CookieSetter
     public $expire=0;
     public $secure=false;
     public $session=false;
+    public $fulltime=false;
 
     public function __construct(string $name, string $value, int $expire=0)
     {
@@ -23,6 +24,12 @@ class CookieSetter
         $this->httponly=$set;
         return $this;
     }
+
+    public function full(bool $set=true){
+        $this->fulltime=$set;
+        return $this;
+    }
+
     public function secure(bool $set=true)
     {
         $this->secure=$set;
@@ -59,7 +66,9 @@ class CookieSetter
         if ($send) {
             _D()->waring(_T('请求头在文件%s#%d时已经发送！', $file, $line));
         } else {
-            return setcookie($this->name, $this->value, $this->session ? 0: time()+$this->expire, $this->path, $this->domain, $this->secure, $this->httponly);
+            $time= $this->fulltime ? $expire : time()+$this->expire;
+            $expire= $this->session ? 0 : $this->expire;
+            return setcookie($this->name, $this->value, $expire, $this->path, $this->domain, $this->secure, $this->httponly);
         }
     }
 }
