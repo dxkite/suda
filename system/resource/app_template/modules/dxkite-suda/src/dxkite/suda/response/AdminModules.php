@@ -20,7 +20,7 @@ class AdminModules extends \dxkite\suda\ACResponse
     public function onAction(Request $request)
     {
         $page=$this->page('suda:admin_modules')
-        ->set('title', _T('模块管理'))
+        ->set('title', __('模块管理'))
         ->set('header_select', 'system_admin');
         if ($request->hasGet()) {
             ModuleManager::setModuleStatu($request->get()->module,

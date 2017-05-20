@@ -37,7 +37,7 @@ class Router
         $simple_routers=[];
         $admin_routers=[];
         $module_dir=Application::getModuleDir($module);
-        _D()->trace(_T('load module:%s [%s] path:%s', $module, Application::getModuleFullName($module), MODULES_DIR.'/'.$module_dir));
+        _D()->trace(__('load module:%s [%s] path:%s', $module, Application::getModuleFullName($module), MODULES_DIR.'/'.$module_dir));
         $prefix= Application::getModulePrefix($module);
         $module=Application::getModuleFullName($module);
         $admin_prefix='';
@@ -49,7 +49,7 @@ class Router
 
         if (Storage::exist($file=MODULES_DIR.'/'.$module_dir.'/resource/config/router.json')) {
             $simple_routers= self::loadModuleJson($module, $file);
-            _D()->trace(_T('loading simple route from file %s', $file));
+            _D()->trace(__('loading simple route from file %s', $file));
             array_walk($simple_routers, function (&$router) use ($module, $prefix) {
                 if (!is_null($prefix)) {
                     $router['visit']=$prefix.$router['visit'];
@@ -62,7 +62,7 @@ class Router
         // 加载后台路由
         if (Storage::exist($file=MODULES_DIR.'/'.$module_dir.'/resource/config/router_admin.json')) {
             $admin_routers= self::loadModuleJson($module, $file);
-            _D()->trace(_T('loading admin route from file  %s', $file));
+            _D()->trace(__('loading admin route from file  %s', $file));
             array_walk($admin_routers, function (&$router) use ($module, $admin_prefix) {
                 $prefix= conf('app.admin', '/admin');
                 if (!is_null($admin_prefix)) {
@@ -235,7 +235,7 @@ class Router
                 }
             }, preg_replace('/\[(.+?)\]/', '$1', $url));
         } else {
-            _D()->warning(_T('get url for %s failed,module:%s args:%s', $name, $module, json_encode($values)));
+            _D()->warning(__('get url for %s failed,module:%s args:%s', $name, $module, json_encode($values)));
             return '#the-router-['.$name.']-is-undefined--please-check-out-router-list';
         }
         if (count($values)) {

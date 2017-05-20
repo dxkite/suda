@@ -31,14 +31,14 @@ class RouterManager
         $admin=$info['role']==='admin';
         $name=$info['name'];
         $router_file=MODULES_DIR.'/'.$module_dir.'/resource/config/router'.($admin?'_admin':'').'.json';
-        _D()->info(_T('路由文件:%s', $router_file));
+        _D()->info(__('路由文件:%s', $router_file));
         if (Storage::exist($router_file)) {
             $json=Json::loadFile($router_file);
         } else {
             $json=[];
         }
         if (!isset($json[$name])) {
-            _D()->waring(_T('无法找到路由%s', $name));
+            _D()->waring(__('无法找到路由%s', $name));
             return false;
         }
         
@@ -265,7 +265,7 @@ class RouterManager
         }
         if (Storage::exist($file=MODULES_DIR.'/'.$module_dir.'/resource/config/router.json')) {
             $simple_routers= self::loadModuleJson($module, $file);
-            _D()->trace(_T('loading simple route from file %s', $file));
+            _D()->trace(__('loading simple route from file %s', $file));
             array_walk($simple_routers, function (&$router) use ($module, $prefix) {
                 if (!is_null($prefix)) {
                     $router['visit']=$prefix.$router['visit'];
@@ -277,7 +277,7 @@ class RouterManager
         // 加载后台路由
         if (Storage::exist($file=MODULES_DIR.'/'.$module_dir.'/resource/config/router_admin.json')) {
             $admin_routers= self::loadModuleJson($module, $file);
-            _D()->trace(_T('loading admin route from file  %s', $file));
+            _D()->trace(__('loading admin route from file  %s', $file));
             array_walk($admin_routers, function (&$router) use ($module, $admin_prefix) {
                 $prefix= conf('app.admin', '/admin');
                 if (!is_null($admin_prefix)) {

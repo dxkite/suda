@@ -44,7 +44,7 @@ class RouterAdd extends \dxkite\suda\ACResponse
 
         $page=$this->page('suda:router_add')->set('header_select', 'router_list')
         ->set('modules', RouterManager::getModules())
-        ->set('title', _T('添加路由'));
+        ->set('title', __('添加路由'));
         if ($request->get()->module) {
             $page->set('module_selected',$request->get()->module);
         }

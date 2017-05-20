@@ -19,13 +19,13 @@ class System
         set_error_handler('suda\\core\\System::uncaughtError');
         set_exception_handler('suda\\core\\System::uncaughtException');
         Locale::path(SYSTEM_RESOURCE.'/locales');
-        _D()->trace(_T('system init'));
+        _D()->trace(__('system init'));
     }
 
     public static function onShutdown()
     {
         _D()->trace('include paths:'.json_encode(Autoloader::getIncludePath()));
-        _D()->trace(_T('system shutdown'));
+        _D()->trace(__('system shutdown'));
         Hook::exec('system:shutdown');
     }
 

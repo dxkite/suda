@@ -36,7 +36,7 @@ class ApplicationManager
         $app=Storage::path($app);
         $this->readManifast($app.'/manifast.json');
         $name=Autoloader::realName($this->appliaction);
-        _D()->trace(_T('loading application %s from %s', $name, $app));
+        _D()->trace(__('loading application %s from %s', $name, $app));
         $this->app=new $name($app);
         if ($this->app instanceof Application) {
             // 设置语言包库
@@ -46,16 +46,16 @@ class ApplicationManager
             Hook::listen('system:uncaughtException', [$this->app, 'uncaughtException']);
             Hook::listen('system:uncaughtError', [$this->app, 'uncaughtError']);
         } else {
-            throw new ApplicationException(_T('unsupport base application class %s', $this->appliaction));
+            throw new ApplicationException(__('unsupport base application class %s', $this->appliaction));
         }
     }
 
     protected function readManifast(string $manifast)
     {
-        _D()->trace(_T('reading manifast file'));
+        _D()->trace(__('reading manifast file'));
         // App不存在
         if (!Storage::exist($manifast)) {
-            _D()->trace(_T('create base app'));
+            _D()->trace(__('create base app'));
             Storage::copydir(SYSTEM_RESOURCE.'/app_template/', APP_DIR);
             Storage::put(APP_DIR.'/modules/default/resource/config/config.json', '{"name":"default"}');
         }

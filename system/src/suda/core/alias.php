@@ -4,6 +4,10 @@ function mime(string $type){
     return suda\core\Response::mime($type);
 }
 // 语言翻译
+function __(string $message){
+    return call_user_func_array('suda\core\Locale::_',func_get_args());
+}
+// 语言翻译
 function _T(string $message){
     return call_user_func_array('suda\core\Locale::_',func_get_args());
 }

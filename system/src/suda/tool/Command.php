@@ -30,7 +30,7 @@ class Command
 
     public function exec(array $params=[])
     {
-        _D()->trace(_T('exec command %s with args %s', is_string($this->command)?$this->command:$this->name, json_encode($params)));
+        _D()->trace(__('exec command %s with args %s', is_string($this->command)?$this->command:$this->name, json_encode($params)));
         if (is_string($this->command)) {
             $this->command= self::parseCommand($this->command);
         }
@@ -83,7 +83,7 @@ class Command
     protected function parseCommand(string $command)
     {
         if (preg_match('/^(?:([\w\\\\\/.]+))?(?:(#|->|::)(\w+))?(?:\((.+?)\))?(?:@(.+))?$/', $command, $matchs)) {
-            _D()->trace(_T('parse command %s', $command));
+            _D()->trace(__('parse command %s', $command));
             // 添加参数绑定
             if (isset($matchs[4])) {
                 $this->func_bind=explode(',', trim($matchs[4], ','));

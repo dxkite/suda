@@ -21,7 +21,7 @@ class AdminDb extends \dxkite\suda\ACResponse
     {
         
         $page=$this->page('suda:admin_db')
-        ->set('title', _T('数据管理'))
+        ->set('title', __('数据管理'))
         ->set('header_select', 'system_admin');
         $list=DBManager::readList();
         if (count($list)) {

@@ -64,7 +64,7 @@ class CookieSetter
         // 检测请求头发送情况
         $send=headers_sent($file, $line);
         if ($send) {
-            _D()->waring(_T('请求头在文件%s#%d时已经发送！', $file, $line));
+            _D()->waring(__('请求头在文件%s#%d时已经发送！', $file, $line));
         } else {
             $time= $this->fulltime ? $expire : time()+$this->expire;
             $expire= $this->session ? 0 : $this->expire;

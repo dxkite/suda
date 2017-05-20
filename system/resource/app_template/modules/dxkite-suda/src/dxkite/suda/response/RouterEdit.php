@@ -61,7 +61,7 @@ class RouterEdit extends \dxkite\suda\ACResponse
             } else {
                 $methods['ALL']=true;
             }
-            $page->set('title',_T('编辑路由 %s',$edit));
+            $page->set('title',__('编辑路由 %s',$edit));
             $page->set('method', $methods)->set('header_select', 'router_list');
             $page->set('modules', RouterManager::getModules());
             return $page->render();
