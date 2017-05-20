@@ -115,6 +115,8 @@ class Query extends SQLQuery
         $bind=array_merge($bind,$param);
         return $where;
     }
+
+    
     public static function count(string $table,  $where='1', array $binds=[]):int
     {
         $table=self::table($table);

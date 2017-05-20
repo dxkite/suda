@@ -59,6 +59,8 @@ class DTOReader
         }
         return implode(',',$str);
     }
+
+    
     public function load(string $path)
     {
         if (file_exists($path)) {
