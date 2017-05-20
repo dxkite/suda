@@ -1,6 +1,6 @@
 <?php
 namespace suda\core;
-use suda\archive\Query as SQLQuery;
+use suda\archive\SQLQuery;
 
 class Query extends SQLQuery
 {

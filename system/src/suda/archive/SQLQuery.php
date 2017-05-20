@@ -6,7 +6,7 @@ use suda\core\{Config,Storage};
 use suda\exception\SQLException;
 
 // 数据库查询方案
-class Query
+class SQLQuery
 {
     protected static $pdo=null;
     protected static $prefix=null;
