@@ -273,8 +273,7 @@ class Debug
         return file_put_contents($file, $str, FILE_APPEND);
     }
 
-
-    protected static function memshow(int $mem, int $dec)
+    public static function memshow(int $mem, int $dec)
     {
         $human= ['B', 'KB', 'MB', 'GB', 'TB'];
         $pos= 0;
@@ -292,7 +291,7 @@ class Debug
         self::$run_info['start_memory']=D_MEM;
     }
 
-    protected static function getInfo()
+    public static function getInfo()
     {
         self::$run_info['end_time']=microtime(true);
         self::$run_info['time']=microtime(true) - D_START;

@@ -8,6 +8,7 @@ use suda\exception\SQLException;
 // 数据库查询方案
 class SQLQuery
 {
+    public static $queryCount=0;
     protected static $pdo=null;
     protected static $prefix=null;
     protected $stmt=null;
@@ -148,6 +149,7 @@ class SQLQuery
         }
 
         $return=$stmt->execute();
+        self::$queryCount++;
         // TODO: To Log This
         // var_dump($return,$stmt,$stmt->errorInfo());
         Storage::mkdirs($path=DATA_DIR.'/logs');

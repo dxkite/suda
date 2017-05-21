@@ -44,4 +44,10 @@ class System
     {
         self::uncaughtException(new \ErrorException($errstr, 0, $errno, $errfile, $errline));
     }
+
+    public static function getRunInfo(){
+        $info=Debug::getInfo();
+        $info['query_count']=Query::$queryCount;
+        return $info;
+    }
 }
