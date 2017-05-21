@@ -11,6 +11,12 @@ class DAO
 
     public function __construct()
     {
+        // 读取类名作为表名
+        // TableName    => table_name
+        // TableNameDAO => table_name
+        $this->tableName=trim(strtolower(preg_replace('/([A-Z])/','_$1',preg_replace('/^.+\\\\/','',preg_replace('/DAO$/','',get_class($this))))),'_');
+        // 默认ID为表主键
+        $this->primaryKey='id';
     }
 
 
