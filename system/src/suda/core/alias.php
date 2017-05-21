@@ -37,3 +37,7 @@ function u($name=null,array $values=[]){
         return suda\core\Router::getInstance()->buildUrl(suda\core\Response::$name);
     }
 }
+
+function import(string $path){
+    return suda\core\Autoloader::import($path);
+}

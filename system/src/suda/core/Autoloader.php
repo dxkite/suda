@@ -16,6 +16,20 @@ class Autoloader
         self::addIncludePath(dirname(dirname(__DIR__)));
     }
 
+    public static function import(string $filename){
+        if (file_exists($filename)){
+            require_once $filename;
+            return $filename;
+        }else{
+            foreach (self::$include_path as $include_path) {
+                if (file_exists($path=$include_path.DIRECTORY_SEPARATOR.$filename)){
+                    require_once $path;
+                    return $path;
+                }
+            }
+        }
+    }
+
     public static function classLoader(string $classname)
     {
         $classname=self::realName($classname);
