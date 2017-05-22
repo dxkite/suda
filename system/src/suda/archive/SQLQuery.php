@@ -117,20 +117,24 @@ class SQLQuery
     protected function lazyQuery(string $query, array $array=[])
     {
         $query=self::auto_prefix($query);
+        $debug=debug_backtrace();
         // 调整数据表
         if ($this->database && $this->dbchange) {
             if (self::$pdo->query('USE '.$this->database)) {
                 $this->dbchange=false;
                 $this->database=null;
             } else {
-                die('Could not select database:'.$this->database);
+                throw new SQLException(__('could not select database:%s, please check the table if exist.',$this->database),0,E_ERROR,$debug[1]['file'],$debug[1]['line']);
             }
         } elseif (is_null($this->database)) {
-            if (self::$pdo->query('USE '.Config::get('database.name', 'test'))) {
-                $this->database=Config::get('database.name', 'test');
+            $database=Config::get('database.name', 'test');
+            if (self::$pdo->query('USE '.$database)) {
+                $this->database=$database;
+            }else{
+                throw new SQLException(__('could not select database:%s, please check the table if exist.',$database),0,E_ERROR,$debug[1]['file'],$debug[1]['line']);
             }
         }
-
+        
         if ($this->scroll) {
             $stmt=self::$pdo->prepare($query, [PDO::ATTR_CURSOR=>PDO::CURSOR_SCROLL]);
         } else {
@@ -162,7 +166,7 @@ class SQLQuery
         } else {
             Storage::put($path.'/query_'.date('Y_m_d').'.error', date('Y-m-d H:i:s ').$stmt->queryString.' '.$stmt->errorInfo()[2]."\r\n", FILE_APPEND);
             if (!conf('database.ignoreError',false)){
-                throw new SQLException($stmt->errorInfo()[2], intval($stmt->errorCode()));
+                throw new SQLException($stmt->errorInfo()[2], intval($stmt->errorCode()),E_ERROR,$debug[1]['file'],$debug[1]['line']);
             }
         }
         $this->stmt=$stmt;
