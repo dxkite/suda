@@ -156,10 +156,10 @@ class SQLQuery
         self::$queryCount++;
         if ($return) {
             if (Config::get('debug')) {
-                _D()->debug($stmt->errorInfo()[2],$stmt->queryString);
+                _D()->debug($stmt->queryString,$this->values);
             }
         } else {
-            _D()->waring($stmt->errorInfo()[2],$stmt->queryString);
+            _D()->warning($stmt->errorInfo()[2].':'.$stmt->queryString,$this->values);
             if (!conf('database.ignoreError',false)){
                 throw new SQLException($stmt->errorInfo()[2], intval($stmt->errorCode()),E_ERROR,$debug[1]['file'],$debug[1]['line']);
             }

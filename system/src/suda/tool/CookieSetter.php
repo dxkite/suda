@@ -66,7 +66,7 @@ class CookieSetter
         if ($send) {
             _D()->waring(__('请求头在文件%s#%d时已经发送！', $file, $line));
         } else {
-            $time= $this->fulltime ? $expire : time()+$this->expire;
+            $time= $this->fulltime ? $this->expire : time()+$this->expire;
             $expire= $this->session ? 0 : $this->expire;
             return setcookie($this->name, $this->value, $expire, $this->path, $this->domain, $this->secure, $this->httponly);
         }
