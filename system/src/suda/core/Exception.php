@@ -14,17 +14,19 @@ class Exception extends ErrorException
 
     public function __construct(Throwable $e)
     {
-        $this->severity =$e  instanceof ErrorException?$e->getSeverity():E_ERROR;
+        $this->severity =$e instanceof ErrorException?$e->getSeverity():E_ERROR;
         parent::__construct($e->getMessage(), $e->getCode(), $this->severity, $e->getFile(), $e->getLine(), $e->getPrevious());
         $this->name=get_class($e);
         $this->backtrace=$e->getTrace();
     }
+
     public function show(int $start, int $end=0)
     {
         $this->show_start=$start;
         $this->show_end=$end;
         return $this;
     }
+    
     public function getBackTrace()
     {
         $trace=$this->backtrace;
@@ -38,6 +40,7 @@ class Exception extends ErrorException
         }
         return $trace;
     }
+
     public function getName()
     {
         return $this->name;

@@ -1,7 +1,8 @@
 <?php
 namespace suda\template;
 
-use suda\tool\{ArrayHelper};
+use suda\tool\ArrayHelper;
+use suda\tool\Command;
 use suda\core\Response;
 
 abstract class Template
@@ -134,7 +135,7 @@ abstract class Template
 
     public function data(string $name)
     {
-        return (new  \suda\tool\Command($name))->exec([$this]);
+        return (new Command($name))->exec([$this]);
     }
     
     public function hook(string $name, $callback)
@@ -143,7 +144,7 @@ abstract class Template
         if ($this->parent) {
             return $this->parent->hook($name, $callback);
         } else {
-            $this->hooks[$name][]=(new  \suda\tool\Command($callback))->name($name);
+            $this->hooks[$name][]=(new Command($callback))->name($name);
         }
     }
 

@@ -1,7 +1,7 @@
 <?php
 namespace suda\archive;
 
-use PDO;
+use PDO,PDOException;
 use suda\core\{Config,Storage};
 use suda\exception\SQLException;
 
@@ -154,17 +154,12 @@ class SQLQuery
 
         $return=$stmt->execute();
         self::$queryCount++;
-        // TODO: To Log This
-        // var_dump($return,$stmt,$stmt->errorInfo());
-        Storage::mkdirs($path=DATA_DIR.'/logs');
-        // 检查成功
-        $path=realpath($path);
         if ($return) {
             if (Config::get('debug')) {
-                Storage::put($path.'/query_'.date('Y_m_d').'.query', date('Y-m-d H:i:s ').$stmt->queryString.' '.$stmt->errorInfo()[2]."\r\n", FILE_APPEND);
+                _D()->debug($stmt->errorInfo()[2],$stmt->queryString);
             }
         } else {
-            Storage::put($path.'/query_'.date('Y_m_d').'.error', date('Y-m-d H:i:s ').$stmt->queryString.' '.$stmt->errorInfo()[2]."\r\n", FILE_APPEND);
+            _D()->waring($stmt->errorInfo()[2],$stmt->queryString);
             if (!conf('database.ignoreError',false)){
                 throw new SQLException($stmt->errorInfo()[2], intval($stmt->errorCode()),E_ERROR,$debug[1]['file'],$debug[1]['line']);
             }
@@ -180,7 +175,8 @@ class SQLQuery
             self::$prefix=Config::get('database.prefix', '');
             try {
                 self::$pdo = new PDO($pdo, Config::get('database.user', 'root'), Config::get('database.passwd', 'root'));
-            } catch (\PDOException $e) {
+            } catch (PDOException $e) {
+                _D()->waring('connect database error:'.$e->getMessage());
                 self::$good=false;
             }
         }
