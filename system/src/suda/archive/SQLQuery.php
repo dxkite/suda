@@ -131,7 +131,7 @@ class SQLQuery
             if (self::$pdo->query('USE '.$database)) {
                 $this->database=$database;
             }else{
-                throw new SQLException(__('could not select database:%s, please check the table if exist.',$database),0,E_ERROR,$debug[1]['file'],$debug[1]['line']);
+                _D()->warning(__('could not select database:%s, maybe you should create database.',$database),0,E_ERROR,$debug[1]['file'],$debug[1]['line']);
             }
         }
         
