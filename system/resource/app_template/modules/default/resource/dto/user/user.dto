@@ -1,9 +1,0 @@
-; 用户表
-id bigint(20) auto unsigned comment="用户ID" primary 
-name varchar(13) unique comment="用户名"
-email varchar(50) unique comment="邮箱"
-password varchar(60) comment="密码HASH"
-group bigint(20) key default=0 comment="分组ID"
-available int(1) key default=0 comment="邮箱验证"
-avatar bigint(20) comment="头像ID"
-ip  varchar(32) comment="注册IP"

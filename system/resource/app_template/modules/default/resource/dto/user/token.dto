@@ -1,9 +1,0 @@
-; 令牌表
-id bigint(20) auto comment="令牌ID" primary 
-user bigint(20) key comment="使用的用户"
-token varchar(32) key comment="令牌"
-client bigint(20) key comment="客户端"
-ip varchar(32) comment="使用令牌的ID"
-time int(11) comment="使用的时间"
-expire int(11) comment="过期时间"
-value varchar(255) comment="附加值"

@@ -1,7 +1,7 @@
 <?php
 namespace dxkite\suda;
 
-use suda\template\Template;
+use suda\template\compiler\suda\Template;
 
 class Dataset
 {

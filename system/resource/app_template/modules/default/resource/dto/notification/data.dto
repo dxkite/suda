@@ -1,3 +1,0 @@
-; 通知数据
-id bigint(20) auto primary comment="通知ID"
-data text  comment="通知数据"

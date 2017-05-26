@@ -1,6 +1,0 @@
-; 权限分组表
-id int(11) auto primary  comment="分组ID"
-user bigint(20) unique  comment="用户ID"
-name varchar(80) key comment="分组名"
-sort int(11) key comment="排序索引"
-auths text comment="权限数据"
