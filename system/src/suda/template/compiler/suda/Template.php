@@ -1,5 +1,5 @@
 <?php
-namespace suda\template;
+namespace suda\template\compiler\suda;
 
 use suda\tool\ArrayHelper;
 use suda\tool\Command;

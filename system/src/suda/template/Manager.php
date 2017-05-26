@@ -29,7 +29,8 @@ class Manager
     {
         if (is_null(self::$compiler)) {
             Hook::exec('Manager:loadCompile::before');
-            self::$compiler=new Compiler;
+            // 调用工厂方法
+            self::$compiler=Factory::compiler(conf('app.compiler','SudaCompiler'));
         }
     }
 
@@ -76,27 +77,14 @@ class Manager
     public static function compile(string $name)
     {
         self::loadCompile();
-        _D()->time('compile '.$name);
         list($module, $basename)=Router::parseName($name);
-        _D()->trace($module,Application::getModuleDir($module));
+        _D()->trace($module, Application::getModuleDir($module));
         $module_dir=Application::getModuleDir($module);
         $prefix=MODULES_DIR.'/'.  $module_dir.'/resource/template/'.self::$theme;
         $output=VIEWS_DIR.'/'. $module_dir .'/'.$basename.self::$extCpl;
         $input=$prefix.'/'.$basename.self::$extRaw;
         _D()->trace('compile '.$name, $input);
-        if (!Storage::exist($input)) {
-            return false;
-        }
-        $content= self::$compiler->compileText(Storage::get($input));
-        if (!Storage::isDir($dir=dirname($output))) {
-            Storage::mkdirs(dirname($output));
-        }
-
-        $classname='Template_'.md5($name);
-        $content='<?php  class '.$classname.' extends suda\template\Template { protected $name="'.$name.'"; protected function _render_template() {  ?>'.$content.'<?php }}';
-        Storage::put($output, $content);
-        _D()->timeEnd('compile '.$name);
-        return true;
+        return self::$compiler->compileFile($name,$input,$output);
     }
 
 
