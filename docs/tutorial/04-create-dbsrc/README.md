@@ -38,7 +38,7 @@ data text comment="数据"
 创建页面 `/mark_score`:
 属性：名称 mark_score， 类 MarkScore ，路由 `/mark_score`
 
-修改模板:
+#### 修改模板，显示操作结果:
 ```html
 <html>
 
@@ -54,7 +54,7 @@ data text comment="数据"
 </html>
 ```
 
-修改类：
+#### 向写入数据库数据
 ```php
 <?php
 namespace cn\atd3\response;
