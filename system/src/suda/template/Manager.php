@@ -4,24 +4,42 @@ namespace suda\template;
 use suda\tool\EchoValue;
 use suda\core\{Config,Application,Storage,Hook,Router};
 
+/**
+ * 模板管理类
+ */
 class Manager
 {
+    /**
+     * 模板输入扩展
+     *
+     * @var string
+     */
+    public static $extRaw='.tpl.html';
+    /**
+     * 模板输出扩展
+     *
+     * @var string
+     */
+    public static $extCpl='.tpl';
+    /**
+     * 默认样式
+     *
+     * @var string
+     */
+    protected static $theme='default';
     /**
      * 模板编译器
      * @var null
      */
     private static $compiler=null;
-    // 模板目录
-    private static $path=[];
-    // 样式
-    protected static $theme='default';
 
-    public static $extRaw='.tpl.html';
-    public static $extCpl='.tpl';
-    protected static $error='';
-    protected static $erron=0;
-    protected static $current=null;
+    /**
+     * 附加模板命令
+     *
+     * @var array
+     */
     protected static $command=[];
+    
     /**
      * 载入模板编译器
      */
@@ -30,7 +48,7 @@ class Manager
         if (is_null(self::$compiler)) {
             Hook::exec('Manager:loadCompile::before');
             // 调用工厂方法
-            self::$compiler=Factory::compiler(conf('app.compiler','SudaCompiler'));
+            self::$compiler=Factory::compiler(conf('app.compiler', 'SudaCompiler'));
         }
     }
 
@@ -47,28 +65,6 @@ class Manager
         return self::$theme;
     }
 
-
-    /**
-     * 获取编译后的模板路径
-     * @param string $name
-     * @return string
-     */
-    protected static function path(string $name, bool $ext=true):string
-    {
-        list($module, $name)=Router::parseName($name);
-        $path=MODULES_DIR.'/'.Application::getModuleDir($module).'/resource/template/'.self::$theme;
-        if ($ext) {
-            $tpl=$path.'/'.$name.self::$extRaw;
-        } else {
-            $tpl=$path.'/'.$name;
-        }
-        if (Storage::exist($tpl)) {
-            self::$current=$path;
-            return $tpl;
-        }
-        return false;
-    }
-
     /**
      * 编译文件
      * @param $input
@@ -77,30 +73,21 @@ class Manager
     public static function compile(string $name)
     {
         self::loadCompile();
-        list($module, $basename)=Router::parseName($name);
-        _D()->trace($module, Application::getModuleDir($module));
-        $module_dir=Application::getModuleDir($module);
-        $prefix=MODULES_DIR.'/'.  $module_dir.'/resource/template/'.self::$theme;
-        $output=VIEWS_DIR.'/'. $module_dir .'/'.$basename.self::$extCpl;
-        $input=$prefix.'/'.$basename.self::$extRaw;
-        _D()->trace('compile '.$name, $input);
-        return self::$compiler->compileFile($name,$input,$output);
-    }
-
-
-    public static function display(string $name)
-    {
-        list($module, $basename)=Router::parseName($name);
-        $module_dir=Application::getModuleDir($module);
-        return self::_display($name, VIEWS_DIR.'/'.$module_dir. DIRECTORY_SEPARATOR .$basename.self::$extCpl);
+        return self::$compiler->compileFile($name, self::getInputPath($name), self::getOutputPath($name));
     }
 
     /**
-    *  $name 模板名称
-    *  $path 编译后路径
-    */
-    protected static function _display(string $name, string $viewpath)
+     * 根据模板ID显示模板
+     *
+     * @param string $name
+     * @param string $viewpath
+     * @return void
+     */
+    public static function display(string $name, string $viewpath=null)
     {
+        if (is_null($viewpath)) {
+            $viewpath=self::getOutputPath($name);
+        }
         if (Config::get('debug', true)) {
             if (!self::compile($name)) {
                 echo '<b>compile error: '.$name.': '.$viewpath. 'missing raw template </b>';
@@ -115,6 +102,13 @@ class Manager
         return self::displayFile($viewpath, $name);
     }
 
+    /**
+     * 根据路径显示模板
+     *
+     * @param string $file
+     * @param string $name
+     * @return void
+     */
     public static function displayFile(string $file, string $name)
     {
         $name='Template_'.md5($name);
@@ -131,7 +125,7 @@ class Manager
         $module_dir=Application::getModuleDir($module);
         // 向下兼容
         defined('APP_PUBLIC') or define('APP_PUBLIC', Storage::path('.'));
-        $static_path=Storage::path(MODULES_DIR.'/'.$module_dir.'/resource/template/'.self::$theme.'/static');
+        $static_path=Storage::path(self::getThemePath($module));
         $path=Storage::path(APP_PUBLIC.'/static/'. $module_dir);
         if (self::hasChanged($static_path, $path)) {
             self::copyStatic($static_path, $path);
@@ -139,6 +133,99 @@ class Manager
         return $path;
     }
 
+    
+    /**
+     * 模块模板文件目录
+     *
+     * @param string $module
+     * @return string
+     */
+    public static function getThemePath(string $module):string
+    {
+        $module_dir=Application::getModuleDir($module);
+        $theme=MODULES_DIR.'/'.  $module_dir.'/resource/template/'.self::$theme;
+        return $theme;
+    }
+
+    /**
+     * 模板输入路径
+     *
+     * @param string $name
+     * @return string
+     */
+    public static function getInputPath(string $name):string
+    {
+        list($module, $basename)=Router::parseName($name);
+        $input=self::getThemePath($module).'/'.$basename.self::$extRaw;
+        return $input;
+    }
+
+    /**
+     * 模板编译后输出路径
+     *
+     * @param string $name
+     * @return string
+     */
+    public static function getOutputPath(string $name):string
+    {
+        list($module, $basename)=Router::parseName($name);
+        $module_dir=Application::getModuleDir($module);
+        $output=VIEWS_DIR.'/'. $module_dir .'/'.$basename.self::$extCpl;
+        return $output;
+    }
+
+    /**
+     * 扩展模板命令
+     *
+     * @param string $name
+     * @param string $callback
+     * @param bool $echo
+     * @return void
+     */
+    public static function addCommand(string $name, string $callback, bool $echo=true)
+    {
+        $name=ucfirst($name);
+        self::$command[$name]=['command'=>$callback,'echo'=>$echo];
+    }
+    
+    /**
+     * 检查模板扩展命令是否存在
+     *
+     * @param string $name
+     * @return bool
+     */
+    public static function hasCommand(string $name):bool
+    {
+        $name=ucfirst($name);
+        return isset(self::$command[$name]);
+    }
+
+    /**
+     * 创建模板扩展命令
+     *
+     * @param string $name
+     * @param string $exp
+     * @return string
+     */
+    public static function buildCommand(string $name, string $exp):string
+    {
+        $name=ucfirst($name);
+        if (self::hasCommand($name)) {
+            $echo=self::$command[$name]['echo']?'echo':'';
+            $command=self::$command[$name]['command'];
+            return '<?php '.$echo.' (new \suda\tool\Command("'.$command.'"))->args'. ($exp?:'()').' ?>';
+        }
+        return '';
+    }
+
+
+    /**
+     * 检测模板是否被修改
+     *
+     * @param string $static
+     * @param string $tpl
+     * @return boolean
+     */
     protected static function hasChanged(string $static, string $tpl)
     {
         if (conf('debug', false)) {
@@ -152,6 +239,14 @@ class Manager
         return false;
     }
 
+
+    /**
+     * 复制模板目录下静态文件
+     *
+     * @param string $static_path
+     * @param string $path
+     * @return void
+     */
     protected static function copyStatic(string $static_path, string $path)
     {
         // 默认不删除模板更新
@@ -164,28 +259,5 @@ class Manager
         if (Storage::isDir($static_path)) {
             Storage::copydir($static_path, $path, $non_static_preg);
         }
-    }
-
-    public static function addCommand(string $name, string $callback, bool $echo=true)
-    {
-        $name=ucfirst($name);
-        self::$command[$name]=['command'=>$callback,'echo'=>$echo];
-    }
-    
-    public static function hasCommand(string $name)
-    {
-        $name=ucfirst($name);
-        return isset(self::$command[$name]);
-    }
-
-    public static function buildCommand(string $name, string $exp)
-    {
-        $name=ucfirst($name);
-        if (self::hasCommand($name)) {
-            $echo=self::$command[$name]['echo']?'echo':'';
-            $command=self::$command[$name]['command'];
-            return '<?php '.$echo.' (new \suda\tool\Command("'.$command.'"))->args'. ($exp?:'()').' ?>';
-        }
-        return '';
     }
 }
