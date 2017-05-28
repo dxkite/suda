@@ -161,12 +161,14 @@ class SQLQuery
         } else {
             _D()->warning($stmt->errorInfo()[2].':'.$stmt->queryString,$this->values);
             if (!conf('database.ignoreError',false)){
-                throw new SQLException($stmt->errorInfo()[2], intval($stmt->errorCode()),E_ERROR,$debug[1]['file'],$debug[1]['line']);
+                throw (new SQLException($stmt->errorInfo()[2], intval($stmt->errorCode()),E_ERROR,$debug[1]['file'],$debug[1]['line']))->setSql($stmt->queryString)->setBinds($this->values);
             }
         }
         $this->stmt=$stmt;
         return $return;
     }
+
+
     protected static function connectPdo()
     {
         // 链接数据库
@@ -181,21 +183,25 @@ class SQLQuery
             }
         }
     }
+
     public function good() :bool
     {
         return self::$good;
     }
+
     // 事务系列
     public static function begin()
     {
         return self::beginTransaction();
     }
+
     // 事务系列
     public static function beginTransaction()
     {
         self::connectPdo();
         return self::$pdo->beginTransaction();
     }
+    
     public static function commit()
     {
         self::connectPdo();
