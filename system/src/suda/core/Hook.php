@@ -8,6 +8,7 @@ class Hook
 
     public static function loadJson(string $path){
         $hooks=Json::loadFile($path);
+        _D()->trace($path);
         self::load($hooks?:[]);
     }
 

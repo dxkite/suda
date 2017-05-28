@@ -165,6 +165,10 @@ class Application
         if (Storage::exist($path=MODULE_CONFIG.'/config.json')) {
             Config::set('module', Json::loadFile($path));
         }
+        // 监听器
+        if (Storage::exist($path=MODULE_CONFIG.'/listener.json')) {
+            Hook::loadJson($path);
+        }
     }
 
 
