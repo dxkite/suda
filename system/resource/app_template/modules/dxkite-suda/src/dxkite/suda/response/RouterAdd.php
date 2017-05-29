@@ -38,7 +38,7 @@ class RouterAdd extends \dxkite\suda\ACResponse
              );
              
             return $this->page('suda:router_add_ok')->set('header_select', 'router_list')
-            ->set('class', $result['class'])
+           ->set('title', __('修改路由成功')) ->set('class', $result['class'])
             ->set('template', $result['template']??'无模板')->render();
         }
 
@@ -46,7 +46,7 @@ class RouterAdd extends \dxkite\suda\ACResponse
         ->set('modules', RouterManager::getModules())
         ->set('title', __('添加路由'));
         if ($request->get()->module) {
-            $page->set('module_selected',$request->get()->module);
+            $page->set('module_selected', $request->get()->module);
         }
         return $page->render();
     }

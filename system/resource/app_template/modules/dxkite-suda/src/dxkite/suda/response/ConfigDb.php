@@ -22,7 +22,7 @@ class ConfigDb extends \dxkite\suda\ACResponse
     public function onAction(Request $request)
     {
         $page= $this->page('suda:config_db')
-        ->set('title', 'Welcome to use Suda!')
+        ->set('title', __('配置数据库'))
         ->set('header_select', 'system_admin');
         
         $config=conf('database');
