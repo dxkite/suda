@@ -5,7 +5,8 @@ namespace suda\template\compiler;
 use Storage;
 use suda\core\Application;
 use suda\tool\Value;
-use suda\template\{Compiler,Manager};
+use suda\template\Compiler;
+use suda\template\Manager;
 
 /**
  *
@@ -45,7 +46,7 @@ class SudaCompiler implements Compiler
      * @param $input
      * @return mixed
      */
-    public function compileFile(string $name,string $input,string $output)
+    public function compile(string $name, string $input, string $output)
     {
         _D()->time('compile '.$name);
 
@@ -62,6 +63,13 @@ class SudaCompiler implements Compiler
         Storage::put($output, $content);
         _D()->timeEnd('compile '.$name);
         return true;
+    }
+
+    public function render(string $name, string $viewfile)
+    {
+        $name='Template_'.md5($name);
+        require_once $viewfile;
+        return $template=new $name;
     }
 
     private function compileString(string $str)
@@ -84,8 +92,8 @@ class SudaCompiler implements Compiler
         $rawecho=sprintf('/(?<!!)%s\s*(.+?)\s*?%s/', preg_quote(self::$rawTag[0]), preg_quote(self::$rawTag[1]));
         $comment=sprintf('/(?<!!)%s(.+)%s/', preg_quote(self::$commentTag[0]), preg_quote(self::$commentTag[1]));
         return self::echoValue(preg_replace(
-            [$rawecho, $echo, $comment,'/\<\!\-\-\:\s*(.+?)\s*\-\-\>/'],
-            ['<?php echo $1; ?>', '<?php echo htmlspecialchars($1); ?>', '<?php /* $1 */ ?>','<?php \suda\core\Hook::exec("$1") ?>'],
+            [$rawecho, $echo, $comment, '/\<\!\-\-\:\s*(.+?)\s*\-\-\>/'],
+            ['<?php echo $1; ?>', '<?php echo htmlspecialchars($1); ?>', '<?php /* $1 */ ?>', '<?php \suda\core\Hook::exec("$1") ?>'],
             $str
         ));
     }

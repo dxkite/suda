@@ -73,7 +73,7 @@ class Manager
     public static function compile(string $name)
     {
         self::loadCompile();
-        return self::$compiler->compileFile($name, self::getInputPath($name), self::getOutputPath($name));
+        return self::$compiler->compile($name, self::getInputPath($name), self::getOutputPath($name));
     }
 
     /**
@@ -111,9 +111,8 @@ class Manager
      */
     public static function displayFile(string $file, string $name)
     {
-        $name='Template_'.md5($name);
-        require_once $file;
-        return $template=new $name;
+        self::loadCompile();
+        return self::$compiler->render($name,$file);
     }
 
     /**
