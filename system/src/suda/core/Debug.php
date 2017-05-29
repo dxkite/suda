@@ -33,6 +33,8 @@ class Debug
     {
         self::$time[$name]=microtime(true);
     }
+
+
     public static function timeEnd(string $name)
     {
         if (isset(self::$time[$name])) {
@@ -71,6 +73,7 @@ class Debug
             return self::printHTML($e);
         }
     }
+
     protected static function printTrace(array $backtrace, bool $str=true)
     {
         $traces_console=[];
@@ -125,10 +128,11 @@ class Debug
     protected static function printHTML(Exception $e)
     {
         // 非致命错误
-        if ($e->getSeverity()!=E_ERROR) {
+        if ($e->getSeverity()!==E_ERROR) {
             echo "<div class=\"suda-error\"><b>{$e->getName()}</b>: {$e->getMessage()} at {$e->getFile()}#{$e->getLine()}</div>";
             return;
         }
+
         $line=$e->getLine();
         $file=$e->getFile();
 

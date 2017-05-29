@@ -1,18 +1,26 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>{{ $:title }}</title>
-    </head>
-    <body>
-        <div> {{ _T($:helloworld) }}@__create_url__ </div>
-        @if (count($_GET))
-        <table>
-            @foreach ($_GET as $name => $value)
-            <tr><th>{{$name}}</th><td>{{$value}}</td></tr>
-            @endforeach
-        </table>
-        @else
-        <div>No GET value</div>
-        @endif
-    </body>
+
+<head>
+    <title>{{ $:title }}</title>
+    {:head}
+</head>
+
+<body>
+    <div> {{ _T($:helloworld) }}@/ </div>
+    @if (count($_GET))
+    <table>
+        @foreach ($_GET as $name => $value)
+        <tr>
+            <th>{{$name}}</th>
+            <td>{{$value}}</td>
+        </tr>
+        @endforeach
+    </table>
+    @else
+    <div>No GET value</div>
+    @endif {:body}
+</body>
+{:script}
+
 </html>

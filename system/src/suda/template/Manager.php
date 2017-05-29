@@ -34,13 +34,6 @@ class Manager
     private static $compiler=null;
 
     /**
-     * 附加模板命令
-     *
-     * @var array
-     */
-    protected static $command=[];
-    
-    /**
      * 载入模板编译器
      */
     public static function loadCompile()
@@ -173,51 +166,7 @@ class Manager
         return $output;
     }
 
-    /**
-     * 扩展模板命令
-     *
-     * @param string $name
-     * @param string $callback
-     * @param bool $echo
-     * @return void
-     */
-    public static function addCommand(string $name, string $callback, bool $echo=true)
-    {
-        $name=ucfirst($name);
-        self::$command[$name]=['command'=>$callback,'echo'=>$echo];
-    }
-    
-    /**
-     * 检查模板扩展命令是否存在
-     *
-     * @param string $name
-     * @return bool
-     */
-    public static function hasCommand(string $name):bool
-    {
-        $name=ucfirst($name);
-        return isset(self::$command[$name]);
-    }
-
-    /**
-     * 创建模板扩展命令
-     *
-     * @param string $name
-     * @param string $exp
-     * @return string
-     */
-    public static function buildCommand(string $name, string $exp):string
-    {
-        $name=ucfirst($name);
-        if (self::hasCommand($name)) {
-            $echo=self::$command[$name]['echo']?'echo':'';
-            $command=self::$command[$name]['command'];
-            return '<?php '.$echo.' (new \suda\tool\Command("'.$command.'"))->args'. ($exp?:'()').' ?>';
-        }
-        return '';
-    }
-
-
+   
     /**
      * 检测模板是否被修改
      *

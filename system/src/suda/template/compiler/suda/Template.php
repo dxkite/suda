@@ -4,6 +4,8 @@ namespace suda\template\compiler\suda;
 use suda\tool\ArrayHelper;
 use suda\tool\Command;
 use suda\core\Response;
+use suda\core\Hook;
+use suda\exception\CommandException;
 
 abstract class Template
 {
@@ -148,15 +150,40 @@ abstract class Template
         }
     }
 
+    public function execGloHook(string $name)
+    {
+        try {
+            Hook::exec($name, [$this]);
+        } catch (CommandException $e) {
+            echo '<div style="color:red" title="'.__('can\'t run global hook %s', $e->getCmd()).'">{:'.$name.'}</div>';
+            return;
+        }
+        if (conf('app.showPageGlobalHook', false)) {
+            echo '<div style="color:green" title="'.__('global hook point').'">{:'.$name.'}</div>';
+        }
+    }
+
     public function exec(string $name)
     {
-        // 存在父模板
-        if ($this->parent) {
-            $this->parent->exec($name);
-        } elseif (isset($this->hooks[$name])) {
-            foreach ($this->hooks[$name] as $hook) {
-                $hook->exec();
+        try {
+            // 存在父模板
+            if ($this->parent) {
+                $this->parent->exec($name);
+            } elseif (isset($this->hooks[$name])) {
+                foreach ($this->hooks[$name] as $hook) {
+                    $hook->exec();
+                }
             }
+        } catch (CommandException $e) {
+            echo '<div style="color:red" title="'.__('can\'t run page hook %s', $e->getCmd()).'">{:'.$e->getCmd().'}</div>';
+            return;
         }
+        if (conf('app.showPageHook', false)) {
+            echo '<div style="color:green" title="'.__('page hook point').'">{#'.$name.'}</div>';
+        }
+    }
+    public function getName()
+    {
+        return $this->name;
     }
 }

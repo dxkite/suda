@@ -30,7 +30,7 @@ class Command
 
     public function exec(array $params=[])
     {
-        _D()->trace(__('exec command %s with args %s', is_string($this->command)?$this->command:$this->name, json_encode($params)));
+        _D()->trace(__('exec command %s with args %s', $this->name, json_encode($params)));
         if (is_string($this->command)) {
             $this->command= self::parseCommand($this->command);
         }
@@ -61,6 +61,9 @@ class Command
                     $this->command[0]=new $this->command[0];
                 }
             }
+            if (!is_callable($this->command)) {
+                throw (new CommandException(__('command{%s} is uncallable',$this->name)))->setCmd($this->name)->setParams($this->params);
+            }
             if ($this->static) {
                 return forward_static_call_array($this->command, $this->params);
             } else {
@@ -80,10 +83,12 @@ class Command
     {
         return self::exec(func_get_args());
     }
+    
     protected function parseCommand(string $command)
     {
         if (preg_match('/^(?:([\w\\\\\/.]+))?(?:(#|->|::)(\w+))?(?:\((.+?)\))?(?:@(.+))?$/', $command, $matchs)) {
             _D()->trace(__('parse command %s', $command));
+            $this->name=$command;
             // 添加参数绑定
             if (isset($matchs[4])) {
                 $this->func_bind=explode(',', trim($matchs[4], ','));
@@ -105,7 +110,7 @@ class Command
                 return $matchs[1];
             }
         } else {
-            throw new CommandException('unknow:'.$command);
+            throw (new CommandException('unknow:'.$command))->setCmd($command);
         }
     }
 }

@@ -29,4 +29,7 @@ class Index extends \suda\core\Response
 
         return $page->render();
     }
+    public static function showTplName($tpl){
+        echo '<div>'.__('当前页面模板名:%s',$tpl->getName()).'</div>';
+    }
 }

@@ -15,8 +15,15 @@ class SudaCompiler implements Compiler
 {
     protected static $rawTag=['{{!','}}'];
     protected static $echoTag=['{{','}}'];
+    protected static $hookTag=['{:','}'];
     protected static $commentTag=['{--','--}'];
-
+    /**
+     * 附加模板命令
+     *
+     * @var array
+     */
+    protected static $command=[];
+    
     // 编译文本
     public function compileText(string $text)
     {
@@ -71,12 +78,56 @@ class SudaCompiler implements Compiler
         require_once $viewfile;
         return $template=new $name;
     }
+    
+    /**
+     * 扩展模板命令
+     *
+     * @param string $name
+     * @param string $callback
+     * @param bool $echo
+     * @return void
+     */
+    public static function addCommand(string $name, string $callback, bool $echo=true)
+    {
+        $name=ucfirst($name);
+        self::$command[$name]=['command'=>$callback,'echo'=>$echo];
+    }
+    
+    /**
+     * 检查模板扩展命令是否存在
+     *
+     * @param string $name
+     * @return bool
+     */
+    public static function hasCommand(string $name):bool
+    {
+        $name=ucfirst($name);
+        return isset(self::$command[$name]);
+    }
+
+    /**
+     * 创建模板扩展命令
+     *
+     * @param string $name
+     * @param string $exp
+     * @return string
+     */
+    public static function buildCommand(string $name, string $exp):string
+    {
+        $name=ucfirst($name);
+        if (self::hasCommand($name)) {
+            $echo=self::$command[$name]['echo']?'echo':'';
+            $command=self::$command[$name]['command'];
+            return '<?php '.$echo.' (new \suda\tool\Command("'.$command.'"))->args'. ($exp?:'()').' ?>';
+        }
+        return '';
+    }
 
     private function compileString(string $str)
     {
         $callback=function ($match) {
-            if (Manager::hasCommand(ucfirst($match[1]))) {
-                $match[0]=Manager::buildCommand($match[1], $match[3] ?? '');
+            if (self::hasCommand(ucfirst($match[1]))) {
+                $match[0]=self::buildCommand($match[1], $match[3] ?? '');
             } elseif (method_exists($this, $method = 'parse'.ucfirst($match[1]))) {
                 $match[0] = $this->$method($match[3] ?? '');
             }
@@ -91,9 +142,10 @@ class SudaCompiler implements Compiler
         $echo=sprintf('/(?<!!)%s\s*(.+?)\s*?%s/', preg_quote(self::$echoTag[0]), preg_quote(self::$echoTag[1]));
         $rawecho=sprintf('/(?<!!)%s\s*(.+?)\s*?%s/', preg_quote(self::$rawTag[0]), preg_quote(self::$rawTag[1]));
         $comment=sprintf('/(?<!!)%s(.+)%s/', preg_quote(self::$commentTag[0]), preg_quote(self::$commentTag[1]));
+        $hook=sprintf('/(?<!!)%s(.+)%s/', preg_quote(self::$hookTag[0]), preg_quote(self::$hookTag[1]));
         return self::echoValue(preg_replace(
-            [$rawecho, $echo, $comment, '/\<\!\-\-\:\s*(.+?)\s*\-\-\>/'],
-            ['<?php echo $1; ?>', '<?php echo htmlspecialchars($1); ?>', '<?php /* $1 */ ?>', '<?php \suda\core\Hook::exec("$1") ?>'],
+            [$rawecho, $echo, $comment, $hook ],
+            ['<?php echo $1; ?>', '<?php echo htmlspecialchars($1); ?>', '<?php /* $1 */ ?>', '<?php $this->execGloHook("$1") ?>'],
             $str
         ));
     }
