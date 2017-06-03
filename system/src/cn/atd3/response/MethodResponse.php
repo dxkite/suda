@@ -9,7 +9,7 @@ use suda\core\Request;
 /**
  * 自动调用函数接口来响应
  */
-class MethodResponse extends \suda\core\Response
+abstract class MethodResponse extends \suda\core\Response
 {
     // 参数生成
     const PARAM_GET=1;
@@ -36,7 +36,7 @@ class MethodResponse extends \suda\core\Response
     {
         $this->request=$request;
         $method=$request->get()->method($this->default);
-        if (isset($this->export[$method]['comment']) && preg_match('/@paramSource\s*:\s*(get|get|json|all)\s*$/im', $this->export[$method]['comment'], $match)) {
+        if (isset($this->export[$method]['comment']) && preg_match('/@paramSource\s+(get|post|json|all)\s*$/ims', $this->export[$method]['comment'], $match)) {
             $type=$match[1];
             $alias=[
                     'get'=>MethodResponse::PARAM_GET,
@@ -54,7 +54,7 @@ class MethodResponse extends \suda\core\Response
             return $this->runMethod([$this, $this->default], $param_arr);
         }
     }
-
+    abstract public function __default();
     /**
      * 获取导出的接口
      *
@@ -71,6 +71,7 @@ class MethodResponse extends \suda\core\Response
                 $export[$name]['callback']=[get_class($this),$name];
             }
         }
+        _D()->info($export);
         return $export;
     }
 
