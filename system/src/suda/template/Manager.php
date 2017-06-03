@@ -117,7 +117,7 @@ class Manager
         $module_dir=Application::getModuleDir($module);
         // 向下兼容
         defined('APP_PUBLIC') or define('APP_PUBLIC', Storage::path('.'));
-        $static_path=Storage::path(self::getThemePath($module));
+        $static_path=Storage::path(self::getThemePath($module).'/static');
         $path=Storage::path(APP_PUBLIC.'/static/'. $module_dir);
         if (self::hasChanged($static_path, $path)) {
             self::copyStatic($static_path, $path);
