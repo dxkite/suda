@@ -13,50 +13,7 @@ final class Request
     private static $type=0;
     private static $request=null;
     private static $query='';
-    private static $crawlers=[
-            'TencentTraveler',
-            'Baiduspider+',
-            'BaiduGame',
-            'Googlebot',
-            'Baiduspider',
-            'msnbot',
-            'Sosospider+',
-            'Sogou web spider',
-            'ia_archiver',
-            'Yahoo! Slurp',
-            'YoudaoBot',
-            'Yahoo Slurp',
-            'MSNBot',
-            'Java (Often spam bot)',
-            'BaiDuSpider',
-            'Voila',
-            'Yandex bot',
-            'BSpider',
-            'twiceler',
-            'Sogou Spider',
-            'Speedy Spider',
-            'Google AdSense',
-            'Heritrix',
-            'Python-urllib',
-            'Alexa (IA Archiver)',
-            'Ask',
-            'Exabot',
-            'Custo',
-            'OutfoxBot/YodaoBot',
-            'yacy',
-            'SurveyBot',
-            'legs',
-            'lwp-trivial',
-            'Nutch',
-            'StackRambler',
-            'The web archive (IA Archiver)',
-            'Perl tool',
-            'MJ12bot',
-            'Netcraft',
-            'MSIECrawler',
-            'WGet tools',
-            'larbin',
-            'Fish search',];
+    private static $crawlers=null;
     private function __construct()
     {
         if (!isset($_SERVER['REQUEST_URI'])) {
@@ -297,6 +254,9 @@ final class Request
     public function isCrawler()
     {
         $agent= $_SERVER['HTTP_USER_AGENT'] ?? '';
+        if(is_null(self::$crawlers)){
+            self::$crawlers=require SYSTEM_RESOURCE.'/crawlers.php';
+        }
         foreach (self::$crawlers as $crawler) {
             if (preg_match('/'.preg_quote($crawler).'/i', $agent)) {
                 return $crawler;

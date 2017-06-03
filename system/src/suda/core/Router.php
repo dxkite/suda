@@ -42,6 +42,7 @@ class Router
         $module=Application::getModuleFullName($module);
         $admin_prefix='';
         if (is_array($prefix)) {
+            // TODO: admin->backend simple->frontend
             $admin_prefix=$prefix['admin'] ?? array_shift($prefix);
             $prefix=$prefix['simple'] ?? array_shift($prefix);
         }
