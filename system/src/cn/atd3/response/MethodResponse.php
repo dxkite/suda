@@ -15,11 +15,12 @@ abstract class MethodResponse extends \suda\core\Response
     const PARAM_GET=1;
     const PARAM_POST=2;
     const PARAM_JSON=3;
-    const PARAM_ALL=4;
-    
+    const PARAM_FILES=4;
+
     protected $export;
     protected $request;
-    protected $default='__default';
+    protected $defaultMethod='__default';
+    protected $defaultParams=[MethodResponse::PARAM_GET];
 
     public function __construct()
     {
@@ -35,25 +36,32 @@ abstract class MethodResponse extends \suda\core\Response
     public function onRequest(Request $request)
     {
         $this->request=$request;
-        $method=$request->get()->method($this->default);
-        if (isset($this->export[$method]['comment']) && preg_match('/@paramSource\s+(get|post|json|all)\s*$/ims', $this->export[$method]['comment'], $match)) {
-            $type=$match[1];
+        $method=$request->get()->method($this->defaultMethod);
+        $param_arr=[];
+        if (isset($this->export[$method]['comment']) && preg_match('/@paramSource\s+([\w,]+)\s*$/ims', $this->export[$method]['comment'], $match)) {
+            $types=explode(',', strtoupper(trim($match[1], ',')));
             $alias=[
-                    'get'=>MethodResponse::PARAM_GET,
-                    'post'=>MethodResponse::PARAM_POST,
-                    'json'=>MethodResponse::PARAM_JSON,
-                    'all'=>MethodResponse::PARAM_ALL,
+                    'GET'=>MethodResponse::PARAM_GET,
+                    'POST'=>MethodResponse::PARAM_POST,
+                    'JSON'=>MethodResponse::PARAM_JSON,
+                    'FILES'=>MethodResponse::PARAM_FILES,
                 ];
-            $param_arr=$this->getParams($alias[strtolower($type)]);
+            
+            foreach ($types as $type) {
+                $param_arr=array_merge($param_arr, $this->getParams($alias[$type]));
+            }
         } else {
-            $param_arr=$this->getParams();
+            foreach ($this->defaultParams as $type) {
+                $param_arr=array_merge($param_arr, $this->getParams($type));
+            }
         }
         if (isset($this->export[$method])) {
             return $this->runMethod($this->export[$method]['callback'], $param_arr);
         } else {
-            return $this->runMethod([$this, $this->default], $param_arr);
+            return $this->runMethod([$this, $this->defaultMethod], $param_arr);
         }
     }
+
     abstract public function __default();
     /**
      * 获取导出的接口
@@ -71,7 +79,7 @@ abstract class MethodResponse extends \suda\core\Response
                 $export[$name]['callback']=[get_class($this),$name];
             }
         }
-        _D()->info($export);
+        // _D()->info($export);
         return $export;
     }
 
@@ -99,6 +107,8 @@ abstract class MethodResponse extends \suda\core\Response
                 return $this->request->post()->_getVar();
             case MethodResponse::PARAM_JSON:
                 return $this->request->json();
+            case MethodResponse::PARAM_FILES:
+                return $this->request->files()->_getVar();
             default:
                 return array_merge($this->request->get()->_getVar(), $this->request->post()->_getVar(), $this->request->json());
         }
