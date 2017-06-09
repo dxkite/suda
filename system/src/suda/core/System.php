@@ -8,7 +8,7 @@ defined('SYSTEM_DIR') or define('SYSTEM_DIR', dirname(dirname(dirname(__DIR__)))
 defined('SYSTEM_RESOURCE') or define('SYSTEM_RESOURCE', SYSTEM_DIR.'/resource');
 define('SUDA_VERSION','1.2.3');
 
-require_once __DIR__.'/alias.php';
+require_once __DIR__.'/functions.php';
 
 class System
 {
