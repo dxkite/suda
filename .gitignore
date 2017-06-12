@@ -5,3 +5,4 @@ public/static/
 public/phpinfo.php
 app/resource/config/config.json
 /vendor/
+/script
