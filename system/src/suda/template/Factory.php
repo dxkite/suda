@@ -11,7 +11,7 @@
  * @copyright  Copyright (c) DXkite
  * @license    MIT
  * @link       https://github.com/DXkite/suda
- * @version    1.2.3
+ * @version    1.2.4
  */
 namespace suda\template;
 

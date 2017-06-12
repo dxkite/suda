@@ -11,7 +11,7 @@
  * @copyright  Copyright (c) DXkite
  * @license    MIT
  * @link       https://github.com/DXkite/suda
- * @version    1.2.3
+ * @version    1.2.4
  */
 namespace suda\core;
 
@@ -20,7 +20,7 @@ defined('D_MEM') or define('D_MEM', memory_get_usage());
 defined('ROOT_PATH') or define('ROOT_PATH', dirname(dirname(dirname(dirname(__DIR__)))));
 defined('SYSTEM_DIR') or define('SYSTEM_DIR', dirname(dirname(dirname(__DIR__))));
 defined('SYSTEM_RESOURCE') or define('SYSTEM_RESOURCE', SYSTEM_DIR.'/resource');
-define('SUDA_VERSION','1.2.3');
+define('SUDA_VERSION','1.2.4');
 
 require_once __DIR__.'/functions.php';
 
