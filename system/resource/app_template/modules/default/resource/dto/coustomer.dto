@@ -1,0 +1,4 @@
+; 顾客联系方式
+id bigint(20) primary key auto comment="顾客序列号"
+data text comment="顾客信息"
+status tinyint(0) default=0 key comment="顾客状态"

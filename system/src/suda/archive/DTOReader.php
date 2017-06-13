@@ -54,14 +54,6 @@ class DTOReader
         return $path;
     }
 
-    public function getFieldsStr(string $key=null)
-    {
-        $fields=$this->fields;
-        if ($key && isset($fields[$key])){
-            unset($fields[$key]);
-        }
-        return '[\''.implode('\',\'', array_keys($fields)).'\']';
-    }
     public function updataParams(){
         $str=[];
      
@@ -152,6 +144,9 @@ class DTOReader
         return $sql;
     }
 
+    public function getPrimaryKey(){
+        return $this->primary;
+    }
     /**
      * @return mixed
      */

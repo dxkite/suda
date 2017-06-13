@@ -17,6 +17,7 @@
 namespace cn\atd3\response;
 
 use suda\core\{Session,Cookie,Request,Query};
+use suda\archive\DAO;
 
 /**
 * visit url / as all method to run this class.
@@ -37,7 +38,9 @@ class Index extends \suda\core\Response
         // param values array
         $value=array();
         // display template
-
+        $dao=new DAO('coustomer');
+        $dao->insert(['data'=>'something','status'=>1]);
+        var_dump($dao->list());
         $page->set('title', 'Welcome to use Suda!')
         ->set('helloworld', 'Hello,World!')
         ->set('value', $value);

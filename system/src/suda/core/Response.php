@@ -81,7 +81,15 @@ abstract class Response
             self::noCache();
             // for windows debug touch file to avoid 304 by server
             if (DIRECTORY_SEPARATOR==='\\') {
-                touch('dev.php');
+                $script=$_SERVER['SCRIPT_NAME'];
+                $file=APP_PUBLIC.$script;
+                $content=file_get_contents($file);
+                if (preg_match('/\<\?php\s+#\d+\r\n/i', $content)) {
+                    $content=preg_replace('/\<\?php\s+#\d+\r\n/i', '<?php #'.time()."\r\n", $content);
+                } else {
+                    $content=preg_replace('/\<\?php/i', '<?php #'.time()."\r\n", $content);
+                }
+                file_put_contents($file, $content);
             }
         }
     }

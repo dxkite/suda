@@ -23,14 +23,20 @@ class DAO
     protected $primaryKey=null;
     protected $tableName;
 
-    public function __construct()
+    public function __construct(string $tableName)
     {
+        // 默认ID为表主键
+        $this->primaryKey='id';
+        $this->tableName=$tableName;
         // 读取类名作为表名
         // TableName    => table_name
         // TableNameDAO => table_name
-        $this->tableName=trim(strtolower(preg_replace('/([A-Z])/','_$1',preg_replace('/^.+\\\\/','',preg_replace('/DAO$/','',get_class($this))))),'_');
-        // 默认ID为表主键
-        $this->primaryKey='id';
+        // if (is_null($tableName)) {
+        //     $this->tableName=trim(strtolower(preg_replace('/([A-Z])/', '_$1', preg_replace('/^.+\\\\/', '', preg_replace('/DAO$/', '', get_class($this))))), '_');
+        // }else{
+        //     $this->tableName=$tableName;
+        // }
+        self::initTableFields();
     }
 
 
@@ -227,5 +233,31 @@ class DAO
     public function count():int
     {
         return Query::count($this->getTableName());
+    }
+
+    
+    private function initTableFields()
+    {
+        // 使用DTO文件
+        $path=TEMP_DIR.'/db/fields/'.$this->tableName.'.php';
+        if (file_exists($path)) {
+            $fieldsinfo=require $path;
+            $this->setFields(array_keys($fieldsinfo['fields']));
+            $this->setPrimaryKey($fieldsinfo['primaryKey']);
+        } else {
+            $fields=[];
+            $columns=(new SQLQuery('show columns from #{'.$this->getTableName().'};'))->fetchAll();
+            foreach ($columns as $column) {
+                $fields[$column['Field']]=$column['Type'];
+                if ($column['Key']==='PRI'){
+                    $this->setPrimaryKey($column['Field']);
+                }
+            }
+            $this->setFields(array_keys($fields));
+            $info['fields']=$fields;
+            $info['primaryKey']=$this->getPrimaryKey();
+            Storage::path(dirname($path));
+            ArrayHelper::export($path, '_fieldinfos',$info);
+        }
     }
 }

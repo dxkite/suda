@@ -224,7 +224,7 @@ End;
                 self::log('import module >  '.$module);
                 self::execFile($datafile);
             } else {
-                self::log("file no found :${datafile}");
+                _D()->debug("file no found :${datafile}");
             }
         }
         return $this;
@@ -262,12 +262,13 @@ End;
     public function createTable(string $module)
     {
         $module_dir=Application::getModuleDir($module);
-        $create=$this->dirname.'/create/'.$module_dir.'.php';
+        $path=file_exists($this->dirname)?$this->dirname:TEMP_DIR.'/db';
+        $create=$path.'/create/'.$module_dir.'.php';
         if (Storage::exist($create)) {
             self::log('create module tables > '.$create);
             self::execFile($create);
         } else {
-            self::log("file no found :${create}");
+            _D()->debug("file no found :${create}");
         }
     }
 
@@ -277,7 +278,7 @@ End;
         $module_dir=Application::getModuleDir($module);
         $dto_path=MODULES_DIR.'/'.$module_dir.'/resource/dto';
         if (!Storage::isDir($dto_path)) {
-            self::log("not exist {$dto_path}\r\n");
+            _D()->debug("not exist {$dto_path}\r\n");
             return;
         }
         $create= $this->dirname.'/create/'.$module_dir.'.php';
@@ -303,9 +304,20 @@ End;
                 $builder->setName($name);
                 $builder->setTableName($table_name);
                 $table_names[]=$table_name;
+                
+                // 创建键列
+                $cmtablefields=TEMP_DIR.'/db/fields/'.$table_name.'.php';
+                
+                $info['fields']=$builder->getFields();
+                $info['primaryKey']=key($builder->getPrimaryKey());
+                Storage::path(dirname($cmtablefields));
+                ArrayHelper::export($cmtablefields, '_fieldinfos',$info);
+                self::log('output file > '.$cmtablefields);
+
                 $sql=$builder->getCreateSQL();
                 $query=self::createQuery("DROP TABLE IF EXISTS #{{$table_name}}").self::createQueryMessage(self::sqlNameChange($sql), 'create table '.$table_name);
                 file_put_contents($create, '/* table '.$table_name.'*/'.$query."\r\n", FILE_APPEND);
+            
             } else {
                 self::log('parse sql > '.$dto_path.'/'.$table);
                 $name=pathinfo($table, PATHINFO_FILENAME);
@@ -325,8 +337,20 @@ End;
         $tablefile=$this->dirname.'/table/'.$module_dir.'.php';
         Storage::path(dirname($tablefile));
         ArrayHelper::export($tablefile, '_tables', $table_names);
+
+        $cmtablefile=TEMP_DIR.'/db/table/'.$module_dir.'.php';
+        Storage::path(dirname($cmtablefile));
+        ArrayHelper::export($cmtablefile, '_tables', $table_names);
+
         file_put_contents($create, str_repeat('#', 64)."\r\n".self::$dtoend, FILE_APPEND);
+        
+        $cmcreate=TEMP_DIR.'/db/create/'.$module_dir.'.php';
+        Storage::path(dirname($cmcreate));
+        Storage::copy($create,$cmcreate);
+        
+        self::log('output file > '.$cmcreate);
         self::log('output file > '.$create);
+        self::log('output tablefile > '.$cmtablefile);
         self::log('output tablefile > '.$tablefile);
         return true;
     }
