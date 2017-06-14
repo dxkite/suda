@@ -34,13 +34,13 @@ class Index extends \suda\core\Response
         $page=$this->page('demo/default:index');
 
         // params if had
-        ;
+        // ;
         // param values array
-        $value=array();
+        // $value=array();
         // display template
-        $dao=new DAO('coustomer');
-        $dao->insert(['data'=>'something','status'=>1]);
-        var_dump($dao->list());
+        // $dao=new DAO('coustomer');
+        // $dao->updateByPrimaryKey(4,['data'=>'something status']);
+        // var_dump($dao->list());
         $page->set('title', 'Welcome to use Suda!')
         ->set('helloworld', 'Hello,World!')
         ->set('value', $value);
