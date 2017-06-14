@@ -75,12 +75,12 @@ class DAO
      * @param [type] $data 待更新的数据
      * @return counts 更新的行数
      */
-    public function updataByPrimaryKey($value, $values)
+    public function updateByPrimaryKey($value, $values)
     {
         if (is_array($values) && !$this->checkFields(array_keys($values))) {
             return false;
         }
-        return Query::updata($this->getTableName(), $values, [$this->getPrimaryKey()=>$value]);
+        return Query::update($this->getTableName(), $values, [$this->getPrimaryKey()=>$value]);
     }
     
     /**
@@ -117,7 +117,7 @@ class DAO
      * @param [type] $where
      * @return int
      */
-    public function updata($values, $where)
+    public function update($values, $where)
     {
         if (is_array($values) && !$this->checkFields(array_keys($values))) {
             return false;
@@ -125,7 +125,7 @@ class DAO
         if (is_array($where) && !$this->checkFields(array_keys($where))) {
             return false;
         }
-        return Query::updata($this->getTableName(), $values, $where);
+        return Query::update($this->getTableName(), $values, $where);
     }
 
     /**
