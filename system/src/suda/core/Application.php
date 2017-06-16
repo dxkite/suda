@@ -66,10 +66,11 @@ class Application
         Autoloader::setNamespace(Config::get('app.namespace'));
         // 系统共享库
         Autoloader::addIncludePath(SHRAE_DIR);
-
+        // 加载模块主配置
+        self::loadAllModuleManifast();
         // 模块共享库
         $module_dirs=self::getModuleDirs();
-
+        // 激活模块
         $module_use=self::getLiveModules();
         // 安装 启用 活动
         foreach ($module_dirs as $module_dir) {
@@ -273,22 +274,28 @@ class Application
         // [限制名/]模块名:版本号
         $dirs=Storage::readDirs(MODULES_DIR);
         $modulemap=[];
+        foreach (self::$module_configs as $name => $info) {
+            $modulemap[$name]=$info['directory'];
+        }
+        ArrayHelper::export(TEMP_DIR.'/module-dir.php', '_module_map', $modulemap);
+        return $modulemap;
+    }
+
+    public static function loadAllModuleManifast() {
+        // [限制名/]模块名:版本号
+        $dirs=Storage::readDirs(MODULES_DIR);
         foreach ($dirs as $dir) {
             if (Storage::exist($file=MODULES_DIR.'/'.$dir.'/module.json')) {
                 _D()->info(__('load module config %s',$file));
                 $json=Json::parseFile($file);
                 $name=$json['name'] ?? $dir;
+                $json['directory']=$dir;
                 $name.=isset($json['version'])?':'.$json['version']:'';
-                // self::$module_configs[$name]=$json;
-            } else {
-                $name=$dir;
+                self::$module_configs[$name]=$json;
             }
-            $modulemap[$name]=$dir;
         }
-        
-        ArrayHelper::export(TEMP_DIR.'/module-dir.php', '_module_map', $modulemap);
-        return $modulemap;
     }
+
     public static function getModulesInfo()
     {
         return self::$module_configs;
