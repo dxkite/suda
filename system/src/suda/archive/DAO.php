@@ -15,7 +15,8 @@
  */
 namespace suda\archive;
 
-use suda\core\Query;
+use suda\core\{Query,Storage};
+use suda\tool\ArrayHelper;
 
 class DAO
 {
@@ -51,6 +52,24 @@ class DAO
             return false;
         }
         return Query::insert($this->getTableName(), $values);
+    }
+
+    /**
+     * 插入行
+     * @param $values 待插入的值
+     * @return void
+     */
+    public function insertValue($values)
+    {
+        $values=func_get_args();
+        $insert=[];
+        foreach ($this->getFields() as $field) {
+            $value=array_shift($values);
+            if(!is_null($value)){
+                $insert[$field]=$value;
+            }
+        }
+        return Query::insert($this->getTableName(), $insert);
     }
 
     /**
@@ -128,8 +147,43 @@ class DAO
         return Query::update($this->getTableName(), $values, $where);
     }
 
+
     /**
      * 根据条件删除列
+     *
+     * @param [type] $wants
+     * @param [type] $where
+     * @return int
+     */
+    public function select($wants, $where)
+    {
+        if (is_array($where) && !$this->checkFields(array_keys($where))) {
+            return false;
+        }
+        if (is_array($wants) && !$this->checkFields($wants)) {
+            return false;
+        } elseif (is_string($wants)) {
+            if (!in_array($wants, $this->fields)) {
+                return false;
+            }
+        }
+        return Query::where($this->getTableName(), $wants, $where);
+    }
+        
+    /**
+     * 根据条件删除列
+     *
+     * @param [type] $wants
+     * @param [type] $where
+     * @return int
+     */
+    public function query(string $query, array $binds=[], bool $scroll=false)
+    {
+        return new SQLQuery($query, $binds, $scroll);
+    }
+
+    /**
+     * 根据条件获取列
      *
      * @param [type] $where
      * @return int
@@ -249,7 +303,7 @@ class DAO
             $columns=(new SQLQuery('show columns from #{'.$this->getTableName().'};'))->fetchAll();
             foreach ($columns as $column) {
                 $fields[$column['Field']]=$column['Type'];
-                if ($column['Key']==='PRI'){
+                if ($column['Key']==='PRI') {
                     $this->setPrimaryKey($column['Field']);
                 }
             }
@@ -257,7 +311,7 @@ class DAO
             $info['fields']=$fields;
             $info['primaryKey']=$this->getPrimaryKey();
             Storage::path(dirname($path));
-            ArrayHelper::export($path, '_fieldinfos',$info);
+            ArrayHelper::export($path, '_fieldinfos', $info);
         }
     }
 }

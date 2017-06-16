@@ -121,6 +121,7 @@ class DTOReader
     {
         $create=[];
         $sets=[];
+        if (!is_array($this->fields)) return '';
         foreach ($this->fields as $name => $type) {
             $type=strtoupper($type);
             $auto=isset($this->sets[$name]['auto'])?'AUTO_INCREMENT':'';
