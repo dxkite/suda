@@ -79,6 +79,7 @@ class ApplicationManager
         // 开发状态覆盖
         if (defined('DEBUG')) {
             Config::set('app.debug', DEBUG);
+            Config::set('debug', DEBUG);
         }
         // 载入配置前设置配置
         Hook::exec('core:loadManifast');

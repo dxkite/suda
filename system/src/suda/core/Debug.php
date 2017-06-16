@@ -247,7 +247,7 @@ class Debug
         $time=number_format($info['time'], 10);
         $mem=self::memshow($info['memory'], 2);
         self::$hash=substr(md5($mem.$time), 0, 8);
-        return Request::ip() . "\t" . date('Y-m-d H:i:s') . "\t" .Request::method()."\t".Request::virtualUrl() ."\t".$time.'s '.$mem.' '.self::$hash;
+        return Request::ip(). "\t" .(conf('debug')?'debug':'normal') . "\t" . date('Y-m-d H:i:s') . "\t" .Request::method()."\t".Request::virtualUrl() ."\t".$time.'s '.$mem.' '.self::$hash;
     }
 
     protected static function save(string $file)

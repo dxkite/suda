@@ -60,8 +60,7 @@ class Router
             $admin_prefix=$prefix['admin'] ?? array_shift($prefix);
             $prefix=$prefix['simple'] ?? array_shift($prefix);
         }
-
-
+        // _D()->debug($prefix);
         if (Storage::exist($file=MODULES_DIR.'/'.$module_dir.'/resource/config/router.json')) {
             $simple_routers= self::loadModuleJson($module, $file);
             _D()->trace(__('loading simple route from file %s', $file));

@@ -166,7 +166,11 @@ class SQLQuery
             $stmt->bindValue($key, $value, $type);
         }
 
+        $markstring='query>'.$stmt->queryString;
+        _D()->time($markstring);
         $return=$stmt->execute();
+        _D()->timeEnd($markstring);
+        
         self::$queryCount++;
         if ($return) {
             if (Config::get('debug')) {

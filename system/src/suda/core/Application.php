@@ -260,6 +260,7 @@ class Application
 
     public static function moduleMap()
     {
+        _D()->info(self::$module_configs);
         if (Config::get('debug', false) && Storage::exist(TEMP_DIR.'/module-dir.php')) {
             self::$module_dirs=require TEMP_DIR.'/module-dir.php';
         } else {
@@ -274,10 +275,11 @@ class Application
         $modulemap=[];
         foreach ($dirs as $dir) {
             if (Storage::exist($file=MODULES_DIR.'/'.$dir.'/module.json')) {
+                _D()->info(__('load module config %s',$file));
                 $json=Json::parseFile($file);
                 $name=$json['name'] ?? $dir;
                 $name.=isset($json['version'])?':'.$json['version']:'';
-                self::$module_configs[$name]=$json;
+                // self::$module_configs[$name]=$json;
             } else {
                 $name=$dir;
             }

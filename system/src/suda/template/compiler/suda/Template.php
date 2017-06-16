@@ -44,13 +44,13 @@ abstract class Template
         // 渲染页面
         $content=self::getRenderedString();
         // 计算输出页面长度
-        if (conf('app.calcContentLength', !DEBUG)) {
+        if (conf('app.calcContentLength', !conf('debug'))) {
             $length=strlen($content);
             // 输出页面长度
             $this->response->setHeader('Content-Length:'.$length);
         }
         $this->response->type('html');
-        if (conf('app.etag', !conf('debug')) && $length>0) {
+        if (conf('app.etag', !conf('debug'))) {
             $this->response->etag(md5($content));
         }
         echo $content;
