@@ -49,6 +49,11 @@ class Application
         // 获取基本配置信息
         if (Storage::exist($path=CONFIG_DIR.'/config.json')) {
             Config::load($path);
+            // 开发状态覆盖
+            if (defined('DEBUG')) {
+                Config::set('debug', DEBUG);
+                Config::set('app.debug', DEBUG);
+            }
         }
         
         // 加载外部数据库配置
@@ -261,8 +266,8 @@ class Application
 
     public static function moduleMap()
     {
-        _D()->info(self::$module_configs);
-        if (Config::get('debug', false) && Storage::exist(TEMP_DIR.'/module-dir.php')) {
+        _D()->trace('refersh module map');
+        if (!Config::get('debug', false) && Storage::exist(TEMP_DIR.'/module-dir.php')) {
             self::$module_dirs=require TEMP_DIR.'/module-dir.php';
         } else {
             self::$module_dirs=self::refreshMap();

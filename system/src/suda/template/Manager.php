@@ -95,12 +95,14 @@ class Manager
         if (is_null($viewpath)) {
             $viewpath=self::getOutputPath($name);
         }
+
         if (Config::get('debug', true)) {
             if (!self::compile($name)) {
-                echo '<b>compile error: '.$name.': '.$viewpath. 'missing raw template </b>';
+                echo '<b>compile error: '.$name.': '.$viewpath. ' missing raw template </b>';
                 return;
             }
         } elseif (!Storage::exist($viewpath)) {
+            // _D()->debug('perpare viewpath',$viewpath);
             if (!self::compile($name)) {
                 echo '<b>missing '.$name.': '.$viewpath. '</b>';
                 return;

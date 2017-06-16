@@ -76,12 +76,7 @@ class ApplicationManager
         Autoloader::addIncludePath(APP_DIR.'/share');
         // 设置配置
         Config::set('app', Json::loadFile($manifast));
-        // 开发状态覆盖
-        if (defined('DEBUG')) {
-            Config::set('app.debug', DEBUG);
-            // someting happend
-            Config::set('debug', DEBUG);
-        }
+
         // 载入配置前设置配置
         Hook::exec('core:loadManifast');
         // 默认应用控制器
