@@ -52,6 +52,7 @@ abstract class Template
         $this->response->type('html');
         if (conf('app.etag', !conf('debug'))) {
             $this->response->etag(md5($content));
+            return $this;
         }
         echo $content;
         return $this;

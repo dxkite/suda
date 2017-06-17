@@ -34,6 +34,7 @@ class System
         set_exception_handler('suda\\core\\System::uncaughtException');
         Locale::path(SYSTEM_RESOURCE.'/locales');
         _D()->trace(__('system init'));
+        Hook::exec('system:init');
     }
 
     public static function onShutdown()

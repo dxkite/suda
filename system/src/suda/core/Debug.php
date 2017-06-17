@@ -15,8 +15,8 @@
  */
 namespace suda\core;
 
+// 监听事件
 Hook::listen('system:init', 'suda\core\Debug::beforeSystemRun');
-Hook::listen('system:display::after', 'suda\core\Debug::afterSystemRun');
 Hook::listen('system:shutdown', 'suda\core\Debug::phpShutdown');
 Hook::listen('system:debug:printf', 'suda\core\Debug::printf');
 
@@ -278,7 +278,6 @@ class Debug
             file_put_contents($filejson, json_encode($loginfo));
         }
         $outerror=false;
-        
         foreach (self::$log as $log) {
             // 允许添加错误到日志后 或者发生了致命错误
             if ((defined('LOG_FILE_APPEND') && LOG_FILE_APPEND) || Debug::ERROR===$log['level']) {
@@ -308,7 +307,8 @@ class Debug
     
     public static function beforeSystemRun()
     {
-        Hook::listen('system:debug::start');
+        self::time('system');
+        Hook::exec('system:debug::start');
         self::$run_info['start_time']=D_START;
         self::$run_info['start_memory']=D_MEM;
     }
@@ -327,11 +327,13 @@ class Debug
     public static function afterSystemRun()
     {
         $info=self::getInfo();
-        Hook::listen('system:debug::end', $info);
+        Hook::exec('system:debug::end', $info);
+        self::timeEnd('system');
     }
 
     public static function phpShutdown()
     {
+        self::afterSystemRun();
         self::save(LOG_DIR.'/debug.log');
     }
 

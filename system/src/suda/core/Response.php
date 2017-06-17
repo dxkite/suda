@@ -186,6 +186,13 @@ abstract class Response
         $page->render();
     }
 
+    /**
+     * 使用Etag
+     * 注意：请不要再输出内容
+     *
+     * @param string $etag
+     * @return void
+     */
     public static function etag(string $etag)
     {
         self::setHeader('Etag:'.$etag);
@@ -195,7 +202,7 @@ abstract class Response
                 self::state(304);
                 self::close();
                 // 直接结束访问
-                exit(0);
+                // exit(0);
             }
         }
     }
