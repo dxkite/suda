@@ -291,7 +291,7 @@ class Application
         $dirs=Storage::readDirs(MODULES_DIR);
         foreach ($dirs as $dir) {
             if (Storage::exist($file=MODULES_DIR.'/'.$dir.'/module.json')) {
-                _D()->info(__('load module config %s',$file));
+                _D()->trace(__('load module config %s',$file));
                 $json=Json::parseFile($file);
                 $name=$json['name'] ?? $dir;
                 $json['directory']=$dir;

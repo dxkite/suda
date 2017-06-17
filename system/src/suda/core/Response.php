@@ -75,8 +75,10 @@ abstract class Response
 
     public function __construct()
     {
-        // Mark
-        self::setHeader('X-Suda : Suda/'.SUDA_VERSION.' '.conf('app.name', 'suda-app').'/'.conf('app.version').' '.self::$name);
+        // Mark Version
+        if (conf('markVersion', true)) {
+            self::setHeader('X-Suda : Suda/'.SUDA_VERSION.' '.conf('app.name', 'suda-app').'/'.conf('app.version').' '.self::$name);
+        }
         if (conf('debug')) {
             self::noCache();
             // for windows debug touch file to avoid 304 by server

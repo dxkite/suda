@@ -261,13 +261,17 @@ class Router
 
     public function dispatch()
     {
+        _D()->time('dispatch');
         self::buildRouterMap();
         // Hook前置路由（自定义过滤器|自定义路由）
         if (Hook::execIf('Router:dispatch::before', [Request::getInstance()], true)) {
             if (($router_name=self::matchRouterMap())!==false) {
-                _D()->info('dispatch match '.$router_name);
+                _D()->debug('dispatch match '.$router_name);
+                _D()->timeEnd('dispatch');
                 Response::setName($router_name);
+                _D()->time('run router');
                 self::runRouter($this->routers[$router_name]);
+                _D()->timeEnd('run router');
             } else {
                 Hook::exec('system:404');
             }

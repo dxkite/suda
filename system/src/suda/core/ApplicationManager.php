@@ -40,7 +40,9 @@ class ApplicationManager
 
     public function run(string $app)
     {
+        _D()->time('init application');
         self::console($app);
+        _D()->timeEnd('init application');
         Router::getInstance()->dispatch();
     }
 

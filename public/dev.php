@@ -1,4 +1,4 @@
-<?php #1497608498
+<?php #1497664267
     
     // 应用所在目录
     define('APP_DIR',__DIR__.'/../app');
@@ -9,7 +9,7 @@
     // 开发者模式
     define('DEBUG',true);
     // 日志纪录等级
-    define('LOG_LEVEL', 'trace');
+    define('LOG_LEVEL', 'info');
     // 输出日志详细信息到json文档
     define('LOG_JSON',true);
     // 输出详细信息添加到日志末尾

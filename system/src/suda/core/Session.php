@@ -60,3 +60,5 @@ class Session
         session_unset();
     }
 }
+// 初始化
+Session::getInstance();

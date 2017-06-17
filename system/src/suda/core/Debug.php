@@ -54,8 +54,12 @@ class Debug
         if (isset(self::$time[$name])) {
             $pass=microtime(true)-self::$time[$name];
             $backtrace=debug_backtrace();
-            $call=(isset($backtrace[2]['class'])?$backtrace[2]['class'].'#':'').$backtrace[2]['function'];
-            self::_loginfo('info', $call, __('process %s %fs', $name, $pass), $backtrace[1]['file'], $backtrace[1]['line'], $backtrace);
+            $offset=1;
+            if (!isset($backtrace[$offset]['file'])){
+                $offset--;
+            }
+            $call=(isset($backtrace[$offset]['class'])?$backtrace[$offset]['class'].'#':'').$backtrace[$offset]['function'];
+            self::_loginfo('info', $call, __('process %s %fs', $name, $pass), $backtrace[$offset]['file'] ??'unknown',  $backtrace[$offset]['line'] ?? 0, $backtrace);
         }
     }
 
