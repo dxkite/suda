@@ -1,8 +1,7 @@
-app
-public/dev-suda.php
-system/resource/app_template/data
-public/static/
-public/phpinfo.php
-app/resource/config/config.json
+/apps
+/public/dev-suda.php
+/system/resource/app_template/data
+/public/static/
+/public/phpinfo.php
 /vendor/
 /script

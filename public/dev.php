@@ -1,7 +1,7 @@
-<?php #1497664267
+<?php #1497664564
     
     // 应用所在目录
-    define('APP_DIR',__DIR__.'/../app');
+    define('APP_DIR',__DIR__.'/../apps/wuming');
     // 系统所在目录
     define('SYSTEM',__DIR__.'/../system/');
     // 网站更目录位置
