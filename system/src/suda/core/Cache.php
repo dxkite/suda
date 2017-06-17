@@ -23,6 +23,8 @@ class Cache
 {
     public static $cache;
     public static $storage=CACHE_DIR.'/data/';
+    const CACHE_DEFAULT=86400;
+
     /**
      * 设置
      * @param string $name 名
@@ -30,12 +32,15 @@ class Cache
      * @param int $expire 过期时间
      * @return bool
      */
-    public static function set(string $name, $value, int $expire=0):bool
+    public static function set(string $name, $value, int $expire=null):bool
     {
-        $path=self::$storage.self::nam($name);
+        $path=self::getPath($name);
         self::$cache[$name]=$value;
         Storage::mkdirs(dirname($path));
         $value=serialize($value);
+        if (is_null($expire)) {
+            $expire=time()+Cache::CACHE_DEFAULT;
+        }
         return file_put_contents($path, $expire.'|'.$value)!==false;
     }
 
@@ -52,13 +57,13 @@ class Cache
             return $value;
         }
         // 没值就在cache文件中查找
-        $path=self::$storage.self::nam($name);
+        $path=self::getPath($name);
         if (Storage::exist($path)) {
             $value=Storage::get($path);
-            $time=explode('|', $value, 2);
-            if (time()<intval($time[0]) || intval($time[0])===0) {
+            list($time, $value)=explode('|', $value, 2);
+            if (time()<intval($time)) {
                 // 未过期则返回
-                return unserialize($time[1]);
+                return unserialize($value);
             } else {
                 // 过期则删除
                 self::delete($path);
@@ -77,7 +82,14 @@ class Cache
     {
         return Storage::remove(self::nam($name));
     }
-    // 检测
+    
+    
+    /**
+     * 检测是否存在
+     *
+     * @param string $name
+     * @return bool
+     */
     public static function has(string $name):bool
     {
         return self::get($name)!==null;
@@ -88,24 +100,33 @@ class Cache
      */
     public static function gc()
     {
+        _D()->time('cache gc');
         $files=Storage::readDirFiles(self::$storage, '/^(?!\.)/');
         foreach ($files as $file) {
-            if (Config::get('cache', false)) {
+            if (Config::get('cache', true)) {
                 $value=Storage::get($file);
-                $time=explode('|', $value, 2);
-                if (intval($time[0])!==0 && intval($time[0])<time()) {
+                list($time, $value)=explode('|', $value, 2);
+                if (time()>intval($time)) {                 
                     Storage::remove($file);
                 }
             } else {
                 Storage::remove($file);
             }
         }
+        _D()->timeEnd('cache gc');
     }
-    private static function nam(string $name)
+
+    private static function getPath(string $name)
     {
-        $str=preg_split('/[.\/]+/', $name, 2, PREG_SPLIT_NO_EMPTY);
-        return $str[0].'_'.md5($name).'.cache';
+        if (strpos('.', $name)) {
+            list($main, $sub)=explode('.', $name, 2);
+        } else {
+            $main=$name;
+            $sub=$name;
+        }
+        $fname=self::$storage.$main.'_'.md5($sub).'.cache';
+        return $fname;
     }
 }
 
-Hook::listen('system:shutdown', 'suda\\core\\Cache::gc');
+Hook::listen('system:shutdown::before', 'suda\\core\\Cache::gc');

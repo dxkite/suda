@@ -168,7 +168,7 @@ class SQLQuery
             $stmt->bindValue($key, $value, $type);
         }
 
-        $markstring='query>'.$stmt->queryString;
+        $markstring='query '.$stmt->queryString;
         _D()->time($markstring);
         $return=$stmt->execute();
         _D()->timeEnd($markstring);

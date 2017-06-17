@@ -1,4 +1,4 @@
-<?php #1497664564
+<?php #1497678113
     
     // 应用所在目录
     define('APP_DIR',__DIR__.'/../apps/wuming');

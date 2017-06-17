@@ -107,7 +107,7 @@ class DAO
     }
 
     /**
-     * 列出全部元素
+     * 分页列出元素
      *
      * @param int $page  是否分页（页数）
      * @param int $rows 分页的元素个数
@@ -120,6 +120,18 @@ class DAO
         } else {
             return Query::where($this->getTableName(), $this->getFields(), '1', [], [$page, $rows])->fetchAll();
         }
+    }
+
+    /**
+     * 列出全部元素
+     *
+     * @param int $page  是否分页（页数）
+     * @param int $rows 分页的元素个数
+     * @return array|false
+     */
+    public function listAll()
+    {
+        return Query::where($this->getTableName(), $this->getFields())->fetchAll();
     }
 
     /**
