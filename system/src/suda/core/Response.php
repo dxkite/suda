@@ -201,10 +201,12 @@ abstract class Response
             if (strcasecmp($etag, $str)===0) {
                 self::state(304);
                 self::close();
+                return true;
                 // 直接结束访问
                 // exit(0);
             }
         }
+        return false;
     }
 
     protected static function _etag(string $etag)

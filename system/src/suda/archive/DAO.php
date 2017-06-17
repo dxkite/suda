@@ -30,13 +30,6 @@ class DAO
         $this->primaryKey='id';
         $this->tableName=$tableName;
         // 读取类名作为表名
-        // TableName    => table_name
-        // TableNameDAO => table_name
-        // if (is_null($tableName)) {
-        //     $this->tableName=trim(strtolower(preg_replace('/([A-Z])/', '_$1', preg_replace('/^.+\\\\/', '', preg_replace('/DAO$/', '', get_class($this))))), '_');
-        // }else{
-        //     $this->tableName=$tableName;
-        // }
         self::initTableFields();
     }
 

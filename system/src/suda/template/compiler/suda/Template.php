@@ -50,11 +50,10 @@ abstract class Template
             $this->response->setHeader('Content-Length:'.$length);
         }
         $this->response->type('html');
-        if (conf('app.etag', !conf('debug'))) {
-            $this->response->etag(md5($content));
-            return $this;
+        if (conf('app.etag', !conf('debug'))  && $this->response->etag(md5($content))) {
+        }else{
+            echo $content;
         }
-        echo $content;
         return $this;
     }
     

@@ -15,8 +15,10 @@
  */
 namespace suda\archive;
 
-use PDO,PDOException;
-use suda\core\{Config,Storage};
+use PDO;
+use PDOException;
+use suda\core\Config;
+use suda\core\Storage;
 use suda\exception\SQLException;
 
 // 数据库查询方案
@@ -138,14 +140,14 @@ class SQLQuery
                 $this->dbchange=false;
                 $this->database=null;
             } else {
-                throw new SQLException(__('could not select database:%s, please check the table if exist.',$this->database),0,E_ERROR,$debug[1]['file'],$debug[1]['line']);
+                throw new SQLException(__('could not select database:%s, please check the table if exist.', $this->database), 0, E_ERROR, $debug[1]['file'], $debug[1]['line']);
             }
         } elseif (is_null($this->database)) {
             $database=Config::get('database.name', 'test');
             if (self::$pdo->query('USE '.$database)) {
                 $this->database=$database;
-            }else{
-                _D()->warning(__('could not select database:%s, maybe you should create database.',$database),0,E_ERROR,$debug[1]['file'],$debug[1]['line']);
+            } else {
+                _D()->warning(__('could not select database:%s, maybe you should create database.', $database), 0, E_ERROR, $debug[1]['file'], $debug[1]['line']);
             }
         }
         
@@ -174,12 +176,12 @@ class SQLQuery
         self::$queryCount++;
         if ($return) {
             if (Config::get('debug')) {
-                _D()->debug($stmt->queryString,$this->values);
+                _D()->debug($stmt->queryString, $this->values);
             }
         } else {
-            _D()->warning($stmt->errorInfo()[2].':'.$stmt->queryString,$this->values);
-            if (!conf('database.ignoreError',false)){
-                throw (new SQLException($stmt->errorInfo()[2], intval($stmt->errorCode()),E_ERROR,$debug[1]['file'],$debug[1]['line']))->setSql($stmt->queryString)->setBinds($this->values);
+            _D()->warning($stmt->errorInfo()[2].':'.$stmt->queryString, $this->values);
+            if (!conf('database.ignoreError', false)) {
+                throw (new SQLException($stmt->errorInfo()[2], intval($stmt->errorCode()), E_ERROR, $debug[1]['file'], $debug[1]['line']))->setSql($stmt->queryString)->setBinds($this->values);
             }
         }
         $this->stmt=$stmt;
@@ -191,10 +193,12 @@ class SQLQuery
     {
         // 链接数据库
         if (!self::$pdo) {
-            $pdo='mysql:host='.Config::get('database.host', 'localhost').';charset='.Config::get('database.charset', 'utf8').';port='.Config::get('database.port',3306);
+            $pdo='mysql:host='.Config::get('database.host', 'localhost').';charset='.Config::get('database.charset', 'utf8').';port='.Config::get('database.port', 3306);
             self::$prefix=Config::get('database.prefix', '');
             try {
+                _D()->time('connect database');
                 self::$pdo = new PDO($pdo, Config::get('database.user', 'root'), Config::get('database.passwd', 'root'));
+                _D()->timeEnd('connect database');
             } catch (PDOException $e) {
                 _D()->waring('connect database error:'.$e->getMessage());
                 self::$good=false;

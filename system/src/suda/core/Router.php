@@ -281,7 +281,9 @@ class Router
     }
     protected static function runRouter(array $router)
     {
+        // _D()->time('active Module');
         (new \suda\tool\Command(Config::get('app.application', 'suda\\core\\Application').'::activeModule'))->exec([$router['module']]);
+        // _D()->timeEnd('active Module');
         _D()->time('request');
         (new \suda\tool\Command($router['class'].'->onRequest'))->exec([Request::getInstance()]);
         _D()->timeEnd('request');
