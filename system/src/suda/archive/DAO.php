@@ -83,9 +83,6 @@ class DAO
      */
     public function getByPrimaryKey($value)
     {
-        if (is_array($values) && !$this->checkFields(array_keys($values))) {
-            return false;
-        }
         return Query::where($this->getTableName(), $this->getFields(), [$this->getPrimaryKey()=>$value])->fetch()?:false;
     }
 

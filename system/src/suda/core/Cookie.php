@@ -39,10 +39,12 @@ class Cookie
         }
         return self::$values[$name];
     }
+    
     public static function unset(string $name)
     {
-        self::set($name, 'unset', 0);
+        self::set($name, '', 0);
     }
+    
     public static function has(string $name)
     {
         return isset(self::$values[$name]) || isset($_COOKIE[$name]);

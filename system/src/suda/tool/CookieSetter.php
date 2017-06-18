@@ -25,7 +25,7 @@ class CookieSetter
     public $expire=0;
     public $secure=false;
     public $session=false;
-    public $fulltime=false;
+    public $fulltime=true;
 
     public function __construct(string $name, string $value, int $expire=0)
     {

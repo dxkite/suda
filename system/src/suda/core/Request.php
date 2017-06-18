@@ -149,6 +149,10 @@ final class Request
         return count($_GET);
     }
 
+    public static function hasPost()
+    {
+        return count($_POST);
+    }
     public static function isJson()
     {
         return isset($_SERVER['CONTENT_TYPE']) && preg_match('/json/i', $_SERVER['CONTENT_TYPE']);

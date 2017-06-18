@@ -118,7 +118,7 @@ class Cache
 
     private static function getPath(string $name)
     {
-        if (strpos('.', $name)) {
+        if (strpos($name,'.')) {
             list($main, $sub)=explode('.', $name, 2);
         } else {
             $main=$name;

@@ -246,6 +246,11 @@ class SudaCompiler implements Compiler
     {
         return "<?php echo u$exp; ?>";
     }
+    
+    protected function parseSelf()
+    {
+        return "<?php echo \$_SERVER['PHP_SELF'] ?>";
+    }
 
     protected function parseSet($exp)
     {
