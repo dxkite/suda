@@ -15,12 +15,22 @@
  */
 namespace suda\archive;
 
-use suda\core\{Query,Storage};
+use suda\core\Query;
+use suda\core\Storage;
 use suda\tool\ArrayHelper;
+use suda\exception\DAOException;
 
 class DAO
 {
     protected $fields=[];
+
+    /**
+     * 验证：类型，长度，正则
+     * fieldname=>verify_type,error_message
+     * @var array
+     */
+    protected $field_check=[];
+
     protected $primaryKey=null;
     protected $tableName;
 
@@ -41,7 +51,7 @@ class DAO
      */
     public function insert(array $values)
     {
-        if (is_array($values) && !$this->checkFields(array_keys($values))) {
+        if (is_array($values) && !($this->checkFields(array_keys($values)) && $this->checkFieldsType($values))) {
             return false;
         }
         return Query::insert($this->getTableName(), $values);
@@ -58,7 +68,7 @@ class DAO
         $insert=[];
         foreach ($this->getFields() as $field) {
             $value=array_shift($values);
-            if(!is_null($value)){
+            if (!is_null($value)) {
                 $insert[$field]=$value;
             }
         }
@@ -89,7 +99,7 @@ class DAO
      */
     public function updateByPrimaryKey($value, $values)
     {
-        if (is_array($values) && !$this->checkFields(array_keys($values))) {
+        if (is_array($values) && !($this->checkFields(array_keys($values)) && $this->checkFieldsType($values))) {
             return false;
         }
         return Query::update($this->getTableName(), $values, [$this->getPrimaryKey()=>$value]);
@@ -146,7 +156,7 @@ class DAO
         if (is_array($values) && !$this->checkFields(array_keys($values))) {
             return false;
         }
-        if (is_array($where) && !$this->checkFields(array_keys($where))) {
+        if (is_array($values) && !($this->checkFields(array_keys($values)) && $this->checkFieldsType($values))) {
             return false;
         }
         return Query::update($this->getTableName(), $values, $where);
@@ -273,16 +283,35 @@ class DAO
      * @param array $values
      * @return bool
      */
-    public function checkFields(array $values):bool
+    protected function checkFields(array $values):bool
     {
         foreach ($values as $key) {
             if (!in_array($key, $this->fields)) {
-                return false;
+                throw new DAOException(__('field %s is not exsits in table', $key));
             }
         }
         return true;
     }
 
+    /**
+     * 检查参数列
+     *
+     * @param array $values
+     * @return bool
+     */
+    protected function checkFieldsType($values):bool
+    {
+        $check= $this->field_check;
+        $keys=array_keys($check);
+        foreach ($keys as $key) {
+            if (isset($values[$key]) && !self::checkValueType($this->field_check[$key][0], $values[$key])) {
+                $message=str_replace(['{key}','{value}','{check}'], [$key,self::strify($values[$key]),$this->field_check[$key][0]], $this->field_check[$key][1]??'field {key} value {value} type is not valid');
+                $debug=debug_backtrace();
+                throw new DAOException(__($message),0,E_ERROR, $debug[1]['file'], $debug[1]['line']);
+            }
+        }
+        return true;
+    }
 
     /**
      * 计数
@@ -294,6 +323,50 @@ class DAO
         return Query::count($this->getTableName());
     }
 
+
+    protected function checkValueType(string $check, $value)
+    {
+        static $type2name=[
+            'int'=>'numeric',
+            'integer'=>'numeric',
+            'boolean'=>'bool',
+            'bool'=>'bool',
+            'double'=>'float',
+            'float'=>'float',
+            'string'=>'string',
+            'array'=>'array',
+            'object'=>'object',
+            'resource'=>'resource',
+        ];
+        // _D()->info($check, $value);
+        // 类型检测
+        if (preg_match('/^'. implode('|', array_keys($type2name)) .'$/', $check)) {
+            // _D()->info('type check');
+            $name='is_'.$type2name[$check];
+            if (!$name($value)) {
+                return false;
+            }
+            // 长度检测
+        } elseif (preg_match('/^(\d+)(?:\,(\d+))?$/', $check, $match)) {
+            // _D()->info('length check',$match);
+            if (isset($match[2])) {
+                $min=$match[1];
+                $max=$match[2];
+                if (strlen($value) < $min || strlen($value) > $max) {
+                    return false;
+                }
+            } elseif (strlen($value)!==intval($match[1])) {
+                return false;
+            }
+            // 正则检测
+        } elseif (preg_match('/^[\/](\S+)[\/]([imsxeADSXUuJ]+)?$/', $check)) {
+            // _D()->info('preg check');
+            if (!preg_match($check, $value)) {
+                return false;
+            }
+        }
+        return true;
+    }
     
     private function initTableFields()
     {
@@ -318,5 +391,17 @@ class DAO
             Storage::path(dirname($path));
             ArrayHelper::export($path, '_fieldinfos', $info);
         }
+    }
+
+    protected static function strify($object)
+    {
+        if (is_null($object)) {
+            return '[NULL]';
+        } elseif (is_object($object)) {
+            return serialize($object);
+        } elseif (is_array($object)) {
+            return json_encode($object);
+        }
+        return $object;
     }
 }
