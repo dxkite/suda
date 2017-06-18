@@ -28,9 +28,10 @@ class Application
     protected static $module_dirs=null;
     protected static $module_cache;
     protected static $module_live=null;
-    protected static $module_configs=[];
+    protected static $module_configs=null;
     public function __construct(string $app)
     {
+        _D()->trace(__('application load %s',$app));
         $this->path=$app;
         // 基本常量
         defined('MODULES_DIR') or define('MODULES_DIR', Storage::path(APP_DIR.'/modules'));
@@ -43,9 +44,7 @@ class Application
         defined('CONFIG_DIR') or define('CONFIG_DIR', Storage::path(RESOURCE_DIR.'/config'));
         defined('TEMP_DIR') or define('TEMP_DIR', Storage::path(DATA_DIR.'/temp'));
         defined('SHRAE_DIR') or define('SHRAE_DIR', Storage::path(APP_DIR.'/share'));
-        
-        // 解析模块
-        self::moduleMap();
+    
         // 获取基本配置信息
         if (Storage::exist($path=CONFIG_DIR.'/config.json')) {
             Config::load($path);
@@ -73,6 +72,8 @@ class Application
         Autoloader::addIncludePath(SHRAE_DIR);
         // 加载模块主配置
         self::loadAllModuleManifast();
+        // 解析模块
+        self::moduleMap();
         // 模块共享库
         $module_dirs=self::getModuleDirs();
         // 激活模块
@@ -234,11 +235,12 @@ class Application
 
         _D()->debug('match name', (isset($matchname[1])&&$matchname[1]?$matchname[1]:'(\w+\/)?'));
 
-        $preg='/^'.(isset($matchname[1])&&$matchname[1]?$matchname[1].'\/':'(\w+\/)?') // 限制域
+        $preg='/^'.(isset($matchname[1])&&$matchname[1]? preg_quote($matchname[1]).'\/':'(\w+\/)?') // 限制域
         .preg_quote($matchname[2]). // 名称
-        (isset($matchname[3])&&$matchname[3]?':'.$matchname[3]:'(:.+)?').'$/'; // 版本号
+        (isset($matchname[3])&&$matchname[3]?':'.preg_quote($matchname[3]):'(:.+)?').'$/'; // 版本号
         $targets=[];
         _D()->debug($matchname, $preg);
+
         foreach (self::$module_dirs as $modulename=>$moduledir) {
             if (preg_match($preg, $modulename)) {
                 preg_match('/^(?:(\w+)\/)?(\w+)(?::(.+))?$/', $modulename, $matchname);
@@ -266,12 +268,14 @@ class Application
 
     public static function moduleMap()
     {
-        _D()->trace('refersh module map');
-        if (!Config::get('debug', false) && Storage::exist(TEMP_DIR.'/module-dir.php')) {
-            self::$module_dirs=require TEMP_DIR.'/module-dir.php';
+        if (!DEBUG && Storage::exist($path=TEMP_DIR.'/module-dir.php')) {
+            _D()->trace(__('load modules from %s',$path));
+            self::$module_dirs=require $path;
         } else {
+            _D()->trace('refersh module map');
             self::$module_dirs=self::refreshMap();
         }
+        _D()->debug('module_dirs',self::$module_dirs);
     }
 
     protected static function refreshMap()
@@ -279,6 +283,7 @@ class Application
         // [限制名/]模块名:版本号
         $dirs=Storage::readDirs(MODULES_DIR);
         $modulemap=[];
+        _D()->info('module config',self::$module_configs);
         foreach (self::$module_configs as $name => $info) {
             $modulemap[$name]=$info['directory'];
         }

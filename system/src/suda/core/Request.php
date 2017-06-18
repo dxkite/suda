@@ -203,14 +203,13 @@ final class Request
                 self::$query=$match[3]??'';
                 self::$url=$match[2];
                 self::$type=1;
-            } elseif 
-            // 匹配 [2] /index.php?/
+            } elseif // 匹配 [2] /index.php?/
             // 匹配 [3] /index.php/xx
-            (preg_match('/^(.*)\/'.$index.'(?:(\?)?\/)?/', $_SERVER['REQUEST_URI'],$check)) {
+            (preg_match('/^(.*)\/'.$index.'(?:(\?)?\/)?/', $_SERVER['REQUEST_URI'], $check)) {
                 // _D()->trace($check,$check[2]);
                 $preg='/(.*)\/'.$index.'\??(\/[^?]*)?(?:[?](.+)?)?$/';
                 self::$type=strlen($check[2]??false)>0?2:3;
-                preg_match($preg,$_SERVER['REQUEST_URI'], $match);
+                preg_match($preg, $_SERVER['REQUEST_URI'], $match);
                 // _D()->trace($preg,$_SERVER['REQUEST_URI'].' '. serialize($match));
                 // 处理查询字符
                 if (isset($match[3])) {
@@ -263,7 +262,11 @@ final class Request
             $base=$scheme.'://'.$host;
         }
         if (ltrim($script, '/')===conf('app.index', 'index.php')) {
-            return $base. (DIRECTORY_SEPARATOR ===  '/' ? '/':'/?/') ;
+            // windows下rewrite重写会出现各种奇怪的异常
+            if(conf('app.rewrite',false)){
+                return $base. (DIRECTORY_SEPARATOR ===  '/' ? '/':'/?/');
+            }
+            return $base.'/';
         }
         // _D()->trace(self::$type);
         return $base. $script.(self::$type==2?'?':'').'/';
@@ -272,7 +275,7 @@ final class Request
     public function isCrawler()
     {
         $agent= $_SERVER['HTTP_USER_AGENT'] ?? '';
-        if(is_null(self::$crawlers)){
+        if (is_null(self::$crawlers)) {
             self::$crawlers=require SYSTEM_RESOURCE.'/crawlers.php';
         }
         foreach (self::$crawlers as $crawler) {
