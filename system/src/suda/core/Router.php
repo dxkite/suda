@@ -230,10 +230,10 @@ class Router
     
     public function buildUrlArgs(string $name, array $args)
     {
-        if(is_array($this->types[$name]??false)){
-             list($module, $name)=self::parseName($name);
-            $module=Application::getModuleFullName($module);
-            $name=$module.':'.$name;
+        list($module, $name)=self::parseName($name);
+        $module=Application::getModuleFullName($module);
+        $name=$module.':'.$name;
+        if (isset($this->types[$name])) {
             $keys=array_keys($this->types[$name]);
             $values=[];
             foreach ($keys as $key) {

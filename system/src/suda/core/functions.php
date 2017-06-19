@@ -46,15 +46,14 @@ function use_namespace(string $namespace)
     return suda\core\Autoloader::setNamespace($namespace);
 }
 
-function u($name=null, $values=[])
+function u($name=null, $values=null)
 {
-    if (!is_array($values)) {
-        $args=func_get_args();
-        array_shift($args);
-        $values=suda\core\Router::getInstance()->buildUrlArgs($name,$args);
-    }
-
     if (is_string($name)) {
+        if (!is_array($values)) {
+            $args=func_get_args();
+            array_shift($args);
+            $values=suda\core\Router::getInstance()->buildUrlArgs($name,$args);
+        }
         return suda\core\Router::getInstance()->buildUrl($name, $values);
     } elseif (is_array($name)) {
         return suda\core\Router::getInstance()->buildUrl(suda\core\Response::$name, $name);
