@@ -230,19 +230,22 @@ class Router
     
     public function buildUrlArgs(string $name, array $args)
     {
-        list($module, $name)=self::parseName($name);
-        $module=Application::getModuleFullName($module);
-        $name=$module.':'.$name;
-        $keys=array_keys($this->types[$name]);
-        $values=[];
-        foreach ($keys as $key) {
-            if (count($args)) {
-                $values[$key]=array_shift($args);
-            } else {
-                break;
+        if(is_array($this->types[$name]??false)){
+             list($module, $name)=self::parseName($name);
+            $module=Application::getModuleFullName($module);
+            $name=$module.':'.$name;
+            $keys=array_keys($this->types[$name]);
+            $values=[];
+            foreach ($keys as $key) {
+                if (count($args)) {
+                    $values[$key]=array_shift($args);
+                } else {
+                    break;
+                }
             }
+            return $values;
         }
-        return $values;
+        return [];
     }
 
     public function buildUrl(string $name, array $values=[])

@@ -46,7 +46,7 @@ function use_namespace(string $namespace)
     return suda\core\Autoloader::setNamespace($namespace);
 }
 
-function u($name=null, $values)
+function u($name=null, $values=[])
 {
     if (!is_array($values)) {
         $args=func_get_args();

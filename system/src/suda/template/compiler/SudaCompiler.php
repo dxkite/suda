@@ -244,6 +244,9 @@ class SudaCompiler implements Compiler
 
     protected function parseU($exp)
     {
+        if ($exp==='') {
+            $exp='()';
+        }
         return "<?php echo u$exp; ?>";
     }
     
