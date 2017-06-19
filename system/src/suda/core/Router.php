@@ -26,7 +26,7 @@ class Router
 {
     protected $mapper;
     protected $matchs=[];
-    protected $types;
+    protected $types=[];
     protected static $urltype=['int'=>'\d+','string'=>'[^\/]+','url'=>'.+'];
     protected static $router=null;
     protected $routers=[];
@@ -104,7 +104,9 @@ class Router
     protected function loadFile()
     {
         $this->routers=require TEMP_DIR.'/router.cache.php';
-        $this->types=require TEMP_DIR.'/types.cache.php';
+        if (file_exists(TEMP_DIR.'/types.cache.php')) {
+            $this->types=require TEMP_DIR.'/types.cache.php';
+        }
         $this->matchs=require TEMP_DIR.'/matchs.cache.php';
     }
 
