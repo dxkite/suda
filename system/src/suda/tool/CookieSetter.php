@@ -32,6 +32,8 @@ class CookieSetter
         $this->name=$name;
         $this->value=$value;
         $this->expire=$expire;
+        // auto path
+        // $this->path=$_SERVER['PATH_INFO'];
     }
     public function httpOnly(bool $set=true)
     {

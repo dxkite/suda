@@ -225,15 +225,15 @@ final class Request
                 preg_match($preg, $_SERVER['REQUEST_URI'], $match);
                 self::$url=$match[1];
             }
+            self::$url=preg_replace('/[\/]+/','/',self::$url);
             self::$url=self::$url==='/'?self::$url:rtrim(self::$url, '/');
         } else {
             self::$url='/';
         }
-        
         if (isset($_GET[self::$url])) {
             unset($_GET[self::$url]);
         }
-        
+
         if (!isset($_SERVER['PATH_INFO'])) {
             $_SERVER['PATH_INFO']=self::$url;
         }
