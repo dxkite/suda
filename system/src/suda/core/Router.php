@@ -104,13 +104,17 @@ class Router
     protected function loadFile()
     {
         $this->routers=require TEMP_DIR.'/router.cache.php';
+        $this->types=require TEMP_DIR.'/types.cache.php';
         $this->matchs=require TEMP_DIR.'/matchs.cache.php';
     }
+
     protected function saveFile()
     {
         ArrayHelper::export(TEMP_DIR.'/router.cache.php', '_router', $this->routers);
+        ArrayHelper::export(TEMP_DIR.'/types.cache.php', '_types', $this->types);
         ArrayHelper::export(TEMP_DIR.'/matchs.cache.php', '_matchs', $this->matchs);
     }
+
     protected function loadModulesRouter()
     {
         if (conf('debug')) {
@@ -222,6 +226,23 @@ class Router
                     :$match[1];
         }
         return [$module,$info];
+    }
+    
+    public function buildUrlArgs(string $name, array $args)
+    {
+        list($module, $name)=self::parseName($name);
+        $module=Application::getModuleFullName($module);
+        $name=$module.':'.$name;
+        $keys=array_keys($this->types[$name]);
+        $values=[];
+        foreach ($keys as $key) {
+            if (count($args)) {
+                $values[$key]=array_shift($args);
+            } else {
+                break;
+            }
+        }
+        return $values;
     }
 
     public function buildUrl(string $name, array $values=[])
