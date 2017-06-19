@@ -30,13 +30,15 @@ class Index extends \suda\core\Response
 {
     public function onRequest(Request $request)
     {
+        /**
+         * glad to see you in this file
+         * 
+         * i was very happy that you choose suda as your php framework
+         * 
+         */
         $page=$this->page('demo/default:index');
-        $page->set('title', 'Welcome to use Suda!')
-        ->set('helloworld', 'Hello,World!');
-
+        $page->set('title', 'Welcome to use Suda!');
+        $page->set('helloworld', 'Hello,World!');
         return $page->render();
-    }
-    public static function showTplName($tpl){
-        echo '<div>'.__('当前页面模板名:%s',$tpl->getName()).'</div>';
     }
 }

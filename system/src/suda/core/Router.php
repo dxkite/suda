@@ -90,6 +90,7 @@ class Router
        
         $this->routers=array_merge($this->routers, $admin_routers, $simple_routers);
     }
+
     protected function loadModuleJson(string $module, string $jsonfile)
     {
         $routers=Json::loadFile($jsonfile);
@@ -100,39 +101,48 @@ class Router
         return $router;
     }
 
-    
     protected function loadFile()
     {
         $this->routers=require TEMP_DIR.'/router.cache.php';
-        if (file_exists(TEMP_DIR.'/types.cache.php')) {
-            $this->types=require TEMP_DIR.'/types.cache.php';
-        }
+        $this->types=require TEMP_DIR.'/types.cache.php';
         $this->matchs=require TEMP_DIR.'/matchs.cache.php';
     }
 
     protected function saveFile()
     {
         ArrayHelper::export(TEMP_DIR.'/router.cache.php', '_router', $this->routers);
-        ArrayHelper::export(TEMP_DIR.'/types.cache.php', '_types', $this->types);
+        $type=ArrayHelper::export(TEMP_DIR.'/types.cache.php', '_types', $this->types);
         ArrayHelper::export(TEMP_DIR.'/matchs.cache.php', '_matchs', $this->matchs);
+        _D()->info(__('export %d', $type));
     }
 
     protected function loadModulesRouter()
     {
-        if (conf('debug')) {
-            $modules=Application::getLiveModules();
-            foreach ($modules as $module) {
-                self::load($module);
-            }
-            self::buildRouterMap();
-            // 缓存路由信息
-            self::saveFile();
+        // 如果DEBUG模式
+        if (conf('debug', false)) {
+            self::prepareRouterInfo();
         } else {
-            // 提取路由信息
+            if(!self::routerCached()){
+                self::prepareRouterInfo();
+            }
             self::loadFile();
         }
     }
-
+    public function routerCached(){
+        if(!file_exists(TEMP_DIR.'/router.cache.php')) return false;
+        if(!file_exists(TEMP_DIR.'/types.cache.php')) return false;
+        if(!file_exists(TEMP_DIR.'/matchs.cache.php')) return false;
+    }
+    public function prepareRouterInfo()
+    {
+        $modules=Application::getLiveModules();
+        foreach ($modules as $module) {
+            self::load($module);
+        }
+        self::buildRouterMap();
+        // 缓存路由信息
+        self::saveFile();
+    }
     public function watch(string $name, string $url)
     {
         $this->matchs[$name]=self::buildMatch($name, $url);

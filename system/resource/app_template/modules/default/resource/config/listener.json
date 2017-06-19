@@ -1,4 +1,4 @@
 {
     // TODO:监听事件
-    "body":["cn\\atd3\\response\\Index::showTplName"]
+    // "body":["cn\\atd3\\response\\Index::showTplName"]
 }
