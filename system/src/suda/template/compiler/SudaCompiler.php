@@ -20,6 +20,7 @@ use suda\core\Application;
 use suda\tool\Value;
 use suda\template\Compiler;
 use suda\template\Manager;
+use suda\core\Request;
 
 /**
  *
@@ -268,7 +269,7 @@ class SudaCompiler implements Compiler
         $path=Manager::prepareResource($module);
         $static_url=Storage::cut($path, APP_PUBLIC);
         $static_url=preg_replace('/[\\\\\/]+/', '/', $static_url);
-        return '/'.$static_url;
+        return  Request::hostBase().'/'.$static_url;
     }
 
     

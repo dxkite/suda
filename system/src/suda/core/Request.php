@@ -252,15 +252,15 @@ final class Request
     {
         return self::$url.(self::$query?'?'.self::$query:'');
     }
-    public static function baseUrl()
-    {
+    public static function hostBase(){
         $scheme = $_SERVER['REQUEST_SCHEME'] ?? '//';
         $host= $_SERVER['HTTP_HOST'] ?? '';
-        $base='';
-        $script=$_SERVER['SCRIPT_NAME'];
-        if ($host) {
-            $base=$scheme.'://'.$host;
-        }
+        return $scheme.'://'.$host;
+    }
+    public static function baseUrl()
+    {
+        $base=self::hostBase();
+        $script=$_SERVER['SCRIPT_NAME'];   
         if (ltrim($script, '/')===conf('app.index', 'index.php')) {
             // windows下rewrite重写会出现各种奇怪的异常
             if(conf('app.rewrite',false)){
