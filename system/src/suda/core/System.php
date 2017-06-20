@@ -23,6 +23,7 @@ defined('SYSTEM_RESOURCE') or define('SYSTEM_RESOURCE', SYSTEM_DIR.'/resource');
 defined('DEBUG') or define('DEBUG', false);
 define('SUDA_VERSION','1.2.5');
 
+require_once __DIR__.'/Debug.php';
 require_once __DIR__.'/functions.php';
 
 class System
@@ -40,7 +41,8 @@ class System
 
     public static function onShutdown()
     {
-         Hook::exec('system:shutdown::before');
+        Hook::exec('system:shutdown::before');
+        // var_dump(get_included_files());
         _D()->trace('include paths:'.json_encode(Autoloader::getIncludePath()));
         _D()->trace(__('system shutdown'));
         Hook::exec('system:shutdown');

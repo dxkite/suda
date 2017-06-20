@@ -29,6 +29,7 @@ class Application
     protected static $module_cache;
     protected static $module_live=null;
     protected static $module_configs=null;
+    
     public function __construct(string $app)
     {
         _D()->trace(__('application load %s',$app));

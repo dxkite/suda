@@ -23,6 +23,9 @@ class Autoloader
     public static function realName(string $name) {
         return preg_replace('/[.\/]+/','\\',$name);
     }
+    public static function realPath(string $name) {
+        return preg_replace('/[\\\\\/]+/',DIRECTORY_SEPARATOR,$name);
+    }
 
     public static function init()
     {
@@ -46,18 +49,23 @@ class Autoloader
 
     public static function classLoader(string $classname)
     {
+        $namepath=self::realPath($classname);
         $classname=self::realName($classname);
+        // debug_print_backtrace();
         // 搜索路径
         foreach (self::$include_path as $include_path) {
-            $path=preg_replace('/[\\\\\\/]+/', DIRECTORY_SEPARATOR, $include_path.DIRECTORY_SEPARATOR.$classname.'.php');
+            $path=preg_replace('/[\\\\\\/]+/', DIRECTORY_SEPARATOR, $include_path.DIRECTORY_SEPARATOR.$namepath.'.php');
+            // printf("file %s exists(%d) and class %s exists(%d)\n",$path,file_exists($path),$classname,class_exists($classname));
             if (file_exists($path)) {
                 if (!class_exists($classname)) {
                     require_once $path;
+                    // var_dump(get_included_files());
+                    // printf("include %s and class %s exists(%d)\n",$path,$classname,class_exists($classname));
                 }
             } else {
                 // 添加命名空间
                 foreach (self::$namespace as $namespace) {
-                    $path=preg_replace('/[\\\\]+/', DIRECTORY_SEPARATOR, $include_path.DIRECTORY_SEPARATOR.$namespace.DIRECTORY_SEPARATOR.$classname.'.php');
+                    $path=preg_replace('/[\\\\]+/', DIRECTORY_SEPARATOR, $include_path.DIRECTORY_SEPARATOR.$namespace.DIRECTORY_SEPARATOR.$namepath.'.php');
                     if (file_exists($path)) {
                         // 最简类名
                         if (!class_exists($classname)) {

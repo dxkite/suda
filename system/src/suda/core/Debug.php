@@ -65,6 +65,7 @@ class Debug
 
     protected static function _loginfo(string $level, string $name, string $message, string $file, int $line, array $backtrace=null)
     {
+        // printf('<div><span style="color: red;">%s</span> <span style="color: blue;">%s</span> %s %s#%d</div>',$level,$name,$message,$file,$line);
         if (defined('LOG_LEVEL')) {
             $level_num=is_numeric(LOG_LEVEL)?LOG_LEVEL:self::$level[strtolower(LOG_LEVEL)];
             if (self::$level[$level] < $level_num) {
@@ -150,7 +151,7 @@ class Debug
             echo "<div class=\"suda-error\"><b>{$e->getName()}</b>: {$e->getMessage()} at {$e->getFile()}#{$e->getLine()}</div>";
             return;
         }
-
+        // echo "<div class=\"suda-error\"><b>{$e->getName()}</b>: {$e->getMessage()} at {$e->getFile()}#{$e->getLine()}</div>";
         $line=$e->getLine();
         $file=$e->getFile();
 
