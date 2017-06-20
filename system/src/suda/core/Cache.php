@@ -80,7 +80,7 @@ class Cache
      */
     public static function delete(string $name) :bool
     {
-        return Storage::remove(self::nam($name));
+        return Storage::remove(self::getPath($name));
     }
     
     
