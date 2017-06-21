@@ -23,6 +23,7 @@ use suda\exception\DAOException;
 class DAO
 {
     protected $fields=[];
+    protected $wants=[];
 
     /**
      * 验证：类型，长度，正则
@@ -83,7 +84,7 @@ class DAO
      */
     public function getByPrimaryKey($value)
     {
-        return Query::where($this->getTableName(), $this->getFields(), [$this->getPrimaryKey()=>$value])->fetch()?:false;
+        return Query::where($this->getTableName(), $this->getWants(), [$this->getPrimaryKey()=>$value])->fetch()?:false;
     }
 
 
@@ -123,22 +124,26 @@ class DAO
     public function list(int $page=null, int $rows=10)
     {
         if (is_null($page)) {
-            return Query::where($this->getTableName(), $this->getFields())->fetchAll();
+            return Query::where($this->getTableName(), $this->getWants())->fetchAll();
         } else {
-            return Query::where($this->getTableName(), $this->getFields(), '1', [], [$page, $rows])->fetchAll();
+            return Query::where($this->getTableName(), $this->getWants(), '1', [], [$page, $rows])->fetchAll();
         }
     }
 
     /**
-     * 列出全部元素
+     * 条件列出元素
      *
      * @param int $page  是否分页（页数）
      * @param int $rows 分页的元素个数
      * @return array|false
      */
-    public function listAll()
+    public function listWhere($where, int $page=null, int $rows=10)
     {
-        return Query::where($this->getTableName(), $this->getFields())->fetchAll();
+        if (is_null($page)) {
+            return Query::where($this->getTableName(), $this->getWants(), $where)->fetchAll();
+        } else {
+            return Query::where($this->getTableName(), $this->getWants(), $where, [], [$page, $rows])->fetchAll();
+        }
     }
 
     /**
@@ -258,8 +263,12 @@ class DAO
      * @param array $fields
      * @return void
      */
-    public function setFields(array $fields)
+    public function setFields(array $fields=null)
     {
+        if (is_null($fields)) {
+            self::initTableFields();
+            return $this;
+        }
         $this->fields=$fields;
         return $this;
     }
@@ -274,6 +283,16 @@ class DAO
         return $this->fields;
     }
 
+    public function setWants(array $fields=null)
+    {
+        $this->wants=is_null($fields)?$this->getFields():$fields;
+        return $this;
+    }
+
+    public function getWants():array
+    {
+        return $this->wants??$this->fields;
+    }
     /**
      * 检查参数列
      *
@@ -304,7 +323,7 @@ class DAO
             if (isset($values[$key]) && !self::checkValueType($this->field_check[$key][0], $values[$key])) {
                 $message=str_replace(['{key}','{value}','{check}'], [$key,self::strify($values[$key]),$this->field_check[$key][0]], $this->field_check[$key][1]??'field {key} value {value} type is not valid');
                 $debug=debug_backtrace();
-                throw new DAOException(__($message),0,E_ERROR, $debug[1]['file'], $debug[1]['line']);
+                throw new DAOException(__($message), 0, E_ERROR, $debug[1]['file'], $debug[1]['line']);
             }
         }
         return true;
