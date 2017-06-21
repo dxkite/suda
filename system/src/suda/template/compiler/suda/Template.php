@@ -17,7 +17,7 @@ namespace suda\template\compiler\suda;
 
 use suda\tool\ArrayHelper;
 use suda\tool\Command;
-use suda\core\Response;
+use suda\core\{Response,Router};
 use suda\core\Hook;
 use suda\exception\CommandException;
 
@@ -51,7 +51,7 @@ abstract class Template
         }
         $this->response->type('html');
         if (conf('app.etag', !conf('debug'))  && $this->response->etag(md5($content))) {
-        }else{
+        } else {
             echo $content;
         }
         return $this;
@@ -196,8 +196,22 @@ abstract class Template
             echo '<div style="color:green" title="'.__('page hook point').'">{#'.$name.'}</div>';
         }
     }
-    public function getName()
+    public function name()
     {
         return $this->name;
+    }
+    public function responseName()
+    {
+        return $this->response->getName();
+    }
+
+    public function isMe(string $name)
+    {
+        return $this->response->getName()==Router::getInstance()->getRouterFullName($name);
+    }
+
+    public function boolecho($values, string $true, string $false='')
+    {
+        return is_bool($values) && $values ?$true:$false;
     }
 }

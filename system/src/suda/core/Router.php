@@ -238,6 +238,11 @@ class Router
         }
         return [$module,$info];
     }
+    public function getRouterFullName(string $name){
+        list($module, $name)=self::parseName($name);
+        $module=Application::getModuleFullName($module);
+        return $module.':'.$name;
+    }
     
     public function buildUrlArgs(string $name, array $args)
     {

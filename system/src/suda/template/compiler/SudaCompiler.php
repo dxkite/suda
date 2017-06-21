@@ -260,7 +260,9 @@ class SudaCompiler implements Compiler
     {
         return "<?php \$this->set{$exp}; ?>";
     }
-    
+    public function parseB($exp){
+        return "<?php echo \$this->boolecho{$exp}; ?>";
+    }
     protected function parseStatic($exp)
     {
         preg_match('/^\((.+?)\)$/', $exp, $match);
