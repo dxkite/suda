@@ -23,7 +23,7 @@ use suda\exception\DAOException;
 class DAO
 {
     protected $fields=[];
-    protected $wants=[];
+    protected $wants;
 
     /**
      * 验证：类型，长度，正则

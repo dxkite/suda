@@ -22,6 +22,7 @@ final class Request
 {
     private static $get=null;
     private static $post=null;
+    private static $json=null;
     private static $files=null;
     private static $url;
     private static $type=0;
@@ -46,6 +47,7 @@ final class Request
 
     public static function json()
     {
+        if(self::$json) return self::$json;
         if (!self::isJson()) {
             return null;
         }
@@ -62,10 +64,12 @@ final class Request
     {
         return  $_SERVER['REQUEST_METHOD'] ?? 'GET';
     }
+
     public static function getMethod()
     {
         return  self::method();
     }
+    
     public static function url()
     {
         return self::$url;
@@ -153,6 +157,19 @@ final class Request
     {
         return count($_POST);
     }
+
+    public static function hasJson()
+    {
+        if(self::isJson()){
+            try{
+                self::$json=self::json();
+            }catch(\Exception $e){
+                return false;
+            }
+        }
+        return true;
+    }
+
     public static function isJson()
     {
         return isset($_SERVER['CONTENT_TYPE']) && preg_match('/json/i', $_SERVER['CONTENT_TYPE']);

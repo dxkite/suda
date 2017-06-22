@@ -79,7 +79,6 @@ abstract class MethodResponse extends \suda\core\Response
                 $export[$name]['callback']=[get_class($this),$name];
             }
         }
-        // _D()->info($export);
         return $export;
     }
 
@@ -106,7 +105,7 @@ abstract class MethodResponse extends \suda\core\Response
             case MethodResponse::PARAM_POST:
                 return $this->request->post()->_getVar();
             case MethodResponse::PARAM_JSON:
-                return $this->request->json();
+                return $this->request->json()??[];
             case MethodResponse::PARAM_FILES:
                 return $this->request->files()->_getVar();
             default:

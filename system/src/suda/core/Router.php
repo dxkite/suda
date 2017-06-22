@@ -111,9 +111,8 @@ class Router
     protected function saveFile()
     {
         ArrayHelper::export(TEMP_DIR.'/router.cache.php', '_router', $this->routers);
-        $type=ArrayHelper::export(TEMP_DIR.'/types.cache.php', '_types', $this->types);
+        ArrayHelper::export(TEMP_DIR.'/types.cache.php', '_types', $this->types);
         ArrayHelper::export(TEMP_DIR.'/matchs.cache.php', '_matchs', $this->matchs);
-        _D()->info(__('export %d', $type));
     }
 
     protected function loadModulesRouter()
