@@ -11,7 +11,7 @@
     // 开发者关闭模式
     define('DEBUG', false);
     // 错误等级
-    define('LOG_LEVEL', 'info');
+    define('LOG_LEVEL', 'trace');
     // 输出日志详细信息到json文档
     define('LOG_JSON',false);
     // 输出详细信息添加到日志末尾

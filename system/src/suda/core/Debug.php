@@ -55,23 +55,29 @@ class Debug
             $pass=microtime(true)-self::$time[$name];
             $backtrace=debug_backtrace();
             $offset=1;
-            if (!isset($backtrace[$offset]['file'])){
+            if (!isset($backtrace[$offset]['file'])) {
                 $offset--;
             }
             $call=(isset($backtrace[$offset]['class'])?$backtrace[$offset]['class'].'#':'').$backtrace[$offset]['function'];
-            self::_loginfo('info', $call, __('process %s %fs', $name, $pass), $backtrace[$offset]['file'] ??'unknown',  $backtrace[$offset]['line'] ?? 0, $backtrace);
+            self::_loginfo('info', $call, __('process %s %fs', $name, $pass), $backtrace[$offset]['file'] ??'unknown', $backtrace[$offset]['line'] ?? 0, $backtrace);
         }
+    }
+
+    protected static function compareLevel($levela, $levelb)
+    {
+        $levela_num=is_numeric($levela)?$levela:self::$level[strtolower($levela)];
+        $levelb_num=is_numeric($levelb)?$levelb:self::$level[strtolower($levelb)];
+        return $levela_num - $levelb_num;
     }
 
     protected static function _loginfo(string $level, string $name, string $message, string $file, int $line, array $backtrace=null)
     {
-        // printf('<div><span style="color: red;">%s</span> <span style="color: blue;">%s</span> %s %s#%d</div>',$level,$name,$message,$file,$line);
         if (defined('LOG_LEVEL')) {
-            $level_num=is_numeric(LOG_LEVEL)?LOG_LEVEL:self::$level[strtolower(LOG_LEVEL)];
-            if (self::$level[$level] < $level_num) {
+            if (self::compareLevel(LOG_LEVEL, $level)>=0) {
                 return;
             }
         }
+        
         $loginfo['file']=$file;
         $loginfo['line']=$line;
         $loginfo['message']=$message;
@@ -148,7 +154,7 @@ class Debug
     {
         // // 非致命错误
         if ($e->getSeverity()!==E_ERROR) {
-            echo "<div class=\"suda-error\"><b>{$e->getName()}</b>: {$e->getMessage()} at {$e->getFile()}#{$e->getLine()}</div>";
+            echo "<div class=\"suda-error\" style=\"color:red\"><b>{$e->getName()}</b>: {$e->getMessage()} at {$e->getFile()}#{$e->getLine()}</div>";
             return;
         }
         // echo "<div class=\"suda-error\"><b>{$e->getName()}</b>: {$e->getMessage()} at {$e->getFile()}#{$e->getLine()}</div>";
@@ -278,21 +284,16 @@ class Debug
             Storage::mkdirs(dirname($filejson));
             file_put_contents($filejson, json_encode($loginfo));
         }
-        $outerror=false;
+
         foreach (self::$log as $log) {
-            // 允许添加错误到日志后 或者发生了致命错误
-            if ((defined('LOG_FILE_APPEND') && LOG_FILE_APPEND) || Debug::ERROR===$log['level']) {
-                $str.="\t[".number_format($log['time'], 10).'S:'.self::memshow($log['mem'], 2).']'."\t".$log['level'].'>In '.$log['file'].'#'.$log['line']."\t\t".$log['name']."\t".$log['message']."\r\n";
-                if (Debug::ERROR===$log['level']) {
-                    $str.=self::printTrace($log['backtrace'])."\r\n";
-                }
+            $str.="\t[".number_format($log['time'], 10).'S:'.self::memshow($log['mem'], 2).']'."\t".$log['level'].'>In '.$log['file'].'#'.$log['line']."\t\t".$log['name']."\t".$log['message']."\r\n";
+            // 添加调用栈 高级或者同级则记录
+            if ((defined('LOG_FILE_APPEND') && LOG_FILE_APPEND) && self::compareLevel(conf('debug-backtrace', Debug::ERROR), $log['level'])<=0 ) {
+                $str.=self::printTrace($log['backtrace'])."\r\n";
             }
         }
 
-        if ((defined('LOG_FILE_APPEND') && LOG_FILE_APPEND && count(self::$log) )||  $outerror) {
-            $str.="\r\n";
-        }
-        return file_put_contents($file, $str, FILE_APPEND);
+        return file_put_contents($file, $str."\r\n", FILE_APPEND);
     }
 
     public static function memshow(int $mem, int $dec)

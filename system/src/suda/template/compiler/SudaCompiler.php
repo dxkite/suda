@@ -253,7 +253,7 @@ class SudaCompiler implements Compiler
     
     protected function parseSelf()
     {
-        return "<?php echo \$_SERVER['PHP_SELF'] ?>";
+        return "<?php echo u(); ?>";
     }
 
     protected function parseSet($exp)
