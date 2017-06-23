@@ -36,7 +36,6 @@ class SQLQuery
     // 使用的数据库
     protected $database=null;
     protected $dbchange=false;
-    protected static $good=true;
 
     // TODO :  支持超大查询 max_allowed_packet
 
@@ -197,18 +196,12 @@ class SQLQuery
             self::$prefix=Config::get('database.prefix', '');
             try {
                 _D()->time('connect database');
-                self::$pdo = new PDO($pdo, Config::get('database.user', 'root'), Config::get('database.passwd', 'root'));
+                self::$pdo = new PDO($pdo, Config::get('database.user', 'root'), Config::get('database.passwd', ''));
                 _D()->timeEnd('connect database');
             } catch (PDOException $e) {
-                _D()->waring('connect database error:'.$e->getMessage());
-                self::$good=false;
+                throw new SQLException('connect database error:'.$e->getMessage(),$e->getCode(),E_ERROR,__FILE__,__LINE__,$e);
             }
         }
-    }
-
-    public function good() :bool
-    {
-        return self::$good;
     }
 
     // 事务系列
