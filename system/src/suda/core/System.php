@@ -21,7 +21,7 @@ defined('ROOT_PATH') or define('ROOT_PATH', dirname(dirname(dirname(dirname(__DI
 defined('SYSTEM_DIR') or define('SYSTEM_DIR', dirname(dirname(dirname(__DIR__))));
 defined('SYSTEM_RESOURCE') or define('SYSTEM_RESOURCE', SYSTEM_DIR.'/resource');
 defined('DEBUG') or define('DEBUG', false);
-define('SUDA_VERSION','1.2.5');
+define('SUDA_VERSION','1.2.6');
 
 require_once __DIR__.'/Debug.php';
 require_once __DIR__.'/functions.php';
