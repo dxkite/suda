@@ -121,16 +121,23 @@ class Router
         if (conf('debug', false)) {
             self::prepareRouterInfo();
         } else {
-            if(!self::routerCached()){
+            if (!self::routerCached()) {
                 self::prepareRouterInfo();
             }
             self::loadFile();
         }
     }
-    public function routerCached(){
-        if(!file_exists(TEMP_DIR.'/router.cache.php')) return false;
-        if(!file_exists(TEMP_DIR.'/types.cache.php')) return false;
-        if(!file_exists(TEMP_DIR.'/matchs.cache.php')) return false;
+    public function routerCached()
+    {
+        if (!file_exists(TEMP_DIR.'/router.cache.php')) {
+            return false;
+        }
+        if (!file_exists(TEMP_DIR.'/types.cache.php')) {
+            return false;
+        }
+        if (!file_exists(TEMP_DIR.'/matchs.cache.php')) {
+            return false;
+        }
     }
     public function prepareRouterInfo()
     {
@@ -142,10 +149,12 @@ class Router
         // 缓存路由信息
         self::saveFile();
     }
+
     public function watch(string $name, string $url)
     {
         $this->matchs[$name]=self::buildMatch($name, $url);
     }
+
     protected function matchRouterMap()
     {
         $request=Request::getInstance();
@@ -219,7 +228,7 @@ class Router
         // MODULE_NAME_PREG
         // [模块前缀名称/]模块名[:版本号]:(模板名|路由ID)
         preg_match('/^((?:[a-zA-Z0-9_-]+\/)?[a-zA-Z0-9_-]+)(?::([^:]+))?(?::(.+))?$/', $name, $match);
-        _D()->debug('parse module',$match);
+        _D()->debug('parse module', $match);
         // 单纯路由或者模板
         if (isset($match[1]) && count($match)==2) {
             $module=Application::getActiveModule();
@@ -237,7 +246,9 @@ class Router
         }
         return [$module,$info];
     }
-    public function getRouterFullName(string $name){
+
+    public function getRouterFullName(string $name)
+    {
         list($module, $name)=self::parseName($name);
         $module=Application::getModuleFullName($module);
         return $module.':'.$name;
@@ -302,6 +313,7 @@ class Router
     {
         _D()->time('dispatch');
         self::buildRouterMap();
+        Hook::exec('Router:buildRouterMap::after', [$this]);
         // Hook前置路由（自定义过滤器|自定义路由）
         if (Hook::execIf('Router:dispatch::before', [Request::getInstance()], true)) {
             if (($router_name=self::matchRouterMap())!==false) {
@@ -318,8 +330,99 @@ class Router
             Hook::execTail('Router:dispatch::error');
         }
     }
+
+    /**
+     * 获取路由
+     *
+     * @param string $name
+     * @return void
+     */
+    public function getRouter(string $name)
+    {
+        $name=self::getRouterFullName($name);
+        if (isset($this->routers[$name])) {
+            $router= $this->routers[$name];
+            $router['match']=$this->matchs[$name];
+            return $router;
+        }
+    }
+    
+    /**
+     * 设置路由别名
+     *
+     * @param string $name
+     * @param string $alias
+     * @return void
+     */
+    public function setRouterAlias(string $name,string $alias){
+        $name=self::getRouterFullName($name);
+        $alias=self::getRouterFullName($alias);
+        if (isset($this->routers[$name])) {
+            $this->routers[$alias]=$this->routers[$alias]??$this->routers[$name];
+            $this->matchs[$alias]=$this->matchs[$alias]??$this->matchs[$name];
+        }
+    }
+    
+    /**
+     * 路由替换
+     *
+     * @param string $name
+     * @param string $alias
+     * @return void
+     */
+    public function routerReplace(string $name,string $alias){
+        $name=self::getRouterFullName($name);
+        $alias=self::getRouterFullName($alias);
+        if (isset($this->routers[$name])) {
+            $this->routers[$name]=$this->routers[$alias]??$this->routers[$name];
+            $this->matchs[$name]=$this->matchs[$alias]??$this->matchs[$name];
+        }
+    }
+    
+    /**
+     * 替换匹配表达式
+     *
+     * @param string $name
+     * @param string $url
+     * @param bool $preg
+     * @return void
+     */
+    public function replaceMatch(string $name, string $url, bool $preg=false)
+    {
+        $name=self::getRouterFullName($name);
+        if (isset($this->matchs[$name])) {
+            if ($preg) {
+                return $this->matchs[$name]=$url;
+            }
+            return $this->matchs[$name]=self::buildMatch($name,$url);
+        }
+    }
+
+    /**
+     * 替换指定类
+     *
+     * @param string $name
+     * @param string $class
+     * @param array $method
+     * @return void
+     */
+    public function replaceClass(string $name, string $class, array $method=null)
+    {
+        $name=self::getRouterFullName($name);
+        if (isset($this->routers[$name])) {
+            $router= $this->routers[$name];
+            $router['class']= $class;
+            if ($method) {
+                $router['method']=$method;
+            }
+            return $this->routers[$name]=$router;
+        }
+    }
+
     protected static function runRouter(array $router)
     {
+        // 全局钩子:重置Hook指向
+        Hook::exec('Router:runRouter::before', [&$router]);
         // _D()->time('active Module');
         (new \suda\tool\Command(Config::get('app.application', 'suda\\core\\Application').'::activeModule'))->exec([$router['module']]);
         // _D()->timeEnd('active Module');
