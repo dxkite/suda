@@ -73,11 +73,10 @@ class Debug
     protected static function _loginfo(string $level, string $name, string $message, string $file, int $line, array $backtrace=null)
     {
         if (defined('LOG_LEVEL')) {
-            if (self::compareLevel(LOG_LEVEL, $level)>=0) {
+            if (self::compareLevel(LOG_LEVEL, $level)>0) {
                 return;
             }
         }
-        
         $loginfo['file']=$file;
         $loginfo['line']=$line;
         $loginfo['message']=$message;

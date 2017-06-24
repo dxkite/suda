@@ -210,7 +210,7 @@ class Router
         $url=preg_replace('/\[(\S+)\]/', '(?:$1)?', $url);
         // 编译页面参数
         $url=preg_replace_callback('/\{(?:(\w+)(?::(\w+))?)(?:=(\w+))?\}([?])?/', function ($match) use ($name, &$types, $urltype) {
-            _D()->info($match);
+            _D()->debug($match);
             $size=isset($types[$name])?count($types[$name]):0;
             $param_name=$match[1]!==''?$match[1]:$size;
             $param_type=  $match[2] ?? 'string';
