@@ -374,8 +374,11 @@ class Router
         $name=self::getRouterFullName($name);
         $alias=self::getRouterFullName($alias);
         if (isset($this->routers[$name])) {
-            $this->routers[$name]=$this->routers[$alias]??$this->routers[$name];
-            $this->matchs[$name]=$this->matchs[$alias]??$this->matchs[$name];
+            if(isset($this->routers[$alias])){
+                $this->routers[$name]['class']=$this->routers[$alias]['class'];
+                $this->routers[$name]['method']=$this->routers[$alias]['method']??[];
+                $this->routers[$name]['module']=$this->routers[$alias]['module'];
+            }
         }
     }
     
@@ -406,7 +409,7 @@ class Router
      * @param array $method
      * @return void
      */
-    public function replaceClass(string $name, string $class, array $method=null)
+    public function replaceClass(string $name, string $class,string $module=null, array $method=null)
     {
         $name=self::getRouterFullName($name);
         if (isset($this->routers[$name])) {
@@ -414,6 +417,9 @@ class Router
             $router['class']= $class;
             if ($method) {
                 $router['method']=$method;
+            }
+            if($module){
+                $router['module']=Application::getModuleFullName($module);
             }
             return $this->routers[$name]=$router;
         }
