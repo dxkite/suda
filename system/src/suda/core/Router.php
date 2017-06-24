@@ -204,13 +204,17 @@ class Router
     {
         $types=&$this->types;
         $urltype=self::$urltype;
-        $url=preg_replace('/([\/\.\\\\\+\*\(\^\)\?\$\=\!\<\>\-])/', '\\\\$1', $url);
+        // 转义字符
+        $url=preg_replace('/([\/\.\\\\\+\*\(\^\)\?\$\!\<\>\-])/', '\\\\$1', $url);
+        // 添加忽略
         $url=preg_replace('/\[(\S+)\]/', '(?:$1)?', $url);
-        $url=preg_replace_callback('/\{(?:(\w+)(?::(\w+))?)\}([?])?/', function ($match) use ($name, &$types, $urltype) {
+        // 编译页面参数
+        $url=preg_replace_callback('/\{(?:(\w+)(?::(\w+))?)(?:=(\w+))?\}([?])?/', function ($match) use ($name, &$types, $urltype) {
+            _D()->info($match);
             $size=isset($types[$name])?count($types[$name]):0;
             $param_name=$match[1]!==''?$match[1]:$size;
             $param_type=  $match[2] ?? 'string';
-            $ignore=isset($match[3])?'?':'';
+            $ignore=isset($match[4])?'?':'';
             $types[$name][$param_name]=$param_type;
             if (isset($urltype[$param_type])) {
                 return '('.$urltype[$param_type].')'.$ignore;
@@ -284,9 +288,10 @@ class Router
         if (isset($this->routers[$name])) {
             // 路由存在
             $url.=preg_replace('/[?|]/', '\\\1', $this->routers[$name]['visit']);
-            $url=preg_replace_callback('/\{(?:(\w+)(?::(\w+))?)\}/', function ($match) use ($name, & $values) {
+            $url=preg_replace_callback('/\{(?:(\w+)(?::(\w+))?)(?:=(\w+))?\}/', function ($match) use ($name, & $values) {
                 $param_name=$match[1];
                 $param_type= $match[2] ?? 'url';
+                $param_default=$match[3]??'';
                 if (isset($values[$param_name])) {
                     if ($param_type==='int') {
                         $val= intval($values[$param_name]);
@@ -295,7 +300,7 @@ class Router
                     unset($values[$param_name]);
                     return $val;
                 } else {
-                    return '';
+                    return $param_default;
                 }
             }, preg_replace('/\[(.+?)\]/', '$1', $url));
         } else {
