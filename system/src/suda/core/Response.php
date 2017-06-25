@@ -175,6 +175,7 @@ abstract class Response
     }
     public function go(string $url)
     {
+        _D()->debug($url);
         $this->setHeader('Location:'.$url);
     }
     public function redirect(string $url, int $time=1, string $message=null)

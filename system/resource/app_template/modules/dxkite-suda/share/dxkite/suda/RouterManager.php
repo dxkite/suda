@@ -53,7 +53,7 @@ class RouterManager
             $json=[];
         }
         if (!isset($json[$name])) {
-            _D()->waring(__('无法找到路由%s', $name));
+            _D()->warning(__('无法找到路由%s', $name));
             return false;
         }
         

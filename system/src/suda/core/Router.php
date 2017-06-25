@@ -127,6 +127,8 @@ class Router
             self::loadFile();
         }
     }
+
+    
     public function routerCached()
     {
         if (!file_exists(TEMP_DIR.'/router.cache.php')) {
@@ -139,6 +141,7 @@ class Router
             return false;
         }
     }
+
     public function prepareRouterInfo()
     {
         $modules=Application::getLiveModules();
@@ -146,6 +149,7 @@ class Router
             self::load($module);
         }
         self::buildRouterMap();
+        Hook::exec('Router:prepareRouterInfo', [$this]);
         // 缓存路由信息
         self::saveFile();
     }
@@ -318,7 +322,6 @@ class Router
     {
         _D()->time('dispatch');
         self::buildRouterMap();
-        Hook::exec('Router:buildRouterMap::after', [$this]);
         // Hook前置路由（自定义过滤器|自定义路由）
         if (Hook::execIf('Router:dispatch::before', [Request::getInstance()], true)) {
             if (($router_name=self::matchRouterMap())!==false) {
@@ -386,6 +389,26 @@ class Router
             }
         }
     }
+
+    /**
+     * 路由移动
+     *
+     * @param string $name
+     * @param string $alias
+     * @return void
+     */
+    public function routerMove(string $name,string $alias){
+        $name=self::getRouterFullName($name);
+        $alias=self::getRouterFullName($alias);
+        if (isset($this->routers[$name])) {
+            if(isset($this->routers[$alias])){
+                $this->routers[$name]['class']=$this->routers[$alias]['class'];
+                $this->routers[$name]['method']=$this->routers[$alias]['method']??[];
+                $this->routers[$name]['module']=$this->routers[$alias]['module'];
+                unset($this->router[$alias]);
+            }
+        }
+    }    
     
     /**
      * 替换匹配表达式
@@ -407,7 +430,7 @@ class Router
     }
 
     /**
-     * 替换指定类
+     * 替换路由指定类
      *
      * @param string $name
      * @param string $class
