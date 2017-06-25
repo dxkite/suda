@@ -35,6 +35,11 @@ class DAO
     protected $primaryKey=null;
     protected $tableName;
 
+    protected $order_field=null;
+    protected $order=null;
+    const ORDER_ASC=0;
+    const ORDER_DESC=1;
+
     public function __construct(string $tableName)
     {
         // 默认ID为表主键
@@ -124,9 +129,9 @@ class DAO
     public function list(int $page=null, int $rows=10)
     {
         if (is_null($page)) {
-            return Query::where($this->getTableName(), $this->getWants())->fetchAll();
+            return Query::where($this->getTableName(), $this->getWants(),self::_order())->fetchAll();
         } else {
-            return Query::where($this->getTableName(), $this->getWants(), '1', [], [$page, $rows])->fetchAll();
+            return Query::where($this->getTableName(), $this->getWants(),self::_order(), [], [$page, $rows])->fetchAll();
         }
     }
 
@@ -139,10 +144,13 @@ class DAO
      */
     public function listWhere($where, int $page=null, int $rows=10)
     {
-        if (is_null($page)) {
-            return Query::where($this->getTableName(), $this->getWants(), $where)->fetchAll();
+        $binds=[];
+        $where_str=Query::prepareWhere($where,$binds);
+        $where=preg_replace('/WHERE(.+)$/','$1',$where_str).' '.self::_order(); 
+        if (is_null($where_str)) {
+            return Query::where($this->getTableName(), $this->getWants(), $where,$binds)->fetchAll();
         } else {
-            return Query::where($this->getTableName(), $this->getWants(), $where, [], [$page, $rows])->fetchAll();
+            return Query::where($this->getTableName(), $this->getWants(), $where,$binds,[$page, $rows])->fetchAll();
         }
     }
 
@@ -339,6 +347,11 @@ class DAO
         return Query::count($this->getTableName());
     }
 
+    public function order(string $field,int $order=DAO::ORDER_ASC){
+        $this->order_field=$field;
+        $this->order=$order;
+        return $this;
+    }
 
     protected function checkValueType(string $check, $value)
     {
@@ -419,5 +432,13 @@ class DAO
             return json_encode($object);
         }
         return $object;
+    }
+
+    protected function _order() {
+        if(is_null($this->order_field)) {
+            return '1';
+        } else{
+            return ' ORDER BY '. $this->order_field  .' '. ($this->order==DAO::ORDER_ASC?'ASC':'DESC');
+        }
     }
 }

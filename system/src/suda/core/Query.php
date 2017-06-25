@@ -104,7 +104,7 @@ class Query extends SQLQuery
         return ['sql'=>$sql,'param'=>$param];
     }
 
-    protected static function prepareWhere($where,array &$bind){
+    public static function prepareWhere($where,array &$bind){
         $param=[];
         $count=0;
         if (is_array($where)) {

@@ -269,11 +269,13 @@ final class Request
     {
         return self::$url.(self::$query?'?'.self::$query:'');
     }
+
     public static function hostBase(){
         $scheme = $_SERVER['REQUEST_SCHEME'] ?? '//';
         $host= $_SERVER['HTTP_HOST'] ?? '';
         return $scheme.'://'.$host;
     }
+
     public static function baseUrl()
     {
         $base=self::hostBase();
