@@ -133,7 +133,7 @@ class RouterManager
         $class_path=MODULES_DIR.'/'.$module_dir.'/src/'.$class_namespace;
         $class_file=$class_path.'/'.$class_name.'.php';
         $return['class']=$class_file;
-        $template_name=self::createTplName($class_short);
+        $template_name=self::createTplName(preg_replace('/^(.+)Response$/i','$1',$class_short));
         $template_file=MODULES_DIR.'/'.$module_dir.'/resource/template/default/'.$template_name.'.tpl.html';
         $class_template_file=MODULE_RESOURCE.'/data/'.($json?'/class_json.php':'/class_html.php');
         $class_template= Storage::get($class_template_file);

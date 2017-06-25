@@ -26,7 +26,7 @@ use suda\core\{Session,Cookie,Request,Query};
 * @url: /
 * @param: 
 */
-class Index extends \suda\core\Response
+class IndexResponse extends \suda\core\Response
 {
     public function onRequest(Request $request)
     {
