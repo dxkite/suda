@@ -166,7 +166,7 @@ class SudaCompiler implements Compiler
 
     protected static function echoValue($var)
     {
-        // 任意变量名: 中文点下划线英文数字 
+        // 任意变量名: 中文点下划线英文数字
         return preg_replace_callback('/\B[$][:]([.\w\x{4e00}-\x{9aff}]+)(\s*)(\( ( (?>[^()]+) | (?3) )* \) )?/ux', function ($matchs) {
             $name=$matchs[1];
             $args=isset($matchs[4])?','.$matchs[4]:'';
@@ -188,7 +188,10 @@ class SudaCompiler implements Compiler
     {
         return "<?php \$this->data{$exp}; ?>";
     }
-    
+    protected function parse_($exp)
+    {
+        return "<?php echo __$exp ?>";
+    }
     // IF 语句
     protected function parseIf($exp)
     {
@@ -260,7 +263,8 @@ class SudaCompiler implements Compiler
     {
         return "<?php \$this->set{$exp}; ?>";
     }
-    public function parseB($exp){
+    public function parseB($exp)
+    {
         return "<?php echo \$this->boolecho{$exp}; ?>";
     }
     protected function parseStatic($exp)
