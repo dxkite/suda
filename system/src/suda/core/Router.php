@@ -165,7 +165,7 @@ class Router
         foreach ($this->matchs as $name=>$preg) {
             // _D()->d('url:'.$request->url().'; preg:'.'/^'.$preg.'$/');
             if (preg_match('/^'.$preg.'$/', $request->url(), $match)) {
-                // 检验接口参数
+                // 检验方法
                 if (isset($this->routers[$name]['method']) && count($this->routers[$name]['method'])>0) {
                     array_walk($this->routers[$name]['method'], function ($value) {
                         return strtoupper($value);
@@ -175,7 +175,7 @@ class Router
                         continue;
                     }
                 }
-                
+                // 检验接口参数
                 array_shift($match);
                 if (count($match)>0) {
                     foreach ($this->types[$name] as $param_name =>$type) {
@@ -189,6 +189,10 @@ class Router
                         $_GET[$param_name]=$value;
                         $request->set($param_name, $value);
                     }
+                }
+                // 自定义过滤
+                if(!Hook::execIf('Router:filter',[$name,$this->routers[$name]],false)){
+                    continue;
                 }
                 return $name;
             }

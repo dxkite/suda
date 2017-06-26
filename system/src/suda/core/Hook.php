@@ -72,6 +72,14 @@ class Hook
         }
     }
 
+    /**
+     * 运行，遇到返回指定条件则停止并返回false
+     *
+     * @param string $name
+     * @param array $args
+     * @param boolean $condition
+     * @return void
+     */
     public static function execIf(string $name, array $args=[], $condition = true)
     {
         if (isset(self::$hooks[$name]) && is_array(self::$hooks[$name])) {

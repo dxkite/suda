@@ -119,6 +119,16 @@ class DAO
         return Query::delete($this->getTableName(), [$this->getPrimaryKey()=>$value]);
     }
 
+    
+    public function search(string $field, string $search, int $page=null, int $rows=10)
+    {
+        if (is_null($page)) {
+            return Query::search($this->getTableName(), $this->getWants(), $field, $search);
+        } else {
+            return Query::search($this->getTableName(), $this->getWants(), $field, $search, [$page, $rows]);
+        }
+    }
+
     /**
      * 分页列出元素
      *
@@ -129,9 +139,9 @@ class DAO
     public function list(int $page=null, int $rows=10)
     {
         if (is_null($page)) {
-            return Query::where($this->getTableName(), $this->getWants(),self::_order())->fetchAll();
+            return Query::where($this->getTableName(), $this->getWants(), self::_order())->fetchAll();
         } else {
-            return Query::where($this->getTableName(), $this->getWants(),self::_order(), [], [$page, $rows])->fetchAll();
+            return Query::where($this->getTableName(), $this->getWants(), self::_order(), [], [$page, $rows])->fetchAll();
         }
     }
 
@@ -145,12 +155,12 @@ class DAO
     public function listWhere($where, int $page=null, int $rows=10)
     {
         $binds=[];
-        $where_str=Query::prepareWhere($where,$binds);
-        $where=preg_replace('/WHERE(.+)$/','$1',$where_str).' '.self::_order(); 
+        $where_str=Query::prepareWhere($where, $binds);
+        $where=preg_replace('/WHERE(.+)$/', '$1', $where_str).' '.self::_order();
         if (is_null($where_str)) {
-            return Query::where($this->getTableName(), $this->getWants(), $where,$binds)->fetchAll();
+            return Query::where($this->getTableName(), $this->getWants(), $where, $binds)->fetchAll();
         } else {
-            return Query::where($this->getTableName(), $this->getWants(), $where,$binds,[$page, $rows])->fetchAll();
+            return Query::where($this->getTableName(), $this->getWants(), $where, $binds, [$page, $rows])->fetchAll();
         }
     }
 
@@ -347,7 +357,8 @@ class DAO
         return Query::count($this->getTableName());
     }
 
-    public function order(string $field,int $order=DAO::ORDER_ASC){
+    public function order(string $field, int $order=DAO::ORDER_ASC)
+    {
         $this->order_field=$field;
         $this->order=$order;
         return $this;
@@ -434,10 +445,11 @@ class DAO
         return $object;
     }
 
-    protected function _order() {
-        if(is_null($this->order_field)) {
+    protected function _order()
+    {
+        if (is_null($this->order_field)) {
             return '1';
-        } else{
+        } else {
             return ' ORDER BY '. $this->order_field  .' '. ($this->order==DAO::ORDER_ASC?'ASC':'DESC');
         }
     }
