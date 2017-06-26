@@ -18,6 +18,7 @@ namespace dxkite\suda;
 
 use suda\core\Session;
 use suda\core\Request;
+use suda\core\Storage;
 
 /**
  * 权限控制类
@@ -29,7 +30,7 @@ abstract class ACResponse extends \suda\core\Response
         parent::__construct();
         Session::getInstance();
         // 只允许本地调试
-        if (conf('debug-local',true) && !self::selfCheck()){
+        if (conf('debug-local', true) && !self::selfCheck()) {
             $this->state(403);
             _D()->warning('recieve track form address> '.Request::ip());
             die('<span style="color:red">YOU ARE NOT THE DEVELOPER!</span>');
@@ -58,13 +59,14 @@ abstract class ACResponse extends \suda\core\Response
             $this->onAction($resquest);
         }
     }
+
     public function selfCheck()
     {
         if (Request::ip()!=='::1'||Request::ip()!=='127.0.0.1') {
             try {
-                $content=file_get_contents(u('self_check'));
-                if ($check=json_decode($content,true)){
-                    if($check['self::ip']===Request::ip() &&$check['self::check']==SUDA_VERSION){
+                $content=Storage::curl(u('self_check'));
+                if ($check=json_decode($content, true)) {
+                    if ($check['self::ip']===Request::ip() &&$check['self::check']==SUDA_VERSION) {
                         return true;
                     }
                 }

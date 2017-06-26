@@ -46,7 +46,7 @@ class Storage
         return realpath($path);
     }
 
-    public static function readDirFiles(string $dirs,  bool $repeat=false, string $preg='/^.+$/', bool $cut=false):array
+    public static function readDirFiles(string $dirs, bool $repeat=false, string $preg='/^.+$/', bool $cut=false):array
     {
         $dirs=self::tpath($dirs);
         $file_totu=[];
@@ -125,7 +125,7 @@ class Storage
                     }
                 }
             }
-            if (self::emptyDir($dir)){
+            if (self::emptyDir($dir)) {
                 // echo 'rmdir> '.$dir."\r\n";
                 rmdir($dir);
             }
@@ -133,8 +133,8 @@ class Storage
         return true;
     }
 
-    public static function emptyDir(string $dir){
-        
+    public static function emptyDir(string $dir)
+    {
         return count(scandir(self::tpath($dir))===0);
     }
 
@@ -142,7 +142,7 @@ class Storage
     {
         $src=self::tpath($src);
         $dest=self::tpath($dest);
-        _D()->trace(__('copy %s->%s',$src,$dest));
+        _D()->trace(__('copy %s->%s', $src, $dest));
         self::mkdirs($dest);
         $hd=opendir($src);
         while ($read=readdir($hd)) {
@@ -279,8 +279,17 @@ class Storage
     public static function download(string $url, string $save):int
     {
         $save=self::tpath($save);
-        $file=file_get_contents($url);
-        return file_put_contents($save, $file);
+        return self::put($save, self::curl($url));
+    }
+    
+    public static function curl(string $url)
+    {
+        $ch=curl_init($url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_HEADER, false);
+        $file=curl_exec($ch);
+        curl_close($ch);
+        return $file;
     }
     public static function type(string $name):int
     {
@@ -324,7 +333,8 @@ class Storage
         return false;
     }
 
-    private static function tpath(string $path){
-        return preg_replace('/[\\\\\/]+/',DIRECTORY_SEPARATOR,$path);
+    private static function tpath(string $path)
+    {
+        return preg_replace('/[\\\\\/]+/', DIRECTORY_SEPARATOR, $path);
     }
 }
