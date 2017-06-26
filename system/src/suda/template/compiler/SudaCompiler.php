@@ -159,7 +159,7 @@ class SudaCompiler implements Compiler
         $hook=sprintf('/(?<!!)%s(.+)%s/', preg_quote(self::$hookTag[0]), preg_quote(self::$hookTag[1]));
         return self::echoValue(preg_replace(
             [$rawecho, $echo, $comment, $hook ],
-            ['<?php echo $1; ?>', '<?php echo htmlspecialchars($1); ?>', '<?php /* $1 */ ?>', '<?php $this->execGloHook("$1") ?>'],
+            ['<?php echo $1; ?>', '<?php echo htmlspecialchars($1); ?>', '<?php /* $1 */ ?>', '<?php $this->execGloHook("$1"); ?>'],
             $str
         ));
     }

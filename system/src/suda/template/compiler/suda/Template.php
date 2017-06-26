@@ -196,6 +196,7 @@ abstract class Template
             echo '<div style="color:green" title="'.__('page hook point').'">{#'.$name.'}</div>';
         }
     }
+
     public function name()
     {
         return $this->name;

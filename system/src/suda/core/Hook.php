@@ -28,8 +28,9 @@ class Hook
 
     public static function load(array $arrays)
     {
-        self::$hooks=array_merge(self::$hooks, $arrays);
+        self::$hooks=array_merge_recursive(self::$hooks, $arrays);
     }
+
     public static function listen(string $name, $command)
     {
         self::add($name, $command);
@@ -44,6 +45,7 @@ class Hook
     {
         self::$hooks[$name][]=$command;
     }
+
     public static function addTop(string $name, $command)
     {
         if (isset(self::$hooks[$name]) && is_array(self::$hooks[$name])) {

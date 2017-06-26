@@ -98,12 +98,12 @@ class ArrayHelper
                     $offset = &$offset[$next];
                 }
             }
-        // 如果 设置的是数组，则合并
-        if ($offset && is_array($offset) && is_array($value)) {
-            $offset = array_merge($offset, is_array($def)?$def:[], $value);
-        } else {
-            $offset = empty($value) ? $def : $value;
-        }
+            // 如果 设置的是数组，则合并
+            if ($offset && is_array($offset) && is_array($value)) {
+                $offset = array_merge($offset, is_array($def)?$def:[], $value);
+            } else {
+                $offset = is_null($value) ? $def : $value;
+            }
         } else {
             if (isset($array[$name]) && is_array($array[$name]) && is_array($value)) {
                 $array[$name]=array_merge($array[$name], is_array($def)?$def:[], $value);
@@ -111,7 +111,6 @@ class ArrayHelper
                 $array[$name] = $value;
             }
         }
-
         return $array;
     }
 
