@@ -48,10 +48,21 @@ class Query extends SQLQuery
         return self::select($table, $wants,$where, $binds, $page, $scroll);
     }
 
-    public static function search(string $table, $wants='*',string $field,string $search, array $page=null, bool $scroll=false):SQLQuery
+    public static function search(string $table, $wants='*',$field,string $search, array $page=null, bool $scroll=false):SQLQuery
     {
         $search=preg_replace('/\s+/','%',$search);
-        return self::where($table, $wants,'`'.$field.'` LIKE CONCAT(\'%\',:search,\'%\')',['search'=>$search], $page, $scroll);
+        if(is_array($field)){
+            $search_str=[];
+            foreach ($field as $item=>$want) {
+                $search_str[]="`{$want}` LIKE CONCAT('%',:search,'%')";
+                $bind['search']=$search;
+            }
+            $search_str=implode(' OR ', $search_str);
+        }else{
+            $search_str='`'.$field.'` LIKE CONCAT(\'%\',:search,\'%\')';
+            $bind=['search'=>$search];
+        }
+        return self::where($table, $wants,$search_str,$bind, $page, $scroll);
     }
 
     public static function select(string $table, $wants ,  $conditions, array $binds=[], array $page=null, bool $scroll=false)

@@ -120,7 +120,7 @@ class DAO
     }
 
     
-    public function search(string $field, string $search, int $page=null, int $rows=10)
+    public function search( $field, string $search, int $page=null, int $rows=10)
     {
         if (is_null($page)) {
             return Query::search($this->getTableName(), $this->getWants(), $field, $search);
