@@ -17,6 +17,7 @@ namespace suda\template\compiler;
 
 use Storage;
 use suda\core\Application;
+use suda\core\Hook;
 use suda\tool\Value;
 use suda\template\Compiler;
 use suda\template\Manager;
@@ -37,7 +38,10 @@ class SudaCompiler implements Compiler
      * @var array
      */
     protected static $command=[];
-    
+    public function __construct()
+    {
+        Hook::exec('template:SudaCompiler:init',[$this]);
+    }
     // 编译文本
     public function compileText(string $text)
     {

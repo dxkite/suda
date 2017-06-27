@@ -139,9 +139,9 @@ class DAO
     public function list(int $page=null, int $rows=10)
     {
         if (is_null($page)) {
-            return Query::where($this->getTableName(), $this->getWants(), self::_order())->fetchAll();
+            return Query::where($this->getTableName(), $this->getWants(),'1 '. self::_order())->fetchAll();
         } else {
-            return Query::where($this->getTableName(), $this->getWants(), self::_order(), [], [$page, $rows])->fetchAll();
+            return Query::where($this->getTableName(), $this->getWants(),'1 '.  self::_order(), [], [$page, $rows])->fetchAll();
         }
     }
 
@@ -359,9 +359,9 @@ class DAO
      *
      * @return int
      */
-    public function count():int
+    public function count($where='1', array $binds=[]):int
     {
-        return Query::count($this->getTableName());
+        return Query::count($this->getTableName(),$where,$binds);
     }
 
     public function order(string $field, int $order=DAO::ORDER_ASC)
@@ -455,7 +455,7 @@ class DAO
     protected function _order()
     {
         if (is_null($this->order_field)) {
-            return '1';
+            return '';
         } else {
             return ' ORDER BY '. $this->order_field  .' '. ($this->order==DAO::ORDER_ASC?'ASC':'DESC');
         }

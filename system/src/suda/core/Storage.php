@@ -116,7 +116,7 @@ class Storage
                     } elseif (file_exists("{$dir}/{$item}")) { // Non-Thread-Safe
                         // Need thread-safe version to avoid this error
                         $errorhandler=function ($erron, $error, $file, $line) {
-                            Debug::w($error);
+                            Debug::warning($error);
                         };
                         set_error_handler($errorhandler);
                         unlink("{$dir}/{$item}");
@@ -142,7 +142,7 @@ class Storage
     {
         $src=self::tpath($src);
         $dest=self::tpath($dest);
-        _D()->trace(__('copy %s->%s', $src, $dest));
+        // _D()->trace(__('copy %s->%s', $src, $dest));
         self::mkdirs($dest);
         $hd=opendir($src);
         while ($read=readdir($hd)) {
@@ -184,6 +184,7 @@ class Storage
         }
         return false;
     }
+
     public static function move(string $src, string $dest):bool
     {
         $src=self::tpath($src);
@@ -193,18 +194,21 @@ class Storage
         }
         return false;
     }
+
     // 创建文件夹
     public static function mkdir(string $path, int $mode=0777):bool
     {
         $path=self::tpath($path);
         return !self::isDir($path) && mkdir($path, $mode);
     }
+
     // 删除文件夹
     public static function rmdir(string $path):bool
     {
         $path=self::tpath($path);
         return rmdir($path);
     }
+
     public static function put(string $name, $content, int $flags = 0):bool
     {
         $name=self::tpath($name);
@@ -259,6 +263,7 @@ class Storage
         $name=self::tpath($name);
         return is_readable($name);
     }
+
     public static function isWritable(string $name):bool
     {
         $name=self::tpath($name);
@@ -276,6 +281,7 @@ class Storage
         }
         return 0;
     }
+
     public static function download(string $url, string $save):int
     {
         $save=self::tpath($save);
@@ -291,6 +297,8 @@ class Storage
         curl_close($ch);
         return $file;
     }
+
+
     public static function type(string $name):int
     {
         $name=self::tpath($name);
@@ -333,6 +341,12 @@ class Storage
         return false;
     }
 
+    /**
+     * 修正路径分割符
+     *
+     * @param string $path
+     * @return void
+     */
     private static function tpath(string $path)
     {
         return preg_replace('/[\\\\\/]+/', DIRECTORY_SEPARATOR, $path);
