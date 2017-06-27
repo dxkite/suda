@@ -79,6 +79,8 @@ class AjaxResponse extends MethodResponse
             } else {
                 $data=$this->invokeMethod($method, $param_arr);
             }
+        } catch (AjaxException $e) {
+            return $this->data($e->getData(), $e->getName(), $e->getMessage(), $e->getCode());
         } catch (Exception $e) {
             return $this->data($param_arr, get_class($e), $e->getMessage(), $e->getCode());
         }
