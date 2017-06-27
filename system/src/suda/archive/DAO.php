@@ -338,13 +338,20 @@ class DAO
         $check= $this->field_check;
         $keys=array_keys($check);
         foreach ($keys as $key) {
-            if (isset($values[$key]) && !self::checkValueType($this->field_check[$key][0], $values[$key])) {
+            if (isset($values[$key]) && !$this->checkField($key,$values[$key])) {
                 $message=str_replace(['{key}','{value}','{check}'], [$key,self::strify($values[$key]),$this->field_check[$key][0]], $this->field_check[$key][1]??'field {key} value {value} type is not valid');
                 $debug=debug_backtrace();
                 throw new DAOException(__($message), 0, E_ERROR, $debug[1]['file'], $debug[1]['line']);
             }
         }
         return true;
+    }
+
+    public function checkField(string $field,$value):bool{
+        if(isset($this->field_check[$field][0])){
+             return $this->checkValueType($this->field_check[$field][0],$value);
+        }
+       return true;
     }
 
     /**
