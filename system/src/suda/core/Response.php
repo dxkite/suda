@@ -111,6 +111,7 @@ abstract class Response
     {
         return self::$name;
     }
+ 
     public function type(string $type)
     {
         $this->type=$type;

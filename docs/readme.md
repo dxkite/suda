@@ -3,7 +3,8 @@
 
 - [快速开始](start.md)
 
-- [创建个页面](create-a-page.md)
+- [安装框架](tutorial/01-install-framework/README.md)
+- [学习创建页面](tutorial/02-create-a-page/README.md)
 
 - [核心库](core)
     - [Request类](core/request.md)

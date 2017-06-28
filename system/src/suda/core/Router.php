@@ -462,10 +462,10 @@ class Router
         // 全局钩子:重置Hook指向
         Hook::exec('Router:runRouter::before', [&$router]);
         // _D()->time('active Module');
-        (new \suda\tool\Command(Config::get('app.application', 'suda\\core\\Application').'::activeModule'))->exec([$router['module']]);
+        (new Command(Config::get('app.application', 'suda\\core\\Application').'::activeModule'))->exec([$router['module']]);
         // _D()->timeEnd('active Module');
         _D()->time('request');
-        (new \suda\tool\Command($router['class'].'->onRequest'))->exec([Request::getInstance()]);
+        (new Command($router['class'].'->onRequest'))->exec([Request::getInstance()]);
         _D()->timeEnd('request');
     }
 

@@ -50,6 +50,7 @@ class Query extends SQLQuery
 
     public static function search(string $table, $wants='*',$field,string $search, array $page=null, bool $scroll=false):SQLQuery
     {
+        $search=preg_replace('/([%_])/','\\\\$1',$search);
         $search=preg_replace('/\s+/','%',$search);
         if(is_array($field)){
             $search_str=[];

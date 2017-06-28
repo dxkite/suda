@@ -44,3 +44,33 @@ url表达式为 `/score`
 所有的东西如添加HTML页面一样，但是把响应格式修改为json就好，添加完后访问，可以得到如下效果：
 
 ![JSON](img/jsonrep.png)
+
+
+### 使用问题 FAQ
+
+**Q** : 如何修改页面内容？     
+
+**A** : 找到页面响应类修改内容即可，响应类生成路径按命名空间映射路径，基命名空间为App目录下的`app.namespace`设置的命名空间
+
+![manifast-namespace](img/manifast-namespace.png)
+
+文件内容为模板创建的：
+
+![class-template](img/class-template.png)
+
+本例子的第一个创建的HTML页面响应的路径为:`app/modules/default/src/cn/atd3/response/test/Page1.php`
+解释：`app/modules/模块名/src/基命名空间/response/命名空间/类名.php`
+
+**Q** : 如何修改页面模板？     
+
+**A** : 找到页面模板修改内容即可，模板调用遵循 `模块:路径`，主题默认为`default`
+
+本例的一个HTML页面的响应模板路径为:`app/modules/default/resource/template/default/test/page1.tpl.html` 
+对应解释： `app/modules/模块名/resource/template/模板样式/命名空间全小写/类名全小写.tpl.html` 
+
+初始内容
+
+![template-file](img/template-file.png)
+
+
+具体模板使用请查看[模板使用](../../tools/template.md)

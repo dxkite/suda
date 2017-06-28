@@ -120,7 +120,7 @@ class DAO
     }
 
     
-    public function search( $field, string $search, int $page=null, int $rows=10)
+    public function search($field, string $search, int $page=null, int $rows=10)
     {
         if (is_null($page)) {
             return Query::search($this->getTableName(), $this->getWants(), $field, $search);
@@ -139,9 +139,9 @@ class DAO
     public function list(int $page=null, int $rows=10)
     {
         if (is_null($page)) {
-            return Query::where($this->getTableName(), $this->getWants(),'1 '. self::_order())->fetchAll();
+            return Query::where($this->getTableName(), $this->getWants(), '1 '. self::_order())->fetchAll();
         } else {
-            return Query::where($this->getTableName(), $this->getWants(),'1 '.  self::_order(), [], [$page, $rows])->fetchAll();
+            return Query::where($this->getTableName(), $this->getWants(), '1 '.  self::_order(), [], [$page, $rows])->fetchAll();
         }
     }
 
@@ -286,7 +286,10 @@ class DAO
         if (is_null($fields)) {
             self::initTableFields();
             return $this;
-        }
+        } 
+        // elseif (!is_array($fields) && func_num_args()>=1) {
+        //     $fields=func_get_args();
+        // }
         $this->fields=$fields;
         return $this;
     }
@@ -338,7 +341,7 @@ class DAO
         $check= $this->field_check;
         $keys=array_keys($check);
         foreach ($keys as $key) {
-            if (isset($values[$key]) && !$this->checkField($key,$values[$key])) {
+            if (isset($values[$key]) && !$this->checkField($key, $values[$key])) {
                 $message=str_replace(['{key}','{value}','{check}'], [$key,self::strify($values[$key]),$this->field_check[$key][0]], $this->field_check[$key][1]??'field {key} value {value} type is not valid');
                 $debug=debug_backtrace();
                 throw new DAOException(__($message), 0, E_ERROR, $debug[1]['file'], $debug[1]['line']);
@@ -347,11 +350,12 @@ class DAO
         return true;
     }
 
-    public function checkField(string $field,$value):bool{
-        if(isset($this->field_check[$field][0])){
-             return $this->checkValueType($this->field_check[$field][0],$value);
+    public function checkField(string $field, $value):bool
+    {
+        if (isset($this->field_check[$field][0])) {
+            return $this->checkValueType($this->field_check[$field][0], $value);
         }
-       return true;
+        return true;
     }
 
     /**
@@ -361,7 +365,7 @@ class DAO
      */
     public function count($where='1', array $binds=[]):int
     {
-        return Query::count($this->getTableName(),$where,$binds);
+        return Query::count($this->getTableName(), $where, $binds);
     }
 
     public function order(string $field, int $order=DAO::ORDER_ASC)

@@ -1,3 +1,5 @@
+Console工具包废弃,改用WEB控制面板
+-----------------
 # 工具使用方法
 ## `app/console`
 ## router 路由自动生成
@@ -95,4 +97,4 @@ Usage: app\console --db -bkifgrosp
 ```
 
 -------------
-@DXkite
+@DXkite 2017-06-29 07:45:44 废弃
