@@ -414,6 +414,25 @@ class Router
         }
     }    
     
+
+    /**
+     * 动态添加运行命令
+     *
+     * @param string $name
+     * @param string $url
+     * @param string $class
+     * @param string $module
+     * @param array $method
+     * @return void
+     */
+    public function addRouter(string $name,string $url,string $class,string $module,array $method=[]){
+        $this->routers[$name]['class']=$class;
+        $this->routers[$name]['method']=$method;
+        $this->routers[$name]['module']=$module;
+        $this->routers[$name]['visit']=$url;
+        return $name;
+    }
+
     /**
      * 替换匹配表达式
      *
