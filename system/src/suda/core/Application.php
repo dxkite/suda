@@ -32,7 +32,7 @@ class Application
     
     public function __construct(string $app)
     {
-        _D()->trace(__('application load %s',$app));
+        _D()->trace(__('application load %s', $app));
         $this->path=$app;
         // 基本常量
         defined('MODULES_DIR') or define('MODULES_DIR', Storage::path(APP_DIR.'/modules'));
@@ -133,29 +133,30 @@ class Application
         return $prefix;
     }
 
-    public static function checkModuleExist(string $name){
+    public static function checkModuleExist(string $name)
+    {
         $module_dir=Application::getModuleDir($name);
         return Storage::isDir(MODULES_DIR.'/'.$module_dir);
     }
 
     public static function getLiveModules()
     {
-        if (self::$module_live){
+        if (self::$module_live) {
             return self::$module_live;
         }
         $modules=conf('app.modules', self::getModules());
         $exclude=defined('DISALLOW_MODULES')?explode(',', trim(DISALLOW_MODULES, ',')):[];
-        foreach($exclude as $index=>$name){
+        foreach ($exclude as $index=>$name) {
             $exclude[$index]=Application::getModuleFullName($name);
         }
         _D()->trace('exclude', json_encode($exclude));
         foreach ($modules as $index => $name) {
             $fullname=Application::getModuleFullName($name);
             // _D()->notice($name, 'fullname> ['.$fullname.'] name in  array exclude> ['.in_array($name, $exclude).'] fullname in  array exclude> ['.in_array($fullname, $exclude).'] exist['.self::checkModuleExist($name).']');
-            if ( !self::checkModuleExist($name) || in_array($fullname, $exclude) ) {
+            if (!self::checkModuleExist($name) || in_array($fullname, $exclude)) {
                 // _D()->notice('exclude',$exclude);
                 unset($modules[$index]);
-            } else{
+            } else {
                 $modules[$index]=$fullname;
             }
         }
@@ -204,10 +205,17 @@ class Application
         return false;
     }
 
+    public static function getModuleName(string $name)
+    {
+        $name=self::getModuleFullName($name);
+        return preg_replace('/:.+$/', '', $name);
+    }
+    
     public static function getModuleFullName(string $name)
     {
         return self::moduleName(self::getModuleDir($name));
     }
+
     /**
     * 从模块名调整到模块文件夹
     */
@@ -266,13 +274,13 @@ class Application
     public static function moduleMap()
     {
         if (!DEBUG && Storage::exist($path=TEMP_DIR.'/module-dir.php')) {
-            _D()->trace(__('load modules from %s',$path));
+            _D()->trace(__('load modules from %s', $path));
             self::$module_dirs=require $path;
         } else {
             _D()->trace('refersh module map');
             self::$module_dirs=self::refreshMap();
         }
-        _D()->debug('module_dirs',self::$module_dirs);
+        _D()->debug('module_dirs', self::$module_dirs);
     }
 
     protected static function refreshMap()
@@ -280,7 +288,7 @@ class Application
         // [限制名/]模块名:版本号
         $dirs=Storage::readDirs(MODULES_DIR);
         $modulemap=[];
-        _D()->debug('module config',self::$module_configs);
+        _D()->debug('module config', self::$module_configs);
         foreach (self::$module_configs as $name => $info) {
             $modulemap[$name]=$info['directory'];
         }
@@ -288,12 +296,13 @@ class Application
         return $modulemap;
     }
 
-    public static function loadAllModuleManifast() {
+    public static function loadAllModuleManifast()
+    {
         // [限制名/]模块名:版本号
         $dirs=Storage::readDirs(MODULES_DIR);
         foreach ($dirs as $dir) {
             if (Storage::exist($file=MODULES_DIR.'/'.$dir.'/module.json')) {
-                _D()->trace(__('load module config %s',$file));
+                _D()->trace(__('load module config %s', $file));
                 $json=Json::parseFile($file);
                 $name=$json['name'] ?? $dir;
                 $json['directory']=$dir;

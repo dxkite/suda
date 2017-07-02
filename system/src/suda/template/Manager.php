@@ -16,7 +16,11 @@
 namespace suda\template;
 
 use suda\tool\EchoValue;
-use suda\core\{Config,Application,Storage,Hook,Router};
+use suda\core\Config;
+use suda\core\Application;
+use suda\core\Storage;
+use suda\core\Hook;
+use suda\core\Router;
 
 /**
  * 模板管理类
@@ -121,7 +125,7 @@ class Manager
     public static function displayFile(string $file, string $name)
     {
         self::loadCompile();
-        return self::$compiler->render($name,$file);
+        return self::$compiler->render($name, $file);
     }
 
     /**
@@ -156,6 +160,19 @@ class Manager
     }
 
     /**
+     * 模块模板文件目录
+     *
+     * @param string $module
+     * @return string
+     */
+    public static function getAppThemePath(string $module):string
+    {
+        $module_name=Application::getModuleName($module);
+        $theme=RESOURCE_DIR.'/resource/template/'.self::$theme.'/'.  $module_name;
+        return $theme;
+    }
+
+    /**
      * 模板输入路径
      *
      * @param string $name
@@ -164,8 +181,11 @@ class Manager
     public static function getInputPath(string $name):string
     {
         list($module, $basename)=Router::parseName($name);
-        $input=self::getThemePath($module).'/'.$basename.self::$extRaw;
-        return $input;
+        $input=self::getAppThemePath($module).'/'.$basename.self::$extRaw;
+        if (Storage::exist($input)) {
+            return $input;
+        }
+        return self::getThemePath($module).'/'.$basename.self::$extRaw;
     }
 
     /**
