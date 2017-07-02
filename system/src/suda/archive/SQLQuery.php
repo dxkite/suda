@@ -24,7 +24,8 @@ use suda\exception\SQLException;
 // 数据库查询方案
 class SQLQuery
 {
-    public static $queryCount=0;
+    protected static $queryCount=0;
+    protected static $times=0;
     protected static $pdo=null;
     protected static $prefix=null;
     protected $stmt=null;
@@ -170,8 +171,7 @@ class SQLQuery
         $markstring='query '.$stmt->queryString;
         _D()->time($markstring);
         $return=$stmt->execute();
-        _D()->timeEnd($markstring);
-        
+        self::$times+=_D()->timeEnd($markstring);
         self::$queryCount++;
         if ($return) {
             if (Config::get('debug')) {
@@ -199,7 +199,7 @@ class SQLQuery
                 self::$pdo = new PDO($pdo, Config::get('database.user', 'root'), Config::get('database.passwd', ''));
                 _D()->timeEnd('connect database');
             } catch (PDOException $e) {
-                throw new SQLException('connect database error:'.$e->getMessage(),$e->getCode(),E_ERROR,__FILE__,__LINE__,$e);
+                throw new SQLException('connect database error:'.$e->getMessage(), $e->getCode(), E_ERROR, __FILE__, __LINE__, $e);
             }
         }
     }
@@ -241,5 +241,9 @@ class SQLQuery
             $temp[] = is_int($value) ? $value : self::$pdo->quote($value);
         }
         return implode($temp, ',');
+    }
+    public static function getRuninfo()
+    {
+        return ['times'=>self::$times,'counts'=>self::$queryCount];
     }
 }

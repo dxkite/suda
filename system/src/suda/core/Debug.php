@@ -60,7 +60,9 @@ class Debug
             }
             $call=(isset($backtrace[$offset]['class'])?$backtrace[$offset]['class'].'#':'').$backtrace[$offset]['function'];
             self::_loginfo('info', $call, __('process %s %fs', $name, $pass), $backtrace[$offset]['file'] ??'unknown', $backtrace[$offset]['line'] ?? 0, $backtrace);
+            return $pass;
         }
+        return 0;
     }
 
     protected static function compareLevel($levela, $levelb)
@@ -287,7 +289,7 @@ class Debug
         foreach (self::$log as $log) {
             $str.="\t[".number_format($log['time'], 10).'S:'.self::memshow($log['mem'], 2).']'."\t".$log['level'].'>In '.$log['file'].'#'.$log['line']."\t\t".$log['name']."\t".$log['message']."\r\n";
             // 添加调用栈 高级或者同级则记录
-            if ((defined('LOG_FILE_APPEND') && LOG_FILE_APPEND) && self::compareLevel($log['level'],conf('debug-backtrace', Debug::ERROR)) >= 0 ) {
+            if ((defined('LOG_FILE_APPEND') && LOG_FILE_APPEND) && self::compareLevel($log['level'], conf('debug-backtrace', Debug::ERROR)) >= 0) {
                 $str.=self::printTrace($log['backtrace'])."\r\n";
             }
         }

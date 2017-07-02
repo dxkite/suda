@@ -156,7 +156,7 @@ class Manager
     {
         $module_dir=Application::getModuleDir($module);
         $theme=MODULES_DIR.'/'.  $module_dir.'/resource/template/'.self::$theme;
-        return $theme;
+        return Storage::path($theme);
     }
 
     /**
@@ -169,7 +169,7 @@ class Manager
     {
         $module_name=Application::getModuleName($module);
         $theme=RESOURCE_DIR.'/resource/template/'.self::$theme.'/'.  $module_name;
-        return $theme;
+        return Storage::path($theme);
     }
 
     /**
