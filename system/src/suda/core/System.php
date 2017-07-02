@@ -21,10 +21,11 @@ defined('ROOT_PATH') or define('ROOT_PATH', dirname(dirname(dirname(dirname(__DI
 defined('SYSTEM_DIR') or define('SYSTEM_DIR', dirname(dirname(dirname(__DIR__))));
 defined('SYSTEM_RESOURCE') or define('SYSTEM_RESOURCE', SYSTEM_DIR.'/resource');
 defined('DEBUG') or define('DEBUG', false);
-define('SUDA_VERSION','1.2.6');
+define('SUDA_VERSION', '1.2.6');
 
 require_once __DIR__.'/Debug.php';
 require_once __DIR__.'/functions.php';
+use suda\archive\SQLQuery;
 
 class System
 {
@@ -45,12 +46,13 @@ class System
         // var_dump(get_included_files());
         _D()->trace('include paths:'.json_encode(Autoloader::getIncludePath()));
         _D()->trace(__('system shutdown'));
+        _D()->info('runinfo', self:: getRunInfo());
         Hook::exec('system:shutdown');
     }
 
     public static function uncaughtException($exception)
     {
-        if (!$exception instanceof Exception){
+        if (!$exception instanceof Exception) {
             $exception=new Exception($exception);
         }
         if (Hook::execIf('system:displayException', [$exception], false)) {
@@ -59,14 +61,15 @@ class System
     }
 
     // 错误托管
-    public static function uncaughtError($errno,$errstr, $errfile, $errline)
+    public static function uncaughtError($errno, $errstr, $errfile, $errline)
     {
         self::uncaughtException(new \ErrorException($errstr, 0, $errno, $errfile, $errline));
     }
 
-    public static function getRunInfo(){
+    public static function getRunInfo()
+    {
         $info=Debug::getInfo();
-        $info['query_count']=Query::$queryCount;
+        $info=array_merge($info, SQLQuery::getRunInfo());
         return $info;
     }
 }
