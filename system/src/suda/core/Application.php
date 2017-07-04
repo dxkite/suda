@@ -285,12 +285,12 @@ class Application
 
     protected static function refreshMap()
     {
-        // [限制名/]模块名:版本号
-        $dirs=Storage::readDirs(MODULES_DIR);
         $modulemap=[];
         _D()->debug('module config', self::$module_configs);
-        foreach (self::$module_configs as $name => $info) {
-            $modulemap[$name]=$info['directory'];
+        if (is_array(self::$module_configs)) {
+            foreach (self::$module_configs as $name => $info) {
+                $modulemap[$name]=$info['directory'];
+            }
         }
         ArrayHelper::export(TEMP_DIR.'/module-dir.php', '_module_map', $modulemap);
         return $modulemap;
@@ -298,7 +298,6 @@ class Application
 
     public static function loadAllModuleManifast()
     {
-        // [限制名/]模块名:版本号
         $dirs=Storage::readDirs(MODULES_DIR);
         foreach ($dirs as $dir) {
             if (Storage::exist($file=MODULES_DIR.'/'.$dir.'/module.json')) {

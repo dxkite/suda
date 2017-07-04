@@ -205,7 +205,7 @@ class Debug
                         $this->template=$this->page('suda:alert');
                     }
                 } else {
-                    $this->template=$this->pagefile(SYSTEM_RESOURCE.'/tpl/error.tpl');
+                    $this->template=$this->pagefile(SYSTEM_RESOURCE.'/tpl/error.tpl','suda:error');
                 }
             }
             public function render()

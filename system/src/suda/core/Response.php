@@ -18,6 +18,7 @@ namespace suda\core;
 use suda\tool\Json;
 use suda\tool\ArrayHelper;
 use suda\template\Manager;
+use suda\exception\ApplicationException;
 
 // TODO: If-Modified-Since
 // TODO: Access-Control
@@ -160,14 +161,20 @@ abstract class Response
     {
         return Manager::display($template)->response($this)->assign($values);
     }
-        /**
+        
+    /**
     * 输出HTML页面
     * $template HTML页面模板
     * $values 页面模板的值
     */
     public function pagefile(string $template, string $name, array $values=[])
     {
-        return Manager::displayFile($template, $name)->response($this)->assign($values);
+        // Template lost
+        $template=Manager::displayFile($template, $name);
+        if ($template){
+            return $template->response($this)->assign($values);
+        }
+        throw new AppicationException(__('template[%s] file not exist: %s',$name,$template));
     }
 
     public function refresh()

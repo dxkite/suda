@@ -182,6 +182,7 @@ class Manager
     {
         list($module, $basename)=Router::parseName($name);
         $input=self::getAppThemePath($module).'/'.$basename.self::$extRaw;
+        // _D()->info($input);
         if (Storage::exist($input)) {
             return $input;
         }
