@@ -52,15 +52,19 @@ class Router
         $admin_routers=[];
         $module_dir=Application::getModuleDir($module);
         _D()->trace(__('load module:%s [%s] path:%s', $module, Application::getModuleFullName($module), MODULES_DIR.'/'.$module_dir));
-        $prefix= Application::getModulePrefix($module);
+        $prefix= Application::getModulePrefix($module)??'';
         $module=Application::getModuleFullName($module);
         $admin_prefix='';
         if (is_array($prefix)) {
-            // TODO: admin->backend simple->frontend
-            $admin_prefix=$prefix['admin'] ?? array_shift($prefix);
-            $prefix=$prefix['simple'] ?? array_shift($prefix);
+            if (in_array(key($prefix), ['admin','simple'])) {
+                $admin_prefix=$prefix['admin'] ?? '';
+                $prefix=$prefix['simple'] ?? '';
+            } else {
+                $admin_prefix=count($prefix)?array_shift($prefix):'';
+                $prefix=count($prefix)?array_shift($prefix):'';
+            }
         }
-        // _D()->debug($prefix);
+        // _D()->debug([$admin_prefix,$prefix ]);
         if (Storage::exist($file=MODULES_DIR.'/'.$module_dir.'/resource/config/router.json')) {
             $simple_routers= self::loadModuleJson($module, $file);
             _D()->trace(__('loading simple route from file %s', $file));
@@ -191,7 +195,7 @@ class Router
                     }
                 }
                 // 自定义过滤
-                if(!Hook::execIf('Router:filter',[$name,$this->routers[$name]],false)){
+                if (!Hook::execIf('Router:filter', [$name,$this->routers[$name]], false)) {
                     continue;
                 }
                 return $name;
@@ -366,7 +370,8 @@ class Router
      * @param string $alias
      * @return void
      */
-    public function setRouterAlias(string $name,string $alias){
+    public function setRouterAlias(string $name, string $alias)
+    {
         $name=self::getRouterFullName($name);
         $alias=self::getRouterFullName($alias);
         if (isset($this->routers[$name])) {
@@ -382,11 +387,12 @@ class Router
      * @param string $alias
      * @return void
      */
-    public function routerReplace(string $name,string $alias){
+    public function routerReplace(string $name, string $alias)
+    {
         $name=self::getRouterFullName($name);
         $alias=self::getRouterFullName($alias);
         if (isset($this->routers[$name])) {
-            if(isset($this->routers[$alias])){
+            if (isset($this->routers[$alias])) {
                 $this->routers[$name]['class']=$this->routers[$alias]['class'];
                 $this->routers[$name]['method']=$this->routers[$alias]['method']??[];
                 $this->routers[$name]['module']=$this->routers[$alias]['module'];
@@ -401,18 +407,19 @@ class Router
      * @param string $alias
      * @return void
      */
-    public function routerMove(string $name,string $alias){
+    public function routerMove(string $name, string $alias)
+    {
         $name=self::getRouterFullName($name);
         $alias=self::getRouterFullName($alias);
         if (isset($this->routers[$name])) {
-            if(isset($this->routers[$alias])){
+            if (isset($this->routers[$alias])) {
                 $this->routers[$name]['class']=$this->routers[$alias]['class'];
                 $this->routers[$name]['method']=$this->routers[$alias]['method']??[];
                 $this->routers[$name]['module']=$this->routers[$alias]['module'];
                 unset($this->router[$alias]);
             }
         }
-    }    
+    }
     
 
     /**
@@ -425,7 +432,8 @@ class Router
      * @param array $method
      * @return void
      */
-    public function addRouter(string $name,string $url,string $class,string $module,array $method=[]){
+    public function addRouter(string $name, string $url, string $class, string $module, array $method=[])
+    {
         $this->routers[$name]['class']=$class;
         $this->routers[$name]['method']=$method;
         $this->routers[$name]['module']=$module;
@@ -448,7 +456,7 @@ class Router
             if ($preg) {
                 return $this->matchs[$name]=$url;
             }
-            return $this->matchs[$name]=self::buildMatch($name,$url);
+            return $this->matchs[$name]=self::buildMatch($name, $url);
         }
     }
 
@@ -460,7 +468,7 @@ class Router
      * @param array $method
      * @return void
      */
-    public function replaceClass(string $name, string $class,string $module=null, array $method=null)
+    public function replaceClass(string $name, string $class, string $module=null, array $method=null)
     {
         $name=self::getRouterFullName($name);
         if (isset($this->routers[$name])) {
@@ -469,7 +477,7 @@ class Router
             if ($method) {
                 $router['method']=$method;
             }
-            if($module){
+            if ($module) {
                 $router['module']=Application::getModuleFullName($module);
             }
             return $this->routers[$name]=$router;
