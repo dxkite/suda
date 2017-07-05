@@ -298,7 +298,6 @@ class Storage
         return $file;
     }
 
-
     public static function type(string $name):int
     {
         $name=self::tpath($name);

@@ -27,50 +27,7 @@ use suda\exception\ApplicationException;
 abstract class Response
 {
     // 状态输出
-    private static $status = array(
-        100 => 'Continue',
-        101 => 'Switching Protocols',
-        200 => 'OK',
-        201 => 'Created',
-        202 => 'Accepted',
-        203 => 'Non-Authoritative Information',
-        204 => 'No Content',
-        205 => 'Reset Content',
-        206 => 'Partial Content',
-        300 => 'Multiple Choices',
-        301 => 'Moved Permanently',
-        302 => 'Moved Temporarily ',
-        303 => 'See Other',
-        304 => 'Not Modified',
-        305 => 'Use Proxy',
-        307 => 'Temporary Redirect',
-        400 => 'Bad Request',
-        401 => 'Unauthorized',
-        402 => 'Payment Required',
-        403 => 'Forbidden',
-        404 => 'Not Found',
-        405 => 'Method Not Allowed',
-        406 => 'Not Acceptable',
-        407 => 'Proxy Authentication Required',
-        408 => 'Request Timeout',
-        409 => 'Conflict',
-        410 => 'Gone',
-        411 => 'Length Required',
-        412 => 'Precondition Failed',
-        413 => 'Request Entity Too Large',
-        414 => 'Request-URI Too Long',
-        415 => 'Unsupported Media Type',
-        416 => 'Requested Range Not Satisfiable',
-        417 => 'Expectation Failed',
-        500 => 'Internal Server Error',
-        501 => 'Not Implemented',
-        502 => 'Bad Gateway',
-        503 => 'Service Unavailable',
-        504 => 'Gateway Timeout',
-        505 => 'HTTP Version Not Supported',
-        509 => 'Bandwidth Limit Exceeded',
-    );
-    
+    private static $status =null;
     private static $mime;
     public static $name;
 
@@ -104,10 +61,12 @@ abstract class Response
         self::setHeader('HTTP/1.1 '.$state.' '.self::$status[$state]);
         self::setHeader('Status:'.$state.' '.self::$status[$state]);
     }
+
     public static function setName(string $name)
     {
         self::$name=$name;
     }
+
     public static function getName()
     {
         return self::$name;
@@ -181,11 +140,15 @@ abstract class Response
     {
         $this->go(u(self::$name));
     }
+
+
     public function go(string $url)
     {
         _D()->debug($url);
         $this->setHeader('Location:'.$url);
     }
+
+
     public function redirect(string $url, int $time=1, string $message=null)
     {
         $this->noCache();
@@ -214,20 +177,12 @@ abstract class Response
                 self::state(304);
                 self::close();
                 return true;
-                // 直接结束访问
-                // exit(0);
             }
         }
         return false;
     }
 
-    protected static function _etag(string $etag)
-    {
-        if (conf('app.etag', !conf('debug'))) {
-            self::etag($etag);
-        }
-    }
-    
+
     public static function close()
     {
         self::setHeader('Connection: close');
@@ -239,7 +194,7 @@ abstract class Response
     public static function mime(string $name='')
     {
         if (!self::$mime) {
-            self::$mime=parse_ini_file(SYSTEM_RESOURCE.'/type.mime');
+            self::$mime=parse_ini_file(SYSTEM_RESOURCE.'/mime.ini');
         }
         if ($name) {
             return self::$mime[$name] ?? 'text/plain';
@@ -257,4 +212,19 @@ abstract class Response
             header($header, $replace);
         }
     }
+
+    protected static function _etag(string $etag)
+    {
+        if (conf('app.etag', !conf('debug'))) {
+            self::etag($etag);
+        }
+    }
+
+    private static function _status(int $state){
+        if (is_null(self::$status)) {
+            self::$status=parse_ini_file(SYSTEM_RESOURCE.'/status.ini');
+        }
+        return self::$status[$state] ?? 'OK';
+    }
+
 }

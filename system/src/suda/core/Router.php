@@ -55,8 +55,9 @@ class Router
         $prefix= Application::getModulePrefix($module)??'';
         $module=Application::getModuleFullName($module);
         $admin_prefix='';
+        
         if (is_array($prefix)) {
-            if (in_array(key($prefix), ['admin','simple'])) {
+            if (in_array(key($prefix), ['admin','simple'],true)) {
                 $admin_prefix=$prefix['admin'] ?? '';
                 $prefix=$prefix['simple'] ?? '';
             } else {
@@ -64,6 +65,7 @@ class Router
                 $prefix=count($prefix)?array_shift($prefix):'';
             }
         }
+        
         // _D()->debug([$admin_prefix,$prefix ]);
         if (Storage::exist($file=MODULES_DIR.'/'.$module_dir.'/resource/config/router.json')) {
             $simple_routers= self::loadModuleJson($module, $file);
