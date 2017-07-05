@@ -1,6 +1,5 @@
-<?php #1497446012
- 
-    // 应用所在目录
+<?php  
+     // 应用所在目录
     define('APP_DIR', __DIR__.'/../app');
     // 系统所在目录
     define('SYSTEM', __DIR__.'/suda/../system/');
