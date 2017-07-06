@@ -19,6 +19,7 @@ use Storage;
 use suda\core\Application;
 use suda\core\Hook;
 use suda\tool\Value;
+use suda\tool\Command;
 use suda\template\Compiler;
 use suda\template\Manager;
 use suda\core\Request;
@@ -40,7 +41,7 @@ class SudaCompiler implements Compiler
     protected static $command=[];
     public function __construct()
     {
-        Hook::exec('template:SudaCompiler:init',[$this]);
+        Hook::exec('template:SudaCompiler:init', [$this]);
     }
     // 编译文本
     public function compileText(string $text)
@@ -105,7 +106,7 @@ class SudaCompiler implements Compiler
      * @param bool $echo
      * @return void
      */
-    public static function addCommand(string $name, string $callback, bool $echo=true)
+    public static function addCommand(string $name, $callback, bool $echo=true)
     {
         $name=ucfirst($name);
         self::$command[$name]=['command'=>$callback,'echo'=>$echo];
@@ -136,7 +137,15 @@ class SudaCompiler implements Compiler
         if (self::hasCommand($name)) {
             $echo=self::$command[$name]['echo']?'echo':'';
             $command=self::$command[$name]['command'];
-            return '<?php '.$echo.' (new \suda\tool\Command("'.$command.'"))->args'. ($exp?:'()').' ?>';
+            if (is_string($command)) {
+                return '<?php '.$echo.' (new \suda\tool\Command("'.$command.'"))->args'. ($exp?:'()').' ?>';
+            } else {
+                if ($command instanceof Command) {
+                    return $command->exec();
+                } else {
+                    return (new Command($command))->exec();
+                }
+            }
         }
         return '';
     }

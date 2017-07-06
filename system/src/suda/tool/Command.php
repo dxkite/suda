@@ -31,6 +31,7 @@ class Command
         $this->command=$command;
         $this->params=$params;
     }
+    
     public function name(string $name)
     {
         $this->name=$name;
@@ -124,7 +125,7 @@ class Command
                 return $matchs[1];
             }
         } else {
-            throw (new CommandException('unknow:'.$command))->setCmd($command);
+            throw (new CommandException('unknown:'.$command))->setCmd($command);
         }
     }
 }
