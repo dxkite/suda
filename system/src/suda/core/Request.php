@@ -271,8 +271,8 @@ final class Request
     }
 
     public static function hostBase(){
-        $scheme = $_SERVER['REQUEST_SCHEME'] ?? '//';
-        $host= $_SERVER['HTTP_HOST'] ?? '';
+        $scheme = $_SERVER['REQUEST_SCHEME'] ?? 'http';
+        $host= $_SERVER['HTTP_HOST'] ?? 'localhost';
         return $scheme.'://'.$host;
     }
 
