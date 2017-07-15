@@ -141,9 +141,9 @@ class SudaCompiler implements Compiler
                 return '<?php '.$echo.' (new \suda\tool\Command("'.$command.'"))->args'. ($exp?:'()').' ?>';
             } else {
                 if ($command instanceof Command) {
-                    return $command->exec();
+                    return $command->exec([$exp]);
                 } else {
-                    return (new Command($command))->exec();
+                    return (new Command($command))->exec([$exp]);
                 }
             }
         }
