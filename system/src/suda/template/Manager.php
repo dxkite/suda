@@ -138,14 +138,16 @@ class Manager
         // 向下兼容
         defined('APP_PUBLIC') or define('APP_PUBLIC', Storage::path('.'));
         $static_path=Storage::path(self::getThemePath($module).'/static');
-        $path=Storage::path(APP_PUBLIC.'/static/'. $module_dir);
+        $path=Storage::path(APP_PUBLIC.'/static/'.self::shadowName($module_dir));
         if (self::hasChanged($static_path, $path)) {
             self::copyStatic($static_path, $path);
         }
         return $path;
     }
 
-    
+    public static function shadowName(string $name){
+        return base64_encode(md5($name,true));
+    }
     /**
      * 模块模板文件目录
      *
