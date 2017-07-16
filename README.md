@@ -24,9 +24,16 @@
 
 ## 快速开始使用
 1. 下载框架
+### 普通使用(不会git)
 在网站根目录下打开控制台，执行命令
-```
+```bash
 git clone https://github.com/DXkite/suda  suda
+```
+完成后，把`suda/resource`下的`public`**文件夹**复制到**当前目录**
+### 作为子模块
+在项目根目录下打开控制台，执行命令
+```bash
+git submodule add https://github.com/DXkite/suda
 ```
 完成后，把`suda/resource`下的`public`**文件夹**复制到**当前目录**
 
