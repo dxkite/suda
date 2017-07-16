@@ -57,7 +57,7 @@ class Router
         $admin_prefix='';
         
         if (is_array($prefix)) {
-            if (in_array(key($prefix), ['admin','simple'],true)) {
+            if (in_array(key($prefix), ['admin','simple'], true)) {
                 $admin_prefix=$prefix['admin'] ?? '';
                 $prefix=$prefix['simple'] ?? '';
             } else {
@@ -173,6 +173,7 @@ class Router
             if (preg_match('/^'.$preg.'$/', $request->url(), $match)) {
                 // 检验方法
                 if (isset($this->routers[$name]['method']) && count($this->routers[$name]['method'])>0) {
+                    // 调整方法大小
                     array_walk($this->routers[$name]['method'], function ($value) {
                         return strtoupper($value);
                     });
@@ -180,6 +181,10 @@ class Router
                     if (!in_array(strtoupper($request->method()), $this->routers[$name]['method'])) {
                         continue;
                     }
+                }
+                // URL禁用
+                if ($this->routers[$name]['hidden']??false) {
+                    continue;
                 }
                 // 检验接口参数
                 array_shift($match);
