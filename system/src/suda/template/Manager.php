@@ -175,7 +175,7 @@ class Manager
     public static function getAppThemePath(string $module):string
     {
         $module_name=Application::getModuleName($module);
-        $theme=RESOURCE_DIR.'/resource/template/'.self::$theme.'/'.  $module_name;
+        $theme=RESOURCE_DIR.'/template/'.self::$theme.'/'.  $module_name;
         return Storage::path($theme);
     }
 
