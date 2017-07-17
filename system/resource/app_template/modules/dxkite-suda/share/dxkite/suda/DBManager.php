@@ -276,6 +276,7 @@ End;
     public function parseModuleDTOs(string $module)
     {
         $module_dir=Application::getModuleDir($module);
+        $table_names=[];
         $dto_path=MODULES_DIR.'/'.$module_dir.'/resource/dto';
         if (!Storage::isDir($dto_path)) {
             _D()->debug("not exist {$dto_path}\r\n");

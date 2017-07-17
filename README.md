@@ -45,6 +45,7 @@ git submodule add https://github.com/DXkite/suda
 ```
 sudo usermod -aG 服务器组名 开发者用户名
 sudo chmod g+rw 应用目录（APP_DIR目录）
+sudo chmod g+rw 网站根目录
 ```
 如：服务器设置的 Group ID 为：daemon 用户ID为：dxkite
 则命令为:
