@@ -1,0 +1,5 @@
+# 应用数据
+/app/data
+# 静态数据
+/public/static
+.vscode
