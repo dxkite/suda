@@ -104,11 +104,12 @@ abstract class Response
         $content=file_get_contents($path);
         $hash   = md5($content);
         $size   = strlen($content);
-        $this->_etag($hash);
-        $type   = $type || pathinfo($path, PATHINFO_EXTENSION);
-        $this->type($type);
-        self::setHeader('Content-Length:'.$size);
-        echo $content;
+        if (!$this->_etag($hash)) {
+            $type   = $type ?? pathinfo($path, PATHINFO_EXTENSION);
+            $this->type($type);
+            self::setHeader('Content-Length:'.$size);
+            echo $content;
+        }
     }
 
     /**
@@ -130,10 +131,10 @@ abstract class Response
     {
         // Template lost
         $template=Manager::displayFile($template, $name);
-        if ($template){
+        if ($template) {
             return $template->response($this)->assign($values);
         }
-        throw new AppicationException(__('template[%s] file not exist: %s',$name,$template));
+        throw new AppicationException(__('template[%s] file not exist: %s', $name, $template));
     }
 
     public function refresh()
@@ -216,15 +217,16 @@ abstract class Response
     protected static function _etag(string $etag)
     {
         if (conf('app.etag', !conf('debug'))) {
-            self::etag($etag);
+            return self::etag($etag);
         }
+        return false;
     }
 
-    private static function _status(int $state){
+    private static function _status(int $state)
+    {
         if (is_null(self::$status)) {
             self::$status=parse_ini_file(SYSTEM_RESOURCE.'/status.ini');
         }
         return self::$status[$state] ?? 'OK';
     }
-
 }
