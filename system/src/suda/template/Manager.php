@@ -242,6 +242,7 @@ class Manager
         $non_static=trim(str_replace(',', '|', Config::get('non-static', 'php')), '|');
         $non_static_preg='/(?<!(\.tpl\.html)|(\.('.$non_static.')))$/';
         if (Storage::isDir($static_path)) {
+            _D()->trace('copy '.$static_path.' => '.$path);
             Storage::copydir($static_path, $path, $non_static_preg);
         }
     }
