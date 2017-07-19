@@ -278,17 +278,20 @@ final class Request
 
     public static function baseUrl()
     {
+        // 0 / /?/
+        // 1 index.php/ index.php?/
+        // TODO: 模式选择
         $base=self::hostBase();
         $script=$_SERVER['SCRIPT_NAME'];   
         if (ltrim($script, '/')===conf('app.index', 'index.php')) {
             // windows下rewrite重写会出现各种奇怪的异常
             if(conf('app.rewrite',false)){
+                // 重写模式
                 return $base. (DIRECTORY_SEPARATOR ===  '/' ? '/':'/?/');
             }
             return $base.'/';
         }
-        // _D()->trace(self::$type);
-        return $base. $script.(self::$type==2?'?':'').'/';
+        return $base.$script.(self::$type==2?'?':'').'/';
     }
 
     public function isCrawler()

@@ -196,15 +196,24 @@ class SudaCompiler implements Compiler
     {
         return "<?php echo htmlspecialchars{$exp}; ?>";
     }
-
+    
     protected function parseData($exp)
     {
         return "<?php \$this->data{$exp}; ?>";
     }
+
+    protected function parseFile($exp)
+    {
+        preg_match('/\((.+)\)/', $exp, $v);
+        $name=trim($v[1], '"\'');
+        return "<?php echo suda\\template\\Manager::file('{$name}',\$this) ?>";
+    }
+
     protected function parse_($exp)
     {
         return "<?php echo __$exp ?>";
     }
+
     // IF 语句
     protected function parseIf($exp)
     {

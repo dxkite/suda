@@ -15,12 +15,12 @@
  */
 namespace suda\template;
 
-use suda\tool\EchoValue;
 use suda\core\Config;
 use suda\core\Application;
 use suda\core\Storage;
 use suda\core\Hook;
 use suda\core\Router;
+use suda\core\Request;
 
 /**
  * 模板管理类
@@ -150,8 +150,9 @@ class Manager
         return $path;
     }
 
-    public static function shadowName(string $name){
-        return base64_encode(md5($name,true));
+    public static function shadowName(string $name)
+    {
+        return base64_encode(md5($name, true));
     }
 
     /**
@@ -188,13 +189,7 @@ class Manager
      */
     public static function getInputPath(string $name):string
     {
-        list($module, $basename)=Router::parseName($name);
-        $input=self::getAppThemePath($module).'/'.$basename.self::$extRaw;
-        // _D()->info($input);
-        if (Storage::exist($input)) {
-            return $input;
-        }
-        return self::getThemePath($module).'/'.$basename.self::$extRaw;
+        return self::getInputFile($name.self::$extRaw);
     }
 
     /**
@@ -205,10 +200,7 @@ class Manager
      */
     public static function getOutputPath(string $name):string
     {
-        list($module, $basename)=Router::parseName($name);
-        $module_dir=Application::getModuleDir($module);
-        $output=VIEWS_DIR.'/'. $module_dir .'/'.$basename.self::$extCpl;
-        return $output;
+        return self::getOutputFile($name.self::$extCpl);
     }
 
    
@@ -252,5 +244,70 @@ class Manager
         if (Storage::isDir($static_path)) {
             Storage::copydir($static_path, $path, $non_static_preg);
         }
+    }
+
+    public static function file(string $name, $parent)
+    {
+        list($module, $basename)=Router::parseName($name);
+        $input=self::getAppThemePath($module).'/'.$basename;
+        if (!Storage::exist($input)) {
+            $input=self::getThemePath($module).'/'.$basename;
+        }
+        $module_dir=Application::getModuleDir($module);
+        // 获取输出
+        $output=VIEWS_DIR.'/'. $module_dir .'/'.$basename;
+        // 动态文件导出
+        $outpath=APP_PUBLIC.'/dtf/'.self::shadowName($module_dir).'/'.$basename;
+        $path=Storage::path(dirname($outpath));
+        // 编译文件
+        if (Config::get('debug', true)) {
+            if (!self::$compiler->compile($name, $input, $output)) {
+                echo '<b>compile theme &lt;<span style="color:red;">'.self::$theme.'</span>&gt; file '.$input. ' missing file</b>';
+                return;
+            }
+        } elseif (!Storage::exist($output)) {
+            if (!self::$compiler->compile($name, $input, $output)) {
+                echo '<b>missing theme &lt;<span style="color:red;">'.self::$theme.'</span>&gt; file '.$input. ' missing file</b>';
+                return;
+            }
+        }
+        // 输出内容
+        $public=self::$compiler->render($name, $output)->parent($parent)->getRenderedString();
+        Storage::put($outpath, $public);
+        // 引用文件
+        $static_url=Storage::cut($outpath, APP_PUBLIC);
+        $static_url=preg_replace('/[\\\\\/]+/', '/', $static_url);
+        return  Request::hostBase().'/'.trim($static_url, '/');
+    }
+
+    /**
+     * 模板输入路径
+     *
+     * @param string $name
+     * @return string
+     */
+    public static function getInputFile(string $name):string
+    {
+        list($module, $basename)=Router::parseName($name);
+        $input=self::getAppThemePath($module).'/'.$basename;
+        // _D()->info($input);
+        if (Storage::exist($input)) {
+            return $input;
+        }
+        return self::getThemePath($module).'/'.$basename;
+    }
+
+    /**
+     * 模板编译后输出路径
+     *
+     * @param string $name
+     * @return string
+     */
+    public static function getOutputFile(string $name):string
+    {
+        list($module, $basename)=Router::parseName($name);
+        $module_dir=Application::getModuleDir($module);
+        $output=VIEWS_DIR.'/'. $module_dir .'/'.$basename;
+        return $output;
     }
 }
