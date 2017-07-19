@@ -94,6 +94,8 @@ class Application
                 Locale::path(MODULES_DIR.'/'.$module_dir.'/resource/locales/');
             }
         }
+        // 调整模板
+        Manager::theme(conf('app.template','default'));
         Hook::exec('Application:init');
     }
 

@@ -72,6 +72,7 @@ class Manager
     {
         if (!is_null($theme)) {
             self::$theme=$theme;
+            _D()->info('change themes:'.$theme);
         }
         return self::$theme;
     }
@@ -102,13 +103,13 @@ class Manager
 
         if (Config::get('debug', true)) {
             if (!self::compile($name)) {
-                echo '<b>compile error: '.$name.': '.$viewpath. ' missing raw template </b>';
+                echo '<b>compile theme &lt;<span style="color:red;">'.self::$theme.'</span>&gt; error: '.$name.' location '.$viewpath. ' missing raw template file</b>';
                 return;
             }
         } elseif (!Storage::exist($viewpath)) {
             // _D()->debug('perpare viewpath',$viewpath);
             if (!self::compile($name)) {
-                echo '<b>missing '.$name.': '.$viewpath. '</b>';
+                echo '<b>missing theme &lt;<span style="color:red;">'.self::$theme.'</span>&gt; template file '.$name.'  location '.$viewpath. '</b>';
                 return;
             }
         }
