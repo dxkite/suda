@@ -45,17 +45,11 @@ class Router
         }
         return self::$router;
     }
-
-    public function load(string $module)
+    
+    public static function getModulePrefix(string $module)
     {
-        $simple_routers=[];
-        $admin_routers=[];
-        $module_dir=Application::getModuleDir($module);
-        _D()->trace(__('load module:%s [%s] path:%s', $module, Application::getModuleFullName($module), MODULES_DIR.'/'.$module_dir));
         $prefix= Application::getModulePrefix($module)??'';
-        $module=Application::getModuleFullName($module);
         $admin_prefix='';
-        
         if (is_array($prefix)) {
             if (in_array(key($prefix), ['admin','simple'], true)) {
                 $admin_prefix=$prefix['admin'] ?? '';
@@ -65,8 +59,17 @@ class Router
                 $prefix=count($prefix)?array_shift($prefix):'';
             }
         }
-        
-        // _D()->debug([$admin_prefix,$prefix ]);
+        return [$admin_prefix,$prefix];
+    }
+
+    public function load(string $module)
+    {
+        $simple_routers=[];
+        $admin_routers=[];
+        $module_dir=Application::getModuleDir($module);
+        _D()->trace(__('load module:%s [%s] path:%s', $module, Application::getModuleFullName($module), MODULES_DIR.'/'.$module_dir));
+        list($admin_prefix, $prefix)=self::getModulePrefix($module);
+        $module=Application::getModuleFullName($module);
         if (Storage::exist($file=MODULES_DIR.'/'.$module_dir.'/resource/config/router.json')) {
             $simple_routers= self::loadModuleJson($module, $file);
             _D()->trace(__('loading simple route from file %s', $file));
