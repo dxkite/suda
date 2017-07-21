@@ -444,10 +444,13 @@ class Router
      */
     public function addRouter(string $name, string $url, string $class, string $module, array $method=[])
     {
+        $module=Application::getModuleFullName($module);
+        $name=$module.':'.$name;
         $this->routers[$name]['class']=$class;
         $this->routers[$name]['method']=$method;
         $this->routers[$name]['module']=$module;
         $this->routers[$name]['visit']=$url;
+        self::watch($name,$url);
         return $name;
     }
 
