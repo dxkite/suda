@@ -139,7 +139,7 @@ abstract class Response
 
     public function refresh()
     {
-        $this->go(u(self::$name));
+        $this->go(u(self::$name,$_GET));
     }
 
 

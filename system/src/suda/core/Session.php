@@ -36,6 +36,7 @@ class Session
         session_cache_expire(conf('session.expire', 0));
         session_start();
     }
+
     public static function set(string $name, $value)
     {
         $_SESSION[$name]=$value;
