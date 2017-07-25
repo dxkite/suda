@@ -70,31 +70,25 @@ class Router
         _D()->trace(__('load module:%s [%s] path:%s', $module, Application::getModuleFullName($module), MODULES_DIR.'/'.$module_dir));
         list($admin_prefix, $prefix)=self::getModulePrefix($module);
         $module=Application::getModuleFullName($module);
+        $prefix_it= function (&$router, $key, $prefixinfo) use ($module) {
+            $prefix=$prefixinfo[0]?conf('app.admin', '/admin'):'/';
+            if (!(isset($router['anti-prefix']) && $router['anti-prefix'])){
+                $prefix.=$prefixinfo[1];
+            }      
+            $router['visit']='/'.trim($prefix.$router['visit'], '/');
+            $router['module']=$module;
+        };
+        // 加载前台路由
         if (Storage::exist($file=MODULES_DIR.'/'.$module_dir.'/resource/config/router.json')) {
             $simple_routers= self::loadModuleJson($module, $file);
             _D()->trace(__('loading simple route from file %s', $file));
-            array_walk($simple_routers, function (&$router) use ($module, $prefix) {
-                if (!is_null($prefix)) {
-                    $router['visit']=$prefix.$router['visit'];
-                }
-                $router['visit']='/'.trim($router['visit'], '/');
-                $router['module']=$module;
-            });
+            array_walk($simple_routers, $prefix_it, [false,$prefix]);
         }
-
         // 加载后台路由
         if (Storage::exist($file=MODULES_DIR.'/'.$module_dir.'/resource/config/router_admin.json')) {
             $admin_routers= self::loadModuleJson($module, $file);
             _D()->trace(__('loading admin route from file  %s', $file));
-            array_walk($admin_routers, function (&$router) use ($module, $admin_prefix) {
-                $prefix= conf('app.admin', '/admin');
-                if (!is_null($admin_prefix)) {
-                    $prefix = $prefix . $admin_prefix;
-                }
-                $router['visit']=$prefix.$router['visit'];
-                $router['visit']='/'.trim($router['visit'], '/');
-                $router['module']=$module;
-            });
+            array_walk($admin_routers, $prefix_it, [true,$admin_prefix]);
         }
        
         $this->routers=array_merge($this->routers, $admin_routers, $simple_routers);
@@ -450,7 +444,7 @@ class Router
         $this->routers[$name]['method']=$method;
         $this->routers[$name]['module']=$module;
         $this->routers[$name]['visit']=$url;
-        self::watch($name,$url);
+        self::watch($name, $url);
         return $name;
     }
 
