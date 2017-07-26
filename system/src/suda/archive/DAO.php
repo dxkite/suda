@@ -173,7 +173,7 @@ class DAO
      */
     public function update($values, $where)
     {
-        if (is_array($values) && !$this->checkFields(array_keys($values))) {
+        if (is_array($where) && !$this->checkFields(array_keys($where))) {
             return false;
         }
         if (is_array($values) && !($this->checkFields(array_keys($values)) && $this->checkFieldsType($values))) {
