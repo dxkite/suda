@@ -135,19 +135,20 @@ class Manager
     public static function prepareResource(string $module)
     {
         Hook::exec('Manager:prepareResource::before', [$module]);
+        // 非Debug不更新资源
+        if (!conf('debug', false)) {
+            return false;
+        }
         $module_dir=Application::getModuleDir($module);
         // 向下兼容
         defined('APP_PUBLIC') or define('APP_PUBLIC', Storage::path('.'));
         $static_path=Storage::path(self::getThemePath($module).'/static');
         $app_static_path=Storage::path(self::getAppThemePath($module).'/static');
         $path=Storage::path(APP_PUBLIC.'/static/'.self::shadowName($module_dir));
-        if (self::hasChanged($static_path, $path)) {
-            self::copyStatic($static_path, $path);
-        }
-        if (self::hasChanged($app_static_path, $path)) {
-            self::copyStatic($app_static_path, $path);
-        }
-        return $path;
+        self::copyStatic($static_path, $path);
+        self::copyStatic($app_static_path, $path);
+        return true;
+        ;
     }
 
     public static function shadowName(string $name)
@@ -201,27 +202,6 @@ class Manager
     public static function getOutputPath(string $name):string
     {
         return self::getOutputFile($name.self::$extCpl);
-    }
-
-   
-    /**
-     * 检测模板是否被修改
-     *
-     * @param string $static
-     * @param string $tpl
-     * @return boolean
-     */
-    protected static function hasChanged(string $static, string $tpl)
-    {
-        if (conf('debug', false)) {
-            return true;
-        } else {
-            // 模板内容比静态文件夹内容新
-            if (filemtime($tpl)>filemtime($static)) {
-                return true;
-            }
-        }
-        return false;
     }
 
 
