@@ -47,7 +47,9 @@ final class Request
 
     public static function json()
     {
-        if(self::$json) return self::$json;
+        if (self::$json) {
+            return self::$json;
+        }
         if (!self::isJson()) {
             return null;
         }
@@ -160,10 +162,10 @@ final class Request
 
     public static function hasJson()
     {
-        if(self::isJson()){
-            try{
+        if (self::isJson()) {
+            try {
                 self::$json=self::json();
-            }catch(\Exception $e){
+            } catch (\Exception $e) {
                 return false;
             }
         }
@@ -242,7 +244,7 @@ final class Request
                 preg_match($preg, $_SERVER['REQUEST_URI'], $match);
                 self::$url=$match[1];
             }
-            self::$url=preg_replace('/[\/]+/','/',self::$url);
+            self::$url=preg_replace('/[\/]+/', '/', self::$url);
             self::$url=self::$url==='/'?self::$url:rtrim(self::$url, '/');
         } else {
             self::$url='/';
@@ -270,7 +272,13 @@ final class Request
         return self::$url.(self::$query?'?'.self::$query:'');
     }
 
-    public static function hostBase(){
+    public static function referer()
+    {
+        return $_SERVER['HTTP_REFERER']??'';
+    }
+
+    public static function hostBase()
+    {
         $scheme = $_SERVER['REQUEST_SCHEME'] ?? 'http';
         $host= $_SERVER['HTTP_HOST'] ?? 'localhost';
         return $scheme.'://'.$host;
@@ -278,18 +286,27 @@ final class Request
 
     public static function baseUrl()
     {
-        // 0 / /?/
-        // 1 index.php/ index.php?/
-        // TODO: 模式选择
+        // 0 auto
+        // 1 windows = /?/, linux = /
+        // 2 index.php/
+        // 3 index.php?/
         $base=self::hostBase();
-        $script=$_SERVER['SCRIPT_NAME'];   
-        if (ltrim($script, '/')===conf('app.index', 'index.php')) {
-            // windows下rewrite重写会出现各种奇怪的异常
-            if(conf('app.rewrite',false)){
-                // 重写模式
-                return $base. (DIRECTORY_SEPARATOR ===  '/' ? '/':'/?/');
+        $script=$_SERVER['SCRIPT_NAME'];
+        $module=conf('app.url-module', 0);
+        if ($module==0 && $module==1) {
+            // 如果当前脚本为AutoIndex索引
+            if (ltrim($script, '/')===conf('app.index', 'index.php')) {
+                // windows下rewrite重写会出现各种奇怪的异常
+                if (conf('app.rewrite', false)) {
+                    // 重写模式
+                    return $base. (IS_LINUX ? '/':'/?/');
+                }
+                return $base.'/';
             }
-            return $base.'/';
+        } elseif ($module==2) {
+            return $base.$script.'/';
+        } elseif ($module==3) {
+            return $base.$script.'?/';
         }
         return $base.$script.(self::$type==2?'?':'').'/';
     }

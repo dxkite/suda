@@ -19,7 +19,6 @@ use suda\tool\Json;
 use suda\tool\ArrayHelper;
 use suda\template\Manager;
 use suda\exception\ApplicationException;
-
 // TODO: If-Modified-Since
 // TODO: Access-Control
 
@@ -119,7 +118,12 @@ abstract class Response
     */
     public function page(string $template, array $values=[])
     {
-        return Manager::display($template)->response($this)->assign($values);
+       // Template lost
+        $tpl=Manager::displayFile($template, $name);
+        if ($tpl) {
+            return $tpl->response($this)->assign($values);
+        }
+        throw new AppicationException(__('template[%s] file not exist: %s', $name, $template));
     }
         
     /**
@@ -130,9 +134,9 @@ abstract class Response
     public function pagefile(string $template, string $name, array $values=[])
     {
         // Template lost
-        $template=Manager::displayFile($template, $name);
-        if ($template) {
-            return $template->response($this)->assign($values);
+        $tpl=Manager::displayFile($template, $name);
+        if ($tpl) {
+            return $tpl->response($this)->assign($values);
         }
         throw new AppicationException(__('template[%s] file not exist: %s', $name, $template));
     }
@@ -142,7 +146,7 @@ abstract class Response
         $this->go(u(self::$name,$_GET));
     }
 
-
+ 
     public function go(string $url)
     {
         _D()->debug($url);
