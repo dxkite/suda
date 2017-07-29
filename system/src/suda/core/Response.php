@@ -118,8 +118,7 @@ abstract class Response
     */
     public function page(string $template, array $values=[])
     {
-       // Template lost
-        $tpl=Manager::displayFile($template, $name);
+        $tpl=Manager::display($template);
         if ($tpl) {
             return $tpl->response($this)->assign($values);
         }
