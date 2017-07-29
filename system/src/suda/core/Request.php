@@ -293,15 +293,14 @@ final class Request
         $base=self::hostBase();
         $script=$_SERVER['SCRIPT_NAME'];
         $module=conf('app.url-module', 0);
-        if ($module==0 && $module==1) {
+        if ($module==0 || $module==1) {
             // 如果当前脚本为AutoIndex索引
             if (ltrim($script, '/')===conf('app.index', 'index.php')) {
-                // windows下rewrite重写会出现各种奇怪的异常
+                // 开启重写
                 if (conf('app.rewrite', false)) {
-                    // 重写模式
                     return $base. (IS_LINUX ? '/':'/?/');
                 }
-                return $base.'/';
+                return $base.'/?/';
             }
         } elseif ($module==2) {
             return $base.$script.'/';
