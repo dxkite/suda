@@ -293,12 +293,13 @@ final class Request
         $base=self::hostBase();
         $script=$_SERVER['SCRIPT_NAME'];
         $module=conf('app.url-module', 0);
+        $beautify=conf('app.url-beautify', false);
         if ($module==0 || $module==1) {
             // 如果当前脚本为AutoIndex索引
             if (ltrim($script, '/')===conf('app.index', 'index.php')) {
                 // 开启重写
                 if (conf('app.rewrite', false)) {
-                    return $base. (IS_LINUX ? '/':'/?/');
+                    return $base. ((IS_LINUX || $beautify)? '/':'/?/');
                 }
                 return $base.'/?/';
             }
