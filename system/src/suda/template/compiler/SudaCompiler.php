@@ -285,18 +285,24 @@ class SudaCompiler implements Compiler
     {
         return "<?php \$this->set{$exp}; ?>";
     }
+
     public function parseB($exp)
     {
         return "<?php echo \$this->boolecho{$exp}; ?>";
     }
+
     protected function parseStatic($exp)
     {
         preg_match('/^\((.+?)\)$/', $exp, $match);
+        // _D()->info('exp ==> '.$exp);
         $module=$match[1]??Application::getActiveModule();
         $module=trim($module, '"\'');
+        // _D()->info('module ==> '.$module);
         $path=Manager::prepareResource($module);
+        // _D()->info('path ==> '.$path);
         $static_url=Storage::cut($path, APP_PUBLIC);
         $static_url=preg_replace('/[\\\\\/]+/', '/', $static_url);
+        // _D()->info($static_url.' ==> '.Request::hostBase());
         return  Request::hostBase().'/'.$static_url;
     }
 

@@ -147,8 +147,7 @@ class Manager
         $path=Storage::path(APP_PUBLIC.'/static/'.self::shadowName($module_dir));
         self::copyStatic($static_path, $path);
         self::copyStatic($app_static_path, $path);
-        return true;
-        ;
+        return $path;
     }
 
     public static function shadowName(string $name)
