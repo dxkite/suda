@@ -3,5 +3,10 @@
     "version": "1.0-dev",
     "application": "suda\\core\\Application",
     "modules": ["suda", "default"],
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "url": {
+        "module": 0,
+        "beautify": true,
+        "rewrite": true
+    }
 }
