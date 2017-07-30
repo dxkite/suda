@@ -294,8 +294,11 @@ class SudaCompiler implements Compiler
     protected function parseStatic($exp)
     {
         preg_match('/^\((.+?)\)$/', $exp, $match);
-        $exp=isset($match[1])&&$match[1]?$exp:'()';
-        return '<?php echo suda\\template\\Manager::getPublicStaticPath'.$exp.'; ?>';
+        if(isset($match[1])&&$match[1]){
+            $match[1]=trim($match[1], '"\'');
+            return Manager::getPublicStaticPath($match[1]);
+        }
+        return '<?php echo suda\\template\\Manager::getPublicStaticPath(); ?>';
     }
 
     

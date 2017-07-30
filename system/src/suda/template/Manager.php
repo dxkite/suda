@@ -333,7 +333,6 @@ class Manager
     public static function getPublicStaticPath(string $module=null)
     {
         $module=$module??Application::getActiveModule();
-        $module=trim($module, '"\'');
         $path=Manager::prepareResource($module);
         $static_url=Storage::cut($path, APP_PUBLIC);
         $static_url=preg_replace('/[\\\\\/]+/', '/', $static_url);
