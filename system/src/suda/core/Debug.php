@@ -42,6 +42,7 @@ class Debug
     protected static $log=[];
     protected static $time=[];
     protected static $hash;
+    private static $file;
 
     public static function time(string $name)
     {
@@ -154,10 +155,10 @@ class Debug
     protected static function printHTML(Exception $e)
     {
         // // 非致命错误
-        // if ($e->getSeverity()!==E_ERROR) {
-        //     echo "<div class=\"suda-error\" style=\"color:red\"><b>{$e->getName()}</b>: {$e->getMessage()} at {$e->getFile()}#{$e->getLine()}</div>";
-        //     return;
-        // }
+        if ($e->getSeverity()!==E_ERROR) {
+            echo "<div class=\"suda-error\" style=\"color:red\"><b>{$e->getName()}</b>: {$e->getMessage()} at {$e->getFile()}#{$e->getLine()}</div>";
+            return;
+        }
         // echo "<div class=\"suda-error\"><b>{$e->getName()}</b>: {$e->getMessage()} at {$e->getFile()}#{$e->getLine()}</div>";
         $line=$e->getLine();
         $file=$e->getFile();
@@ -205,7 +206,7 @@ class Debug
                         $this->template=$this->page('suda:alert');
                     }
                 } else {
-                    $this->template=$this->pagefile(SYSTEM_RESOURCE.'/tpl/error.tpl','suda:error');
+                    $this->template=$this->pagefile(SYSTEM_RESOURCE.'/tpl/error.tpl', 'suda:error');
                 }
             }
             public function render()
@@ -250,7 +251,10 @@ class Debug
         $loginfo['hash']=md5(microtime(true).$loginfo['file'].$loginfo['line']);
         $loginfo['level']=Debug::ERROR;
         $loginfo['backtrace']=$e->getBacktrace();
-        self::$log[]=$loginfo;
+        self::writeLine($loginfo);
+        if (defined('LOG_JSON') && LOG_JSON) {
+            self::$log[]=$loginfo;
+        }
     }
 
     public static function printf()
@@ -262,17 +266,9 @@ class Debug
         return Request::ip(). "\t" .(conf('debug')?'debug':'normal') . "\t" . date('Y-m-d H:i:s') . "\t" .Request::method()."\t".Request::virtualUrl() ."\t".$time.'s '.$mem.' '.self::$hash;
     }
 
-    protected static function save(string $file)
+    protected static function save()
     {
-        if (!is_dir(dirname($file))) {
-            Storage::mkdirs(dirname($file));
-        }
-        $file=dirname($file) . '/' . date('Y-m-d').'-'.basename($file);
-        if (file_exists($file)  && filesize($file) > self::MAX_LOG_SIZE) {
-            rename($file, dirname($file) . '/' . date('Y-m-d'). '-'. substr(md5_file($file), 0, 8).'-'.basename($file));
-        }
-        $str=Hook::execTail("system:debug:printf"). "\r\n";
-        
+        file_put_contents(self::$file, Hook::execTail("system:debug:printf")."\r\n", FILE_APPEND);
         if (defined('LOG_JSON') && LOG_JSON) {
             $loginfo=self::getInfo();
             $loginfo['request']=[
@@ -285,16 +281,16 @@ class Debug
             Storage::mkdirs(dirname($filejson));
             file_put_contents($filejson, json_encode($loginfo));
         }
+    }
 
-        foreach (self::$log as $log) {
-            $str.="\t[".number_format($log['time'], 10).'S:'.self::memshow($log['mem'], 2).']'."\t".$log['level'].'>In '.$log['file'].'#'.$log['line']."\t\t".$log['name']."\t".$log['message']."\r\n";
-            // 添加调用栈 高级或者同级则记录
-            if ((defined('LOG_FILE_APPEND') && LOG_FILE_APPEND) && self::compareLevel($log['level'], conf('debug-backtrace', Debug::ERROR)) >= 0) {
-                $str.=self::printTrace($log['backtrace'])."\r\n";
-            }
+    private static function writeLine(array $log)
+    {
+        $str="\t[".number_format($log['time'], 10).'S:'.self::memshow($log['mem'], 2).']'."\t".$log['level'].'>In '.$log['file'].'#'.$log['line']."\t\t".$log['name']."\t".$log['message']."\r\n";
+        // 添加调用栈 高级或者同级则记录
+        if ((defined('LOG_FILE_APPEND') && LOG_FILE_APPEND) && self::compareLevel($log['level'], conf('debug-backtrace', Debug::ERROR)) >= 0) {
+            $str.=self::printTrace($log['backtrace'])."\r\n";
         }
-
-        return file_put_contents($file, $str."\r\n", FILE_APPEND);
+        return file_put_contents(self::$file, $str."\r\n", FILE_APPEND);
     }
 
     public static function memshow(int $mem, int $dec)
@@ -307,13 +303,22 @@ class Debug
         }
         return round($mem, $dec) . $human[$pos];
     }
-    
+    public static function name()
+    {
+        $file=LOG_DIR . '/' . date('Y-m-d').'.log';
+        if (file_exists($file)  && filesize($file) > self::MAX_LOG_SIZE) {
+            rename($file, dirname($file) . '/' . date('Y-m-d'). '-'. substr(md5_file($file), 0, 8).'.log');
+        }
+        self::$file=$file;
+    }
     public static function beforeSystemRun()
     {
         self::time('system');
         Hook::exec('system:debug::start');
         self::$run_info['start_time']=D_START;
         self::$run_info['start_memory']=D_MEM;
+        $head=Request::ip(). "\t" .(conf('debug')?'debug':'normal') . "\t" . date('Y-m-d H:i:s') . "\t" .Request::method()."\t".Request::virtualUrl() ."\r\n";
+        file_put_contents(self::$file, $head, FILE_APPEND);
     }
 
     public static function getInfo()
@@ -337,7 +342,7 @@ class Debug
     public static function phpShutdown()
     {
         self::afterSystemRun();
-        self::save(LOG_DIR.'/debug.log');
+        self::save();
     }
 
     public static function __callStatic($method, $args)
@@ -380,3 +385,5 @@ class Debug
         self::aliasMethod($method, $args);
     }
 }
+
+Debug::name();

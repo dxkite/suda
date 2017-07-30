@@ -44,7 +44,6 @@ class System
     public static function onShutdown()
     {
         Hook::exec('system:shutdown::before');
-        // var_dump(get_included_files());
         _D()->trace('include paths:'.json_encode(Autoloader::getIncludePath()));
         _D()->trace(__('system shutdown'));
         _D()->info('runinfo', self:: getRunInfo());
