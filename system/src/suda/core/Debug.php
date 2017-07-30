@@ -154,10 +154,10 @@ class Debug
     protected static function printHTML(Exception $e)
     {
         // // 非致命错误
-        if ($e->getSeverity()!==E_ERROR) {
-            echo "<div class=\"suda-error\" style=\"color:red\"><b>{$e->getName()}</b>: {$e->getMessage()} at {$e->getFile()}#{$e->getLine()}</div>";
-            return;
-        }
+        // if ($e->getSeverity()!==E_ERROR) {
+        //     echo "<div class=\"suda-error\" style=\"color:red\"><b>{$e->getName()}</b>: {$e->getMessage()} at {$e->getFile()}#{$e->getLine()}</div>";
+        //     return;
+        // }
         // echo "<div class=\"suda-error\"><b>{$e->getName()}</b>: {$e->getMessage()} at {$e->getFile()}#{$e->getLine()}</div>";
         $line=$e->getLine();
         $file=$e->getFile();

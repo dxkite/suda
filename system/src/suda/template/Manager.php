@@ -132,11 +132,11 @@ class Manager
     /**
     * 准备静态资源
     */
-    public static function prepareResource(string $module)
+    public static function prepareResource(string $module,bool $force=false)
     {
         Hook::exec('Manager:prepareResource::before', [$module]);
         // 非Debug不更新资源
-        if (!conf('debug', false)) {
+        if (!conf('debug', false) && !$force) {
             return false;
         }
         $module_dir=Application::getModuleDir($module);
@@ -269,7 +269,7 @@ class Manager
     public static function getInputFile(string $name):string
     {
         list($module, $basename)=Router::parseName($name);
-        $input=self::getAppThemePath($module).'/'.$basename;
+        $input=self::getAppThemePath($module).'/'.trim($basename, '/');
         // _D()->info($input);
         if (Storage::exist($input)) {
             return $input;
@@ -290,4 +290,55 @@ class Manager
         $output=VIEWS_DIR.'/'. $module_dir .'/'.$basename;
         return $output;
     }
+
+    public static function initResource()
+    {
+        _D()->time('init resource');
+        $modules=Application::getLiveModules();
+        foreach ($modules as $module) {
+            $root=self::getThemePath($module);
+            self::compileModulleFile($module, $root, $root);
+            self::prepareResource($module,true);
+        }
+        _D()->timeEnd('init resource');
+    }
+
+    private static function compileModulleFile(string $module, string $root, string $dirs)
+    {
+        $hd=opendir($dirs);
+        while ($read=readdir($hd)) {
+            if (strcmp($read, '.') !== 0 && strcmp($read, '..') !==0) {
+                $path=$dirs.'/'.$read;
+                if (preg_match('/'.preg_quote($root.'/static', '/').'/', $path)) {
+                    continue;
+                }
+                if (is_file($path)) {
+                    self::compileFile($path, $module, $root);
+                } else {
+                    self::compileModulleFile($module, $root, $path);
+                }
+            }
+        }
+    }
+
+    private static function compileFile(string $path, string $module, string $root)
+    {
+        $name=preg_replace('/^('.preg_quote($root, '/').')?(.+)'.preg_quote(self::$extRaw, '/').'/', '$2', $path);
+        $name=$module.':'.trim($name, '/');
+        $success=self::compile($name);
+        _D()->debug(__('[%d] compiling ==> %s', $success, $name));
+        return $success;
+    }
+
+    public static function getPublicStaticPath(string $module=null)
+    {
+        $module=$module??Application::getActiveModule();
+        $module=trim($module, '"\'');
+        $path=Manager::prepareResource($module);
+        $static_url=Storage::cut($path, APP_PUBLIC);
+        $static_url=preg_replace('/[\\\\\/]+/', '/', $static_url);
+        return  Request::hostBase().'/'.$static_url;
+    }
 }
+
+// Manager::initResource();

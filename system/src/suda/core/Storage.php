@@ -93,7 +93,7 @@ class Storage
                     if (self::isDir($path) && preg_match($preg, $read)) {
                         $reads[]=$read;
                         if ($repeat) {
-                            foreach (self::readDirs($path) as $read) {
+                            foreach (self::readDirs($path,$repeat,$preg) as $read) {
                                 $reads[]=$read;
                             }
                         }

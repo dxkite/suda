@@ -15,7 +15,6 @@
  */
 namespace suda\core;
 
-use Exception;
 use suda\template\Manager;
 use suda\tool\Json;
 use suda\tool\ArrayHelper;
