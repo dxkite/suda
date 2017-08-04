@@ -296,7 +296,7 @@ class SudaCompiler implements Compiler
         preg_match('/^\((.+?)\)$/', $exp, $match);
         if(isset($match[1])&&$match[1]){
             $match[1]=trim($match[1], '"\'');
-            return Manager::getPublicStaticPath($match[1]);
+            return Manager::getPublicStaticPath(trim($match[1]));
         }
         return '<?php echo suda\\template\\Manager::getPublicStaticPath(); ?>';
     }
@@ -317,7 +317,7 @@ class SudaCompiler implements Compiler
     protected function parseStartInsert($exp)
     {
         preg_match('/\((.+)\)/', $exp, $v);
-        $name=str_replace('\'', '-', trim($v[1], '"\''));
+        $name=trim(str_replace('\'', '-', trim($v[1], '"\'')));
         return '<?php $this->hook(\''.$name.'\',function () { ?>';
     }
     
