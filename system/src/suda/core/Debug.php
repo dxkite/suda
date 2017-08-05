@@ -44,6 +44,15 @@ class Debug
     protected static $hash;
     private static $file;
 
+    public static function init() {
+        defined('APP_LOG') or define('APP_LOG', APP_DIR.'/data/logs');
+        $file=APP_LOG . '/latest.log';
+        if (file_exists($file)  && filesize($file) > self::MAX_LOG_SIZE) {
+            rename($file, dirname($file) . '/' . date('Y-m-d'). '-'. substr(md5_file($file), 0, 8).'.log');
+        }
+        self::$file=$file;
+    }
+
     public static function time(string $name)
     {
         self::$time[$name]=microtime(true);
@@ -88,7 +97,10 @@ class Debug
         $loginfo['backtrace']=$backtrace;
         $loginfo['time']=microtime(true)-D_START;
         $loginfo['mem']=memory_get_usage() - D_MEM;
-        self::$log[]=$loginfo;
+        self::writeLine($loginfo);
+        if (defined('LOG_JSON') && LOG_JSON) {
+            self::$log[]=$loginfo;
+        }
     }
 
     public static function displayException(Exception $e)
@@ -242,19 +254,7 @@ class Debug
         if (!$e instanceof Exception) {
             $e=new Exception($e);
         }
-        $loginfo['file']=$e->getFile();
-        $loginfo['line']=$e->getLine();
-        $loginfo['message']=$e->getMessage();
-        $loginfo['name']=$e->getName();
-        $loginfo['time']=microtime(true)-D_START;
-        $loginfo['mem']=memory_get_usage() - D_MEM;
-        $loginfo['hash']=md5(microtime(true).$loginfo['file'].$loginfo['line']);
-        $loginfo['level']=Debug::ERROR;
-        $loginfo['backtrace']=$e->getBacktrace();
-        self::writeLine($loginfo);
-        if (defined('LOG_JSON') && LOG_JSON) {
-            self::$log[]=$loginfo;
-        }
+        self::_loginfo(Debug::ERROR,$e->getName(),$e->getMessage(),$e->getFile(), $e->getLine(),$e->getBacktrace());
     }
 
     public static function printf()
@@ -290,7 +290,7 @@ class Debug
         if ((defined('LOG_FILE_APPEND') && LOG_FILE_APPEND) && self::compareLevel($log['level'], conf('debug-backtrace', Debug::ERROR)) >= 0) {
             $str.=self::printTrace($log['backtrace'])."\r\n";
         }
-        return file_put_contents(self::$file, $str."\r\n", FILE_APPEND);
+        return file_put_contents(self::$file, $str, FILE_APPEND);
     }
 
     public static function memshow(int $mem, int $dec)
@@ -303,22 +303,14 @@ class Debug
         }
         return round($mem, $dec) . $human[$pos];
     }
-    public static function name()
-    {
-        $file=LOG_DIR . '/' . date('Y-m-d').'.log';
-        if (file_exists($file)  && filesize($file) > self::MAX_LOG_SIZE) {
-            rename($file, dirname($file) . '/' . date('Y-m-d'). '-'. substr(md5_file($file), 0, 8).'.log');
-        }
-        self::$file=$file;
-    }
+
     public static function beforeSystemRun()
     {
         self::time('system');
         Hook::exec('system:debug::start');
         self::$run_info['start_time']=D_START;
         self::$run_info['start_memory']=D_MEM;
-        $head=Request::ip(). "\t" .(conf('debug')?'debug':'normal') . "\t" . date('Y-m-d H:i:s') . "\t" .Request::method()."\t".Request::virtualUrl() ."\r\n";
-        file_put_contents(self::$file, $head, FILE_APPEND);
+        file_put_contents(self::$file,'>>>>>>>>'."\r\n", FILE_APPEND);
     }
 
     public static function getInfo()
@@ -384,6 +376,15 @@ class Debug
     {
         self::aliasMethod($method, $args);
     }
+
+    /**
+     * 压缩日志文件
+     *
+     * @return void
+     */
+    protected function compress() {
+
+    }
 }
 
-Debug::name();
+Debug::init();
