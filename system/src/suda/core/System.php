@@ -36,6 +36,7 @@ class System
         register_shutdown_function('suda\\core\\System::onShutdown');
         set_error_handler('suda\\core\\System::uncaughtError');
         set_exception_handler('suda\\core\\System::uncaughtException');
+        Debug::beforeSystemRun();
         Locale::path(SYSTEM_RESOURCE.'/locales');
         _D()->trace(__('system init'));
         Hook::exec('system:init');
@@ -48,6 +49,7 @@ class System
         _D()->trace(__('system shutdown'));
         _D()->info('runinfo', self:: getRunInfo());
         Hook::exec('system:shutdown');
+        Debug::phpShutdown();
     }
 
     public static function uncaughtException($exception)

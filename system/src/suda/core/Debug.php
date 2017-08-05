@@ -15,10 +15,6 @@
  */
 namespace suda\core;
 
-// 监听事件
-Hook::listen('system:init', 'suda\core\Debug::beforeSystemRun');
-Hook::listen('system:shutdown', 'suda\core\Debug::phpShutdown');
-Hook::listen('system:debug:printf', 'suda\core\Debug::printf');
 defined('APP_LOG') or define('APP_LOG', APP_DIR.'/data/logs');
 // TODO: 记录异常类型
 class Debug
@@ -255,7 +251,7 @@ class Debug
         self::_loginfo(Debug::ERROR,$e->getName(),$e->getMessage(),$e->getFile(), $e->getLine(),$e->getBacktrace());
     }
 
-    public static function printf()
+    private static function printf()
     {
         $info=self::getInfo();
         $time=number_format($info['time'], 10);
@@ -269,11 +265,10 @@ class Debug
         if (file_exists($file)  && filesize($file) > self::MAX_LOG_SIZE) {
             rename($file, dirname($file) . '/' . date('Y-m-d'). '-'. substr(md5_file($file), 0, 8).'.log');
         }
-        $head=Hook::execTail("system:debug:printf")."\r\n";
+        $head=self::printf();
         $body=file_get_contents(self::$file);
-        file_put_contents($file,$head.$body,FILE_APPEND);
+        file_put_contents($file,"\r\n".$head."\r\n".$body,FILE_APPEND);
         unlink(self::$file);
-        self::$file=null;
         if (defined('LOG_JSON') && LOG_JSON) {
             $loginfo=self::getInfo();
             $loginfo['request']=[
@@ -362,7 +357,6 @@ class Debug
             }
         }
         $backtrace=debug_backtrace();
-        
         $name=(isset($backtrace[2]['class'])?$backtrace[2]['class'].'#':'').$backtrace[2]['function'];
         self::_loginfo($level, self::strify(isset($args[1])?$args[0]:$name), self::strify($args[1]??$args[0]), $backtrace[1]['file'], $backtrace[1]['line'], $backtrace);
     }
