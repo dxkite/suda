@@ -19,7 +19,7 @@ namespace suda\core;
 Hook::listen('system:init', 'suda\core\Debug::beforeSystemRun');
 Hook::listen('system:shutdown', 'suda\core\Debug::phpShutdown');
 Hook::listen('system:debug:printf', 'suda\core\Debug::printf');
-
+defined('APP_LOG') or define('APP_LOG', APP_DIR.'/data/logs');
 // TODO: 记录异常类型
 class Debug
 {
@@ -42,12 +42,20 @@ class Debug
     protected static $log=[];
     protected static $time=[];
     protected static $hash;
+    private static $file;
+    private static $latest=APP_LOG.'/latest.log';
+    
+    public static function init() {
+        self::$hash=substr(md5(microtime().''.Request::ip()), 0, 8);
+        self::$file=APP_LOG.'/'.self::$hash.'.tmp';
+        Storage::mkdirs(dirname(self::$file));
+        touch(self::$file);
+    }
 
     public static function time(string $name)
     {
         self::$time[$name]=microtime(true);
     }
-
 
     public static function timeEnd(string $name)
     {
@@ -87,7 +95,10 @@ class Debug
         $loginfo['backtrace']=$backtrace;
         $loginfo['time']=microtime(true)-D_START;
         $loginfo['mem']=memory_get_usage() - D_MEM;
-        self::$log[]=$loginfo;
+        self::writeLine($loginfo);
+        if (defined('LOG_JSON') && LOG_JSON) {
+            self::$log[]=$loginfo;
+        }
     }
 
     public static function displayException(Exception $e)
@@ -154,10 +165,10 @@ class Debug
     protected static function printHTML(Exception $e)
     {
         // // 非致命错误
-        // if ($e->getSeverity()!==E_ERROR) {
-        //     echo "<div class=\"suda-error\" style=\"color:red\"><b>{$e->getName()}</b>: {$e->getMessage()} at {$e->getFile()}#{$e->getLine()}</div>";
-        //     return;
-        // }
+        if ($e->getSeverity()!==E_ERROR) {
+            echo "<div class=\"suda-error\" style=\"color:red\"><b>{$e->getName()}</b>: {$e->getMessage()} at {$e->getFile()}#{$e->getLine()}</div>";
+            return;
+        }
         // echo "<div class=\"suda-error\"><b>{$e->getName()}</b>: {$e->getMessage()} at {$e->getFile()}#{$e->getLine()}</div>";
         $line=$e->getLine();
         $file=$e->getFile();
@@ -205,7 +216,7 @@ class Debug
                         $this->template=$this->page('suda:alert');
                     }
                 } else {
-                    $this->template=$this->pagefile(SYSTEM_RESOURCE.'/tpl/error.tpl','suda:error');
+                    $this->template=$this->pagefile(SYSTEM_RESOURCE.'/tpl/error.tpl', 'suda:error');
                 }
             }
             public function render()
@@ -241,16 +252,7 @@ class Debug
         if (!$e instanceof Exception) {
             $e=new Exception($e);
         }
-        $loginfo['file']=$e->getFile();
-        $loginfo['line']=$e->getLine();
-        $loginfo['message']=$e->getMessage();
-        $loginfo['name']=$e->getName();
-        $loginfo['time']=microtime(true)-D_START;
-        $loginfo['mem']=memory_get_usage() - D_MEM;
-        $loginfo['hash']=md5(microtime(true).$loginfo['file'].$loginfo['line']);
-        $loginfo['level']=Debug::ERROR;
-        $loginfo['backtrace']=$e->getBacktrace();
-        self::$log[]=$loginfo;
+        self::_loginfo(Debug::ERROR,$e->getName(),$e->getMessage(),$e->getFile(), $e->getLine(),$e->getBacktrace());
     }
 
     public static function printf()
@@ -258,21 +260,20 @@ class Debug
         $info=self::getInfo();
         $time=number_format($info['time'], 10);
         $mem=self::memshow($info['memory'], 2);
-        self::$hash=substr(md5($mem.$time), 0, 8);
         return Request::ip(). "\t" .(conf('debug')?'debug':'normal') . "\t" . date('Y-m-d H:i:s') . "\t" .Request::method()."\t".Request::virtualUrl() ."\t".$time.'s '.$mem.' '.self::$hash;
     }
 
-    protected static function save(string $file)
+    protected static function save()
     {
-        if (!is_dir(dirname($file))) {
-            Storage::mkdirs(dirname($file));
-        }
-        $file=dirname($file) . '/' . date('Y-m-d').'-'.basename($file);
+        $file=self::$latest;
         if (file_exists($file)  && filesize($file) > self::MAX_LOG_SIZE) {
-            rename($file, dirname($file) . '/' . date('Y-m-d'). '-'. substr(md5_file($file), 0, 8).'-'.basename($file));
+            rename($file, dirname($file) . '/' . date('Y-m-d'). '-'. substr(md5_file($file), 0, 8).'.log');
         }
-        $str=Hook::execTail("system:debug:printf"). "\r\n";
-        
+        $head=Hook::execTail("system:debug:printf")."\r\n";
+        $body=file_get_contents(self::$file);
+        file_put_contents($file,$head.$body,FILE_APPEND);
+        unlink(self::$file);
+        self::$file=null;
         if (defined('LOG_JSON') && LOG_JSON) {
             $loginfo=self::getInfo();
             $loginfo['request']=[
@@ -285,16 +286,19 @@ class Debug
             Storage::mkdirs(dirname($filejson));
             file_put_contents($filejson, json_encode($loginfo));
         }
+    }
 
-        foreach (self::$log as $log) {
-            $str.="\t[".number_format($log['time'], 10).'S:'.self::memshow($log['mem'], 2).']'."\t".$log['level'].'>In '.$log['file'].'#'.$log['line']."\t\t".$log['name']."\t".$log['message']."\r\n";
-            // 添加调用栈 高级或者同级则记录
-            if ((defined('LOG_FILE_APPEND') && LOG_FILE_APPEND) && self::compareLevel($log['level'], conf('debug-backtrace', Debug::ERROR)) >= 0) {
-                $str.=self::printTrace($log['backtrace'])."\r\n";
-            }
+    private static function writeLine(array $log)
+    {
+        if (is_null(self::$file)){
+            return;
         }
-
-        return file_put_contents($file, $str."\r\n", FILE_APPEND);
+        $str="\t[".number_format($log['time'], 10).'S:'.self::memshow($log['mem'], 2).']'."\t".$log['level'].'>In '.$log['file'].'#'.$log['line']."\t\t".$log['name']."\t".$log['message']."\r\n";
+        // 添加调用栈 高级或者同级则记录
+        if ((defined('LOG_FILE_APPEND') && LOG_FILE_APPEND) && self::compareLevel($log['level'], conf('debug-backtrace', Debug::ERROR)) >= 0) {
+            $str.=self::printTrace($log['backtrace'])."\r\n";
+        }
+        return file_put_contents(self::$file, $str, FILE_APPEND);
     }
 
     public static function memshow(int $mem, int $dec)
@@ -307,7 +311,7 @@ class Debug
         }
         return round($mem, $dec) . $human[$pos];
     }
-    
+
     public static function beforeSystemRun()
     {
         self::time('system');
@@ -337,7 +341,7 @@ class Debug
     public static function phpShutdown()
     {
         self::afterSystemRun();
-        self::save(LOG_DIR.'/debug.log');
+        self::save();
     }
 
     public static function __callStatic($method, $args)
@@ -379,4 +383,15 @@ class Debug
     {
         self::aliasMethod($method, $args);
     }
+
+    /**
+     * 压缩日志文件
+     *
+     * @return void
+     */
+    protected function compress() {
+
+    }
 }
+
+Debug::init();

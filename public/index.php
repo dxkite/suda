@@ -2,6 +2,8 @@
  
     // 应用所在目录
     define('APP_DIR', __DIR__.'/../app');
+    // 应用所在目录
+    define('APP_LOG', APP_DIR.'/data/logs');
     // 系统所在目录
     define('SYSTEM', __DIR__.'/../system/');
     // 网站根目录位置
