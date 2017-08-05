@@ -19,7 +19,7 @@ namespace suda\core;
 Hook::listen('system:init', 'suda\core\Debug::beforeSystemRun');
 Hook::listen('system:shutdown', 'suda\core\Debug::phpShutdown');
 Hook::listen('system:debug:printf', 'suda\core\Debug::printf');
-
+defined('APP_LOG') or define('APP_LOG', APP_DIR.'/data/logs');
 // TODO: 记录异常类型
 class Debug
 {
@@ -43,21 +43,19 @@ class Debug
     protected static $time=[];
     protected static $hash;
     private static $file;
-
+    private static $latest=APP_LOG.'/latest.log';
+    
     public static function init() {
-        defined('APP_LOG') or define('APP_LOG', APP_DIR.'/data/logs');
-        $file=APP_LOG . '/latest.log';
-        if (file_exists($file)  && filesize($file) > self::MAX_LOG_SIZE) {
-            rename($file, dirname($file) . '/' . date('Y-m-d'). '-'. substr(md5_file($file), 0, 8).'.log');
-        }
-        self::$file=$file;
+        self::$hash=substr(md5(microtime().''.Request::ip()), 0, 8);
+        self::$file=APP_LOG.'/'.self::$hash.'.tmp';
+        Storage::mkdirs(dirname(self::$file));
+        touch(self::$file);
     }
 
     public static function time(string $name)
     {
         self::$time[$name]=microtime(true);
     }
-
 
     public static function timeEnd(string $name)
     {
@@ -262,13 +260,20 @@ class Debug
         $info=self::getInfo();
         $time=number_format($info['time'], 10);
         $mem=self::memshow($info['memory'], 2);
-        self::$hash=substr(md5($mem.$time), 0, 8);
         return Request::ip(). "\t" .(conf('debug')?'debug':'normal') . "\t" . date('Y-m-d H:i:s') . "\t" .Request::method()."\t".Request::virtualUrl() ."\t".$time.'s '.$mem.' '.self::$hash;
     }
 
     protected static function save()
     {
-        file_put_contents(self::$file, Hook::execTail("system:debug:printf")."\r\n", FILE_APPEND);
+        $file=self::$latest;
+        if (file_exists($file)  && filesize($file) > self::MAX_LOG_SIZE) {
+            rename($file, dirname($file) . '/' . date('Y-m-d'). '-'. substr(md5_file($file), 0, 8).'.log');
+        }
+        $head=Hook::execTail("system:debug:printf")."\r\n";
+        $body=file_get_contents(self::$file);
+        file_put_contents($file,$head.$body,FILE_APPEND);
+        unlink(self::$file);
+        self::$file=null;
         if (defined('LOG_JSON') && LOG_JSON) {
             $loginfo=self::getInfo();
             $loginfo['request']=[
@@ -285,6 +290,9 @@ class Debug
 
     private static function writeLine(array $log)
     {
+        if (is_null(self::$file)){
+            return;
+        }
         $str="\t[".number_format($log['time'], 10).'S:'.self::memshow($log['mem'], 2).']'."\t".$log['level'].'>In '.$log['file'].'#'.$log['line']."\t\t".$log['name']."\t".$log['message']."\r\n";
         // 添加调用栈 高级或者同级则记录
         if ((defined('LOG_FILE_APPEND') && LOG_FILE_APPEND) && self::compareLevel($log['level'], conf('debug-backtrace', Debug::ERROR)) >= 0) {
@@ -310,7 +318,6 @@ class Debug
         Hook::exec('system:debug::start');
         self::$run_info['start_time']=D_START;
         self::$run_info['start_memory']=D_MEM;
-        file_put_contents(self::$file,'>>>>>>>>'."\r\n", FILE_APPEND);
     }
 
     public static function getInfo()
