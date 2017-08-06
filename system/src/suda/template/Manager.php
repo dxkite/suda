@@ -231,6 +231,13 @@ class Manager
         }
     }
 
+    /**
+     * 编译动态文件
+     *
+     * @param string $name
+     * @param [type] $parent
+     * @return void
+     */
     public static function file(string $name, $parent)
     {
         list($module, $basename)=Router::parseName($name);
@@ -244,7 +251,7 @@ class Manager
         // 动态文件导出
         $outpath=APP_PUBLIC.'/dtf/'.self::shadowName($module_dir).'/'.$basename;
         $path=Storage::path(dirname($outpath));
-        // 编译文件
+        // 编译检查
         if (Config::get('debug', true)) {
             if (!self::$compiler->compile($name, $input, $output)) {
                 echo '<b>compile theme &lt;<span style="color:red;">'.self::$theme.'</span>&gt; file '.$input. ' missing file</b>';
@@ -317,7 +324,7 @@ class Manager
                 if (preg_match('/'.preg_quote($root.'/static', '/').'/', $path)) {
                     continue;
                 }
-                if (is_file($path)) {
+                if (is_file($path) && preg_match('/\.tpl\..+$/',$path)) {
                     self::compileFile($path, $module, $root);
                 } else {
                     self::compileModulleFile($module, $root, $path);
@@ -345,4 +352,4 @@ class Manager
     }
 }
 
-// Manager::initResource();
+Manager::initResource();
