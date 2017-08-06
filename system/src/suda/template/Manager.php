@@ -144,10 +144,15 @@ class Manager
         defined('APP_PUBLIC') or define('APP_PUBLIC', Storage::path('.'));
         $static_path=Storage::path(self::getThemePath($module).'/static');
         $app_static_path=Storage::path(self::getAppThemePath($module).'/static');
-        $path=Storage::path(APP_PUBLIC.'/static/'.self::shadowName($module_dir));
+        $path=self::getPublicModulePath($module);
         self::copyStatic($static_path, $path);
         self::copyStatic($app_static_path, $path);
         return $path;
+    }
+
+    private static function getPublicModulePath(string $module){
+        $module_dir=Application::getModuleDir($module);
+        return Storage::path(APP_PUBLIC.'/static/'.self::shadowName($module_dir));
     }
 
     public static function shadowName(string $name)
@@ -333,7 +338,7 @@ class Manager
     public static function getPublicStaticPath(string $module=null)
     {
         $module=$module??Application::getActiveModule();
-        $path=Manager::prepareResource($module);
+        $path=Manager::getPublicModulePath($module);
         $static_url=Storage::cut($path, APP_PUBLIC);
         $static_url=preg_replace('/[\\\\\/]+/', '/', $static_url);
         return  Request::hostBase().'/'.$static_url;
