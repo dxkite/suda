@@ -113,6 +113,8 @@ class Application
         }
         return array_values(self::$module_dirs);
     }
+
+    
     public static function getActiveModule()
     {
         return self::$active_module;

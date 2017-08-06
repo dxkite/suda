@@ -264,22 +264,10 @@ class Debug
 
     protected static function save()
     {
-        $file=self::$latest;
-        if (file_exists($file)  && filesize($file) > self::MAX_LOG_SIZE) {
-            $path=preg_replace('/[\\\\]+/', '/', Storage::path(APP_LOG).'/'.date('Y-m-d').'.zip');
-            $zip = new ZipArchive;
-            $res = $zip->open($path, ZipArchive::CREATE);
-            if ($res === true) {
-                $zip->addFile($file,date('Y-m-d'). '-'. ($zip->numFiles +1).'.log');
-                $zip->close();
-                unlink($file);
-            } else {
-                rename($file, APP_LOG . '/' . date('Y-m-d'). '-'. substr(md5_file($file), 0, 8).'.log');
-            }
-        }
+        self::checkSize();
         $head=self::printf();
         $body=file_get_contents(self::$file);
-        file_put_contents($file, "\r\n".$head."\r\n".$body, FILE_APPEND);
+        file_put_contents(self::$file, "\r\n".$head."\r\n".$body, FILE_APPEND);
         unlink(self::$file);
         if (defined('LOG_JSON') && LOG_JSON) {
             $loginfo=self::getInfo();
@@ -388,6 +376,27 @@ class Debug
     public function __call($method, $args)
     {
         self::aliasMethod($method, $args);
+    }
+
+    /**
+     * 检查日志文件大小
+     *
+     * @return void
+     */
+    private function checkSize() {
+        $file=self::$latest;
+        if (file_exists($file)  && filesize($file) > self::MAX_LOG_SIZE) {
+            $path=preg_replace('/[\\\\]+/', '/', Storage::path(APP_LOG).'/'.date('Y-m-d').'.zip');
+            $zip = new ZipArchive;
+            $res = $zip->open($path, ZipArchive::CREATE);
+            if ($res === true) {
+                $zip->addFile($file,date('Y-m-d'). '-'. ($zip->numFiles +1).'.log');
+                $zip->close();
+                unlink($file);
+            } else {
+                rename($file, APP_LOG . '/' . date('Y-m-d'). '-'. substr(md5_file($file), 0, 8).'.log');
+            }
+        }
     }
 }
 
