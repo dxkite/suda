@@ -347,6 +347,7 @@ class Manager
     {
         $module=$module??Application::getActiveModule();
         $path=Manager::getPublicModulePath($module);
+        self::prepareResource($module);
         $static_url=Storage::cut($path, APP_PUBLIC);
         $static_url=preg_replace('/[\\\\\/]+/', '/', $static_url);
         return  Request::hostBase().'/'.$static_url;
