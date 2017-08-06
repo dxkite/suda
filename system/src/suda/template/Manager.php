@@ -247,7 +247,7 @@ class Manager
         }
         $module_dir=Application::getModuleDir($module);
         // 获取输出
-        $output=VIEWS_DIR.'/'. $module_dir .'/'.$basename;
+        $output=VIEWS_DIR.'/'. $module_dir .'/'.$basename.self::$extCpl;
         // 动态文件导出
         $outpath=APP_PUBLIC.'/dtf/'.self::shadowName($module_dir).'/'.$basename;
         $path=Storage::path(dirname($outpath));
@@ -352,4 +352,4 @@ class Manager
     }
 }
 
-Manager::initResource();
+// Manager::initResource();
