@@ -50,7 +50,8 @@ class Manager
      * @var null
      */
     private static $compiler=null;
-
+    private static $staticPath='assets/01';
+    private static $dynamicPath='assets/00';
     /**
      * 载入模板编译器
      */
@@ -152,12 +153,12 @@ class Manager
 
     private static function getPublicModulePath(string $module){
         $module_dir=Application::getModuleDir($module);
-        return Storage::path(APP_PUBLIC.'/static/'.self::shadowName($module_dir));
+        return Storage::path(APP_PUBLIC.'/'.self::$staticPath.'/'.self::shadowName($module_dir));
     }
 
     public static function shadowName(string $name)
     {
-        return base64_encode(md5($name, true));
+        return substr(md5($name),0,8);
     }
 
     /**
@@ -249,7 +250,7 @@ class Manager
         // 获取输出
         $output=VIEWS_DIR.'/'. $module_dir .'/'.$basename.self::$extCpl;
         // 动态文件导出
-        $outpath=APP_PUBLIC.'/dtf/'.self::shadowName($module_dir).'/'.$basename;
+        $outpath=APP_PUBLIC.'/'.self::$dynamicPath.'/'.self::shadowName($module_dir).'/'.$basename;
         $path=Storage::path(dirname($outpath));
         // 编译检查
         if (Config::get('debug', true)) {
