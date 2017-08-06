@@ -270,8 +270,7 @@ class Debug
             $zip = new ZipArchive;
             $res = $zip->open($path, ZipArchive::CREATE);
             if ($res === true) {
-                $tmp=preg_replace('/[\\\\]+/', '/', $tmp);
-                $tname=date('Y-m-d'). '-'. ($zip->numFiles +1).'.log';
+                $tname=date('Y-m-d'). '.'. ($zip->numFiles +1).'.log';
                 $success=$zip->addFile($file, $tname);
                 $zip->close();
                 unlink($file);
