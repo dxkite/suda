@@ -383,7 +383,7 @@ class Debug
      *
      * @return void
      */
-    private function checkSize() {
+    private static function checkSize() {
         $file=self::$latest;
         if (file_exists($file)  && filesize($file) > self::MAX_LOG_SIZE) {
             $path=preg_replace('/[\\\\]+/', '/', Storage::path(APP_LOG).'/'.date('Y-m-d').'.zip');
