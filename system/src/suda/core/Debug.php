@@ -270,12 +270,11 @@ class Debug
             $zip = new ZipArchive;
             $res = $zip->open($path, ZipArchive::CREATE);
             if ($res === true) {
-                $tname=date('Y-m-d'). '.'. ($zip->numFiles +1).'.log';
-                $success=$zip->addFile($file, $tname);
+                $zip->addFile($file,date('Y-m-d'). '.'. ($zip->numFiles +1).'.log');
                 $zip->close();
                 unlink($file);
             } else {
-                rename($file, dirname($file) . '/' . date('Y-m-d'). '-'. substr(md5_file($file), 0, 8).'.log');
+                rename($file, APP_LOG . '/' . date('Y-m-d'). '.'. substr(md5_file($file), 0, 8).'.log');
             }
         }
         $head=self::printf();
