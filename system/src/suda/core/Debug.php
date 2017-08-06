@@ -267,7 +267,7 @@ class Debug
         self::checkSize();
         $head=self::printf();
         $body=file_get_contents(self::$file);
-        file_put_contents(self::$file, "\r\n".$head."\r\n".$body, FILE_APPEND);
+        file_put_contents(self::$latest, "\r\n".$head."\r\n".$body, FILE_APPEND);
         unlink(self::$file);
         if (defined('LOG_JSON') && LOG_JSON) {
             $loginfo=self::getInfo();
