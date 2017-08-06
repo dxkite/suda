@@ -15,6 +15,8 @@
  */
 namespace suda\core;
 
+use ZipArchive;
+
 defined('APP_LOG') or define('APP_LOG', APP_DIR.'/data/logs');
 // TODO: 记录异常类型
 class Debug
@@ -41,7 +43,8 @@ class Debug
     private static $file;
     private static $latest=APP_LOG.'/latest.log';
     
-    public static function init() {
+    public static function init()
+    {
         self::$hash=substr(md5(microtime().''.Request::ip()), 0, 8);
         self::$file=APP_LOG.'/'.self::$hash.'.tmp';
         Storage::mkdirs(dirname(self::$file));
@@ -248,7 +251,7 @@ class Debug
         if (!$e instanceof Exception) {
             $e=new Exception($e);
         }
-        self::_loginfo(Debug::ERROR,$e->getName(),$e->getMessage(),$e->getFile(), $e->getLine(),$e->getBacktrace());
+        self::_loginfo(Debug::ERROR, $e->getName(), $e->getMessage(), $e->getFile(), $e->getLine(), $e->getBacktrace());
     }
 
     private static function printf()
@@ -263,11 +266,22 @@ class Debug
     {
         $file=self::$latest;
         if (file_exists($file)  && filesize($file) > self::MAX_LOG_SIZE) {
-            rename($file, dirname($file) . '/' . date('Y-m-d'). '-'. substr(md5_file($file), 0, 8).'.log');
+            $path=preg_replace('/[\\\\]+/', '/', Storage::path(APP_LOG).'/'.date('Y-m-d').'.zip');
+            $zip = new ZipArchive;
+            $res = $zip->open($path, ZipArchive::CREATE);
+            if ($res === true) {
+                $tmp=preg_replace('/[\\\\]+/', '/', $tmp);
+                $tname=date('Y-m-d'). '-'. ($zip->numFiles +1).'.log';
+                $success=$zip->addFile($file, $tname);
+                $zip->close();
+                unlink($file);
+            } else {
+                rename($file, dirname($file) . '/' . date('Y-m-d'). '-'. substr(md5_file($file), 0, 8).'.log');
+            }
         }
         $head=self::printf();
         $body=file_get_contents(self::$file);
-        file_put_contents($file,"\r\n".$head."\r\n".$body,FILE_APPEND);
+        file_put_contents($file, "\r\n".$head."\r\n".$body, FILE_APPEND);
         unlink(self::$file);
         if (defined('LOG_JSON') && LOG_JSON) {
             $loginfo=self::getInfo();
@@ -285,7 +299,7 @@ class Debug
 
     private static function writeLine(array $log)
     {
-        if (is_null(self::$file)){
+        if (is_null(self::$file)) {
             return;
         }
         $str="\t[".number_format($log['time'], 10).'S:'.self::memshow($log['mem'], 2).']'."\t".$log['level'].'>In '.$log['file'].'#'.$log['line']."\t\t".$log['name']."\t".$log['message']."\r\n";
@@ -376,15 +390,6 @@ class Debug
     public function __call($method, $args)
     {
         self::aliasMethod($method, $args);
-    }
-
-    /**
-     * 压缩日志文件
-     *
-     * @return void
-     */
-    protected function compress() {
-
     }
 }
 
