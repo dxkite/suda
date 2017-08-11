@@ -122,7 +122,7 @@ abstract class Response
         if ($tpl) {
             return $tpl->response($this)->assign($values);
         }
-        throw new AppicationException(__('template[%s] file not exist: %s', $name, $template));
+        throw new ApplicationException(__('template[%s] file not exist: %s', $template, $template));
     }
         
     /**
@@ -137,7 +137,7 @@ abstract class Response
         if ($tpl) {
             return $tpl->response($this)->assign($values);
         }
-        throw new AppicationException(__('template[%s] file not exist: %s', $name, $template));
+        throw new ApplicationException(__('template[%s] file not exist: %s', $name, $template));
     }
 
     public function refresh()
