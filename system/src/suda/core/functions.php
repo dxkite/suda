@@ -66,3 +66,9 @@ function import(string $path)
 {
     return suda\core\Autoloader::import($path);
 }
+
+
+function init_resource(array $modules=null)
+{
+    return $modules?suda\template\Manager::initResource($modules):suda\template\Manager::initResource();
+}

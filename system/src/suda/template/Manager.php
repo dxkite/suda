@@ -304,10 +304,10 @@ class Manager
         return $output;
     }
 
-    public static function initResource()
+    public static function initResource(array $modules=null)
     {
         _D()->time('init resource');
-        $modules=Application::getLiveModules();
+        $modules=$modules??Application::getLiveModules();
         foreach ($modules as $module) {
             $root=self::getThemePath($module);
             self::compileModulleFile($module, $root, $root);
