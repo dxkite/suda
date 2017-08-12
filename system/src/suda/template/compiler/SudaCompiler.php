@@ -211,7 +211,7 @@ class SudaCompiler implements Compiler
 
     protected function parse_($exp)
     {
-        return "<?php echo __$exp ?>";
+        return "<?php echo __$exp; ?>";
     }
 
     // IF 语句
