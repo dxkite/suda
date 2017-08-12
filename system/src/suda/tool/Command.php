@@ -24,12 +24,13 @@ class Command
     public $static=false;
     public $params=[];
     public $func_bind=[];
-    public $name='command';
+    public $name;
 
     public function __construct($command, array $params=[])
     {
-        $this->command=$command;
+        $this->command= is_string($command)?self::parseCommand($command):$command;
         $this->params=$params;
+        $this->name=is_string($command)?$command:'{closure command}';
     }
     
     public function name(string $name)
@@ -46,9 +47,6 @@ class Command
     public function exec(array $params=[])
     {
         _D()->trace(__('exec command %s with args %s', $this->name, json_encode($params)));
-        if (is_string($this->command)) {
-            $this->command= self::parseCommand($this->command);
-        }
         // 集合所有参数
         if (count($params)) {
             $this->params=$params;
@@ -62,7 +60,6 @@ class Command
             }
             $this->params=$args;
         }
-        // spl_autoload_register([$this,'loadCommand']);
         // 非空调用
         if ($this->command) {
             // 是函数调用&指定了文件&函数不存在
@@ -70,14 +67,17 @@ class Command
                 require_once $this->file;
             }
             // 调用接口
-            elseif (is_array($this->command) /*&& !is_callable($this->command)*/) {
-                if ($this->static  || is_object($this->command[0])) {
-                } else {
-                    $this->command[0]=new $this->command[0];
+            elseif (is_array($this->command)) {
+                if (!is_object($this->command[0])) {
+                    if($this->static){
+                    }else{
+                        $this->command[0]=new $this->command[0];
+                    }
                 }
             }
+            
             if (!is_callable($this->command)) {
-                throw (new CommandException(__('command{%s} is uncallable',$this->name)))->setCmd($this->name)->setParams($this->params);
+                throw (new CommandException(__('command {%s} is uncallable', $this->name)))->setCmd($this->name)->setParams($this->params);
             }
             if ($this->static) {
                 return forward_static_call_array($this->command, $this->params);
@@ -99,11 +99,11 @@ class Command
         return self::exec(func_get_args());
     }
     
-    protected function parseCommand(string $command)
+    private function parseCommand(string $command)
     {
         if (preg_match('/^(?:([\w\\\\\/.]+))?(?:(#|->|::)(\w+))?(?:\((.+?)\))?(?:@(.+))?$/', $command, $matchs)) {
-            _D()->trace(__('parse command %s', $command));
-            $this->name=$command;
+            _D()->trace(__('parse command %s', $command), $matchs);
+            // $this->name=$command;
             // 添加参数绑定
             if (isset($matchs[4])) {
                 $this->func_bind=explode(',', trim($matchs[4], ','));
