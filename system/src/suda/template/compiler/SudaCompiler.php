@@ -75,7 +75,6 @@ class SudaCompiler implements Compiler
     public function compile(string $name, string $input, string $output)
     {
         _D()->time('compile '.$name);
-
         if (!Storage::exist($input)) {
             return false;
         }
@@ -84,7 +83,7 @@ class SudaCompiler implements Compiler
             Storage::mkdirs(dirname($output));
         }
 
-        $classname='Template_'.md5($name);
+        $classname=Manager::className($name);
         $content='<?php  class '.$classname.' extends suda\template\compiler\suda\Template { protected $name="'.$name.'"; protected function _render_template() {  ?>'.$content.'<?php }}';
         Storage::put($output, $content);
         _D()->timeEnd('compile '.$name);
@@ -93,9 +92,9 @@ class SudaCompiler implements Compiler
 
     public function render(string $name, string $viewfile)
     {
-        $name='Template_'.md5($name);
+        $classname=Manager::className($name);
         require_once $viewfile;
-        return $template=new $name;
+        return $template=new $classname;
     }
     
     /**
@@ -294,7 +293,7 @@ class SudaCompiler implements Compiler
     protected function parseStatic($exp)
     {
         preg_match('/^\((.+?)\)$/', $exp, $match);
-        if(isset($match[1])&&$match[1]){
+        if (isset($match[1])&&$match[1]) {
             $match[1]=trim($match[1], '"\'');
             return Manager::getPublicStaticPath(trim($match[1]));
         }

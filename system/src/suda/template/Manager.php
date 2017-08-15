@@ -301,6 +301,11 @@ class Manager
         return $output;
     }
 
+    public static function className(string $name) {
+        list($module, $basename)=Router::parseName($name);
+        return 'Template_'.md5($basename);
+    }
+
     public static function initResource(array $modules=null)
     {
         _D()->time('init resource');
