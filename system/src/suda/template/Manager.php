@@ -104,15 +104,12 @@ class Manager
 
         if (Config::get('debug', true)) {
             if (!self::compile($name)) {
-                echo '<b>compile theme &lt;<span style="color:red;">'.self::$theme.'</span>&gt; error: '.$name.' location '.$viewpath. ' missing raw template file</b>';
+                echo '<b>compile theme</b> &lt;<span style="color:red;">'.self::$theme.'</span>&gt; error: '.$name.' location '.$viewpath. ' missing raw template file</br>';
                 return;
             }
         } elseif (!Storage::exist($viewpath)) {
-            // _D()->debug('perpare viewpath',$viewpath);
-            if (!self::compile($name)) {
-                echo '<b>missing theme &lt;<span style="color:red;">'.self::$theme.'</span>&gt; template file '.$name.'  location '.$viewpath. '</b>';
-                return;
-            }
+            echo '<b>missing theme</b> &lt;<span style="color:red;">'.self::$theme.'</span>&gt; template file '.$name.'  location '. Storage::cut($viewpath,DATA_DIR). '</br>';
+            return;
         }
         return self::displayFile($viewpath, $name);
     }
@@ -307,13 +304,15 @@ class Manager
     public static function initResource(array $modules=null)
     {
         _D()->time('init resource');
+        $init=[];
         $modules=$modules??Application::getLiveModules();
         foreach ($modules as $module) {
             $root=self::getThemePath($module);
             self::compileModulleFile($module, $root, $root);
-            self::prepareResource($module,true);
+            $init[$module]=Storage::cut(self::prepareResource($module,true),APP_PUBLIC);
         }
         _D()->timeEnd('init resource');
+        return $init;
     }
 
     private static function compileModulleFile(string $module, string $root, string $dirs)
