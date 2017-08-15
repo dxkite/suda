@@ -47,5 +47,9 @@
         "class": "dxkite\\suda\\response\\SelfCheck",
         "visit": "\/self_check",
         "method": ["GET"]
+    },
+    "resource_prepare": {
+        "class": "dxkite\\suda\\response\\ResourcePrepareResponse",
+        "visit": "\/resource_prepare"
     }
 }
