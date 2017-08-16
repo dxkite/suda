@@ -322,7 +322,7 @@ class Application
     {
         if (file_exists($path=RUNTIME_DIR.'/database.config.php')) {
             $config=include $path;
-            Config::assign(['database'=>$config]);
+            Config::set('database',$config);
         }
     }
 }
