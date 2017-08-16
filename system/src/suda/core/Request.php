@@ -281,7 +281,8 @@ final class Request
     {
         $scheme = $_SERVER['REQUEST_SCHEME'] ?? 'http';
         $host= $_SERVER['HTTP_HOST'] ?? 'localhost';
-        return $scheme.'://'.$host.($_SERVER["SERVER_PORT"]!=80?':'.$_SERVER["SERVER_PORT"]:'');
+        $port=$_SERVER["SERVER_PORT"]??80;
+        return $scheme.'://'.$host.($port!=80?':'.$port:'');
     }
 
     public static function baseUrl()
