@@ -101,6 +101,7 @@ class SQLQuery
         $this->stmt=null;
         return $this;
     }
+    
     public function use(string $name=null)
     {
         $this->database=$name;
@@ -115,21 +116,69 @@ class SQLQuery
         }
         return false;
     }
-    public function erron():string
+
+    public function erron()
     {
         if ($this->stmt) {
             return $this->stmt->errorCode();
         }
         return false;
     }
+
     public static function lastInsertId():int
     {
         return self::$pdo->lastInsertId();
     }
-    protected function auto_prefix(string $query)
+
+    // 事务系列
+    public static function begin()
+    {
+        return self::beginTransaction();
+    }
+
+    // 事务系列
+    public static function beginTransaction()
+    {
+        self::connectPdo();
+        return self::$pdo->beginTransaction();
+    }
+    
+    public static function commit()
+    {
+        self::connectPdo();
+        return  self::$pdo->commit();
+    }
+
+    public static function rollBack()
+    {
+        self::connectPdo();
+        return  self::$pdo->rollBack();
+    }
+
+    public function quote($string)
+    {
+        return self::$pdo->quote($string);
+    }
+
+    public function arrayQuote(array $array)
+    {
+        $temp = array();
+        foreach ($array as $value) {
+            $temp[] = is_int($value) ? $value : self::$pdo->quote($value);
+        }
+        return implode($temp, ',');
+    }
+
+    public static function getRuninfo()
+    {
+        return ['times'=>self::$times,'counts'=>self::$queryCount];
+    }
+
+    private function auto_prefix(string $query)
     {
         return preg_replace('/#{(\S+?)}/', self::$prefix.'$1', $query);
     }
+
     protected function lazyQuery(string $query, array $array=[])
     {
         $query=self::auto_prefix($query);
@@ -187,7 +236,6 @@ class SQLQuery
         return $return;
     }
 
-
     protected static function connectPdo()
     {
         // 链接数据库
@@ -202,48 +250,5 @@ class SQLQuery
                 throw new SQLException('connect database error:'.$e->getMessage(), $e->getCode(), E_ERROR, __FILE__, __LINE__, $e);
             }
         }
-    }
-
-    // 事务系列
-    public static function begin()
-    {
-        return self::beginTransaction();
-    }
-
-    // 事务系列
-    public static function beginTransaction()
-    {
-        self::connectPdo();
-        return self::$pdo->beginTransaction();
-    }
-    
-    public static function commit()
-    {
-        self::connectPdo();
-        return  self::$pdo->commit();
-    }
-
-    public static function rollBack()
-    {
-        self::connectPdo();
-        return  self::$pdo->rollBack();
-    }
-
-    public function quote($string)
-    {
-        return self::$pdo->quote($string);
-    }
-
-    public function arrayQuote(array $array)
-    {
-        $temp = array();
-        foreach ($array as $value) {
-            $temp[] = is_int($value) ? $value : self::$pdo->quote($value);
-        }
-        return implode($temp, ',');
-    }
-    public static function getRuninfo()
-    {
-        return ['times'=>self::$times,'counts'=>self::$queryCount];
     }
 }
