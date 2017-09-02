@@ -72,9 +72,9 @@ class Router
         $module=Application::getModuleFullName($module);
         $prefix_it= function (&$router, $key, $prefixinfo) use ($module) {
             $prefix=$prefixinfo[0]?conf('app.admin', '/admin'):'/';
-            if (!(isset($router['anti-prefix']) && $router['anti-prefix'])){
+            if (!(isset($router['anti-prefix']) && $router['anti-prefix'])) {
                 $prefix.=$prefixinfo[1];
-            }      
+            }
             $router['visit']='/'.trim($prefix.$router['visit'], '/');
             $router['module']=$module;
         };
@@ -106,16 +106,16 @@ class Router
 
     protected function loadFile()
     {
-        $this->routers=require TEMP_DIR.'/router.cache.php';
-        $this->types=require TEMP_DIR.'/types.cache.php';
-        $this->matchs=require TEMP_DIR.'/matchs.cache.php';
+        $this->routers=require self::cacheFile('router.cache.php');
+        $this->types=require self::cacheFile('types.cache.php');
+        $this->matchs=require self::cacheFile('matchs.cache.php');
     }
 
     protected function saveFile()
     {
-        ArrayHelper::export(TEMP_DIR.'/router.cache.php', '_router', $this->routers);
-        ArrayHelper::export(TEMP_DIR.'/types.cache.php', '_types', $this->types);
-        ArrayHelper::export(TEMP_DIR.'/matchs.cache.php', '_matchs', $this->matchs);
+        ArrayHelper::export(self::cacheFile('router.cache.php'), '_router', $this->routers);
+        ArrayHelper::export(self::cacheFile('types.cache.php'), '_types', $this->types);
+        ArrayHelper::export(self::cacheFile('matchs.cache.php'), '_matchs', $this->matchs);
     }
 
     protected function loadModulesRouter()
@@ -134,13 +134,13 @@ class Router
     
     public function routerCached()
     {
-        if (!file_exists(TEMP_DIR.'/router.cache.php')) {
+        if (!file_exists(self::cacheFile('router.cache.php'))) {
             return false;
         }
-        if (!file_exists(TEMP_DIR.'/types.cache.php')) {
+        if (!file_exists(self::cacheFile('types.cache.php'))) {
             return false;
         }
-        if (!file_exists(TEMP_DIR.'/matchs.cache.php')) {
+        if (!file_exists(self::cacheFile('matchs.cache.php'))) {
             return false;
         }
     }
@@ -514,5 +514,10 @@ class Router
             }
         };
         $render->onRequest(Request::getInstance());
+    }
+
+    private function cacheFile(string $name):string
+    {
+        return TEMP_DIR.'/'.ltrim($_SERVER['SCRIPT_NAME'], '/').'_'.$name;
     }
 }
