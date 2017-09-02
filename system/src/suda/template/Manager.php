@@ -50,7 +50,7 @@ class Manager
      * @var null
      */
     private static $compiler=null;
-    private static $staticPath='assets/01';
+    private static $staticPath='assets/static';
     private static $dynamicPath='assets/00';
     /**
      * 载入模板编译器
@@ -347,14 +347,18 @@ class Manager
         return $success;
     }
 
-    public static function getPublicStaticPath(string $module=null)
+    public static function getStaticAssetPath(string $module=null)
     {
         $module=$module??Application::getActiveModule();
         $path=Manager::getPublicModulePath($module);
         self::prepareResource($module);
         $static_url=Storage::cut($path, APP_PUBLIC);
         $static_url=preg_replace('/[\\\\\/]+/', '/', $static_url);
-        return  Request::hostBase().'/'.$static_url;
+        return  '/'.$static_url;
+    }
+
+    public static function assetServer(string $url){
+        return conf('asset-server',Request::hostBase()).$url;
     }
 }
 

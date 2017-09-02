@@ -295,9 +295,9 @@ class SudaCompiler implements Compiler
         preg_match('/^\((.+?)\)$/', $exp, $match);
         if (isset($match[1])&&$match[1]) {
             $match[1]=trim($match[1], '"\'');
-            return Manager::getPublicStaticPath(trim($match[1]));
+            return '<?php echo suda\\template\\Manager::assetServer(\''.Manager::getStaticAssetPath(trim($match[1])).'\');?>';
         }
-        return '<?php echo suda\\template\\Manager::getPublicStaticPath(); ?>';
+        return '<?php echo suda\\template\\Manager::assetServer(suda\\template\\Manager::getStaticAssetPath()); ?>';
     }
 
     
