@@ -125,9 +125,14 @@ class SQLQuery
         return false;
     }
 
-    public static function lastInsertId():int
+    public static function lastInsertId(string $name=null)
     {
-        return self::$pdo->lastInsertId();
+        if (is_null($name)) {
+            return self::$pdo->lastInsertId();
+        } else {
+            return self::$pdo->lastInsertId($name);
+        }
+        return false;
     }
 
     // 事务系列
