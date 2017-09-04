@@ -74,6 +74,7 @@ class ApplicationManager
             _D()->trace(__('create base app'));
             Storage::copydir(SYSTEM_RESOURCE.'/app_template/', APP_DIR);
             Storage::put(APP_DIR.'/modules/default/resource/config/config.json', '{"name":"default"}');
+            Config::set('app.init',true);
         }
         Autoloader::addIncludePath(APP_DIR.'/share');
         // 设置配置

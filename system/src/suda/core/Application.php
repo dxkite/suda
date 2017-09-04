@@ -93,8 +93,17 @@ class Application
             }
         }
         // 调整模板
-        Manager::theme(conf('app.template','default'));
+        Manager::theme(conf('app.template', 'default'));
         Hook::exec('Application:init');
+        // 初次运行初始化资源
+        if (conf('app.init')) {
+            init_resource();
+            if (!conf('debug', false)) {
+                // 内置管理模块
+                // 安装模块（用户自定义）
+                init_resource(['suda','install']);
+            }
+        }
     }
 
     public static function getModules()
@@ -322,7 +331,7 @@ class Application
     {
         if (file_exists($path=RUNTIME_DIR.'/database.config.php')) {
             $config=include $path;
-            Config::set('database',$config);
+            Config::set('database', $config);
         }
     }
 }
