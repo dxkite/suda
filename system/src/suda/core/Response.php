@@ -98,7 +98,7 @@ abstract class Response
     /**
     *  直接输出文件
     */
-    public function file(string $path, string $type=null)
+    public function file(string $path,  string $filename=null,string $type=null)
     {
         $content=file_get_contents($path);
         $hash   = md5($content);
@@ -106,7 +106,13 @@ abstract class Response
         if (!$this->_etag($hash)) {
             $type   = $type ?? pathinfo($path, PATHINFO_EXTENSION);
             $this->type($type);
+            self::setHeader('Content-Disposition: attachment;filename="'.$filename.'.'.$type.'"');
             self::setHeader('Content-Length:'.$size);
+            self::setHeader('Cache-Control: max-age=0');
+            self::setHeader('Expires: Mon, 26 Jul 1997 05:00:00 GMT'); // Date in the past
+            self::setHeader('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT'); // always modified
+            self::setHeader('Cache-Control: cache, must-revalidate'); // HTTP/1.1
+            self::setHeader('Pragma: public'); // HTTP/1.0
             echo $content;
         }
     }
