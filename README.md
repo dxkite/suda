@@ -57,7 +57,7 @@ visit the localhost to help the framework create a template application.
 [Document](docs/readme.md)    
 [Route](docs/tools/router.md)
 
-## Suggest Application Module
+## Suggest Application Modules 
 - function modules
     - a function module
         - admin router (*module functions admin*)
@@ -65,7 +65,7 @@ visit the localhost to help the framework create a template application.
     - another function module
 - install module (*for install this application*)
 - admin module (*the admin panel*)
-- suda base admin module (*admin suda（auto create when init this application）*)
+- suda base admin module *(admin suda `auto create when init this application`)*
 
 ## Historys Or Demos
 
