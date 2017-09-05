@@ -1,5 +1,5 @@
 #  Suda PHP Framework
-A simple PHP7 framework.
+A simple PHP7 framework **only support php7 or new** , you can easy use this to make a module base application. 
 
 ## Functions
 
@@ -16,22 +16,26 @@ A simple PHP7 framework.
 
 
 ## Get Start
-### step1 get suda source code
+
+### Step1 get suda source code
 
 #### clone from git 
+
 ```bash
 git clone https://github.com/DXkite/suda  suda
 ```
 #### clone as a git submodule
+
 ```bash
 git submodule add https://github.com/DXkite/suda
 ```
 
-### step2 copy file necessary
+### Step2 copy file necessary
+
 ```bash
 cp -R ./suda/system/resource/project/* .
 ```
-### step3 change document root to `public` 
+### Step3 change document root to `public` 
 
 change web service configuration make `public` directory as the document root.
 
@@ -43,14 +47,24 @@ sudo chmod g+rw application_directory
 sudo chmod g+rw document_directory
 ```
 
-###step4 make the template application
+### Step4 make the template application
+
 visit the localhost to help the framework create a template application.
 
-## documents
+## Document
 
 [Document](docs/readme.md)    
 [Route](docs/tools/router.md)
 
+## Suggest Application Module
+- function modules
+    - a function module
+        - admin router (*module functions admin*)
+        - simple router (*user web interface*)
+    - another function module
+- install module
+- admin module
+- suda base admin module
 
 ## Historys Or Demos
 
