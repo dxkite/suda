@@ -39,7 +39,8 @@ cp -R ./suda/system/resource/project/* .
 
 change web service configuration make `public` directory as the document root.
 
-**For Linux User** to make web service has the permission to modify web appliction directorys.
+> **For Linux User** to make web service has the permission to modify web appliction directorys.
+
 eg:
 ```bash
 sudo usermod -aG service_group user_name
@@ -62,9 +63,9 @@ visit the localhost to help the framework create a template application.
         - admin router (*module functions admin*)
         - simple router (*user web interface*)
     - another function module
-- install module
-- admin module
-- suda base admin module
+- install module (*for install this application*)
+- admin module (*the admin panel*)
+- suda base admin module (*admin suda（auto create when init this application）*)
 
 ## Historys Or Demos
 
