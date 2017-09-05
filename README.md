@@ -40,13 +40,11 @@ cp -R ./suda/system/resource/project/* .
 change web service configuration make `public` directory as the document root.
 
 > **For Linux User** to make web service has the permission to modify web appliction directorys.
-
-eg:
-```bash
-sudo usermod -aG service_group user_name
-sudo chmod g+rw application_directory
-sudo chmod g+rw document_directory
-```
+> ```bash
+> sudo usermod -aG service_group user_name
+> sudo chmod g+rw application_directory
+> sudo chmod g+rw document_directory
+> ```
 
 ### Step4 make the template application
 
