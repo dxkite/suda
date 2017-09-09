@@ -1,5 +1,5 @@
 #  Suda PHP Framework
-A simple PHP7 framework **only support php7 or new** , you can easy use this to make a module base application. 
+suda is a simple web framework for **PHP7**.
 
 ## Functions
 
@@ -11,8 +11,6 @@ A simple PHP7 framework **only support php7 or new** , you can easy use this to 
 - [x] Simple Smarty Like Template
 - [x] Response
 - [x] Simple Date Access Object
-
-
 
 
 ## Get Start
@@ -39,7 +37,7 @@ cp -R ./suda/system/resource/project/* .
 
 change web service configuration make `public` directory as the document root.
 
-> **For Linux User** to make web service has the permission to modify web appliction directorys.
+> **For Linux User** To make sure the web server has the permission to modify web appliction directorys.
 > ```bash
 > sudo usermod -aG service_group user_name
 > sudo chmod g+rw application_directory
@@ -48,7 +46,7 @@ change web service configuration make `public` directory as the document root.
 
 ### Step4 make the template application
 
-visit the localhost to help the framework create a template application.
+visit the localhost to help the framework to create a  template web application.
 
 ## Document
 
