@@ -215,4 +215,9 @@ abstract class Template
     {
         return is_bool($values) && $values ?$true:$false;
     }
+
+    public function getModule(){
+        preg_match('/^((?:[a-zA-Z0-9_-]+\/)?[a-zA-Z0-9_-]+)(?::([^:]+))?(?::(.+))?$/',$this->name,$match);
+        return isset($match[3])?$match[1].$match[2]:$match[1];
+    }
 }
