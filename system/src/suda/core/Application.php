@@ -323,6 +323,9 @@ class Application
         foreach ($dirs as $dir) {
             self::registerModule(MODULES_DIR.'/'.$dir);
         }
+        if(defined('DEBUG')&& DEBUG){
+            self::registerModule(SYSTEM_RESOURCE.'/dxkite-suda');
+        }
     }
 
     public static function registerModule(string $path){
