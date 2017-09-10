@@ -313,7 +313,9 @@ class Manager
         $modules=$modules??Application::getLiveModules();
         foreach ($modules as $module) {
             $root=self::getThemePath($module);
+            $app_root=self::getAppThemePath($module);
             self::compileModulleFile($module, $root, $root);
+            self::compileModulleFile($module, $app_root, $app_root);
             $init[$module]=Storage::cut(self::prepareResource($module,true),APP_PUBLIC);
         }
         _D()->timeEnd('init resource');
