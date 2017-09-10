@@ -524,6 +524,8 @@ class Router
         $module_use=Application::getLiveModules();
         sort($module_use);
         $hash=substr(md5(implode('-', $module_use)), 0, 8);
-        return TEMP_DIR.'/'.$hash.'-'.$name;
+        $path=CACHE_DIR.'/router/'.$hash;
+        Storage::path($path);
+        return $path.'/'.$name;
     }
 }
