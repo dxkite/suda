@@ -422,7 +422,7 @@ class DAO
     private function initTableFields()
     {
         // 使用DTO文件
-        $path=TEMP_DIR.'/db/fields/'.$this->tableName.'.php';
+        $path=CACHE_DIR.'/database/fields/'.$this->tableName.'.php';
         if (file_exists($path)) {
             $fieldsinfo=require $path;
             $this->setFields(array_keys($fieldsinfo['fields']));
