@@ -82,7 +82,6 @@ class SudaCompiler implements Compiler
         if (!Storage::isDir($dir=dirname($output))) {
             Storage::mkdirs(dirname($output));
         }
-
         $classname=Manager::className($name);
         $content='<?php  class '.$classname.' extends suda\template\compiler\suda\Template { protected $name="'.$name.'"; protected function _render_template() {  ?>'.$content.'<?php }}';
         Storage::put($output, $content);
@@ -264,7 +263,7 @@ class SudaCompiler implements Compiler
     {
         preg_match('/\((.+)\)/', $exp, $v);
         $name=str_replace('\'', '-', trim($v[1], '"\''));
-        return "<?php suda\\template\\Manager::display('{$name}')->parent(\$this)->assign(\$this->value)->render(); ?>";
+        return "<?php suda\\template\\Manager::include('{$name}',\$this)->render(); ?>";
     }
 
     protected function parseU($exp)
@@ -297,7 +296,7 @@ class SudaCompiler implements Compiler
             $match[1]=trim($match[1], '"\'');
             return '<?php echo suda\\template\\Manager::assetServer(\''.Manager::getStaticAssetPath(trim($match[1])).'\');?>';
         }
-        return '<?php echo suda\\template\\Manager::assetServer(suda\\template\\Manager::getStaticAssetPath()); ?>';
+        return '<?php echo suda\\template\\Manager::assetServer(suda\\template\\Manager::getStaticAssetPath($this->getModule())); ?>';
     }
 
     

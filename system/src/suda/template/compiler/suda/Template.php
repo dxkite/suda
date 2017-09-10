@@ -17,7 +17,8 @@ namespace suda\template\compiler\suda;
 
 use suda\tool\ArrayHelper;
 use suda\tool\Command;
-use suda\core\{Response,Router};
+use suda\core\Response;
+use suda\core\Router;
 use suda\core\Hook;
 use suda\exception\CommandException;
 
@@ -189,7 +190,7 @@ abstract class Template
                 }
             }
         } catch (CommandException $e) {
-            echo '<div style="color:red" title="'.__('can\'t run page hook %s %s', $e->getCmd(),$e->getMessage()).'">{:'.$e->getCmd().'}</div>';
+            echo '<div style="color:red" title="'.__('can\'t run page hook %s %s', $e->getCmd(), $e->getMessage()).'">{:'.$e->getCmd().'}</div>';
             return;
         }
         if (conf('app.showPageHook', false)) {
@@ -214,5 +215,16 @@ abstract class Template
     public function boolecho($values, string $true, string $false='')
     {
         return is_bool($values) && $values ?$true:$false;
+    }
+
+    public function getModule()
+    {
+        preg_match('/^((?:[a-zA-Z0-9_-]+\/)?[a-zA-Z0-9_-]+)(?::([^:]+))?(?::(.+))?$/', $this->name, $match);
+        return isset($match[3])?$match[1].(isset($match[2])?':'.$match[2]:''):$match[1];
+    }
+
+    public function getValue()
+    {
+        return $this->value;
     }
 }
