@@ -263,7 +263,7 @@ class SudaCompiler implements Compiler
     {
         preg_match('/\((.+)\)/', $exp, $v);
         $name=str_replace('\'', '-', trim($v[1], '"\''));
-        return "<?php suda\\template\\Manager::display('{$name}')->parent(\$this)->assign(\$this->value)->render(); ?>";
+        return "<?php suda\\template\\Manager::include('{$name}',\$this)->render(); ?>";
     }
 
     protected function parseU($exp)

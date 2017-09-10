@@ -238,7 +238,7 @@ class Manager
      */
     public static function file(string $name, $parent)
     {
-        list($module, $basename)=Router::parseName($name);
+        list($module, $basename)=Router::parseName($name,$parent->getModule());
         $input=self::getAppThemePath($module).'/'.$basename;
         if (!Storage::exist($input)) {
             $input=self::getThemePath($module).'/'.$basename;
@@ -268,6 +268,11 @@ class Manager
         $static_url=Storage::cut($outpath, APP_PUBLIC);
         $static_url=preg_replace('/[\\\\\/]+/', '/', $static_url);
         return  Request::hostBase().'/'.trim($static_url, '/');
+    }
+
+    public static function include(string $name,$parent) {
+        list($module_name, $basename)=Router::parseName($name,$parent->getModule());
+        return self::display($module_name.':'.$basename)->parent($parent)->assign($parent->getValue());
     }
 
     /**

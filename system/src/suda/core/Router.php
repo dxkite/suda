@@ -244,26 +244,29 @@ class Router
     /**
     * 解析模板名
     */
-    public static function parseName(string $name)
+    public static function parseName(string $name, string $module_default=null)
     {
         // MODULE_NAME_PREG
         // [模块前缀名称/]模块名[:版本号]:(模板名|路由ID)
-        preg_match('/^((?:[a-zA-Z0-9_-]+\/)?[a-zA-Z0-9_-]+)(?::([^:]+))?(?::(.+))?$/', $name, $match);
-        _D()->debug('parse module', $match);
-        // 单纯路由或者模板
-        if (isset($match[1]) && count($match)==2) {
-            $module=Application::getActiveModule();
+       preg_match('/^((?:[a-zA-Z0-9_-]+\/)?[a-zA-Z0-9_-]+)(?::([^:]+))?(?::(.+))?$/', $name, $match);
+        if (count($match)===0) {
+            $module=$module_default??Application::getActiveModule();
+            $info=$name;
+        } elseif (isset($match[1]) && count($match)==2) {
+            // 单纯路由或者模板
+                $module=$module_default??Application::getActiveModule();
             $info=$match[0];
         } else {
             $info=isset($match[3])?$match[3]:$match[2];
             $module=isset($match[3])?
-                        (isset($match[1])?
-                            $match[1].(
-                                $match[2]?
-                                ':'.$match[2]
-                                :'')
-                            :Application::getActiveModule())
-                    :$match[1];
+                            (isset($match[1])?
+                                $match[1].(
+                                    $match[2]?
+                                    ':'.$match[2]
+                                    :'')
+                                :($module_default??Application::getActiveModule()) // 未指定模板名
+                            )
+                        :$match[1];
         }
         return [$module,$info];
     }
@@ -520,7 +523,7 @@ class Router
     {
         $module_use=Application::getLiveModules();
         sort($module_use);
-        $hash=substr(md5(implode('-',$module_use)),0,8);
+        $hash=substr(md5(implode('-', $module_use)), 0, 8);
         return TEMP_DIR.'/'.$hash.'-'.$name;
     }
 }
