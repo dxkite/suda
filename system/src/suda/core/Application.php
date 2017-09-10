@@ -323,12 +323,13 @@ class Application
         foreach ($dirs as $dir) {
             self::registerModule(MODULES_DIR.'/'.$dir);
         }
-        if(defined('DEBUG')&& DEBUG){
-            self::registerModule(SYSTEM_RESOURCE.'/dxkite-suda');
+        if (defined('DEBUG') && DEBUG) {
+            self::registerModule(SYSTEM_RESOURCE.'/modules/dxkite-suda');
         }
     }
 
-    public static function registerModule(string $path){
+    public static function registerModule(string $path)
+    {
         if (Storage::exist($file=$path.'/module.json')) {
             $dir=basename($path);
             _D()->trace(__('load module config %s', $file));
