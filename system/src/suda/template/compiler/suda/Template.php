@@ -218,6 +218,6 @@ abstract class Template
 
     public function getModule(){
         preg_match('/^((?:[a-zA-Z0-9_-]+\/)?[a-zA-Z0-9_-]+)(?::([^:]+))?(?::(.+))?$/',$this->name,$match);
-        return isset($match[3])?$match[1].$match[2]:$match[1];
+        return isset($match[3])?$match[1].(isset($match[2])?':'.$match[2]:''):$match[1];   
     }
 }
