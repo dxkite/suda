@@ -239,6 +239,7 @@ class Manager
     public static function file(string $name, $parent)
     {
         list($module, $basename)=Router::parseName($name,$parent->getModule());
+        $name=$module.':'.$basename;
         $input=self::getAppThemePath($module).'/'.$basename;
         if (!Storage::exist($input)) {
             $input=self::getThemePath($module).'/'.$basename;
