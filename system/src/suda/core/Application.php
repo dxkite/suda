@@ -327,6 +327,10 @@ class Application
         return self::$module_configs;
     }
 
+    public static function getModulePath(string $module){
+        return MODULES_DIR.'/'. self::getModuleDir($module);
+    }
+
     public static function configDBify()
     {
         if (file_exists($path=RUNTIME_DIR.'/database.config.php')) {
