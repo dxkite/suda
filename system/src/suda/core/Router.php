@@ -518,6 +518,9 @@ class Router
 
     private function cacheFile(string $name):string
     {
-        return TEMP_DIR.'/'.ltrim($_SERVER['SCRIPT_NAME'], '/').'_'.$name;
+        $module_use=Application::getLiveModules();
+        sort($module_use);
+        $hash=substr(md5(implode('-',$module_use)),0,8);
+        return TEMP_DIR.'/'.$hash.'-'.$name;
     }
 }
