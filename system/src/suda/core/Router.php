@@ -66,8 +66,8 @@ class Router
     {
         $simple_routers=[];
         $admin_routers=[];
-        $module_dir=Application::getModuleDir($module);
-        _D()->trace(__('load module:%s [%s] path:%s', $module, Application::getModuleFullName($module), MODULES_DIR.'/'.$module_dir));
+        $module_path=Application::getModulePath($module);
+        _D()->trace(__('load module:%s [%s] path:%s', $module, Application::getModuleFullName($module),$module_path));
         list($admin_prefix, $prefix)=self::getModulePrefix($module);
         $module=Application::getModuleFullName($module);
         $prefix_it= function (&$router, $key, $prefixinfo) use ($module) {
@@ -79,13 +79,13 @@ class Router
             $router['module']=$module;
         };
         // 加载前台路由
-        if (Storage::exist($file=MODULES_DIR.'/'.$module_dir.'/resource/config/router.json')) {
+        if (Storage::exist($file=$module_path.'/resource/config/router.json')) {
             $simple_routers= self::loadModuleJson($module, $file);
             _D()->trace(__('loading simple route from file %s', $file));
             array_walk($simple_routers, $prefix_it, [false,$prefix]);
         }
         // 加载后台路由
-        if (Storage::exist($file=MODULES_DIR.'/'.$module_dir.'/resource/config/router_admin.json')) {
+        if (Storage::exist($file=$module_path.'/resource/config/router_admin.json')) {
             $admin_routers= self::loadModuleJson($module, $file);
             _D()->trace(__('loading admin route from file  %s', $file));
             array_walk($admin_routers, $prefix_it, [true,$admin_prefix]);
@@ -226,7 +226,7 @@ class Router
         $url=preg_replace('/\[(\S+)\]/', '(?:$1)?', $url);
         // 编译页面参数
         $url=preg_replace_callback('/\{(?:(\w+)(?::(\w+))?)(?:=(\w+))?\}([?])?/', function ($match) use ($name, &$types, $urltype) {
-            _D()->debug($match);
+            // _D()->debug($match);
             $size=isset($types[$name])?count($types[$name]):0;
             $param_name=$match[1]!==''?$match[1]:$size;
             $param_type=  $match[2] ?? 'string';
@@ -303,7 +303,7 @@ class Router
         list($module, $name)=self::parseName($name);
         $module=Application::getModuleFullName($module);
         $name=$module.':'.$name;
-        _D()->debug($name);
+        // _D()->debug($name);
         $url= '';
         if (isset($this->routers[$name])) {
             // 路由存在
@@ -341,7 +341,7 @@ class Router
         // Hook前置路由（自定义过滤器|自定义路由）
         if (Hook::execIf('Router:dispatch::before', [Request::getInstance()], true)) {
             if (($router_name=self::matchRouterMap())!==false) {
-                _D()->debug('dispatch match '.$router_name);
+                // _D()->debug('dispatch match '.$router_name);
                 _D()->timeEnd('dispatch');
                 Response::setName($router_name);
                 _D()->time('run router');

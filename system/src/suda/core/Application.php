@@ -203,9 +203,9 @@ class Application
         Hook::exec('Application:active', [$module]);
         _D()->trace(__('active module %s', $module));
         self::$active_module=$module;
-        $module_dir=self::getModuleDir($module);
+        $root=self::getModulePath($module);
         $module_config=self::getModuleConfig($module);
-        define('MODULE_RESOURCE', Storage::path(MODULES_DIR.'/'.$module_dir.'/resource'));
+        define('MODULE_RESOURCE', Storage::path($root.'/resource'));
         define('MODULE_LOCALES', Storage::path(MODULE_RESOURCE.'/locales'));
         define('MODULE_CONFIG', Storage::path(MODULE_RESOURCE.'/config'));
         _D()->trace(__('set locale %s', Config::get('app.locale', 'zh-CN')));
@@ -215,7 +215,7 @@ class Application
             Autoloader::setNamespace($module_config['namespace']);
         }
         // 自动加载私有库
-        Autoloader::addIncludePath(Storage::path(MODULES_DIR.'/'.$module_dir.'/src'));
+        Autoloader::addIncludePath(Storage::path($root.'/src'));
         // 加载模块配置到 module命名空间
         if (Storage::exist($path=MODULE_CONFIG.'/config.json')) {
             Config::set('module', Json::loadFile($path));
@@ -321,16 +321,21 @@ class Application
     {
         $dirs=Storage::readDirs(MODULES_DIR);
         foreach ($dirs as $dir) {
-            if (Storage::exist($file=MODULES_DIR.'/'.$dir.'/module.json')) {
-                _D()->trace(__('load module config %s', $file));
-                $json=Json::parseFile($file);
-                $name=$json['name'] ?? $dir;
-                $json['directory']=$dir;
-                $json['path']=MODULES_DIR.'/'.$dir;
-                $name.=isset($json['version'])?':'.$json['version']:'';
-                self::$module_configs[$name]=$json;
-                self::$module_dir_name[$dir]=$name;
-            }
+            self::registerModule(MODULES_DIR.'/'.$dir);
+        }
+    }
+
+    public static function registerModule(string $path){
+        if (Storage::exist($file=$path.'/module.json')) {
+            $dir=basename($path);
+            _D()->trace(__('load module config %s', $file));
+            $json=Json::parseFile($file);
+            $name=$json['name'] ?? $dir;
+            $json['directory']=$dir;
+            $json['path']=$path;
+            $name.=isset($json['version'])?':'.$json['version']:'';
+            self::$module_configs[$name]=$json;
+            self::$module_dir_name[$dir]=$name;
         }
     }
 

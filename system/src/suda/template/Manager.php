@@ -351,7 +351,7 @@ class Manager
         $name=preg_replace('/^('.preg_quote($root, '/').')?(.+)'.preg_quote(self::$extRaw, '/').'/', '$2', $path);
         $name=$module.':'.trim($name, '/');
         $success=self::compile($name);
-        _D()->debug(__('[%d] compiling ==> %s', $success, $name));
+        // _D()->debug(__('[%d] compiling ==> %s', $success, $name));
         return $success;
     }
 

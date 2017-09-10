@@ -224,7 +224,7 @@ End;
                 self::log('import module >  '.$module);
                 self::execFile($datafile);
             } else {
-                _D()->debug("file no found :${datafile}");
+                _D()->warning("file no found :${datafile}");
             }
         }
         return $this;
@@ -268,7 +268,7 @@ End;
             self::log('create module tables > '.$create);
             self::execFile($create);
         } else {
-            _D()->debug("file no found :${create}");
+            _D()->warning("file no found :${create}");
         }
     }
 
@@ -277,9 +277,9 @@ End;
     {
         $module_dir=Application::getModuleDir($module);
         $table_names=[];
-        $dto_path=MODULES_DIR.'/'.$module_dir.'/resource/dto';
+        $dto_path=Application::getModulePath($module).'/resource/dto';
         if (!Storage::isDir($dto_path)) {
-            _D()->debug("not exist {$dto_path}\r\n");
+            _D()->warning("not exist {$dto_path}\r\n");
             return;
         }
         $create= $this->dirname.'/create/'.$module_dir.'.php';
