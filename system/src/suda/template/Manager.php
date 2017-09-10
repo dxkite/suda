@@ -338,7 +338,7 @@ class Manager
                 }
                 if (is_file($path) && preg_match('/\.tpl\..+$/',$path)) {
                     self::compileFile($path, $module, $root);
-                } else {
+                } elseif(is_dir($path)) {
                     self::compileModulleFile($module, $root, $path);
                 }
             }
