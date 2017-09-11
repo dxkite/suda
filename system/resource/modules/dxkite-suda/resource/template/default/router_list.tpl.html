@@ -42,7 +42,7 @@
                         <tr @b(!isset($item['role']),'class="table-info"')>
                             <td>{{$id}}</td>
                             <td> @if(isset($item['method'])) {{ implode(',',$item['method']) }} @else ALL @endif</td>
-                            <td> <a href="@u($module.':'.$id)" target="_blank">{{ $item['visit'] }}</a></td>
+                            <td> <a href="@u($id)" target="_blank">{{ $item['visit'] }}</a></td>
                             <td> {{ $item['role']??'-' }} </td>
                             <td> {{ $item['class'] }} </td>
                             <td>
