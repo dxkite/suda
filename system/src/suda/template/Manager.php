@@ -108,7 +108,7 @@ class Manager
                 return;
             }
         } elseif (!Storage::exist($viewpath)) {
-            echo '<b>missing theme</b> &lt;<span style="color:red;">'.self::$theme.'</span>&gt; template file '.$name.'  location '. Storage::cut($viewpath,DATA_DIR). '</br>';
+            echo '<b>missing theme</b> &lt;<span style="color:red;">'.self::$theme.'</span>&gt; template file '.$name.'  location '. Storage::cut($viewpath, DATA_DIR). '</br>';
             return;
         }
         return self::displayFile($viewpath, $name);
@@ -130,7 +130,7 @@ class Manager
     /**
     * 准备静态资源
     */
-    public static function prepareResource(string $module,bool $force=false)
+    public static function prepareResource(string $module, bool $force=false)
     {
         Hook::exec('Manager:prepareResource::before', [$module]);
         // 非Debug不更新资源
@@ -148,14 +148,15 @@ class Manager
         return $path;
     }
 
-    private static function getPublicModulePath(string $module){
+    private static function getPublicModulePath(string $module)
+    {
         $module_dir=Application::getModuleDir($module);
         return Storage::path(APP_PUBLIC.'/'.self::$staticPath.'/'.self::shadowName($module_dir));
     }
 
     public static function shadowName(string $name)
     {
-        return substr(md5($name),0,8);
+        return substr(md5($name), 0, 8);
     }
 
     /**
@@ -166,8 +167,7 @@ class Manager
      */
     public static function getThemePath(string $module):string
     {
-        $module_dir=Application::getModuleDir($module);
-        $theme=MODULES_DIR.'/'.  $module_dir.'/resource/template/'.self::$theme;
+        $theme=Application::getModulePath($module).'/resource/template/'.self::$theme;
         return Storage::path($theme);
     }
 
@@ -180,7 +180,7 @@ class Manager
     public static function getAppThemePath(string $module):string
     {
         $module_name=Application::getModuleName($module);
-        $theme=RESOURCE_DIR.'/template/'.self::$theme.'/'.  $module_name;
+        $theme=RESOURCE_DIR.'/template/'.self::$theme.'/'.$module_name;
         return Storage::path($theme);
     }
 
@@ -238,7 +238,7 @@ class Manager
      */
     public static function file(string $name, $parent)
     {
-        list($module, $basename)=Router::parseName($name,$parent->getModule());
+        list($module, $basename)=Router::parseName($name, $parent->getModule());
         $name=$module.':'.$basename;
         $input=self::getAppThemePath($module).'/'.$basename;
         if (!Storage::exist($input)) {
@@ -271,8 +271,9 @@ class Manager
         return  Request::hostBase().'/'.trim($static_url, '/');
     }
 
-    public static function include(string $name,$parent) {
-        list($module_name, $basename)=Router::parseName($name,$parent->getModule());
+    public static function include(string $name, $parent)
+    {
+        list($module_name, $basename)=Router::parseName($name, $parent->getModule());
         return self::display($module_name.':'.$basename)->parent($parent)->assign($parent->getValue());
     }
 
@@ -286,7 +287,6 @@ class Manager
     {
         list($module, $basename)=Router::parseName($name);
         $input=self::getAppThemePath($module).'/'.trim($basename, '/');
-        // _D()->info($input);
         if (Storage::exist($input)) {
             return $input;
         }
@@ -307,7 +307,8 @@ class Manager
         return $output;
     }
 
-    public static function className(string $name) {
+    public static function className(string $name)
+    {
         list($module, $basename)=Router::parseName($name);
         return 'Template_'.md5($basename);
     }
@@ -318,11 +319,14 @@ class Manager
         $init=[];
         $modules=$modules??Application::getLiveModules();
         foreach ($modules as $module) {
+            if (!Application::checkModuleExist($module)) {
+                continue;
+            }
             $root=self::getThemePath($module);
             $app_root=self::getAppThemePath($module);
             self::compileModulleFile($module, $root, $root);
             self::compileModulleFile($module, $app_root, $app_root);
-            $init[$module]=Storage::cut(self::prepareResource($module,true),APP_PUBLIC);
+            $init[$module]=Storage::cut(self::prepareResource($module, true), APP_PUBLIC);
         }
         _D()->timeEnd('init resource');
         return $init;
@@ -337,9 +341,9 @@ class Manager
                 if (preg_match('/'.preg_quote($root.'/static', '/').'/', $path)) {
                     continue;
                 }
-                if (is_file($path) && preg_match('/\.tpl\..+$/',$path)) {
+                if (is_file($path) && preg_match('/\.tpl\..+$/', $path)) {
                     self::compileFile($path, $module, $root);
-                } elseif(is_dir($path)) {
+                } elseif (is_dir($path)) {
                     self::compileModulleFile($module, $root, $path);
                 }
             }
@@ -365,9 +369,9 @@ class Manager
         return  '/'.$static_url;
     }
 
-    public static function assetServer(string $url){
-        return conf('asset-server',Request::hostBase()).$url;
+    public static function assetServer(string $url)
+    {
+        return conf('asset-server', Request::hostBase()).$url;
     }
 }
 
-// Manager::initResource();

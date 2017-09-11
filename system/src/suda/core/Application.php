@@ -73,6 +73,7 @@ class Application
         set_time_limit(Config::get('timelimit', 0));
         // 设置时区
         date_default_timezone_set(Config::get('timezone', 'PRC'));
+        // 设置默认命名空间
         Autoloader::setNamespace(Config::get('app.namespace'));
         // 系统共享库
         Autoloader::addIncludePath(SHRAE_DIR);
@@ -86,11 +87,6 @@ class Application
         // 初次运行初始化资源
         if (conf('app.init')) {
             init_resource();
-            if (!conf('debug', false)) {
-                // 内置管理模块
-                // 安装模块（用户自定义）
-                init_resource(['suda','install']);
-            }
         }
     }
 
@@ -162,8 +158,7 @@ class Application
 
     public static function checkModuleExist(string $name)
     {
-        $module_dir=Application::getModuleDir($name);
-        return Storage::isDir(MODULES_DIR.'/'.$module_dir);
+        return Application::getModuleDir($name)!=false;
     }
 
     public static function getLiveModules()
@@ -176,7 +171,8 @@ class Application
         foreach ($exclude as $index=>$name) {
             $exclude[$index]=Application::getModuleFullName($name);
         }
-        _D()->trace('exclude', json_encode($exclude));
+        // _D()->trace('modules', json_encode($modules));
+        // _D()->trace('exclude', json_encode($exclude));
         foreach ($modules as $index => $name) {
             $fullname=Application::getModuleFullName($name);
             // 剔除模块名
@@ -230,6 +226,9 @@ class Application
     
     public static function onShutdown()
     {
+        // TODO: CACHE Appication Info
+        // ArrayHelper::export(CACHE_DIR.'/module_configs.cache.php','module_configs',self::$module_configs);
+        // ArrayHelper::export(CACHE_DIR.'/module_dir_name.cache.php','module_dir_name',self::$module_dir_name);
     }
 
     public static function uncaughtException($e)
@@ -299,6 +298,7 @@ class Application
         if (isset(self::$module_configs[$name])) {
             return self::$module_configs[$name]['directory'];
         }
+        return false;
     }
 
     /**
@@ -323,7 +323,8 @@ class Application
         foreach ($dirs as $dir) {
             self::registerModule(MODULES_DIR.'/'.$dir);
         }
-        if (defined('DEBUG') && DEBUG) {
+        // 自动注册suda管理模块
+        if (defined('DEBUG') && DEBUG ) {
             self::registerModule(SYSTEM_RESOURCE.'/modules/dxkite-suda');
         }
     }
@@ -350,7 +351,11 @@ class Application
 
     public static function getModulePath(string $module)
     {
-        return MODULES_DIR.'/'. self::getModuleDir($module);
+        $name=self::getModuleFullName($module);
+        if (isset(self::$module_configs[$name])) {
+            return self::$module_configs[$name]['path'];
+        }
+        return false;
     }
 
     private static function configDBify()

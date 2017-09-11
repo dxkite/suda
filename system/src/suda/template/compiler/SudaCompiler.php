@@ -76,6 +76,7 @@ class SudaCompiler implements Compiler
     {
         _D()->time('compile '.$name);
         if (!Storage::exist($input)) {
+            _D()->warning(__('compile_error:no sorce file => %s %s',$name,$input));
             return false;
         }
         $content= $this->compileText(Storage::get($input));
