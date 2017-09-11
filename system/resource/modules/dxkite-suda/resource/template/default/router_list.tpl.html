@@ -26,7 +26,7 @@
 
             </ul>
             <div class="table-responsive">
-                <table class="table table-striped">
+                <table class="table table-striped table-sm">
                     <thead>
                         <tr>
                             <th>引用ID</th>
@@ -39,7 +39,7 @@
                     </thead>
                     <tbody>
                         @foreach ($infos as $id=>$item)
-                        <tr>
+                        <tr @b(!isset($item['role']),'class="table-info"')>
                             <td>{{$id}}</td>
                             <td> @if(isset($item['method'])) {{ implode(',',$item['method']) }} @else ALL @endif</td>
                             <td> <a href="@u($module.':'.$id)" target="_blank">{{ $item['visit'] }}</a></td>
