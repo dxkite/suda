@@ -28,7 +28,7 @@ use suda\tool\Json;
 
 class RouterManager
 {
-    protected static $routerinfos=[];
+    protected static $routerinfos=null;
     protected static $configs=[];
     protected static $urltype=['int'=>'\d+','string'=>'[^\/]+','url'=>'.+'];
     /**
@@ -236,20 +236,20 @@ class RouterManager
     {
         return Application::getLiveModules()??[];
     }
+
     /**
     * 列出路由
     */
     public static function getInfo(string $gmod=null)
     {
-        self::$routerinfos=[];
-        $modules=self::getModules();
-        foreach ($modules as $module) {
-            self::load($module);
+        
+        if(is_null(self::$routerinfos)){
+            $routerinfos=Router::getInstance()->getRouters();
+            foreach($routerinfos as $id=>$infos){
+                self::$routerinfos[$infos['module']][$id]=$infos;
+            }
         }
-        if (is_null($gmod)) {
-            return self::$routerinfos;
-        }
-        return self::$routerinfos[$gmod]??null;
+        return $gmod?self::$routerinfos[$gmod]:self::$routerinfos;
     }
 
 

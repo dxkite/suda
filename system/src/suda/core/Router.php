@@ -76,6 +76,7 @@ class Router
                 $prefix.=$prefixinfo[1];
             }
             $router['visit']='/'.trim($prefix.$router['visit'], '/');
+            $router['role']=$prefixinfo[0]?'admin':'simple';
             $router['module']=$module;
         };
         // 加载前台路由
@@ -517,6 +518,10 @@ class Router
             }
         };
         $render->onRequest(Request::getInstance());
+    }
+
+    public function getRouters(){
+        return $this->routers;
     }
 
     private function cacheFile(string $name):string
