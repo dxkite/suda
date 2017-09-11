@@ -28,7 +28,7 @@ use suda\tool\Json;
 
 class RouterManager
 {
-    protected static $routerinfos=[];
+    protected static $routerinfos=null;
     protected static $configs=[];
     protected static $urltype=['int'=>'\d+','string'=>'[^\/]+','url'=>'.+'];
     /**
@@ -42,10 +42,10 @@ class RouterManager
         if (!$info) {
             return false;
         }
-        $module_dir=Application::getModuleDir($module);
+        $module_path=Application::getModulePath($module);
         $admin=$info['role']==='admin';
         $name=$info['name'];
-        $router_file=MODULES_DIR.'/'.$module_dir.'/resource/config/router'.($admin?'_admin':'').'.json';
+        $router_file= $module_path.'/resource/config/router'.($admin?'_admin':'').'.json';
         _D()->info(__('路由文件:%s', $router_file));
         if (Storage::exist($router_file)) {
             $json=Json::loadFile($router_file);
@@ -56,8 +56,7 @@ class RouterManager
             _D()->warning(__('无法找到路由%s', $name));
             return false;
         }
-        
-        $class_path=MODULES_DIR.'/'.$module_dir.'/src/'.$info['class'].'.php';
+        $class_path= $module_path.'/src/'.$info['class'].'.php';
         if (($class_path=Storage::abspath($class_path)) && $deleteall) {
             _D()->info($class_path);
             Storage::remove($class_path);
@@ -109,7 +108,7 @@ class RouterManager
         $module_dir=Application::getModuleDir($module);
         $module_config=Application::getModuleConfig($module);
         // 路由位置
-        $router_file=MODULES_DIR.'/'.$module_dir.'/resource/config/router'.($admin?'_admin':'').'.json';
+        $router_file=Application::getModulePath($module).'/resource/config/router'.($admin?'_admin':'').'.json';
         // 命名空间
         $namespace=$module_config['namespace']??conf('app.namespace');
 
@@ -130,11 +129,11 @@ class RouterManager
         $pos=strrpos($class, '\\');
         $class_namespace=substr($class, 0, $pos);
         $class_name=substr($class, $pos+1);
-        $class_path=MODULES_DIR.'/'.$module_dir.'/src/'.$class_namespace;
+        $class_path=Application::getModulePath($module).'/src/'.$class_namespace;
         $class_file=$class_path.'/'.$class_name.'.php';
         $return['class']=$class_file;
         $template_name=self::createTplName(preg_replace('/^(.+)Response$/i','$1',$class_short));
-        $template_file=MODULES_DIR.'/'.$module_dir.'/resource/template/default/'.$template_name.'.tpl.html';
+        $template_file=Application::getModulePath($module).'/resource/template/default/'.$template_name.'.tpl.html';
         $class_template_file=MODULE_RESOURCE.'/data/'.($json?'/class_json.php':'/class_html.php');
         $class_template= Storage::get($class_template_file);
         
@@ -237,20 +236,20 @@ class RouterManager
     {
         return Application::getLiveModules()??[];
     }
+
     /**
     * 列出路由
     */
     public static function getInfo(string $gmod=null)
     {
-        self::$routerinfos=[];
-        $modules=self::getModules();
-        foreach ($modules as $module) {
-            self::load($module);
+        
+        if(is_null(self::$routerinfos)){
+            $routerinfos=Router::getInstance()->getRouters();
+            foreach($routerinfos as $id=>$infos){
+                self::$routerinfos[$infos['module']][$id]=$infos;
+            }
         }
-        if (is_null($gmod)) {
-            return self::$routerinfos;
-        }
-        return self::$routerinfos[$gmod]??null;
+        return $gmod?self::$routerinfos[$gmod]:self::$routerinfos;
     }
 
 
@@ -272,7 +271,7 @@ class RouterManager
         $simple_routers=[];
         $admin_routers=[];
         $module_dir=Application::getModuleDir($module);
-        _D()->trace(__('load module:%s [%s] path:%s', $module, Application::getModuleFullName($module), MODULES_DIR.'/'.$module_dir));
+        _D()->trace(__('load module:%s [%s] path:%s', $module, Application::getModuleFullName($module), Application::getModulePath($module)));
         list($admin_prefix, $prefix)=Router::getModulePrefix($module);
         $module=Application::getModuleFullName($module);
         $prefix_it= function (&$router, $key, $prefixinfo) use ($module) {
@@ -285,17 +284,18 @@ class RouterManager
             $router['role']=$prefixinfo[0]?'admin':'simple';
         };
         // 加载前台路由
-        if (Storage::exist($file=MODULES_DIR.'/'.$module_dir.'/resource/config/router.json')) {
+        if (Storage::exist($file=Application::getModulePath($module).'/resource/config/router.json')) {
             $simple_routers= self::loadModuleJson($module, $file);
             array_walk($simple_routers, $prefix_it, [false,$prefix]);
         }
         // 加载后台路由
-        if (Storage::exist($file=MODULES_DIR.'/'.$module_dir.'/resource/config/router_admin.json')) {
+        if (Storage::exist($file=Application::getModulePath($module).'/resource/config/router_admin.json')) {
             $admin_routers= self::loadModuleJson($module, $file);
             array_walk($admin_routers, $prefix_it, [true,$admin_prefix]);
         }
         self::$routerinfos[$module]=array_merge($admin_routers, $simple_routers);
     }
+    
     protected static function createTplName(string $name)
     {
         $name=strtolower(preg_replace('/([A-Z])/', '_$1', $name));

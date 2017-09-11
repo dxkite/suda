@@ -26,7 +26,7 @@
 
             </ul>
             <div class="table-responsive">
-                <table class="table table-striped">
+                <table class="table table-striped table-sm">
                     <thead>
                         <tr>
                             <th>引用ID</th>
@@ -39,63 +39,64 @@
                     </thead>
                     <tbody>
                         @foreach ($infos as $id=>$item)
-                        <tr>
+                        <tr @b(!isset($item['role']),'class="table-info"')>
                             <td>{{$id}}</td>
                             <td> @if(isset($item['method'])) {{ implode(',',$item['method']) }} @else ALL @endif</td>
-                            <td> <a href="@u($module.':'.$id)" target="_blank">{{ $item['visit'] }}</a></td>
-                            <td> {{ $item['role'] }} </td>
+                            <td> <a href="@u($id)" target="_blank">{{ $item['visit'] }}</a></td>
+                            <td> {{ $item['role']??'-' }} </td>
                             <td> {{ $item['class'] }} </td>
                             <td>
+                                @if(isset($item['role']))
                                 <a href="@u('suda:router_edit',['edit'=>$id,'module'=>$module])">编辑</a>
-                                <a class="delete" href="#" data-name="{{$module}}:{{$id}}" data-delete="@u('suda:router_list',['delete'=>$id,'module'=>$module])" data-delete-all="@u('suda:router_list',['delete'=>$id,'module'=>$module,'all'=>'yes'])">删除</a>
+                                <a class="delete" href="#" data-name="{{$module}}:{{$id}}" data-delete="@u('suda:router_list',['delete'=>$id,'module'=>$module])"
+                                    data-delete-all="@u('suda:router_list',['delete'=>$id,'module'=>$module,'all'=>'yes'])">删除</a>                                @else @_('运行时生成') @endif
                             </td>
                         </tr>
                         @endforeach
                     </tbody>
                 </table>
-                @endforeach
-
-                <div class="modal fade" id="delete-panel" tabindex="-1" role="dialog" aria-labelledby="deleteWindow" aria-hidden="true">
-                    <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="exampleModalLabel">删除提示</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            </div>
+            @endforeach
+        </main>
+        <div class="modal fade" id="delete-panel" tabindex="-1" role="dialog" aria-labelledby="deleteWindow" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">删除提示</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                             </button>
-                            </div>
-                            <div class="modal-body">
-                                你确定要删除路由<span id="panel-name"></span>？
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-danger" >删除路由及响应</button>
-                                <button type="button" class="btn btn-primary">删除路由</button>
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
-                            </div>
-                        </div>
+                    </div>
+                    <div class="modal-body">
+                        你确定要删除路由<span id="panel-name"></span>？
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger">删除路由及响应</button>
+                        <button type="button" class="btn btn-primary">删除路由</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
                     </div>
                 </div>
-
             </div>
-        </main>
+        </div>
+
     </div>
 </div>
 @endInsert @startInsert('bs-footer')
 <script>
     $(function () {
-        $('.delete').on('click',function(){
-            var panel=$('#delete-panel');
+        $('.delete').on('click', function () {
+            var panel = $('#delete-panel');
             panel.modal('show');
             panel.find('#panel-name').text(this.dataset.name);
-            var url_delete=this.dataset.delete;
-            var url_delete_all=this.dataset.deleteAll;
-            panel.find('.btn-primary').on('click',function(){
+            var url_delete = this.dataset.delete;
+            var url_delete_all = this.dataset.deleteAll;
+            panel.find('.btn-primary').on('click', function () {
                 $(this).text("删除中");
-                location.href=url_delete;
+                location.href = url_delete;
             });
-            panel.find('.btn-danger').on('click',function(){
+            panel.find('.btn-danger').on('click', function () {
                 $(this).text("删除中");
-                location.href=url_delete_all;
+                location.href = url_delete_all;
             });
         });
     });

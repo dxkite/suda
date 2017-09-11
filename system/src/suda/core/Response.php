@@ -154,7 +154,7 @@ abstract class Response
  
     public function go(string $url)
     {
-        _D()->debug($url);
+        // _D()->debug($url);
         $this->setHeader('Location:'.$url);
     }
 
