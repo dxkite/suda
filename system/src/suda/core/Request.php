@@ -50,7 +50,7 @@ final class Request
         if (self::$json) {
             return self::$json;
         }
-        if (!self::isJson()) {
+        if (!self::isJson() || self::isGet() ) {
             return null;
         }
         $str=self::input();

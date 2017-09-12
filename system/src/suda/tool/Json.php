@@ -14,7 +14,7 @@
  * @version    since 1.2.4
  */
 namespace suda\tool;
-
+use cn\atd3\exception\JSONException;
 
 class Json
 {
@@ -32,7 +32,7 @@ class Json
         $json=self::parseComments($json);
         $value=json_decode($json, $assoc, $depth, $options);
         if (json_last_error()!==JSON_ERROR_NONE){
-            throw new \RuntimeException(  self::$error[json_last_error()] ?? 'Unknown error');
+            throw new JSONException(self::$error[json_last_error()] ?? 'Unknown error');
         }
         return $value;
     }
@@ -45,7 +45,7 @@ class Json
     public static function parseFile(string $path)
     {
         if (!file_exists($path)){
-            throw new \RuntimeException("File $path No Find");
+            throw new JSONException("File {$path} No Found");
         }
         $content=file_get_contents($path);
         return self::decode($content, true);
