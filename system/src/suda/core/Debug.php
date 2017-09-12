@@ -46,7 +46,7 @@ class Debug
     public static function init()
     {
         self::$hash=substr(md5(microtime().''.Request::ip()), 0, 8);
-        self::$file=APP_LOG.'/'.self::$hash.'.tmp';
+        self::$file=APP_LOG.'/tmps/'.self::$hash.'.tmp';
         Storage::mkdirs(dirname(self::$file));
         touch(self::$file);
     }
