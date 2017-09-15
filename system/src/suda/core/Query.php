@@ -121,7 +121,7 @@ class Query extends SQLQuery
         return (new SQLQuery($sql, $binds))->exec();
     }
 
-    protected static function prepareIn(string $name, array $invalues, string $prefix='in_')
+    public static function prepareIn(string $name, array $invalues, string $prefix='in_')
     {
         $count=0;
         $names=[];
@@ -132,7 +132,7 @@ class Query extends SQLQuery
             $names[]=':'.$bname;
         }
         $sql=$name.' IN ('.implode(',', $names).')';
-        return ['sql'=>$sql,'param'=>$param];
+        return [$sql,$param];
     }
 
     public static function prepareWhere($where, array &$bind)
@@ -146,9 +146,9 @@ class Query extends SQLQuery
                 $bname=$name.'_'.($count++);
                 // in cause
                 if (is_array($value)) {
-                    $in=self::prepareIn($name, $value);
-                    $and[]=$in['sql'];
-                    $param=array_merge($param, $in['param']);
+                    list($sql,$in_param)=self::prepareIn($name, $value);
+                    $and[]=$sql;
+                    $param=array_merge($param,$in_param);
                 } else {
                     $and[]="`{$name}`=:{$bname}";
                     $param[$bname]=$value;
