@@ -423,7 +423,7 @@ class DAO
     {
         // 使用DTO文件
         $path=CACHE_DIR.'/database/fields/'.$this->tableName.'.php';
-        if (file_exists($path)) {
+        if (file_exists($path) && !conf('debug')) {
             $fieldsinfo=require $path;
             $this->setFields(array_keys($fieldsinfo['fields']));
             $this->setPrimaryKey($fieldsinfo['primaryKey']);
