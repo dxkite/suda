@@ -214,6 +214,7 @@ class Storage
     {
         $name=self::tpath($name);
         if (self::isDir(dirname($name))) {
+            _D()->trace(__('put file %s',$name));
             return file_put_contents($name, $content, $flags);
         }
         return false;

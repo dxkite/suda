@@ -227,4 +227,8 @@ abstract class Template
     {
         return $this->value;
     }
+
+    public function getResponse(){
+        return $this->response;
+    }
 }

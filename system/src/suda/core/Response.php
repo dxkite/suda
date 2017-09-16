@@ -29,7 +29,8 @@ abstract class Response
     private static $status =null;
     private static $mime;
     public static $name;
-
+    protected $type;
+    
     public function __construct()
     {
         // Mark Version
