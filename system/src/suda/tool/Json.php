@@ -14,7 +14,7 @@
  * @version    since 1.2.4
  */
 namespace suda\tool;
-use cn\atd3\exception\JSONException;
+use suda\exception\JSONException;
 
 class Json
 {

@@ -86,7 +86,10 @@ class Manager
     public static function compile(string $name)
     {
         self::loadCompile();
-        return self::$compiler->compile($name, self::getInputPath($name), self::getOutputPath($name));
+        if ($path=self::getInputPath($name)) {
+            return self::$compiler->compile($name, $path, self::getOutputPath($name));
+        }
+        return false;
     }
 
     /**
@@ -140,11 +143,20 @@ class Manager
         $module_dir=Application::getModuleDir($module);
         // 向下兼容
         defined('APP_PUBLIC') or define('APP_PUBLIC', Storage::path('.'));
-        $static_path=Storage::path(self::getThemePath($module).'/static');
-        $app_static_path=Storage::path(self::getAppThemePath($module).'/static');
         $path=self::getPublicModulePath($module);
-        self::copyStatic($static_path, $path);
-        self::copyStatic($app_static_path, $path);
+
+        
+        if ($theme_path=self::getThemePath($module)) {
+            if ($static_path=Storage::abspath($theme_path.'/static')) {
+                self::copyStatic($static_path, $path);
+            }
+        }
+
+        if ($app_static_path=self::getAppThemePath($module)) {
+            if ($static_path=Storage::abspath($theme_path.'/static')) {
+                self::copyStatic($app_static_path, $path);
+            }
+        }
         return $path;
     }
 
@@ -168,7 +180,7 @@ class Manager
     public static function getThemePath(string $module):string
     {
         $theme=Application::getModulePath($module).'/resource/template/'.self::$theme;
-        return Storage::path($theme);
+        return Storage::abspath($theme);
     }
 
     /**
@@ -181,7 +193,7 @@ class Manager
     {
         $module_name=Application::getModuleName($module);
         $theme=RESOURCE_DIR.'/template/'.self::$theme.'/'.$module_name;
-        return Storage::path($theme);
+        return Storage::abspath($theme);
     }
 
     /**
@@ -190,7 +202,7 @@ class Manager
      * @param string $name
      * @return string
      */
-    public static function getInputPath(string $name):string
+    public static function getInputPath(string $name)
     {
         return self::getInputFile($name.self::$extRaw);
     }
@@ -240,10 +252,22 @@ class Manager
     {
         list($module, $basename)=Router::parseName($name, $parent->getModule());
         $name=$module.':'.$basename;
-        $input=self::getAppThemePath($module).'/'.$basename;
-        if (!Storage::exist($input)) {
-            $input=self::getThemePath($module).'/'.$basename;
+        $input=false;
+
+        if (self::getAppThemePath($module)) {
+            $input=$app_theme.'/'.$basename;
         }
+
+        if (!Storage::exist($input)) {
+            if ($module_theme=self::getThemePath($module)) {
+                $input=$module_theme.'/'.$basename;
+            } else {
+                echo '<b>compile theme &lt;<span style="color:red;">'.self::$theme.'</span>&gt; file '.$input. ' missing file</b>';
+                return; //文件目录不存在
+            }
+        }
+
+        // 获取文件夹
         $module_dir=Application::getModuleDir($module);
         // 获取输出
         $output=VIEWS_DIR.'/'. $module_dir .'/'.$basename.self::$extCpl;
@@ -283,14 +307,22 @@ class Manager
      * @param string $name
      * @return string
      */
-    public static function getInputFile(string $name):string
+    public static function getInputFile(string $name)
     {
         list($module, $basename)=Router::parseName($name);
-        $input=self::getAppThemePath($module).'/'.trim($basename, '/');
-        if (Storage::exist($input)) {
-            return $input;
+        if ($app_theme=self::getAppThemePath($module)) {
+            $input=$app_theme.'/'.trim($basename, '/');
+            if (Storage::exist($input)) {
+                return $input;
+            }
         }
-        return self::getThemePath($module).'/'.$basename;
+        if ($path=self::getThemePath($module)) {
+            $input= $path.'/'.$basename;
+            if (Storage::exist($input)) {
+                return $input;
+            }
+        }
+        return false;
     }
 
     /**
@@ -322,10 +354,12 @@ class Manager
             if (!Application::checkModuleExist($module)) {
                 continue;
             }
-            $root=self::getThemePath($module);
-            $app_root=self::getAppThemePath($module);
-            self::compileModulleFile($module, $root, $root);
-            self::compileModulleFile($module, $app_root, $app_root);
+            if($root=self::getThemePath($module)){
+                self::compileModulleFile($module, $root, $root);
+            }
+            if($app_root=self::getAppThemePath($module)){
+                self::compileModulleFile($module, $app_root, $app_root);
+            }
             $init[$module]=Storage::cut(self::prepareResource($module, true), APP_PUBLIC);
         }
         _D()->timeEnd('init resource');
@@ -374,4 +408,3 @@ class Manager
         return conf('asset-server', Request::hostBase()).$url;
     }
 }
-
