@@ -42,7 +42,8 @@ class Debug
     protected static $hash;
     private static $file;
     private static $latest=APP_LOG.'/latest.log';
-    
+    private static $saved=false;
+
     public static function init()
     {
         self::$hash=substr(md5(microtime().''.Request::ip()), 0, 8);
@@ -171,13 +172,23 @@ class Debug
         // echo "<div class=\"suda-error\"><b>{$e->getName()}</b>: {$e->getMessage()} at {$e->getFile()}#{$e->getLine()}</div>";
         $line=$e->getLine();
         $file=$e->getFile();
-
+        $backtrace=$e->getBacktrace();
+        return self::displayLog(['line'=>$line,'file'=>$file,'backtrace'=>$backtrace,'name'=>$e->getName(),'message'=>$e->getMessage()]);
+    }
+    
+    protected static function displayLog(array $logarray){
+        
+        /* ---- 外部变量 ----- */
+        $line=$logarray['line'];
+        $file=$logarray['file'];
+        $backtrace=$logarray['backtrace'];
+        $name=$logarray['name'];
+        $message=$logarray['message'];
+ 
         $pos_num = $line - 1;
         $code_file = file($file);
         $start = $line - 5 < 0 ? 0 : $line - 5;
         $lines = array_slice($code_file, $start, 10, true);
-        $backtrace=$e->getBacktrace();
-        
         foreach ($backtrace as $trace) {
             $print = null;
             if (isset($trace['file'])) {
@@ -231,8 +242,8 @@ class Debug
         $render->onRequest(Request::getInstance());
         $debug=self::getInfo();
         $render->template->assign([
-                'erron'=>$e->getName(),
-                'error'=>$e->getMessage(),
+                'erron'=>$name,
+                'error'=>$message,
                 'file'=>$file,
                 'line'=>$line,
                 'time'=> $debug['time'].'S',
@@ -269,6 +280,7 @@ class Debug
         $body=file_get_contents(self::$file);
         file_put_contents(self::$latest, "\r\n".$head."\r\n".$body, FILE_APPEND);
         unlink(self::$file);
+        self::$saved=true;
         if (defined('LOG_JSON') && LOG_JSON) {
             $loginfo=self::getInfo();
             $loginfo['request']=[
@@ -285,8 +297,9 @@ class Debug
 
     private static function writeLine(array $log)
     {
-        if (is_null(self::$file)) {
-            return;
+        if(self::$saved || is_null(self::$file)){
+            // 无法记录错误时直接显示错误
+            return self::displayLog($log);
         }
         $str="\t[".number_format($log['time'], 10).'S:'.self::memshow($log['mem'], 2).']'."\t".$log['level'].'>In '.$log['file'].'#'.$log['line']."\t\t".$log['name']."\t".$log['message']."\r\n";
         // 添加调用栈 高级或者同级则记录
