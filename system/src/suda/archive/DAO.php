@@ -157,7 +157,7 @@ class DAO
         $binds=[];
         $where_str=Query::prepareWhere($where, $binds);
         $where=preg_replace('/WHERE(.+)$/', '$1', $where_str).' '.self::_order();
-        if (is_null($where_str)) {
+        if (is_null($page)) {
             return Query::where($this->getTableName(), $this->getWants(), $where, $binds)->fetchAll();
         } else {
             return Query::where($this->getTableName(), $this->getWants(), $where, $binds, [$page, $rows])->fetchAll();
