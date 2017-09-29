@@ -62,12 +62,13 @@ class Cookie
     /**
      * 发送Cookie至浏览器
      */
-    public static function write()
+    public static function sendCookies()
     {
         foreach (self::$values as $setter) {
             $setter->set();
         }
     }
+
     /**
     * 从字符串设置cookie
     */
@@ -81,4 +82,4 @@ class Cookie
     }
 }
 
-register_shutdown_function(['suda\\core\\Cookie', 'write']);
+register_shutdown_function(['suda\\core\\Cookie', 'sendCookies']);
