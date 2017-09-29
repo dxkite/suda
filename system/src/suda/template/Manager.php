@@ -142,18 +142,15 @@ class Manager
         }
         $module_dir=Application::getModuleDir($module);
         // 向下兼容
-        defined('APP_PUBLIC') or define('APP_PUBLIC', Storage::path('.'));
+        defined('APP_PUBLIC') or define('APP_PUBLIC', Storage::abspath('.'));
         $path=self::getPublicModulePath($module);
-
-        
         if ($theme_path=self::getThemePath($module)) {
             if ($static_path=Storage::abspath($theme_path.'/static')) {
                 self::copyStatic($static_path, $path);
             }
         }
-
-        if ($app_static_path=self::getAppThemePath($module)) {
-            if ($static_path=Storage::abspath($theme_path.'/static')) {
+        if ($app_theme_path=self::getAppThemePath($module)) {
+            if ($app_static_path=Storage::abspath($app_theme_path.'/static')) {
                 self::copyStatic($app_static_path, $path);
             }
         }
@@ -254,7 +251,7 @@ class Manager
         $name=$module.':'.$basename;
         $input=false;
 
-        if (self::getAppThemePath($module)) {
+        if ($app_theme=self::getAppThemePath($module)) {
             $input=$app_theme.'/'.$basename;
         }
 
