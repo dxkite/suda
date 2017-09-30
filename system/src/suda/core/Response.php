@@ -147,17 +147,19 @@ abstract class Response
         throw new ApplicationException(__('template[%s] file not exist: %s', $name, $template));
     }
 
-    public function refresh(bool $clearget=false)
+    public function refresh()
     {
-        if ($clearget){
-            return $this->go(u(self::$name));
-        }
         return $this->go(u(self::$name,$_GET));
+    }
+
+    public function forward()
+    {
+        $referer=Request::referer();
+        return $referer?$this->go($referer):false;
     }
 
     public function go(string $url)
     {
-        // _D()->debug($url);
         $this->setHeader('Location:'.$url);
     }
 

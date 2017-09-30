@@ -329,9 +329,9 @@ class Router
             return '#the-router-['.$name.']-is-undefined--please-check-out-router-list';
         }
         if (count($values)) {
-            return Request::getInstance()->baseUrl(). ltrim($url, '/').'?'.http_build_query($values, 'v', '&', PHP_QUERY_RFC3986);
+            return Request::getInstance()->baseUrl(). trim($url, '/').'?'.http_build_query($values, 'v', '&', PHP_QUERY_RFC3986);
         }
-        return Request::getInstance()->baseUrl(). ltrim($url, '/');
+        return Request::getInstance()->baseUrl(). trim($url, '/');
     }
 
 

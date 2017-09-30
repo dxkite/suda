@@ -51,7 +51,7 @@ class Manager
      */
     private static $compiler=null;
     private static $staticPath='assets/static';
-    private static $dynamicPath='assets/00';
+    private static $dynamicPath='assets';
     /**
      * 载入模板编译器
      */
