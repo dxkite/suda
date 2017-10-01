@@ -27,8 +27,9 @@ class Smtp extends Mailer
     private $passwd;
     private $sock=null;
     private $timeout;
+    private $ssl=true;
 
-    public function __construct(string $host=null, int $port = 25, int $timeout=30, bool $auth = false, string $user, string $pass, string $name=null)
+    public function __construct(string $host=null, int $port = 25, int $timeout=30, bool $auth = false, string $user, string $pass, string $name=null,bool $ssl=false)
     {
         $this->port = $port;
         $this->host = $host;
@@ -37,6 +38,7 @@ class Smtp extends Mailer
         $this->user = $user;
         $this->passwd = $pass;
         $this->from[0]=$user;
+        $this->ssh=$ssl;
         if ($name) {
             $this->from[1]=$name;
         }
@@ -130,7 +132,7 @@ class Smtp extends Mailer
     private function smtpSockopen(string $email)
     {
         if ($this->host) {
-            $this->sock = @fsockopen($this->host, $this->port, $errno, $errstr, $this->timeout);
+            $this->sock = self::fsockopen($this->host, $this->port, $this->timeout, $errno, $errstr);
             if (!($this->sock && $this->smtpCheck())) {
                 $this->setError($errno, $errstr);
             }
@@ -145,13 +147,16 @@ class Smtp extends Mailer
     private function smtpSockopenMX($email)
     {
         $domain = preg_replace('/^.+@([^@]+)$/', '\1', $email);
-        if (!@getmxrr($domain, $MXhosts)) {
+        try {
+            getmxrr($domain, $MXhosts);
+        } catch (\Exception $e) {
             $this->setError(13, 'cannot resolve MX '.$domain);
             return false;
         }
         
+        
         foreach ($MXhosts as $host) {
-            $this->sock = @fsockopen($host, $this->port, $errno, $errstr, $this->timeout);
+            $this->sock = self::fsockopen($host, $this->port, $this->timeout, $errno, $errstr);
             if (!($this->sock && $this->smtpCheck())) {
                 $this->log($errno.'>'.$host.':'.$errstr);
                 continue;
@@ -197,5 +202,20 @@ class Smtp extends Mailer
             return false;
         }
         return true;
+    }
+
+    private function fsockopen(string $host, int $port, int $timeout, & $errno, & $errstr)
+    {
+        try {
+            if($this->ssl){
+                $sock = fsockopen('ssl://'.$host, $port, $errno, $errstr, $timeout);
+            }else{
+                $sock = fsockopen($host, $port, $errno, $errstr, $timeout);
+            }
+            return $sock;
+        } catch (\Exception $e) {
+            $this->setError($e->getCode(), $e->getMessage());
+            return false;
+        }
     }
 }
