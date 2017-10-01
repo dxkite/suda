@@ -29,7 +29,7 @@ class Smtp extends Mailer
     private $timeout;
     private $ssl=true;
 
-    public function __construct(string $host=null, int $port = 25, int $timeout=30, bool $auth = false, string $user, string $pass, string $name=null,bool $ssl=false)
+    public function __construct(string $host=null, int $port = 25, int $timeout=30, bool $auth = false, string $user, string $pass, string $name=null, bool $ssl=false)
     {
         $this->port = $port;
         $this->host = $host;
@@ -207,11 +207,11 @@ class Smtp extends Mailer
     private function fsockopen(string $host, int $port, int $timeout, & $errno, & $errstr)
     {
         try {
-            if($this->ssl){
-                $sock = fsockopen('ssl://'.$host, $port, $errno, $errstr, $timeout);
-            }else{
-                $sock = fsockopen($host, $port, $errno, $errstr, $timeout);
+            if ($this->ssl) {
+                $host='ssl://'.$host;
             }
+            $sock = fsockopen($host, $port, $errno, $errstr, $timeout);      
+            $this->_log('scoket open '.$host.':'.$port);
             return $sock;
         } catch (\Exception $e) {
             $this->setError($e->getCode(), $e->getMessage());
