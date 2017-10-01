@@ -9,7 +9,7 @@
     // 系统所在目录
     define('SYSTEM',__DIR__.'/../system/');
     // 开发者模式
-    define('DEBUG',false);
+    define('DEBUG',true);
     // 日志纪录等级
     define('LOG_LEVEL', 'trace');
     // 输出日志详细信息到json文档
