@@ -324,7 +324,10 @@ class Application
             self::registerModule(MODULES_DIR.'/'.$dir);
         }
         // 自动注册suda管理模块
-        if (defined('DEBUG') && DEBUG ) {
+        $debug_mode=defined('DEBUG') && DEBUG;
+        // 强制启动
+        $force_suda=defined('FORCE_SUDA') && FORCE_SUDA;
+        if ( $debug_mode || $force_suda ) {
             self::registerModule(SYSTEM_RESOURCE.'/modules/dxkite-suda');
         }
     }

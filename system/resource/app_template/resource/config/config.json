@@ -1,16 +1,17 @@
 {
-    "debug":true,
-    "debug-passwd":"dxkite",
-    "timelimit":0,
-    "timezone":"PRC",
-    "database":{
-        "prefix":"dx_" // 数据库前缀
-        ,"name":"suda" // 数据库名
-        ,"user":"root" // 数据库用户
-        ,"passwd":"root"//数据库密码
-        ,"charset":"utf8"//编码
-        ,"host":"localhost"//网址
-        ,"port":3306 // 数据库端口
+    "debug": true,
+    "debug-passwd": "dxkite", //调试后台
+    "debug-local": true, //只允许本地调试
+    "timelimit": 0,
+    "timezone": "PRC",
+    "database": {
+        "prefix": "dx_", // 数据库前缀
+        "name": "suda", // 数据库名
+        "user": "root", // 数据库用户
+        "passwd": "root", //数据库密码
+        "charset": "utf8", //编码
+        "host": "localhost", //域名
+        "port": 3306 // 数据库端口
     },
-    "non-static":"php"
+    "non-static": "php"
 }
