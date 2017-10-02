@@ -108,6 +108,8 @@ class Application
             if (Storage::isDir($share_path=$root.'/share')) {
                 Autoloader::addIncludePath($share_path);
             }
+            // 自动安装
+            self::installModule($module_temp);
             // 是否激活
             $is_live_module=in_array($module_temp, $module_use);
             if ($is_live_module) {
@@ -118,6 +120,26 @@ class Application
                 // 设置语言包库
                 Locale::path($root.'/resource/locales/');
             }
+        }
+    }
+
+    public static function installModule(string $module)
+    {
+        if (!conf('autoinstall', true)) {
+            return;
+        }
+        $install_lock = DATA_DIR.'/install/install_'.substr(md5($module),0,6).'.lock';
+        storage()->path(dirname($install_lock));
+        $config=self::getModuleConfig($module);
+        if (isset($config['install']) && !file_exists($install_lock)) {
+            $installs=$config['install'];
+            if (is_string($installs)) {
+                $installs=[$installs];
+            }
+            foreach ($installs as $cmd) {
+                cmd($cmd)->args($config);
+            }
+            file_put_contents($install_lock,'name='.$module."\r\n".'time='.microtime(true));
         }
     }
 

@@ -7,5 +7,6 @@
     }],
     "discription":"网站测试模块",
     "require": {},
-    "version": "1.0.0-dev"
+    "version": "1.0.0-dev",
+    "install":"cn\\atd3\\Install::task"
 }

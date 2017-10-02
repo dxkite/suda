@@ -103,6 +103,14 @@ function cache() {
     return new suda\core\Cache;
 }
 
+function storage() {
+    return new suda\core\Storage;
+}
+
 function config() {
     return new suda\core\Config;
+}
+
+function cmd($command, array $params=[]){
+    return new suda\tool\Command($command,$params);
 }

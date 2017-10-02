@@ -79,6 +79,7 @@ class Command
             if (!is_callable($this->command)) {
                 throw (new CommandException(__('command {%s} is uncallable', $this->name)))->setCmd($this->name)->setParams($this->params);
             }
+            
             if ($this->static) {
                 return forward_static_call_array($this->command, $this->params);
             } else {
