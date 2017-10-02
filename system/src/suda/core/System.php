@@ -90,7 +90,7 @@ class System
         // App不存在
         if (!Storage::exist($manifast)) {
             debug()->trace(__('create base app'));
-            Storage::copydir(SYSTEM_RESOURCE.'/app_template/', APP_DIR);
+            Storage::copydir(SYSTEM_RESOURCE.'/app/', APP_DIR);
             Storage::put(APP_DIR.'/modules/default/resource/config/config.json', '{"name":"default"}');
             Config::set('app.init',true);
         }
