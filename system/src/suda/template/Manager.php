@@ -389,12 +389,21 @@ class Manager
         // debug()->debug(__('[%d] compiling ==> %s', $success, $name));
         return $success;
     }
-
+    
     public static function getStaticAssetPath(string $module=null)
     {
         $module=$module??Application::getActiveModule();
         $path=Manager::getPublicModulePath($module);
         self::prepareResource($module);
+        $static_url=Storage::cut($path, APP_PUBLIC);
+        $static_url=preg_replace('/[\\\\\/]+/', '/', $static_url);
+        return  '/'.$static_url;
+    }
+
+    public static function getDynamicAssetPath(string $path,string $module=null)
+    {
+        $module=$module??Application::getActiveModule();
+        $path=APP_PUBLIC.'/'.self::$dynamicPath.'/'.self::shadowName(Application::getModuleDir($module)).'/'.$path;
         $static_url=Storage::cut($path, APP_PUBLIC);
         $static_url=preg_replace('/[\\\\\/]+/', '/', $static_url);
         return  '/'.$static_url;

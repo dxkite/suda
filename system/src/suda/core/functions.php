@@ -47,13 +47,22 @@ function u($name=null, $values=null)
         if (!is_array($values)) {
             $args=func_get_args();
             array_shift($args);
-            $values=suda\core\Router::getInstance()->buildUrlArgs($name,$args);
+            $values=suda\core\Router::getInstance()->buildUrlArgs($name, $args);
         }
         return suda\core\Router::getInstance()->buildUrl($name, $values);
     } elseif (is_array($name)) {
         return suda\core\Router::getInstance()->buildUrl(suda\core\Response::$name, $name);
     } else {
         return suda\core\Router::getInstance()->buildUrl(suda\core\Response::$name);
+    }
+}
+
+function assets(string $module, string $path, bool $static=true)
+{
+    if ($static) {
+        return suda\template\Manager::assetServer(suda\template\Manager::getStaticAssetPath($module)).'/'.ltrim($path, '/');
+    } else {
+        return suda\template\Manager::assetServer(suda\template\Manager::getDynamicAssetPath($path,$module));
     }
 }
 
