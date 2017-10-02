@@ -219,14 +219,10 @@ class Debug
             public function onRequest(Request $request)
             {
                 $this->state(500);
-                if (\suda\template\Manager::compile('suda:error')) {
-                    if (conf('debug', false)) {
-                        $this->template=$this->page('suda:error');
-                    } else {
-                        $this->template=$this->page('suda:alert');
-                    }
+                if (conf('debug', false)) {
+                    $this->template=$this->page('suda:error');
                 } else {
-                    $this->template=$this->pagefile(SYSTEM_RESOURCE.'/tpl/error.tpl', 'suda:error');
+                    $this->template=$this->page('suda:alert');
                 }
             }
             public function render()

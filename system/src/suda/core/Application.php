@@ -104,7 +104,7 @@ class Application
         // 安装 启用 活动
         foreach ($module_all as $module_temp) {
             $root=self::getModulePath($module_temp);
-            // 注册共享目录
+            // 注册模块共享目录
             if (Storage::isDir($share_path=$root.'/share')) {
                 Autoloader::addIncludePath($share_path);
             }
@@ -319,16 +319,17 @@ class Application
      */
     private static function registerModules()
     {
-        $dirs=Storage::readDirs(MODULES_DIR);
+        $system_modules=SYSTEM_RESOURCE.'/modules';
+        $app_modules=MODULES_DIR;
+        // 内置模块
+        $dirs=Storage::readDirs($system_modules);
         foreach ($dirs as $dir) {
-            self::registerModule(MODULES_DIR.'/'.$dir);
+            self::registerModule($system_modules.'/'.$dir);
         }
-        // 自动注册suda管理模块
-        $debug_mode=defined('DEBUG') && DEBUG;
-        // 强制启动
-        $force_suda=defined('FORCE_SUDA') && FORCE_SUDA;
-        if ( $debug_mode || $force_suda ) {
-            self::registerModule(SYSTEM_RESOURCE.'/modules/dxkite-suda');
+        // 应用模块
+        $dirs=Storage::readDirs($app_modules);
+        foreach ($dirs as $dir) {
+            self::registerModule($app_modules.'/'.$dir);
         }
     }
 
