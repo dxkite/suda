@@ -9,7 +9,7 @@
     // 网站根目录位置
     define('APP_PUBLIC', __DIR__);
     // 关闭模块
-    define('DISALLOW_MODULES', 'suda');
+    define('DISABLE_MODULES', 'suda');
     // 开发者关闭模式
     define('DEBUG', false);
     // 错误等级

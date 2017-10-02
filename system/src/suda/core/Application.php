@@ -167,7 +167,7 @@ class Application
             return self::$module_live;
         }
         $modules=conf('app.modules', self::getModules());
-        $exclude=defined('DISALLOW_MODULES')?explode(',', trim(DISALLOW_MODULES, ',')):[];
+        $exclude=defined('DISABLE_MODULES')?explode(',', trim(DISABLE_MODULES, ',')):[];
         foreach ($exclude as $index=>$name) {
             $exclude[$index]=Application::getModuleFullName($name);
         }

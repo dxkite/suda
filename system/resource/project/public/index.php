@@ -7,8 +7,8 @@
     define('SYSTEM', __DIR__.'/../suda/system');
     // 网站根目录位置
     define('APP_PUBLIC', __DIR__);
-    // 关闭开发者模块
-    define('DISALLOW_MODULES', 'suda');
+    // 关闭系统管理模块
+    define('DISABLE_MODULES', 'suda');
     // 开发者关闭模式
     define('DEBUG', false);
     // 错误等级
