@@ -49,7 +49,10 @@ class System
         Hook::exec('system:init');
     }
  
-
+    public static function getApplication(){
+        return self::$app_instance;
+    }
+    
     public static function run(string $app)
     {
         debug()->time('init application');

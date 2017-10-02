@@ -13,6 +13,8 @@
  * @link       https://github.com/DXkite/suda
  * @version    since 1.2.4
  */
+
+
 function mime(string $type)
 {
     return suda\core\Response::mime($type);
@@ -75,4 +77,32 @@ function import(string $path)
 function init_resource(array $modules=null)
 {
     return $modules?suda\template\Manager::initResource($modules):suda\template\Manager::initResource();
+}
+
+function app() {
+    return suda\core\System::getApplication();
+}
+
+function router() {
+    return suda\core\Router::getInstance();
+}
+
+function request() {
+    return suda\core\Request::getInstance();
+}
+
+function hook() {
+    return new suda\core\Hook;
+}
+
+function cookie() {
+    return new suda\core\Cookie;
+}
+
+function cache() {
+    return new suda\core\Cache;
+}
+
+function config() {
+    return new suda\core\Config;
 }

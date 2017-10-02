@@ -297,7 +297,7 @@ class Debug
             // 无法记录错误时直接显示错误
             return self::displayLog($log);
         }
-        $str="\t[".number_format($log['time'], 10).'S:'.self::memshow($log['mem'], 2).']'."\t".$log['level'].'>In '.$log['file'].'#'.$log['line']."\t\t".$log['name']."\t".$log['message']."\r\n";
+        $str="\t[".number_format($log['time'], 10).'s:'.self::memshow($log['mem'], 2).']'."\t".$log['level'].'>In '.$log['file'].'#'.$log['line']."\t\t".$log['name']."\t".$log['message']."\r\n";
         // 添加调用栈 高级或者同级则记录
         if ((defined('LOG_FILE_APPEND') && LOG_FILE_APPEND) && self::compareLevel($log['level'], conf('debug-backtrace', Debug::ERROR)) >= 0) {
             $str.=self::printTrace($log['backtrace'])."\r\n";
