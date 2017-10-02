@@ -46,10 +46,13 @@ class Debug
 
     public static function init()
     {
-        self::$hash=substr(md5(microtime().''.Request::ip()), 0, 8);
+        $request=Request::getInstance();
+        self::$hash=$hash=substr(md5(microtime().''.$request->ip()), 0, 6);
         self::$file=APP_LOG.'/tmps/'.self::$hash.'.tmp';
         Storage::mkdirs(dirname(self::$file));
         touch(self::$file);
+        file_put_contents(self::$file, '====='.self::$hash.'====='.$request->ip()."=====\r\n",FILE_APPEND);
+        file_put_contents(self::$file,self::printf()."\r\n",FILE_APPEND);
     }
 
     public static function time(string $name)
@@ -263,18 +266,20 @@ class Debug
 
     private static function printf()
     {
+        $request=Request::getInstance();
         $info=self::getInfo();
-        $time=number_format($info['time'], 10);
         $mem=self::memshow($info['memory'], 2);
-        return Request::ip(). "\t" .(conf('debug')?'debug':'normal') . "\t" . date('Y-m-d H:i:s') . "\t" .Request::method()."\t".Request::virtualUrl() ."\t".$time.'s '.$mem.' '.self::$hash;
+        return  $request->ip(). "\t" .(conf('debug')?'debug':'normal') . "\t" . date('Y-m-d H:i:s') . "\t" .$request->method()."\t".$request->virtualUrl() ."\t".$mem.' '.self::$hash;
     }
 
     protected static function save()
     {
         self::checkSize();
-        $head=self::printf();
         $body=file_get_contents(self::$file);
-        file_put_contents(self::$latest, "\r\n".$head."\r\n".$body, FILE_APPEND);
+        $time=number_format(microtime(true) - D_START, 10);
+        $hash=self::$hash;
+        file_put_contents(self::$latest, $body, FILE_APPEND);
+        file_put_contents(self::$latest,"====={$hash}====={$time}=====\r\n\r\n",FILE_APPEND);
         unlink(self::$file);
         self::$saved=true;
         if (defined('LOG_JSON') && LOG_JSON) {

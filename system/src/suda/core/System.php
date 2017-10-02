@@ -24,8 +24,9 @@ defined('DEBUG') or define('DEBUG', false);
 defined('IS_LINUX') or define('IS_LINUX', DIRECTORY_SEPARATOR ===  '/');
 define('SUDA_VERSION', '1.2.9');
 
-require_once __DIR__.'/Debug.php';
 require_once __DIR__.'/functions.php';
+require_once __DIR__.'/Debug.php';
+
 
 use suda\archive\SQLQuery;
 use suda\tool\Json;

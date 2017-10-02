@@ -29,6 +29,7 @@ final class Request
     private static $request=null;
     private static $query='';
     private static $crawlers=null;
+    
     private function __construct()
     {
         if (!isset($_SERVER['REQUEST_URI'])) {
@@ -50,7 +51,7 @@ final class Request
         if (self::$json) {
             return self::$json;
         }
-        if (!self::isJson() || self::isGet() ) {
+        if (!self::isJson() || self::isGet()) {
             return null;
         }
         $str=self::input();
@@ -199,11 +200,13 @@ final class Request
         }
         return $default;
     }
+    
     public static function hasHeader(string $name, string $default=null)
     {
         $name='HTTP_'.strtoupper(preg_replace('/[^\w]/', '_', $name));
         return isset($_SERVER[$name]);
     }
+
     protected static function parseServer()
     {
         $index=pathinfo(get_included_files()[0], PATHINFO_BASENAME);
@@ -267,6 +270,7 @@ final class Request
             self::$files=new Value($_FILES);
         }
     }
+
     public static function virtualUrl()
     {
         return self::$url.(self::$query?'?'.self::$query:'');
