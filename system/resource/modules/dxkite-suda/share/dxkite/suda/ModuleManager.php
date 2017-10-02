@@ -37,13 +37,13 @@ class ModuleManager
                     unset($manifast['modules'][$index]);
                 }
             }
-            _D()->trace('module dead', $module);
+            debug()->trace('module dead', $module);
             return Json::saveFile($manifast_file, $manifast);
         } else {
             if (!in_array($module, $manifast['modules'])) {
                 $manifast['modules'][]=$module;
             }
-            _D()->trace('module live', $module);
+            debug()->trace('module live', $module);
             return Json::saveFile($manifast_file, $manifast);
         }
     }

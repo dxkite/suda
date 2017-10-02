@@ -39,7 +39,7 @@ class DBManager
     }
     else{
         dxkite\suda\DBManager::log('Database '.conf('database.name').'create filed!');
-        _D()->error('Database '.conf('database.name').'create filed!');
+        debug()->error('Database '.conf('database.name').'create filed!');
     }
 Table;
 
@@ -49,7 +49,7 @@ Table;
     } 
     catch (Exception $e)
     {
-        _D()->logException($e);
+        debug()->logException($e);
         dxkite\suda\DBManager::log($e->getLine().':'.$e->getMessage());
         Query::rollBack();
         return false;
@@ -196,7 +196,7 @@ End;
         if (Storage::exist($config_path)) {
             $config= include $config_path;
             foreach ($modules as $module) {
-                _D()->info($module, array_search($module, $config['module']));
+                debug()->info($module, array_search($module, $config['module']));
                 if (($key=array_search($module, $config['module']))!==false) {
                     self::log('delete data > '.$module);
                     unset($config['module'][$key]);
@@ -224,7 +224,7 @@ End;
                 self::log('import module >  '.$module);
                 self::execFile($datafile);
             } else {
-                _D()->warning("file no found :${datafile}");
+                debug()->warning("file no found :${datafile}");
             }
         }
         return $this;
@@ -268,7 +268,7 @@ End;
             self::log('create module tables > '.$create);
             self::execFile($create);
         } else {
-            _D()->warning("file no found :${create}");
+            debug()->warning("file no found :${create}");
         }
     }
 
@@ -279,7 +279,7 @@ End;
         $table_names=[];
         $dto_path=Application::getModulePath($module).'/resource/dto';
         if (!Storage::isDir($dto_path)) {
-            _D()->warning("not exist {$dto_path}\r\n");
+            debug()->warning("not exist {$dto_path}\r\n");
             return;
         }
         $create= $this->dirname.'/create/'.$module_dir.'.php';
@@ -358,7 +358,7 @@ End;
 
     public static function log(string $message)
     {
-        _D()->trace($message);
+        debug()->trace($message);
         echo $message.'<br/>';
         echo str_repeat(' ', 4096);
         flush();
@@ -376,7 +376,7 @@ End;
 
     protected static function createQueryMessage(string $sql, string $message)
     {
-        _D()->trace($sql, $message);
+        debug()->trace($sql, $message);
         $data=base64_encode($sql);
         $message=base64_encode($message);
         $name=md5($sql);

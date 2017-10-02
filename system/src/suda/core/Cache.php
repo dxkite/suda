@@ -100,7 +100,7 @@ class Cache
      */
     public static function gc()
     {
-        _D()->time('cache gc');
+        debug()->time('cache gc');
         $files=Storage::readDirFiles(self::$storage, '/^(?!\.)/');
         foreach ($files as $file) {
             if (Config::get('cache', true)) {
@@ -113,7 +113,7 @@ class Cache
                 Storage::remove($file);
             }
         }
-        _D()->timeEnd('cache gc');
+        debug()->timeEnd('cache gc');
     }
 
     private static function getPath(string $name)
@@ -128,5 +128,3 @@ class Cache
         return $fname;
     }
 }
-
-Hook::listen('system:shutdown::before', 'suda\\core\\Cache::gc');

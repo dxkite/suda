@@ -21,7 +21,7 @@ defined('ROOT_PATH') or define('ROOT_PATH', dirname(dirname(dirname(dirname(__DI
 defined('SYSTEM_DIR') or define('SYSTEM_DIR', dirname(dirname(dirname(__DIR__))));
 defined('SYSTEM_RESOURCE') or define('SYSTEM_RESOURCE', SYSTEM_DIR.'/resource');
 defined('DEBUG') or define('DEBUG', false);
-defined('IS_LINUX') or define('IS_LINUX',DIRECTORY_SEPARATOR ===  '/');
+defined('IS_LINUX') or define('IS_LINUX', DIRECTORY_SEPARATOR ===  '/');
 define('SUDA_VERSION', '1.2.9');
 
 require_once __DIR__.'/Debug.php';
@@ -38,17 +38,25 @@ class System
         set_exception_handler('suda\\core\\System::uncaughtException');
         Debug::beforeSystemRun();
         Locale::path(SYSTEM_RESOURCE.'/locales');
-        _D()->trace(__('system init'));
+        debug()->trace('system init');
         Hook::exec('system:init');
     }
 
     public static function onShutdown()
     {
-        Hook::exec('system:shutdown::before');
-        _D()->trace('include paths:'.json_encode(Autoloader::getIncludePath()));
-        _D()->trace(__('system shutdown'));
-        _D()->info('runinfo', self:: getRunInfo());
+        // 忽略用户停止
+        ignore_user_abort(true);
+        // 如果正常连接则设置未来得及发送的Cookie
+        if (connection_status() == CONNECTION_NORMAL) {
+            Cookie::sendCookies();
+            Hook::exec('system:shutdown::before');
+        }
+        Cache::gc();
         Hook::exec('system:shutdown');
+        debug()->trace('connection status '. ['normal','aborted','timeout'][connection_status()]);
+        debug()->trace('include paths '.json_encode(Autoloader::getIncludePath()));
+        debug()->trace('runinfo', self::getRunInfo());
+        debug()->trace('system shutdown');
         Debug::phpShutdown();
     }
 

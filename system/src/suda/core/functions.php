@@ -22,14 +22,9 @@ function __(string $message)
 {
     return call_user_func_array('suda\core\Locale::_', func_get_args());
 }
-// 语言翻译
-function _T(string $message)
-{
-    return call_user_func_array('suda\core\Locale::_', func_get_args());
-}
 
 // 获取debug记录
-function _D()
+function debug()
 {
     return new suda\core\Debug;
 }

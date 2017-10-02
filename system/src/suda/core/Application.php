@@ -37,7 +37,7 @@ class Application
 
     public function __construct(string $app)
     {
-        _D()->trace(__('application load %s', $app));
+        debug()->trace(__('application load %s', $app));
         $this->path=$app;
 
         // 注册基本常量
@@ -171,8 +171,8 @@ class Application
         foreach ($exclude as $index=>$name) {
             $exclude[$index]=Application::getModuleFullName($name);
         }
-        // _D()->trace('modules', json_encode($modules));
-        // _D()->trace('exclude', json_encode($exclude));
+        // debug()->trace('modules', json_encode($modules));
+        // debug()->trace('exclude', json_encode($exclude));
         foreach ($modules as $index => $name) {
             $fullname=Application::getModuleFullName($name);
             // 剔除模块名
@@ -184,7 +184,7 @@ class Application
         }
         // 排序，保证为数组
         sort($modules);
-        _D()->trace('live modules', json_encode($modules));
+        debug()->trace('live modules', json_encode($modules));
         return self::$module_live=$modules;
     }
 
@@ -197,14 +197,14 @@ class Application
     public static function activeModule(string $module)
     {
         Hook::exec('Application:active', [$module]);
-        _D()->trace(__('active module %s', $module));
+        debug()->trace(__('active module %s', $module));
         self::$active_module=$module;
         $root=self::getModulePath($module);
         $module_config=self::getModuleConfig($module);
         define('MODULE_RESOURCE', Storage::path($root.'/resource'));
         define('MODULE_LOCALES', Storage::path(MODULE_RESOURCE.'/locales'));
         define('MODULE_CONFIG', Storage::path(MODULE_RESOURCE.'/config'));
-        _D()->trace(__('set locale %s', Config::get('app.locale', 'zh-CN')));
+        debug()->trace(__('set locale %s', Config::get('app.locale', 'zh-CN')));
         Locale::set(Config::get('app.locale', 'zh-CN'));
         if (isset($module_config['namespace'])) {
             // 缩减命名空间
@@ -267,7 +267,7 @@ class Application
             .preg_quote($matchname[2]) // 名称
             .(isset($matchname[3])&&$matchname[3]?':'.preg_quote($matchname[3]):'(:.+)?').'$/'; // 版本号
         $targets=[];
-        // _D()->debug($matchname, $preg);
+        // debug()->debug($matchname, $preg);
         // 匹配模块名，查找符合格式的模块
         foreach (self::$module_configs as $module_name=>$module_config) {
             // 匹配到模块名
@@ -337,7 +337,7 @@ class Application
     {
         if (Storage::exist($file=$path.'/module.json')) {
             $dir=basename($path);
-            _D()->trace(__('load module config %s', $file));
+            debug()->trace(__('load module config %s', $file));
             $json=Json::parseFile($file);
             $name=$json['name'] ?? $dir;
             $json['directory']=$dir;

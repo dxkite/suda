@@ -46,7 +46,7 @@ class Command
 
     public function exec(array $params=[])
     {
-        _D()->trace(__('exec command %s with args %s', $this->name, json_encode($params)));
+        debug()->trace(__('exec command %s with args %s', $this->name, json_encode($params)));
         // 集合所有参数
         if (count($params)) {
             $this->params=$params;
@@ -102,7 +102,7 @@ class Command
     private function parseCommand(string $command)
     {
         if (preg_match('/^(?:([\w\\\\\/.]+))?(?:(#|->|::)(\w+))?(?:\((.+?)\))?(?:@(.+))?$/', $command, $matchs)) {
-            _D()->trace(__('parse command %s', $command), $matchs);
+            debug()->trace(__('parse command %s', $command), $matchs);
             // $this->name=$command;
             // 添加参数绑定
             if (isset($matchs[4])) {

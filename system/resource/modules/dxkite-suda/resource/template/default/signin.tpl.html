@@ -1,4 +1,4 @@
-@set('title',_T('suda管理面板登陆')) @set('lang','Zh-cn')@startInsert('bs-head')
+@set('title',__('suda管理面板登陆')) @set('lang','Zh-cn')@startInsert('bs-head')
 <style>
     body {
         padding-top: 40px;
@@ -39,11 +39,11 @@
 @endInsert @startInsert('bs-content')
 <div class="container sign">
     <form class="form-sign" id="form-signin" method="POST">
-        <h2 class="form-sign-heading"> {{ _T('suda管理面板登陆') }}</h2>
+        <h2 class="form-sign-heading"> {{ __('suda管理面板登陆') }}</h2>
         <div class="form-group @if($:msgerror(false)) has-danger @endif">
-            <label for="passwd" class="sr-only">{{ _T('密码') }}</label>
-            <input type="password" name="passwd" id="passwd" class="form-control" placeholder="{{ _T('密码') }}" required>
-            <div id="passwd_error" class="form-control-feedback" @if(!$:msgerror(false))style="display:none" @endif> {{ _T("密码错误") }}</div>
+            <label for="passwd" class="sr-only">{{ __('密码') }}</label>
+            <input type="password" name="passwd" id="passwd" class="form-control" placeholder="{{ __('密码') }}" required>
+            <div id="passwd_error" class="form-control-feedback" @if(!$:msgerror(false))style="display:none" @endif> {{ __("密码错误") }}</div>
         </div>
     </form>
 </div>

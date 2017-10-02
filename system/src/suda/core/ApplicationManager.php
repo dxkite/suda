@@ -40,9 +40,9 @@ class ApplicationManager
 
     public function run(string $app)
     {
-        _D()->time('init application');
+        debug()->time('init application');
         self::console($app);
-        _D()->timeEnd('init application');
+        debug()->timeEnd('init application');
         Router::getInstance()->dispatch();
     }
 
@@ -52,7 +52,7 @@ class ApplicationManager
         $app=Storage::path($app);
         $this->readManifast($app.'/manifast.json');
         $name=Autoloader::realName($this->appliaction);
-        _D()->trace(__('loading application %s from %s', $name, $app));
+        debug()->trace(__('loading application %s from %s', $name, $app));
         $this->app=new $name($app);
         if ($this->app instanceof Application) {
             // 设置语言包库
@@ -68,10 +68,10 @@ class ApplicationManager
 
     protected function readManifast(string $manifast)
     {
-        _D()->trace(__('reading manifast file'));
+        debug()->trace(__('reading manifast file'));
         // App不存在
         if (!Storage::exist($manifast)) {
-            _D()->trace(__('create base app'));
+            debug()->trace(__('create base app'));
             Storage::copydir(SYSTEM_RESOURCE.'/app_template/', APP_DIR);
             Storage::put(APP_DIR.'/modules/default/resource/config/config.json', '{"name":"default"}');
             Config::set('app.init',true);

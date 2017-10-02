@@ -32,7 +32,7 @@ abstract class ACResponse extends \suda\core\Response
         // 只允许本地调试
         if (conf('debug-local', true) && !self::selfCheck()) {
             $this->state(403);
-            _D()->warning('recieve track form address> '.Request::ip());
+            debug()->warning('recieve track form address> '.Request::ip());
             die('<span style="color:red">YOU ARE NOT THE DEVELOPER!</span>');
         }
     }

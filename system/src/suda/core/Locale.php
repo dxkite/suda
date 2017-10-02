@@ -66,7 +66,7 @@ class Locale
     {
         // 清空历史
         self::$langs=[];
-        _D()->trace(__('loaded paths %s',implode(';',self::$paths)));
+        debug()->trace(__('loaded paths %s',implode(';',self::$paths)));
         // 重写
         foreach (self::$paths as $path){
             if (file_exists($file=$path.'/'.$locale.'.json')){

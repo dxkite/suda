@@ -47,7 +47,7 @@ class ConfigMailer extends \dxkite\suda\ACResponse
             }
             
         }
-        _D()->trace('mailer config',json_encode($config));
+        debug()->trace('mailer config',json_encode($config));
         $smtp=$config['smtp']??[];
         $sendmail=$config['sendmail']??[];
         return $this->page('suda:config_mailer')

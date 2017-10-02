@@ -230,7 +230,7 @@ class Debug
                 $stack=$this->template->getRenderStack();
                 while ($name=array_pop($stack)) {
                     $get=ob_get_clean();
-                    _D()->trace('free render', $name);
+                    debug()->trace('free render', $name);
                 }
                 $this->template->render();
             }
