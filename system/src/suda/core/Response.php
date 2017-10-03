@@ -215,7 +215,7 @@ abstract class Response
             self::$mime=parse_ini_file(SYSTEM_RESOURCE.'/mime.ini');
         }
         if ($name) {
-            return self::$mime[$name] ?? 'text/plain';
+            return self::$mime[$name] ?? $name;
         } else {
             return self::$mime;
         }
