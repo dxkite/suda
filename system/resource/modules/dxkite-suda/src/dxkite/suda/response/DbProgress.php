@@ -57,7 +57,7 @@ class DbProgress extends \dxkite\suda\ACResponse
             // 操作多个模块
             if ($request->isPost()) {
                 $select=$request->post()->select([]);
-                _D()->info($select);
+                debug()->info($select);
                 $tables=array_keys($select);
                 if ($option==='recovery') {
                     DBManager::getInstance()->createTables($tables)->importTables($tables);

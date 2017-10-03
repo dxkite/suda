@@ -13,6 +13,8 @@
  * @link       https://github.com/DXkite/suda
  * @version    since 1.2.4
  */
+
+
 function mime(string $type)
 {
     return suda\core\Response::mime($type);
@@ -22,14 +24,9 @@ function __(string $message)
 {
     return call_user_func_array('suda\core\Locale::_', func_get_args());
 }
-// 语言翻译
-function _T(string $message)
-{
-    return call_user_func_array('suda\core\Locale::_', func_get_args());
-}
 
 // 获取debug记录
-function _D()
+function debug()
 {
     return new suda\core\Debug;
 }
@@ -52,13 +49,22 @@ function u($name=null, $values=null)
         if (!is_array($values)) {
             $args=func_get_args();
             array_shift($args);
-            $values=suda\core\Router::getInstance()->buildUrlArgs($name,$args);
+            $values=suda\core\Router::getInstance()->buildUrlArgs($name, $args);
         }
         return suda\core\Router::getInstance()->buildUrl($name, $values);
     } elseif (is_array($name)) {
         return suda\core\Router::getInstance()->buildUrl(suda\core\Response::$name, $name);
     } else {
         return suda\core\Router::getInstance()->buildUrl(suda\core\Response::$name);
+    }
+}
+
+function assets(string $module, string $path, bool $static=true)
+{
+    if ($static) {
+        return suda\template\Manager::assetServer(suda\template\Manager::getStaticAssetPath($module)).'/'.ltrim($path, '/');
+    } else {
+        return suda\template\Manager::assetServer(suda\template\Manager::getDynamicAssetPath($path,$module));
     }
 }
 
@@ -71,4 +77,40 @@ function import(string $path)
 function init_resource(array $modules=null)
 {
     return $modules?suda\template\Manager::initResource($modules):suda\template\Manager::initResource();
+}
+
+function app() {
+    return suda\core\System::getApplication();
+}
+
+function router() {
+    return suda\core\Router::getInstance();
+}
+
+function request() {
+    return suda\core\Request::getInstance();
+}
+
+function hook() {
+    return new suda\core\Hook;
+}
+
+function cookie() {
+    return new suda\core\Cookie;
+}
+
+function cache() {
+    return new suda\core\Cache;
+}
+
+function storage() {
+    return new suda\core\Storage;
+}
+
+function config() {
+    return new suda\core\Config;
+}
+
+function cmd($command, array $params=[]){
+    return new suda\tool\Command($command,$params);
 }

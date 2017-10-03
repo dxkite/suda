@@ -73,7 +73,7 @@ class Manager
     {
         if (!is_null($theme)) {
             self::$theme=$theme;
-            _D()->info('change themes:'.$theme);
+            debug()->info('change themes:'.$theme);
         }
         return self::$theme;
     }
@@ -233,7 +233,7 @@ class Manager
         $non_static=trim(str_replace(',', '|', Config::get('non-static', 'php')), '|');
         $non_static_preg='/(?<!(\.tpl\.html)|(\.('.$non_static.')))$/';
         if (Storage::isDir($static_path)) {
-            _D()->trace('copy '.$static_path.' => '.$path);
+            debug()->trace('copy '.$static_path.' => '.$path);
             Storage::copydir($static_path, $path, $non_static_preg);
         }
     }
@@ -344,7 +344,7 @@ class Manager
 
     public static function initResource(array $modules=null)
     {
-        _D()->time('init resource');
+        debug()->time('init resource');
         $init=[];
         $modules=$modules??Application::getLiveModules();
         foreach ($modules as $module) {
@@ -359,7 +359,7 @@ class Manager
             }
             $init[$module]=Storage::cut(self::prepareResource($module, true), APP_PUBLIC);
         }
-        _D()->timeEnd('init resource');
+        debug()->timeEnd('init resource');
         return $init;
     }
 
@@ -386,15 +386,24 @@ class Manager
         $name=preg_replace('/^('.preg_quote($root, '/').')?(.+)'.preg_quote(self::$extRaw, '/').'/', '$2', $path);
         $name=$module.':'.trim($name, '/');
         $success=self::compile($name);
-        // _D()->debug(__('[%d] compiling ==> %s', $success, $name));
+        // debug()->debug(__('[%d] compiling ==> %s', $success, $name));
         return $success;
     }
-
+    
     public static function getStaticAssetPath(string $module=null)
     {
         $module=$module??Application::getActiveModule();
         $path=Manager::getPublicModulePath($module);
         self::prepareResource($module);
+        $static_url=Storage::cut($path, APP_PUBLIC);
+        $static_url=preg_replace('/[\\\\\/]+/', '/', $static_url);
+        return  '/'.$static_url;
+    }
+
+    public static function getDynamicAssetPath(string $path,string $module=null)
+    {
+        $module=$module??Application::getActiveModule();
+        $path=APP_PUBLIC.'/'.self::$dynamicPath.'/'.self::shadowName(Application::getModuleDir($module)).'/'.$path;
         $static_url=Storage::cut($path, APP_PUBLIC);
         $static_url=preg_replace('/[\\\\\/]+/', '/', $static_url);
         return  '/'.$static_url;

@@ -67,7 +67,7 @@ class Router
         $simple_routers=[];
         $admin_routers=[];
         $module_path=Application::getModulePath($module);
-        _D()->trace(__('load module:%s [%s] path:%s', $module, Application::getModuleFullName($module),$module_path));
+        debug()->trace(__('load module:%s [%s] path:%s', $module, Application::getModuleFullName($module),$module_path));
         list($admin_prefix, $prefix)=self::getModulePrefix($module);
         $module=Application::getModuleFullName($module);
         $prefix_it= function (&$router, $key, $prefixinfo) use ($module) {
@@ -82,13 +82,13 @@ class Router
         // 加载前台路由
         if (Storage::exist($file=$module_path.'/resource/config/router.json')) {
             $simple_routers= self::loadModuleJson($module, $file);
-            _D()->trace(__('loading simple route from file %s', $file));
+            debug()->trace(__('loading simple route from file %s', $file));
             array_walk($simple_routers, $prefix_it, [false,$prefix]);
         }
         // 加载后台路由
         if (Storage::exist($file=$module_path.'/resource/config/router_admin.json')) {
             $admin_routers= self::loadModuleJson($module, $file);
-            _D()->trace(__('loading admin route from file  %s', $file));
+            debug()->trace(__('loading admin route from file  %s', $file));
             array_walk($admin_routers, $prefix_it, [true,$admin_prefix]);
         }
        
@@ -167,7 +167,7 @@ class Router
     {
         $request=Request::getInstance();
         foreach ($this->matchs as $name=>$preg) {
-            // _D()->d('url:'.$request->url().'; preg:'.'/^'.$preg.'$/');
+            // debug()->d('url:'.$request->url().'; preg:'.'/^'.$preg.'$/');
             if (preg_match('/^'.$preg.'$/', $request->url(), $match)) {
                 // 检验方法
                 if (isset($this->routers[$name]['method']) && count($this->routers[$name]['method'])>0) {
@@ -227,7 +227,7 @@ class Router
         $url=preg_replace('/\[(\S+)\]/', '(?:$1)?', $url);
         // 编译页面参数
         $url=preg_replace_callback('/\{(?:(\w+)(?::(\w+))?)(?:=(\w+))?\}([?])?/', function ($match) use ($name, &$types, $urltype) {
-            // _D()->debug($match);
+            // debug()->debug($match);
             $size=isset($types[$name])?count($types[$name]):0;
             $param_name=$match[1]!==''?$match[1]:$size;
             $param_type=  $match[2] ?? 'string';
@@ -304,7 +304,7 @@ class Router
         list($module, $name)=self::parseName($name);
         $module=Application::getModuleFullName($module);
         $name=$module.':'.$name;
-        // _D()->debug($name);
+        // debug()->debug($name);
         $url= '';
         if (isset($this->routers[$name])) {
             // 路由存在
@@ -325,7 +325,7 @@ class Router
                 }
             }, preg_replace('/\[(.+?)\]/', '$1', $url));
         } else {
-            _D()->warning(__('get url for %s failed,module:%s args:%s', $name, $module, json_encode($values)));
+            debug()->warning(__('get url for %s failed,module:%s args:%s', $name, $module, json_encode($values)));
             return '#the-router-['.$name.']-is-undefined--please-check-out-router-list';
         }
         if (count($values)) {
@@ -337,17 +337,17 @@ class Router
 
     public function dispatch()
     {
-        _D()->time('dispatch');
+        debug()->time('dispatch');
         self::buildRouterMap();
         // Hook前置路由（自定义过滤器|自定义路由）
         if (Hook::execIf('Router:dispatch::before', [Request::getInstance()], true)) {
             if (($router_name=self::matchRouterMap())!==false) {
-                // _D()->debug('dispatch match '.$router_name);
-                _D()->timeEnd('dispatch');
+                // debug()->debug('dispatch match '.$router_name);
+                debug()->timeEnd('dispatch');
                 Response::setName($router_name);
-                _D()->time('run router');
+                debug()->time('run router');
                 self::runRouter($this->routers[$router_name]);
-                _D()->timeEnd('run router');
+                debug()->timeEnd('run router');
             } else {
                 Hook::exec('system:404');
             }
@@ -500,12 +500,16 @@ class Router
     {
         // 全局钩子:重置Hook指向
         Hook::exec('Router:runRouter::before', [&$router]);
-        // _D()->time('active Module');
+        // debug()->time('active Module');
+        // 激活模块
         (new Command(Config::get('app.application', 'suda\\core\\Application').'::activeModule'))->exec([$router['module']]);
-        // _D()->timeEnd('active Module');
-        _D()->time('request');
+        // debug()->timeEnd('active Module');
+        debug()->time('request');
+        // 运行请求
         (new Command($router['class'].'->onRequest'))->exec([Request::getInstance()]);
-        _D()->timeEnd('request');
+        debug()->timeEnd('request');
+        // 请求结束
+        Hook::exec('Router:runRouter::after', [&$router]);
     }
 
     public static function error404()

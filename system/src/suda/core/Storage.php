@@ -26,7 +26,7 @@ class Storage
             if (!self::mkdirs(dirname($dir), $mode)) {
                 return false;
             }
-            // _D()->warning(__('mkdir %s->%o', $dir,$mode));
+            // debug()->warning(__('mkdir %s->%o', $dir,$mode));
             if (!self::mkdir($dir, $mode)) {
                 return false;
             }
@@ -143,7 +143,7 @@ class Storage
     {
         $src=self::tpath($src);
         $dest=self::tpath($dest);
-        // _D()->trace(__('copy %s->%s', $src, $dest));
+        // debug()->trace(__('copy %s->%s', $src, $dest));
         self::mkdirs($dest);
         $hd=opendir($src);
         while ($read=readdir($hd)) {
@@ -214,7 +214,7 @@ class Storage
     {
         $name=self::tpath($name);
         if (self::isDir(dirname($name))) {
-            _D()->trace(__('put file %s',$name));
+            debug()->trace(__('put file %s',$name));
             return file_put_contents($name, $content, $flags);
         }
         return false;

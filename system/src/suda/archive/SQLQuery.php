@@ -201,7 +201,7 @@ class SQLQuery
             if (self::$pdo->query('USE '.$database)) {
                 $this->database=$database;
             } else {
-                _D()->warning(__('could not select database:%s, maybe you should create database.', $database), 0, E_ERROR, $debug[1]['file'], $debug[1]['line']);
+                debug()->warning(__('could not select database:%s, maybe you should create database.', $database), 0, E_ERROR, $debug[1]['file'], $debug[1]['line']);
             }
         }
         
@@ -223,16 +223,16 @@ class SQLQuery
         }
 
         $markstring='query '.$stmt->queryString;
-        _D()->time($markstring);
+        debug()->time($markstring);
         $return=$stmt->execute();
-        self::$times+=_D()->timeEnd($markstring);
+        self::$times+=debug()->timeEnd($markstring);
         self::$queryCount++;
         if ($return) {
             if (Config::get('debug')) {
-                _D()->debug($stmt->queryString, $this->values);
+                debug()->debug($stmt->queryString, $this->values);
             }
         } else {
-            _D()->warning($stmt->errorInfo()[2].':'.$stmt->queryString, $this->values);
+            debug()->warning($stmt->errorInfo()[2].':'.$stmt->queryString, $this->values);
             if (!conf('database.ignoreError', false)) {
                 throw (new SQLException($stmt->errorInfo()[2], intval($stmt->errorCode()), E_ERROR, $debug[1]['file'], $debug[1]['line']))->setSql($stmt->queryString)->setBinds($this->values);
             }
@@ -248,9 +248,9 @@ class SQLQuery
             $pdo='mysql:host='.Config::get('database.host', 'localhost').';charset='.Config::get('database.charset', 'utf8').';port='.Config::get('database.port', 3306);
             self::$prefix=Config::get('database.prefix', '');
             try {
-                _D()->time('connect database');
+                debug()->time('connect database');
                 self::$pdo = new PDO($pdo, Config::get('database.user', 'root'), Config::get('database.passwd', ''));
-                _D()->timeEnd('connect database');
+                debug()->timeEnd('connect database');
             } catch (PDOException $e) {
                 throw new SQLException('connect database error:'.$e->getMessage(), $e->getCode(), E_ERROR, __FILE__, __LINE__, $e);
             }

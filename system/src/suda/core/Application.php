@@ -37,7 +37,7 @@ class Application
 
     public function __construct(string $app)
     {
-        _D()->trace(__('application load %s', $app));
+        debug()->trace(__('application load %s', $app));
         $this->path=$app;
 
         // 注册基本常量
@@ -104,10 +104,12 @@ class Application
         // 安装 启用 活动
         foreach ($module_all as $module_temp) {
             $root=self::getModulePath($module_temp);
-            // 注册共享目录
+            // 注册模块共享目录
             if (Storage::isDir($share_path=$root.'/share')) {
                 Autoloader::addIncludePath($share_path);
             }
+            // 自动安装
+            self::installModule($module_temp);
             // 是否激活
             $is_live_module=in_array($module_temp, $module_use);
             if ($is_live_module) {
@@ -118,6 +120,26 @@ class Application
                 // 设置语言包库
                 Locale::path($root.'/resource/locales/');
             }
+        }
+    }
+
+    public static function installModule(string $module)
+    {
+        if (!conf('autoinstall', true)) {
+            return;
+        }
+        $install_lock = DATA_DIR.'/install/install_'.substr(md5($module),0,6).'.lock';
+        storage()->path(dirname($install_lock));
+        $config=self::getModuleConfig($module);
+        if (isset($config['install']) && !file_exists($install_lock)) {
+            $installs=$config['install'];
+            if (is_string($installs)) {
+                $installs=[$installs];
+            }
+            foreach ($installs as $cmd) {
+                cmd($cmd)->args($config);
+            }
+            file_put_contents($install_lock,'name='.$module."\r\n".'time='.microtime(true));
         }
     }
 
@@ -167,12 +189,12 @@ class Application
             return self::$module_live;
         }
         $modules=conf('app.modules', self::getModules());
-        $exclude=defined('DISALLOW_MODULES')?explode(',', trim(DISALLOW_MODULES, ',')):[];
+        $exclude=defined('DISABLE_MODULES')?explode(',', trim(DISABLE_MODULES, ',')):[];
         foreach ($exclude as $index=>$name) {
             $exclude[$index]=Application::getModuleFullName($name);
         }
-        // _D()->trace('modules', json_encode($modules));
-        // _D()->trace('exclude', json_encode($exclude));
+        // debug()->trace('modules', json_encode($modules));
+        // debug()->trace('exclude', json_encode($exclude));
         foreach ($modules as $index => $name) {
             $fullname=Application::getModuleFullName($name);
             // 剔除模块名
@@ -184,7 +206,7 @@ class Application
         }
         // 排序，保证为数组
         sort($modules);
-        _D()->trace('live modules', json_encode($modules));
+        debug()->trace('live modules', json_encode($modules));
         return self::$module_live=$modules;
     }
 
@@ -197,14 +219,14 @@ class Application
     public static function activeModule(string $module)
     {
         Hook::exec('Application:active', [$module]);
-        _D()->trace(__('active module %s', $module));
+        debug()->trace(__('active module %s', $module));
         self::$active_module=$module;
         $root=self::getModulePath($module);
         $module_config=self::getModuleConfig($module);
         define('MODULE_RESOURCE', Storage::path($root.'/resource'));
         define('MODULE_LOCALES', Storage::path(MODULE_RESOURCE.'/locales'));
         define('MODULE_CONFIG', Storage::path(MODULE_RESOURCE.'/config'));
-        _D()->trace(__('set locale %s', Config::get('app.locale', 'zh-CN')));
+        debug()->trace(__('set locale %s', Config::get('app.locale', 'zh-CN')));
         Locale::set(Config::get('app.locale', 'zh-CN'));
         if (isset($module_config['namespace'])) {
             // 缩减命名空间
@@ -267,7 +289,7 @@ class Application
             .preg_quote($matchname[2]) // 名称
             .(isset($matchname[3])&&$matchname[3]?':'.preg_quote($matchname[3]):'(:.+)?').'$/'; // 版本号
         $targets=[];
-        // _D()->debug($matchname, $preg);
+        // debug()->debug($matchname, $preg);
         // 匹配模块名，查找符合格式的模块
         foreach (self::$module_configs as $module_name=>$module_config) {
             // 匹配到模块名
@@ -319,16 +341,17 @@ class Application
      */
     private static function registerModules()
     {
-        $dirs=Storage::readDirs(MODULES_DIR);
+        $system_modules=SYSTEM_RESOURCE.'/modules';
+        $app_modules=MODULES_DIR;
+        // 内置模块
+        $dirs=Storage::readDirs($system_modules);
         foreach ($dirs as $dir) {
-            self::registerModule(MODULES_DIR.'/'.$dir);
+            self::registerModule($system_modules.'/'.$dir);
         }
-        // 自动注册suda管理模块
-        $debug_mode=defined('DEBUG') && DEBUG;
-        // 强制启动
-        $force_suda=defined('FORCE_SUDA') && FORCE_SUDA;
-        if ( $debug_mode || $force_suda ) {
-            self::registerModule(SYSTEM_RESOURCE.'/modules/dxkite-suda');
+        // 应用模块
+        $dirs=Storage::readDirs($app_modules);
+        foreach ($dirs as $dir) {
+            self::registerModule($app_modules.'/'.$dir);
         }
     }
 
@@ -336,7 +359,7 @@ class Application
     {
         if (Storage::exist($file=$path.'/module.json')) {
             $dir=basename($path);
-            _D()->trace(__('load module config %s', $file));
+            debug()->trace(__('load module config %s', $file));
             $json=Json::parseFile($file);
             $name=$json['name'] ?? $dir;
             $json['directory']=$dir;

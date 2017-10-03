@@ -119,10 +119,10 @@ abstract class Mailer
         $domain = preg_replace('/^.+@([^@]+)$/', '\1', $email);
         // PHP IP 乱入 使用　gethostbyname
         if (!dns_check_record($domain)) {
-            _D()->error('dns '.$email.' no found '.$domain);
+            debug()->error('dns '.$email.' no found '.$domain);
             throw new MailException('no such dns in has mail mx '.$email,1);
         }
-        _D()->trace('dns '.$email.' found '.$domain.' '.gethostbyname($domain));
+        debug()->trace('dns '.$email.' found '.$domain.' '.gethostbyname($domain));
     }
 
     protected function parseFrom()
@@ -177,7 +177,7 @@ abstract class Mailer
     protected function _log(string $message)
     {
         $this->log[]=$message;
-        _D()->trace($message);
+        debug()->trace($message);
     }
     protected function encode(string $text){
         return  '=?UTF-8?B?'. base64_encode($text) .'?=';
@@ -188,7 +188,7 @@ abstract class Mailer
         if (!$this->errno) {
             $this->errno=$errno;
             $this->errstr=$errstr;
-            _D()->error($errno,$errstr);
+            debug()->error($errno,$errstr);
         }
     }
 }

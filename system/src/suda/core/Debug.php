@@ -46,28 +46,31 @@ class Debug
 
     public static function init()
     {
-        self::$hash=substr(md5(microtime().''.Request::ip()), 0, 8);
+        $request=Request::getInstance();
+        self::$hash=$hash=substr(md5(microtime().''.$request->ip()), 0, 6);
         self::$file=APP_LOG.'/tmps/'.self::$hash.'.tmp';
         Storage::mkdirs(dirname(self::$file));
         touch(self::$file);
+        file_put_contents(self::$file, '====='.self::$hash.'====='.$request->ip().'====='.(conf('debug')?'debug':'normal')."=====\r\n",FILE_APPEND);
+        file_put_contents(self::$file,self::printHead()."\r\n",FILE_APPEND);
     }
 
-    public static function time(string $name)
+    public static function time(string $name,string $type='info')
     {
-        self::$time[$name]=microtime(true);
+        self::$time[$name]=['time'=>microtime(true),'type'=>$type];
     }
 
     public static function timeEnd(string $name)
     {
         if (isset(self::$time[$name])) {
-            $pass=microtime(true)-self::$time[$name];
+            $pass=microtime(true)-self::$time[$name]['time'];
             $backtrace=debug_backtrace();
             $offset=1;
             if (!isset($backtrace[$offset]['file'])) {
                 $offset--;
             }
             $call=(isset($backtrace[$offset]['class'])?$backtrace[$offset]['class'].'#':'').$backtrace[$offset]['function'];
-            self::_loginfo('info', $call, __('process %s %fs', $name, $pass), $backtrace[$offset]['file'] ??'unknown', $backtrace[$offset]['line'] ?? 0, $backtrace);
+            self::_loginfo(self::$time[$name]['type'], $call, __('process %s %fs', $name, $pass), $backtrace[$offset]['file'] ??'unknown', $backtrace[$offset]['line'] ?? 0, $backtrace);
             return $pass;
         }
         return 0;
@@ -219,14 +222,10 @@ class Debug
             public function onRequest(Request $request)
             {
                 $this->state(500);
-                if (\suda\template\Manager::compile('suda:error')) {
-                    if (conf('debug', false)) {
-                        $this->template=$this->page('suda:error');
-                    } else {
-                        $this->template=$this->page('suda:alert');
-                    }
+                if (conf('debug', false)) {
+                    $this->template=$this->page('suda:error');
                 } else {
-                    $this->template=$this->pagefile(SYSTEM_RESOURCE.'/tpl/error.tpl', 'suda:error');
+                    $this->template=$this->page('suda:alert');
                 }
             }
             public function render()
@@ -234,7 +233,7 @@ class Debug
                 $stack=$this->template->getRenderStack();
                 while ($name=array_pop($stack)) {
                     $get=ob_get_clean();
-                    _D()->trace('free render', $name);
+                    debug()->trace('free render', $name);
                 }
                 $this->template->render();
             }
@@ -265,20 +264,24 @@ class Debug
         self::_loginfo(Debug::ERROR, $e->getName(), $e->getMessage(), $e->getFile(), $e->getLine(), $e->getBacktrace());
     }
 
-    private static function printf()
+    private static function printHead()
     {
-        $info=self::getInfo();
-        $time=number_format($info['time'], 10);
-        $mem=self::memshow($info['memory'], 2);
-        return Request::ip(). "\t" .(conf('debug')?'debug':'normal') . "\t" . date('Y-m-d H:i:s') . "\t" .Request::method()."\t".Request::virtualUrl() ."\t".$time.'s '.$mem.' '.self::$hash;
+        $request=Request::getInstance();
+        return  $request->ip() . "\t" . date('Y-m-d H:i:s') . "\t" .$request->method()."\t".$request->virtualUrl();
     }
 
     protected static function save()
     {
         self::checkSize();
-        $head=self::printf();
         $body=file_get_contents(self::$file);
-        file_put_contents(self::$latest, "\r\n".$head."\r\n".$body, FILE_APPEND);
+        $time=number_format(microtime(true) - D_START, 10);
+        $hash=self::$hash;
+        $info=self::getInfo();
+        $mem=self::memshow($info['memory'], 4);
+        $peo=ceil(1/$time);
+        $all=self::memshow($info['memory']*$peo,4);
+        file_put_contents(self::$latest, $body, FILE_APPEND);
+        file_put_contents(self::$latest,"====={$hash}====={$time}====={$mem}====={$peo}:{$all}=====\r\n\r\n",FILE_APPEND);
         unlink(self::$file);
         self::$saved=true;
         if (defined('LOG_JSON') && LOG_JSON) {
@@ -301,7 +304,7 @@ class Debug
             // 无法记录错误时直接显示错误
             return self::displayLog($log);
         }
-        $str="\t[".number_format($log['time'], 10).'S:'.self::memshow($log['mem'], 2).']'."\t".$log['level'].'>In '.$log['file'].'#'.$log['line']."\t\t".$log['name']."\t".$log['message']."\r\n";
+        $str="\t[".number_format($log['time'], 10).'s:'.self::memshow($log['mem'], 2).']'."\t".$log['level'].'>In '.$log['file'].'#'.$log['line']."\t\t".$log['name']."\t".$log['message']."\r\n";
         // 添加调用栈 高级或者同级则记录
         if ((defined('LOG_FILE_APPEND') && LOG_FILE_APPEND) && self::compareLevel($log['level'], conf('debug-backtrace', Debug::ERROR)) >= 0) {
             $str.=self::printTrace($log['backtrace'])."\r\n";

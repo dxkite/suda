@@ -11,12 +11,12 @@
  * @copyright  Copyright (c) DXkite
  * @license    MIT
  * @link       https://github.com/DXkite/suda
- * @version    since 1.2.5
+ * @version    since 1.2.9
  */
 
 
-require_once __DIR__ .'/../system/__autoload.php';
-require_once __DIR__ .'/../system/src/suda/core/System.php';
+require_once __DIR__ .'/../system/suda-console.php';
+ 
 
 use suda\core\Storage;
 $option=getopt("d:r::");

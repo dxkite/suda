@@ -41,7 +41,7 @@ abstract class Template
     */
     public function render()
     {
-        _D()->trace('echo '.$this->name);
+        debug()->trace('echo '.$this->name);
         // 渲染页面
         $content=self::getRenderedString();
         // 计算输出页面长度
@@ -68,17 +68,17 @@ abstract class Template
     */
     public function getRenderedString()
     {
-        _D()->time('render '.$this->name);
+        debug()->time('render '.$this->name);
         self::_render_start();
         $this->_render_template();
         $content=self::_render_end();
-        _D()->timeEnd('render '.$this->name);
+        debug()->timeEnd('render '.$this->name);
         return $content;
     }
     protected function _render_start()
     {
         array_push(self::$render, $this->name);
-        _D()->trace('start render', $this->name);
+        debug()->trace('start render', $this->name);
         ob_start();
     }
 
@@ -86,7 +86,7 @@ abstract class Template
     {
         array_pop(self::$render);
         $content=ob_get_clean();
-        _D()->trace('free render ['.strlen($content).']', $this->name);
+        debug()->trace('free render ['.strlen($content).']', $this->name);
         return $content;
     }
     /**

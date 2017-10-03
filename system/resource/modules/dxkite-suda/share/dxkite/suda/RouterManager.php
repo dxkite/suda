@@ -46,19 +46,19 @@ class RouterManager
         $admin=$info['role']==='admin';
         $name=$info['name'];
         $router_file= $module_path.'/resource/config/router'.($admin?'_admin':'').'.json';
-        _D()->info(__('路由文件:%s', $router_file));
+        debug()->info(__('路由文件:%s', $router_file));
         if (Storage::exist($router_file)) {
             $json=Json::loadFile($router_file);
         } else {
             $json=[];
         }
         if (!isset($json[$name])) {
-            _D()->warning(__('无法找到路由%s', $name));
+            debug()->warning(__('无法找到路由%s', $name));
             return false;
         }
         $class_path= $module_path.'/src/'.$info['class'].'.php';
         if (($class_path=Storage::abspath($class_path)) && $deleteall) {
-            _D()->info($class_path);
+            debug()->info($class_path);
             Storage::remove($class_path);
         }
         unset($json[$name]);
@@ -271,7 +271,7 @@ class RouterManager
         $simple_routers=[];
         $admin_routers=[];
         $module_dir=Application::getModuleDir($module);
-        _D()->trace(__('load module:%s [%s] path:%s', $module, Application::getModuleFullName($module), Application::getModulePath($module)));
+        debug()->trace(__('load module:%s [%s] path:%s', $module, Application::getModuleFullName($module), Application::getModulePath($module)));
         list($admin_prefix, $prefix)=Router::getModulePrefix($module);
         $module=Application::getModuleFullName($module);
         $prefix_it= function (&$router, $key, $prefixinfo) use ($module) {

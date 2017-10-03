@@ -74,9 +74,9 @@ class SudaCompiler implements Compiler
      */
     public function compile(string $name, string $input, string $output)
     {
-        _D()->time('compile '.$name);
+        debug()->time('compile '.$name);
         if (!Storage::exist($input)) {
-            _D()->warning(__('compile_error:no sorce file => %s %s',$name,$input));
+            debug()->warning(__('compile_error:no sorce file => %s %s',$name,$input));
             return false;
         }
         $content= $this->compileText(Storage::get($input));
@@ -86,7 +86,7 @@ class SudaCompiler implements Compiler
         $classname=Manager::className($name);
         $content='<?php  class '.$classname.' extends suda\template\compiler\suda\Template { protected $name="'.$name.'"; protected function _render_template() {  ?>'.$content.'<?php }}';
         Storage::put($output, $content);
-        _D()->timeEnd('compile '.$name);
+        debug()->timeEnd('compile '.$name);
         return true;
     }
 

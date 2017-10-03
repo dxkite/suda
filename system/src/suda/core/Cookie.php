@@ -81,5 +81,3 @@ class Cookie
         }
     }
 }
-
-register_shutdown_function(['suda\\core\\Cookie', 'sendCookies']);

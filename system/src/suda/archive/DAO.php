@@ -389,17 +389,17 @@ class DAO
             'object'=>'object',
             'resource'=>'resource',
         ];
-        // _D()->info($check, $value);
+        // debug()->info($check, $value);
         // 类型检测
         if (preg_match('/^'. implode('|', array_keys($type2name)) .'$/', $check)) {
-            // _D()->info('type check');
+            // debug()->info('type check');
             $name='is_'.$type2name[$check];
             if (!$name($value)) {
                 return false;
             }
             // 长度检测
         } elseif (preg_match('/^(\d+)(?:\,(\d+))?$/', $check, $match)) {
-            // _D()->info('length check',$match);
+            // debug()->info('length check',$match);
             if (isset($match[2])) {
                 $min=$match[1];
                 $max=$match[2];
@@ -411,7 +411,7 @@ class DAO
             }
             // 正则检测
         } elseif (preg_match('/^[\/](\S+)[\/]([imsxeADSXUuJ]+)?$/', $check)) {
-            // _D()->info('preg check');
+            // debug()->info('preg check');
             if (!preg_match($check, $value)) {
                 return false;
             }

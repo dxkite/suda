@@ -9,11 +9,9 @@
     // 网站根目录位置
     define('APP_PUBLIC', __DIR__);
     // 关闭模块
-    // define('DISALLOW_MODULES', 'suda');
+    define('DISABLE_MODULES', 'suda');
     // 开发者关闭模式
     define('DEBUG', false);
-    // 强行启动suda框架
-    // define('FORCE_SUDA',true);
     // 错误等级
     define('LOG_LEVEL', 'trace');
     // 输出日志详细信息到json文档
