@@ -51,26 +51,26 @@ class Debug
         self::$file=APP_LOG.'/tmps/'.self::$hash.'.tmp';
         Storage::mkdirs(dirname(self::$file));
         touch(self::$file);
-        file_put_contents(self::$file, '====='.self::$hash.'====='.$request->ip()."=====\r\n",FILE_APPEND);
-        file_put_contents(self::$file,self::printf()."\r\n",FILE_APPEND);
+        file_put_contents(self::$file, '====='.self::$hash.'====='.$request->ip().'====='.(conf('debug')?'debug':'normal')."=====\r\n",FILE_APPEND);
+        file_put_contents(self::$file,self::printHead()."\r\n",FILE_APPEND);
     }
 
-    public static function time(string $name)
+    public static function time(string $name,string $type='info')
     {
-        self::$time[$name]=microtime(true);
+        self::$time[$name]=['time'=>microtime(true),'type'=>$type];
     }
 
     public static function timeEnd(string $name)
     {
         if (isset(self::$time[$name])) {
-            $pass=microtime(true)-self::$time[$name];
+            $pass=microtime(true)-self::$time[$name]['time'];
             $backtrace=debug_backtrace();
             $offset=1;
             if (!isset($backtrace[$offset]['file'])) {
                 $offset--;
             }
             $call=(isset($backtrace[$offset]['class'])?$backtrace[$offset]['class'].'#':'').$backtrace[$offset]['function'];
-            self::_loginfo('info', $call, __('process %s %fs', $name, $pass), $backtrace[$offset]['file'] ??'unknown', $backtrace[$offset]['line'] ?? 0, $backtrace);
+            self::_loginfo(self::$time[$name]['type'], $call, __('process %s %fs', $name, $pass), $backtrace[$offset]['file'] ??'unknown', $backtrace[$offset]['line'] ?? 0, $backtrace);
             return $pass;
         }
         return 0;
@@ -264,12 +264,10 @@ class Debug
         self::_loginfo(Debug::ERROR, $e->getName(), $e->getMessage(), $e->getFile(), $e->getLine(), $e->getBacktrace());
     }
 
-    private static function printf()
+    private static function printHead()
     {
         $request=Request::getInstance();
-        $info=self::getInfo();
-        $mem=self::memshow($info['memory'], 2);
-        return  $request->ip(). "\t" .(conf('debug')?'debug':'normal') . "\t" . date('Y-m-d H:i:s') . "\t" .$request->method()."\t".$request->virtualUrl() ."\t".$mem.' '.self::$hash;
+        return  $request->ip() . "\t" . date('Y-m-d H:i:s') . "\t" .$request->method()."\t".$request->virtualUrl();
     }
 
     protected static function save()
@@ -278,8 +276,12 @@ class Debug
         $body=file_get_contents(self::$file);
         $time=number_format(microtime(true) - D_START, 10);
         $hash=self::$hash;
+        $info=self::getInfo();
+        $mem=self::memshow($info['memory'], 4);
+        $peo=ceil(1/$time);
+        $all=self::memshow($info['memory']*$peo,4);
         file_put_contents(self::$latest, $body, FILE_APPEND);
-        file_put_contents(self::$latest,"====={$hash}====={$time}=====\r\n\r\n",FILE_APPEND);
+        file_put_contents(self::$latest,"====={$hash}====={$time}====={$mem}====={$peo}:{$all}=====\r\n\r\n",FILE_APPEND);
         unlink(self::$file);
         self::$saved=true;
         if (defined('LOG_JSON') && LOG_JSON) {
