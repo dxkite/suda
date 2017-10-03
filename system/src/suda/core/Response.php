@@ -19,6 +19,7 @@ use suda\tool\Json;
 use suda\tool\ArrayHelper;
 use suda\template\Manager;
 use suda\exception\ApplicationException;
+
 // TODO: If-Modified-Since
 // TODO: Access-Control
 
@@ -91,7 +92,9 @@ abstract class Response
         $jsonstr=json_encode($values);
         self::type('json');
         Hook::exec('display:output', [&$jsonstr, $this->type]);
-        self::setHeader('Content-Length:'.strlen($jsonstr));
+        if (conf('app.calcContentLength', !conf('debug'))) {
+            self::setHeader('Content-Length:'.strlen($jsonstr));
+        }
         self::_etag(md5($jsonstr));
         echo $jsonstr;
     }
@@ -99,7 +102,7 @@ abstract class Response
     /**
     *  直接输出文件
     */
-    public function file(string $path,  string $filename=null,string $type=null)
+    public function file(string $path, string $filename=null, string $type=null)
     {
         $content=file_get_contents($path);
         $hash   = md5($content);
@@ -149,7 +152,7 @@ abstract class Response
 
     public function refresh()
     {
-        return $this->go(u(self::$name,$_GET));
+        return $this->go(u(self::$name, $_GET));
     }
 
     public function forward()
