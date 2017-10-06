@@ -8,9 +8,9 @@ suda is a simple web framework for **PHP7**.
 - [x] SQL Query Helper
 - [x] Debugger & Logger
 - [x] Page Hook 
-- [x] Simple Smarty Like Template
+- [x] Smarty Like Template
 - [x] Response
-- [x] Simple Date Access Object
+- [x] Table Object
 
 
 ## Get Start
