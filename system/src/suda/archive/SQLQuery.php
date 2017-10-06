@@ -197,14 +197,18 @@ class SQLQuery
                 throw new SQLException(__('could not select database:%s, please check the table if exist.', $this->database), 0, E_ERROR, $debug[1]['file'], $debug[1]['line']);
             }
         } elseif (is_null($this->database)) {
-            $database=Config::get('database.name', 'test');
-            if (self::$pdo->query('USE '.$database)) {
-                $this->database=$database;
+            $database=Config::get('database.name');
+            if ($database) {
+                if (self::$pdo->query('USE '.$database)) {
+                    $this->database=$database;
+                } else {
+                    debug()->warning(__('could not select database:%s, maybe you should create database.', $database), 0, E_ERROR, $debug[1]['file'], $debug[1]['line']);
+                }
             } else {
-                debug()->warning(__('could not select database:%s, maybe you should create database.', $database), 0, E_ERROR, $debug[1]['file'], $debug[1]['line']);
+                throw new SQLException(__('make sure you have set database info'), 0, E_ERROR, $debug[1]['file'], $debug[1]['line']);
             }
         }
-        
+
         if ($this->scroll) {
             $stmt=self::$pdo->prepare($query, [PDO::ATTR_CURSOR=>PDO::CURSOR_SCROLL]);
         } else {

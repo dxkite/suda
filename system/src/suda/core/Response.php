@@ -38,10 +38,11 @@ abstract class Response
         if (conf('markVersion', true)) {
             self::setHeader('X-Framework : Suda/'.SUDA_VERSION.' '.conf('app.name', 'suda-app').'/'.conf('app.version').' '.self::$name);
         }
+        
         if (conf('debug')) {
             self::noCache();
             // for windows debug touch file to avoid 304 by server
-            if (DIRECTORY_SEPARATOR==='\\') {
+            if (!IS_LINUX) {
                 $script=$_SERVER['SCRIPT_NAME'];
                 $file=APP_PUBLIC.$script;
                 $content=file_get_contents($file);
