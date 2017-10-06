@@ -19,7 +19,6 @@ use suda\core\Query;
 use suda\core\Storage;
 use suda\tool\ArrayHelper;
 use suda\exception\DAOException;
-use suda\archive\creator\Table;
 
 class DAO
 {
@@ -31,11 +30,10 @@ class DAO
      * fieldname=>verify_type,error_message
      * @var array
      */
-    protected $fieldChecks=[];
+    protected $field_check=[];
 
-    protected $primaryKeys;
+    protected $primaryKey=null;
     protected $tableName;
-    protected $cachePath;
 
     protected $order_field=null;
     protected $order=null;
@@ -45,12 +43,12 @@ class DAO
     public function __construct(string $tableName)
     {
         // 默认ID为表主键
-        $this->primaryKeys[]='id';
+        $this->primaryKey='id';
         $this->tableName=$tableName;
-        $this->cachePath=CACHE_DIR.'/database/fields/'.$this->tableName.'.php';
         // 读取类名作为表名
         self::initTableFields();
     }
+
 
     /**
      * 插入行
@@ -91,7 +89,7 @@ class DAO
      */
     public function getByPrimaryKey($value)
     {
-        return Query::where($this->getTableName(), $this->getWants(), $this->checkPrimaryKey($value))->fetch()?:false;
+        return Query::where($this->getTableName(), $this->getWants(), [$this->getPrimaryKey()=>$value])->fetch()?:false;
     }
 
 
@@ -238,20 +236,20 @@ class DAO
      *
      * @return string
      */
-    public function getPrimaryKeys():array
+    public function getPrimaryKey():string
     {
-        return $this->primaryKeys;
+        return $this->primaryKey;
     }
 
     /**
      * 设置主键
      *
-     * @param array $keys
+     * @param string $keyname
      * @return void
      */
-    public function setPrimaryKeys(array $keys)
+    public function setPrimaryKey(string $keyname)
     {
-        $this->primaryKeys=$keys;
+        $this->primaryKey=$keyname;
         return $this;
     }
 
@@ -288,7 +286,10 @@ class DAO
         if (is_null($fields)) {
             self::initTableFields();
             return $this;
-        }
+        } 
+        // elseif (!is_array($fields) && func_num_args()>=1) {
+        //     $fields=func_get_args();
+        // }
         $this->fields=$fields;
         return $this;
     }
@@ -313,24 +314,6 @@ class DAO
     {
         return $this->wants??$this->fields;
     }
-
-    protected function checkPrimaryKey($value)
-    {
-        if (count($this->primaryKeys)===1) {
-            return [ $this->primaryKeys[0]=>$value];
-        } else {
-            // 检查主键完整性
-            foreach ($this->primaryKeys as $key) {
-                if (!isset($value[$key])) {
-                    $message='primary key  is multipled,check '.$key.' in fields';
-                    $debug=debug_backtrace();
-                    throw new DAOException(__($message), 0, E_ERROR, $debug[1]['file'], $debug[1]['line']);
-                }
-            }
-            return $value;
-        }
-    }
-
     /**
      * 检查参数列
      *
@@ -355,11 +338,11 @@ class DAO
      */
     protected function checkFieldsType($values):bool
     {
-        $check= $this->fieldChecks;
+        $check= $this->field_check;
         $keys=array_keys($check);
         foreach ($keys as $key) {
             if (isset($values[$key]) && !$this->checkField($key, $values[$key])) {
-                $message=str_replace(['{key}','{value}','{check}'], [$key,self::strify($values[$key]),$this->fieldChecks[$key][0]], $this->fieldChecks[$key][1]??'field {key} value {value} type is not valid');
+                $message=str_replace(['{key}','{value}','{check}'], [$key,self::strify($values[$key]),$this->field_check[$key][0]], $this->field_check[$key][1]??'field {key} value {value} type is not valid');
                 $debug=debug_backtrace();
                 throw new DAOException(__($message), 0, E_ERROR, $debug[1]['file'], $debug[1]['line']);
             }
@@ -369,8 +352,8 @@ class DAO
 
     public function checkField(string $field, $value):bool
     {
-        if (isset($this->fieldChecks[$field][0])) {
-            return $this->checkValueType($this->fieldChecks[$field][0], $value);
+        if (isset($this->field_check[$field][0])) {
+            return $this->checkValueType($this->field_check[$field][0], $value);
         }
         return true;
     }
@@ -436,44 +419,29 @@ class DAO
         return true;
     }
     
-    protected function initTableFields()
+    private function initTableFields()
     {
-        if (file_exists($this->cachePath) && !conf('debug')) {
+        // 使用DTO文件
+        $path=CACHE_DIR.'/database/fields/'.$this->tableName.'.php';
+        if (file_exists($path) && !conf('debug')) {
             $fieldsinfo=require $path;
-            $this->setFields($fieldsinfo['fields']);
-            $this->setPrimaryKeys($fieldsinfo['primaryKeys']);
+            $this->setFields(array_keys($fieldsinfo['fields']));
+            $this->setPrimaryKey($fieldsinfo['primaryKey']);
         } else {
-            $this->initFromDatabase();
-            $this->cacheDbInfo();
-        }
-    }
-    
-    protected function initFromDatabase()
-    {
-        $fields=[];
-        $this->primaryKeys=[];
-        try {
+            $fields=[];
             $columns=(new SQLQuery('show columns from #{'.$this->getTableName().'};'))->fetchAll();
-        } catch (\suda\exception\SQLException  $e) {
-            return false;
-        }
-        
-        foreach ($columns as $column) {
-            $fields[]=$column['Field'];
-            if ($column['Key']==='PRI') {
-                $this->primaryKeys[]=$column['Field'];
+            foreach ($columns as $column) {
+                $fields[$column['Field']]=$column['Type'];
+                if ($column['Key']==='PRI') {
+                    $this->setPrimaryKey($column['Field']);
+                }
             }
+            $this->setFields(array_keys($fields));
+            $info['fields']=$fields;
+            $info['primaryKey']=$this->getPrimaryKey();
+            Storage::path(dirname($path));
+            ArrayHelper::export($path, '_fieldinfos', $info);
         }
-        $this->setFields($fields);
-        return true;
-    }
-
-    protected function cacheDbInfo()
-    {
-        $info['fields']=$this->getFields();
-        $info['primaryKeys']=$this->getPrimaryKeys();
-        Storage::path(dirname($this->cachePath));
-        ArrayHelper::export($this->cachePath, '_fieldinfos', $info);
     }
 
     protected static function strify($object)
