@@ -141,7 +141,9 @@ class System
             Hook::exec('system:shutdown::before');
         }
         // 停止响应输出
-        fastcgi_finish_request();
+        if (function_exists('fastcgi_finish_request')) {
+            fastcgi_finish_request();
+        }
         Cache::gc();
         Hook::exec('system:shutdown');
         debug()->trace('connection status '. ['normal','aborted','timeout'][connection_status()]);
@@ -187,7 +189,7 @@ class System
             SIGALRM=>'SIGALRM',
             SIGKILL=>'SIGKILL',
         ];
-        debug()->die(__('exit sig %s',$sig[$signo]));
+        debug()->die(__('exit sig %s', $sig[$signo]));
         exit;
     }
 }
