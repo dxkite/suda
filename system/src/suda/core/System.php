@@ -50,13 +50,7 @@ class System
         // 如果开启了进程信号处理
         if (function_exists('pcntl_signal')) {
             pcntl_signal(SIGTERM, 'suda\\core\\System::sigHandler');
-            pcntl_signal(SIGHUP, 'suda\\core\\System::sigHandler');
-            pcntl_signal(SIGINT, 'suda\\core\\System::sigHandler');
-            pcntl_signal(SIGQUIT, 'suda\\core\\System::sigHandler');
-            pcntl_signal(SIGILL, 'suda\\core\\System::sigHandler');
-            pcntl_signal(SIGPIPE, 'suda\\core\\System::sigHandler');
-            // 忽略时钟信号
-            // pcntl_signal(SIGALRM, 'suda\\core\\System::sigHandler');
+            pcntl_signal(SIGKILL, 'suda\\core\\System::sigHandler');
         }
 
         // 注册基本常量
@@ -137,10 +131,12 @@ class System
 
     public static function onShutdown()
     {
-        debug()->timeEnd('before shutdown');
-        debug()->time('shutdown');
+        // 停止响应输出
+        fastcgi_finish_request();
         // 忽略用户停止
         ignore_user_abort(true);
+        debug()->timeEnd('before shutdown');
+        debug()->time('shutdown');
         // 如果正常连接则设置未来得及发送的Cookie
         if (connection_status() == CONNECTION_NORMAL) {
             Cookie::sendCookies();
@@ -189,8 +185,9 @@ class System
             SIGILL=>'SIGILL',
             SIGPIPE=>'SIGPIPE',
             SIGALRM=>'SIGALRM',
+            SIGKILL=>'SIGKILL',
         ];
-        debug()->error(__('exit sig %s',$sig[$signo]));
+        debug()->die(__('exit sig %s',$sig[$signo]));
         exit;
     }
 }
