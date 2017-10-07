@@ -19,6 +19,7 @@ use suda\template\Manager;
 use suda\tool\Json;
 use suda\tool\ArrayHelper;
 use suda\exception\ApplicationException;
+use suda\exception\JSONException;
 
 class Application
 {
@@ -34,41 +35,32 @@ class Application
     private static $module_name_cache=[];
     // 模块目录装换成模块名
     private static $module_dir_name=[];
+    private static $modules_path=[];
 
     public function __construct(string $app)
     {
         debug()->trace(__('application load %s', $app));
         $this->path=$app;
-
-        // 注册基本常量
-        defined('MODULES_DIR') or define('MODULES_DIR', Storage::path(APP_DIR.'/modules'));
-        defined('RESOURCE_DIR') or define('RESOURCE_DIR', Storage::path(APP_DIR.'/resource'));
-        defined('DATA_DIR') or define('DATA_DIR', Storage::path(APP_DIR.'/data'));
-        defined('RUNTIME_DIR') or define('RUNTIME_DIR', Storage::path(DATA_DIR.'/runtime'));
-        defined('VIEWS_DIR') or define('VIEWS_DIR', Storage::path(DATA_DIR.'/views'));
-        defined('CACHE_DIR') or define('CACHE_DIR', Storage::path(DATA_DIR.'/cache'));
-        defined('CONFIG_DIR') or define('CONFIG_DIR', Storage::path(RESOURCE_DIR.'/config'));
-        defined('TEMP_DIR') or define('TEMP_DIR', Storage::path(DATA_DIR.'/temp'));
-        defined('SHRAE_DIR') or define('SHRAE_DIR', Storage::path(APP_DIR.'/share'));
     
         // 获取基本配置信息
         if (Storage::exist($path=CONFIG_DIR.'/config.json')) {
-            Config::load($path);
+            try{
+                Config::load($path);
+            }catch(JSONException $e){
+                debug()->die(__('parse application config.json error'));
+            }
             // 开发状态覆盖
             if (defined('DEBUG')) {
                 Config::set('debug', DEBUG);
                 Config::set('app.debug', DEBUG);
             }
         }
-        
         // 加载外部数据库配置
         self::configDBify();
-
         // 监听器
         if (Storage::exist($path=CONFIG_DIR.'/listener.json')) {
             Hook::loadJson($path);
         }
-
         // 设置PHP属性
         set_time_limit(Config::get('timelimit', 0));
         // 设置时区
@@ -77,8 +69,11 @@ class Application
         Autoloader::setNamespace(Config::get('app.namespace'));
         // 系统共享库
         Autoloader::addIncludePath(SHRAE_DIR);
+        // 注册模块目录
+        Application::addModulesPath(SYSTEM_RESOURCE.'/modules');
+        Application::addModulesPath(MODULES_DIR);
         // 读取目录，注册所有模块
-        self::registerModules();
+        Application::registerModules();
         // 加载模块
         self::loadModules();
         // 调整模板
@@ -87,6 +82,19 @@ class Application
         // 初次运行初始化资源
         if (conf('app.init')) {
             init_resource();
+        }
+    }
+
+    /**
+     * 添加模块扫描目录
+     *
+     * @param string $path
+     * @return void
+     */
+    public static function addModulesPath(string $path){
+        $path=Storage::abspath($path);
+        if($path && !in_array($path,self::$modules_path)){
+            self::$modules_path[]=$path;
         }
     }
 
@@ -341,17 +349,11 @@ class Application
      */
     private static function registerModules()
     {
-        $system_modules=SYSTEM_RESOURCE.'/modules';
-        $app_modules=MODULES_DIR;
-        // 内置模块
-        $dirs=Storage::readDirs($system_modules);
-        foreach ($dirs as $dir) {
-            self::registerModule($system_modules.'/'.$dir);
-        }
-        // 应用模块
-        $dirs=Storage::readDirs($app_modules);
-        foreach ($dirs as $dir) {
-            self::registerModule($app_modules.'/'.$dir);
+        foreach (self::$modules_path as $path){
+            $dirs=Storage::readDirs($path);
+            foreach ($dirs as $dir) {
+                self::registerModule($path.'/'.$dir);
+            }
         }
     }
 

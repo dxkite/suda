@@ -32,6 +32,7 @@ use suda\archive\SQLQuery;
 use suda\tool\Json;
 use suda\tool\Value;
 use suda\core\exception\ApplicationException;
+use suda\exception\JSONException;
 
 class System
 {
@@ -41,16 +42,41 @@ class System
     public static function init()
     {
         class_alias('suda\\core\\System', 'System');
+        // 错误处理
         register_shutdown_function('suda\\core\\System::onShutdown');
         set_error_handler('suda\\core\\System::uncaughtError');
         set_exception_handler('suda\\core\\System::uncaughtException');
+
+        // 如果开启了进程信号处理
+        if (function_exists('pcntl_signal')) {
+            pcntl_signal(SIGTERM, 'suda\\core\\System::sigHandler');
+            pcntl_signal(SIGHUP, 'suda\\core\\System::sigHandler');
+            pcntl_signal(SIGINT, 'suda\\core\\System::sigHandler');
+            pcntl_signal(SIGQUIT, 'suda\\core\\System::sigHandler');
+            pcntl_signal(SIGILL, 'suda\\core\\System::sigHandler');
+            pcntl_signal(SIGPIPE, 'suda\\core\\System::sigHandler');
+            // 忽略时钟信号
+            // pcntl_signal(SIGALRM, 'suda\\core\\System::sigHandler');
+        }
+
+        // 注册基本常量
+        defined('MODULES_DIR') or define('MODULES_DIR', Storage::path(APP_DIR.'/modules'));
+        defined('RESOURCE_DIR') or define('RESOURCE_DIR', Storage::path(APP_DIR.'/resource'));
+        defined('DATA_DIR') or define('DATA_DIR', Storage::path(APP_DIR.'/data'));
+        defined('RUNTIME_DIR') or define('RUNTIME_DIR', Storage::path(DATA_DIR.'/runtime'));
+        defined('VIEWS_DIR') or define('VIEWS_DIR', Storage::path(DATA_DIR.'/views'));
+        defined('CACHE_DIR') or define('CACHE_DIR', Storage::path(DATA_DIR.'/cache'));
+        defined('CONFIG_DIR') or define('CONFIG_DIR', Storage::path(RESOURCE_DIR.'/config'));
+        defined('TEMP_DIR') or define('TEMP_DIR', Storage::path(DATA_DIR.'/temp'));
+        defined('SHRAE_DIR') or define('SHRAE_DIR', Storage::path(APP_DIR.'/share'));
         Debug::beforeSystemRun();
         Locale::path(SYSTEM_RESOURCE.'/locales');
         debug()->trace('system init');
         Hook::exec('system:init');
     }
  
-    public static function getApplication(){
+    public static function getApplication()
+    {
         return self::$app_instance;
     }
     
@@ -81,7 +107,7 @@ class System
             Hook::listen('system:uncaughtException', [self::$app_instance, 'uncaughtException']);
             Hook::listen('system:uncaughtError', [self::$app_instance, 'uncaughtError']);
         } else {
-            throw new ApplicationException(__('unsupport base application class %s', self::$application_class));
+            debug()->die(__('unsupport base application class %s', self::$application_class));
         }
     }
 
@@ -93,12 +119,15 @@ class System
             debug()->trace(__('create base app'));
             Storage::copydir(SYSTEM_RESOURCE.'/app/', APP_DIR);
             Storage::put(APP_DIR.'/modules/default/resource/config/config.json', '{"name":"default"}');
-            Config::set('app.init',true);
+            Config::set('app.init', true);
         }
         Autoloader::addIncludePath(APP_DIR.'/share');
-        // 设置配置
-        Config::set('app', Json::loadFile($manifast));
-
+        try {
+            // 加载配置
+            Config::set('app', Json::loadFile($manifast));
+        } catch (JSONException $e) {
+            debug()->die(__('parse mainifast error %s', $e->getMessage()));
+        }
         // 载入配置前设置配置
         Hook::exec('core:loadManifast');
         // 默认应用控制器
@@ -148,5 +177,20 @@ class System
         $info=Debug::getInfo();
         $info=array_merge($info, SQLQuery::getRunInfo());
         return $info;
+    }
+
+    public static function sigHandler(int $signo)
+    {
+        static $sig=[
+            SIGTERM=>'SIGTERM',
+            SIGHUP=>'SIGHUP',
+            SIGINT=>'SIGINT',
+            SIGQUIT=>'SIGQUIT',
+            SIGILL=>'SIGILL',
+            SIGPIPE=>'SIGPIPE',
+            SIGALRM=>'SIGALRM',
+        ];
+        debug()->error(__('exit sig %s',$sig[$signo]));
+        exit;
     }
 }

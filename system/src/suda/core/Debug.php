@@ -51,7 +51,7 @@ class Debug
         self::$file=APP_LOG.'/tmps/'.self::$hash.'.tmp';
         Storage::mkdirs(dirname(self::$file));
         touch(self::$file);
-        file_put_contents(self::$file, '====='.self::$hash.'====='.$request->ip().'====='.(conf('debug')?'debug':'normal')."=====\r\n",FILE_APPEND);
+        file_put_contents(self::$file, '====='.self::$hash.'====='.$request->ip().'====='.(conf('debug',defined('DEBUG') && DEBUG)?'debug':'normal')."=====\r\n",FILE_APPEND);
         file_put_contents(self::$file,self::printHead()."\r\n",FILE_APPEND);
     }
 
@@ -78,8 +78,8 @@ class Debug
 
     protected static function compareLevel($levela, $levelb)
     {
-        $levela_num=is_numeric($levela)?$levela:self::$level[strtolower($levela)];
-        $levelb_num=is_numeric($levelb)?$levelb:self::$level[strtolower($levelb)];
+        $levela_num=is_numeric($levela)?$levela:self::$level[strtolower($levela)]??100;
+        $levelb_num=is_numeric($levelb)?$levelb:self::$level[strtolower($levelb)]??100;
         return $levela_num - $levelb_num;
     }
 
@@ -114,7 +114,7 @@ class Debug
         }
     }
 
-    protected static function printTrace(array $backtrace, bool $str=true)
+    protected static function printTrace(array $backtrace, bool $str=true,string $perfix='')
     {
         $traces_console=[];
         foreach ($backtrace as $trace) {
@@ -144,7 +144,7 @@ class Debug
         if ($str) {
             $str='';
             foreach ($traces_console as $trace_info) {
-                $str.=$trace_info."\r\n";
+                $str.=$perfix.$trace_info."\r\n";
             }
             return $str;
         }
@@ -307,7 +307,7 @@ class Debug
         $str="\t[".number_format($log['time'], 10).'s:'.self::memshow($log['mem'], 2).']'."\t".$log['level'].'>In '.$log['file'].'#'.$log['line']."\t\t".$log['name']."\t".$log['message']."\r\n";
         // 添加调用栈 高级或者同级则记录
         if ((defined('LOG_FILE_APPEND') && LOG_FILE_APPEND) && self::compareLevel($log['level'], conf('debug-backtrace', Debug::ERROR)) >= 0) {
-            $str.=self::printTrace($log['backtrace'])."\r\n";
+            $str.=self::printTrace($log['backtrace'],true,"\t\t=> ")."\r\n";
         }
         return file_put_contents(self::$file, $str, FILE_APPEND);
     }
@@ -355,6 +355,18 @@ class Debug
         self::save();
     }
 
+
+    public static function die(string $message) { 
+        $backtrace=debug_backtrace();
+        $offset=1;
+        if (!isset($backtrace[$offset]['file'])) {
+            $offset--;
+        }
+        $call=(isset($backtrace[$offset]['class'])?$backtrace[$offset]['class'].'#':'').$backtrace[$offset]['function'];
+        self::_loginfo('die', $call, $message, $backtrace[$offset]['file'] ??'unknown', $backtrace[$offset]['line'] ?? 0, $backtrace);
+        die($message);    
+    }
+    
     public static function __callStatic($method, $args)
     {
         self::aliasMethod($method, $args);

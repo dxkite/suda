@@ -440,7 +440,7 @@ abstract class Table
     protected function initTableFields()
     {
         if (file_exists($this->cachePath) && !conf('debug')) {
-            $fieldsinfo=require $path;
+            $fieldsinfo=require $this->cachePath;
             $this->setFields($fieldsinfo['fields']);
             $this->setPrimaryKeys($fieldsinfo['primaryKeys']);
         } else {
