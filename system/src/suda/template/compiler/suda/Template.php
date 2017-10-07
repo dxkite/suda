@@ -35,7 +35,16 @@ abstract class Template
     protected $name=null;
     protected $parent=null;
     protected $hooks=[];
+    // 所在模块
+    protected $module=null;
+    // 渲染堆栈
     protected static $render=[];
+    
+    public function __construct()
+    {
+        preg_match('/^((?:[a-zA-Z0-9_-]+\/)?[a-zA-Z0-9_-]+)(?::([^:]+))?(?::(.+))?$/', $this->name, $match);
+        $this->module= isset($match[3])?$match[1].(isset($match[2])?':'.$match[2]:''):$match[1];
+    }
     /**
     * 渲染页面
     */
@@ -219,8 +228,7 @@ abstract class Template
 
     public function getModule()
     {
-        preg_match('/^((?:[a-zA-Z0-9_-]+\/)?[a-zA-Z0-9_-]+)(?::([^:]+))?(?::(.+))?$/', $this->name, $match);
-        return isset($match[3])?$match[1].(isset($match[2])?':'.$match[2]:''):$match[1];
+        return $this->module;
     }
 
     public function getValue()
@@ -228,7 +236,8 @@ abstract class Template
         return $this->value;
     }
 
-    public function getResponse(){
+    public function getResponse()
+    {
         return $this->response;
     }
 }

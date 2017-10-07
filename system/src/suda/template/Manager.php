@@ -86,8 +86,8 @@ class Manager
     public static function compile(string $name)
     {
         self::loadCompile();
-        if ($path=self::getInputPath($name)) {
-            return self::$compiler->compile($name, $path, self::getOutputPath($name));
+        if ($path=self::getInputFile($name)) {
+            return self::$compiler->compile($name, $path, self::getOutputFile($name));
         }
         return false;
     }
@@ -102,7 +102,7 @@ class Manager
     public static function display(string $name, string $viewpath=null)
     {
         if (is_null($viewpath)) {
-            $viewpath=self::getOutputPath($name);
+            $viewpath=self::getOutputFile($name);
         }
 
         if (Config::get('debug', true)) {
@@ -194,29 +194,6 @@ class Manager
     }
 
     /**
-     * 模板输入路径
-     *
-     * @param string $name
-     * @return string
-     */
-    public static function getInputPath(string $name)
-    {
-        return self::getInputFile($name.self::$extRaw);
-    }
-
-    /**
-     * 模板编译后输出路径
-     *
-     * @param string $name
-     * @return string
-     */
-    public static function getOutputPath(string $name):string
-    {
-        return self::getOutputFile($name.self::$extCpl);
-    }
-
-
-    /**
      * 复制模板目录下静态文件
      *
      * @param string $static_path
@@ -304,17 +281,18 @@ class Manager
      * @param string $name
      * @return string
      */
-    public static function getInputFile(string $name)
+    public static function getInputFile(string & $name)
     {
         list($module, $basename)=Router::parseName($name);
+        $name=$module.':'.$basename;
         if ($app_theme=self::getAppThemePath($module)) {
-            $input=$app_theme.'/'.trim($basename, '/');
+            $input=$app_theme.'/'.trim($basename, '/').self::$extRaw;
             if (Storage::exist($input)) {
                 return $input;
             }
         }
         if ($path=self::getThemePath($module)) {
-            $input= $path.'/'.$basename;
+            $input= $path.'/'.trim($basename, '/').self::$extRaw;
             if (Storage::exist($input)) {
                 return $input;
             }
@@ -328,11 +306,12 @@ class Manager
      * @param string $name
      * @return string
      */
-    public static function getOutputFile(string $name):string
+    public static function getOutputFile(string & $name):string
     {
         list($module, $basename)=Router::parseName($name);
+        $name=$module.':'.$basename;
         $module_dir=Application::getModuleDir($module);
-        $output=VIEWS_DIR.'/'. $module_dir .'/'.$basename;
+        $output=VIEWS_DIR.'/'. $module_dir .'/'.$basename.self::$extCpl;
         return $output;
     }
 

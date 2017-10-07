@@ -84,7 +84,9 @@ class SudaCompiler implements Compiler
             Storage::mkdirs(dirname($output));
         }
         $classname=Manager::className($name);
-        $content='<?php  class '.$classname.' extends suda\template\compiler\suda\Template { protected $name="'.$name.'"; protected function _render_template() {  ?>'.$content.'<?php }}';
+        preg_match('/^((?:[a-zA-Z0-9_-]+\/)?[a-zA-Z0-9_-]+)(?::([^:]+))?(?::(.+))?$/', $name, $match);
+        $module = isset($match[3])?$match[1].(isset($match[2])?':'.$match[2]:''):$match[1];
+        $content='<?php  class '.$classname.' extends suda\template\compiler\suda\Template { protected $name="'.$name.'";protected $module="'.$module.'"; protected function _render_template() {  ?>'.$content.'<?php }}';
         Storage::put($output, $content);
         debug()->timeEnd('compile '.$name);
         return true;
