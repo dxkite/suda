@@ -131,17 +131,17 @@ class System
 
     public static function onShutdown()
     {
-        // 停止响应输出
-        fastcgi_finish_request();
-        // 忽略用户停止
+        // 忽略用户停止脚本
         ignore_user_abort(true);
         debug()->timeEnd('before shutdown');
         debug()->time('shutdown');
-        // 如果正常连接则设置未来得及发送的Cookie
+        // 发送Cookie
         if (connection_status() == CONNECTION_NORMAL) {
             Cookie::sendCookies();
             Hook::exec('system:shutdown::before');
         }
+        // 停止响应输出
+        fastcgi_finish_request();
         Cache::gc();
         Hook::exec('system:shutdown');
         debug()->trace('connection status '. ['normal','aborted','timeout'][connection_status()]);
