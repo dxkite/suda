@@ -10,6 +10,8 @@ class Install
      */
     public static function task()
     {
+        // ensure database
+        (new \suda\core\Query('CREATE DATABASE IF NOT EXISTS `'.conf('database.name').'` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;'))->exec();
         // TODO install task
         debug()->info('run_install_task');
     }

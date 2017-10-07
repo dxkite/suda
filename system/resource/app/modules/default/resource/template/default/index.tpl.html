@@ -8,18 +8,16 @@
 
 <body>
     <div> {{ __($:helloworld) }} @u </div>
-    @if (count($_GET))
+ 
     <table>
-        @foreach ($_GET as $name => $value)
+        @foreach ($:list as $item )
         <tr>
-            <th>{{$name}}</th>
-            <td>{{$value}}</td>
+            <th>{{$item['name']}}</th>
+            <td>{{$item['value']}}</td>
         </tr>
         @endforeach
     </table>
-    @else
-    <div>No GET value</div>
-    @endif {:body}
+    {:body}
 </body>
 {:script}
 

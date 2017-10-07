@@ -17,7 +17,7 @@
 namespace cn\atd3\response;
 
 use suda\core\{Session,Cookie,Request,Query};
-
+use cn\atd3\table\TestTable;
 /**
 * visit url / as all method to run this class.
 * you call use u('index',Array) to create path.
@@ -39,6 +39,15 @@ class IndexResponse extends \suda\core\Response
         $page=$this->page('demo/default:index');
         $page->set('title', 'Welcome to use Suda!');
         $page->set('helloworld', 'Hello,World!');
+        // create database table instance
+        $table=new TestTable;
+        // insert into database table
+        $table->insert([
+            'name'=>'dxkite',
+            'value'=>date('Y-m-d H:i:s'). ' get request  from '.$request->ip(),
+        ]);
+        // list database table
+        $page->set('list',$table->list());
         return $page->render();
     }
 }

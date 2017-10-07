@@ -83,6 +83,14 @@ final class CookieSetter
         $this->session= $session;
         return $this;
     }
+    
+    public function reset() {
+        $this->set=false;
+        if(isset($_COOKIE[$this->name])){
+            unset($_COOKIE[$this->name]);
+        }
+        return $this;
+    }
 
     public function set()
     {
@@ -97,7 +105,8 @@ final class CookieSetter
             $this->set=true;
             $time= $this->fulltime ? $this->expire : time()+$this->expire;
             $expire= $this->session ? 0 : $this->expire;
-            return setcookie($this->name, $this->value, $expire, $this->path, $this->domain, $this->secure, $this->httponly);
+            setcookie($this->name, $this->value, $expire, $this->path, $this->domain, $this->secure, $this->httponly);
         }
+        return $this;
     }
 }
