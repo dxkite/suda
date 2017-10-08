@@ -105,17 +105,17 @@ class Table
         }
         if (is_array($this->uniqueKeys)) {
             foreach ($this->uniqueKeys as $field) {
-                $content[]='UNIQUE KEY `'.$field->getName().'` ('.$field->getName().')';
+                $content[]='UNIQUE KEY `'.$field->getName().'` (`'.$field->getName().'`)';
             }
         }
         if (is_array($this->indexKeys)) {
             foreach ($this->indexKeys as $field) {
-                $content[]='INDEX ('.$field->getName().')';
+                $content[]='INDEX (`'.$field->getName().'`)';
             }
         }
         if (is_array($this->keys)) {
             foreach ($this->keys as $field) {
-                $content[]='KEY `'.$field->getName().'` ('.$field->getName().')';
+                $content[]='KEY `'.$field->getName().'` (`'.$field->getName().'`)';
             }
         }
         if (is_array($this->foreignKeys)) {
@@ -167,7 +167,7 @@ class Table
         return array_keys($this->fields);
     }
 
-    public function getPrimaryKeysName()
+    public function getPrimaryKeyName()
     {
         return array_keys($this->primaryKeys);
     }
