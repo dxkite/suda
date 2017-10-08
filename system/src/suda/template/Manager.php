@@ -52,7 +52,19 @@ class Manager
     private static $compiler=null;
     private static $staticPath='assets/static';
     private static $dynamicPath='assets';
+
+    /**
+     * 模板搜索目录
+     *
+     * @var array
+     */
     protected static $templateSource=[];
+    /**
+     * 模板搜索目录初始化
+     *
+     * @var array
+     */
+    protected static $templateSourceInit=[];
     /**
      * 载入模板编译器
      */
@@ -216,7 +228,7 @@ class Manager
             self::$templateSource[$module_name]=[];
         }
         if (!in_array($path, self::$templateSource[$module_name]) && $abspath= Storage::abspath($path)) {
-            self::$templateSource[$module_name][]=$abspath;
+            array_unshift(self::$templateSource[$module_name],$abspath);
         }
     }
 
@@ -230,9 +242,13 @@ class Manager
     {
         $module_name=Application::getModuleName($module);
         // 未初始化
-        if(!isset(self::$templateSource[$module_name])){
-            self::addTemplateSource($module,self::getAppThemePath($module));
+        $init_source=isset(self::$templateSource[$module_name]);
+        $init_theme=isset(self::$templateSourceInit[self::$theme]) && self::$templateSourceInit[self::$theme];
+        if(!$init_source || !$init_theme){
             self::addTemplateSource($module,self::getThemePath($module));
+            self::addTemplateSource($module,self::getAppThemePath($module));
+            self::$templateSourceInit[self::$theme]=true;
+            debug()->trace('init_template_source_'.$module_name,self::getTemplateSource($module_name));
         }
         return self::$templateSource[$module_name] ;
     }
