@@ -43,6 +43,7 @@ class Storage
     
     public static function abspath(string $path)
     {
+        if(empty($path)) return false;
         $path=self::tpath($path);
         return realpath($path);
     }
@@ -290,11 +291,12 @@ class Storage
         return self::put($save, self::curl($url));
     }
     
-    public static function curl(string $url)
+    public static function curl(string $url,int $timeout=3)
     {
         $ch=curl_init($url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_HEADER, false);
+        curl_setopt($ch,CURLOPT_CONNECTTIMEOUT,$timeout);
         $file=curl_exec($ch);
         curl_close($ch);
         return $file;
