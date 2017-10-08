@@ -19,7 +19,7 @@ abstract class Table
      */
     protected $fieldChecks=[];
 
-    protected $primaryKeys;
+    protected $primaryKey;
     protected $tableName;
     protected $cachePath;
 
@@ -31,7 +31,7 @@ abstract class Table
     public function __construct(string $tableName)
     {
         // 默认ID为表主键
-        $this->primaryKeys[]='id';
+        $this->primaryKey[]='id';
         $this->tableName=$tableName;
         $this->cachePath=CACHE_DIR.'/database/fields/'.$this->tableName.'.php';
         // 读取类名作为表名
@@ -93,7 +93,7 @@ abstract class Table
         if (is_array($values) && !($this->checkFields(array_keys($values)) && $this->checkFieldsType($values))) {
             return false;
         }
-        return Query::update($this->getTableName(), $values, [$this->getPrimaryKey()=>$value]);
+        return Query::update($this->getTableName(), $values, $this->checkPrimaryKey($value) );
     }
     
     /**
@@ -104,7 +104,7 @@ abstract class Table
      */
     public function deleteByPrimaryKey($value):int
     {
-        return Query::delete($this->getTableName(), [$this->getPrimaryKey()=>$value]);
+        return Query::delete($this->getTableName(),$this->checkPrimaryKey($value)  );
     }
 
     
@@ -224,9 +224,9 @@ abstract class Table
      *
      * @return string
      */
-    public function getPrimaryKeys():array
+    public function getPrimaryKey():array
     {
-        return $this->primaryKeys;
+        return $this->primaryKey;
     }
 
     /**
@@ -235,9 +235,9 @@ abstract class Table
      * @param array $keys
      * @return void
      */
-    public function setPrimaryKeys(array $keys)
+    public function setPrimaryKey(array $keys)
     {
-        $this->primaryKeys=$keys;
+        $this->primaryKey=$keys;
         return $this;
     }
 
@@ -302,11 +302,11 @@ abstract class Table
 
     protected function checkPrimaryKey($value)
     {
-        if (count($this->primaryKeys)===1) {
-            return [ $this->primaryKeys[0]=>$value];
+        if (count($this->primaryKey)===1) {
+            return [ $this->primaryKey[0]=>$value];
         } else {
             // 检查主键完整性
-            foreach ($this->primaryKeys as $key) {
+            foreach ($this->primaryKey as $key) {
                 if (!isset($value[$key])) {
                     $message='primary key  is multipled,check '.$key.' in fields';
                     $debug=debug_backtrace();
@@ -433,7 +433,7 @@ abstract class Table
     protected function initFromTable(TableCreator $table)
     {
         (new SQLQuery($table->getSQL()))->exec();
-        $this->primaryKeys=$table->getPrimaryKeysName();
+        $this->primaryKey=$table->getPrimaryKeyName();
         $this->fields=$table->getFieldsName();
         return true;
     }
@@ -442,7 +442,7 @@ abstract class Table
         if (file_exists($this->cachePath) && !conf('debug')) {
             $fieldsinfo=require $this->cachePath;
             $this->setFields($fieldsinfo['fields']);
-            $this->setPrimaryKeys($fieldsinfo['primaryKeys']);
+            $this->setPrimaryKey($fieldsinfo['primaryKey']);
         } else {
             if (!$this->initFromDatabase()) {
                 $this->createTable();
@@ -454,7 +454,7 @@ abstract class Table
     protected function initFromDatabase()
     {
         $fields=[];
-        $this->primaryKeys=[];
+        $this->primaryKey=[];
         try {
             $columns=(new SQLQuery('show columns from #{'.$this->getTableName().'};'))->fetchAll();
         } catch (\suda\exception\SQLException  $e) {
@@ -464,7 +464,7 @@ abstract class Table
         foreach ($columns as $column) {
             $fields[]=$column['Field'];
             if ($column['Key']==='PRI') {
-                $this->primaryKeys[]=$column['Field'];
+                $this->primaryKey[]=$column['Field'];
             }
         }
         $this->setFields($fields);
@@ -474,7 +474,7 @@ abstract class Table
     protected function cacheDbInfo()
     {
         $info['fields']=$this->getFields();
-        $info['primaryKeys']=$this->getPrimaryKeys();
+        $info['primaryKey']=$this->getPrimaryKey();
         Storage::path(dirname($this->cachePath));
         ArrayHelper::export($this->cachePath, '_fieldinfos', $info);
     }
