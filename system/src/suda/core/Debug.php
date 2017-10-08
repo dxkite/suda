@@ -208,7 +208,7 @@ class Debug
                     if (is_object($arg)) {
                         $args .= 'class '.get_class($arg).',';
                     } else {
-                        $args .=   var_export($arg, true).',';
+                        $args .=   print_r($arg, true).',';
                     }
                 }
                 $args = rtrim($args, ',');
