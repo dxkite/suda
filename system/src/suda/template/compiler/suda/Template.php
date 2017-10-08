@@ -211,6 +211,7 @@ abstract class Template
     {
         return $this->name;
     }
+    
     public function responseName()
     {
         return $this->response->getName();
