@@ -64,6 +64,14 @@ class Manager
         }
     }
 
+    // 设置模板基类
+    public static function setTemplate(string $template=null){
+        if(is_null($template)){
+            return self::$compiler->setBase();
+        }
+        return self::$compiler->setBase($template);
+    }
+
     /**
      * 获取/设置模板样式
      * @param string|null $theme
@@ -85,7 +93,6 @@ class Manager
      */
     public static function compile(string $name)
     {
-        self::loadCompile();
         if ($path=self::getInputFile($name)) {
             return self::$compiler->compile($name, $path, self::getOutputFile($name));
         }
@@ -126,7 +133,6 @@ class Manager
      */
     public static function displayFile(string $file, string $name)
     {
-        self::loadCompile();
         return self::$compiler->render($name, $file);
     }
 
@@ -393,3 +399,5 @@ class Manager
         return conf('asset-server', Request::hostBase()).$url;
     }
 }
+
+Manager::loadCompile();
