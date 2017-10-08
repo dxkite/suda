@@ -33,7 +33,8 @@ class SudaCompiler implements Compiler
     protected static $echoTag=['{{','}}'];
     protected static $hookTag=['{:','}'];
     protected static $commentTag=['{--','--}'];
-
+    protected static $strTransTag=['${','}'];
+    protected static $rawTransTag=['@{','}'];
     const Template='suda\template\compiler\suda\Template';
     protected static $template=self::Template;
     /**
@@ -179,9 +180,11 @@ class SudaCompiler implements Compiler
         $rawecho=sprintf('/(?<!!)%s\s*(.+?)\s*?%s/', preg_quote(self::$rawTag[0]), preg_quote(self::$rawTag[1]));
         $comment=sprintf('/(?<!!)%s(.+)%s/', preg_quote(self::$commentTag[0]), preg_quote(self::$commentTag[1]));
         $hook=sprintf('/(?<!!)%s(.+)%s/', preg_quote(self::$hookTag[0]), preg_quote(self::$hookTag[1]));
+        $strTransTag=sprintf('/(?<!!)%s(.+)%s/', preg_quote(self::$strTransTag[0]), preg_quote(self::$strTransTag[1]));
+        $rawTransTag=sprintf('/(?<!!)%s(.+)%s/', preg_quote(self::$rawTransTag[0]), preg_quote(self::$rawTransTag[1]));
         return self::echoValue(preg_replace(
-            [$rawecho, $echo, $comment, $hook ],
-            ['<?php echo $1; ?>', '<?php echo htmlspecialchars($1); ?>', '<?php /* $1 */ ?>', '<?php $this->execGloHook("$1"); ?>'],
+            [$rawecho, $echo, $comment, $hook,$strTransTag,$rawTransTag],
+            ['<?php echo $1; ?>', '<?php echo htmlspecialchars($1); ?>', '<?php /* $1 */ ?>', '<?php $this->execGloHook("$1"); ?>','<?php echo __("$1") ?>','<?php echo __($1) ?>'],
             $str
         ));
     }
