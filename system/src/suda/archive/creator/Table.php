@@ -43,9 +43,11 @@ class Table
         return $this->fields[$name]??$this->fields[$name]=($length?new Field($this->name, $name, $type, $length):new Field($this->name, $name, $type));
     }
 
-    public function getField(string $name){
+    public function getField(string $name)
+    {
         return $this->fields[$name]??null;
     }
+
     /**
      * 表全部的列
      *
@@ -65,9 +67,13 @@ class Table
 
     public function addField(Field $field)
     {
+        // 非同表格列
+        // TODO: as foreign key
+        if ($field->getTableName()!=$this->name) {
+            return;
+        }
         $name=$field->getName();
         $this->fields[$name]=$field;
-
         if ($key=$field->getKeyType()) {
             switch ($key) {
                 case $field::INDEX:
@@ -88,6 +94,11 @@ class Table
             $this->foreignKeys[$name]=$foreign;
         }
         return $this;
+    }
+    
+    public function __toString()
+    {
+        return $this->getSQL();
     }
 
     public function getSQL()
@@ -121,7 +132,7 @@ class Table
                 $content[]='KEY `'.$field->getName().'` (`'.$field->getName().'`)';
             }
         }
-        
+
         if (is_array($this->foreignKeys)) {
             foreach ($this->foreignKeys as $name=>$field) {
                 $content[]='FOREIGN KEY (`'.$name.'`) REFERENCES  `#{'.$field->getTableName().'}` (`'.$field->getName().'`)';

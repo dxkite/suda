@@ -430,7 +430,7 @@ abstract class Table
         return self::initFromTable(self::getCreator());
     }
     
-    public function getCreator(){
+    public function getCreator() {
         if(is_null($this->creator)){
             $this->creator=$this->onBuildCreator(new TableCreator($this->tableName, 'utf8'));
         }
@@ -444,6 +444,7 @@ abstract class Table
         $this->fields=$table->getFieldsName();
         return true;
     }
+    
     protected function initTableFields()
     {
         if (file_exists($this->cachePath) && !conf('debug')) {
