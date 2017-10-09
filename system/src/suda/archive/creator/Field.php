@@ -53,6 +53,7 @@ class Field
         $this->key=self::KEY;
         return $this;
     }
+
     public function primary()
     {
         $this->key=self::PRIMARY;
@@ -85,6 +86,12 @@ class Field
     public function foreign(Field $field)
     {
         $this->foreign=$field;
+        $this->type=$field->type;
+        $this->length=$field->length;
+        $this->default=null;
+        if($field->attribute){
+            $this->attribute=$field->attribute;
+        }
         return $this;
     }
 

@@ -121,9 +121,10 @@ class Table
                 $content[]='KEY `'.$field->getName().'` (`'.$field->getName().'`)';
             }
         }
+        
         if (is_array($this->foreignKeys)) {
             foreach ($this->foreignKeys as $name=>$field) {
-                $content[]='FOREIGN KEY (`'.$name.'`) REFERENCES  `'.$field->getTableName().'` (`'.$field->getName().'`)';
+                $content[]='FOREIGN KEY (`'.$name.'`) REFERENCES  `#{'.$field->getTableName().'}` (`'.$field->getName().'`)';
             }
         }
         
