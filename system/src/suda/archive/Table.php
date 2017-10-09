@@ -22,6 +22,7 @@ abstract class Table
     protected $primaryKey;
     protected $tableName;
     protected $cachePath;
+    protected $creator;
 
     protected $order_field=null;
     protected $order=null;
@@ -422,14 +423,20 @@ abstract class Table
         return true;
     }
     
-    abstract protected function onCreateTable($table);
+    abstract protected function onBuildCreator($table);
     
     public function createTable()
     {
-        return self::initFromTable($this->onCreateTable(new TableCreator($this->tableName, 'utf8')));
+        return self::initFromTable(self::getCreator());
     }
     
-        
+    public function getCreator(){
+        if(is_null($this->creator)){
+            $this->creator=$this->onBuildCreator(new TableCreator($this->tableName, 'utf8'));
+        }
+        return $this->creator;
+    }
+
     protected function initFromTable(TableCreator $table)
     {
         (new SQLQuery($table->getSQL()))->exec();
