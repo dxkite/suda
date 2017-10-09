@@ -13,21 +13,21 @@
  * @link       https://github.com/DXkite/suda
  * @version    since 1.2.4
  */
-namespace suda\template\compiler;
+namespace suda\template\compiler\suda;
 
 use Storage;
 use suda\core\Application;
 use suda\core\Hook;
 use suda\tool\Value;
 use suda\tool\Command;
-use suda\template\Compiler;
+use suda\template\Compiler as CompilerImpl;
 use suda\template\Manager;
 use suda\core\Request;
 
 /**
- *
+ * Suda 模板编译器
  */
-class SudaCompiler implements Compiler
+class Compiler implements CompilerImpl
 {
     protected static $rawTag=['{{!','}}'];
     protected static $echoTag=['{{','}}'];
@@ -52,6 +52,7 @@ class SudaCompiler implements Compiler
     {
         Hook::exec('template:SudaCompiler:init', [$this]);
     }
+    
     // 编译文本
     public function compileText(string $text)
     {

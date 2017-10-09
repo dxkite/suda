@@ -21,6 +21,7 @@ use suda\core\Storage;
 use suda\core\Hook;
 use suda\core\Router;
 use suda\core\Request;
+use suda\exception\KernelException;
 
 /**
  * 模板管理类
@@ -72,8 +73,14 @@ class Manager
     {
         if (is_null(self::$compiler)) {
             Hook::exec('Manager:loadCompile::before');
-            // 调用工厂方法
-            self::$compiler=Factory::compiler(conf('app.compiler', 'SudaCompiler'));
+            $class=class_name(conf('app.compiler', 'suda.template.compiler.suda.Compiler'));
+            $instance=new   $class;
+            // 初始化编译器
+            if($instance instanceof Compiler){
+                self::$compiler = $instance;
+            }else{
+                throw new KernelException(__('app template compiler must be instance of suda\template\Compier '));
+            }
         }
     }
 
