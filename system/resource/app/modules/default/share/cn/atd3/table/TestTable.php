@@ -6,7 +6,7 @@ class TestTable extends \suda\archive\Table {
         parent::__construct('test');
     }
 
-    protected function onCreateTable($table){
+    protected function onBuildCreator($table){
         $table->fields(
             $table->field('id','bigint')->primary()->auto(),
             $table->field('name','varchar',30),
