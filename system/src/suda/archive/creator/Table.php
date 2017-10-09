@@ -43,6 +43,9 @@ class Table
         return $this->fields[$name]??$this->fields[$name]=($length?new Field($this->name, $name, $type, $length):new Field($this->name, $name, $type));
     }
 
+    public function getField(string $name){
+        return $this->fields[$name]??null;
+    }
     /**
      * 表全部的列
      *

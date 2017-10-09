@@ -63,14 +63,16 @@ class Field
         $this->key=self::INDEX;
         return $this;
     }
+    
     public function unique()
     {
         $this->key=self::UNIQUE;
         return $this;
     }
-    public function collaction(string $collation)
+
+    public function collate(string $collate)
     {
-        $this->collaction=$collation;
+        $this->collate=$collate;
         return $this;
     }
     
