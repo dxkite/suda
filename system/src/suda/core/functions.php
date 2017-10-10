@@ -80,7 +80,7 @@ function init_resource(array $modules=null)
 }
 
 function app() {
-    return suda\core\System::getApplication();
+    return suda\core\System::getAppInstance();
 }
 
 function router() {

@@ -36,8 +36,8 @@ use suda\exception\JSONException;
 
 class System
 {
-    public static $app_instance=null;
-    public static $application_class;
+    protected static $app_instance=null;
+    protected static $application_class=null;
 
     public static function init()
     {
@@ -69,11 +69,19 @@ class System
         Hook::exec('system:init');
     }
  
-    public static function getApplication()
+    public static function getAppInstance()
     {
         return self::$app_instance;
     }
     
+    public static function getAppClassName()
+    {
+        if (is_null(self::$application_class)) {
+            self::$application_class= class_name(Config::get('app.application', 'suda.core.Application'));
+        }
+        return self::$application_class;
+    }
+
     public static function run(string $app)
     {
         debug()->time('init application');
@@ -125,7 +133,7 @@ class System
         // 载入配置前设置配置
         Hook::exec('core:loadManifast');
         // 默认应用控制器
-        self::$application_class=Config::get('app.application', 'suda\\core\\Application');
+        self::$application_class=self::getAppClassName();
     }
 
 

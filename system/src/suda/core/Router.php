@@ -502,7 +502,7 @@ class Router
         Hook::exec('Router:runRouter::before', [&$router]);
         // debug()->time('active Module');
         // 激活模块
-        (new Command(Config::get('app.application', 'suda\\core\\Application').'::activeModule'))->exec([$router['module']]);
+        (new Command(System::getAppClassName().'::activeModule'))->exec([$router['module']]);
         // debug()->timeEnd('active Module');
         debug()->time('request');
         // 运行请求
