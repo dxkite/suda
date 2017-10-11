@@ -14,6 +14,7 @@
  * @version    since 1.2.4
  */
 namespace suda\tool;
+
 use suda\exception\JSONException;
 
 class Json
@@ -27,11 +28,20 @@ class Json
        JSON_ERROR_UTF8=>'Malformed UTF-8 characters, possibly incorrectly encoded',
     ];
     
-    public static function decode(string $json, bool $assoc = false, int $depth = 512, int $options = 0)
+    public static function decodeEx(string $json, bool $assoc = false, int $depth = 512, int $options = 0)
     {
         $json=self::parseComments($json);
         $value=json_decode($json, $assoc, $depth, $options);
-        if (json_last_error()!==JSON_ERROR_NONE){
+        if (json_last_error()!==JSON_ERROR_NONE) {
+            throw new JSONException(self::$error[json_last_error()] ?? 'Unknown error');
+        }
+        return $value;
+    }
+    
+    public static function decode(string $json, bool $assoc = false, int $depth = 512, int $options = 0)
+    {
+        $value=json_decode($json, $assoc, $depth, $options);
+        if (json_last_error()!==JSON_ERROR_NONE) {
             throw new JSONException(self::$error[json_last_error()] ?? 'Unknown error');
         }
         return $value;
@@ -42,28 +52,33 @@ class Json
         return call_user_func_array('json_encode', func_get_args());
     }
 
-    public static function parseFile(string $path)
+    public static function parseFile(string $path, bool $raw=false)
     {
-        if (!file_exists($path)){
+        if (!file_exists($path)) {
             throw new JSONException("File {$path} No Found");
         }
         $content=file_get_contents($path);
-        return self::decode($content, true);
+        $name=$raw?'decode':'decodeEx';
+        return self:: {$name} ($content, true);
     }
-    public static function saveFile(string $path,$jsonable)
+    
+    public static function saveFile(string $path, $jsonable)
     {
         $json=json_encode($jsonable);
-        return file_put_contents($path,$json);
+        return file_put_contents($path, $json);
     }
-    public static function loadFile(string $path)
+    
+    public static function loadFile(string $path, bool $raw=false)
     {
         ob_start();
         require $path;
         $content=ob_get_clean();
-        return self::decode($content, true);
+        $name=$raw?'decode':'decodeEx';
+        return self:: {$name} ($content, true);
     }
+
     protected static function parseComments(string $json)
     {
-        return preg_replace('/\/\*.*?\*\//ms','',preg_replace('/(?<!:)\/\/.*$/m', '', $json));
+        return preg_replace('/\/\*.*?\*\//ms', '', preg_replace('/(?<!:)\/\/.*$/m', '', $json));
     }
 }
