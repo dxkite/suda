@@ -33,7 +33,7 @@ class Compiler implements CompilerImpl
     protected static $echoTag=['{{','}}'];
     protected static $hookTag=['{:','}'];
     protected static $commentTag=['{--','--}'];
-    protected static $strTransTag=['${','}'];
+    protected static $strTransTag=['{=','}'];
     protected static $rawTransTag=['@{','}'];
     const Template='suda\template\compiler\suda\Template';
     protected static $template=self::Template;
