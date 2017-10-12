@@ -77,7 +77,7 @@ class System
     public static function getAppClassName()
     {
         if (is_null(self::$application_class)) {
-            self::$application_class= class_name(Config::get('app.application', 'suda.core.Application'));
+            self::$application_class = class_name(Config::get('app.application', 'suda.core.Application'));
         }
         return self::$application_class;
     }

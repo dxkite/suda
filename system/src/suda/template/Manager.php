@@ -74,11 +74,11 @@ class Manager
         if (is_null(self::$compiler)) {
             Hook::exec('Manager:loadCompile::before');
             $class=class_name(conf('app.compiler', 'suda.template.compiler.suda.Compiler'));
-            $instance=new   $class;
+            $instance=new $class;
             // 初始化编译器
-            if($instance instanceof Compiler){
+            if ($instance instanceof Compiler) {
                 self::$compiler = $instance;
-            }else{
+            } else {
                 throw new KernelException(__('app template compiler must be instance of suda\template\Compier '));
             }
         }
@@ -102,6 +102,8 @@ class Manager
     {
         if (!is_null($theme)) {
             self::$theme=$theme;
+            self::initTemplateSource();
+            Hook::exec('template:theme::change', [$theme]);
             debug()->info('change themes:'.$theme);
         }
         return self::$theme;
@@ -230,12 +232,15 @@ class Manager
      */
     public static function addTemplateSource(string $module, string $path)
     {
+        if (empty($path)) {
+            return;
+        }
         $module_name=Application::getModuleName($module);
-        if(!isset(self::$templateSource[$module_name])){
+        if (!isset(self::$templateSource[$module_name])) {
             self::$templateSource[$module_name]=[];
         }
         if (!in_array($path, self::$templateSource[$module_name]) && $abspath= Storage::abspath($path)) {
-            array_unshift(self::$templateSource[$module_name],$abspath);
+            array_unshift(self::$templateSource[$module_name], $abspath);
         }
     }
 
@@ -247,19 +252,28 @@ class Manager
      */
     public static function getTemplateSource(string $module)
     {
-        $module_name=Application::getModuleName($module);
-        // 未初始化
-        $init_source=isset(self::$templateSource[$module_name]);
-        $init_theme=isset(self::$templateSourceInit[self::$theme]) && self::$templateSourceInit[self::$theme];
-        if(!$init_source || !$init_theme){
-            self::addTemplateSource($module,self::getThemePath($module));
-            self::addTemplateSource($module,self::getAppThemePath($module));
-            self::$templateSourceInit[self::$theme]=true;
-            debug()->trace('init_template_source_'.$module_name,self::getTemplateSource($module_name));
-        }
-        return self::$templateSource[$module_name] ;
+        $moduleName=Application::getModuleName($module);
+        return self::$templateSource[$moduleName]??[];
     }
 
+    public static function initTemplateSource()
+    {
+        $init_theme=isset(self::$templateSourceInit[self::$theme]) && self::$templateSourceInit[self::$theme];
+        if (!$init_theme) {
+            // 初始化
+            foreach (Application::getLiveModules() as $module) {
+                if ($path=self::getThemePath($module)) {
+                    self::addTemplateSource($module, $path);
+                }
+                if ($path=self::getAppThemePath($module)) {
+                    self::addTemplateSource($module, $path);
+                }
+                debug()->trace('init_template_source_'.$module, self::getTemplateSource($module));
+            }
+            self::$templateSourceInit[self::$theme]=true;
+        }
+    }
+    
     /**
      * 复制模板目录下静态文件
      *
@@ -293,7 +307,7 @@ class Manager
     {
         list($module, $basename)=Router::parseName($name, $parent->getModule());
         $name=$module.':'.$basename;
-        $input=self::getInputFile($name,false);
+        $input=self::getInputFile($name, false);
         if (!Storage::exist($input)) {
             echo '<b>compile theme &lt;<span style="color:red;">'.self::$theme.'</span>&gt; file '.$input. ' missing file</b>';
             return; //文件目录不存在
@@ -383,7 +397,8 @@ class Manager
                 continue;
             }
             $sources=self::getTemplateSource($module);
-            foreach ($sources as $path) {
+            // 覆盖顺序：栈顶优先级高，覆盖栈底元素
+            while ($path=array_pop($sources)) {
                 self::compileModulleFile($module, $path, $path);
             }
             $init[$module]=self::prepareResource($module, true);
