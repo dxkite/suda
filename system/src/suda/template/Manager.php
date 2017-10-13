@@ -394,7 +394,8 @@ class Manager
     public static function className(string $name)
     {
         list($module, $basename)=Router::parseName($name);
-        return 'Template_'.md5($module.'-'.$basename);
+        $fullName=Application::getModuleFullName($module);
+        return 'Template_'.md5($fullName.':'.$basename);
     }
 
     public static function initResource(array $modules=null)
