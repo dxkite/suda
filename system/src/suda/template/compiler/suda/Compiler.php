@@ -44,7 +44,8 @@ class Compiler implements CompilerImpl
      */
     protected static $command=[];
     
-    public static function setBase(string $tpl=self::Template){
+    public static function setBase(string $tpl=self::Template)
+    {
         self::$template=$tpl;
     }
 
@@ -73,9 +74,9 @@ class Compiler implements CompilerImpl
             }
         }
         // 合并相邻标签
-        $result=preg_replace('/\?\>(\s*?)\<\?php/i', '', $result);
+        $result=preg_replace('/\?\>([^\S\r\n]*?)\<\?php/i', '', $result);
         // PHP行末标签吃掉换行符处理
-        $result=preg_replace('/\?\>\r?\n/ms',"?>\r\n\r\n",$result);
+        $result=preg_replace('/\?\>\r?\n/ms', "?>\r\n\r\n", $result);
         return $result;
     }
 
@@ -88,7 +89,7 @@ class Compiler implements CompilerImpl
     {
         debug()->time('compile '.$name);
         if (!Storage::exist($input)) {
-            debug()->warning(__('compile_error:no sorce file => %s %s',$name,$input));
+            debug()->warning(__('compile_error:no sorce file => %s %s', $name, $input));
             return false;
         }
         $content= $this->compileText(Storage::get($input));
@@ -192,13 +193,14 @@ class Compiler implements CompilerImpl
         ));
     }
 
-    protected  function echoValue($var)
+    protected function echoValue($var)
     {
         // 任意变量名: 中文点下划线英文数字
-        return preg_replace_callback('/\B[$][:]([.\w\x{4e00}-\x{9aff}]+)(\s*)(\( ( (?>[^()]+) | (?3) )* \) )?/ux',[$this,'echoValueCallback'], $var);
+        return preg_replace_callback('/\B[$][:]([.\w\x{4e00}-\x{9aff}]+)(\s*)(\( ( (?>[^()]+) | (?3) )* \) )?/ux', [$this,'echoValueCallback'], $var);
     }
     
-    protected function  echoValueCallback($matchs) {
+    protected function echoValueCallback($matchs)
+    {
         $name=$matchs[1];
         $args=isset($matchs[4])?','.$matchs[4]:'';
         return '$this->get("'.$name.'"'.$args.')';
