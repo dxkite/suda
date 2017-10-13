@@ -218,8 +218,8 @@ class Manager
      */
     public static function getAppThemePath(string $module):string
     {
-        $module_name=Application::getModuleName($module);
-        $theme=RESOURCE_DIR.'/template/'.self::$theme.'/'.$module_name;
+        $moduleName=Application::getModuleName($module);
+        $theme=RESOURCE_DIR.'/template/'.self::$theme.'/'.$moduleName;
         return Storage::abspath($theme);
     }
 
@@ -235,12 +235,12 @@ class Manager
         if (empty($path)) {
             return;
         }
-        $module_name=Application::getModuleName($module);
-        if (!isset(self::$templateSource[$module_name])) {
-            self::$templateSource[$module_name]=[];
+        $moduleName=Application::getModuleName($module);
+        if (!isset(self::$templateSource[$moduleName])) {
+            self::$templateSource[$moduleName]=[];
         }
-        if (!in_array($path, self::$templateSource[$module_name]) && $abspath= Storage::abspath($path)) {
-            array_unshift(self::$templateSource[$module_name], $abspath);
+        if (!in_array($path, self::$templateSource[$moduleName]) && $abspath= Storage::abspath($path)) {
+            array_unshift(self::$templateSource[$moduleName], $abspath);
         }
     }
 
@@ -342,8 +342,18 @@ class Manager
 
     public static function include(string $name, $parent)
     {
-        list($module_name, $basename)=Router::parseName($name, $parent->getModule());
-        return self::display($module_name.':'.$basename)->parent($parent)->assign($parent->getValue());
+        list($moduleName, $basename)=Router::parseName($name, $parent->getModule());
+        if ($include=self::display($moduleName.':'.$basename)) {
+            return $include->parent($parent)->assign($parent->getValue());
+        } else {
+            return new class {
+                public function render()
+                {
+                    echo '<div style="color:red" title="'.__('can\'t include %s', $moduleName.':'.$basename).'">{include:{'.$name.'}}</div>';
+                    return;
+                }
+            };
+        }
     }
 
     /**
@@ -384,7 +394,7 @@ class Manager
     public static function className(string $name)
     {
         list($module, $basename)=Router::parseName($name);
-        return 'Template_'.md5($basename);
+        return 'Template_'.md5($module.'-'.$basename);
     }
 
     public static function initResource(array $modules=null)
