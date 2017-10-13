@@ -52,10 +52,9 @@ class Storage
 
     public static function readDirFiles(string $dirs, bool $repeat=false, string $preg='/^.+$/', bool $cut=false):array
     {
-        $dirs=self::tpath($dirs);
+        $dirs=self::abspath($dirs);
         $file_totu=[];
-        $dirs=realpath($dirs);
-        if (self::isDir($dirs)) {
+        if ($dirs && self::isDir($dirs)) {
             $hd=opendir($dirs);
             while ($file=readdir($hd)) {
                 if (strcmp($file, '.') !== 0 && strcmp($file, '..') !==0) {
@@ -69,6 +68,7 @@ class Storage
                     }
                 }
             }
+            closedir($hd);
         }
         if ($cut) {
             $cutfile=[];
@@ -104,6 +104,7 @@ class Storage
                     }
                 }
             }
+            closedir($hd);
         }
         return $reads;
     }
@@ -126,7 +127,7 @@ class Storage
         $dir=self::abspath($dir);
         if ($dir  && $handle=opendir($dir)) {
             while (false!== ($item=readdir($handle))) {
-                if ($item!="."&&$item!="..") {
+                if ($item!= '.' && $item != '..') {
                     if (self::isDir($next= $dir.'/'.$item)) {
                         self::rmdirs($next);
                     } elseif (file_exists($file=$dir.'/'.$item)) { // Non-Thread-Safe
@@ -177,6 +178,7 @@ class Storage
                 }
             }
         }
+        closedir($hd);
         return true;
     }
     
@@ -195,6 +197,7 @@ class Storage
                 }
             }
         }
+        closedir($hd);
         return true;
     }
     
