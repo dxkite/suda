@@ -84,6 +84,7 @@ abstract class Template
         debug()->timeEnd('render '.$this->name);
         return $content;
     }
+    
     protected function _render_start()
     {
         array_push(self::$render, $this->name);
@@ -98,6 +99,7 @@ abstract class Template
         debug()->trace('free render ['.strlen($content).']', $this->name);
         return $content;
     }
+
     /**
     * 获取当前模板的字符串
     */

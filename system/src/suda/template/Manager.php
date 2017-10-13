@@ -33,7 +33,7 @@ class Manager
      *
      * @var string
      */
-    public static $extRaw='.tpl.html';
+    public static $extRaw='.tpl.';
     /**
      * 模板输出扩展
      *
@@ -114,12 +114,24 @@ class Manager
      * @param $input
      * @return mixed
      */
-    public static function compile(string $name)
+    public static function compile(string $name,string $ext='html')
     {
-        if ($path=self::getInputFile($name)) {
+        if ($path=self::getInputFile($name,true,$ext)) {
             return self::$compiler->compile($name, $path, self::getOutputFile($name));
         }
         return false;
+    }
+
+    /**
+     * 根据模板ID显示HTML模板
+     *
+     * @param string $name
+     * @param string $viewpath
+     * @return void
+     */
+    public static function display(string $name, string $viewpath=null)
+    {
+        return self::displayExt($name,'html',$viewpath??'');
     }
 
     /**
@@ -129,14 +141,13 @@ class Manager
      * @param string $viewpath
      * @return void
      */
-    public static function display(string $name, string $viewpath=null)
+    public static function displayExt(string $name, string $ext='html',string $viewpath=null)
     {
-        if (is_null($viewpath)) {
+        if (empty($viewpath)) {
             $viewpath=self::getOutputFile($name);
         }
-
         if (Config::get('debug', true)) {
-            if (!self::compile($name)) {
+            if (!self::compile($name,$ext)) {
                 echo '<b>compile theme</b> &lt;<span style="color:red;">'.self::$theme.'</span>&gt; error: '.$name.' location '.$viewpath. ' missing raw template file</br>';
                 return;
             }
@@ -146,7 +157,6 @@ class Manager
         }
         return self::displayFile($viewpath, $name);
     }
-
     /**
      * 根据路径显示模板
      *
@@ -362,13 +372,13 @@ class Manager
      * @param string $name
      * @return string
      */
-    public static function getInputFile(string & $name, bool $ext=true)
+    public static function getInputFile(string & $name, bool $ext=true,string $extRaw='html')
     {
         list($module, $basename)=Router::parseName($name);
         $name=$module.':'.$basename;
         $source=self::getTemplateSource($module);
         foreach ($source as $path) {
-            $input=$path.'/'.trim($basename, '/').($ext?self::$extRaw:'');
+            $input=$path.'/'.trim($basename, '/').($ext?self::$extRaw.$extRaw:'');
             if (Storage::exist($input)) {
                 return $input;
             }
@@ -438,10 +448,10 @@ class Manager
 
     private static function compileFile(string $path, string $module, string $root)
     {
-        $name=preg_replace('/^('.preg_quote($root, '/').')?(.+)'.preg_quote(self::$extRaw, '/').'/', '$2', $path);
-        $name=$module.':'.trim($name, '/');
-        $success=self::compile($name);
-        // debug()->debug(__('[%d] compiling ==> %s', $success, $name));
+        $ex=pathinfo($path,PATHINFO_EXTENSION);
+        $basenmae=preg_replace('/^('.preg_quote($root, '/').')?(.+)'.preg_quote(self::$extRaw.$ex).'/', '$2', $path);
+        $name=$module.':'.trim($basenmae, '/');
+        $success=self::compile($name,$ex);
         return $success;
     }
     
