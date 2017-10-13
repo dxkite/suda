@@ -43,7 +43,9 @@ class Storage
     
     public static function abspath(string $path)
     {
-        if(empty($path)) return false;
+        if (empty($path)) {
+            return false;
+        }
         $path=self::tpath($path);
         return realpath($path);
     }
@@ -95,7 +97,7 @@ class Storage
                     if (self::isDir($path) && preg_match($preg, $read)) {
                         $reads[]=$read;
                         if ($repeat) {
-                            foreach (self::readDirs($path,$repeat,$preg) as $read) {
+                            foreach (self::readDirs($path, $repeat, $preg) as $read) {
                                 $reads[]=$read;
                             }
                         }
@@ -106,38 +108,57 @@ class Storage
         return $reads;
     }
 
+    public static function delete(string $path)
+    {
+        if (empty($path)) {
+            return false;
+        }
+        if (self::isFile($path)) {
+            return self::remove($path);
+        } elseif (self::isDir($path)) {
+            return self::rmdirs($path);
+        }
+    }
+
     // 递归删除文件夹
     public static function rmdirs(string $dir)
     {
-        $dir=self::tpath($dir);
-        if (self::isDir($dir) && $handle=opendir($dir)) {
+        $dir=self::abspath($dir);
+        if ($dir  && $handle=opendir($dir)) {
             while (false!== ($item=readdir($handle))) {
                 if ($item!="."&&$item!="..") {
-                    if (self::isDir("{$dir}/{$item}")) {
-                        self::rmdirs("{$dir}/{$item}");
-                    } elseif (file_exists("{$dir}/{$item}")) { // Non-Thread-Safe
-                        // Need thread-safe version to avoid this error
+                    if (self::isDir($next= $dir.'/'.$item)) {
+                        self::rmdirs($next);
+                    } elseif (file_exists($file=$dir.'/'.$item)) { // Non-Thread-Safe
                         $errorhandler=function ($erron, $error, $file, $line) {
                             Debug::warning($error);
                         };
                         set_error_handler($errorhandler);
-                        unlink("{$dir}/{$item}");
-                        // echo  "rmfile> {$dir}/{$item}\r\n";
+                        unlink($file);
                         restore_error_handler();
                     }
                 }
             }
             if (self::emptyDir($dir)) {
-                // echo 'rmdir> '.$dir."\r\n";
                 rmdir($dir);
             }
+            closedir($handle);
         }
         return true;
     }
 
-    public static function emptyDir(string $dir)
+    public static function emptyDir(string $dirOpen)
     {
-        return count(scandir(self::tpath($dir))===0);
+        if ($dirOpen && self::abspath($dirOpen)) {
+            $handle=opendir($dirOpen);
+            while (false!== ($item=readdir($handle))) {
+                if ($item!= '.' && $item != '..') {
+                    return false;
+                }
+            }
+            closedir($handle);
+        }
+        return true;
     }
 
     public static function copydir(string $src, string $dest, string $preg='/^.+$/')
@@ -215,7 +236,7 @@ class Storage
     {
         $name=self::tpath($name);
         if (self::isDir(dirname($name))) {
-            debug()->trace(__('put file %s',$name));
+            debug()->trace(__('put file %s', $name));
             return file_put_contents($name, $content, $flags);
         }
         return false;
@@ -291,12 +312,12 @@ class Storage
         return self::put($save, self::curl($url));
     }
     
-    public static function curl(string $url,int $timeout=3)
+    public static function curl(string $url, int $timeout=3)
     {
         $ch=curl_init($url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_HEADER, false);
-        curl_setopt($ch,CURLOPT_CONNECTTIMEOUT,$timeout);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
         $file=curl_exec($ch);
         curl_close($ch);
         return $file;
