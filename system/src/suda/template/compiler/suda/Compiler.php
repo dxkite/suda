@@ -74,6 +74,8 @@ class Compiler implements CompilerImpl
         }
         // 合并相邻标签
         $result=preg_replace('/\?\>(\s*?)\<\?php/i', '', $result);
+        // PHP行末标签吃掉换行符处理
+        $result=preg_replace('/\?\>\r?\n/ms',"?>\r\n\r\n",$result);
         return $result;
     }
 
@@ -177,12 +179,12 @@ class Compiler implements CompilerImpl
 
     private function compileCommand(string $str)
     {
-        $echo=sprintf('/(?<!!)%s\s*(.+?)\s*?%s/', preg_quote(self::$echoTag[0]), preg_quote(self::$echoTag[1]));
-        $rawecho=sprintf('/(?<!!)%s\s*(.+?)\s*?%s/', preg_quote(self::$rawTag[0]), preg_quote(self::$rawTag[1]));
-        $comment=sprintf('/(?<!!)%s(.+)%s/', preg_quote(self::$commentTag[0]), preg_quote(self::$commentTag[1]));
-        $hook=sprintf('/(?<!!)%s(.+)%s/', preg_quote(self::$hookTag[0]), preg_quote(self::$hookTag[1]));
-        $strTransTag=sprintf('/(?<!!)%s(.+)%s/', preg_quote(self::$strTransTag[0]), preg_quote(self::$strTransTag[1]));
-        $rawTransTag=sprintf('/(?<!!)%s(.+)%s/', preg_quote(self::$rawTransTag[0]), preg_quote(self::$rawTransTag[1]));
+        $echo=sprintf('/(?<!!)%s\s*(.+?)\s*%s/', preg_quote(self::$echoTag[0]), preg_quote(self::$echoTag[1]));
+        $rawecho=sprintf('/(?<!!)%s\s*(.+?)\s*%s/', preg_quote(self::$rawTag[0]), preg_quote(self::$rawTag[1]));
+        $comment=sprintf('/(?<!!)%s\s*(.+?)\s*%s/', preg_quote(self::$commentTag[0]), preg_quote(self::$commentTag[1]));
+        $hook=sprintf('/(?<!!)%s\s*(.+?)\s*%s/', preg_quote(self::$hookTag[0]), preg_quote(self::$hookTag[1]));
+        $strTransTag=sprintf('/(?<!!)%s\s*(.+?)\s*%s/', preg_quote(self::$strTransTag[0]), preg_quote(self::$strTransTag[1]));
+        $rawTransTag=sprintf('/(?<!!)%s\s*(.+?)\s*%s/', preg_quote(self::$rawTransTag[0]), preg_quote(self::$rawTransTag[1]));
         return self::echoValue(preg_replace(
             [$rawecho, $echo, $comment, $hook,$strTransTag,$rawTransTag],
             ['<?php echo $1; ?>', '<?php echo htmlspecialchars($1); ?>', '<?php /* $1 */ ?>', '<?php $this->execGloHook("$1"); ?>','<?php echo __("$1") ?>','<?php echo __($1) ?>'],
