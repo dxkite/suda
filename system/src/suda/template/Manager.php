@@ -356,13 +356,17 @@ class Manager
         if ($include=self::display($moduleName.':'.$basename)) {
             return $include->parent($parent)->assign($parent->getValue());
         } else {
-            return new class {
+            $class= new class {
                 public function render()
                 {
-                    echo '<div style="color:red" title="'.__('can\'t include %s', $moduleName.':'.$basename).'">{include:{'.$name.'}}</div>';
+                    echo '<div style="color:red" title="'.__('can\'t include %s', $this->moduleName.':'.$this->basename).'">{include:{'.$this->name.'}}</div>';
                     return;
                 }
             };
+            $class->moduleName=$moduleName;
+            $class->basename=$basename;
+            $class->name=$name;
+            return $class;
         }
     }
 

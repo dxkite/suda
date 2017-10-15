@@ -2,7 +2,7 @@
 namespace suda\template\compiler\suda;
 
 use suda\template\Manager;
- 
+
 class TemplateInfo extends Compiler
 {
     protected $values=[];
@@ -48,8 +48,9 @@ class TemplateInfo extends Compiler
         return array_keys($this->values);
     }
 
-    public static function getTemplates(string $module=null,string $ex='.+'){
-        $modules=empty($module)?[$module]:app()->getLiveModules();
+    public static function getTemplates(string $module=null, string $ex='.+')
+    {
+        $modules=empty($module) || is_null($module) ? app()->getLiveModules():[$module];
         foreach ($modules as $module) {
             if (!app()->checkModuleExist($module)) {
                 continue;
@@ -57,13 +58,14 @@ class TemplateInfo extends Compiler
             $sources=Manager::getTemplateSource($module);
             // 覆盖顺序：栈顶优先级高，覆盖栈底元素
             while ($path=array_pop($sources)) {
-                self::getModuleTemplate($module,$ex, $path, $path);
+                self::getModuleTemplate($module, $ex, $path, $path);
             }
         }
         return self::$templates;
     }
 
-    protected static function getModuleTemplate(string $module,string $ex, string $root, string $dirs){
+    protected static function getModuleTemplate(string $module, string $ex, string $root, string $dirs)
+    {
         $hd=opendir($dirs);
         while ($read=readdir($hd)) {
             if (strcmp($read, '.') !== 0 && strcmp($read, '..') !==0) {
@@ -72,7 +74,7 @@ class TemplateInfo extends Compiler
                     continue;
                 }
                 if (is_file($path) && preg_match('/\.tpl\.'.$ex.'$/', $path)) {
-                    $name=preg_replace('/^'.preg_quote($root, '/').'\/(.+)\.tpl\..+$/','$1',$path);
+                    $name=preg_replace('/^'.preg_quote($root, '/').'\/(.+)\.tpl\..+$/', '$1', $path);
                     self::$templates[$module][$name]=$path;
                 } elseif (is_dir($path)) {
                     self::getModuleTemplate($module, $ex, $root, $path);
@@ -80,5 +82,4 @@ class TemplateInfo extends Compiler
             }
         }
     }
-
 }
