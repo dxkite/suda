@@ -6,4 +6,4 @@ suda\core\System::init();
 // 运行App
 suda\core\System::run(APP_DIR);
 // 结束请求
-exit(0);
+exit;

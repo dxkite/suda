@@ -32,28 +32,56 @@ use suda\archive\SQLQuery;
 use suda\tool\Json;
 use suda\tool\Value;
 use suda\core\exception\ApplicationException;
+use suda\exception\JSONException;
 
 class System
 {
-    public static $app_instance=null;
-    public static $application_class;
+    protected static $app_instance=null;
+    protected static $application_class=null;
 
     public static function init()
     {
         class_alias('suda\\core\\System', 'System');
+        // 错误处理
         register_shutdown_function('suda\\core\\System::onShutdown');
         set_error_handler('suda\\core\\System::uncaughtError');
         set_exception_handler('suda\\core\\System::uncaughtException');
+
+        // 如果开启了进程信号处理
+        if (function_exists('pcntl_signal')) {
+            pcntl_signal(SIGTERM, 'suda\\core\\System::sigHandler');
+            pcntl_signal(SIGKILL, 'suda\\core\\System::sigHandler');
+        }
+
+        // 注册基本常量
+        defined('MODULES_DIR') or define('MODULES_DIR', Storage::path(APP_DIR.'/modules'));
+        defined('RESOURCE_DIR') or define('RESOURCE_DIR', Storage::path(APP_DIR.'/resource'));
+        defined('DATA_DIR') or define('DATA_DIR', Storage::path(APP_DIR.'/data'));
+        defined('RUNTIME_DIR') or define('RUNTIME_DIR', Storage::path(DATA_DIR.'/runtime'));
+        defined('VIEWS_DIR') or define('VIEWS_DIR', Storage::path(DATA_DIR.'/views'));
+        defined('CACHE_DIR') or define('CACHE_DIR', Storage::path(DATA_DIR.'/cache'));
+        defined('CONFIG_DIR') or define('CONFIG_DIR', Storage::path(RESOURCE_DIR.'/config'));
+        defined('TEMP_DIR') or define('TEMP_DIR', Storage::path(DATA_DIR.'/temp'));
+        defined('SHRAE_DIR') or define('SHRAE_DIR', Storage::path(APP_DIR.'/share'));
         Debug::beforeSystemRun();
         Locale::path(SYSTEM_RESOURCE.'/locales');
         debug()->trace('system init');
         Hook::exec('system:init');
     }
  
-    public static function getApplication(){
+    public static function getAppInstance()
+    {
         return self::$app_instance;
     }
     
+    public static function getAppClassName()
+    {
+        if (is_null(self::$application_class)) {
+            self::$application_class = class_name(Config::get('app.application', 'suda.core.Application'));
+        }
+        return self::$application_class;
+    }
+
     public static function run(string $app)
     {
         debug()->time('init application');
@@ -81,7 +109,7 @@ class System
             Hook::listen('system:uncaughtException', [self::$app_instance, 'uncaughtException']);
             Hook::listen('system:uncaughtError', [self::$app_instance, 'uncaughtError']);
         } else {
-            throw new ApplicationException(__('unsupport base application class %s', self::$application_class));
+            debug()->die(__('unsupport base application class %s', self::$application_class));
         }
     }
 
@@ -93,29 +121,36 @@ class System
             debug()->trace(__('create base app'));
             Storage::copydir(SYSTEM_RESOURCE.'/app/', APP_DIR);
             Storage::put(APP_DIR.'/modules/default/resource/config/config.json', '{"name":"default"}');
-            Config::set('app.init',true);
+            Config::set('app.init', true);
         }
         Autoloader::addIncludePath(APP_DIR.'/share');
-        // 设置配置
-        Config::set('app', Json::loadFile($manifast));
-
+        try {
+            // 加载配置
+            Config::set('app', Json::loadFile($manifast));
+        } catch (JSONException $e) {
+            debug()->die(__('parse mainifast error %s', $e->getMessage()));
+        }
         // 载入配置前设置配置
         Hook::exec('core:loadManifast');
         // 默认应用控制器
-        self::$application_class=Config::get('app.application', 'suda\\core\\Application');
+        self::$application_class=self::getAppClassName();
     }
 
 
     public static function onShutdown()
     {
+        // 忽略用户停止脚本
+        ignore_user_abort(true);
         debug()->timeEnd('before shutdown');
         debug()->time('shutdown');
-        // 忽略用户停止
-        ignore_user_abort(true);
-        // 如果正常连接则设置未来得及发送的Cookie
+        // 发送Cookie
         if (connection_status() == CONNECTION_NORMAL) {
             Cookie::sendCookies();
             Hook::exec('system:shutdown::before');
+        }
+        // 停止响应输出
+        if (function_exists('fastcgi_finish_request')) {
+            fastcgi_finish_request();
         }
         Cache::gc();
         Hook::exec('system:shutdown');
@@ -148,5 +183,21 @@ class System
         $info=Debug::getInfo();
         $info=array_merge($info, SQLQuery::getRunInfo());
         return $info;
+    }
+
+    public static function sigHandler(int $signo)
+    {
+        static $sig=[
+            SIGTERM=>'SIGTERM',
+            SIGHUP=>'SIGHUP',
+            SIGINT=>'SIGINT',
+            SIGQUIT=>'SIGQUIT',
+            SIGILL=>'SIGILL',
+            SIGPIPE=>'SIGPIPE',
+            SIGALRM=>'SIGALRM',
+            SIGKILL=>'SIGKILL',
+        ];
+        debug()->die(__('exit sig %s', $sig[$signo]));
+        exit;
     }
 }

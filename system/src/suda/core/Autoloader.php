@@ -21,7 +21,7 @@ class Autoloader
     protected static $include_path=[];
 
     public static function realName(string $name) {
-        return preg_replace('/[.\/]+/','\\',$name);
+        return preg_replace('/[.\/\\\\]+/','\\',$name);
     }
     public static function realPath(string $name) {
         return preg_replace('/[\\\\\/]+/',DIRECTORY_SEPARATOR,$name);

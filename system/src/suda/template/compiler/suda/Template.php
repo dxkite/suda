@@ -35,7 +35,16 @@ abstract class Template
     protected $name=null;
     protected $parent=null;
     protected $hooks=[];
+    // 所在模块
+    protected $module=null;
+    // 渲染堆栈
     protected static $render=[];
+    
+    public function __construct()
+    {
+        preg_match('/^((?:[a-zA-Z0-9_-]+\/)?[a-zA-Z0-9_-]+)(?::([^:]+))?(?::(.+))?$/', $this->name, $match);
+        $this->module= isset($match[3])?$match[1].(isset($match[2])?':'.$match[2]:''):$match[1];
+    }
     /**
     * 渲染页面
     */
@@ -75,6 +84,7 @@ abstract class Template
         debug()->timeEnd('render '.$this->name);
         return $content;
     }
+    
     protected function _render_start()
     {
         array_push(self::$render, $this->name);
@@ -89,6 +99,7 @@ abstract class Template
         debug()->trace('free render ['.strlen($content).']', $this->name);
         return $content;
     }
+
     /**
     * 获取当前模板的字符串
     */
@@ -202,6 +213,7 @@ abstract class Template
     {
         return $this->name;
     }
+    
     public function responseName()
     {
         return $this->response->getName();
@@ -219,8 +231,7 @@ abstract class Template
 
     public function getModule()
     {
-        preg_match('/^((?:[a-zA-Z0-9_-]+\/)?[a-zA-Z0-9_-]+)(?::([^:]+))?(?::(.+))?$/', $this->name, $match);
-        return isset($match[3])?$match[1].(isset($match[2])?':'.$match[2]:''):$match[1];
+        return $this->module;
     }
 
     public function getValue()
@@ -228,7 +239,8 @@ abstract class Template
         return $this->value;
     }
 
-    public function getResponse(){
+    public function getResponse()
+    {
         return $this->response;
     }
 }

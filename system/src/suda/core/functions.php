@@ -80,7 +80,7 @@ function init_resource(array $modules=null)
 }
 
 function app() {
-    return suda\core\System::getApplication();
+    return suda\core\System::getAppInstance();
 }
 
 function router() {
@@ -113,4 +113,8 @@ function config() {
 
 function cmd($command, array $params=[]){
     return new suda\tool\Command($command,$params);
+}
+
+function class_name(string $name){
+    return suda\core\Autoloader::realName($name);
 }

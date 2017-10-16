@@ -54,8 +54,8 @@ final class Request
         if (!self::isJson() || self::isGet()) {
             return null;
         }
-        $str=self::input();
-        return Json::decode($str, true);
+        $datastr=self::input();
+        return Json::decode($datastr, true);
     }
 
     public static function input()

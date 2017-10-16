@@ -31,6 +31,9 @@ class Router
     protected static $router=null;
     protected $routers=[];
 
+    protected static $cacheName=null;
+    protected static $cacheModules=null;
+
     private function __construct()
     {
         Hook::listen('system:404', 'Router::error404');
@@ -67,7 +70,7 @@ class Router
         $simple_routers=[];
         $admin_routers=[];
         $module_path=Application::getModulePath($module);
-        debug()->trace(__('load module:%s [%s] path:%s', $module, Application::getModuleFullName($module),$module_path));
+        debug()->trace(__('load module:%s [%s] path:%s', $module, Application::getModuleFullName($module), $module_path));
         list($admin_prefix, $prefix)=self::getModulePrefix($module);
         $module=Application::getModuleFullName($module);
         $prefix_it= function (&$router, $key, $prefixinfo) use ($module) {
@@ -117,6 +120,7 @@ class Router
         ArrayHelper::export(self::cacheFile('router.cache.php'), '_router', $this->routers);
         ArrayHelper::export(self::cacheFile('types.cache.php'), '_types', $this->types);
         ArrayHelper::export(self::cacheFile('matchs.cache.php'), '_matchs', $this->matchs);
+        storage()->put(self::cacheFile('.modules'),implode("\r\n", self::$cacheModules));
     }
 
     protected function loadModulesRouter()
@@ -502,7 +506,7 @@ class Router
         Hook::exec('Router:runRouter::before', [&$router]);
         // debug()->time('active Module');
         // 激活模块
-        (new Command(Config::get('app.application', 'suda\\core\\Application').'::activeModule'))->exec([$router['module']]);
+        (new Command(System::getAppClassName().'::activeModule'))->exec([$router['module']]);
         // debug()->timeEnd('active Module');
         debug()->time('request');
         // 运行请求
@@ -524,16 +528,21 @@ class Router
         $render->onRequest(Request::getInstance());
     }
 
-    public function getRouters(){
+    public function getRouters()
+    {
         return $this->routers;
     }
 
     private function cacheFile(string $name):string
     {
-        $module_use=Application::getLiveModules();
-        sort($module_use);
-        $hash=substr(md5(implode('-', $module_use)), 0, 8);
-        $path=CACHE_DIR.'/router/'.$hash;
+        if (is_null(self::$cacheName)) {
+            $module_use=Application::getLiveModules();
+            sort($module_use);
+            self::$cacheModules=$module_use;
+            self::$cacheName=substr(md5(implode('-', $module_use)), 0, 8);
+        }
+        
+        $path=CACHE_DIR.'/router/'.self::$cacheName;
         Storage::path($path);
         return $path.'/'.$name;
     }

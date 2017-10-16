@@ -30,12 +30,13 @@ abstract class ACResponse extends \suda\core\Response
         parent::__construct();
         Session::getInstance();
         // 只允许本地调试
-        if (conf('debug-local', true) && !self::selfCheck()) {
+        if (conf('debug-local', true) && !self::isSelf()) {
             $this->state(403);
             debug()->warning('recieve track form address> '.Request::ip());
-            die('<span style="color:red">YOU ARE NOT THE DEVELOPER!</span>');
+            debug()->die('<span style="color:red">YOU ARE NOT THE DEVELOPER!</span>');
         }
     }
+
     public function onRequest(Request $resquest)
     {
         $set=conf('debug-passwd', false);
@@ -60,22 +61,26 @@ abstract class ACResponse extends \suda\core\Response
         }
     }
 
-    public function selfCheck()
+    public function isSelf()
     {
-        if (Request::ip()!=='::1'||Request::ip()!=='127.0.0.1') {
-            try {
-                $content=Storage::curl(u('self_check'));
-                if ($check=json_decode($content, true)) {
-                    if ($check['self::ip']===Request::ip() &&$check['self::check']==SUDA_VERSION) {
-                        return true;
+        $ip=request()->ip();
+        if ( $ip!=='::1' && $ip!=='127.0.0.1') {
+            if (conf('debug-dynip', false)) {
+                try {
+                    $content=Storage::curl(u('self_check'));
+                    if ($check=json_decode($content, true)) {
+                        if ($check['self::ip']===Request::ip() && $check['self::check']==SUDA_VERSION) {
+                            return true;
+                        }
                     }
+                } catch (Exception $e) {
+                    return false;
                 }
-            } catch (Exception $e) {
-                return false;
             }
             return false;
         }
         return true;
     }
+
     abstract public function onAction(Request $resquest);
 }

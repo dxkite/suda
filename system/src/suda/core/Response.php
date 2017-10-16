@@ -19,6 +19,7 @@ use suda\tool\Json;
 use suda\tool\ArrayHelper;
 use suda\template\Manager;
 use suda\exception\ApplicationException;
+
 // TODO: If-Modified-Since
 // TODO: Access-Control
 
@@ -37,10 +38,11 @@ abstract class Response
         if (conf('markVersion', true)) {
             self::setHeader('X-Framework : Suda/'.SUDA_VERSION.' '.conf('app.name', 'suda-app').'/'.conf('app.version').' '.self::$name);
         }
+        
         if (conf('debug')) {
             self::noCache();
             // for windows debug touch file to avoid 304 by server
-            if (DIRECTORY_SEPARATOR==='\\') {
+            if (!IS_LINUX) {
                 $script=$_SERVER['SCRIPT_NAME'];
                 $file=APP_PUBLIC.$script;
                 $content=file_get_contents($file);
@@ -91,7 +93,9 @@ abstract class Response
         $jsonstr=json_encode($values);
         self::type('json');
         Hook::exec('display:output', [&$jsonstr, $this->type]);
-        self::setHeader('Content-Length:'.strlen($jsonstr));
+        if (conf('app.calcContentLength', !conf('debug'))) {
+            self::setHeader('Content-Length:'.strlen($jsonstr));
+        }
         self::_etag(md5($jsonstr));
         echo $jsonstr;
     }
@@ -99,7 +103,7 @@ abstract class Response
     /**
     *  直接输出文件
     */
-    public function file(string $path,  string $filename=null,string $type=null)
+    public function file(string $path, string $filename=null, string $type=null)
     {
         $content=file_get_contents($path);
         $hash   = md5($content);
@@ -149,7 +153,7 @@ abstract class Response
 
     public function refresh()
     {
-        return $this->go(u(self::$name,$_GET));
+        return $this->go(u(self::$name, $_GET));
     }
 
     public function forward()
@@ -212,7 +216,7 @@ abstract class Response
             self::$mime=parse_ini_file(SYSTEM_RESOURCE.'/mime.ini');
         }
         if ($name) {
-            return self::$mime[$name] ?? 'text/plain';
+            return self::$mime[$name] ?? $name;
         } else {
             return self::$mime;
         }

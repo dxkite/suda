@@ -13,36 +13,47 @@
  * @link       https://github.com/DXkite/suda
  * @version    since 1.2.4
  */
-namespace suda\template\compiler;
+namespace suda\template\compiler\suda;
 
 use Storage;
 use suda\core\Application;
 use suda\core\Hook;
 use suda\tool\Value;
 use suda\tool\Command;
-use suda\template\Compiler;
+use suda\template\Compiler as CompilerImpl;
 use suda\template\Manager;
 use suda\core\Request;
 
 /**
- *
+ * Suda 模板编译器
  */
-class SudaCompiler implements Compiler
+class Compiler implements CompilerImpl
 {
     protected static $rawTag=['{{!','}}'];
     protected static $echoTag=['{{','}}'];
     protected static $hookTag=['{:','}'];
     protected static $commentTag=['{--','--}'];
+    protected static $strTransTag=['{=','}'];
+    protected static $rawTransTag=['@{','}'];
+    const Template='suda\template\compiler\suda\Template';
+    protected static $template=self::Template;
     /**
      * 附加模板命令
      *
      * @var array
      */
     protected static $command=[];
+    
+    public static function setBase(string $tpl=self::Template)
+    {
+        self::$template=$tpl;
+    }
+
     public function __construct()
     {
         Hook::exec('template:SudaCompiler:init', [$this]);
     }
+    
     // 编译文本
     public function compileText(string $text)
     {
@@ -63,7 +74,9 @@ class SudaCompiler implements Compiler
             }
         }
         // 合并相邻标签
-        $result=preg_replace('/\?\>(\s*?)\<\?php/i', '', $result);
+        $result=preg_replace('/\?\>([^\S\r\n]*?)\<\?php/i', '', $result);
+        // PHP行末标签吃掉换行符处理
+        $result=preg_replace('/\?\>\r?\n/ms', "?>\r\n\r\n", $result);
         return $result;
     }
 
@@ -76,7 +89,7 @@ class SudaCompiler implements Compiler
     {
         debug()->time('compile '.$name);
         if (!Storage::exist($input)) {
-            debug()->warning(__('compile_error:no sorce file => %s %s',$name,$input));
+            debug()->warning(__('compile_error:no sorce file => %s %s', $name, $input));
             return false;
         }
         $content= $this->compileText(Storage::get($input));
@@ -84,7 +97,9 @@ class SudaCompiler implements Compiler
             Storage::mkdirs(dirname($output));
         }
         $classname=Manager::className($name);
-        $content='<?php  class '.$classname.' extends suda\template\compiler\suda\Template { protected $name="'.$name.'"; protected function _render_template() {  ?>'.$content.'<?php }}';
+        preg_match('/^((?:[a-zA-Z0-9_-]+\/)?[a-zA-Z0-9_-]+)(?::([^:]+))?(?::(.+))?$/', $name, $match);
+        $module = isset($match[3])?$match[1].(isset($match[2])?':'.$match[2]:''):$match[1];
+        $content='<?php  class '.$classname.' extends '.self::$template.' { protected $name="'.$name.'";protected $module="'.$module.'"; protected function _render_template() {  ?>'.$content.'<?php }}';
         Storage::put($output, $content);
         debug()->timeEnd('compile '.$name);
         return true;
@@ -165,25 +180,30 @@ class SudaCompiler implements Compiler
 
     private function compileCommand(string $str)
     {
-        $echo=sprintf('/(?<!!)%s\s*(.+?)\s*?%s/', preg_quote(self::$echoTag[0]), preg_quote(self::$echoTag[1]));
-        $rawecho=sprintf('/(?<!!)%s\s*(.+?)\s*?%s/', preg_quote(self::$rawTag[0]), preg_quote(self::$rawTag[1]));
-        $comment=sprintf('/(?<!!)%s(.+)%s/', preg_quote(self::$commentTag[0]), preg_quote(self::$commentTag[1]));
-        $hook=sprintf('/(?<!!)%s(.+)%s/', preg_quote(self::$hookTag[0]), preg_quote(self::$hookTag[1]));
+        $echo=sprintf('/(?<!!)%s\s*(.+?)\s*%s/', preg_quote(self::$echoTag[0]), preg_quote(self::$echoTag[1]));
+        $rawecho=sprintf('/(?<!!)%s\s*(.+?)\s*%s/', preg_quote(self::$rawTag[0]), preg_quote(self::$rawTag[1]));
+        $comment=sprintf('/(?<!!)%s\s*(.+?)\s*%s/', preg_quote(self::$commentTag[0]), preg_quote(self::$commentTag[1]));
+        $hook=sprintf('/(?<!!)%s\s*(.+?)\s*%s/', preg_quote(self::$hookTag[0]), preg_quote(self::$hookTag[1]));
+        $strTransTag=sprintf('/(?<!!)%s\s*(.+?)\s*%s/', preg_quote(self::$strTransTag[0]), preg_quote(self::$strTransTag[1]));
+        $rawTransTag=sprintf('/(?<!!)%s\s*(.+?)\s*%s/', preg_quote(self::$rawTransTag[0]), preg_quote(self::$rawTransTag[1]));
         return self::echoValue(preg_replace(
-            [$rawecho, $echo, $comment, $hook ],
-            ['<?php echo $1; ?>', '<?php echo htmlspecialchars($1); ?>', '<?php /* $1 */ ?>', '<?php $this->execGloHook("$1"); ?>'],
+            [$rawecho, $echo, $comment, $hook,$strTransTag,$rawTransTag],
+            ['<?php echo $1; ?>', '<?php echo htmlspecialchars($1); ?>', '<?php /* $1 */ ?>', '<?php $this->execGloHook("$1"); ?>','<?php echo __("$1") ?>','<?php echo __($1) ?>'],
             $str
         ));
     }
 
-    protected static function echoValue($var)
+    protected function echoValue($var)
     {
         // 任意变量名: 中文点下划线英文数字
-        return preg_replace_callback('/\B[$][:]([.\w\x{4e00}-\x{9aff}]+)(\s*)(\( ( (?>[^()]+) | (?3) )* \) )?/ux', function ($matchs) {
-            $name=$matchs[1];
-            $args=isset($matchs[4])?','.$matchs[4]:'';
-            return '$this->get("'.$name.'"'.$args.')';
-        }, $var);
+        return preg_replace_callback('/\B[$][:]([.\w\x{4e00}-\x{9aff}]+)(\s*)(\( ( (?>[^()]+) | (?3) )* \) )?/ux', [$this,'echoValueCallback'], $var);
+    }
+    
+    protected function echoValueCallback($matchs)
+    {
+        $name=$matchs[1];
+        $args=isset($matchs[4])?','.$matchs[4]:'';
+        return '$this->get("'.$name.'"'.$args.')';
     }
 
     protected static function parseValue($var)
