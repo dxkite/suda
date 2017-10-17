@@ -94,7 +94,7 @@ abstract class Table
         if (is_array($values) && !($this->checkFields(array_keys($values)) && $this->checkFieldsType($values))) {
             return false;
         }
-        return Query::update($this->getTableName(), $values, $this->checkPrimaryKey($value) );
+        return Query::update($this->getTableName(), $values, $this->checkPrimaryKey($value));
     }
     
     /**
@@ -105,7 +105,7 @@ abstract class Table
      */
     public function deleteByPrimaryKey($value):int
     {
-        return Query::delete($this->getTableName(),$this->checkPrimaryKey($value)  );
+        return Query::delete($this->getTableName(), $this->checkPrimaryKey($value));
     }
 
     
@@ -430,8 +430,9 @@ abstract class Table
         return self::initFromTable(self::getCreator());
     }
     
-    public function getCreator() {
-        if(is_null($this->creator)){
+    public function getCreator()
+    {
+        if (is_null($this->creator)) {
             $this->creator=$this->onBuildCreator(new TableCreator($this->tableName, 'utf8'));
         }
         return $this->creator;
@@ -506,5 +507,93 @@ abstract class Table
         } else {
             return ' ORDER BY '. $this->order_field  .' '. ($this->order==DAO::ORDER_ASC?'ASC':'DESC');
         }
+    }
+
+    public function truncate()
+    {
+        return (new SQLQuery('TRUNCATE TABLE `#{'.$this->tableName.'}`;'))->exec();
+    }
+
+    /**
+     * 导出数据到文件
+     *
+     * @param string $path
+     * @return void
+     */
+    public function export(string $path)
+    {
+        if ($data=$this->getDataString()) {
+            $base64=base64_encode($data);
+            $sha1=sha1($base64);
+            storage()->path(dirname($path));
+            return storage()->put($path, $this->tableName.','.time().','.$sha1.',base64;'.$base64);
+        }
+        return false;
+    }
+
+    /**
+     * 从导出文件中恢复数据
+     *
+     * @param string $path
+     * @return void
+     */
+    public function import(string $path)
+    {
+        if (storage()->exist($path)) {
+            try {
+                list($head, $data)=explode(';', storage()->get($path));
+                list($name, $time, $sha1, $dataType)=explode(',', $head);
+            } catch (\Exception $e) {
+                return false;
+            }
+            if (sha1($data)!=$sha1 || $time >time() || $name!=$this->tableName) {
+                return false;
+            }
+            return (new SQLQuery(base64_decode($data)))->exec();
+        }
+        return false;
+    }
+
+    /**
+     * 获取数据SQL字符串
+     *
+     * @return void
+     */
+    protected function getDataString()
+    {
+        $table=$this->tableName;
+        $q=new SQLQuery('SELECT * FROM `#{'.$table.'}` WHERE 1;', [], true);
+        $columns=(new SQLQuery('SHOW COLUMNS FROM `#{'.$table.'}`;'))->fetchAll();
+        $key='(';
+        foreach ($columns  as $column) {
+            $key.='`'.$column['Field'].'`,';
+        }
+        $key=rtrim($key, ',').')';
+        if ($q) {
+            $sqlout='INSERT INTO `#{'.$table.'}` '.$key.' VALUES ';
+            $first=true;
+            while ($values=$q->fetch()) {
+                $sql='';
+                if ($first) {
+                    $first=false;
+                } else {
+                    $sql.=',';
+                }
+                $sql.='(';
+                $columns='';
+                foreach ($values as $val) {
+                    $columns.='\''.addslashes($val).'\',';
+                }
+                $columns=rtrim($columns, ',');
+                $sql.= $columns;
+                $sql.=')';
+                $sqlout.=$sql;
+            }
+            if ($first) {
+                return false;
+            }
+            return $sqlout;
+        }
+        return false;
     }
 }
