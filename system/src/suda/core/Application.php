@@ -119,7 +119,7 @@ class Application
             }
             
             // 自动安装
-            if (conf('auto-install')) {
+            if (conf('auto-install',true)) {
                 Hook::listen('Application:init', function () use ($module_temp) {
                     self::installModule($module_temp);
                 });
@@ -140,9 +140,6 @@ class Application
 
     public static function installModule(string $module)
     {
-        if (!conf('auto-install', true)) {
-            return;
-        }
         $install_lock = DATA_DIR.'/install/install_'.substr(md5($module), 0, 6).'.lock';
         storage()->path(dirname($install_lock));
         $config=self::getModuleConfig($module);
