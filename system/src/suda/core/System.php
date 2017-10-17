@@ -103,7 +103,7 @@ class System
         self::$app_instance=new $name($app);
         if (self::$app_instance instanceof Application) {
             // 设置语言包库
-            Locale::path(Storage::path($app.'/resource/locales/'));
+            Locale::path($app.'/resource/locales/');
             Hook::listen('Router:dispatch::before', [self::$app_instance, 'onRequest']);
             Hook::listen('system:shutdown', [self::$app_instance, 'onShutdown']);
             Hook::listen('system:uncaughtException', [self::$app_instance, 'uncaughtException']);
