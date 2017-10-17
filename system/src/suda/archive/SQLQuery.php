@@ -241,6 +241,7 @@ class SQLQuery
                 throw (new SQLException($stmt->errorInfo()[2], intval($stmt->errorCode()), E_ERROR, $debug[1]['file'], $debug[1]['line']))->setSql($stmt->queryString)->setBinds($this->values);
             }
         }
+        
         $this->stmt=$stmt;
         return $return;
     }

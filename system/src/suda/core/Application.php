@@ -44,9 +44,9 @@ class Application
     
         // 获取基本配置信息
         if (Storage::exist($path=CONFIG_DIR.'/config.json')) {
-            try{
+            try {
                 Config::load($path);
-            }catch(JSONException $e){
+            } catch (JSONException $e) {
                 debug()->die(__('parse application config.json error'));
             }
             // 开发状态覆盖
@@ -91,9 +91,10 @@ class Application
      * @param string $path
      * @return void
      */
-    public static function addModulesPath(string $path){
+    public static function addModulesPath(string $path)
+    {
         $path=Storage::abspath($path);
-        if($path && !in_array($path,self::$modules_path)){
+        if ($path && !in_array($path, self::$modules_path)) {
             self::$modules_path[]=$path;
         }
     }
@@ -116,8 +117,14 @@ class Application
             if (Storage::isDir($share_path=$root.'/share')) {
                 Autoloader::addIncludePath($share_path);
             }
+            
             // 自动安装
-            self::installModule($module_temp);
+            if (conf('auto-install')) {
+                Hook::listen('Application:init', function () use ($module_temp) {
+                    self::installModule($module_temp);
+                });
+            }
+
             // 是否激活
             $is_live_module=in_array($module_temp, $module_use);
             if ($is_live_module) {
@@ -133,10 +140,10 @@ class Application
 
     public static function installModule(string $module)
     {
-        if (!conf('autoinstall', true)) {
+        if (!conf('auto-install', true)) {
             return;
         }
-        $install_lock = DATA_DIR.'/install/install_'.substr(md5($module),0,6).'.lock';
+        $install_lock = DATA_DIR.'/install/install_'.substr(md5($module), 0, 6).'.lock';
         storage()->path(dirname($install_lock));
         $config=self::getModuleConfig($module);
         if (isset($config['install']) && !file_exists($install_lock)) {
@@ -147,9 +154,10 @@ class Application
             foreach ($installs as $cmd) {
                 cmd($cmd)->args($config);
             }
-            file_put_contents($install_lock,'name='.$module."\r\n".'time='.microtime(true));
+            file_put_contents($install_lock, 'name='.$module."\r\n".'time='.microtime(true));
         }
     }
+
 
     /**
      * 获取所有模块
@@ -349,7 +357,7 @@ class Application
      */
     private static function registerModules()
     {
-        foreach (self::$modules_path as $path){
+        foreach (self::$modules_path as $path) {
             $dirs=Storage::readDirs($path);
             foreach ($dirs as $dir) {
                 self::registerModule($path.'/'.$dir);
