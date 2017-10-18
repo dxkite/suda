@@ -237,9 +237,9 @@ class Application
         $root=self::getModulePath($module);
         $module_config=self::getModuleConfig($module);
         define('MODULE_RESOURCE', Storage::path($root.'/resource'));
-        define('MODULE_LOCALES', Storage::path(MODULE_RESOURCE.'/locales'));
         define('MODULE_CONFIG', Storage::path(MODULE_RESOURCE.'/config'));
         debug()->trace(__('set locale %s', Config::get('app.locale', 'zh-CN')));
+        Locale::path(MODULE_RESOURCE.'/locales');
         Locale::set(Config::get('app.locale', 'zh-CN'));
         if (isset($module_config['namespace'])) {
             // 缩减命名空间

@@ -34,12 +34,12 @@ class Autoloader
     }
 
     public static function import(string $filename){
-        if (file_exists($filename)){
+        if (self::file_exists($filename)){
             require_once $filename;
             return $filename;
         }else{
             foreach (self::$include_path as $include_path) {
-                if (file_exists($path=$include_path.DIRECTORY_SEPARATOR.$filename)){
+                if (self::file_exists($path=$include_path.DIRECTORY_SEPARATOR.$filename)){
                     require_once $path;
                     return $path;
                 }
@@ -56,7 +56,7 @@ class Autoloader
         foreach (self::$include_path as $include_path) {
             $path=preg_replace('/[\\\\\\/]+/', DIRECTORY_SEPARATOR, $include_path.DIRECTORY_SEPARATOR.$namepath.'.php');
             // printf("file %s exists(%d) and class %s exists(%d)\n",$path,file_exists($path),$classname,class_exists($classname));
-            if (file_exists($path)) {
+            if (self::file_exists($path)) {
                 if (!class_exists($classname)) {
                     require_once $path;
                     // var_dump(get_included_files());
@@ -66,7 +66,7 @@ class Autoloader
                 // 添加命名空间
                 foreach (self::$namespace as $namespace) {
                     $path=preg_replace('/[\\\\]+/', DIRECTORY_SEPARATOR, $include_path.DIRECTORY_SEPARATOR.$namespace.DIRECTORY_SEPARATOR.$namepath.'.php');
-                    if (file_exists($path)) {
+                    if (self::file_exists($path)) {
                         // 最简类名
                         if (!class_exists($classname)) {
                             class_alias($namespace.'\\'.$classname, $classname);
@@ -99,5 +99,15 @@ class Autoloader
         if (!in_array($namespace, self::$namespace)) {
             self::$namespace[]=$namespace;
         }
+    }
+
+    private static function file_exists($name):bool
+    {
+        if (file_exists($name) && is_file($name) && $real=realpath($name)) {
+            if (basename($real) === basename($name)) {
+                return true;
+            }
+        }
+        return false;
     }
 }
