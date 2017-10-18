@@ -246,7 +246,7 @@ class Application
             Autoloader::setNamespace($module_config['namespace']);
         }
         // 自动加载私有库
-        Autoloader::addIncludePath(Storage::path($root.'/src'));
+        Autoloader::addIncludePath($root.'/src');
         // 加载模块配置到 module命名空间
         if (Storage::exist($path=MODULE_CONFIG.'/config.json')) {
             Config::set('module', Json::loadFile($path));
