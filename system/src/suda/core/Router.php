@@ -171,8 +171,9 @@ class Router
     {
         $request=Request::getInstance();
         foreach ($this->matchs as $name=>$preg) {
+            $matchExp=conf('app.url.ignoreCase',true)?'/^'.$preg.'$/i':'/^'.$preg.'$/';
             // debug()->d('url:'.$request->url().'; preg:'.'/^'.$preg.'$/');
-            if (preg_match('/^'.$preg.'$/', $request->url(), $match)) {
+            if (preg_match($matchExp, $request->url(), $match)) {
                 // 检验方法
                 if (isset($this->routers[$name]['method']) && count($this->routers[$name]['method'])>0) {
                     // 调整方法大小

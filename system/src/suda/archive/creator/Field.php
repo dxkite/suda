@@ -30,6 +30,7 @@ class Field
     protected $type;
     protected $length;
     protected $default;
+    protected $isDefault;
     
     protected $null; // nullable
     protected $attribute; // binary unsigned
@@ -50,9 +51,11 @@ class Field
         $this->name=$name;
         $this->type=strtoupper($type);
         $this->length=$length;
+        $this->isDefault=false;
     }
 
-    public function comment(string $comment){
+    public function comment(string $comment)
+    {
         $this->comment=$comment;
         return $this;
     }
@@ -104,7 +107,7 @@ class Field
         $this->type=$field->type;
         $this->length=$field->length;
         $this->default=null;
-        if($field->attribute){
+        if ($field->attribute) {
             $this->attribute=$field->attribute;
         }
         return $this;
@@ -116,9 +119,13 @@ class Field
         return $this;
     }
 
-    public function default(string $value)
+    public function default($value)
     {
+        $this->isDefault=true;
         $this->default=$value;
+        if (is_null($value)) {
+            $this->null=true;
+        }
         return $this;
     }
 
@@ -141,7 +148,17 @@ class Field
         $null=$this->null?'NULL':'NOT NULL';
         $attr=$this->attribute?strtoupper($this->attribute):'';
         $comment=$this->comment?('COMMENT \''.addcslashes($this->comment, '\'').'\''):'';
-        $default=$this->default?'DEFAULT \''.addcslashes($this->default, '\'').'\'':'';
+        // default设置
+        if ($this->isDefault) {
+            if (is_null($this->default)) {
+                $default='DEFAULT NULL';
+            } else {
+                $default=$this->default?'DEFAULT \''.addcslashes($this->default, '\'').'\'':'';
+            }
+        } else {
+            $default='';
+        }
+        
         return trim("`{$this->name}` {$type} {$attr} {$null} {$default} {$auto} {$comment}");
     }
 
@@ -164,7 +181,8 @@ class Field
         return $this->foreign;
     }
 
-    public function getAutoIncrement(){
+    public function getAutoIncrement()
+    {
         return $this->auto;
-    }    
+    }
 }
