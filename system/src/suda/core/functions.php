@@ -64,7 +64,7 @@ function assets(string $module, string $path, bool $static=true)
     if ($static) {
         return suda\template\Manager::assetServer(suda\template\Manager::getStaticAssetPath($module)).'/'.ltrim($path, '/');
     } else {
-        return suda\template\Manager::assetServer(suda\template\Manager::getDynamicAssetPath($path,$module));
+        return suda\template\Manager::assetServer(suda\template\Manager::getDynamicAssetPath($path, $module));
     }
 }
 
@@ -79,42 +79,58 @@ function init_resource(array $modules=null)
     return $modules?suda\template\Manager::initResource($modules):suda\template\Manager::initResource();
 }
 
-function app() {
+function app()
+{
     return suda\core\System::getAppInstance();
 }
 
-function router() {
+function router()
+{
     return suda\core\Router::getInstance();
 }
 
-function request() {
+function request()
+{
     return suda\core\Request::getInstance();
 }
 
-function hook() {
+function hook()
+{
     return new suda\core\Hook;
 }
 
-function cookie() {
+function cookie()
+{
     return new suda\core\Cookie;
 }
 
-function cache() {
+function cache()
+{
     return new suda\core\Cache;
 }
 
-function storage() {
+function storage()
+{
     return new suda\core\Storage;
 }
 
-function config() {
+function config()
+{
     return new suda\core\Config;
 }
 
-function cmd($command, array $params=[]){
-    return new suda\tool\Command($command,$params);
+function cmd($command, array $params=[])
+{
+    return new suda\tool\Command($command, $params);
 }
 
-function class_name(string $name){
+function class_name(string $name)
+{
     return suda\core\Autoloader::realName($name);
+}
+
+
+function table(string $tableName)
+{
+    return suda\archive\TableInstance::new($tableName);
 }
