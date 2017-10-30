@@ -2,20 +2,21 @@
 
 [![Latest Stable Version](https://poser.pugx.org/dxkite/suda/v/stable)](https://packagist.org/packages/dxkite/suda) 
 [![Latest Unstable Version](https://poser.pugx.org/dxkite/suda/v/unstable)](https://packagist.org/packages/dxkite/suda) 
+[![Total Downloads](https://poser.pugx.org/dxkite/suda/downloads)](https://packagist.org/packages/dxkite/suda) 
 [![License](https://poser.pugx.org/dxkite/suda/license)](https://packagist.org/packages/dxkite/suda)
 
 Suda框架是一款基于PHP7开发的轻量级PHP框架。
 
 ## 特性
 
-- [x] 应用功能模块化开发
-- [x] 自动化应用构建
-- [x] URL路由美化
-- [x] SQL查询辅助
-- [x] 简单的日志和调试工具
-- [x] 内置页面插件机制 
-- [x] 可编译的模板语言
-- [x] 简化的数据表操作
+- 应用功能模块化开发
+- 自动化应用构建
+- URL路由美化
+- SQL查询辅助
+- 简单的日志和调试工具
+- 内置页面插件机制 
+- 可编译的模板语言
+- 简化的数据表操作
 
 
 ## 基本使用
