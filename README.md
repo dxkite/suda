@@ -1,55 +1,58 @@
 #  Suda PHP Framework
 
-suda is a simple web framework for **PHP7**.
+[![Latest Stable Version](https://poser.pugx.org/dxkite/suda/v/stable)](https://packagist.org/packages/dxkite/suda) 
+[![Total Downloads](https://poser.pugx.org/dxkite/suda/downloads)](https://packagist.org/packages/dxkite/suda) 
+[![Latest Unstable Version](https://poser.pugx.org/dxkite/suda/v/unstable)](https://packagist.org/packages/dxkite/suda) 
+[![License](https://poser.pugx.org/dxkite/suda/license)](https://packagist.org/packages/dxkite/suda)
 
-## Functions
+Suda框架是一款基于PHP7开发的轻量级PHP框架。
 
-- [x] Module Based Application
-- [x] Route Mapping
-- [x] SQL Query Helper
-- [x] Debugger & Logger
-- [x] Page Hook 
-- [x] Smarty Like Template
-- [x] Response
-- [x] Table Access Object
+## 特性
+
+- [x] 应用功能模块化开发
+- [x] 自动化应用构建
+- [x] URL路由美化
+- [x] SQL查询辅助
+- [x] 简单的日志和调试工具
+- [x] 内置页面插件机制 
+- [x] 可编译的模板语言
+- [x] 简化的数据表操作
 
 
-## Get Start
+## 基本使用
 
-### Step1 get suda source code
+### 步骤一 下载框架代码
 
-#### clone from git 
+#### 从github克隆
 
 ```bash
 git clone https://github.com/DXkite/suda  suda
 ```
-#### clone as a git submodule
+#### 作为git子模块克隆
 
 ```bash
 git submodule add https://github.com/DXkite/suda
 ```
 
-### Step2 copy file necessary
+### 步骤二 复制基本配置文件
 
 ```bash
 cp -R ./suda/system/resource/project/* .
 ```
-### Step3 change document root to `public` 
+### 步骤三 调整根目录至 `public` 
 
-change web service configuration make `public` directory as the document root.
-
-> **For Linux User** To make sure the web server has the permission to modify web appliction directorys.
+> **Linux用户注意** 请保证目录的可读写性，参考配置：
 > ```bash
 > sudo usermod -aG service_group user_name
 > sudo chmod g+rw application_directory
 > sudo chmod g+rw document_directory
 > ```
 
-### Step4 make the template application
+### 步骤四
 
-visit the localhost to help the framework to create a  template web application.
+访问public/dev.php文件，框架会自动创建应用
 
-## Document
+## 文档说明
 
 [Document](docs/readme.md)    
 [Route](docs/tools/router.md)
