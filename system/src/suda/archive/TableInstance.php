@@ -16,11 +16,16 @@ class TableInstance
 
     public static function new(string $tableName)
     {
+        $tableClassName=self::instance()->getClassName($tableName);
+        return self::$tableInstances[$tableName]=new $tableClassName;
+    }
+
+    public static function getInstance(string $tableName)
+    {
         if (isset(self::$tableInstances[$tableName])) {
             return self::$tableInstances[$tableName];
         }
-        $tableClassName=self::instance()->getClassName($tableName);
-        return self::$tableInstances[$tableName]=new $tableClassName;
+        return self::new($tableName);
     }
 
     protected static function instance()
