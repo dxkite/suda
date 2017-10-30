@@ -1,7 +1,5 @@
 #  Suda PHP Framework
 
-[![Build Status](https://travis-ci.org/DXkite/suda.svg)](https://travis-ci.org/DXkite/suda)
-
 suda is a simple web framework for **PHP7**.
 
 ## Functions
@@ -13,7 +11,7 @@ suda is a simple web framework for **PHP7**.
 - [x] Page Hook 
 - [x] Smarty Like Template
 - [x] Response
-- [x] Table Object
+- [x] Table Access Object
 
 
 ## Get Start
