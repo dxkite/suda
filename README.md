@@ -1,6 +1,8 @@
 #  Suda PHP Framework
 suda is a simple web framework for **PHP7**.
 
+[![Build Status](https://travis-ci.org/DXkite/suda.svg)](https://travis-ci.org/DXkite/suda)
+
 ## Functions
 
 - [x] Module Based Application
