@@ -3,7 +3,6 @@
     "description": "a php7 only framework!",
     "type": "library",
     "license": "MIT",
-    "version": "1.1.2-dev",
     "authors": [
         {
             "name": "DXkite",

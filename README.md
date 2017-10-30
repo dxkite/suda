@@ -1,7 +1,6 @@
 #  Suda PHP Framework
 
 [![Latest Stable Version](https://poser.pugx.org/dxkite/suda/v/stable)](https://packagist.org/packages/dxkite/suda) 
-[![Total Downloads](https://poser.pugx.org/dxkite/suda/downloads)](https://packagist.org/packages/dxkite/suda) 
 [![Latest Unstable Version](https://poser.pugx.org/dxkite/suda/v/unstable)](https://packagist.org/packages/dxkite/suda) 
 [![License](https://poser.pugx.org/dxkite/suda/license)](https://packagist.org/packages/dxkite/suda)
 
