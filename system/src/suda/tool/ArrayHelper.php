@@ -120,16 +120,20 @@ class ArrayHelper
     * @param $name 导出的数组名
     * @param $array 导出的数组
     */
-    public static function export(string $path, string $name, array $array, bool $sort = true)
+    public static function export(string $path, string $name, array $array, bool $sort = true, bool $beautify=false)
     {
-        $name = '$'.ltrim($name, '$');
-        $exstr = "<?php\r\n".$name."=array();\r\n";
-        //@notice# 排序数组时可能会导致数据丢失
-        if ($sort) {
-            ksort($array);
+        if ($beautify) {
+            $name = '$'.ltrim($name, '$');
+            $exstr = "<?php\r\n".$name."=array();\r\n";
+            //@notice# 排序数组时可能会导致数据丢失
+            if ($sort) {
+                ksort($array);
+            }
+            $exstr .= self::arr2string($name, $array);
+            $exstr .= 'return '.$name.';';
+        } else {
+            $exstr = "<?php\r\nreturn ". var_export($array, true).";\r\n";
         }
-        $exstr .= self::arr2string($name, $array);
-        $exstr .= 'return '.$name.';';
         return file_put_contents($path, $exstr) ? true : false;
     }
 
@@ -148,12 +152,11 @@ class ArrayHelper
         $exstr = '';
         foreach ($array as $key => $value) {
             $line = '';
+            $current=$arrname."['".addslashes($key)."']";
             if (is_array($value)) {
-                $parent = $arrname."['".$key."']";
-                $exstr .= '#'.str_pad(' '.ucwords($key).' ', 64, '-', STR_PAD_BOTH)."#\r\n";
-                $line .= self::parserArraySub($parent, $value);
+                $line .= self::parserArraySub($current, $value);
             } else {
-                $line = $arrname."['".$key."']";
+                $line =  $current;
                 if (is_string($value)) {
                     $line .= "='".addslashes($value)."';\r\n";
                 } elseif (is_bool($value)) {
@@ -166,7 +169,6 @@ class ArrayHelper
             }
             $exstr .= $line;
         }
-
         return $exstr;
     }
 

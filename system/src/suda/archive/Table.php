@@ -20,7 +20,7 @@ use suda\archive\creator\Table as TableCreator;
 use suda\core\Query;
 use suda\core\Storage;
 use suda\tool\ArrayHelper;
-use suda\exception\DAOException;
+use suda\exception\TableException;
 
 abstract class Table
 {
@@ -326,7 +326,7 @@ abstract class Table
                 if (!isset($value[$key])) {
                     $message='primary key  is multipled,check '.$key.' in fields';
                     $debug=debug_backtrace();
-                    throw new DAOException(__($message), 0, E_ERROR, $debug[1]['file'], $debug[1]['line']);
+                    throw new TableException(__($message), 0, E_ERROR, $debug[1]['file'], $debug[1]['line']);
                 }
             }
             return $value;
@@ -343,7 +343,7 @@ abstract class Table
     {
         foreach ($values as $key) {
             if (!in_array($key, $this->fields)) {
-                throw new DAOException(__('field %s is not exsits in table', $key));
+                throw new TableException(__('field %s is not exsits in table', $key));
             }
         }
         return true;
@@ -363,7 +363,7 @@ abstract class Table
             if (isset($values[$key]) && !$this->checkField($key, $values[$key])) {
                 $message=str_replace(['{key}','{value}','{check}'], [$key,self::strify($values[$key]),$this->fieldChecks[$key][0]], $this->fieldChecks[$key][1]??'field {key} value {value} type is not valid');
                 $debug=debug_backtrace();
-                throw new DAOException(__($message), 0, E_ERROR, $debug[1]['file'], $debug[1]['line']);
+                throw new TableException(__($message), 0, E_ERROR, $debug[1]['file'], $debug[1]['line']);
             }
         }
         return true;
@@ -387,7 +387,7 @@ abstract class Table
         return Query::count($this->getTableName(), $where, $binds);
     }
 
-    public function order(string $field, int $order=DAO::ORDER_ASC)
+    public function order(string $field, int $order=self::ORDER_ASC)
     {
         $this->order_field=$field;
         $this->order=$order;
@@ -520,7 +520,7 @@ abstract class Table
         if (is_null($this->order_field)) {
             return '';
         } else {
-            return ' ORDER BY '. $this->order_field  .' '. ($this->order==DAO::ORDER_ASC?'ASC':'DESC');
+            return ' ORDER BY '. $this->order_field  .' '. ($this->order==self::ORDER_ASC?'ASC':'DESC');
         }
     }
 
