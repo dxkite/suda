@@ -90,7 +90,7 @@ abstract class Response
     */
     public function json($values)
     {
-        $jsonstr=json_encode($values);
+        $jsonstr=json_encode($values,JSON_UNESCAPED_UNICODE);
         self::type('json');
         Hook::exec('display:output', [&$jsonstr, $this->type]);
         if (conf('app.calcContentLength', !conf('debug'))) {
