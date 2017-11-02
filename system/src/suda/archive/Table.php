@@ -175,7 +175,7 @@ abstract class Table
      * @param [type] $where
      * @return int
      */
-    public function update($values, $where)
+    public function update($values,$where,array $bind=[])
     {
         if (is_array($where) && !$this->checkFields(array_keys($where))) {
             return false;
@@ -183,7 +183,7 @@ abstract class Table
         if (is_array($values) && !($this->checkFields(array_keys($values)) && $this->checkFieldsType($values))) {
             return false;
         }
-        return Query::update($this->getTableName(), $values, $where);
+        return Query::update($this->getTableName(), $values, $where,$bind);
     }
 
 

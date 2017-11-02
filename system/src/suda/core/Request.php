@@ -26,7 +26,7 @@ final class Request
     private static $files=null;
     private static $url;
     private static $type=0;
-    private static $request=null;
+    private static $instance=null;
     private static $query='';
     private static $crawlers=null;
     
@@ -40,10 +40,10 @@ final class Request
 
     public static function getInstance()
     {
-        if (is_null(self::$request)) {
-            self::$request=new Request();
+        if (is_null(self::$instance)) {
+            self::$instance=new self;
         }
-        return self::$request;
+        return self::$instance;
     }
 
     public static function json()
@@ -95,10 +95,12 @@ final class Request
             return self::$get;
         }
     }
+    
     public static function cookie(string $name, $default)
     {
         return Cookie::get($name, $default);
     }
+
     public static function post(string $name='')
     {
         if ($name) {
