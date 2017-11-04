@@ -116,6 +116,10 @@ class Cache
         debug()->timeEnd('cache gc');
     }
 
+    public static function clear(bool $data=true) {
+        return Storage::delete($data?self::$storage:CACHE_DIR);
+    }
+
     private static function getPath(string $name)
     {
         if (strpos($name,'.')) {
