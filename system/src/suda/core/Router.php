@@ -103,7 +103,7 @@ class Router
     {
         storage()->put(self::cacheFile('.modules'),implode("\r\n", self::$cacheModules));
         storage()->put(self::cacheFile(self::CACHE_NAME),serialize($this->routers));
-        storage()->put(self::cacheFile(self::CACHE_NAME.'.php'),'<?php '.var_export($this->routers,true));
+        // storage()->put(self::cacheFile(self::CACHE_NAME.'.php'),'<?php '.var_export($this->routers,true));
     }
 
     protected function loadModulesRouter()
