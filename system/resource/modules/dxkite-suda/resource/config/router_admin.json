@@ -1,19 +1,19 @@
 {
     "index": {
         "class": "dxkite\\suda\\response\\RouterList",
-        "visit": "\/"
+        "visit": "\/","hidden":true
     },
     "router_add": {
         "class": "dxkite\\suda\\response\\RouterAdd",
-        "visit": "\/router\/add"
+        "visit": "\/router\/add","hidden":true
     },
     "router_edit": {
         "class": "dxkite\\suda\\response\\RouterEdit",
-        "visit": "\/router\/edit"
+        "visit": "\/router\/edit","hidden":true
     },
     "router_list": {
         "class": "dxkite\\suda\\response\\RouterList",
-        "visit": "\/router[\/list]"
+        "visit": "\/router[\/list]","hidden":true
     },
     "system_admin": {
         "class": "dxkite\\suda\\response\\AdminModules",

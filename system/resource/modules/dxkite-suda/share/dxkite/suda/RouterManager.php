@@ -31,6 +31,7 @@ class RouterManager
     protected static $routerinfos=null;
     protected static $configs=[];
     protected static $urltype=['int'=>'\d+','string'=>'[^\/]+','url'=>'.+'];
+
     /**
     * 删除路由
     */
@@ -72,24 +73,6 @@ class RouterManager
         $module_config=Application::getModuleConfig($module);
         $namespace=$module_config['namespace'] ?? conf('app.namespace');
         return  str_replace($namespace.'\\response\\', '', $name);
-    }
-
-    public static function urlPrefix(string $module, bool $admin, string $url)
-    {
-        $module=trim($module);
-        $prefix=Application::getModulePrefix($module);
-        if ($prefix) {
-            $admin_prefix='';
-            if (is_array($prefix)) {
-                $admin_prefix=$prefix['admin'] ?? array_shift($prefix);
-                $prefix=$prefix['simple'] ?? array_shift($prefix);
-            }
-            if ($admin) {
-                $url=substr($url, strlen($admin_prefix));
-            }
-            $url=substr($url, strlen($prefix));
-        }
-        return strlen($url)===0?'/':$url;
     }
 
 
@@ -232,70 +215,21 @@ class RouterManager
     {
         return self::getInfo($module)[$id]??null;
     }
-    public static function getModules()
-    {
-        return Application::getLiveModules()??[];
-    }
 
     /**
     * 列出路由
     */
     public static function getInfo(string $gmod=null)
     {
-        
         if(is_null(self::$routerinfos)){
             $routerinfos=Router::getInstance()->getRouters();
             foreach($routerinfos as $id=>$infos){
-                self::$routerinfos[$infos['module']][$id]=$infos;
+                self::$routerinfos[$infos->getModule()][$id]=$infos;
             }
         }
         return $gmod?self::$routerinfos[$gmod]:self::$routerinfos;
     }
 
-
-
-    /* getInfo 辅助函数 */
-    private static function loadModuleJson(string $module, string $jsonfile)
-    {
-        $routers=Json::loadFile($jsonfile);
-        $router=[];
-        foreach ($routers as $name => $value) {
-            $router[$name]=$value;
-            $router[$name]['name']=$name;
-        }
-        return $router;
-    }
-
-    private static function load(string $module)
-    {
-        $simple_routers=[];
-        $admin_routers=[];
-        $module_dir=Application::getModuleDir($module);
-        debug()->trace(__('load module:%s [%s] path:%s', $module, Application::getModuleFullName($module), Application::getModulePath($module)));
-        list($admin_prefix, $prefix)=Router::getModulePrefix($module);
-        $module=Application::getModuleFullName($module);
-        $prefix_it= function (&$router, $key, $prefixinfo) use ($module) {
-            $prefix=$prefixinfo[0]?conf('app.admin', '/admin'):'/';
-            if (!(isset($router['anti-prefix']) && $router['anti-prefix'])){
-                $prefix.=$prefixinfo[1];
-            }      
-            $router['visit']='/'.trim($prefix.$router['visit'], '/');
-            $router['module']=$module;
-            $router['role']=$prefixinfo[0]?'admin':'simple';
-        };
-        // 加载前台路由
-        if (Storage::exist($file=Application::getModulePath($module).'/resource/config/router.json')) {
-            $simple_routers= self::loadModuleJson($module, $file);
-            array_walk($simple_routers, $prefix_it, [false,$prefix]);
-        }
-        // 加载后台路由
-        if (Storage::exist($file=Application::getModulePath($module).'/resource/config/router_admin.json')) {
-            $admin_routers= self::loadModuleJson($module, $file);
-            array_walk($admin_routers, $prefix_it, [true,$admin_prefix]);
-        }
-        self::$routerinfos[$module]=array_merge($admin_routers, $simple_routers);
-    }
-    
     protected static function createTplName(string $name)
     {
         $name=strtolower(preg_replace('/([A-Z])/', '_$1', $name));
