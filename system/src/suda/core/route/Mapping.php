@@ -45,15 +45,16 @@ class Mapping
 
     public function match(Request $request, bool $ignoreCase=true)
     {
+        if ($this->hidden) {
+            return false;
+        }
+        // 方法不匹配
+        if (count($this->method)>0 && !in_array(strtoupper($request->method()), $this->method)) {
+            return false;
+        }
         $matchExp=$ignoreCase?'/^'.$this->mapping.'$/i':'/^'.$this->mapping.'$/';
         if (preg_match($matchExp, $request->url(), $match)) {
-            // 方法不匹配
-            if (count($this->method)>0 && !in_array(strtoupper($request->method()), $this->method)) {
-                return false;
-            }
-            if ($this->hidden) {
-                return false;
-            }
+  
             // 检验接口参数
             array_shift($match);
             if (count($match)>0) {
@@ -112,11 +113,18 @@ class Mapping
         return $this;
     }
 
-    public function isDynamic(){
+    public function isDynamic()
+    {
         return $this->dynamic;
     }
+    
+    public function isHidden()
+    {
+        return $this->hidden;
+    }
 
-    public function getRole(){
+    public function getRole()
+    {
         return $this->role;
     }
 
@@ -139,6 +147,12 @@ class Mapping
     public function setDynamic(bool $set=true)
     {
         $this->dynamic=$set;
+        return $this;
+    }
+
+    public function setHidden(bool $set=true)
+    {
+        $this->hidden=$set;
         return $this;
     }
 

@@ -71,24 +71,26 @@ class Router
         debug()->trace(__('load module:%s path:%s', $module, $module_path));
         // 加载前台路由
         if (Storage::exist($file=$module_path.'/resource/config/router.json')) {
-            $simple_routers= self::loadModuleJson(Mapping::ROLE_SIMPLE,$module, $file);
+            $simple_routers= self::loadModuleJson(Mapping::ROLE_SIMPLE, $module, $file);
             debug()->trace(__('loading simple route from file %s', $file));
         }
         // 加载后台路由
         if (Storage::exist($file=$module_path.'/resource/config/router_admin.json')) {
-            $admin_routers= self::loadModuleJson(Mapping::ROLE_ADMIN,$module, $file);
+            $admin_routers= self::loadModuleJson(Mapping::ROLE_ADMIN, $module, $file);
             debug()->trace(__('loading admin route from file  %s', $file));
         }
         $this->routers=array_merge($this->routers, $admin_routers, $simple_routers);
     }
 
-    protected function loadModuleJson(int $role,string $module, string $jsonfile)
+    protected function loadModuleJson(int $role, string $module, string $jsonfile)
     {
         $routers=Json::loadFile($jsonfile);
         $router=[];
         foreach ($routers as $name => $value) {
-            $mapping=Mapping::createFromRouteArray($role,$module,$name,$value);
-            $router[$mapping->getFullName()]=$mapping;
+            $mapping=Mapping::createFromRouteArray($role, $module, $name, $value);
+            if (!$mapping->isHidden()) {
+                $router[$mapping->getFullName()]=$mapping;
+            }
         }
         return $router;
     }
@@ -101,8 +103,8 @@ class Router
 
     protected function saveFile()
     {
-        storage()->put(self::cacheFile('.modules'),implode("\r\n", self::$cacheModules));
-        storage()->put(self::cacheFile(self::CACHE_NAME),serialize($this->routers));
+        storage()->put(self::cacheFile('.modules'), implode("\r\n", self::$cacheModules));
+        storage()->put(self::cacheFile(self::CACHE_NAME), serialize($this->routers));
         // storage()->put(self::cacheFile(self::CACHE_NAME.'.php'),'<?php '.var_export($this->routers,true));
     }
 
@@ -114,7 +116,7 @@ class Router
         } else {
             if (self::routerCached()) {
                 self::loadFile();
-            }else{
+            } else {
                 self::prepareRouterInfo();
             }
         }
@@ -142,9 +144,9 @@ class Router
     protected function matchRouterMap()
     {
         $request=Request::getInstance();
-        $ignoreCase=conf('app.url.ignoreCase',true);
-        foreach ($this->routers as $name => $mapping ){
-            if($mapping->match($request,$ignoreCase)){
+        $ignoreCase=conf('app.url.ignoreCase', true);
+        foreach ($this->routers as $name => $mapping) {
+            if ($mapping->match($request, $ignoreCase)) {
                 return $mapping;
             }
         }
@@ -193,7 +195,7 @@ class Router
         list($module, $name)=self::parseName($name);
         $module=Application::getModuleFullName($module);
         $name=$module.':'.$name;
-        if (isset($this->routers[$name])){
+        if (isset($this->routers[$name])) {
             $types=$this->routers[$name]->getTypes();
             if ($types) {
                 $keys=array_keys($types);
@@ -217,7 +219,7 @@ class Router
         $module=Application::getModuleFullName($module);
         $name=$module.':'.$name;
         if (isset($this->routers[$name])) {
-             return $this->routers[$name]->createUrl($values);
+            return $this->routers[$name]->createUrl($values);
         } else {
             debug()->warning(__('get url for %s failed,module:%s args:%s', $name, $module, json_encode($values)));
             return '#the-router-['.$name.']-is-undefined--please-check-out-router-list';
@@ -299,7 +301,7 @@ class Router
      */
     public function routerMove(string $name, string $alias)
     {
-        $this->routerReplace($name,$alias);
+        $this->routerReplace($name, $alias);
         $alias=self::getRouterFullName($alias);
         unset($this->router[$alias]);
     }
@@ -315,9 +317,9 @@ class Router
      * @param array $method
      * @return void
      */
-    public function addRouter(string $name, string $url, string $class, string $module, array $method=[],bool $autoPrefix=false)
+    public function addRouter(string $name, string $url, string $class, string $module, array $method=[], bool $autoPrefix=false)
     {
-        $mapping=new Mapping($name,$url,$class.'->onRequest',$module,$method);
+        $mapping=new Mapping($name, $url, $class.'->onRequest', $module, $method);
         $fillName=$mapping->getFullName();
         $this->routers[$fillName]=$mapping;
         $mapping->setAntiPrefix(!$autoPrefix);
@@ -358,10 +360,10 @@ class Router
         $name=self::getRouterFullName($name);
         if (isset($this->routers[$name])) {
             $this->routers[$name]->setCallback($class.'->onRequest');
-            if ($module){
+            if ($module) {
                 $this->routers[$name]->setModule($module);
             }
-            if ($method){
+            if ($method) {
                 $this->routers[$name]->setMethod($method);
             }
             return $this->routers[$name];
