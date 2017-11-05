@@ -442,6 +442,8 @@ abstract class Table
     
     public function createTable()
     {
+        // 删除数据表
+        $this->drop();
         return self::initFromTable(self::getCreator());
     }
     
@@ -524,9 +526,24 @@ abstract class Table
         }
     }
 
+    /**
+     * 清空数据表
+     *
+     * @return void
+     */
     public function truncate()
     {
         return (new SQLQuery('TRUNCATE TABLE `#{'.$this->tableName.'}`;'))->exec();
+    }
+
+    /**
+     * 删除数据表
+     *
+     * @return void
+     */
+    public function drop()
+    {
+        return (new SQLQuery('DROP TABLE IF EXISTS `#{'.$this->tableName.'}`;'))->exec();
     }
 
     /**

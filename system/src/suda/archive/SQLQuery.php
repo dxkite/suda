@@ -217,11 +217,17 @@ class SQLQuery
         foreach ($array as $key=> $value) {
             $key=':'.ltrim($key, ':');
             if (is_array($value)) {
-                $tmp =$value;
-                $value = $tmp[0];
-                $type = $tmp[1];
+                list($value,$type) =$value;
             } else {
-                $type=is_numeric($value)?PDO::PARAM_INT:PDO::PARAM_STR;
+                if (is_null($value)){
+                    $type=PDO::PARAM_NULL;
+                }elseif(is_bool($value)) {
+                    $type=PDO::PARAM_BOOL;
+                }elseif (is_numeric($value)){
+                    $type=PDO::PARAM_INT;
+                }else{
+                    $type=PDO::PARAM_STR;
+                }
             }
             $stmt->bindValue($key, $value, $type);
         }
