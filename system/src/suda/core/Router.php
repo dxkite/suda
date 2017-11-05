@@ -103,6 +103,7 @@ class Router
     {
         storage()->put(self::cacheFile('.modules'),implode("\r\n", self::$cacheModules));
         storage()->put(self::cacheFile(self::CACHE_NAME),serialize($this->routers));
+        storage()->put(self::cacheFile(self::CACHE_NAME.'.php'),'<?php '.var_export($this->routers,true));
     }
 
     protected function loadModulesRouter()
@@ -119,7 +120,7 @@ class Router
         }
     }
 
-    
+
     public function routerCached()
     {
         if (!file_exists(self::cacheFile(self::CACHE_NAME))) {
@@ -320,6 +321,7 @@ class Router
         $fillName=$mapping->getFullName();
         $this->routers[$fillName]=$mapping;
         $mapping->setAntiPrefix(!$autoPrefix);
+        $mapping->setDynamic();
         $mapping->build();
         return $fillName;
     }

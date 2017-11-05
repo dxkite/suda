@@ -17,6 +17,7 @@ class Mapping
 
     protected $antiPrefix=false;
     protected $hidden=false;
+    protected $dynamic=false;
 
     const ROLE_ADMIN=0;
     const ROLE_SIMPLE=1;
@@ -111,6 +112,48 @@ class Mapping
         return $this;
     }
 
+    public function isDynamic(){
+        return $this->dynamic;
+    }
+
+    public function getRole(){
+        return $this->role;
+    }
+
+    public function getModule()
+    {
+        return $this->module;
+    }
+
+    public function getTypes()
+    {
+        return $this->types;
+    }
+    
+    public function setAntiPrefix(bool $set=true)
+    {
+        $this->antiPrefix=$set;
+        return $this;
+    }
+    
+    public function setDynamic(bool $set=true)
+    {
+        $this->dynamic=$set;
+        return $this;
+    }
+
+    public function setMapping(string $mapping)
+    {
+        $this->mapping=$mapping;
+        return $this;
+    }
+
+    public function setUrl(string $url)
+    {
+        $this->url=$url;
+        return $this;
+    }
+
     public function createUrl(array $args)
     {
         $url=preg_replace('/[?|]/', '\\\1', $this->url);
@@ -177,34 +220,6 @@ class Mapping
             }
         }, $url);
         return $url;
-    }
-
-    public function getModule()
-    {
-        return $this->module;
-    }
-
-    public function getTypes()
-    {
-        return $this->types;
-    }
-    
-    public function setAntiPrefix(bool $set=true)
-    {
-        $this->antiPrefix=$set;
-        return $this;
-    }
-
-    public function setMapping(string $mapping)
-    {
-        $this->mapping=$mapping;
-        return $this;
-    }
-
-    public function setUrl(string $url)
-    {
-        $this->url=$url;
-        return $this;
     }
 
     public static function createFromRouteArray(int $role, string $module, string $name, array $json)
