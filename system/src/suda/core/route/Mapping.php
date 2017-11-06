@@ -14,6 +14,7 @@ class Mapping
     protected $name;
     protected $role;
     protected $types;
+    protected $param;
 
     protected $antiPrefix=false;
     protected $hidden=false;
@@ -23,7 +24,7 @@ class Mapping
     const ROLE_SIMPLE=1;
 
     protected static $urlType=['int'=>'\d+','string'=>'[^\/]+','url'=>'.+'];
-
+    public static $current;
     
     public function __construct(string $name, string $url, string $callback, string $module, array $method=[], int $role=self::ROLE_SIMPLE)
     {
@@ -42,7 +43,16 @@ class Mapping
     {
         return $this->module.':'.$this->name;
     }
+    
+    public function setParam($param){
+        $this->param=$param;
+        return $this;
+    }
 
+    public function getParam(){
+        return $this->param;
+    }
+    
     public function match(Request $request, bool $ignoreCase=true)
     {
         if ($this->hidden) {
@@ -82,6 +92,7 @@ class Mapping
 
     public function run()
     {
+        self::$current=$this;
         return (new Command($this->callback))->exec([Request::getInstance()]);
     }
 

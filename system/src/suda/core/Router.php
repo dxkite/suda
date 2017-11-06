@@ -307,6 +307,13 @@ class Router
     }
     
 
+    public function addMapping(Mapping $mapping){
+        $this->routers[$mapping->getFullName()]=$mapping;
+        $mapping->build();
+        $mapping->setDynamic();
+        return $this;
+    }
+
     /**
      * 动态添加运行命令
      *
