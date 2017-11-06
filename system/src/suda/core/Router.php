@@ -28,9 +28,9 @@ class Router
     protected static $urltype=['int'=>'\d+','string'=>'[^\/]+','url'=>'.+'];
     protected static $router=null;
     protected $routers=[];
+    const CACHE_NAME='route.mapping';
     protected static $cacheName=null;
     protected static $cacheModules=null;
-    const CACHE_NAME='route.mapping';
 
     private function __construct()
     {
@@ -49,7 +49,7 @@ class Router
     
     public static function getModulePrefix(string $module)
     {
-        $prefix= Application::getModulePrefix($module)??'';
+        $prefix= Application::getInstance()->getInstance()->getModulePrefix($module)??'';
         $admin_prefix='';
         if (is_array($prefix)) {
             if (in_array(key($prefix), ['admin','simple'], true)) {
@@ -67,7 +67,7 @@ class Router
     {
         $simple_routers=[];
         $admin_routers=[];
-        $module_path=Application::getModulePath($module);
+        $module_path=Application::getInstance()->getInstance()->getModulePath($module);
         debug()->trace(__('load module:%s path:%s', $module, $module_path));
         // 加载前台路由
         if (Storage::exist($file=$module_path.'/resource/config/router.json')) {
@@ -97,14 +97,14 @@ class Router
 
     protected function loadFile()
     {
-        $routers=storage()->get(self::cacheFile(self::CACHE_NAME));
+        $routers=storage()->get($this->cacheFile(self::CACHE_NAME));
         $this->routers=unserialize($routers);
     }
 
     protected function saveFile()
     {
         storage()->put(self::cacheFile('.modules'), implode("\r\n", self::$cacheModules));
-        storage()->put(self::cacheFile(self::CACHE_NAME), serialize($this->routers));
+        storage()->put($this->cacheFile(self::CACHE_NAME), serialize($this->routers));
         // storage()->put(self::cacheFile(self::CACHE_NAME.'.php'),'<?php '.var_export($this->routers,true));
     }
 
@@ -125,14 +125,14 @@ class Router
 
     public function routerCached()
     {
-        if (!file_exists(self::cacheFile(self::CACHE_NAME))) {
+        if (!file_exists($this->cacheFile(self::CACHE_NAME))) {
             return false;
         }
     }
 
     public function prepareRouterInfo()
     {
-        $modules=Application::getLiveModules();
+        $modules=Application::getInstance()->getInstance()->getLiveModules();
         foreach ($modules as $module) {
             self::load($module);
         }
@@ -162,11 +162,11 @@ class Router
         // [模块前缀名称/]模块名[:版本号]:(模板名|路由ID)
        preg_match('/^((?:[a-zA-Z0-9_-]+\/)?[a-zA-Z0-9_-]+)(?::([^:]+))?(?::(.+))?$/', $name, $match);
         if (count($match)===0) {
-            $module=$module_default??Application::getActiveModule();
+            $module=$module_default??Application::getInstance()->getInstance()->getActiveModule();
             $info=$name;
         } elseif (isset($match[1]) && count($match)==2) {
             // 单纯路由或者模板
-                $module=$module_default??Application::getActiveModule();
+                $module=$module_default??Application::getInstance()->getInstance()->getActiveModule();
             $info=$match[0];
         } else {
             $info=isset($match[3])?$match[3]:$match[2];
@@ -176,7 +176,7 @@ class Router
                                     $match[2]?
                                     ':'.$match[2]
                                     :'')
-                                :($module_default??Application::getActiveModule()) // 未指定模板名
+                                :($module_default??Application::getInstance()->getInstance()->getActiveModule()) // 未指定模板名
                             )
                         :$match[1];
         }
@@ -186,14 +186,14 @@ class Router
     public function getRouterFullName(string $name)
     {
         list($module, $name)=self::parseName($name);
-        $module=Application::getModuleFullName($module);
+        $module=Application::getInstance()->getInstance()->getModuleFullName($module);
         return $module.':'.$name;
     }
     
     public function buildUrlArgs(string $name, array $args)
     {
         list($module, $name)=self::parseName($name);
-        $module=Application::getModuleFullName($module);
+        $module=Application::getInstance()->getInstance()->getModuleFullName($module);
         $name=$module.':'.$name;
         if (isset($this->routers[$name])) {
             $types=$this->routers[$name]->getTypes();
@@ -216,7 +216,7 @@ class Router
     public function buildUrl(string $name, array $values=[])
     {
         list($module, $name)=self::parseName($name);
-        $module=Application::getModuleFullName($module);
+        $module=Application::getInstance()->getInstance()->getModuleFullName($module);
         $name=$module.':'.$name;
         if (isset($this->routers[$name])) {
             return $this->routers[$name]->createUrl($values);
@@ -376,7 +376,7 @@ class Router
         Hook::exec('Router:runRouter::before', [&$mapping]);
         // debug()->time('active Module');
         // 激活模块
-        (new Command(System::getAppClassName().'::activeModule'))->exec([$mapping->getModule()]);
+        System::getAppInstance()->activeModule($mapping->getModule());
         // debug()->timeEnd('active Module');
         debug()->time('request');
         // 运行请求
@@ -406,7 +406,7 @@ class Router
     private function cacheFile(string $name):string
     {
         if (is_null(self::$cacheName)) {
-            $module_use=Application::getLiveModules();
+            $module_use=app()->getLiveModules();
             sort($module_use);
             self::$cacheModules=$module_use;
             self::$cacheName=substr(md5(implode('-', $module_use)), 0, 8);

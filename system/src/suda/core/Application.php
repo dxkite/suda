@@ -26,22 +26,24 @@ class Application
     // app 目录
     private $path;
     // 当前模块名
-    private static $active_module;
+    private $active_module;
     // 激活的模块
-    private static $module_live=null;
+    private $module_live=null;
     // 模块配置
-    private static $module_configs=null;
+    private $module_configs=null;
     // 模块名缓存
-    private static $module_name_cache=[];
+    private $module_name_cache=[];
     // 模块目录装换成模块名
-    private static $module_dir_name=[];
-    private static $modules_path=[];
+    private $module_dir_name=[];
+    private $modules_path=[];
 
-    public function __construct(string $app)
+
+    private static $instance;
+
+    private function __construct()
     {
-        debug()->trace(__('application load %s', $app));
-        $this->path=$app;
-    
+        debug()->trace(__('application load %s',APP_DIR));
+        $this->path=APP_DIR;
         // 获取基本配置信息
         if (Storage::exist($path=CONFIG_DIR.'/config.json')) {
             try {
@@ -56,11 +58,12 @@ class Application
             }
         }
         // 加载外部数据库配置
-        self::configDBify();
+        $this->configDBify();
         // 监听器
         if (Storage::exist($path=CONFIG_DIR.'/listener.json')) {
             Hook::loadJson($path);
         }
+        
         // 设置PHP属性
         set_time_limit(Config::get('timelimit', 0));
         // 设置时区
@@ -70,12 +73,22 @@ class Application
         // 系统共享库
         Autoloader::addIncludePath(SHRAE_DIR);
         // 注册模块目录
-        Application::addModulesPath(SYSTEM_RESOURCE.'/modules');
-        Application::addModulesPath(MODULES_DIR);
+        $this->addModulesPath(SYSTEM_RESOURCE.'/modules');
+        $this->addModulesPath(MODULES_DIR);
         // 读取目录，注册所有模块
-        Application::registerModules();
+        $this->registerModules();
         // 加载模块
-        self::loadModules();
+        $this->loadModules();
+    }   
+
+    public static function getInstance() {
+        if (is_null(static::$instance)){
+            static::$instance=new self();
+        }
+        return static::$instance;
+    }
+
+    public function init() {
         // 调整模板
         Manager::theme(conf('app.template', 'default'));
         Hook::exec('Application:init');
@@ -83,6 +96,11 @@ class Application
         if (conf('app.init')) {
             init_resource();
         }
+        Locale::path($this->path.'/resource/locales/');
+        hook()->listen('Router:dispatch::before', [$this, 'onRequest']);
+        hook()->listen('system:shutdown', [$this, 'onShutdown']);
+        hook()->listen('system:uncaughtException', [$this,'uncaughtException']);
+        hook()->listen('system:uncaughtError', [$this, 'uncaughtError']);
     }
 
     /**
@@ -91,11 +109,11 @@ class Application
      * @param string $path
      * @return void
      */
-    public static function addModulesPath(string $path)
+    public function addModulesPath(string $path)
     {
         $path=Storage::abspath($path);
-        if ($path && !in_array($path, self::$modules_path)) {
-            self::$modules_path[]=$path;
+        if ($path && !in_array($path, $this->modules_path)) {
+            $this->modules_path[]=$path;
         }
     }
 
@@ -104,7 +122,7 @@ class Application
      *
      * @return void
      */
-    public static function loadModules()
+    protected function loadModules()
     {
         // 模块共享库
         $module_all=self::getModules();
@@ -119,7 +137,7 @@ class Application
             }
             
             // 自动安装
-            if (conf('auto-install',true)) {
+            if (conf('auto-install', true)) {
                 Hook::listen('Application:init', function () use ($module_temp) {
                     self::installModule($module_temp);
                 });
@@ -138,7 +156,7 @@ class Application
         }
     }
 
-    public static function installModule(string $module)
+    public function installModule(string $module)
     {
         $install_lock = DATA_DIR.'/install/install_'.substr(md5($module), 0, 6).'.lock';
         storage()->path(dirname($install_lock));
@@ -161,55 +179,55 @@ class Application
      *
      * @return void
      */
-    public static function getModules()
+    public function getModules()
     {
-        return array_values(self::$module_dir_name);
+        return array_values($this->module_dir_name);
     }
 
-    public static function getModuleDirs()
+    public function getModuleDirs()
     {
-        return array_keys(self::$module_dir_name);
+        return array_keys($this->module_dir_name);
     }
 
     
-    public static function getActiveModule()
+    public function getActiveModule()
     {
-        return self::$active_module;
+        return $this->active_module;
     }
 
-    public static function getModuleConfig(string $module)
+    public function getModuleConfig(string $module)
     {
-        return self::$module_configs[self::getModuleFullName($module)]??[];
+        return $this->module_configs[self::getModuleFullName($module)]??[];
     }
 
-    public static function getModulePrefix(string $module)
+    public function getModulePrefix(string $module)
     {
         $prefix=conf('module-prefix.'.$module, null);
         if (is_null($prefix)) {
-            $prefix=self::$module_configs[self::getModuleFullName($module)]['prefix']??null;
+            $prefix=$this->module_configs[self::getModuleFullName($module)]['prefix']??null;
         }
         return $prefix;
     }
 
-    public static function checkModuleExist(string $name)
+    public function checkModuleExist(string $name)
     {
-        return Application::getModuleDir($name)!=false;
+        return $this->getModuleDir($name)!=false;
     }
 
-    public static function getLiveModules()
+    public function getLiveModules()
     {
-        if (self::$module_live) {
-            return self::$module_live;
+        if ($this->module_live) {
+            return $this->module_live;
         }
         $modules=conf('app.modules', self::getModules());
         $exclude=defined('DISABLE_MODULES')?explode(',', trim(DISABLE_MODULES, ',')):[];
         foreach ($exclude as $index=>$name) {
-            $exclude[$index]=Application::getModuleFullName($name);
+            $exclude[$index]=$this->getModuleFullName($name);
         }
         // debug()->trace('modules', json_encode($modules));
         // debug()->trace('exclude', json_encode($exclude));
         foreach ($modules as $index => $name) {
-            $fullname=Application::getModuleFullName($name);
+            $fullname=$this->getModuleFullName($name);
             // 剔除模块名
             if (!self::checkModuleExist($name) || in_array($fullname, $exclude)) {
                 unset($modules[$index]);
@@ -220,7 +238,7 @@ class Application
         // 排序，保证为数组
         sort($modules);
         debug()->trace('live modules', json_encode($modules));
-        return self::$module_live=$modules;
+        return $this->module_live=$modules;
     }
 
     /**
@@ -229,11 +247,11 @@ class Application
      * @param string $module
      * @return void
      */
-    public static function activeModule(string $module)
+    public function activeModule(string $module)
     {
         Hook::exec('Application:active', [$module]);
         debug()->trace(__('active module %s', $module));
-        self::$active_module=$module;
+        $this->active_module=$module;
         $root=self::getModulePath($module);
         $module_config=self::getModuleConfig($module);
         define('MODULE_RESOURCE', Storage::path($root.'/resource'));
@@ -259,14 +277,14 @@ class Application
         return true;
     }
     
-    public static function onShutdown()
+    public function onShutdown()
     {
         // TODO: CACHE Appication Info
-        // ArrayHelper::export(CACHE_DIR.'/module_configs.cache.php','module_configs',self::$module_configs);
-        // ArrayHelper::export(CACHE_DIR.'/module_dir_name.cache.php','module_dir_name',self::$module_dir_name);
+        // ArrayHelper::export(CACHE_DIR.'/module_configs.cache.php','module_configs',$this->module_configs);
+        // ArrayHelper::export(CACHE_DIR.'/module_dir_name.cache.php','module_dir_name',$this->module_dir_name);
     }
 
-    public static function uncaughtException($e)
+    public function uncaughtException($e)
     {
         return false;
     }
@@ -277,7 +295,7 @@ class Application
      * @param string $name 不完整模块名
      * @return void
      */
-    public static function getModuleName(string $name)
+    public function getModuleName(string $name)
     {
         $name=self::getModuleFullName($name);
         return preg_replace('/:.+$/', '', $name);
@@ -291,11 +309,11 @@ class Application
      * @param string $name 不完整模块名
      * @return void
      */
-    public static function getModuleFullName(string $name)
+    public function getModuleFullName(string $name)
     {
         // 存在缓存则返回缓存
-        if (isset(self::$module_name_cache[$name])) {
-            return self::$module_name_cache[$name];
+        if (isset($this->module_name_cache[$name])) {
+            return $this->module_name_cache[$name];
         }
         preg_match('/^(?:([a-zA-Z0-9_-]+)\/)?([a-zA-Z0-9_-]+)(?::(.+))?$/', $name, $matchname);
         $preg='/^'.(isset($matchname[1])&&$matchname[1]? preg_quote($matchname[1]).'\/':'(\w+\/)?') // 限制域
@@ -304,7 +322,7 @@ class Application
         $targets=[];
         // debug()->debug($matchname, $preg);
         // 匹配模块名，查找符合格式的模块
-        foreach (self::$module_configs as $module_name=>$module_config) {
+        foreach ($this->module_configs as $module_name=>$module_config) {
             // 匹配到模块名
             if (preg_match($preg, $module_name)) {
                 preg_match('/^(?:(\w+)\/)?(\w+)(?::(.+))?$/', $module_name, $matchname);
@@ -327,11 +345,11 @@ class Application
      * @param string $name
      * @return void
      */
-    public static function getModuleDir(string $name)
+    public function getModuleDir(string $name)
     {
         $name=self::getModuleFullName($name);
-        if (isset(self::$module_configs[$name])) {
-            return self::$module_configs[$name]['directory'];
+        if (isset($this->module_configs[$name])) {
+            return $this->module_configs[$name]['directory'];
         }
         return false;
     }
@@ -342,9 +360,9 @@ class Application
      * @param string $dirname
      * @return void
      */
-    public static function moduleName(string $dirname)
+    public function moduleName(string $dirname)
     {
-        return self::$module_dir_name[$dirname]?:$name;
+        return $this->module_dir_name[$dirname]?:$name;
     }
 
     /**
@@ -352,9 +370,9 @@ class Application
      *
      * @return void
      */
-    private static function registerModules()
+    private function registerModules()
     {
-        foreach (self::$modules_path as $path) {
+        foreach ($this->modules_path as $path) {
             $dirs=Storage::readDirs($path);
             foreach ($dirs as $dir) {
                 self::registerModule($path.'/'.$dir);
@@ -362,7 +380,7 @@ class Application
         }
     }
 
-    public static function registerModule(string $path)
+    public function registerModule(string $path)
     {
         if (Storage::exist($file=$path.'/module.json')) {
             $dir=basename($path);
@@ -372,26 +390,26 @@ class Application
             $json['directory']=$dir;
             $json['path']=$path;
             $name.=isset($json['version'])?':'.$json['version']:'';
-            self::$module_configs[$name]=$json;
-            self::$module_dir_name[$dir]=$name;
+            $this->module_configs[$name]=$json;
+            $this->module_dir_name[$dir]=$name;
         }
     }
 
-    public static function getModulesInfo()
+    public function getModulesInfo()
     {
-        return self::$module_configs;
+        return $this->module_configs;
     }
 
-    public static function getModulePath(string $module)
+    public function getModulePath(string $module)
     {
         $name=self::getModuleFullName($module);
-        if (isset(self::$module_configs[$name])) {
-            return self::$module_configs[$name]['path'];
+        if (isset($this->module_configs[$name])) {
+            return $this->module_configs[$name]['path'];
         }
         return false;
     }
 
-    private static function configDBify()
+    private function configDBify()
     {
         if (file_exists($path=RUNTIME_DIR.'/database.config.php')) {
             $config=include $path;

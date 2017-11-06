@@ -38,6 +38,7 @@ class System
 {
     protected static $app_instance=null;
     protected static $application_class=null;
+    const APP_CACHE='app.cache';
 
     public static function init()
     {
@@ -82,10 +83,10 @@ class System
         return self::$application_class;
     }
 
-    public static function run(string $app)
+    public static function run()
     {
         debug()->time('init application');
-        self::console($app);
+        self::console();
         debug()->timeEnd('init application');
         debug()->time('run request');
         Router::getInstance()->dispatch();
@@ -93,24 +94,14 @@ class System
         debug()->time('before shutdown');
     }
 
-    public static function console(string $app)
+    public static function console()
     {
-        // 加载配置
-        $app=Storage::path($app);
-        self::readManifast($app.'/manifast.json');
+        $app=Storage::path(APP_DIR);
+        self::readManifast(APP_DIR.'/manifast.json');
         $name=Autoloader::realName(self::$application_class);
         debug()->trace(__('loading application %s from %s', $name, $app));
-        self::$app_instance=new $name($app);
-        if (self::$app_instance instanceof Application) {
-            // 设置语言包库
-            Locale::path($app.'/resource/locales/');
-            Hook::listen('Router:dispatch::before', [self::$app_instance, 'onRequest']);
-            Hook::listen('system:shutdown', [self::$app_instance, 'onShutdown']);
-            Hook::listen('system:uncaughtException', [self::$app_instance, 'uncaughtException']);
-            Hook::listen('system:uncaughtError', [self::$app_instance, 'uncaughtError']);
-        } else {
-            debug()->die(__('unsupport base application class %s', self::$application_class));
-        }
+        self::$app_instance= $name::getInstance();
+        self::$app_instance->init();
     }
 
     protected static function readManifast(string $manifast)

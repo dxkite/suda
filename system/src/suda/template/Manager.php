@@ -199,7 +199,7 @@ class Manager
 
     private static function getPublicModulePath(string $module)
     {
-        $module_dir=Application::getModuleDir($module);
+        $module_dir=Application::getInstance()->getModuleDir($module);
         return Storage::path(APP_PUBLIC.'/'.self::$staticPath.'/'.self::shadowName($module_dir));
     }
 
@@ -216,7 +216,7 @@ class Manager
      */
     public static function getThemePath(string $module):string
     {
-        $theme=Application::getModulePath($module).'/resource/template/'.self::$theme;
+        $theme=Application::getInstance()->getModulePath($module).'/resource/template/'.self::$theme;
         return Storage::abspath($theme);
     }
 
@@ -228,7 +228,7 @@ class Manager
      */
     public static function getAppThemePath(string $module):string
     {
-        $moduleName=Application::getModuleName($module);
+        $moduleName=Application::getInstance()->getModuleName($module);
         $theme=RESOURCE_DIR.'/template/'.self::$theme.'/'.$moduleName;
         return Storage::abspath($theme);
     }
@@ -245,7 +245,7 @@ class Manager
         if (empty($path)) {
             return;
         }
-        $moduleName=Application::getModuleName($module);
+        $moduleName=Application::getInstance()->getModuleName($module);
         if (!isset(self::$templateSource[$moduleName])) {
             self::$templateSource[$moduleName]=[];
         }
@@ -262,7 +262,7 @@ class Manager
      */
     public static function getTemplateSource(string $module)
     {
-        $moduleName=Application::getModuleName($module);
+        $moduleName=Application::getInstance()->getModuleName($module);
         return self::$templateSource[$moduleName]??[];
     }
 
@@ -271,7 +271,7 @@ class Manager
         $init_theme=isset(self::$templateSourceInit[self::$theme]) && self::$templateSourceInit[self::$theme];
         if (!$init_theme) {
             // 初始化
-            foreach (Application::getLiveModules() as $module) {
+            foreach (Application::getInstance()->getLiveModules() as $module) {
                 if ($path=self::getThemePath($module)) {
                     self::addTemplateSource($module, $path);
                 }
@@ -323,7 +323,7 @@ class Manager
             return; //文件目录不存在
         }
         // 获取文件夹
-        $module_dir=Application::getModuleDir($module);
+        $module_dir=Application::getInstance()->getModuleDir($module);
         // 获取输出
         $output=self::getOutputFile($name);
         // 动态文件导出
@@ -400,7 +400,7 @@ class Manager
     {
         list($module, $basename)=Router::parseName($name);
         $name=$module.':'.$basename;
-        $module_dir=Application::getModuleDir($module);
+        $module_dir=Application::getInstance()->getModuleDir($module);
         $output=VIEWS_DIR.'/'. $module_dir .'/'.$basename.self::$extCpl;
         return $output;
     }
@@ -408,7 +408,7 @@ class Manager
     public static function className(string $name)
     {
         list($module, $basename)=Router::parseName($name);
-        $fullName=Application::getModuleFullName($module);
+        $fullName=Application::getInstance()->getModuleFullName($module);
         return 'Template_'.md5($fullName.':'.$basename);
     }
 
@@ -416,9 +416,9 @@ class Manager
     {
         debug()->time('init resource');
         $init=[];
-        $modules=$modules??Application::getLiveModules();
+        $modules=$modules??Application::getInstance()->getLiveModules();
         foreach ($modules as $module) {
-            if (!Application::checkModuleExist($module)) {
+            if (!Application::getInstance()->checkModuleExist($module)) {
                 continue;
             }
             $sources=self::getTemplateSource($module);
@@ -461,7 +461,7 @@ class Manager
     
     public static function getStaticAssetPath(string $module=null)
     {
-        $module=$module??Application::getActiveModule();
+        $module=$module??Application::getInstance()->getActiveModule();
         $path=Manager::getPublicModulePath($module);
         self::prepareResource($module);
         $static_url=Storage::cut($path, APP_PUBLIC);
@@ -471,8 +471,8 @@ class Manager
 
     public static function getDynamicAssetPath(string $path, string $module=null)
     {
-        $module=$module??Application::getActiveModule();
-        $path=APP_PUBLIC.'/'.self::$dynamicPath.'/'.self::shadowName(Application::getModuleDir($module)).'/'.$path;
+        $module=$module??Application::getInstance()->getActiveModule();
+        $path=APP_PUBLIC.'/'.self::$dynamicPath.'/'.self::shadowName(Application::getInstance()->getModuleDir($module)).'/'.$path;
         $static_url=Storage::cut($path, APP_PUBLIC);
         $static_url=preg_replace('/[\\\\\/]+/', '/', $static_url);
         return  '/'.$static_url;
