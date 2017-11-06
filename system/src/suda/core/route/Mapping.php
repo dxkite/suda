@@ -181,7 +181,11 @@ class Mapping
 
     public function createUrl(array $args)
     {
-        $url=preg_replace('/[?|]/', '\\\1', $this->url);
+        $url='/'.trim($this->url, '/');
+        if (!$this->antiPrefix) {
+            $url='/'.trim($this->getPrefix().$this->url, '/');
+        }
+        $url=preg_replace('/[?|]/', '\\\1', $url);
         $url=preg_replace_callback('/\{(?:(\w+)(?::(\w+))?)(?:=(\w+))?\}/', function ($match) use (& $args) {
             $param_name=$match[1];
             $param_type= $match[2] ?? 'url';
@@ -205,7 +209,7 @@ class Mapping
 
     public function getPrefix()
     {
-        $prefix= app()->getModulePrefix($this->module)??'';
+        $prefix=app()->getModulePrefix($this->module)??'';
         $admin_prefix='';
         if (is_array($prefix)) {
             if (in_array(key($prefix), ['admin','simple'], true)) {
