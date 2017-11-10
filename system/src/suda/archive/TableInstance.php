@@ -43,7 +43,7 @@ class TableInstance
         return self::new($tableName);
     }
 
-    protected static function instance()
+    public static function instance()
     {
         if (is_null(self::$instance)) {
             self::$instance=new self;
@@ -51,6 +51,11 @@ class TableInstance
         return self::$instance;
     }
 
+    public function getTables()
+    {
+        return static::$tableClass;
+    }
+    
     protected function getTableNames()
     {
         $modules = app()->getLiveModules();

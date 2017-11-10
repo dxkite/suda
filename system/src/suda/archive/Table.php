@@ -208,13 +208,14 @@ abstract class Table
         }
         return Query::where($this->getTableName(), $wants, $where);
     }
-        
+
     /**
-     * 根据条件删除列
+     * 纯查询
      *
-     * @param [type] $wants
-     * @param [type] $where
-     * @return int
+     * @param string $query
+     * @param array $binds
+     * @param bool $scroll
+     * @return void
      */
     public function query(string $query, array $binds=[], bool $scroll=false)
     {
@@ -476,7 +477,7 @@ abstract class Table
             $this->cacheDbInfo();
         }
     }
-    
+
     protected function initFromDatabase()
     {
         $fields=[];
