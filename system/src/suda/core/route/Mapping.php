@@ -39,20 +39,6 @@ class Mapping
         $this->url=$url;
     }
 
-    public function getFullName()
-    {
-        return $this->module.':'.$this->name;
-    }
-    
-    public function setParam($param){
-        $this->param=$param;
-        return $this;
-    }
-
-    public function getParam(){
-        return $this->param;
-    }
-    
     public function match(Request $request, bool $ignoreCase=true)
     {
         if ($this->hidden) {
@@ -106,6 +92,22 @@ class Mapping
         return $this;
     }
 
+    public function getFullName()
+    {
+        return $this->module.':'.$this->name;
+    }
+    
+    public function setParam($param)
+    {
+        $this->param=$param;
+        return $this;
+    }
+
+    public function getParam()
+    {
+        return $this->param;
+    }
+    
     public function setCallback(string $callback)
     {
         $this->callback=$callback;
@@ -256,6 +258,7 @@ class Mapping
         $mapping= new self($name, $json['visit'], $json['class'].'->onRequest', $module, $json['method']??[], $role);
         $mapping->antiPrefix=isset($json['anti-prefix'])?$json['anti-prefix']:false;
         $mapping->hidden=isset($json['hidden'])?$json['hidden']:false;
+        $mapping->param= $json['param'] ?? null;
         $mapping->build();
         return $mapping;
     }
