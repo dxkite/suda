@@ -156,9 +156,8 @@ abstract class Table
      * @param int $rows 分页的元素个数
      * @return array|false
      */
-    public function listWhere($where, int $page=null, int $rows=10)
+    public function listWhere($where,array $binds=[], int $page=null, int $rows=10)
     {
-        $binds=[];
         $where_str=Query::prepareWhere($where, $binds);
         $where=preg_replace('/WHERE(.+)$/', '$1', $where_str).' '.self::_order();
         if (is_null($page)) {
