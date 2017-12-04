@@ -299,7 +299,7 @@ final class Request
         // 3 index.php?/
         $base=self::hostBase();
         $script=$_SERVER['SCRIPT_NAME'];
-        $module=conf('app.url.module', 0);
+        $module=conf('app.url.mode', 0);
         $beautify=conf('app.url.beautify', false);
         if ($module==0 || $module==1) {
             // 如果当前脚本为AutoIndex索引

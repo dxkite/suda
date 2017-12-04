@@ -5,7 +5,7 @@
     "modules": ["suda", "default"],
     "language": "zh-CN",
     "url": {
-        "module": 0,
+        "mode": 0,
         "beautify": true,
         "rewrite": true
     }
