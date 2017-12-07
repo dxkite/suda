@@ -42,7 +42,7 @@ class Application
 
     private function __construct()
     {
-        debug()->trace(__('application load %s',APP_DIR));
+        debug()->trace(__('application load %s', APP_DIR));
         $this->path=APP_DIR;
         // 获取基本配置信息
         if (Storage::exist($path=CONFIG_DIR.'/config.json')) {
@@ -79,16 +79,18 @@ class Application
         $this->registerModules();
         // 加载模块
         $this->loadModules();
-    }   
+    }
 
-    public static function getInstance() {
-        if (is_null(static::$instance)){
+    public static function getInstance()
+    {
+        if (is_null(static::$instance)) {
             static::$instance=new self();
         }
         return static::$instance;
     }
 
-    public function init() {
+    public function init()
+    {
         // 调整模板
         Manager::theme(conf('app.template', 'default'));
         Hook::exec('Application:init');
@@ -131,11 +133,14 @@ class Application
         // 安装 启用 活动
         foreach ($module_all as $module_temp) {
             $root=self::getModulePath($module_temp);
-            // 注册模块共享目录
-            if (Storage::isDir($share_path=$root.'/share')) {
-                Autoloader::addIncludePath($share_path);
+            $config=self::getModuleConfig($module_temp);
+
+            // 注册模块共享目录自动加载
+            foreach ($config['autoload']['share'] as $namespace=>$path) {
+                if (Storage::isDir($share_path=$root.DIRECTORY_SEPARATOR.$path)) {
+                    Autoloader::addIncludePath($share_path, $namespace);
+                }
             }
-            
             // 自动安装
             if (conf('auto-install', true)) {
                 Hook::listen('Application:init', function () use ($module_temp) {
@@ -264,7 +269,11 @@ class Application
             Autoloader::setNamespace($module_config['namespace']);
         }
         // 自动加载私有库
-        Autoloader::addIncludePath($root.'/src');
+        foreach ($module_config['autoload']['src'] as $namespace=>$path) {
+            if (Storage::isDir($srcPath=$root.DIRECTORY_SEPARATOR.$path)) {
+                Autoloader::addIncludePath($srcPath, $namespace);
+            }
+        }
         // 加载模块配置到 module命名空间
         if (Storage::exist($path=MODULE_CONFIG.'/config.json')) {
             Config::set('module', Json::loadFile($path));
@@ -389,6 +398,11 @@ class Application
             $name=$json['name'] ?? $dir;
             $json['directory']=$dir;
             $json['path']=$path;
+            // 注册默认自动加载
+            $json['autoload']=array_merge([
+                'share'=>[''=>'share/'],
+                'src'=>[''=>'src/']
+            ],$json['autoload']??[]);
             $name.=isset($json['version'])?':'.$json['version']:'';
             $this->module_configs[$name]=$json;
             $this->module_dir_name[$dir]=$name;
