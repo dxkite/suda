@@ -1,9 +1,7 @@
 # 应用数据
 /app/data
 # 静态数据
-/public/static
-# 动态模板文件
-/public/dtf
+/public/assets
 # DXkite本地开发环境
 /public/dx.php
 /public/dx-dev.php

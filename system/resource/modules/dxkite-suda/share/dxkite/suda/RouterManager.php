@@ -43,7 +43,7 @@ class RouterManager
         if (!$info) {
             return false;
         }
-        $module_path=Application::getModulePath($module);
+        $module_path=app()->getModulePath($module);
         $admin=$info['role']==='admin';
         $name=$info['name'];
         $router_file= $module_path.'/resource/config/router'.($admin?'_admin':'').'.json';
@@ -70,7 +70,7 @@ class RouterManager
     {
         $module=trim($module);
         $name=trim($name);
-        $module_config=Application::getModuleConfig($module);
+        $module_config=app()->getModuleConfig($module);
         $namespace=$module_config['namespace'] ?? conf('app.namespace');
         return  str_replace($namespace.'\\response\\', '', $name);
     }
@@ -88,10 +88,10 @@ class RouterManager
         // 解析变量
         list($router, $class_short, $module)=$matchs;
         // 激活模块
-        $module_dir=Application::getModuleDir($module);
-        $module_config=Application::getModuleConfig($module);
+        $module_dir=app()->getModuleDir($module);
+        $module_config=app()->getModuleConfig($module);
         // 路由位置
-        $router_file=Application::getModulePath($module).'/resource/config/router'.($admin?'_admin':'').'.json';
+        $router_file=app()->getModulePath($module).'/resource/config/router'.($admin?'_admin':'').'.json';
         // 命名空间
         $namespace=$module_config['namespace']??conf('app.namespace');
 
@@ -112,11 +112,11 @@ class RouterManager
         $pos=strrpos($class, '\\');
         $class_namespace=substr($class, 0, $pos);
         $class_name=substr($class, $pos+1);
-        $class_path=Application::getModulePath($module).'/src/'.$class_namespace;
+        $class_path=app()->getModulePath($module).'/src/'.$class_namespace;
         $class_file=$class_path.'/'.$class_name.'.php';
         $return['class']=$class_file;
         $template_name=self::createTplName(preg_replace('/^(.+)Response$/i','$1',$class_short));
-        $template_file=Application::getModulePath($module).'/resource/template/default/'.$template_name.'.tpl.html';
+        $template_file=app()->getModulePath($module).'/resource/template/default/'.$template_name.'.tpl.html';
         $class_template_file=MODULE_RESOURCE.'/data/'.($json?'/class_json.php':'/class_html.php');
         $class_template= Storage::get($class_template_file);
         

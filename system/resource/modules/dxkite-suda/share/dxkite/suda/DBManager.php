@@ -105,7 +105,7 @@ End;
 
     public function parseDTOs(array $modules=null)
     {
-        $modules= $modules ?? Application::getModules();
+        $modules= $modules ?? app()->getModules();
         foreach ($modules as $module) {
             self::log('parse module dtos > '.$module);
             self::parseModuleDTOs($module);
@@ -115,7 +115,7 @@ End;
 
     public function createTables(array $modules=null)
     {
-        $modules= $modules ?? Application::getModules();
+        $modules= $modules ?? app()->getModules();
         foreach ($modules as $module) {
             self::log('create module tables > '.$module);
             self::createTable($module);
@@ -130,7 +130,7 @@ End;
         if (Storage::exist($config_path)) {
             $config=include $config_path;
             foreach ($config['module'] as $index=>$name) {
-                $module_dir=Application::getModuleDir($name);
+                $module_dir=app()->getModuleDir($name);
                 $datafile=self::$root.'/'.$backup.'/data/'.$module_dir.'.php';
                 if (file_exists($datafile)) {
                     $config['module_size'][$index]=filesize($datafile);
@@ -164,7 +164,7 @@ End;
 
     public function backupTables(array $modules=null)
     {
-        $modules= $modules ?? Application::getModules();
+        $modules= $modules ?? app()->getModules();
         // 新建备份
         self::archive();
         $config_path=$this->dirname .'/config.php';
@@ -200,7 +200,7 @@ End;
                 if (($key=array_search($module, $config['module']))!==false) {
                     self::log('delete data > '.$module);
                     unset($config['module'][$key]);
-                    $module_dir=Application::getModuleDir($module);
+                    $module_dir=app()->getModuleDir($module);
                     $datafile=$this->dirname.'/data/'.$module_dir.'.php';
                     $tablefile=$this->dirname.'/table/'.$module_dir.'.php';
                     $createfile=$this->dirname.'/create/'.$module_dir.'.php';
@@ -216,9 +216,9 @@ End;
 
     public function importTables(array $modules=null)
     {
-        $modules= $modules ?? Application::getModules();
+        $modules= $modules ?? app()->getModules();
         foreach ($modules as $module) {
-            $module_dir=Application::getModuleDir($module);
+            $module_dir=app()->getModuleDir($module);
             $datafile=$this->dirname.'/data/'.$module_dir.'.php';
             if (Storage::exist($datafile)) {
                 self::log('import module >  '.$module);
@@ -233,7 +233,7 @@ End;
 
     public function backupModule(string $module)
     {
-        $module_dir=Application::getModuleDir($module);
+        $module_dir=app()->getModuleDir($module);
         $tablefile=$this->dirname.'/table/'.$module_dir.'.php';
         if (Storage::exist($tablefile)) {
             Storage::path($this->dirname.'/data/');
@@ -261,7 +261,7 @@ End;
 
     public function createTable(string $module)
     {
-        $module_dir=Application::getModuleDir($module);
+        $module_dir=app()->getModuleDir($module);
         $path=file_exists($this->dirname)?$this->dirname:TEMP_DIR.'/db';
         $create=$path.'/create/'.$module_dir.'.php';
         if (Storage::exist($create)) {
@@ -275,9 +275,9 @@ End;
 
     public function parseModuleDTOs(string $module)
     {
-        $module_dir=Application::getModuleDir($module);
+        $module_dir=app()->getModuleDir($module);
         $table_names=[];
-        $dto_path=Application::getModulePath($module).'/resource/dto';
+        $dto_path=app()->getModulePath($module).'/resource/dto';
         if (!Storage::isDir($dto_path)) {
             debug()->warning("not exist {$dto_path}\r\n");
             return;

@@ -30,10 +30,10 @@ class ModuleManager
         $manifast_file=APP_DIR.'/manifast.json';
         $manifast=Json::parseFile($manifast_file);
         if ($status === self::MODULE_OFF) {
-            $module=Application::getModuleFullName($module);
+            $module=app()->getModuleFullName($module);
             foreach ($manifast['modules'] as $index => $mname) {
-                $mname=Application::getModuleFullName($mname);
-                if ($module===$mname || !Application::checkModuleExist($mname)) {
+                $mname=app()->getModuleFullName($mname);
+                if ($module===$mname || !app()->checkModuleExist($mname)) {
                     unset($manifast['modules'][$index]);
                 }
             }
@@ -50,8 +50,8 @@ class ModuleManager
     
     public static function getModulesInfo()
     {
-        $module_use=Application::getLiveModules();
-        $all=Application::getModulesInfo();
+        $module_use=app()->getLiveModules();
+        $all=app()->getModulesInfo();
         foreach ($all as $index=>$module) {
             if (in_array($index, $module_use)) {
                 $all[$index]['on']=true;
