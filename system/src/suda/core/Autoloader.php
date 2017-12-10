@@ -57,8 +57,8 @@ class Autoloader
         // debug_print_backtrace();
         // 搜索路径
         foreach (self::$include_path as $include_namesapce => $include_path) {
-            if (!is_numeric($include_namesapce) && preg_match('/^'.preg_quote($include_namesapce).'(.+)$/',$classname,$match)) {
-                $path=preg_replace('/[\\\\\\/]+/', DIRECTORY_SEPARATOR, $include_path.DIRECTORY_SEPARATOR.$match[1].'.php');
+            if (!is_numeric($include_namesapce) && preg_match('/^'.preg_quote(static::realName($include_namesapce),'/').'(.+)$/',$classname,$match)) {
+                $path=preg_replace('/[\\\\\\/]+/', DIRECTORY_SEPARATOR, $include_path.DIRECTORY_SEPARATOR.static::realPath($match[1]).'.php');
             }else{
                 $path=preg_replace('/[\\\\\\/]+/', DIRECTORY_SEPARATOR, $include_path.DIRECTORY_SEPARATOR.$namepath.'.php');
             }
