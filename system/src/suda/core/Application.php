@@ -141,6 +141,12 @@ class Application
                     Autoloader::addIncludePath($share_path, $namespace);
                 }
             }
+            // 注册Import函数
+            foreach ($config['import'] as $path) {
+                if (Storage::isFile($importPath=$root.DIRECTORY_SEPARATOR.$path)) {
+                    Autoloader::import($importPath);
+                }
+            }
             // 自动安装
             if (conf('auto-install', true)) {
                 Hook::listen('Application:init', function () use ($module_temp) {
@@ -402,7 +408,8 @@ class Application
             $json['autoload']=array_merge([
                 'share'=>[''=>'share/'],
                 'src'=>[''=>'src/']
-            ],$json['autoload']??[]);
+            ], $json['autoload']??[]);
+            $json['import']= $json['import']??[];
             $name.=isset($json['version'])?':'.$json['version']:'';
             $this->module_configs[$name]=$json;
             $this->module_dir_name[$dir]=$name;
