@@ -43,16 +43,19 @@ class Cookie
     
     public static function unset(string $name)
     {
-        self::set($name, '', -1);
+        self::set($name, '', time() - 0x0802);
+        if (isset($_COOKIE[$name])) {
+            unset($_COOKIE[$name]);
+        }
     }
     
     public static function delete(string $name){
-        self::set($name, '',-1);
+        self::unset($name);
     }
 
     public static function has(string $name)
     {
-        return isset(self::$values[$name]) && self::$values[$name]->get() > 0 || isset($_COOKIE[$name]);
+        return isset(self::$values[$name]) && self::$values[$name]->get() > time() || isset($_COOKIE[$name]);
     }
 
     /**
@@ -62,7 +65,7 @@ class Cookie
      */
     public static function get(string $name, $default='') : string
     {
-        if (isset(self::$values[$name]) && self::$values[$name]->get() > 0){
+        if (isset(self::$values[$name]) && self::$values[$name]->get() > time()){
             return self::$values[$name]->get();
         }
         return isset($_COOKIE[$name])?$_COOKIE[$name]:$default;
