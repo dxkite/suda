@@ -24,6 +24,7 @@ use suda\tool\CookieSetter as Setter;
 class Cookie
 {
     public static $values=[];
+    
     /**
      * @param string $name Cookie名
      * @param string $value 设置的值
@@ -42,13 +43,18 @@ class Cookie
     
     public static function unset(string $name)
     {
-        self::set($name, '', 0);
+        self::set($name, '', -1);
     }
     
+    public static function delete(string $name){
+        self::set($name, '',-1);
+    }
+
     public static function has(string $name)
     {
-        return isset(self::$values[$name]) || isset($_COOKIE[$name]);
+        return isset(self::$values[$name]) && self::$values[$name]->get() > 0 || isset($_COOKIE[$name]);
     }
+
     /**
      * 获取Cookie的值
      * @param string $name
@@ -56,7 +62,10 @@ class Cookie
      */
     public static function get(string $name, $default='') : string
     {
-        return isset(self::$values[$name])?self::$values[$name]->get():(isset($_COOKIE[$name])?$_COOKIE[$name]:$default);
+        if (isset(self::$values[$name]) && self::$values[$name]->get() > 0){
+            return self::$values[$name]->get();
+        }
+        return isset($_COOKIE[$name])?$_COOKIE[$name]:$default;
     }
 
     /**
