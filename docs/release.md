@@ -1,3 +1,16 @@
+v1.2.12
+----------
+- 修复
+    - Route 错误
+    - Query listWhere错误
+    - Route Mapping
+- 添加
+    - 路由缓存
+    - 错误处理
+- 修正
+    - URL构建
+    - Cookie操作
+
 v1.2.11-release-1c6b049 
 -------------
 - 添加 
