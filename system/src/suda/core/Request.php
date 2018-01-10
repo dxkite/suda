@@ -203,7 +203,7 @@ final class Request
         return $default;
     }
     
-    public static function hasHeader(string $name, string $default=null)
+    public static function hasHeader(string $name)
     {
         $name='HTTP_'.strtoupper(preg_replace('/[^\w]/', '_', $name));
         return isset($_SERVER[$name]);
