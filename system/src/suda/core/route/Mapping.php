@@ -270,7 +270,7 @@ class Mapping
 
     public static function createFromRouteArray(int $role, string $module, string $name, array $json)
     {
-        $mapping= new self($name, $json['visit'], $json['class'].'->onRequest', $module, $json['method']??[], $role);
+        $mapping= new self($name, $json['url']??$json['visit'], $json['class'].'->onRequest', $module, $json['method']??[], $role);
         $mapping->antiPrefix=isset($json['anti-prefix'])?$json['anti-prefix']:false;
         $mapping->hidden=isset($json['hidden'])?$json['hidden']:false;
         $mapping->param= $json['param'] ?? null;
