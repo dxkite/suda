@@ -28,6 +28,8 @@ class SQLQuery
     protected static $times=0;
     protected static $pdo=null;
     protected static $prefix=null;
+    protected static $transaction = 0;
+
     protected $stmt=null;
     // 查询语句
     protected $query=null;
@@ -37,6 +39,7 @@ class SQLQuery
     // 使用的数据库
     protected $database=null;
     protected $dbchange=false;
+   
 
     // TODO :  支持超大查询 max_allowed_packet
 
@@ -145,19 +148,29 @@ class SQLQuery
     public static function beginTransaction()
     {
         self::connectPdo();
-        return self::$pdo->beginTransaction();
+        static::$transaction ++;
+        if (static::$transaction == 1) {
+            self::$pdo->beginTransaction();
+        }
     }
     
     public static function commit()
     {
         self::connectPdo();
-        return  self::$pdo->commit();
+        if (static::$transaction == 1) {
+            self::$pdo->commit();
+        }
     }
 
     public static function rollBack()
     {
         self::connectPdo();
-        return  self::$pdo->rollBack();
+        if (static::$transaction == 1) {
+            static::$transaction=0;
+            self::$pdo->rollBack();
+        } else {
+            static::$transaction--;
+        }
     }
 
     public function quote($string)
@@ -217,15 +230,15 @@ class SQLQuery
         foreach ($array as $key=> $value) {
             $key=':'.ltrim($key, ':');
             if (is_array($value)) {
-                list($value,$type) =$value;
+                list($value, $type) =$value;
             } else {
-                if (is_null($value)){
+                if (is_null($value)) {
                     $type=PDO::PARAM_NULL;
-                }elseif(is_bool($value)) {
+                } elseif (is_bool($value)) {
                     $type=PDO::PARAM_BOOL;
-                }elseif (is_numeric($value)){
+                } elseif (is_numeric($value)) {
                     $type=PDO::PARAM_INT;
-                }else{
+                } else {
                     $type=PDO::PARAM_STR;
                 }
             }
