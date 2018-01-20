@@ -27,7 +27,7 @@ class Query extends SQLQuery
      * @param array $binds
      * @return void
      */
-    public static function insert(string $table, $values, array $binds=[])
+    public static function insert(string $table, $values, array $binds=[],$object=null)
     {
         $table=self::table($table);
         if (is_string($values)) {
@@ -43,7 +43,7 @@ class Query extends SQLQuery
             $binds=$values;
             $sql='INSERT INTO `'.$table.'` ('.trim($names, ',').') VALUES ('.trim($bind, ',').');';
         }
-        $count=(new SQLQuery($sql, $binds))->exec();
+        $count=(new SQLQuery($sql, $binds))->object($object)->exec();
         if ($count) {
             $id=SQLQuery::lastInsertId();
             if ($id>0) {
@@ -95,7 +95,7 @@ class Query extends SQLQuery
         return new SQLQuery('SELECT '.$fields.' FROM `'.$table.'` '.trim($conditions, ';').$limit.';', $binds, $scroll);
     }
 
-    public static function update(string $table, $set_fields, $where='1', array $binds=[]):int
+    public static function update(string $table, $set_fields, $where='1', array $binds=[],$object=null):int
     {
         $table=self::table($table);
         $count=0;
@@ -111,14 +111,14 @@ class Query extends SQLQuery
             $sql='UPDATE `'.$table.'` SET '.$set_fields.' '.self::prepareWhere($where, $binds).';';
         }
         
-        return (new Query($sql, $binds))->exec();
+        return (new Query($sql, $binds))->object($object)->exec();
     }
 
-    public static function delete(string $table, $where='1', array $binds=[]):int
+    public static function delete(string $table, $where='1', array $binds=[],$object=null):int
     {
         $table=self::table($table);
         $sql='DELETE FROM `'.$table.'` '.self::prepareWhere($where, $binds).';';
-        return (new SQLQuery($sql, $binds))->exec();
+        return (new SQLQuery($sql, $binds))->object($object)->exec();
     }
 
     public static function prepareIn(string $name, array $invalues, string $prefix='in_')
@@ -163,12 +163,12 @@ class Query extends SQLQuery
     }
 
     
-    public static function count(string $table, $where='1', array $binds=[]):int
+    public static function count(string $table, $where='1', array $binds=[],$object=null):int
     {
         $table=self::table($table);
         $where=self::prepareWhere($where, $binds);
         $sql='SELECT count(*) as `count` FROM `'.$table.'` '.$where.';';
-        if ($query=(new SQLQuery($sql, $binds))->fetch()) {
+        if ($query=(new SQLQuery($sql, $binds))->object($object)->fetch()) {
             return intval($query['count']);
         }
         return 0;

@@ -30,6 +30,8 @@ class SQLQuery
     protected static $prefix=null;
     protected static $transaction = 0;
 
+    protected $object;
+
     protected $stmt=null;
     // 查询语句
     protected $query=null;
@@ -49,7 +51,7 @@ class SQLQuery
         $this->query=$query;
         $this->values=$binds;
         $this->scroll=$scroll;
-        static::$object=$this;
+        $this->object=null;
     }
 
     public function fetch(int $fetch_style = PDO::FETCH_ASSOC)
@@ -59,7 +61,7 @@ class SQLQuery
         } else {
             if (self::lazyQuery($this->query, $this->values)) {
                 if ($data=$this->stmt->fetch($fetch_style)){
-                    return static::__outputRowTransfrom($data);
+                    return self::__outputRowTransfrom($data);
                 }
             }
         }
@@ -82,7 +84,7 @@ class SQLQuery
     {
         if (self::lazyQuery($this->query, $this->values)) {
             if ($data=$this->stmt->fetchAll($fetch_style)){
-                return static::__outputRowsTransfrom($data);
+                return self::__outputRowsTransfrom($data);
             }
         }
         return false;
@@ -248,7 +250,7 @@ class SQLQuery
                     $type=PDO::PARAM_STR;
                 }
             }
-            $stmt->bindValue($key, static::__inputFieldTransfrom($key, $value), $type);
+            $stmt->bindValue($key, self::__inputFieldTransfrom($key, $value), $type);
         }
 
         $markstring='query '.$stmt->queryString;
@@ -285,30 +287,31 @@ class SQLQuery
             }
         }
     }
-    
-    protected static function __dataTransfrom(string $name, string $fieldName, $inputData)
+
+    public function object($object){
+        $this->object=$object;
+        return $this;
+    }
+
+    protected function __dataTransfrom(string $name, string $fieldName, $inputData)
     {
         $methodName='_'.$name.ucfirst($fieldName).'Field';
-        if (static::$object) {
-            if (method_exists(static::$object, $methodName)) {
-                if (is_array($value)) {
-                    foreach ($value as $i => $item) {
-                        $inputData[$fieldName][$i]=static::$object->$methodName($item);
-                    }
-                } else {
-                    $inputData[$fieldName]=static::$object->$methodName($value);
-                }
+        if ($this->object) {
+            if (method_exists($this->object, $methodName)) {
+                $method = new \ReflectionMethod($this->object,$methodName);
+                $method->setAccessible(true);
+                $inputData= $method->invokeArgs($this->object,[$inputData]);
             }
         }
         return $inputData;
     }
 
-    private static function __inputFieldTransfrom(string $name, $inputData)
+    private function __inputFieldTransfrom(string $name, $inputData)
     {
         return self::__dataTransfrom('input', $name, $inputData);
     }
 
-    private static function __outputRowsTransfrom(array $inputRows)
+    private  function __outputRowsTransfrom(array $inputRows)
     {
         foreach ($inputRows as $id=>$inputData) {
             foreach ($inputData as $fieldName => $fieldData) {
@@ -318,7 +321,7 @@ class SQLQuery
         return $inputRows;
     }
 
-    private static function __outputRowTransfrom(array $inputData)
+    private  function __outputRowTransfrom(array $inputData)
     {
         foreach ($inputData as $fieldName => $fieldData) {
             $inputData[$fieldName]=self::__dataTransfrom('output', $fieldName, $fieldData);

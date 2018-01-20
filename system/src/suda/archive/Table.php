@@ -64,7 +64,7 @@ abstract class Table
         if (is_array($values) && !($this->checkFields(array_keys($values)) && $this->checkFieldsType($values))) {
             return false;
         }
-        return Query::insert($this->getTableName(), $values);
+        return Query::insert($this->getTableName(), $values,[],$this);
     }
 
     /**
@@ -82,7 +82,7 @@ abstract class Table
                 $insert[$field]=$value;
             }
         }
-        return Query::insert($this->getTableName(), $insert);
+        return Query::insert($this->getTableName(), $insert,[],$this);
     }
 
     /**
@@ -93,7 +93,7 @@ abstract class Table
      */
     public function getByPrimaryKey($value)
     {
-        return Query::where($this->getTableName(), $this->getWants(), $this->checkPrimaryKey($value))->fetch()?:false;
+        return Query::where($this->getTableName(), $this->getWants(), $this->checkPrimaryKey($value))->object($this)->fetch()?:false;
     }
 
 
@@ -109,7 +109,7 @@ abstract class Table
         if (is_array($values) && !($this->checkFields(array_keys($values)) && $this->checkFieldsType($values))) {
             return false;
         }
-        return Query::update($this->getTableName(), $values, $this->checkPrimaryKey($value));
+        return Query::update($this->getTableName(), $values, $this->checkPrimaryKey($value),[],$this);
     }
     
     /**
@@ -120,16 +120,16 @@ abstract class Table
      */
     public function deleteByPrimaryKey($value):int
     {
-        return Query::delete($this->getTableName(), $this->checkPrimaryKey($value));
+        return Query::delete($this->getTableName(), $this->checkPrimaryKey($value),[],$this);
     }
 
     
     public function search($field, string $search, int $page=null, int $rows=10)
     {
         if (is_null($page)) {
-            return Query::search($this->getTableName(), $this->getWants(), $field, $search);
+            return Query::search($this->getTableName(), $this->getWants(), $field, $search)->object($this);
         } else {
-            return Query::search($this->getTableName(), $this->getWants(), $field, $search, [$page, $rows]);
+            return Query::search($this->getTableName(), $this->getWants(), $field, $search, [$page, $rows])->object($this);
         }
     }
 
@@ -143,9 +143,9 @@ abstract class Table
     public function list(int $page=null, int $rows=10)
     {
         if (is_null($page)) {
-            return Query::where($this->getTableName(), $this->getWants(), '1 '. self::_order())->fetchAll();
+            return Query::where($this->getTableName(), $this->getWants(), '1 '. self::_order())->object($this)->fetchAll();
         } else {
-            return Query::where($this->getTableName(), $this->getWants(), '1 '.  self::_order(), [], [$page, $rows])->fetchAll();
+            return Query::where($this->getTableName(), $this->getWants(), '1 '.  self::_order(), [], [$page, $rows])->object($this)->fetchAll();
         }
     }
 
@@ -161,9 +161,9 @@ abstract class Table
         $where_str=Query::prepareWhere($where, $binds);
         $where=preg_replace('/WHERE(.+)$/', '$1', $where_str).' '.self::_order();
         if (is_null($page)) {
-            return Query::where($this->getTableName(), $this->getWants(), $where, $binds)->fetchAll();
+            return Query::where($this->getTableName(), $this->getWants(), $where, $binds)->object($this)->fetchAll();
         } else {
-            return Query::where($this->getTableName(), $this->getWants(), $where, $binds, [$page, $rows])->fetchAll();
+            return Query::where($this->getTableName(), $this->getWants(), $where, $binds, [$page, $rows])->object($this)->fetchAll();
         }
     }
 
@@ -182,7 +182,7 @@ abstract class Table
         if (is_array($values) && !($this->checkFields(array_keys($values)) && $this->checkFieldsType($values))) {
             return false;
         }
-        return Query::update($this->getTableName(), $values, $where,$bind);
+        return Query::update($this->getTableName(), $values, $where,$bind,$this);
     }
 
 
@@ -205,7 +205,7 @@ abstract class Table
                 return false;
             }
         }
-        return Query::where($this->getTableName(), $wants, $where);
+        return Query::where($this->getTableName(), $wants, $where)->object($this);
     }
 
     /**
@@ -218,7 +218,7 @@ abstract class Table
      */
     public function query(string $query, array $binds=[], bool $scroll=false)
     {
-        return new SQLQuery($query, $binds, $scroll);
+        return (new SQLQuery($query, $binds, $scroll))->object($this);
     }
 
     /**
@@ -232,7 +232,7 @@ abstract class Table
         if (is_array($where) && !$this->checkFields(array_keys($where))) {
             return false;
         }
-        return Query::delete($this->getTableName(), $where);
+        return Query::delete($this->getTableName(), $where,[],$this);
     }
 
     /**
@@ -384,7 +384,7 @@ abstract class Table
      */
     public function count($where='1', array $binds=[]):int
     {
-        return Query::count($this->getTableName(), $where, $binds);
+        return Query::count($this->getTableName(), $where, $binds,$this);
     }
 
     public function order(string $field, int $order=self::ORDER_ASC)
