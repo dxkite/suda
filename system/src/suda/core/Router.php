@@ -156,6 +156,7 @@ class Router
         }
 
         list($url, $queryString)=Request::parseUrl($info['path']);
+        
         if ($queryString) {
             parse_str($queryString, $paramValue);
         }

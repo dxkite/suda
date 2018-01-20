@@ -74,8 +74,9 @@ class Mapping
                 $request->set($paramName, $value);
                 $_GET[$paramName]=$value;
             }
+            return true;
         }
-        return true;
+        return false;
     }
 
     public function matchUrlValue(string $url, bool $ignoreCase, array &$valueGet)
