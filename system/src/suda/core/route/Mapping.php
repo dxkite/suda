@@ -30,6 +30,7 @@ class Mapping
     protected $role;
     protected $types;
     protected $param;
+    protected $value;
 
     protected $antiPrefix=false;
     protected $hidden=false;
@@ -63,9 +64,24 @@ class Mapping
         if (count($this->method)>0 && !in_array(strtoupper($request->method()), $this->method)) {
             return false;
         }
+        $paramGet=[];
+        if ($this->matchUrlValue($request->url(), $ignoreCase, $paramGet)) {
+            // 自定义过滤
+            if (!hook()->execIf('Router:filter', [$this->getFullName(),$this], false)) {
+                return false;
+            }
+            foreach ($paramGet as $paramName=>$value) {
+                $request->set($paramName, $value);
+                $_GET[$paramName]=$value;
+            }
+        }
+        return true;
+    }
+
+    public function matchUrlValue(string $url, bool $ignoreCase, array &$valueGet)
+    {
         $matchExp=$ignoreCase?'/^'.$this->mapping.'$/i':'/^'.$this->mapping.'$/';
-        if (preg_match($matchExp, $request->url(), $match)) {
-  
+        if (preg_match($matchExp, $url, $match)) {
             // 检验接口参数
             array_shift($match);
             if (count($match)>0) {
@@ -77,18 +93,12 @@ class Mapping
                         $value=urldecode($value);
                     }
                     // 填充$_GET
-                    $_GET[$paramName]=$value;
-                    $request->set($paramName, $value);
+                    $valueGet[$paramName]=$value;
                 }
             }
-            // 自定义过滤
-            if (!hook()->execIf('Router:filter', [$this->getFullName(),$this], false)) {
-                return false;
-            }
             return true;
-        } else {
-            return false;
         }
+        return false;
     }
 
     public function run()
@@ -107,6 +117,11 @@ class Mapping
         return $this;
     }
 
+    public function is(string $that) {
+        list($module,$name)=router()->parseName($that);
+        return app()->getModuleFullName($module).':'.$name == $this->getFullName();
+    }
+    
     public function getFullName()
     {
         return $this->module.':'.$this->name;
@@ -121,6 +136,17 @@ class Mapping
     public function getParam()
     {
         return $this->param;
+    }
+
+    public function setValue($value)
+    {
+        $this->value=$value;
+        return $this;
+    }
+
+    public function getValue()
+    {
+        return $this->value;
     }
     
     public function setCallback(string $callback)

@@ -141,6 +141,39 @@ class Router
         self::saveFile();
     }
 
+
+    public function parseUrl(string $url)
+    {
+        $paramValue=[];
+        $info=parse_url($url);
+        if (isset($info['query'])) {
+            parse_str($info['query'], $paramValue);
+        }
+        if (isset($info['host'])) {
+            if ($info['host']!=$_SERVER['HTTP_HOST'] &&  $info['host']!='localhost') {
+                return false;
+            }
+        }
+
+        list($url, $queryString)=Request::parseUrl($info['path']);
+        if ($queryString) {
+            parse_str($queryString, $paramValue);
+        }
+        $ignoreCase=conf('app.url.ignoreCase', true);
+        $target=null;
+        foreach ($this->routers as $name => $mapping) {
+            if ($mapping->matchUrlValue($url, $ignoreCase, $paramValue)) {
+                $target=$mapping;
+                $target->setValue($paramValue);
+                break;
+            }
+        }
+        if ($target) {
+            return $target;
+        }
+        return false;
+    }
+
     protected function matchRouterMap()
     {
         $request=Request::getInstance();
@@ -307,7 +340,8 @@ class Router
     }
     
 
-    public function addMapping(Mapping $mapping){
+    public function addMapping(Mapping $mapping)
+    {
         $this->routers[$mapping->getFullName()]=$mapping;
         $mapping->build();
         $mapping->setDynamic();

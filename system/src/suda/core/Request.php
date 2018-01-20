@@ -209,51 +209,54 @@ final class Request
         return isset($_SERVER[$name]);
     }
 
+    public static function parseUrl(string $url)
+    {
+        $path= '';
+        $queryString='';
+        $phpSelf='';
+        $index=pathinfo(get_included_files()[0], PATHINFO_BASENAME);
+        //  匹配 [1] /?/xxxxx
+        if (preg_match('/^\/\?\//', $url)) {
+            $preg='/^(\/\?(\/[^?]*))(?:[?](.+)?)?$/';
+            preg_match($preg, $url, $match);
+            $phpSelf=$match[1];
+            $queryString=$match[3]??'';
+            $path=$match[2];
+        } elseif // 匹配 [2] /index.php?/
+        // 匹配 [3] /index.php/xx
+        (preg_match('/^(.*)\/'.$index.'(?:(\?)?\/)?/', $url, $check)) {
+            // debug()->trace($check,$check[2]);
+            $preg='/(.*)\/'.$index.'\??(\/[^?]*)?(?:[?](.+)?)?$/';
+            self::$type=strlen($check[2]??false)>0?2:3;
+            preg_match($preg, $url, $match);
+            $queryString=$match[3]??'';
+            $path= $match[2] ?? '/';
+        } else {
+            $preg='/^([^?]*)/';
+            preg_match($preg, $url, $match);
+            $path=$match[1];
+        }
+        $path=preg_replace('/[\/]+/', '/', $path);
+        $path=($path==='/'?$path:rtrim($path, '/'));
+        return [$path,$queryString,$phpSelf];
+    }
+
     protected static function parseServer()
     {
-        $index=pathinfo(get_included_files()[0], PATHINFO_BASENAME);
-        // 预处理 请求
-        if (isset($_SERVER['REQUEST_URI'])) {
-            //  匹配 [1] /?/xxxxx
-            if (preg_match('/^\/\?\//', $_SERVER['REQUEST_URI'])) {
-                $preg='/^(\/\?(\/[^?]*))(?:[?](.+)?)?$/';
-                preg_match($preg, $_SERVER['REQUEST_URI'], $match);
-                $_SERVER['PHP_SELF']=$match[1];
-                // 处理查询字符
-                if (isset($match[3])) {
-                    $_GET=array();
-                    parse_str($match[3], $_GET);
-                }
-                self::$query=$match[3]??'';
-                self::$url=$match[2];
-                self::$type=1;
-            } elseif // 匹配 [2] /index.php?/
-            // 匹配 [3] /index.php/xx
-            (preg_match('/^(.*)\/'.$index.'(?:(\?)?\/)?/', $_SERVER['REQUEST_URI'], $check)) {
-                // debug()->trace($check,$check[2]);
-                $preg='/(.*)\/'.$index.'\??(\/[^?]*)?(?:[?](.+)?)?$/';
-                self::$type=strlen($check[2]??false)>0?2:3;
-                preg_match($preg, $_SERVER['REQUEST_URI'], $match);
-                // debug()->trace($preg,$_SERVER['REQUEST_URI'].' '. serialize($match));
-                // 处理查询字符
-                if (isset($match[3])) {
-                    $_GET=array();
-                    parse_str($match[3], $_GET);
-                }
-                self::$query=$match[3]??'';
-                self::$url= $match[2] ?? '/';
-            } else {
-                // 匹配 [0] /
-                self::$type=0;
-                $preg='/^([^?]*)/';
-                preg_match($preg, $_SERVER['REQUEST_URI'], $match);
-                self::$url=$match[1];
+        list(self::$url, $queryString, $phpSelf) = static::parseUrl($_SERVER['REQUEST_URI']);
+
+        if ($queryString) {
+            if (isset($queryString)) {
+                // 重定义GET
+                $_GET=[];
+                parse_str($queryString, $_GET);
             }
-            self::$url=preg_replace('/[\/]+/', '/', self::$url);
-            self::$url=self::$url==='/'?self::$url:rtrim(self::$url, '/');
-        } else {
-            self::$url='/';
         }
+
+        if ($phpSelf) {
+            $_SERVER['PHP_SELF'] = $phpSelf;
+        }
+        
         if (isset($_GET[self::$url])) {
             unset($_GET[self::$url]);
         }
