@@ -102,9 +102,10 @@ class Query extends SQLQuery
         if (is_array($set_fields)) {
             $sets=[];
             foreach ($set_fields as $name=>$value) {
-                $bname=$name.'_'.($count++);
-                $sets[]="`{$name}`=:{$bname}";
+                $bname=static::_packName($name,$count);
                 $binds[$bname]=$value;
+                list($x,$bindName)=static::_unpackName($bname);
+                $sets[]="`{$name}`=:{$bindName}";
             }
             $sql='UPDATE `'.$table.'` SET '.implode(',', $sets).' '.self::prepareWhere($where, $binds).';';
         } else {
@@ -128,8 +129,10 @@ class Query extends SQLQuery
         $param=[];
         foreach ($invalues as $key=>$value) {
             $bname=$prefix. preg_replace('/[_]+/', '_', preg_replace('/[`.{}#]/', '_', $name)).$key.($count++);
+            $bname=static::_packName($name,$bname);
             $param[$bname]=$value;
-            $names[]=':'.$bname;
+            list($x,$bindName)=static::_unpackName($bname);
+            $names[]=':'.$bindName;
         }
         $sql=$name.' IN ('.implode(',', $names).')';
         return [$sql,$param];
@@ -143,14 +146,15 @@ class Query extends SQLQuery
             $count=0;
             $and=[];
             foreach ($where as $name => $value) {
-                $bname=$name.'_'.($count++);
+                $bname=static::_packName($name,$count);
                 // in cause
                 if (is_array($value)) {
                     list($sql,$in_param)=self::prepareIn($name, $value);
                     $and[]=$sql;
                     $param=array_merge($param,$in_param);
                 } else {
-                    $and[]="`{$name}`=:{$bname}";
+                    list($x,$bindName)=static::_unpackName($bname);
+                    $and[]="`{$name}`=:{$bindName}";
                     $param[$bname]=$value;
                 }
             }

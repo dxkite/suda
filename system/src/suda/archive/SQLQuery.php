@@ -60,7 +60,7 @@ class SQLQuery
             return $this->stmt->fetch($fetch_style);
         } else {
             if (self::lazyQuery($this->query, $this->values)) {
-                if ($data=$this->stmt->fetch($fetch_style)){
+                if ($data=$this->stmt->fetch($fetch_style)) {
                     return self::__outputRowTransfrom($data);
                 }
             }
@@ -83,7 +83,7 @@ class SQLQuery
     public function fetchAll(int $fetch_style = PDO::FETCH_ASSOC)
     {
         if (self::lazyQuery($this->query, $this->values)) {
-            if ($data=$this->stmt->fetchAll($fetch_style)){
+            if ($data=$this->stmt->fetchAll($fetch_style)) {
                 return self::__outputRowsTransfrom($data);
             }
         }
@@ -235,8 +235,9 @@ class SQLQuery
         } else {
             $stmt=self::$pdo->prepare($query);
         }
-        foreach ($array as $key=> $value) {
-            $key=':'.ltrim($key, ':');
+        
+        foreach ($array as $inputName=> $value) {
+            $key=':'.ltrim($inputName, ':');
             if (is_array($value)) {
                 list($value, $type) =$value;
             } else {
@@ -250,7 +251,13 @@ class SQLQuery
                     $type=PDO::PARAM_STR;
                 }
             }
-            $stmt->bindValue($key, self::__inputFieldTransfrom($key, $value), $type);
+            if (static::_isPackName($inputName)) {
+                list($inputName, $packName)=static::_unpackName($inputName);
+                $stmt->bindValue($packName, self::__inputFieldTransfrom($inputName, $value), $type);
+            }
+            else{
+                $stmt->bindValue($key, self::__inputFieldTransfrom($inputName, $value), $type);
+            }
         }
 
         $markstring='query '.$stmt->queryString;
@@ -270,6 +277,24 @@ class SQLQuery
         }
         $this->stmt=$stmt;
         return $return;
+    }
+
+    protected static function _packName(string $key, string $ext)
+    {
+        return $key.'@'.($key.$ext);
+    }
+
+    protected static function _isPackName(string $name)
+    {
+        return preg_match('/(.+?)@/', $name, $matches);
+    }
+
+    protected static function _unpackName(string $name)
+    {
+        if (preg_match('/^(.+?)@(.+?)$/', $name, $matches)) {
+            return [$matches[1],str_replace('@', '_', $matches[2])];
+        }
+        return false;
     }
 
     protected static function connectPdo()
@@ -294,7 +319,8 @@ class SQLQuery
      * @param [type] $object
      * @return void
      */
-    public function object($object){
+    public function object($object)
+    {
         $this->object=$object;
         return $this;
     }
@@ -304,11 +330,11 @@ class SQLQuery
         $methodName='_'.$name.ucfirst($fieldName).'Field';
         if ($this->object) {
             if (method_exists($this->object, $methodName)) {
-                $method = new \ReflectionMethod($this->object,$methodName);
+                $method = new \ReflectionMethod($this->object, $methodName);
                 if ($method->isPrivate() || $method->isProtected()) {
                     $method->setAccessible(true);
                 }
-                $inputData= $method->invokeArgs($this->object,[$inputData]);
+                $inputData= $method->invokeArgs($this->object, [$inputData]);
             }
         }
         return $inputData;
@@ -319,7 +345,7 @@ class SQLQuery
         return self::__dataTransfrom('input', $name, $inputData);
     }
 
-    private  function __outputRowsTransfrom(array $inputRows)
+    private function __outputRowsTransfrom(array $inputRows)
     {
         foreach ($inputRows as $id=>$inputData) {
             foreach ($inputData as $fieldName => $fieldData) {
@@ -329,7 +355,7 @@ class SQLQuery
         return $inputRows;
     }
 
-    private  function __outputRowTransfrom(array $inputData)
+    private function __outputRowTransfrom(array $inputData)
     {
         foreach ($inputData as $fieldName => $fieldData) {
             $inputData[$fieldName]=self::__dataTransfrom('output', $fieldName, $fieldData);
