@@ -49,6 +49,7 @@ class SQLQuery
         $this->query=$query;
         $this->values=$binds;
         $this->scroll=$scroll;
+        static::$object=$this;
     }
 
     public function fetch(int $fetch_style = PDO::FETCH_ASSOC)
@@ -57,7 +58,9 @@ class SQLQuery
             return $this->stmt->fetch($fetch_style);
         } else {
             if (self::lazyQuery($this->query, $this->values)) {
-                return $this->stmt->fetch($fetch_style);
+                if ($data=$this->stmt->fetch($fetch_style)){
+                    return static::__outputRowTransfrom($data);
+                }
             }
         }
         return false;
@@ -78,7 +81,9 @@ class SQLQuery
     public function fetchAll(int $fetch_style = PDO::FETCH_ASSOC)
     {
         if (self::lazyQuery($this->query, $this->values)) {
-            return $this->stmt->fetchAll($fetch_style);
+            if ($data=$this->stmt->fetchAll($fetch_style)){
+                return static::__outputRowsTransfrom($data);
+            }
         }
         return false;
     }
@@ -160,7 +165,7 @@ class SQLQuery
         if (static::$transaction == 1) {
             self::$pdo->commit();
         }
-        static::$transaction--;  
+        static::$transaction--;
     }
 
     public static function rollBack()
@@ -193,14 +198,14 @@ class SQLQuery
         return ['times'=>self::$times,'counts'=>self::$queryCount];
     }
 
-    private function auto_prefix(string $query)
+    private function __SqlPrefix(string $query)
     {
         return preg_replace('/#{(\S+?)}/', self::$prefix.'$1', $query);
     }
 
     protected function lazyQuery(string $query, array $array=[])
     {
-        $query=self::auto_prefix($query);
+        $query=self::__SqlPrefix($query);
         $debug=debug_backtrace();
         // 调整数据表
         if ($this->database && $this->dbchange) {
@@ -243,7 +248,7 @@ class SQLQuery
                     $type=PDO::PARAM_STR;
                 }
             }
-            $stmt->bindValue($key, $value, $type);
+            $stmt->bindValue($key, static::__inputFieldTransfrom($key, $value), $type);
         }
 
         $markstring='query '.$stmt->queryString;
@@ -261,7 +266,6 @@ class SQLQuery
                 throw (new SQLException($stmt->errorInfo()[2], intval($stmt->errorCode()), E_ERROR, $debug[1]['file'], $debug[1]['line']))->setSql($stmt->queryString)->setBinds($this->values);
             }
         }
-        
         $this->stmt=$stmt;
         return $return;
     }
@@ -280,5 +284,45 @@ class SQLQuery
                 throw new SQLException('connect database error:'.$e->getMessage(), $e->getCode(), E_ERROR, __FILE__, __LINE__, $e);
             }
         }
+    }
+    
+    protected static function __dataTransfrom(string $name, string $fieldName, $inputData)
+    {
+        $methodName='_'.$name.ucfirst($fieldName).'Field';
+        if (static::$object) {
+            if (method_exists(static::$object, $methodName)) {
+                if (is_array($value)) {
+                    foreach ($value as $i => $item) {
+                        $inputData[$fieldName][$i]=static::$object->$methodName($item);
+                    }
+                } else {
+                    $inputData[$fieldName]=static::$object->$methodName($value);
+                }
+            }
+        }
+        return $inputData;
+    }
+
+    private static function __inputFieldTransfrom(string $name, $inputData)
+    {
+        return self::__dataTransfrom('input', $name, $inputData);
+    }
+
+    private static function __outputRowsTransfrom(array $inputRows)
+    {
+        foreach ($inputRows as $id=>$inputData) {
+            foreach ($inputData as $fieldName => $fieldData) {
+                $inputRows[$id][$fieldName]=self::__dataTransfrom('output', $fieldName, $fieldData);
+            }
+        }
+        return $inputRows;
+    }
+
+    private static function __outputRowTransfrom(array $inputData)
+    {
+        foreach ($inputData as $fieldName => $fieldData) {
+            $inputData[$fieldName]=self::__dataTransfrom('output', $fieldName, $fieldData);
+        }
+        return $inputData;
     }
 }
