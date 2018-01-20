@@ -160,6 +160,7 @@ class SQLQuery
         if (static::$transaction == 1) {
             self::$pdo->commit();
         }
+        static::$transaction--;  
     }
 
     public static function rollBack()
