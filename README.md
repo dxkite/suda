@@ -1,12 +1,4 @@
-
-```                                        
-                                                                                     
- _____       _        _____ _____ _____    _____                                 _   
-|   __|_ _ _| |___   |  _  |  |  |  _  |  |   __|___ ___ _____ ___ _ _ _ ___ ___| |_ 
-|__   | | | . | .'|  |   __|     |   __|  |   __|  _| .'|     | -_| | | | . |  _| '_|
-|_____|___|___|__,|  |__|  |__|__|__|     |__|  |_| |__,|_|_|_|___|_____|___|_| |_,_|
-                                                                                     
-```
+# Suda PHP7框架
 
 [![Latest Stable Version](https://poser.pugx.org/dxkite/suda/v/stable)](https://packagist.org/packages/dxkite/suda) 
 [![Latest Unstable Version](https://poser.pugx.org/dxkite/suda/v/unstable)](https://packagist.org/packages/dxkite/suda) 

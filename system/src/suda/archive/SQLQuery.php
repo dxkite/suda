@@ -287,7 +287,13 @@ class SQLQuery
             }
         }
     }
-
+    
+    /**
+     * 添加列处理类
+     *
+     * @param [type] $object
+     * @return void
+     */
     public function object($object){
         $this->object=$object;
         return $this;
