@@ -299,7 +299,9 @@ class SQLQuery
         if ($this->object) {
             if (method_exists($this->object, $methodName)) {
                 $method = new \ReflectionMethod($this->object,$methodName);
-                $method->setAccessible(true);
+                if ($method->isPrivate() || $method->isProtected()) {
+                    $method->setAccessible(true);
+                }
                 $inputData= $method->invokeArgs($this->object,[$inputData]);
             }
         }

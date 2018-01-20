@@ -69,8 +69,8 @@ class Command
             // 调用接口
             elseif (is_array($this->command)) {
                 if (!is_object($this->command[0])) {
-                    if($this->static){
-                    }else{
+                    if ($this->static) {
+                    } else {
                         $this->command[0]=new $this->command[0];
                     }
                 }
@@ -79,12 +79,7 @@ class Command
             if (!is_callable($this->command)) {
                 throw (new CommandException(__('command {%s} is uncallable', $this->name)))->setCmd($this->name)->setParams($this->params);
             }
-            
-            if ($this->static) {
-                return forward_static_call_array($this->command, $this->params);
-            } else {
-                return call_user_func_array($this->command, $this->params);
-            }
+            return static::_absoluteCall($this->command, $this->params);
         } elseif ($this->file) {
             // 文件参数引入
             $params=array_unshift($params, $this->file);
@@ -127,6 +122,30 @@ class Command
             }
         } else {
             throw (new CommandException('unknown:'.$command))->setCmd($command);
+        }
+    }
+
+    /**
+     * 绝对调用函数，包括私有和保护函数
+     *
+     * @param [type] $command
+     * @param [type] $params
+     * @return void
+     */
+    protected static function _absoluteCall($command, $params)
+    {
+        if (is_array($command)) {
+            $method = new \ReflectionMethod($command[0], $command[1]);
+            if ($method->isPrivate() || $method->isProtected()) {
+                $method->setAccessible(true);
+            }
+            if (is_object($command[0])) {
+                return $method->invokeArgs($command[0], $params);
+            } else {
+                return $method->invokeArgs(null, $params);
+            }
+        } else {
+            return forward_static_call_array($command, $params);
         }
     }
 }
