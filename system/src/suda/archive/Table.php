@@ -22,6 +22,11 @@ use suda\core\Storage;
 use suda\tool\ArrayHelper;
 use suda\exception\TableException;
 
+/**
+ * 数据表抽象对象
+ * 用于提供对数据表的操作
+ * 
+ */ 
 abstract class Table
 {
     protected $fields=[];
@@ -55,9 +60,9 @@ abstract class Table
     }
 
     /**
-     * 插入行
+     * 插入一行记录
      * @param array $values 待插入的值
-     * @return void
+     * @return int 插入影响的行数
      */
     public function insert(array $values)
     {
@@ -68,7 +73,7 @@ abstract class Table
     }
 
     /**
-     * 插入行
+     * 插入一行记录
      * @param $values 待插入的值
      * @return void
      */
@@ -87,7 +92,9 @@ abstract class Table
 
     /**
      * 通过主键查找元素
-     *
+     * 主键的值可以为关联数组或单独的一个值
+     * 查询成功返回查询成功的列，失败返回false
+     * 
      * @param [type] $value 主键的值
      * @return array|false
      */
@@ -218,7 +225,8 @@ abstract class Table
      */
     public function query(string $query, array $binds=[], bool $scroll=false)
     {
-        return (new SQLQuery($query, $binds, $scroll))->object($this);
+        $queryString=preg_replace('/@table@/i',$this->getTableName(),$query);
+        return (new SQLQuery($queryString, $binds, $scroll))->object($this);
     }
 
     /**
@@ -305,17 +313,142 @@ abstract class Table
         return $this->fields;
     }
 
+    /**
+     * 设置想要的列
+     *
+     * @param array $fields
+     * @return void
+     */
     public function setWants(array $fields=null)
     {
         $this->wants=is_null($fields)?$this->getFields():$fields;
         return $this;
     }
 
+
+    /**
+     * 获取设置了的列
+     *
+     * @return array
+     */
     public function getWants():array
     {
         return $this->wants??$this->fields;
     }
 
+    /**
+     * 计数
+     *
+     * @return int
+     */
+    public function count($where='1', array $binds=[]):int
+    {
+        return Query::count($this->getTableName(), $where, $binds,$this);
+    }
+
+
+    /**
+     * 排序
+     *
+     * @param string $field
+     * @param integer $order
+     * @return void
+     */
+    public function order(string $field, int $order=self::ORDER_ASC)
+    {
+        $this->order_field=$field;
+        $this->order=$order;
+        return $this;
+    }
+
+    public function createTable()
+    {
+        // 删除数据表
+        $this->drop();
+        return self::initFromTable(self::getCreateSql());
+    }
+    
+    public function getCreateSql()
+    {
+        if (is_null($this->creator)) {
+            $this->creator=$this->onBuildCreator(new TableCreator($this->tableName, 'utf8'));
+        }
+        return $this->creator;
+    }
+
+    public static function begin() {
+        return SQLQuery::begin();
+    }
+
+    public static function commit() {
+        return SQLQuery::commit();
+    }
+
+    public static function rollBack(){
+        return SQLQuery::rollBack();
+    }
+
+    
+    /**
+     * 清空数据表
+     *
+     * @return void
+     */
+    public function truncate()
+    {
+        return (new SQLQuery('TRUNCATE TABLE `#{'.$this->tableName.'}`;'))->exec();
+    }
+
+    /**
+     * 删除数据表
+     *
+     * @return void
+     */
+    public function drop()
+    {
+        return (new SQLQuery('DROP TABLE IF EXISTS `#{'.$this->tableName.'}`;'))->exec();
+    }
+
+    /**
+     * 导出数据到文件
+     *
+     * @param string $path
+     * @return void
+     */
+    public function export(string $path)
+    {
+        if ($data=$this->getDataString()) {
+            $base64=base64_encode($data);
+            $sha1=sha1($base64);
+            storage()->path(dirname($path));
+            return storage()->put($path, $this->tableName.','.time().','.$sha1.',base64;'.$base64);
+        }
+        return false;
+    }
+
+    /**
+     * 从导出文件中恢复数据
+     *
+     * @param string $path
+     * @return void
+     */
+    public function import(string $path)
+    {
+        if (storage()->exist($path)) {
+            try {
+                list($head, $data)=explode(';', storage()->get($path));
+                list($name, $time, $sha1, $dataType)=explode(',', $head);
+            } catch (\Exception $e) {
+                return false;
+            }
+            if (sha1($data)!=$sha1 || $time >time() || $name!=$this->tableName) {
+                return false;
+            }
+            return (new SQLQuery(base64_decode($data)))->exec();
+        }
+        return false;
+    }
+    
     protected function checkPrimaryKey($value)
     {
         if (count($this->primaryKey)===1) {
@@ -369,7 +502,7 @@ abstract class Table
         return true;
     }
 
-    public function checkField(string $field, $value):bool
+    protected function checkField(string $field, $value):bool
     {
         if (isset($this->fieldChecks[$field][0])) {
             return $this->checkValueType($this->fieldChecks[$field][0], $value);
@@ -377,22 +510,6 @@ abstract class Table
         return true;
     }
 
-    /**
-     * 计数
-     *
-     * @return int
-     */
-    public function count($where='1', array $binds=[]):int
-    {
-        return Query::count($this->getTableName(), $where, $binds,$this);
-    }
-
-    public function order(string $field, int $order=self::ORDER_ASC)
-    {
-        $this->order_field=$field;
-        $this->order=$order;
-        return $this;
-    }
 
     protected function checkValueType(string $check, $value)
     {
@@ -440,24 +557,9 @@ abstract class Table
     
     abstract protected function onBuildCreator($table);
     
-    public function createTable()
-    {
-        // 删除数据表
-        $this->drop();
-        return self::initFromTable(self::getCreator());
-    }
-    
-    public function getCreator()
-    {
-        if (is_null($this->creator)) {
-            $this->creator=$this->onBuildCreator(new TableCreator($this->tableName, 'utf8'));
-        }
-        return $this->creator;
-    }
-
     protected function initFromTable(TableCreator $table)
     {
-        (new SQLQuery($table->getSQL()))->exec();
+        (new SQLQuery($table))->exec();
         $this->primaryKey=$table->getPrimaryKeyName();
         $this->fields=$table->getFieldsName();
         return true;
@@ -524,66 +626,6 @@ abstract class Table
         } else {
             return ' ORDER BY '. $this->order_field  .' '. ($this->order==self::ORDER_ASC?'ASC':'DESC');
         }
-    }
-
-    /**
-     * 清空数据表
-     *
-     * @return void
-     */
-    public function truncate()
-    {
-        return (new SQLQuery('TRUNCATE TABLE `#{'.$this->tableName.'}`;'))->exec();
-    }
-
-    /**
-     * 删除数据表
-     *
-     * @return void
-     */
-    public function drop()
-    {
-        return (new SQLQuery('DROP TABLE IF EXISTS `#{'.$this->tableName.'}`;'))->exec();
-    }
-
-    /**
-     * 导出数据到文件
-     *
-     * @param string $path
-     * @return void
-     */
-    public function export(string $path)
-    {
-        if ($data=$this->getDataString()) {
-            $base64=base64_encode($data);
-            $sha1=sha1($base64);
-            storage()->path(dirname($path));
-            return storage()->put($path, $this->tableName.','.time().','.$sha1.',base64;'.$base64);
-        }
-        return false;
-    }
-
-    /**
-     * 从导出文件中恢复数据
-     *
-     * @param string $path
-     * @return void
-     */
-    public function import(string $path)
-    {
-        if (storage()->exist($path)) {
-            try {
-                list($head, $data)=explode(';', storage()->get($path));
-                list($name, $time, $sha1, $dataType)=explode(',', $head);
-            } catch (\Exception $e) {
-                return false;
-            }
-            if (sha1($data)!=$sha1 || $time >time() || $name!=$this->tableName) {
-                return false;
-            }
-            return (new SQLQuery(base64_decode($data)))->exec();
-        }
-        return false;
     }
 
     /**

@@ -38,9 +38,8 @@ class Query extends SQLQuery
             foreach ($values as $name => $value) {
                 $bind.=':'.$name.',';
                 $names.='`'.$name.'`,';
-                $param[$name]=static::value($name,$value);
+                $binds[$name]=static::value($name,$value);
             }
-            $binds=$values;
             $sql='INSERT INTO `'.$table.'` ('.trim($names, ',').') VALUES ('.trim($bind, ',').');';
         }
         $count=(new SQLQuery($sql, $binds))->object($object)->exec();
