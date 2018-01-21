@@ -20,6 +20,7 @@ use PDOException;
 use suda\core\Config;
 use suda\core\Storage;
 use suda\exception\SQLException;
+use suda\archive\creator\InputValue;
 
 // 数据库查询方案
 class SQLQuery
@@ -43,8 +44,15 @@ class SQLQuery
     protected $dbchange=false;
    
 
-    // TODO :  支持超大查询 max_allowed_packet
+    // TODO:  支持超大查询 max_allowed_packet
 
+    /**
+     * 构造查询
+     *
+     * @param string $query
+     * @param array $binds
+     * @param boolean $scroll
+     */
     public function __construct(string $query, array $binds=[], bool $scroll=false)
     {
         self::connectPdo();
@@ -59,7 +67,7 @@ class SQLQuery
         if ($this->stmt) {
             return $this->stmt->fetch($fetch_style);
         } else {
-            if (self::lazyQuery($this->query, $this->values)) {
+            if (self::__query($this->query, $this->values)) {
                 if ($data=$this->stmt->fetch($fetch_style)) {
                     return self::__outputRowTransfrom($data);
                 }
@@ -73,7 +81,7 @@ class SQLQuery
         if ($this->stmt) {
             return $this->stmt->fetchObject($class);
         } else {
-            if (self::lazyQuery($this->query, $this->values)) {
+            if (self::__query($this->query, $this->values)) {
                 return $this->stmt->fetchObject($class);
             }
         }
@@ -82,7 +90,7 @@ class SQLQuery
     
     public function fetchAll(int $fetch_style = PDO::FETCH_ASSOC)
     {
-        if (self::lazyQuery($this->query, $this->values)) {
+        if (self::__query($this->query, $this->values)) {
             if ($data=$this->stmt->fetchAll($fetch_style)) {
                 return self::__outputRowsTransfrom($data);
             }
@@ -92,10 +100,14 @@ class SQLQuery
     
     public function exec():int
     {
-        if (self::lazyQuery($this->query, $this->values)) {
+        if (self::__query($this->query, $this->values)) {
             return $this->stmt->rowCount();
         }
         return 0;
+    }
+
+    public static function value(string $name,$value,int $type=PDO::PARAM_STR):InputValue {
+        return new InputValue($name,$value,$type);
     }
 
     public function values(array $values)
@@ -205,7 +217,7 @@ class SQLQuery
         return preg_replace('/#{(\S+?)}/', self::$prefix.'$1', $query);
     }
 
-    protected function lazyQuery(string $query, array $array=[])
+    private function __query(string $query, array $array=[])
     {
         $query=self::__SqlPrefix($query);
         $debug=debug_backtrace();
@@ -236,27 +248,12 @@ class SQLQuery
             $stmt=self::$pdo->prepare($query);
         }
         
-        foreach ($array as $inputName=> $value) {
-            $key=':'.ltrim($inputName, ':');
-            if (is_array($value)) {
-                list($value, $type) =$value;
-            } else {
-                if (is_null($value)) {
-                    $type=PDO::PARAM_NULL;
-                } elseif (is_bool($value)) {
-                    $type=PDO::PARAM_BOOL;
-                } elseif (is_numeric($value)) {
-                    $type=PDO::PARAM_INT;
-                } else {
-                    $type=PDO::PARAM_STR;
-                }
-            }
-            if (static::_isPackName($inputName)) {
-                list($inputName, $packName)=static::_unpackName($inputName);
-                $stmt->bindValue($packName, self::__inputFieldTransfrom($inputName, $value), $type);
-            }
-            else{
-                $stmt->bindValue($key, self::__inputFieldTransfrom($inputName, $value), $type);
+        foreach ($array as $key=> $value) {
+            $bindName=':'.ltrim($key, ':');
+            if ($value instanceof InputValue) {
+                $stmt->bindValue($bindName, self::__inputFieldTransfrom($value->getName(),$value->getValue()), $value->getBindType());
+            }else {
+                $stmt->bindValue($bindName,$value,InputValue::bindParam($value));
             }
         }
 
@@ -278,25 +275,6 @@ class SQLQuery
         $this->stmt=$stmt;
         return $return;
     }
-
-    protected static function _packName(string $key, string $ext)
-    {
-        return $key.'@'.($key.$ext);
-    }
-
-    protected static function _isPackName(string $name)
-    {
-        return preg_match('/(.+?)@/', $name, $matches);
-    }
-
-    protected static function _unpackName(string $name)
-    {
-        if (preg_match('/^(.+?)@(.+?)$/', $name, $matches)) {
-            return [$matches[1],str_replace('@', '_', $matches[2])];
-        }
-        return false;
-    }
-
     protected static function connectPdo()
     {
         // 链接数据库
@@ -325,11 +303,21 @@ class SQLQuery
         return $this;
     }
 
+    /**
+     * 转换数据，数据库统处理输入输出数据
+     * 转换函数
+     *
+     * @param string $name
+     * @param string $fieldName
+     * @param [type] $inputData
+     * @return void
+     */
     protected function __dataTransfrom(string $name, string $fieldName, $inputData)
     {
         $methodName='_'.$name.ucfirst($fieldName).'Field';
         if ($this->object) {
             if (method_exists($this->object, $methodName)) {
+                debug()->debug('query_invoke '.get_class($this->object).'->'.$methodName);
                 $method = new \ReflectionMethod($this->object, $methodName);
                 if ($method->isPrivate() || $method->isProtected()) {
                     $method->setAccessible(true);

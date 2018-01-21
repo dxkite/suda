@@ -38,7 +38,7 @@ class Query extends SQLQuery
             foreach ($values as $name => $value) {
                 $bind.=':'.$name.',';
                 $names.='`'.$name.'`,';
-                $param[$name]=$value;
+                $param[$name]=static::value($name,$value);
             }
             $binds=$values;
             $sql='INSERT INTO `'.$table.'` ('.trim($names, ',').') VALUES ('.trim($bind, ',').');';
@@ -102,16 +102,14 @@ class Query extends SQLQuery
         if (is_array($set_fields)) {
             $sets=[];
             foreach ($set_fields as $name=>$value) {
-                $bname=static::_packName($name,$count);
-                $binds[$bname]=$value;
-                list($x,$bindName)=static::_unpackName($bname);
-                $sets[]="`{$name}`=:{$bindName}";
+                $bname= $name.($count++);
+                $binds[$bname]=static::value($name,$value);
+                $sets[]="`{$name}`=:{$bname}";
             }
             $sql='UPDATE `'.$table.'` SET '.implode(',', $sets).' '.self::prepareWhere($where, $binds).';';
         } else {
             $sql='UPDATE `'.$table.'` SET '.$set_fields.' '.self::prepareWhere($where, $binds).';';
         }
-        
         return (new Query($sql, $binds))->object($object)->exec();
     }
 
@@ -129,10 +127,8 @@ class Query extends SQLQuery
         $param=[];
         foreach ($invalues as $key=>$value) {
             $bname=$prefix. preg_replace('/[_]+/', '_', preg_replace('/[`.{}#]/', '_', $name)).$key.($count++);
-            $bname=static::_packName($name,$bname);
-            $param[$bname]=$value;
-            list($x,$bindName)=static::_unpackName($bname);
-            $names[]=':'.$bindName;
+            $param[$bname]= static::value($name,$value);
+            $names[]=':'.$bname;
         }
         $sql=$name.' IN ('.implode(',', $names).')';
         return [$sql,$param];
@@ -146,16 +142,15 @@ class Query extends SQLQuery
             $count=0;
             $and=[];
             foreach ($where as $name => $value) {
-                $bname=static::_packName($name,$count);
+                $bname= $name.($count++);
                 // in cause
                 if (is_array($value)) {
                     list($sql,$in_param)=self::prepareIn($name, $value);
                     $and[]=$sql;
                     $param=array_merge($param,$in_param);
                 } else {
-                    list($x,$bindName)=static::_unpackName($bname);
-                    $and[]="`{$name}`=:{$bindName}";
-                    $param[$bname]=$value;
+                    $and[]="`{$name}`=:{$bname}";
+                    $param[$bname]=static::value($name,$value);
                 }
             }
 

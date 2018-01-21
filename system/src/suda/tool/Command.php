@@ -132,7 +132,7 @@ class Command
      * @param [type] $params
      * @return void
      */
-    protected static function _absoluteCall($command, $params)
+    public static function _absoluteCall($command, $params)
     {
         if (is_array($command)) {
             $method = new \ReflectionMethod($command[0], $command[1]);
