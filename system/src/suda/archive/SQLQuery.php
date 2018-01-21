@@ -82,7 +82,7 @@ class SQLQuery
             return $this->stmt->fetchObject($class);
         } else {
             if (self::__query($this->query, $this->values)) {
-                return $this->stmt->fetchObject($class);
+                return self::__outputObjectTransfrom($this->stmt->fetchObject($class));
             }
         }
         return false;
@@ -106,8 +106,9 @@ class SQLQuery
         return 0;
     }
 
-    public static function value(string $name,$value,int $type=PDO::PARAM_STR):InputValue {
-        return new InputValue($name,$value,$type);
+    public static function value(string $name, $value, int $type=PDO::PARAM_STR):InputValue
+    {
+        return new InputValue($name, $value, $type);
     }
 
     public function values(array $values)
@@ -251,9 +252,9 @@ class SQLQuery
         foreach ($array as $key=> $value) {
             $bindName=':'.ltrim($key, ':');
             if ($value instanceof InputValue) {
-                $stmt->bindValue($bindName, self::__inputFieldTransfrom($value->getName(),$value->getValue()), $value->getBindType());
-            }else {
-                $stmt->bindValue($bindName,$value,InputValue::bindParam($value));
+                $stmt->bindValue($bindName, self::__inputFieldTransfrom($value->getName(), $value->getValue()), $value->getBindType());
+            } else {
+                $stmt->bindValue($bindName, $value, InputValue::bindParam($value));
             }
         }
 
@@ -349,5 +350,16 @@ class SQLQuery
             $inputData[$fieldName]=self::__dataTransfrom('output', $fieldName, $fieldData);
         }
         return $inputData;
+    }
+
+    private function __outputObjectTransfrom($object)
+    {
+        $reflect=new \ReflectionClass($object);
+        $props=$reflect->getProperties(\ReflectionProperty::IS_PUBLIC | \ReflectionProperty::IS_PROTECTED|\ReflectionProperty::IS_PUBLIC | ReflectionProperty::IS_PRIVATE);
+        foreach ($props as $prop) {
+            $prop->setAccessible(true);
+            $prop->setValue($object, self::__dataTransfrom('output', $prop->getName(), $prop->getValue()));
+        }
+        return $object;
     }
 }
