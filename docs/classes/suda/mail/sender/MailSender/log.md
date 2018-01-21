@@ -1,8 +1,16 @@
 # 方法 `log`
 
 > *文件信息* suda\mail\sender\MailSender.php: 53~56
-> 所属类 [MailSender](../MailSender.md)
 
+## 所属类 
+
+[MailSender](../MailSender.md)
+
+## 可见性
+
+protected
+
+## 说明
 
 
 

@@ -1,8 +1,16 @@
 # 方法 `_setVar`
 
 > *文件信息* suda\tool\Value.php: 49~52
-> 所属类 [ArrayValue](../ArrayValue.md)
 
+## 所属类 
+
+[ArrayValue](../ArrayValue.md)
+
+## 可见性
+
+public
+
+## 说明
 
 
 

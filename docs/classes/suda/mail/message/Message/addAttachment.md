@@ -1,8 +1,16 @@
 # 方法 `addAttachment`
 
 > *文件信息* suda\mail\message\Message.php: 75~81
-> 所属类 [Message](../Message.md)
 
+## 所属类 
+
+[Message](../Message.md)
+
+## 可见性
+
+public
+
+## 说明
 
 
 

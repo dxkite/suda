@@ -1,8 +1,16 @@
 # 方法 `__construct`
 
 > *文件信息* D:\Server\Local\suda\script\doc\src\ClassExport.php: 23~26
-> 所属类 [ClassExport](../ClassExport.md)
 
+## 所属类 
+
+[ClassExport](../ClassExport.md)
+
+## 可见性
+
+public
+
+## 说明
 
 
 

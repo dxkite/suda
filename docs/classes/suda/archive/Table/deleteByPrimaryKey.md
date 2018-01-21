@@ -1,8 +1,16 @@
 # 方法 `deleteByPrimaryKey`
 
 > *文件信息* suda\archive\Table.php: 128~131
-> 所属类 [Table](../Table.md)
 
+## 所属类 
+
+[Table](../Table.md)
+
+## 可见性
+
+public
+
+## 说明
 
 通过主键删除元素
 

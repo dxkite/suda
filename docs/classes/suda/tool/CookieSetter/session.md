@@ -1,8 +1,16 @@
 # 方法 `session`
 
 > *文件信息* suda\tool\CookieSetter.php: 81~85
-> 所属类 [CookieSetter](../CookieSetter.md)
 
+## 所属类 
+
+[CookieSetter](../CookieSetter.md)
+
+## 可见性
+
+public
+
+## 说明
 
 
 

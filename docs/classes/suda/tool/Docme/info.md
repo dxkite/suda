@@ -1,8 +1,16 @@
 # 方法 `info`
 
 > *文件信息* suda\tool\Docme.php: 35~37
-> 所属类 [Docme](../Docme.md)
 
+## 所属类 
+
+[Docme](../Docme.md)
+
+## 可见性
+
+public
+
+## 说明
 
 
 

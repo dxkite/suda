@@ -1,8 +1,16 @@
 # 方法 `expire`
 
 > *文件信息* suda\tool\CookieSetter.php: 64~68
-> 所属类 [CookieSetter](../CookieSetter.md)
 
+## 所属类 
+
+[CookieSetter](../CookieSetter.md)
+
+## 可见性
+
+public
+
+## 说明
 
 
 

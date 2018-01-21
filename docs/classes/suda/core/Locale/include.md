@@ -1,8 +1,16 @@
 # 方法 `include`
 
 > *文件信息* suda\core\Locale.php: 34~37
-> 所属类 [Locale](../Locale.md)
 
+## 所属类 
+
+[Locale](../Locale.md)
+
+## 可见性
+
+public
+
+## 说明
 
 包含本地化语言数组
 

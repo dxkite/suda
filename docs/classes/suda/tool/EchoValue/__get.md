@@ -1,8 +1,16 @@
 # 方法 `__get`
 
 > *文件信息* suda\tool\EchoValue.php: 20~24
-> 所属类 [EchoValue](../EchoValue.md)
 
+## 所属类 
+
+[EchoValue](../EchoValue.md)
+
+## 可见性
+
+public
+
+## 说明
 
 
 

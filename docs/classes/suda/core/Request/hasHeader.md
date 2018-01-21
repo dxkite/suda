@@ -1,8 +1,16 @@
 # 方法 `hasHeader`
 
 > *文件信息* suda\core\Request.php: 206~210
-> 所属类 [Request](../Request.md)
 
+## 所属类 
+
+[Request](../Request.md)
+
+## 可见性
+
+public
+
+## 说明
 
 
 

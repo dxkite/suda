@@ -1,8 +1,16 @@
 # 方法 `log`
 
 > *文件信息* suda\mail\sender\StmpSender.php: 239~242
-> 所属类 [StmpSender](../StmpSender.md)
 
+## 所属类 
+
+[StmpSender](../StmpSender.md)
+
+## 可见性
+
+protected
+
+## 说明
 
 
 

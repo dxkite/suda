@@ -1,8 +1,16 @@
 # 方法 `zipFolder`
 
 > *文件信息* suda\tool\ZipHelper.php: 68~83
-> 所属类 [ZipHelper](../ZipHelper.md)
 
+## 所属类 
+
+[ZipHelper](../ZipHelper.md)
+
+## 可见性
+
+protected
+
+## 说明
 
 
 

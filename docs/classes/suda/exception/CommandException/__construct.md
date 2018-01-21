@@ -1,8 +1,16 @@
 # 方法 `__construct`
 
 > *文件信息* suda\exception\CommandException.php: 22~25
-> 所属类 [CommandException](../CommandException.md)
 
+## 所属类 
+
+[CommandException](../CommandException.md)
+
+## 可见性
+
+public
+
+## 说明
 
 
 

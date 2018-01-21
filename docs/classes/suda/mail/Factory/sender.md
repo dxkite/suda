@@ -1,8 +1,16 @@
 # 方法 `sender`
 
 > *文件信息* suda\mail\Factory.php: 27~35
-> 所属类 [Factory](../Factory.md)
 
+## 所属类 
+
+[Factory](../Factory.md)
+
+## 可见性
+
+public
+
+## 说明
 
 
 

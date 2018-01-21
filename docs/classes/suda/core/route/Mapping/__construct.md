@@ -1,8 +1,16 @@
 # 方法 `__construct`
 
 > *文件信息* suda\core\route\Mapping.php: 45~56
-> 所属类 [Mapping](../Mapping.md)
 
+## 所属类 
+
+[Mapping](../Mapping.md)
+
+## 可见性
+
+public
+
+## 说明
 
 
 
@@ -16,7 +24,7 @@
 | callback |  string | 无 | 无 |
 | module |  string | 无 | 无 |
 | method |  array | # Error> htmlspecialchars() expects parameter 1 to be string, array given
-	Cause By D:\Server\Local\suda\script\doc\template\method.md.tpl:17
+	Cause By D:\Server\Local\suda\script\doc\template\method.md.tpl:26
  | 无 |
 | role |  int | self::ROLE_SIMPLE | 无 |
 

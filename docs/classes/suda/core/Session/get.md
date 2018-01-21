@@ -1,8 +1,16 @@
 # 方法 `get`
 
 > *文件信息* suda\core\Session.php: 46~53
-> 所属类 [Session](../Session.md)
 
+## 所属类 
+
+[Session](../Session.md)
+
+## 可见性
+
+public
+
+## 说明
 
 
 
@@ -13,7 +21,7 @@
 |--------|-----|-------|-------|
 | name |  string |  | 无 |
 | default |  # Error> htmlspecialchars() expects parameter 1 to be string, array given
-	Cause By D:\Server\Local\suda\script\doc\template\method.md.tpl:17
+	Cause By D:\Server\Local\suda\script\doc\template\method.md.tpl:26
  | 无 | 无 |
 
 

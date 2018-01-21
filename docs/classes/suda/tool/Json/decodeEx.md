@@ -1,8 +1,16 @@
 # 方法 `decodeEx`
 
 > *文件信息* suda\tool\Json.php: 31~39
-> 所属类 [Json](../Json.md)
 
+## 所属类 
+
+[Json](../Json.md)
+
+## 可见性
+
+public
+
+## 说明
 
 
 

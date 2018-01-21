@@ -1,8 +1,16 @@
 # 方法 `getInstance`
 
 > *文件信息* suda\core\Request.php: 41~47
-> 所属类 [Request](../Request.md)
 
+## 所属类 
+
+[Request](../Request.md)
+
+## 可见性
+
+public
+
+## 说明
 
 
 

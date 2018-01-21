@@ -1,8 +1,16 @@
 # 方法 `setFrom`
 
 > *文件信息* suda\mail\message\Message.php: 35~40
-> 所属类 [HTMLMessage](../HTMLMessage.md)
 
+## 所属类 
+
+[HTMLMessage](../HTMLMessage.md)
+
+## 可见性
+
+public
+
+## 说明
 
 
 

@@ -1,8 +1,16 @@
 # 方法 `forward`
 
 > *文件信息* suda\core\Response.php: 159~163
-> 所属类 [Response](../Response.md)
 
+## 所属类 
+
+[Response](../Response.md)
+
+## 可见性
+
+public
+
+## 说明
 
 
 

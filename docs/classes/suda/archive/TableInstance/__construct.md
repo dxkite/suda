@@ -1,8 +1,16 @@
 # 方法 `__construct`
 
 > *文件信息* suda\archive\TableInstance.php: 27~30
-> 所属类 [TableInstance](../TableInstance.md)
 
+## 所属类 
+
+[TableInstance](../TableInstance.md)
+
+## 可见性
+
+protected
+
+## 说明
 
 
 

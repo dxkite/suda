@@ -1,8 +1,16 @@
 # 方法 `combine`
 
 > *文件信息* suda\tool\ArrayHelper.php: 142~148
-> 所属类 [ArrayHelper](../ArrayHelper.md)
 
+## 所属类 
+
+[ArrayHelper](../ArrayHelper.md)
+
+## 可见性
+
+protected
+
+## 说明
 
 
 

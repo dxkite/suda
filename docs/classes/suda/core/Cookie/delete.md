@@ -1,8 +1,16 @@
 # 方法 `delete`
 
 > *文件信息* suda\core\Cookie.php: 52~54
-> 所属类 [Cookie](../Cookie.md)
 
+## 所属类 
+
+[Cookie](../Cookie.md)
+
+## 可见性
+
+public
+
+## 说明
 
 
 

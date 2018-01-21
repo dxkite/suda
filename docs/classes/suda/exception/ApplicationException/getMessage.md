@@ -1,8 +1,16 @@
 # 方法 `getMessage`
 
 > *文件信息* : ~
-> 所属类 [ApplicationException](../ApplicationException.md)
 
+## 所属类 
+
+[ApplicationException](../ApplicationException.md)
+
+## 可见性
+
+public
+
+## 说明
 
 
 

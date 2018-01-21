@@ -1,8 +1,16 @@
 # 方法 `assetServer`
 
 > *文件信息* suda\template\Manager.php: 486~489
-> 所属类 [Manager](../Manager.md)
 
+## 所属类 
+
+[Manager](../Manager.md)
+
+## 可见性
+
+public
+
+## 说明
 
 
 

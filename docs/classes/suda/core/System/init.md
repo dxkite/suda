@@ -1,8 +1,16 @@
 # 方法 `init`
 
 > *文件信息* suda\core\System.php: 43~71
-> 所属类 [System](../System.md)
 
+## 所属类 
+
+[System](../System.md)
+
+## 可见性
+
+public
+
+## 说明
 
 
 

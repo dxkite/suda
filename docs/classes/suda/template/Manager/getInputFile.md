@@ -1,8 +1,16 @@
 # 方法 `getInputFile`
 
 > *文件信息* suda\template\Manager.php: 384~396
-> 所属类 [Manager](../Manager.md)
 
+## 所属类 
+
+[Manager](../Manager.md)
+
+## 可见性
+
+public
+
+## 说明
 
 模板输入路径
 

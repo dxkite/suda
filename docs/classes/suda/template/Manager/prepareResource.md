@@ -1,8 +1,16 @@
 # 方法 `prepareResource`
 
 > *文件信息* suda\template\Manager.php: 184~203
-> 所属类 [Manager](../Manager.md)
 
+## 所属类 
+
+[Manager](../Manager.md)
+
+## 可见性
+
+public
+
+## 说明
 
 准备静态资源
 

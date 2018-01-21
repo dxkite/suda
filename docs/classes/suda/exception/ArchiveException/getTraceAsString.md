@@ -1,8 +1,16 @@
 # 方法 `getTraceAsString`
 
 > *文件信息* : ~
-> 所属类 [ArchiveException](../ArchiveException.md)
 
+## 所属类 
+
+[ArchiveException](../ArchiveException.md)
+
+## 可见性
+
+public
+
+## 说明
 
 
 

@@ -1,8 +1,16 @@
 # 方法 `getModules`
 
 > *文件信息* suda\core\Application.php: 193~196
-> 所属类 [Application](../Application.md)
 
+## 所属类 
+
+[Application](../Application.md)
+
+## 可见性
+
+public
+
+## 说明
 
 获取所有模块
 

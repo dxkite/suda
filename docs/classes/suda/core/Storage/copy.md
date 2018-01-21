@@ -1,8 +1,16 @@
 # 方法 `copy`
 
 > *文件信息* suda\core\Storage.php: 204~212
-> 所属类 [Storage](../Storage.md)
 
+## 所属类 
+
+[Storage](../Storage.md)
+
+## 可见性
+
+public
+
+## 说明
 
 
 

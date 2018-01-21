@@ -1,8 +1,16 @@
 # 方法 `set`
 
 > *文件信息* suda\core\Cache.php: 35~45
-> 所属类 [Cache](../Cache.md)
 
+## 所属类 
+
+[Cache](../Cache.md)
+
+## 可见性
+
+public
+
+## 说明
 
 设置
 

@@ -1,8 +1,16 @@
 # 方法 `arrayQuote`
 
 > *文件信息* suda\archive\SQLQuery.php: 202~209
-> 所属类 [SQLQuery](../SQLQuery.md)
 
+## 所属类 
+
+[SQLQuery](../SQLQuery.md)
+
+## 可见性
+
+public
+
+## 说明
 
 
 

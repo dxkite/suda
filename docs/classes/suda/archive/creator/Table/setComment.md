@@ -1,8 +1,16 @@
 # 方法 `setComment`
 
 > *文件信息* suda\archive\creator\Table.php: 183~187
-> 所属类 [Table](../Table.md)
 
+## 所属类 
+
+[Table](../Table.md)
+
+## 可见性
+
+public
+
+## 说明
 
 
 

@@ -1,8 +1,16 @@
 # 方法 `unique`
 
 > *文件信息* suda\archive\creator\Field.php: 86~90
-> 所属类 [Field](../Field.md)
 
+## 所属类 
+
+[Field](../Field.md)
+
+## 可见性
+
+public
+
+## 说明
 
 
 

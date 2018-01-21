@@ -1,8 +1,16 @@
 # 方法 `readFile`
 
 > *文件信息* suda\mail\message\Message.php: 222~229
-> 所属类 [Message](../Message.md)
 
+## 所属类 
+
+[Message](../Message.md)
+
+## 可见性
+
+protected
+
+## 说明
 
 
 

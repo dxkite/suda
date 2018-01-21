@@ -1,8 +1,16 @@
 # 方法 `activeModule`
 
 > *文件信息* suda\core\Application.php: 261~287
-> 所属类 [Application](../Application.md)
 
+## 所属类 
+
+[Application](../Application.md)
+
+## 可见性
+
+public
+
+## 说明
 
 激活运行的模块
 

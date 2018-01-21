@@ -1,8 +1,16 @@
 # 方法 `replaceClass`
 
 > *文件信息* suda\core\Router.php: 400~413
-> 所属类 [Router](../Router.md)
 
+## 所属类 
+
+[Router](../Router.md)
+
+## 可见性
+
+public
+
+## 说明
 
 替换路由指定类
 

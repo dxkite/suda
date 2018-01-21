@@ -1,8 +1,16 @@
 # 方法 `execGloHook`
 
 > *文件信息* suda\template\compiler\suda\Template.php: 179~190
-> 所属类 [Template](../Template.md)
 
+## 所属类 
+
+[Template](../Template.md)
+
+## 可见性
+
+public
+
+## 说明
 
 
 

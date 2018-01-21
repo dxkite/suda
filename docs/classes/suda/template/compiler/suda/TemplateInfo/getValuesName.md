@@ -1,8 +1,16 @@
 # 方法 `getValuesName`
 
 > *文件信息* suda\template\compiler\suda\TemplateInfo.php: 61~64
-> 所属类 [TemplateInfo](../TemplateInfo.md)
 
+## 所属类 
+
+[TemplateInfo](../TemplateInfo.md)
+
+## 可见性
+
+public
+
+## 说明
 
 
 

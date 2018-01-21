@@ -1,8 +1,16 @@
 # 方法 `erron`
 
 > *文件信息* suda\template\compiler\suda\Compiler.php: 360~363
-> 所属类 [TemplateInfo](../TemplateInfo.md)
 
+## 所属类 
+
+[TemplateInfo](../TemplateInfo.md)
+
+## 可见性
+
+public
+
+## 说明
 
 
 

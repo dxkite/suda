@@ -1,8 +1,16 @@
 # 方法 `getPrevious`
 
 > *文件信息* : ~
-> 所属类 [SQLException](../SQLException.md)
 
+## 所属类 
+
+[SQLException](../SQLException.md)
+
+## 可见性
+
+public
+
+## 说明
 
 
 

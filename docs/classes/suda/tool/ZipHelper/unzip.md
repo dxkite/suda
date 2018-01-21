@@ -1,8 +1,16 @@
 # 方法 `unzip`
 
 > *文件信息* suda\tool\ZipHelper.php: 31~46
-> 所属类 [ZipHelper](../ZipHelper.md)
 
+## 所属类 
+
+[ZipHelper](../ZipHelper.md)
+
+## 可见性
+
+public
+
+## 说明
 
 解压文件到目录
 

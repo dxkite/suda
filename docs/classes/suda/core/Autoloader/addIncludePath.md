@@ -1,8 +1,16 @@
 # 方法 `addIncludePath`
 
 > *文件信息* suda\core\Autoloader.php: 85~94
-> 所属类 [Autoloader](../Autoloader.md)
 
+## 所属类 
+
+[Autoloader](../Autoloader.md)
+
+## 可见性
+
+public
+
+## 说明
 
 
 

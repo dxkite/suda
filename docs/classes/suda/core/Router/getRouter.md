@@ -1,8 +1,16 @@
 # 方法 `getRouter`
 
 > *文件信息* suda\core\Router.php: 287~293
-> 所属类 [Router](../Router.md)
 
+## 所属类 
+
+[Router](../Router.md)
+
+## 可见性
+
+public
+
+## 说明
 
 获取路由
 

@@ -1,8 +1,16 @@
 # 方法 `displayExt`
 
 > *文件信息* suda\template\Manager.php: 148~163
-> 所属类 [Manager](../Manager.md)
 
+## 所属类 
+
+[Manager](../Manager.md)
+
+## 可见性
+
+public
+
+## 说明
 
 根据模板ID显示模板
 

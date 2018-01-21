@@ -1,8 +1,16 @@
 # 方法 `die`
 
 > *文件信息* suda\core\Debug.php: 374~384
-> 所属类 [Debug](../Debug.md)
 
+## 所属类 
+
+[Debug](../Debug.md)
+
+## 可见性
+
+public
+
+## 说明
 
 
 

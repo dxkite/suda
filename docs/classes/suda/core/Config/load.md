@@ -1,8 +1,16 @@
 # 方法 `load`
 
 > *文件信息* suda\core\Config.php: 25~28
-> 所属类 [Config](../Config.md)
 
+## 所属类 
+
+[Config](../Config.md)
+
+## 可见性
+
+public
+
+## 说明
 
 
 

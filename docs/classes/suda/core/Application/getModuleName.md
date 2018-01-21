@@ -1,8 +1,16 @@
 # 方法 `getModuleName`
 
 > *文件信息* suda\core\Application.php: 313~317
-> 所属类 [Application](../Application.md)
 
+## 所属类 
+
+[Application](../Application.md)
+
+## 可见性
+
+public
+
+## 说明
 
 获取模块名，不包含版本号
 

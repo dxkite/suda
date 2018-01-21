@@ -1,8 +1,16 @@
 # 方法 `hostBase`
 
 > *文件信息* suda\core\Request.php: 289~295
-> 所属类 [Request](../Request.md)
 
+## 所属类 
+
+[Request](../Request.md)
+
+## 可见性
+
+public
+
+## 说明
 
 
 

@@ -1,8 +1,16 @@
 # 方法 `parseDoc`
 
 > *文件信息* suda\tool\Docme.php: 41~44
-> 所属类 [Docme](../Docme.md)
 
+## 所属类 
+
+[Docme](../Docme.md)
+
+## 可见性
+
+protected
+
+## 说明
 
 
 

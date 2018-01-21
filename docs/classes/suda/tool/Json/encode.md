@@ -1,8 +1,16 @@
 # 方法 `encode`
 
 > *文件信息* suda\tool\Json.php: 50~53
-> 所属类 [Json](../Json.md)
 
+## 所属类 
+
+[Json](../Json.md)
+
+## 可见性
+
+public
+
+## 说明
 
 
 

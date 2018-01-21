@@ -1,8 +1,16 @@
 # 方法 `checkModuleExist`
 
 > *文件信息* suda\core\Application.php: 223~226
-> 所属类 [Application](../Application.md)
 
+## 所属类 
+
+[Application](../Application.md)
+
+## 可见性
+
+public
+
+## 说明
 
 
 

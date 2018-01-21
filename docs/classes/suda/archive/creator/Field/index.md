@@ -1,8 +1,16 @@
 # 方法 `index`
 
 > *文件信息* suda\archive\creator\Field.php: 80~84
-> 所属类 [Field](../Field.md)
 
+## 所属类 
+
+[Field](../Field.md)
+
+## 可见性
+
+public
+
+## 说明
 
 
 

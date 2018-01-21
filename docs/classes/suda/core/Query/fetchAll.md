@@ -1,8 +1,16 @@
 # 方法 `fetchAll`
 
 > *文件信息* suda\archive\SQLQuery.php: 91~99
-> 所属类 [Query](../Query.md)
 
+## 所属类 
+
+[Query](../Query.md)
+
+## 可见性
+
+public
+
+## 说明
 
 
 

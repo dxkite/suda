@@ -1,8 +1,16 @@
 # 方法 `foreign`
 
 > *文件信息* suda\archive\creator\Field.php: 104~114
-> 所属类 [Field](../Field.md)
 
+## 所属类 
+
+[Field](../Field.md)
+
+## 可见性
+
+public
+
+## 说明
 
 
 

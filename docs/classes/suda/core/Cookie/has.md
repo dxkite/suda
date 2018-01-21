@@ -1,8 +1,16 @@
 # 方法 `has`
 
 > *文件信息* suda\core\Cookie.php: 56~59
-> 所属类 [Cookie](../Cookie.md)
 
+## 所属类 
+
+[Cookie](../Cookie.md)
+
+## 可见性
+
+public
+
+## 说明
 
 
 

@@ -1,8 +1,16 @@
 # 方法 `parseCommand`
 
 > *文件信息* suda\core\Request.php: 189~195
-> 所属类 [Request](../Request.md)
 
+## 所属类 
+
+[Request](../Request.md)
+
+## 可见性
+
+protected
+
+## 说明
 
 
 

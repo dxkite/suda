@@ -1,8 +1,16 @@
 # 方法 `setFields`
 
 > *文件信息* suda\archive\Table.php: 296~304
-> 所属类 [Table](../Table.md)
 
+## 所属类 
+
+[Table](../Table.md)
+
+## 可见性
+
+public
+
+## 说明
 
 设置表列
 

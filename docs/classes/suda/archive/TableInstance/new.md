@@ -1,8 +1,16 @@
 # 方法 `new`
 
 > *文件信息* suda\archive\TableInstance.php: 32~36
-> 所属类 [TableInstance](../TableInstance.md)
 
+## 所属类 
+
+[TableInstance](../TableInstance.md)
+
+## 可见性
+
+public
+
+## 说明
 
 
 

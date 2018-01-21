@@ -1,8 +1,16 @@
 # 方法 `readManifast`
 
 > *文件信息* suda\core\System.php: 107~128
-> 所属类 [System](../System.md)
 
+## 所属类 
+
+[System](../System.md)
+
+## 可见性
+
+protected
+
+## 说明
 
 
 

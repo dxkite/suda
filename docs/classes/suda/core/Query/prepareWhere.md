@@ -1,8 +1,16 @@
 # 方法 `prepareWhere`
 
 > *文件信息* suda\core\Query.php: 137~162
-> 所属类 [Query](../Query.md)
 
+## 所属类 
+
+[Query](../Query.md)
+
+## 可见性
+
+public
+
+## 说明
 
 
 

@@ -1,8 +1,16 @@
 # 方法 `export`
 
 > *文件信息* D:\Server\Local\suda\script\doc\src\FunctionExport.php: 28~38
-> 所属类 [FunctionExport](../FunctionExport.md)
 
+## 所属类 
+
+[FunctionExport](../FunctionExport.md)
+
+## 可见性
+
+public
+
+## 说明
 
 
 

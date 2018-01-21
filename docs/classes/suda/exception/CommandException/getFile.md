@@ -1,8 +1,16 @@
 # 方法 `getFile`
 
 > *文件信息* : ~
-> 所属类 [CommandException](../CommandException.md)
 
+## 所属类 
+
+[CommandException](../CommandException.md)
+
+## 可见性
+
+public
+
+## 说明
 
 
 

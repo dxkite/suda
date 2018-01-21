@@ -1,8 +1,16 @@
 # 方法 `__construct`
 
 > *文件信息* suda\archive\Table.php: 52~60
-> 所属类 [Table](../Table.md)
 
+## 所属类 
+
+[Table](../Table.md)
+
+## 可见性
+
+public
+
+## 说明
 
 
 

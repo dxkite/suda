@@ -1,8 +1,16 @@
 # 方法 `strify`
 
 > *文件信息* suda\core\Debug.php: 408~418
-> 所属类 [Debug](../Debug.md)
 
+## 所属类 
+
+[Debug](../Debug.md)
+
+## 可见性
+
+protected
+
+## 说明
 
 
 

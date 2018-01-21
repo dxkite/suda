@@ -1,8 +1,16 @@
 # 方法 `post`
 
 > *文件信息* suda\core\Request.php: 104~111
-> 所属类 [Request](../Request.md)
 
+## 所属类 
+
+[Request](../Request.md)
+
+## 可见性
+
+public
+
+## 说明
 
 
 

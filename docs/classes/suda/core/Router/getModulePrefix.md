@@ -1,8 +1,16 @@
 # 方法 `getModulePrefix`
 
 > *文件信息* suda\core\Router.php: 50~64
-> 所属类 [Router](../Router.md)
 
+## 所属类 
+
+[Router](../Router.md)
+
+## 可见性
+
+public
+
+## 说明
 
 
 

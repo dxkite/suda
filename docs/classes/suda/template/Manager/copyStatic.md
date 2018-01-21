@@ -1,8 +1,16 @@
 # 方法 `copyStatic`
 
 > *文件信息* suda\template\Manager.php: 299~312
-> 所属类 [Manager](../Manager.md)
 
+## 所属类 
+
+[Manager](../Manager.md)
+
+## 可见性
+
+protected
+
+## 说明
 
 复制模板目录下静态文件
 

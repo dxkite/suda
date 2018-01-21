@@ -1,8 +1,16 @@
 # 方法 `echoValue`
 
 > *文件信息* suda\template\compiler\suda\Compiler.php: 196~200
-> 所属类 [Compiler](../Compiler.md)
 
+## 所属类 
+
+[Compiler](../Compiler.md)
+
+## 可见性
+
+protected
+
+## 说明
 
 
 

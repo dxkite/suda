@@ -1,8 +1,16 @@
 # 方法 `load`
 
 > *文件信息* suda\core\Locale.php: 65~76
-> 所属类 [Locale](../Locale.md)
 
+## 所属类 
+
+[Locale](../Locale.md)
+
+## 可见性
+
+public
+
+## 说明
 
 加载语言本地化文件
 

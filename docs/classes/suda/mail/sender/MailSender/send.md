@@ -1,8 +1,16 @@
 # 方法 `send`
 
 > *文件信息* suda\mail\sender\MailSender.php: 26~33
-> 所属类 [MailSender](../MailSender.md)
 
+## 所属类 
+
+[MailSender](../MailSender.md)
+
+## 可见性
+
+public
+
+## 说明
 
 
 

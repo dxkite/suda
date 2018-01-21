@@ -1,8 +1,16 @@
 # 方法 `setCmd`
 
 > *文件信息* suda\exception\CommandException.php: 26~30
-> 所属类 [CommandException](../CommandException.md)
 
+## 所属类 
+
+[CommandException](../CommandException.md)
+
+## 可见性
+
+public
+
+## 说明
 
 
 

@@ -1,8 +1,16 @@
 # 方法 `runRouter`
 
 > *文件信息* suda\core\Router.php: 415~429
-> 所属类 [Router](../Router.md)
 
+## 所属类 
+
+[Router](../Router.md)
+
+## 可见性
+
+protected
+
+## 说明
 
 
 

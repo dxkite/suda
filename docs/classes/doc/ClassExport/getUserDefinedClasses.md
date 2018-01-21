@@ -1,8 +1,16 @@
 # 方法 `getUserDefinedClasses`
 
-> *文件信息* D:\Server\Local\suda\script\doc\src\ClassExport.php: 55~68
-> 所属类 [ClassExport](../ClassExport.md)
+> *文件信息* D:\Server\Local\suda\script\doc\src\ClassExport.php: 74~87
 
+## 所属类 
+
+[ClassExport](../ClassExport.md)
+
+## 可见性
+
+public
+
+## 说明
 
 
 

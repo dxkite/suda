@@ -1,8 +1,16 @@
 # 方法 `compile`
 
 > *文件信息* suda\template\Manager.php: 121~127
-> 所属类 [Manager](../Manager.md)
 
+## 所属类 
+
+[Manager](../Manager.md)
+
+## 可见性
+
+public
+
+## 说明
 
 编译文件
 @param $input

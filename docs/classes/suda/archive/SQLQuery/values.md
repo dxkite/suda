@@ -1,8 +1,16 @@
 # 方法 `values`
 
 > *文件信息* suda\archive\SQLQuery.php: 114~118
-> 所属类 [SQLQuery](../SQLQuery.md)
 
+## 所属类 
+
+[SQLQuery](../SQLQuery.md)
+
+## 可见性
+
+public
+
+## 说明
 
 
 

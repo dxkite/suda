@@ -1,8 +1,16 @@
 # 方法 `export`
 
 > *文件信息* suda\archive\Table.php: 418~427
-> 所属类 [Table](../Table.md)
 
+## 所属类 
+
+[Table](../Table.md)
+
+## 可见性
+
+public
+
+## 说明
 
 导出数据到文件
 

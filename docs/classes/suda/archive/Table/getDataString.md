@@ -1,8 +1,16 @@
 # 方法 `getDataString`
 
 > *文件信息* suda\archive\Table.php: 636~672
-> 所属类 [Table](../Table.md)
 
+## 所属类 
+
+[Table](../Table.md)
+
+## 可见性
+
+protected
+
+## 说明
 
 获取数据SQL字符串
 

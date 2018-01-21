@@ -1,8 +1,16 @@
 # 方法 `setName`
 
 > *文件信息* suda\core\Response.php: 67~70
-> 所属类 [Response](../Response.md)
 
+## 所属类 
+
+[Response](../Response.md)
+
+## 可见性
+
+public
+
+## 说明
 
 
 

@@ -1,8 +1,16 @@
 # 方法 `isReadable`
 
 > *文件信息* suda\core\Storage.php: 288~292
-> 所属类 [Storage](../Storage.md)
 
+## 所属类 
+
+[Storage](../Storage.md)
+
+## 可见性
+
+public
+
+## 说明
 
 
 

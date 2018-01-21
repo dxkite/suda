@@ -1,8 +1,16 @@
 # 方法 `parseFromString`
 
 > *文件信息* suda\core\Cookie.php: 87~94
-> 所属类 [Cookie](../Cookie.md)
 
+## 所属类 
+
+[Cookie](../Cookie.md)
+
+## 可见性
+
+public
+
+## 说明
 
 从字符串设置cookie
 

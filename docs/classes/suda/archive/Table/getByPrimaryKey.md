@@ -1,8 +1,16 @@
 # 方法 `getByPrimaryKey`
 
 > *文件信息* suda\archive\Table.php: 101~104
-> 所属类 [Table](../Table.md)
 
+## 所属类 
+
+[Table](../Table.md)
+
+## 可见性
+
+public
+
+## 说明
 
 通过主键查找元素
 主键的值可以为关联数组或单独的一个值

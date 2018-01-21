@@ -1,8 +1,16 @@
 # 方法 `utf8`
 
 > *文件信息* suda\mail\message\Message.php: 208~214
-> 所属类 [HTMLMessage](../HTMLMessage.md)
 
+## 所属类 
+
+[HTMLMessage](../HTMLMessage.md)
+
+## 可见性
+
+protected
+
+## 说明
 
 
 

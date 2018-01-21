@@ -1,8 +1,16 @@
 # 方法 `hasCommand`
 
 > *文件信息* suda\template\compiler\suda\Compiler.php: 135~139
-> 所属类 [Compiler](../Compiler.md)
 
+## 所属类 
+
+[Compiler](../Compiler.md)
+
+## 可见性
+
+public
+
+## 说明
 
 检查模板扩展命令是否存在
 

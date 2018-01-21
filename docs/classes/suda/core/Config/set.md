@@ -1,8 +1,16 @@
 # 方法 `set`
 
 > *文件信息* suda\core\Config.php: 43~46
-> 所属类 [Config](../Config.md)
 
+## 所属类 
+
+[Config](../Config.md)
+
+## 可见性
+
+public
+
+## 说明
 
 
 
@@ -13,7 +21,7 @@
 |--------|-----|-------|-------|
 | name |  string | 无 | 无 |
 | combine |  # Error> htmlspecialchars() expects parameter 1 to be string, array given
-	Cause By D:\Server\Local\suda\script\doc\template\method.md.tpl:17
+	Cause By D:\Server\Local\suda\script\doc\template\method.md.tpl:26
  | 无 | 无 |
 
 

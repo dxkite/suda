@@ -1,8 +1,16 @@
 # 方法 `list`
 
 > *文件信息* suda\archive\Table.php: 150~157
-> 所属类 [Table](../Table.md)
 
+## 所属类 
+
+[Table](../Table.md)
+
+## 可见性
+
+public
+
+## 说明
 
 分页列出元素
 

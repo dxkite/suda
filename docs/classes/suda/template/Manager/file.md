@@ -1,8 +1,16 @@
 # 方法 `file`
 
 > *文件信息* suda\template\Manager.php: 321~356
-> 所属类 [Manager](../Manager.md)
 
+## 所属类 
+
+[Manager](../Manager.md)
+
+## 可见性
+
+public
+
+## 说明
 
 编译动态文件
 

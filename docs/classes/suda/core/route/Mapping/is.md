@@ -1,8 +1,16 @@
 # 方法 `is`
 
 > *文件信息* suda\core\route\Mapping.php: 121~124
-> 所属类 [Mapping](../Mapping.md)
 
+## 所属类 
+
+[Mapping](../Mapping.md)
+
+## 可见性
+
+public
+
+## 说明
 
 
 

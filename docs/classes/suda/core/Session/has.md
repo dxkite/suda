@@ -1,8 +1,16 @@
 # 方法 `has`
 
 > *文件信息* suda\core\Session.php: 55~58
-> 所属类 [Session](../Session.md)
 
+## 所属类 
+
+[Session](../Session.md)
+
+## 可见性
+
+public
+
+## 说明
 
 
 

@@ -1,8 +1,16 @@
 # 方法 `getMIMEType`
 
 > *文件信息* suda\mail\message\Message.php: 216~220
-> 所属类 [HTMLMessage](../HTMLMessage.md)
 
+## 所属类 
+
+[HTMLMessage](../HTMLMessage.md)
+
+## 可见性
+
+protected
+
+## 说明
 
 
 

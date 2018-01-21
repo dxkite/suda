@@ -1,8 +1,16 @@
 # 方法 `displayFile`
 
 > *文件信息* suda\template\Manager.php: 172~175
-> 所属类 [Manager](../Manager.md)
 
+## 所属类 
+
+[Manager](../Manager.md)
+
+## 可见性
+
+public
+
+## 说明
 
 根据路径显示模板
 

@@ -1,8 +1,16 @@
 # 方法 `error`
 
 > *文件信息* suda\archive\SQLQuery.php: 135~141
-> 所属类 [SQLQuery](../SQLQuery.md)
 
+## 所属类 
+
+[SQLQuery](../SQLQuery.md)
+
+## 可见性
+
+public
+
+## 说明
 
 
 

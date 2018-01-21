@@ -1,8 +1,16 @@
 # 方法 `addCommand`
 
 > *文件信息* suda\template\compiler\suda\Compiler.php: 123~127
-> 所属类 [Compiler](../Compiler.md)
 
+## 所属类 
+
+[Compiler](../Compiler.md)
+
+## 可见性
+
+public
+
+## 说明
 
 扩展模板命令
 

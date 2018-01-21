@@ -1,8 +1,16 @@
 # 方法 `getModuleConfig`
 
 > *文件信息* suda\core\Application.php: 209~212
-> 所属类 [Application](../Application.md)
 
+## 所属类 
+
+[Application](../Application.md)
+
+## 可见性
+
+public
+
+## 说明
 
 
 

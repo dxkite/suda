@@ -1,8 +1,16 @@
 # 方法 `rmdir`
 
 > *文件信息* suda\core\Storage.php: 232~236
-> 所属类 [Storage](../Storage.md)
 
+## 所属类 
+
+[Storage](../Storage.md)
+
+## 可见性
+
+public
+
+## 说明
 
 
 

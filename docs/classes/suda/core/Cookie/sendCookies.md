@@ -1,8 +1,16 @@
 # 方法 `sendCookies`
 
 > *文件信息* suda\core\Cookie.php: 77~82
-> 所属类 [Cookie](../Cookie.md)
 
+## 所属类 
+
+[Cookie](../Cookie.md)
+
+## 可见性
+
+public
+
+## 说明
 
 发送Cookie至浏览器
 

@@ -1,8 +1,16 @@
 # 方法 `page`
 
 > *文件信息* suda\core\Query.php: 191~200
-> 所属类 [Query](../Query.md)
 
+## 所属类 
+
+[Query](../Query.md)
+
+## 可见性
+
+protected
+
+## 说明
 
 
 

@@ -1,8 +1,16 @@
 # 方法 `__construct`
 
 > *文件信息* suda\mail\sender\StmpSender.php: 34~42
-> 所属类 [StmpSender](../StmpSender.md)
 
+## 所属类 
+
+[StmpSender](../StmpSender.md)
+
+## 可见性
+
+public
+
+## 说明
 
 
 

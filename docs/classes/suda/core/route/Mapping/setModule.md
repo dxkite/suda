@@ -1,8 +1,16 @@
 # 方法 `setModule`
 
 > *文件信息* suda\core\route\Mapping.php: 159~163
-> 所属类 [Mapping](../Mapping.md)
 
+## 所属类 
+
+[Mapping](../Mapping.md)
+
+## 可见性
+
+public
+
+## 说明
 
 
 

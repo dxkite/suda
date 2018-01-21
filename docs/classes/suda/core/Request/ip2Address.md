@@ -1,8 +1,16 @@
 # 方法 `ip2Address`
 
 > *文件信息* suda\core\Request.php: 139~144
-> 所属类 [Request](../Request.md)
 
+## 所属类 
+
+[Request](../Request.md)
+
+## 可见性
+
+public
+
+## 说明
 
 
 

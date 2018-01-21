@@ -1,8 +1,16 @@
 # 方法 `getInstance`
 
 > *文件信息* suda\core\Application.php: 84~90
-> 所属类 [Application](../Application.md)
 
+## 所属类 
+
+[Application](../Application.md)
+
+## 可见性
+
+public
+
+## 说明
 
 
 

@@ -1,8 +1,16 @@
 # 方法 `cacheDbInfo`
 
 > *文件信息* suda\archive\Table.php: 602~608
-> 所属类 [Table](../Table.md)
 
+## 所属类 
+
+[Table](../Table.md)
+
+## 可见性
+
+protected
+
+## 说明
 
 
 

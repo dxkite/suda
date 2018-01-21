@@ -1,8 +1,16 @@
 # 方法 `getModulePath`
 
 > *文件信息* suda\core\Application.php: 424~431
-> 所属类 [Application](../Application.md)
 
+## 所属类 
+
+[Application](../Application.md)
+
+## 可见性
+
+public
+
+## 说明
 
 
 

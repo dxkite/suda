@@ -1,8 +1,16 @@
 # 方法 `__construct`
 
 > *文件信息* suda\tool\Docme.php: 28~31
-> 所属类 [Docme](../Docme.md)
 
+## 所属类 
+
+[Docme](../Docme.md)
+
+## 可见性
+
+public
+
+## 说明
 
 
 

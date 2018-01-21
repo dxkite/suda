@@ -1,8 +1,16 @@
 # 方法 `moduleName`
 
 > *文件信息* suda\core\Application.php: 378~381
-> 所属类 [Application](../Application.md)
 
+## 所属类 
+
+[Application](../Application.md)
+
+## 可见性
+
+public
+
+## 说明
 
 根据模块目录名转换成模块名
 

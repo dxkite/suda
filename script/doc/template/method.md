@@ -1,8 +1,16 @@
 # 方法 `{{$:functionName}}`
 
 > *文件信息* {{$:fileName('未知文件')}}: {{$:lineStart('未知')}}~{{$:lineEnd('未知')}}
-> 所属类 [{{ $:className }}](../{{ $:className }}.md)
 
+## 所属类 
+
+[{{ $:className }}](../{{ $:className }}.md)
+
+## 可见性
+
+{{ $:visibility }}
+
+## 说明
 
 {{! $:functionDoc('该函数暂时无注释文档') }}
 

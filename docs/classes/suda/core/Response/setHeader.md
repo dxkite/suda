@@ -1,8 +1,16 @@
 # 方法 `setHeader`
 
 > *文件信息* suda\core\Response.php: 228~233
-> 所属类 [Response](../Response.md)
 
+## 所属类 
+
+[Response](../Response.md)
+
+## 可见性
+
+public
+
+## 说明
 
 安全设置Header值
 

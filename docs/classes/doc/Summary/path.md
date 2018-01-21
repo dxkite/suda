@@ -1,8 +1,16 @@
 # 方法 `path`
 
 > *文件信息* D:\Server\Local\suda\script\doc\src\Summary.php: 31~33
-> 所属类 [Summary](../Summary.md)
 
+## 所属类 
+
+[Summary](../Summary.md)
+
+## 可见性
+
+public
+
+## 说明
 
 
 

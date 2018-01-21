@@ -1,8 +1,16 @@
 # 方法 `addModulesPath`
 
 > *文件信息* suda\core\Application.php: 114~120
-> 所属类 [Application](../Application.md)
 
+## 所属类 
+
+[Application](../Application.md)
+
+## 可见性
+
+public
+
+## 说明
 
 添加模块扫描目录
 

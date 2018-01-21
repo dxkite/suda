@@ -1,8 +1,16 @@
 # 方法 `getField`
 
 > *文件信息* suda\archive\creator\Table.php: 61~64
-> 所属类 [Table](../Table.md)
 
+## 所属类 
+
+[Table](../Table.md)
+
+## 可见性
+
+public
+
+## 说明
 
 
 

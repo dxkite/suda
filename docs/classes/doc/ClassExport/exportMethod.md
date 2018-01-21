@@ -1,8 +1,16 @@
 # 方法 `exportMethod`
 
-> *文件信息* D:\Server\Local\suda\script\doc\src\ClassExport.php: 42~53
-> 所属类 [ClassExport](../ClassExport.md)
+> *文件信息* D:\Server\Local\suda\script\doc\src\ClassExport.php: 60~72
 
+## 所属类 
+
+[ClassExport](../ClassExport.md)
+
+## 可见性
+
+public
+
+## 说明
 
 
 

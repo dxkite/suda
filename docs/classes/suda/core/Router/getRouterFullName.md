@@ -1,8 +1,16 @@
 # 方法 `getRouterFullName`
 
 > *文件信息* suda\core\Router.php: 220~225
-> 所属类 [Router](../Router.md)
 
+## 所属类 
+
+[Router](../Router.md)
+
+## 可见性
+
+public
+
+## 说明
 
 
 

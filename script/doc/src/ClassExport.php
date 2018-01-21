@@ -29,14 +29,32 @@ class ClassExport
     {
         $reflect=$this->reflect;
         $methods=$reflect->getMethods(\ReflectionMethod::IS_PUBLIC | \ReflectionMethod::IS_PROTECTED);
+
+        list($doc)=FunctionExport::getDoc($reflect->getDocComment());
+
         $classData= [
             'className'=>$reflect->getShortName(),
             'classFullName'=>$reflect->getName(),
+            'classDoc' => $doc,
         ];
         $methodPath=$path.'/'.$reflect->getName();
+
+        $template=new ExportTemplate;
+        $template->setSrc(__DIR__.'/../template/class.md');
+
+        
+        $destPath=$methodPath.'.md';
+        print 'doc  class '.$classData['className'].' --> '.$destPath ."\r\n";
+        $methodsInfo=[];
+
         foreach ($methods as $method) {
-            self::exportMethod($method, $classData, $methodPath);
+            $methodsInfo[$method->getName()]=self::exportMethod($method, $classData, $methodPath);
         }
+
+        $classData['methods']= $methodsInfo;
+        $template->setValues($classData);
+        $template->export($destPath);
+        return $destPath;
     }
     
     public function exportMethod($reflect, array $classData, string $path)
@@ -44,12 +62,13 @@ class ClassExport
         $template=new ExportTemplate;
         $template->setSrc(__DIR__.'/../template/method.md');
         $value=FunctionExport::getFunctionInfo($reflect);
+        $value['visibility'] = $reflect->isProtected ()? 'protected':'public';
         $value=array_merge($value, $classData);
         $template->setValues($value);
         $destPath=$path.'/'.$reflect->getName().'.md';
-        print 'doc  method'.$classData['className'].' -> '.$value['functionName'] .' --> '.$destPath ."\r\n";
+        print 'doc  method '.$classData['className'].' -> '.$value['functionName'] .' --> '.$destPath ."\r\n";
         $template->export($destPath);
-        return $destPath;
+        return $value;
     }
 
     public static function getUserDefinedClasses()

@@ -1,8 +1,16 @@
 # 方法 `getAll`
 
 > *文件信息* suda\tool\Pinyin.php: 50~61
-> 所属类 [Pinyin](../Pinyin.md)
 
+## 所属类 
+
+[Pinyin](../Pinyin.md)
+
+## 可见性
+
+public
+
+## 说明
 
 
 

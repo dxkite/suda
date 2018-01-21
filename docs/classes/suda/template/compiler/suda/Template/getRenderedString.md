@@ -1,8 +1,16 @@
 # 方法 `getRenderedString`
 
 > *文件信息* suda\template\compiler\suda\Template.php: 78~86
-> 所属类 [Template](../Template.md)
 
+## 所属类 
+
+[Template](../Template.md)
+
+## 可见性
+
+public
+
+## 说明
 
 获取渲染后的字符串
 

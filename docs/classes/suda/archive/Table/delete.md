@@ -1,8 +1,16 @@
 # 方法 `delete`
 
 > *文件信息* suda\archive\Table.php: 238~244
-> 所属类 [Table](../Table.md)
 
+## 所属类 
+
+[Table](../Table.md)
+
+## 可见性
+
+public
+
+## 说明
 
 根据条件获取列
 

@@ -1,8 +1,16 @@
 # 方法 `_absoluteCall`
 
 > *文件信息* suda\tool\Command.php: 135~150
-> 所属类 [Command](../Command.md)
 
+## 所属类 
+
+[Command](../Command.md)
+
+## 可见性
+
+public
+
+## 说明
 
 绝对调用函数，包括私有和保护函数
 

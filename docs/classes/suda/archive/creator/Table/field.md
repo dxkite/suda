@@ -1,8 +1,16 @@
 # 方法 `field`
 
 > *文件信息* suda\archive\creator\Table.php: 51~54
-> 所属类 [Table](../Table.md)
 
+## 所属类 
+
+[Table](../Table.md)
+
+## 可见性
+
+public
+
+## 说明
 
 新建表列
 

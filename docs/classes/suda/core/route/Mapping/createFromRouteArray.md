@@ -1,8 +1,16 @@
 # 方法 `createFromRouteArray`
 
 > *文件信息* suda\core\route\Mapping.php: 298~306
-> 所属类 [Mapping](../Mapping.md)
 
+## 所属类 
+
+[Mapping](../Mapping.md)
+
+## 可见性
+
+public
+
+## 说明
 
 
 

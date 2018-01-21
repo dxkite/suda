@@ -1,8 +1,16 @@
 # 方法 `zip`
 
 > *文件信息* suda\tool\ZipHelper.php: 56~66
-> 所属类 [ZipHelper](../ZipHelper.md)
 
+## 所属类 
+
+[ZipHelper](../ZipHelper.md)
+
+## 可见性
+
+public
+
+## 说明
 
 压缩目录到文件
 

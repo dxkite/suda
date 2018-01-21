@@ -1,8 +1,16 @@
 # 方法 `setCc`
 
 > *文件信息* suda\mail\message\Message.php: 49~54
-> 所属类 [Message](../Message.md)
 
+## 所属类 
+
+[Message](../Message.md)
+
+## 可见性
+
+public
+
+## 说明
 
 
 

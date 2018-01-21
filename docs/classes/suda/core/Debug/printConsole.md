@@ -1,8 +1,16 @@
 # 方法 `printConsole`
 
 > *文件信息* suda\core\Debug.php: 154~178
-> 所属类 [Debug](../Debug.md)
 
+## 所属类 
+
+[Debug](../Debug.md)
+
+## 可见性
+
+protected
+
+## 说明
 
 
 

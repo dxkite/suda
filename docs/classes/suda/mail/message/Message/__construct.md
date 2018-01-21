@@ -1,8 +1,16 @@
 # 方法 `__construct`
 
 > *文件信息* suda\mail\message\Message.php: 29~33
-> 所属类 [Message](../Message.md)
 
+## 所属类 
+
+[Message](../Message.md)
+
+## 可见性
+
+public
+
+## 说明
 
 
 

@@ -1,8 +1,16 @@
 # 方法 `checkPrimaryKey`
 
 > *文件信息* suda\archive\Table.php: 452~467
-> 所属类 [Table](../Table.md)
 
+## 所属类 
+
+[Table](../Table.md)
+
+## 可见性
+
+protected
+
+## 说明
 
 
 

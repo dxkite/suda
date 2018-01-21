@@ -1,8 +1,16 @@
 # 方法 `getBindType`
 
 > *文件信息* suda\archive\creator\InputValue.php: 38~41
-> 所属类 [InputValue](../InputValue.md)
 
+## 所属类 
+
+[InputValue](../InputValue.md)
+
+## 可见性
+
+public
+
+## 说明
 
 
 

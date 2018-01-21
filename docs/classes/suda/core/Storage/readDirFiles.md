@@ -1,8 +1,16 @@
 # 方法 `readDirFiles`
 
 > *文件信息* suda\core\Storage.php: 53~81
-> 所属类 [Storage](../Storage.md)
 
+## 所属类 
+
+[Storage](../Storage.md)
+
+## 可见性
+
+public
+
+## 说明
 
 
 

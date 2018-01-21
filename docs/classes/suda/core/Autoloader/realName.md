@@ -1,8 +1,16 @@
 # 方法 `realName`
 
 > *文件信息* suda\core\Autoloader.php: 23~26
-> 所属类 [Autoloader](../Autoloader.md)
 
+## 所属类 
+
+[Autoloader](../Autoloader.md)
+
+## 可见性
+
+public
+
+## 说明
 
 
 

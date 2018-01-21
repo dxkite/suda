@@ -1,8 +1,16 @@
 # 方法 `load`
 
 > *文件信息* suda\core\Hook.php: 29~32
-> 所属类 [Hook](../Hook.md)
 
+## 所属类 
+
+[Hook](../Hook.md)
+
+## 可见性
+
+public
+
+## 说明
 
 
 

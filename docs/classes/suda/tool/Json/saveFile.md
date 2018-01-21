@@ -1,8 +1,16 @@
 # 方法 `saveFile`
 
 > *文件信息* suda\tool\Json.php: 65~69
-> 所属类 [Json](../Json.md)
 
+## 所属类 
+
+[Json](../Json.md)
+
+## 可见性
+
+public
+
+## 说明
 
 
 

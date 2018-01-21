@@ -1,8 +1,16 @@
 # 方法 `getTemplates`
 
 > *文件信息* suda\template\compiler\suda\TemplateInfo.php: 66~80
-> 所属类 [TemplateInfo](../TemplateInfo.md)
 
+## 所属类 
+
+[TemplateInfo](../TemplateInfo.md)
+
+## 可见性
+
+public
+
+## 说明
 
 
 

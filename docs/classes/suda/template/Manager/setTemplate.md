@@ -1,8 +1,16 @@
 # 方法 `setTemplate`
 
 > *文件信息* suda\template\Manager.php: 88~94
-> 所属类 [Manager](../Manager.md)
 
+## 所属类 
+
+[Manager](../Manager.md)
+
+## 可见性
+
+public
+
+## 说明
 
 
 

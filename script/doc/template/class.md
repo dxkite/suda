@@ -8,3 +8,10 @@
 
 ## 方法
 
+@if (count($:methods([])))
+@foreach ($:methods as $name => $info )- [{{$info['visibility']}} - {{$name}}]({{$:className}}/{{$name}}.md)
+    {{$info['functionDoc']}}
+@endforeach
+@else
+无方法
+@endif

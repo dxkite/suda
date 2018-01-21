@@ -1,8 +1,16 @@
 # 方法 `valid`
 
 > *文件信息* suda\tool\Value.php: 119~122
-> 所属类 [Value](../Value.md)
 
+## 所属类 
+
+[Value](../Value.md)
+
+## 可见性
+
+public
+
+## 说明
 
 
 

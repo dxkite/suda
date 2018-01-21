@@ -1,8 +1,16 @@
 # 方法 `getThemePath`
 
 > *文件信息* suda\template\Manager.php: 222~226
-> 所属类 [Manager](../Manager.md)
 
+## 所属类 
+
+[Manager](../Manager.md)
+
+## 可见性
+
+public
+
+## 说明
 
 模块模板文件目录
 

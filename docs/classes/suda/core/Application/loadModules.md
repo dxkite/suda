@@ -1,8 +1,16 @@
 # 方法 `loadModules`
 
 > *文件信息* suda\core\Application.php: 127~168
-> 所属类 [Application](../Application.md)
 
+## 所属类 
+
+[Application](../Application.md)
+
+## 可见性
+
+protected
+
+## 说明
 
 载入模块
 

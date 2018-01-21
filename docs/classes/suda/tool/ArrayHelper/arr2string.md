@@ -1,8 +1,16 @@
 # 方法 `arr2string`
 
 > *文件信息* suda\tool\ArrayHelper.php: 150~173
-> 所属类 [ArrayHelper](../ArrayHelper.md)
 
+## 所属类 
+
+[ArrayHelper](../ArrayHelper.md)
+
+## 可见性
+
+protected
+
+## 说明
 
 
 

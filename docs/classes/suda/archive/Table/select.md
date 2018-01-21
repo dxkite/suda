@@ -1,8 +1,16 @@
 # 方法 `select`
 
 > *文件信息* suda\archive\Table.php: 203~216
-> 所属类 [Table](../Table.md)
 
+## 所属类 
+
+[Table](../Table.md)
+
+## 可见性
+
+public
+
+## 说明
 
 根据条件删除列
 

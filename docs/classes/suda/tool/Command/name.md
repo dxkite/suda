@@ -1,8 +1,16 @@
 # 方法 `name`
 
 > *文件信息* suda\tool\Command.php: 36~40
-> 所属类 [Command](../Command.md)
 
+## 所属类 
+
+[Command](../Command.md)
+
+## 可见性
+
+public
+
+## 说明
 
 
 

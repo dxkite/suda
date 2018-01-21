@@ -1,8 +1,16 @@
 # 方法 `matchRouterMap`
 
 > *文件信息* suda\core\Router.php: 178~188
-> 所属类 [Router](../Router.md)
 
+## 所属类 
+
+[Router](../Router.md)
+
+## 可见性
+
+protected
+
+## 说明
 
 
 

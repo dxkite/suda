@@ -1,8 +1,16 @@
 # 方法 `initResource`
 
 > *文件信息* suda\template\Manager.php: 420~438
-> 所属类 [Manager](../Manager.md)
 
+## 所属类 
+
+[Manager](../Manager.md)
+
+## 可见性
+
+public
+
+## 说明
 
 
 

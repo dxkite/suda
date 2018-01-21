@@ -1,8 +1,16 @@
 # 方法 `getFrom`
 
 > *文件信息* suda\mail\message\Message.php: 93~96
-> 所属类 [Message](../Message.md)
 
+## 所属类 
+
+[Message](../Message.md)
+
+## 可见性
+
+public
+
+## 说明
 
 
 

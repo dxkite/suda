@@ -1,8 +1,16 @@
 # 方法 `destroy`
 
 > *文件信息* suda\core\Session.php: 59~62
-> 所属类 [Session](../Session.md)
 
+## 所属类 
+
+[Session](../Session.md)
+
+## 可见性
+
+public
+
+## 说明
 
 
 

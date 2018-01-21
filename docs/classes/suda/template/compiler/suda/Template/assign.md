@@ -1,8 +1,16 @@
 # 方法 `assign`
 
 > *文件信息* suda\template\compiler\suda\Template.php: 127~131
-> 所属类 [Template](../Template.md)
 
+## 所属类 
+
+[Template](../Template.md)
+
+## 可见性
+
+public
+
+## 说明
 
 直接压入值
 

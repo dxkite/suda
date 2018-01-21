@@ -1,8 +1,16 @@
 # 方法 `export`
 
 > *文件信息* suda\tool\ArrayHelper.php: 123~138
-> 所属类 [ArrayHelper](../ArrayHelper.md)
 
+## 所属类 
+
+[ArrayHelper](../ArrayHelper.md)
+
+## 可见性
+
+public
+
+## 说明
 
 @ref 将数组导出
 

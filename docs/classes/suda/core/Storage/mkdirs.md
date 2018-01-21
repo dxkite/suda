@@ -1,8 +1,16 @@
 # 方法 `mkdirs`
 
 > *文件信息* suda\core\Storage.php: 22~35
-> 所属类 [Storage](../Storage.md)
 
+## 所属类 
+
+[Storage](../Storage.md)
+
+## 可见性
+
+public
+
+## 说明
 
 
 

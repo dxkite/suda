@@ -1,8 +1,16 @@
 # 方法 `getWants`
 
 > *文件信息* suda\archive\Table.php: 334~337
-> 所属类 [Table](../Table.md)
 
+## 所属类 
+
+[Table](../Table.md)
+
+## 可见性
+
+public
+
+## 说明
 
 获取设置了的列
 

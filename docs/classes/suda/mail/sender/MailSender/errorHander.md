@@ -1,8 +1,16 @@
 # 方法 `errorHander`
 
 > *文件信息* suda\mail\sender\MailSender.php: 40~45
-> 所属类 [MailSender](../MailSender.md)
 
+## 所属类 
+
+[MailSender](../MailSender.md)
+
+## 可见性
+
+protected
+
+## 说明
 
 
 

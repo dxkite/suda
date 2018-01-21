@@ -1,8 +1,16 @@
 # 方法 `getTrace`
 
 > *文件信息* : ~
-> 所属类 [TableException](../TableException.md)
 
+## 所属类 
+
+[TableException](../TableException.md)
+
+## 可见性
+
+public
+
+## 说明
 
 
 

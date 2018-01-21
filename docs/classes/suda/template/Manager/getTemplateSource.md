@@ -1,8 +1,16 @@
 # 方法 `getTemplateSource`
 
 > *文件信息* suda\template\Manager.php: 268~272
-> 所属类 [Manager](../Manager.md)
 
+## 所属类 
+
+[Manager](../Manager.md)
+
+## 可见性
+
+public
+
+## 说明
 
 获取模板源
 

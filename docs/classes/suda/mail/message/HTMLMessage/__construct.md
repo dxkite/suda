@@ -1,8 +1,16 @@
 # 方法 `__construct`
 
 > *文件信息* suda\mail\message\HTMLMessage.php: 21~25
-> 所属类 [HTMLMessage](../HTMLMessage.md)
 
+## 所属类 
+
+[HTMLMessage](../HTMLMessage.md)
+
+## 可见性
+
+public
+
+## 说明
 
 
 

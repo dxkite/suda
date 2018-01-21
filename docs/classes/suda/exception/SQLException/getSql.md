@@ -1,8 +1,16 @@
 # 方法 `getSql`
 
 > *文件信息* suda\exception\SQLException.php: 27~30
-> 所属类 [SQLException](../SQLException.md)
 
+## 所属类 
+
+[SQLException](../SQLException.md)
+
+## 可见性
+
+public
+
+## 说明
 
 
 

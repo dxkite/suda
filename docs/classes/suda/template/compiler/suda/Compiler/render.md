@@ -1,8 +1,16 @@
 # 方法 `render`
 
 > *文件信息* suda\template\compiler\suda\Compiler.php: 108~113
-> 所属类 [Compiler](../Compiler.md)
 
+## 所属类 
+
+[Compiler](../Compiler.md)
+
+## 可见性
+
+public
+
+## 说明
 
 
 

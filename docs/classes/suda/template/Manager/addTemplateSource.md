@@ -1,8 +1,16 @@
 # 方法 `addTemplateSource`
 
 > *文件信息* suda\template\Manager.php: 248~260
-> 所属类 [Manager](../Manager.md)
 
+## 所属类 
+
+[Manager](../Manager.md)
+
+## 可见性
+
+public
+
+## 说明
 
 设置模板源
 

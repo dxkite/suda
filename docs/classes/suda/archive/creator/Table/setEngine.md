@@ -1,8 +1,16 @@
 # 方法 `setEngine`
 
 > *文件信息* suda\archive\creator\Table.php: 177~181
-> 所属类 [Table](../Table.md)
 
+## 所属类 
+
+[Table](../Table.md)
+
+## 可见性
+
+public
+
+## 说明
 
 
 

@@ -1,8 +1,16 @@
 # 方法 `__call`
 
 > *文件信息* suda\tool\Value.php: 87~96
-> 所属类 [Value](../Value.md)
 
+## 所属类 
+
+[Value](../Value.md)
+
+## 可见性
+
+public
+
+## 说明
 
 @param $args
 

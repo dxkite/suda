@@ -1,8 +1,16 @@
 # 方法 `display`
 
 > *文件信息* suda\template\Manager.php: 136~139
-> 所属类 [Manager](../Manager.md)
 
+## 所属类 
+
+[Manager](../Manager.md)
+
+## 可见性
+
+public
+
+## 说明
 
 根据模板ID显示HTML模板
 

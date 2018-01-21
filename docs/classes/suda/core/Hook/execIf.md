@@ -1,8 +1,16 @@
 # 方法 `execIf`
 
 > *文件信息* suda\core\Hook.php: 85~95
-> 所属类 [Hook](../Hook.md)
 
+## 所属类 
+
+[Hook](../Hook.md)
+
+## 可见性
+
+public
+
+## 说明
 
 运行，遇到返回指定条件则停止并返回false
 
@@ -14,7 +22,7 @@
 |--------|-----|-------|-------|
 | name |  string | 无 | 无 |
 | args |  array | # Error> htmlspecialchars() expects parameter 1 to be string, array given
-	Cause By D:\Server\Local\suda\script\doc\template\method.md.tpl:17
+	Cause By D:\Server\Local\suda\script\doc\template\method.md.tpl:26
  | 无 |
 | condition |  boolean | 1 | 无 |
 

@@ -1,8 +1,16 @@
 # 方法 `setBcc`
 
 > *文件信息* suda\mail\message\Message.php: 56~61
-> 所属类 [HTMLMessage](../HTMLMessage.md)
 
+## 所属类 
+
+[HTMLMessage](../HTMLMessage.md)
+
+## 可见性
+
+public
+
+## 说明
 
 
 

@@ -1,8 +1,16 @@
 # 方法 `loadCompile`
 
 > *文件信息* suda\template\Manager.php: 72~85
-> 所属类 [Manager](../Manager.md)
 
+## 所属类 
+
+[Manager](../Manager.md)
+
+## 可见性
+
+public
+
+## 说明
 
 载入模板编译器
 

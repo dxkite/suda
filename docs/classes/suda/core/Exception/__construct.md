@@ -1,8 +1,16 @@
 # 方法 `__construct`
 
 > *文件信息* suda\core\Exception.php: 28~34
-> 所属类 [Exception](../Exception.md)
 
+## 所属类 
+
+[Exception](../Exception.md)
+
+## 可见性
+
+public
+
+## 说明
 
 
 

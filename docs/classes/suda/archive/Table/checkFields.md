@@ -1,8 +1,16 @@
 # 方法 `checkFields`
 
 > *文件信息* suda\archive\Table.php: 475~483
-> 所属类 [Table](../Table.md)
 
+## 所属类 
+
+[Table](../Table.md)
+
+## 可见性
+
+protected
+
+## 说明
 
 检查参数列
 

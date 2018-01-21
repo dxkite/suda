@@ -1,8 +1,16 @@
 # 方法 `addMapping`
 
 > *文件信息* suda\core\Router.php: 344~350
-> 所属类 [Router](../Router.md)
 
+## 所属类 
+
+[Router](../Router.md)
+
+## 可见性
+
+public
+
+## 说明
 
 
 

@@ -1,8 +1,16 @@
 # 方法 `assign`
 
 > *文件信息* suda\core\Config.php: 30~33
-> 所属类 [Config](../Config.md)
 
+## 所属类 
+
+[Config](../Config.md)
+
+## 可见性
+
+public
+
+## 说明
 
 
 

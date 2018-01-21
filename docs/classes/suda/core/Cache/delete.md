@@ -1,8 +1,16 @@
 # 方法 `delete`
 
 > *文件信息* suda\core\Cache.php: 81~84
-> 所属类 [Cache](../Cache.md)
 
+## 所属类 
+
+[Cache](../Cache.md)
+
+## 可见性
+
+public
+
+## 说明
 
 删除值
 

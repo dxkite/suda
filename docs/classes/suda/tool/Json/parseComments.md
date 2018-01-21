@@ -1,8 +1,16 @@
 # 方法 `parseComments`
 
 > *文件信息* suda\tool\Json.php: 80~83
-> 所属类 [Json](../Json.md)
 
+## 所属类 
+
+[Json](../Json.md)
+
+## 可见性
+
+protected
+
+## 说明
 
 
 

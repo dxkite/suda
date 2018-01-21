@@ -1,8 +1,16 @@
 # 方法 `getTableNames`
 
 > *文件信息* suda\archive\TableInstance.php: 59~65
-> 所属类 [TableInstance](../TableInstance.md)
 
+## 所属类 
+
+[TableInstance](../TableInstance.md)
+
+## 可见性
+
+protected
+
+## 说明
 
 
 

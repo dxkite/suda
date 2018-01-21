@@ -1,8 +1,16 @@
 # 方法 `setClasses`
 
 > *文件信息* D:\Server\Local\suda\script\doc\src\Summary.php: 59~62
-> 所属类 [Summary](../Summary.md)
 
+## 所属类 
+
+[Summary](../Summary.md)
+
+## 可见性
+
+public
+
+## 说明
 
 
 

@@ -1,8 +1,16 @@
 # 方法 `getFirst`
 
 > *文件信息* suda\tool\Pinyin.php: 64~79
-> 所属类 [Pinyin](../Pinyin.md)
 
+## 所属类 
+
+[Pinyin](../Pinyin.md)
+
+## 可见性
+
+public
+
+## 说明
 
 
 

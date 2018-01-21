@@ -1,8 +1,16 @@
 # 方法 `sigHandler`
 
 > *文件信息* suda\core\System.php: 185~199
-> 所属类 [System](../System.md)
 
+## 所属类 
+
+[System](../System.md)
+
+## 可见性
+
+public
+
+## 说明
 
 
 

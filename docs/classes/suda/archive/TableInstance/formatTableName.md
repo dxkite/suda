@@ -1,8 +1,16 @@
 # 方法 `formatTableName`
 
 > *文件信息* suda\archive\TableInstance.php: 83~86
-> 所属类 [TableInstance](../TableInstance.md)
 
+## 所属类 
+
+[TableInstance](../TableInstance.md)
+
+## 可见性
+
+protected
+
+## 说明
 
 
 

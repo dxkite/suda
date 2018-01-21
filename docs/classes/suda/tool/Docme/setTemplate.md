@@ -1,8 +1,16 @@
 # 方法 `setTemplate`
 
 > *文件信息* suda\tool\Docme.php: 32~34
-> 所属类 [Docme](../Docme.md)
 
+## 所属类 
+
+[Docme](../Docme.md)
+
+## 可见性
+
+public
+
+## 说明
 
 
 

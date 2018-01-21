@@ -1,8 +1,16 @@
 # 方法 `setBody`
 
 > *文件信息* suda\mail\message\Message.php: 69~73
-> 所属类 [Message](../Message.md)
 
+## 所属类 
+
+[Message](../Message.md)
+
+## 可见性
+
+public
+
+## 说明
 
 
 

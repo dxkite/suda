@@ -1,8 +1,16 @@
 # 方法 `theme`
 
 > *文件信息* suda\template\Manager.php: 105~114
-> 所属类 [Manager](../Manager.md)
 
+## 所属类 
+
+[Manager](../Manager.md)
+
+## 可见性
+
+public
+
+## 说明
 
 获取/设置模板样式
 

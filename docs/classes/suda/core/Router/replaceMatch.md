@@ -1,8 +1,16 @@
 # 方法 `replaceMatch`
 
 > *文件信息* suda\core\Router.php: 381~390
-> 所属类 [Router](../Router.md)
 
+## 所属类 
+
+[Router](../Router.md)
+
+## 可见性
+
+public
+
+## 说明
 
 替换匹配表达式
 

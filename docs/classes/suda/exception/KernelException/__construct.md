@@ -1,8 +1,16 @@
 # 方法 `__construct`
 
 > *文件信息* : ~
-> 所属类 [KernelException](../KernelException.md)
 
+## 所属类 
+
+[KernelException](../KernelException.md)
+
+## 可见性
+
+public
+
+## 说明
 
 
 

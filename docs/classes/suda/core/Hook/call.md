@@ -1,8 +1,16 @@
 # 方法 `call`
 
 > *文件信息* suda\core\Hook.php: 123~126
-> 所属类 [Hook](../Hook.md)
 
+## 所属类 
+
+[Hook](../Hook.md)
+
+## 可见性
+
+protected
+
+## 说明
 
 
 

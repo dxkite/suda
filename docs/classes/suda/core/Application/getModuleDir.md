@@ -1,8 +1,16 @@
 # 方法 `getModuleDir`
 
 > *文件信息* suda\core\Application.php: 363~370
-> 所属类 [Application](../Application.md)
 
+## 所属类 
+
+[Application](../Application.md)
+
+## 可见性
+
+public
+
+## 说明
 
 获取模块所在的文件夹名
 

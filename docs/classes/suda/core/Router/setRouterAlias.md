@@ -1,8 +1,16 @@
 # 方法 `setRouterAlias`
 
 > *文件信息* suda\core\Router.php: 302~309
-> 所属类 [Router](../Router.md)
 
+## 所属类 
+
+[Router](../Router.md)
+
+## 可见性
+
+public
+
+## 说明
 
 设置路由别名
 

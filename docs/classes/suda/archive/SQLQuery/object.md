@@ -1,8 +1,16 @@
 # 方法 `object`
 
 > *文件信息* suda\archive\SQLQuery.php: 301~305
-> 所属类 [SQLQuery](../SQLQuery.md)
 
+## 所属类 
+
+[SQLQuery](../SQLQuery.md)
+
+## 可见性
+
+public
+
+## 说明
 
 添加列处理类
 

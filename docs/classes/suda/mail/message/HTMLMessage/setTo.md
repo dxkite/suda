@@ -1,8 +1,16 @@
 # 方法 `setTo`
 
 > *文件信息* suda\mail\message\Message.php: 42~47
-> 所属类 [HTMLMessage](../HTMLMessage.md)
 
+## 所属类 
+
+[HTMLMessage](../HTMLMessage.md)
+
+## 可见性
+
+public
+
+## 说明
 
 
 

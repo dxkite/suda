@@ -1,8 +1,16 @@
 # 方法 `set`
 
 > *文件信息* suda\core\Locale.php: 56~60
-> 所属类 [Locale](../Locale.md)
 
+## 所属类 
+
+[Locale](../Locale.md)
+
+## 可见性
+
+public
+
+## 说明
 
 设置本地化语言类型
 

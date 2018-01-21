@@ -1,8 +1,16 @@
 # 方法 `clear`
 
 > *文件信息* suda\core\Cache.php: 119~121
-> 所属类 [Cache](../Cache.md)
 
+## 所属类 
+
+[Cache](../Cache.md)
+
+## 可见性
+
+public
+
+## 说明
 
 
 

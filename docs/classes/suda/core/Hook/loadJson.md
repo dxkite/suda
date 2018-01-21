@@ -1,8 +1,16 @@
 # 方法 `loadJson`
 
 > *文件信息* suda\core\Hook.php: 23~27
-> 所属类 [Hook](../Hook.md)
 
+## 所属类 
+
+[Hook](../Hook.md)
+
+## 可见性
+
+public
+
+## 说明
 
 
 

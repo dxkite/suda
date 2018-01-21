@@ -1,8 +1,16 @@
 # 方法 `parseName`
 
 > *文件信息* suda\core\Router.php: 193~218
-> 所属类 [Router](../Router.md)
 
+## 所属类 
+
+[Router](../Router.md)
+
+## 可见性
+
+public
+
+## 说明
 
 解析模板名
 

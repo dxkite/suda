@@ -1,8 +1,16 @@
 # 方法 `getUserDefinedFunctions`
 
 > *文件信息* D:\Server\Local\suda\script\doc\src\FunctionExport.php: 40~43
-> 所属类 [FunctionExport](../FunctionExport.md)
 
+## 所属类 
+
+[FunctionExport](../FunctionExport.md)
+
+## 可见性
+
+public
+
+## 说明
 
 
 

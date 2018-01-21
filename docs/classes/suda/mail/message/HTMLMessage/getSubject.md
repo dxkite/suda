@@ -1,8 +1,16 @@
 # 方法 `getSubject`
 
 > *文件信息* suda\mail\message\Message.php: 98~101
-> 所属类 [HTMLMessage](../HTMLMessage.md)
 
+## 所属类 
+
+[HTMLMessage](../HTMLMessage.md)
+
+## 可见性
+
+public
+
+## 说明
 
 
 

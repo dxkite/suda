@@ -1,8 +1,16 @@
 # 方法 `_etag`
 
 > *文件信息* suda\core\Response.php: 235~241
-> 所属类 [Response](../Response.md)
 
+## 所属类 
+
+[Response](../Response.md)
+
+## 可见性
+
+protected
+
+## 说明
 
 
 

@@ -1,8 +1,16 @@
 # 方法 `getCode`
 
 > *文件信息* : ~
-> 所属类 [Exception](../Exception.md)
 
+## 所属类 
+
+[Exception](../Exception.md)
+
+## 可见性
+
+public
+
+## 说明
 
 
 
