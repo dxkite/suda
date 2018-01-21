@@ -243,7 +243,7 @@ final class Request
 
     protected static function parseServer()
     {
-        list(self::$url, $queryString, $phpSelf) = static::parseUrl($_SERVER['REQUEST_URI']);
+        list(self::$url, $queryString, $phpSelf) = static::parseUrl($_SERVER['REQUEST_URI']??'/');
 
         if ($queryString) {
             if (isset($queryString)) {
