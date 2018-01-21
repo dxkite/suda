@@ -36,9 +36,10 @@ class Query extends SQLQuery
             $bind='';
             $names='';
             foreach ($values as $name => $value) {
-                $bind.=':'.$name.',';
+                $bindName=$name.count($binds);
+                $bind.=':'.$bindName.',';
                 $names.='`'.$name.'`,';
-                $binds[$name]=static::value($name,$value);
+                $binds[$bindName]=static::value($name,$value);
             }
             $sql='INSERT INTO `'.$table.'` ('.trim($names, ',').') VALUES ('.trim($bind, ',').');';
         }
