@@ -29,11 +29,23 @@ class FunctionExport
     {
         $template=new ExportTemplate;
         $template->setSrc(__DIR__.'/../template/function.md');
+        $value=static::getFunctionInfo($this->reflect);
+        $template->setValues($value);
+        $destPath=$path.'/functions/'.$this->reflect->getName().'.md';
+        print 'doc function '.$value['functionName'] .' --> '.$destPath ."\r\n";
+        $template->export($destPath);
+        return $destPath;
+    }
+
+    public static function getUserDefinedFunctions()
+    {
+        return get_defined_functions()['user'];
+    }
+
+    public static function getFunctionInfo($reflect) {
         $value=[];
-        $reflect=$this->reflect;
-        $value['functionName']=$this->reflect->getName();
-        list($comment, $params, $return)= static::getDoc($this->reflect->getDocComment());
-        
+        $value['functionName']=$reflect->getName();
+        list($comment, $params, $return)= static::getDoc($reflect->getDocComment());
         $value['functionDoc']=$comment;
         $value['fileName']= Summary::path($reflect->getFileName());
         $value['lineStart']= $reflect->getStartLine();
@@ -64,27 +76,16 @@ class FunctionExport
         }
         $value['params']=$paramValues;
         $value['return']=$return;
-        $template->setValues($value);
-        $destPath=$path.'/functions/'.$this->reflect->getName().'.md';
-        print 'doc function '.$value['functionName'] .' --> '.$destPath ."\r\n";
-        $template->export($destPath);
-        return $destPath;
-    }
-
-    public static function getUserDefinedFunctions()
-    {
-        return get_defined_functions()['user'];
+        return $value;
     }
 
     public static function getDoc(string $docs)
     {
         $docs= trim(preg_replace('/^\/\*\*(.+?)\*\//ms', '$1', $docs));
         $lines=preg_split('/\r?\n/', $docs);
-
         $params=[];
         $return=[];
         $docs=[];
-        
         foreach ($lines as $index=> $line) {
             $line= substr(ltrim(trim($line), '*'), 1);
             if (preg_match('/^@param\s+(.+?)\s+(.+?)(\s+(.+))?$/', $line, $match)) {

@@ -82,7 +82,7 @@ function use_namespace(string $namespace)
  *
  * @param [type] $name 路由名称
  * @param [type] $values 路由的值
- * @return void
+ * @return string 生成的URL
  */
 function u($name=null, $values=null)
 {
