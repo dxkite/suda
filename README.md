@@ -54,8 +54,7 @@ cp -R ./suda/system/resource/project/* .
 
 ## 文档说明
 
-[Document](docs/readme.md)    
-[Route](docs/tools/router.md)
+[自动文档](docs/summary.md)    
 
 ## Suggest Application Modules 
 - function modules
