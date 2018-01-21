@@ -16,9 +16,12 @@
 
 require_once __DIR__ .'/../system/suda-console.php';
 
-Autoloader::addIncludePath(__DIR__.'/doc','doc');
+Autoloader::addIncludePath(__DIR__.'/doc/src','doc');
 
-$exportClass = [
-    suda\archive\Table::class,
-];
 
+$summary=new doc\Summary;
+
+$summary->include(SYSTEM_DIR.'/src');
+$summary->setFunctions(doc\FunctionExport::getUserDefinedFunctions());
+$summary->setClasses(doc\ClassExport::getUserDefinedClasses());
+$summary->export(__DIR__.'/../docs');

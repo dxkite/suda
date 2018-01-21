@@ -93,6 +93,10 @@ class Manager
         return self::$compiler->setBase($template);
     }
 
+    public static function getCompiler() {
+        return static::$compiler;
+    }
+
     /**
      * 获取/设置模板样式
      * @param string|null $theme
@@ -157,6 +161,7 @@ class Manager
         }
         return self::displayFile($viewpath, $name);
     }
+
     /**
      * 根据路径显示模板
      *

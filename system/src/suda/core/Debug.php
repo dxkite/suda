@@ -51,11 +51,11 @@ class Debug
         self::$file=APP_LOG.'/tmps/'.self::$hash.'.tmp';
         Storage::mkdirs(dirname(self::$file));
         touch(self::$file);
-        file_put_contents(self::$file, '====='.self::$hash.'====='.$request->ip().'====='.(conf('debug',defined('DEBUG') && DEBUG)?'debug':'normal')."=====\r\n",FILE_APPEND);
-        file_put_contents(self::$file,self::printHead()."\r\n",FILE_APPEND);
+        file_put_contents(self::$file, '====='.self::$hash.'====='.$request->ip().'====='.(conf('debug', defined('DEBUG') && DEBUG)?'debug':'normal')."=====\r\n", FILE_APPEND);
+        file_put_contents(self::$file, self::printHead()."\r\n", FILE_APPEND);
     }
 
-    public static function time(string $name,string $type='info')
+    public static function time(string $name, string $type='info')
     {
         self::$time[$name]=['time'=>microtime(true),'type'=>$type];
     }
@@ -114,13 +114,13 @@ class Debug
         }
     }
 
-    protected static function printTrace(array $backtrace, bool $str=true,string $perfix='')
+    protected static function printTrace(array $backtrace, bool $str=true, string $perfix='')
     {
         $traces_console=[];
         foreach ($backtrace as $trace) {
             $print_d = null;
             if (isset($trace['file'])) {
-                $print_d=$trace['file'].'#'.$trace['line'];
+                $print_d=$trace['file'].':'.$trace['line'];
             }
             if (isset($trace['class'])) {
                 $function = $trace['class'].$trace['type'].$trace['function'];
@@ -144,7 +144,7 @@ class Debug
         if ($str) {
             $str='';
             foreach ($traces_console as $trace_info) {
-                $str.=$perfix.preg_replace('/\n/',"\n".$perfix."\t",$trace_info)."\r\n";
+                $str.=$perfix.preg_replace('/\n/', "\n".$perfix."\t", $trace_info)."\r\n";
             }
             return $str;
         }
@@ -157,11 +157,23 @@ class Debug
         $file=$e->getFile();
         $error=$e->getMessage();
         $backtrace=$e->getBacktrace();
-        $traces_console=self::printTrace($backtrace, false);
-        print "\033[31m# Error>\033[33m $error\033[0m\r\n";
-        print "\t\033[34mCause By $file:$line\033[0m\r\n";
-        foreach ($traces_console as $trace_info) {
-            print "\033[36m$trace_info\033[0m\r\n";
+        $traces_console=self::printTrace($backtrace, true, "\t\t=> ");
+        if (IS_LINUX) {
+            print "\033[31m# Error>\033[33m $error\033[0m\r\n";
+            print "\t\033[34mCause By $file:$line\033[0m\r\n";
+            if (is_array($traces_console)) {
+                foreach ($traces_console as $trace_info) {
+                    print "\033[36m$trace_info\033[0m\r\n";
+                }
+            }
+        } else {
+            print "# Error> $error\r\n";
+            print "\tCause By $file:$line\r\n";
+            if (is_array($traces_console)) {
+                foreach ($traces_console as $trace_info) {
+                    print "$trace_info\r\n";
+                }
+            }
         }
     }
 
@@ -179,7 +191,8 @@ class Debug
         return self::displayLog(['line'=>$line,'file'=>$file,'backtrace'=>$backtrace,'name'=>$e->getName(),'message'=>$e->getMessage()]);
     }
     
-    protected static function displayLog(array $logarray){
+    protected static function displayLog(array $logarray)
+    {
         
         /* ---- 外部变量 ----- */
         $line=$logarray['line'];
@@ -279,9 +292,9 @@ class Debug
         $info=self::getInfo();
         $mem=self::memshow($info['memory'], 4);
         $peo=ceil(1/$time);
-        $all=self::memshow($info['memory']*$peo,4);
+        $all=self::memshow($info['memory']*$peo, 4);
         file_put_contents(self::$latest, $body, FILE_APPEND);
-        file_put_contents(self::$latest,"====={$hash}====={$time}====={$mem}====={$peo}:{$all}=====\r\n\r\n",FILE_APPEND);
+        file_put_contents(self::$latest, "====={$hash}====={$time}====={$mem}====={$peo}:{$all}=====\r\n\r\n", FILE_APPEND);
         unlink(self::$file);
         self::$saved=true;
         if (defined('LOG_JSON') && LOG_JSON) {
@@ -300,16 +313,16 @@ class Debug
 
     private static function writeLine(array $log)
     {
-        if(self::$saved || is_null(self::$file)){
+        if (self::$saved || is_null(self::$file)) {
             // 无法记录错误时直接显示错误
             return self::displayLog($log);
         }
         
-        $str="\t[".number_format($log['time'], 10).'s:'.self::memshow($log['mem'], 2).']'."\t".$log['level'].'>In '.$log['file'].'#'.$log['line']."\t\t".$log['name']."\t".$log['message'];
-        $str=preg_replace('/\n/',"\n\t\t",$str)."\r\n";
+        $str="\t[".number_format($log['time'], 10).'s:'.self::memshow($log['mem'], 2).']'."\t".$log['level'].'>In '.$log['file'].':'.$log['line']."\t\t".$log['name']."\t".$log['message'];
+        $str=preg_replace('/\n/', "\n\t\t", $str)."\r\n";
         // 添加调用栈 高级或者同级则记录
         if ((defined('LOG_FILE_APPEND') && LOG_FILE_APPEND) && self::compareLevel($log['level'], conf('debug-backtrace', Debug::ERROR)) >= 0) {
-            $str.=self::printTrace($log['backtrace'],true,"\t\t=> ")."\r\n";
+            $str.=self::printTrace($log['backtrace'], true, "\t\t=> ")."\r\n";
         }
         return file_put_contents(self::$file, $str, FILE_APPEND);
     }
@@ -358,7 +371,8 @@ class Debug
     }
 
 
-    public static function die(string $message) { 
+    public static function die(string $message)
+    {
         $backtrace=debug_backtrace();
         $offset=1;
         if (!isset($backtrace[$offset]['file'])) {
@@ -366,7 +380,7 @@ class Debug
         }
         $call=(isset($backtrace[$offset]['class'])?$backtrace[$offset]['class'].'#':'').$backtrace[$offset]['function'];
         self::_loginfo('die', $call, $message, $backtrace[$offset]['file'] ??'unknown', $backtrace[$offset]['line'] ?? 0, $backtrace);
-        die($message);    
+        die($message);
     }
     
     public static function __callStatic($method, $args)
@@ -413,14 +427,15 @@ class Debug
      *
      * @return void
      */
-    private static function checkSize() {
+    private static function checkSize()
+    {
         $file=self::$latest;
         if (file_exists($file)  && filesize($file) > self::MAX_LOG_SIZE) {
             $path=preg_replace('/[\\\\]+/', '/', Storage::path(APP_LOG).'/'.date('Y-m-d').'.zip');
             $zip = new ZipArchive;
             $res = $zip->open($path, ZipArchive::CREATE);
             if ($res === true) {
-                $zip->addFile($file,date('Y-m-d'). '-'. ($zip->numFiles +1).'.log');
+                $zip->addFile($file, date('Y-m-d'). '-'. ($zip->numFiles +1).'.log');
                 $zip->close();
                 unlink($file);
             } else {
