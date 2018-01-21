@@ -1,0 +1,20 @@
+# 方法 `comment`
+
+> *文件信息* suda\archive\creator\Field.php: 57~61
+> 所属类 [Field](../Field.md)
+
+
+
+
+## 参数
+
+
+| 参数名 | 类型 | 默认值 | 说明 |
+|--------|-----|-------|-------|
+| comment |  string | 无 | 无 |
+
+
+
+## 返回值
+
+无返回值

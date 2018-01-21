@@ -44,7 +44,10 @@ class Summary
     public function export(string $path)
     {
         foreach ($this->exportFunction as $function) {
-            (new FunctionExport($function))->export($path);
+            (new FunctionExport($function))->export($path.'/functions');
+        }
+        foreach ($this->exportClass as $class) {
+            (new ClassExport($class))->export($path.'/classes');
         }
     }
 

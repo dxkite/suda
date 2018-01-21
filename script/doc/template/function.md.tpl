@@ -3,8 +3,7 @@
 > *文件信息* <?php echo htmlspecialchars(__($this->get("fileName",'未知文件'))); ?>: <?php echo htmlspecialchars(__($this->get("lineStart",'未知'))); ?>~<?php echo htmlspecialchars(__($this->get("lineEnd",'未知'))); ?>
 
 
-<?php echo htmlspecialchars(__($this->get("functionDoc",'该函数暂时无注释文档'))); ?>
-
+<?php echo $this->get("functionDoc",'该函数暂时无注释文档'); ?>
 
 
 ## 参数

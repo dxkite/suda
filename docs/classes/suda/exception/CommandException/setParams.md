@@ -1,0 +1,20 @@
+# 方法 `setParams`
+
+> *文件信息* suda\exception\CommandException.php: 39~43
+> 所属类 [CommandException](../CommandException.md)
+
+
+
+
+## 参数
+
+
+| 参数名 | 类型 | 默认值 | 说明 |
+|--------|-----|-------|-------|
+| params |  array | 无 | 无 |
+
+
+
+## 返回值
+
+无返回值

@@ -31,7 +31,7 @@ class FunctionExport
         $template->setSrc(__DIR__.'/../template/function.md');
         $value=static::getFunctionInfo($this->reflect);
         $template->setValues($value);
-        $destPath=$path.'/functions/'.$this->reflect->getName().'.md';
+        $destPath=$path.'/'.$this->reflect->getName().'.md';
         print 'doc function '.$value['functionName'] .' --> '.$destPath ."\r\n";
         $template->export($destPath);
         return $destPath;

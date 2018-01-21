@@ -1,0 +1,17 @@
+# 方法 `setParam`
+
+> *文件信息* suda\core\route\Mapping.php: 131~135
+> 所属类 [Mapping](../Mapping.md)
+
+
+
+
+## 参数
+
+
+无参数
+
+
+## 返回值
+
+无返回值

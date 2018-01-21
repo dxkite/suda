@@ -13,9 +13,8 @@
 ### 动态方法
 
 ```
-类名-&gt;方法名
+类名->方法名
 ```
-
 
 
 ## 参数
@@ -25,7 +24,7 @@
 |--------|-----|-------|-------|
 | command |  [type] | 无 |  可调用的对象 |
 | params |  array | # Error> htmlspecialchars() expects parameter 1 to be string, array given
-	Cause By D:\Server\Local\suda\script\doc\template\function.md.tpl:16
+	Cause By D:\Server\Local\suda\script\doc\template\function.md.tpl:15
  |  调用时的参数 |
 
 

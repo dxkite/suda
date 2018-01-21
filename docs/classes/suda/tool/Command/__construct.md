@@ -1,0 +1,22 @@
+# 方法 `__construct`
+
+> *文件信息* suda\tool\Command.php: 29~34
+> 所属类 [Command](../Command.md)
+
+
+
+
+## 参数
+
+
+| 参数名 | 类型 | 默认值 | 说明 |
+|--------|-----|-------|-------|
+| params |  array | # Error> htmlspecialchars() expects parameter 1 to be string, array given
+	Cause By D:\Server\Local\suda\script\doc\template\method.md.tpl:17
+ | 无 |
+
+
+
+## 返回值
+
+无返回值

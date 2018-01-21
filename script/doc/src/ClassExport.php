@@ -18,13 +18,40 @@ namespace doc;
 
 class ClassExport
 {
+    protected $reflect;
+
     public function __construct(string $class)
     {
+        $this->reflect=new \ReflectionClass($class);
     }
+
     public function export(string $path)
     {
+        $reflect=$this->reflect;
+        $methods=$reflect->getMethods(\ReflectionMethod::IS_PUBLIC | \ReflectionMethod::IS_PROTECTED);
+        $classData= [
+            'className'=>$reflect->getShortName(),
+            'classFullName'=>$reflect->getName(),
+        ];
+        $methodPath=$path.'/'.$reflect->getName();
+        foreach ($methods as $method) {
+            self::exportMethod($method, $classData, $methodPath);
+        }
     }
     
+    public function exportMethod($reflect, array $classData, string $path)
+    {
+        $template=new ExportTemplate;
+        $template->setSrc(__DIR__.'/../template/method.md');
+        $value=FunctionExport::getFunctionInfo($reflect);
+        $value=array_merge($value, $classData);
+        $template->setValues($value);
+        $destPath=$path.'/'.$reflect->getName().'.md';
+        print 'doc  method'.$classData['className'].' -> '.$value['functionName'] .' --> '.$destPath ."\r\n";
+        $template->export($destPath);
+        return $destPath;
+    }
+
     public static function getUserDefinedClasses()
     {
         $classes=get_declared_classes();

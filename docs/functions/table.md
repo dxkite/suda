@@ -6,12 +6,11 @@
 如：
 ```json
 {
-   &quot;table&quot;:{
-       &quot;user&quot;:&quot;classNameOfUserTable&quot;
+   "table":{
+       "user":"classNameOfUserTable"
     }
 }
 ```
-
 
 
 ## 参数
