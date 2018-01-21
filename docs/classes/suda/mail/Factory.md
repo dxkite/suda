@@ -11,4 +11,4 @@
 
 | 可见性 | 方法名 | 说明 |
 |--------|-------|------|
-| public|[sender](Factory/sender.md) |  |
+| public static|[sender](Factory/sender.md) |  |

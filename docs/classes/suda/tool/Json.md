@@ -11,10 +11,10 @@
 
 | 可见性 | 方法名 | 说明 |
 |--------|-------|------|
-| public|[decodeEx](Json/decodeEx.md) |  |
-| public|[decode](Json/decode.md) |  |
-| public|[encode](Json/encode.md) |  |
-| public|[parseFile](Json/parseFile.md) |  |
-| public|[saveFile](Json/saveFile.md) |  |
-| public|[loadFile](Json/loadFile.md) |  |
-| protected|[parseComments](Json/parseComments.md) |  |
+| public static|[decodeEx](Json/decodeEx.md) |  |
+| public static|[decode](Json/decode.md) |  |
+| public static|[encode](Json/encode.md) |  |
+| public static|[parseFile](Json/parseFile.md) |  |
+| public static|[saveFile](Json/saveFile.md) |  |
+| public static|[loadFile](Json/loadFile.md) |  |
+| protected static|[parseComments](Json/parseComments.md) |  |

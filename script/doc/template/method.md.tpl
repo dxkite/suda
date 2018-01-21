@@ -9,7 +9,7 @@
 
 ## 可见性
 
-<?php echo htmlspecialchars(__($this->get("visibility"))); ?>
+<?php echo htmlspecialchars(__($this->get("abstract").' '));  echo htmlspecialchars(__($this->get("visibility").' '));  echo htmlspecialchars(__($this->get("static"))); ?>
 
 
 ## 说明

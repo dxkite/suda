@@ -13,10 +13,10 @@ use markdown style to doc this.
 
 | 可见性 | 方法名 | 说明 |
 |--------|-------|------|
-| public|[__construct](Docme/__construct.md) |  |
-| public|[setTemplate](Docme/setTemplate.md) |  |
-| public|[info](Docme/info.md) |  |
-| public|[export](Docme/export.md) |  |
-| protected|[parseDoc](Docme/parseDoc.md) |  |
-| protected|[docClass](Docme/docClass.md) |  |
-| public|[__toString](Docme/__toString.md) |  |
+| public |[__construct](Docme/__construct.md) |  |
+| public |[setTemplate](Docme/setTemplate.md) |  |
+| public |[info](Docme/info.md) |  |
+| public |[export](Docme/export.md) |  |
+| protected |[parseDoc](Docme/parseDoc.md) |  |
+| protected |[docClass](Docme/docClass.md) |  |
+| public |[__toString](Docme/__toString.md) |  |

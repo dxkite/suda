@@ -1,6 +1,6 @@
 # 方法 `export`
 
-> *文件信息* D:\Server\Local\suda\script\doc\src\Summary.php: 44~52
+> *文件信息* D:\Server\Local\suda\script\doc\src\Summary.php: 44~68
 
 ## 所属类 
 
@@ -8,7 +8,7 @@
 
 ## 可见性
 
-public
+ public 
 
 ## 说明
 

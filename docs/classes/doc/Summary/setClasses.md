@@ -1,6 +1,6 @@
 # 方法 `setClasses`
 
-> *文件信息* D:\Server\Local\suda\script\doc\src\Summary.php: 59~62
+> *文件信息* D:\Server\Local\suda\script\doc\src\Summary.php: 75~78
 
 ## 所属类 
 
@@ -8,7 +8,7 @@
 
 ## 可见性
 
-public
+ public 
 
 ## 说明
 

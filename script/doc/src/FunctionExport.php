@@ -34,7 +34,7 @@ class FunctionExport
         $destPath=$path.'/'.$this->reflect->getName().'.md';
         print 'doc function '.$value['functionName'] .' --> '.$destPath ."\r\n";
         $template->export($destPath);
-        return $destPath;
+        return $value;
     }
 
     public static function getUserDefinedFunctions()

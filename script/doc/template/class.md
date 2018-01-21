@@ -11,7 +11,7 @@
 @if (count($:methods([])))
 | 可见性 | 方法名 | 说明 |
 |--------|-------|------|
-@foreach ($:methods as $name => $info )| {{$info['visibility']}}|[{{$name}}]({{$:className}}/{{$name}}.md) | {{$info['functionDoc']??'无'}} |
+@foreach ($:methods as $name => $info )|{{$info['abstract'] .' '}} {{$info['visibility'].' ' }} {{$info['static']}}|[{{$name}}]({{$:className}}/{{$name}}.md) | {{$info['functionDoc']??'无'}} |
 @endforeach @else
 无方法
 @endif

@@ -8,7 +8,7 @@
 
 ## 可见性
 
-protected
+ protected static
 
 ## 说明
 

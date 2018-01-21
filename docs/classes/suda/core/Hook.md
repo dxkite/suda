@@ -11,16 +11,16 @@
 
 | 可见性 | 方法名 | 说明 |
 |--------|-------|------|
-| public|[loadJson](Hook/loadJson.md) |  |
-| public|[load](Hook/load.md) |  |
-| public|[listen](Hook/listen.md) |  |
-| public|[register](Hook/register.md) |  |
-| public|[add](Hook/add.md) |  |
-| public|[addTop](Hook/addTop.md) |  |
-| public|[remove](Hook/remove.md) |  |
-| public|[exec](Hook/exec.md) |  |
-| public|[execIf](Hook/execIf.md) | 运行，遇到返回指定条件则停止并返回false  |
-| public|[execNotNull](Hook/execNotNull.md) |  |
-| public|[execTop](Hook/execTop.md) |  |
-| public|[execTail](Hook/execTail.md) |  |
-| protected|[call](Hook/call.md) |  |
+| public static|[loadJson](Hook/loadJson.md) |  |
+| public static|[load](Hook/load.md) |  |
+| public static|[listen](Hook/listen.md) |  |
+| public static|[register](Hook/register.md) |  |
+| public static|[add](Hook/add.md) |  |
+| public static|[addTop](Hook/addTop.md) |  |
+| public static|[remove](Hook/remove.md) |  |
+| public static|[exec](Hook/exec.md) |  |
+| public static|[execIf](Hook/execIf.md) | 运行，遇到返回指定条件则停止并返回false |
+| public static|[execNotNull](Hook/execNotNull.md) |  |
+| public static|[execTop](Hook/execTop.md) |  |
+| public static|[execTail](Hook/execTail.md) |  |
+| protected static|[call](Hook/call.md) |  |

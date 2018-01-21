@@ -8,7 +8,7 @@
 
 ## 可见性
 
-public
+abstract public 
 
 ## 说明
 

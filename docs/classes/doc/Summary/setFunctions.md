@@ -1,6 +1,6 @@
 # 方法 `setFunctions`
 
-> *文件信息* D:\Server\Local\suda\script\doc\src\Summary.php: 54~57
+> *文件信息* D:\Server\Local\suda\script\doc\src\Summary.php: 70~73
 
 ## 所属类 
 
@@ -8,7 +8,7 @@
 
 ## 可见性
 
-public
+ public 
 
 ## 说明
 

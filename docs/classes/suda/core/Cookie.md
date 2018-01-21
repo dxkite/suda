@@ -12,10 +12,10 @@ Class Cookie
 
 | 可见性 | 方法名 | 说明 |
 |--------|-------|------|
-| public|[set](Cookie/set.md) |  |
-| public|[unset](Cookie/unset.md) |  |
-| public|[delete](Cookie/delete.md) |  |
-| public|[has](Cookie/has.md) |  |
-| public|[get](Cookie/get.md) | 获取Cookie的值 |
-| public|[sendCookies](Cookie/sendCookies.md) | 发送Cookie至浏览器 |
-| public|[parseFromString](Cookie/parseFromString.md) | 从字符串设置cookie |
+| public static|[set](Cookie/set.md) |  |
+| public static|[unset](Cookie/unset.md) |  |
+| public static|[delete](Cookie/delete.md) |  |
+| public static|[has](Cookie/has.md) |  |
+| public static|[get](Cookie/get.md) | 获取Cookie的值 |
+| public static|[sendCookies](Cookie/sendCookies.md) | 发送Cookie至浏览器 |
+| public static|[parseFromString](Cookie/parseFromString.md) | 从字符串设置cookie |

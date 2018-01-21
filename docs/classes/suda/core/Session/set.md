@@ -8,7 +8,7 @@
 
 ## 可见性
 
-public
+ public static
 
 ## 说明
 

@@ -11,7 +11,7 @@
 
 | 可见性 | 方法名 | 说明 |
 |--------|-------|------|
-| public|[load](Config/load.md) |  |
-| public|[assign](Config/assign.md) |  |
-| public|[get](Config/get.md) |  |
-| public|[set](Config/set.md) |  |
+| public static|[load](Config/load.md) |  |
+| public static|[assign](Config/assign.md) |  |
+| public static|[get](Config/get.md) |  |
+| public static|[set](Config/set.md) |  |

@@ -8,7 +8,7 @@
 
 ## 可见性
 
-protected
+ protected 
 
 ## 说明
 

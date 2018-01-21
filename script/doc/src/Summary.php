@@ -43,12 +43,28 @@ class Summary
 
     public function export(string $path)
     {
+        $classes=[];
+        $functions=[];
+
         foreach ($this->exportFunction as $function) {
-            (new FunctionExport($function))->export($path.'/functions');
+            $functionInfo=(new FunctionExport($function))->export($path.'/functions');
+            // $functionInfo['functionDoc']=trim(preg_replace('/\r?\n/',' ',$functionInfo['functionDoc']));
+            $functions[$function]=$functionInfo;
         }
+
         foreach ($this->exportClass as $class) {
-            (new ClassExport($class))->export($path.'/classes');
+            $classInfo=(new ClassExport($class))->export($path.'/classes');
+            // $classInfo['classDoc']=trim(preg_replace('/\r?\n/',' ',$classInfo['classDoc']));
+            $classes[$class]=$classInfo;
         }
+
+        $template=new ExportTemplate;
+        $template->setSrc(__DIR__.'/../template/summary.md');
+        $template->setValues([
+            'classes'=>$classes,
+            'functions'=>$functions,
+        ]);
+        $template->export($path.'/summary.md');
     }
 
     public function setFunctions(array $functions)
@@ -59,5 +75,9 @@ class Summary
     public function setClasses(array $classes)
     {
         $this->exportClass=$classes;
+    }
+
+    public static function realPath(string $path){
+        return preg_replace('/[\\\\\/]+/', '/', $path);
     }
 }

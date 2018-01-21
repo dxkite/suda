@@ -49,14 +49,14 @@ class ClassExport
 
         foreach ($methods as $method) {
             $methodInfo=self::exportMethod($method, $classData, $methodPath);
-            $methodInfo['functionDoc']=preg_replace('/\r?\n/',' ',$methodInfo['functionDoc']);
+            $methodInfo['functionDoc']=trim(preg_replace('/\r?\n/',' ',$methodInfo['functionDoc']));
             $methodsInfo[$method->getName()]=$methodInfo;
         }
 
         $classData['methods']= $methodsInfo;
         $template->setValues($classData);
         $template->export($destPath);
-        return $destPath;
+        return $classData;
     }
     
     public function exportMethod($reflect, array $classData, string $path)
@@ -65,6 +65,8 @@ class ClassExport
         $template->setSrc(__DIR__.'/../template/method.md');
         $value=FunctionExport::getFunctionInfo($reflect);
         $value['visibility'] = $reflect->isProtected ()? 'protected':'public';
+        $value['abstract'] = $reflect->isAbstract()? 'abstract':'';
+        $value['static'] = $reflect->isStatic()? 'static':'';
         $value=array_merge($value, $classData);
         $template->setValues($value);
         $destPath=$path.'/'.$reflect->getName().'.md';
