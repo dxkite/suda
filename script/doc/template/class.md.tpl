@@ -12,12 +12,10 @@
 
 <?php if(count($this->get("methods",[]))): ?>
 
-<?php foreach($this->get("methods")as $name => $info ): ?>- [<?php echo htmlspecialchars(__($info['visibility'])); ?> - <?php echo htmlspecialchars(__($name)); ?>](<?php echo htmlspecialchars(__($this->get("className"))); ?>/<?php echo htmlspecialchars(__($name)); ?>.md)
-    <?php echo htmlspecialchars(__($info['functionDoc'])); ?>
-
-<?php endforeach; ?>
-
-<?php else: ?>
+| 可见性 | 方法名 | 说明 |
+|--------|-------|------|
+<?php foreach($this->get("methods")as $name => $info ): ?>| <?php echo htmlspecialchars(__($info['visibility'])); ?>|[<?php echo htmlspecialchars(__($name)); ?>](<?php echo htmlspecialchars(__($this->get("className"))); ?>/<?php echo htmlspecialchars(__($name)); ?>.md) | <?php echo htmlspecialchars(__($info['functionDoc']??'无')); ?> |
+<?php endforeach;  else: ?>
 
 无方法
 <?php endif; ?><?php }}

@@ -9,8 +9,7 @@
 ## 方法
 
 
-- [public - getAll](Pinyin/getAll.md)
-    
-- [public - getFirst](Pinyin/getFirst.md)
-    
-
+| 可见性 | 方法名 | 说明 |
+|--------|-------|------|
+| public|[getAll](Pinyin/getAll.md) |  |
+| public|[getFirst](Pinyin/getFirst.md) |  |

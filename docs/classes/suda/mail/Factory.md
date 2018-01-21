@@ -9,6 +9,6 @@
 ## 方法
 
 
-- [public - sender](Factory/sender.md)
-    
-
+| 可见性 | 方法名 | 说明 |
+|--------|-------|------|
+| public|[sender](Factory/sender.md) |  |

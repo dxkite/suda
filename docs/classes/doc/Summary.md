@@ -9,14 +9,10 @@
 ## 方法
 
 
-- [public - path](Summary/path.md)
-    
-- [public - include](Summary/include.md)
-    
-- [public - export](Summary/export.md)
-    
-- [public - setFunctions](Summary/setFunctions.md)
-    
-- [public - setClasses](Summary/setClasses.md)
-    
-
+| 可见性 | 方法名 | 说明 |
+|--------|-------|------|
+| public|[path](Summary/path.md) |  |
+| public|[include](Summary/include.md) |  |
+| public|[export](Summary/export.md) |  |
+| public|[setFunctions](Summary/setFunctions.md) |  |
+| public|[setClasses](Summary/setClasses.md) |  |

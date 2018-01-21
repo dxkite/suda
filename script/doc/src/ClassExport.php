@@ -48,7 +48,9 @@ class ClassExport
         $methodsInfo=[];
 
         foreach ($methods as $method) {
-            $methodsInfo[$method->getName()]=self::exportMethod($method, $classData, $methodPath);
+            $methodInfo=self::exportMethod($method, $classData, $methodPath);
+            $methodInfo['functionDoc']=preg_replace('/\r?\n/',' ',$methodInfo['functionDoc']);
+            $methodsInfo[$method->getName()]=$methodInfo;
         }
 
         $classData['methods']= $methodsInfo;

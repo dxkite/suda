@@ -1,6 +1,6 @@
 # 方法 `exportMethod`
 
-> *文件信息* D:\Server\Local\suda\script\doc\src\ClassExport.php: 60~72
+> *文件信息* D:\Server\Local\suda\script\doc\src\ClassExport.php: 62~74
 
 ## 所属类 
 

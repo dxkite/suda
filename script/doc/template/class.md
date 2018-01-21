@@ -9,9 +9,9 @@
 ## 方法
 
 @if (count($:methods([])))
-@foreach ($:methods as $name => $info )- [{{$info['visibility']}} - {{$name}}]({{$:className}}/{{$name}}.md)
-    {{$info['functionDoc']}}
-@endforeach
-@else
+| 可见性 | 方法名 | 说明 |
+|--------|-------|------|
+@foreach ($:methods as $name => $info )| {{$info['visibility']}}|[{{$name}}]({{$:className}}/{{$name}}.md) | {{$info['functionDoc']??'无'}} |
+@endforeach @else
 无方法
 @endif
