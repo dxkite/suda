@@ -1,6 +1,6 @@
 #  类 Autoloader
 
-> *文件信息* suda\core\Autoloader.php: 18~122
+> *文件信息* suda\core\Autoloader.php: 18~125
 
 
 
@@ -22,6 +22,7 @@
 | public static|[init](Autoloader/init.md) |  |
 | public static|[import](Autoloader/import.md) |  |
 | public static|[classLoader](Autoloader/classLoader.md) |  |
+| public static|[getClassPath](Autoloader/getClassPath.md) |  |
 | public static|[addIncludePath](Autoloader/addIncludePath.md) |  |
 | public static|[getIncludePath](Autoloader/getIncludePath.md) |  |
 | public static|[getNamespace](Autoloader/getNamespace.md) |  |

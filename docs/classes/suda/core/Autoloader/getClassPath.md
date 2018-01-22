@@ -1,16 +1,16 @@
-# 方法 `__construct`
+# 方法 `getClassPath`
 
 
 
-> *文件信息* D:\Server\Local\suda\script\doc\src\ClassExport.php: 19~99
+> *文件信息* suda\core\Autoloader.php: 18~125
 
 ## 所属类 
 
-[ClassExport](../ClassExport.md)
+[Autoloader](../Autoloader.md)
 
 ## 可见性
 
- public 
+ public static
 
 ## 说明
 
@@ -22,7 +22,7 @@
 
 | 参数名 | 类型 | 默认值 | 说明 |
 |--------|-----|-------|-------|
-| class |  string | 无 | 无 |
+| className |  string | 无 | 无 |
 
 
 

@@ -89,7 +89,9 @@ class ClassExport
                 if (preg_match('/^class@anonymous/', $class)) {
                     continue;
                 }
-                $userClasses[]=$class;
+                if (\suda\core\Autoloader::getClassPath($class)) {
+                    $userClasses[]=$class;
+                }
             }
         }
         return $userClasses;

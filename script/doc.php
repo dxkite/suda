@@ -16,7 +16,7 @@
 
 require_once __DIR__ .'/../system/suda-console.php';
 
-Autoloader::addIncludePath(__DIR__.'/doc/src','doc');
+\suda\core\Autoloader::addIncludePath(__DIR__.'/doc/src','doc');
 
 
 $summary=new doc\Summary;
