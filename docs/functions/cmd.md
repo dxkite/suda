@@ -24,9 +24,7 @@
 | 参数名 | 类型 | 默认值 | 说明 |
 |--------|-----|-------|-------|
 | command |  [type] | 无 |  可调用的对象 |
-| params |  array | # Error> htmlspecialchars() expects parameter 1 to be string, array given
-	Cause By D:\Server\Local\suda\script\docme\template\function.md.tpl:19
- |  调用时的参数 |
+| params |  array | Array |  调用时的参数 |
 
 
 

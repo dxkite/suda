@@ -24,9 +24,7 @@ $values 页面模板的值
 | 参数名 | 类型 | 默认值 | 说明 |
 |--------|-----|-------|-------|
 | template |  string | 无 | 无 |
-| values |  array | # Error> htmlspecialchars() expects parameter 1 to be string, array given
-	Cause By D:\Server\Local\suda\script\docme\template\method.md.tpl:31
- | 无 |
+| values |  array | Array | 无 |
 
 
 

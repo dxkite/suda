@@ -26,12 +26,10 @@
 | where |  # Error> htmlspecialchars() expects parameter 1 to be string, array given
 	Cause By D:\Server\Local\suda\script\docme\template\method.md.tpl:31
  | 1 | 无 |
-| binds |  array | # Error> htmlspecialchars() expects parameter 1 to be string, array given
-	Cause By D:\Server\Local\suda\script\docme\template\method.md.tpl:31
- | 无 |
+| binds |  array | Array | 无 |
 | object |  # Error> htmlspecialchars() expects parameter 1 to be string, array given
 	Cause By D:\Server\Local\suda\script\docme\template\method.md.tpl:31
- | 无 | 无 |
+ | null | 无 |
 
 
 

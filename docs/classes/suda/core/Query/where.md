@@ -29,10 +29,8 @@
 | condithon |  # Error> htmlspecialchars() expects parameter 1 to be string, array given
 	Cause By D:\Server\Local\suda\script\docme\template\method.md.tpl:31
  | 1 | 无 |
-| binds |  array | # Error> htmlspecialchars() expects parameter 1 to be string, array given
-	Cause By D:\Server\Local\suda\script\docme\template\method.md.tpl:31
- | 无 |
-| page |  array | 无 | 无 |
+| binds |  array | Array | 无 |
+| page |  array | null | 无 |
 | scroll |  bool |  | 无 |
 
 

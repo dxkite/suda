@@ -111,16 +111,4 @@ class ClassExport
         }
         return $userClasses;
     }
-
-    public static function getValue($value){
-        if (is_null($value)) {
-            $value='null';
-        } elseif (is_array($value)) {
-            $value='Array';
-        }
-        elseif (is_object($value)) {
-            $value='Object '.get_class($value);
-        }
-        return $value;
-    }
 }

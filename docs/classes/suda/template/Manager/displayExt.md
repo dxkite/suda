@@ -24,7 +24,7 @@
 |--------|-----|-------|-------|
 | name |  string | 无 | 无 |
 | ext |  string | html | 无 |
-| viewpath |  string | 无 | 无 |
+| viewpath |  string | null | 无 |
 
 
 

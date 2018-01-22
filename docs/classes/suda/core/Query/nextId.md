@@ -23,7 +23,7 @@
 | 参数名 | 类型 | 默认值 | 说明 |
 |--------|-----|-------|-------|
 | table |  string | 无 | 无 |
-| database |  string | 无 | 无 |
+| database |  string | null | 无 |
 
 
 

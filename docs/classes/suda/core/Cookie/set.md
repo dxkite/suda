@@ -24,7 +24,7 @@
 |--------|-----|-------|-------|
 | name |  string | 无 |  Cookie名 |
 | value |  string | 无 |  设置的值 |
-| expire |  int | 无 |   到期时间 |
+| expire |  int | null |   到期时间 |
 
 
 

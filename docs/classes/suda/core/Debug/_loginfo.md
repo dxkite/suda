@@ -27,7 +27,7 @@
 | message |  string | 无 | 无 |
 | file |  string | 无 | 无 |
 | line |  int | 无 | 无 |
-| backtrace |  array | 无 | 无 |
+| backtrace |  array | null | 无 |
 
 
 

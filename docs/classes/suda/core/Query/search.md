@@ -27,7 +27,7 @@
 	Cause By D:\Server\Local\suda\script\docme\template\method.md.tpl:31
  | * | 无 |
 | search |  string | 无 | 无 |
-| page |  array | 无 | 无 |
+| page |  array | null | 无 |
 | scroll |  bool |  | 无 |
 
 

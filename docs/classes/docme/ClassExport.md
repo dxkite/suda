@@ -1,6 +1,6 @@
 #  ClassExport 
 
-> *文件信息* D:\Server\Local\suda\script\docme\src\ClassExport.php: 19~126
+> *文件信息* D:\Server\Local\suda\script\docme\src\ClassExport.php: 19~114
 
 
 
@@ -29,4 +29,3 @@
 | public static|[exportValues](ClassExport/exportValues.md) |  |
 | public |[exportMethod](ClassExport/exportMethod.md) |  |
 | public static|[getUserDefinedClasses](ClassExport/getUserDefinedClasses.md) |  |
-| public static|[getValue](ClassExport/getValue.md) |  |

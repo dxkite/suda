@@ -26,9 +26,7 @@
 | url |  string | 无 | 无 |
 | callback |  string | 无 | 无 |
 | module |  string | 无 | 无 |
-| method |  array | # Error> htmlspecialchars() expects parameter 1 to be string, array given
-	Cause By D:\Server\Local\suda\script\docme\template\method.md.tpl:31
- | 无 |
+| method |  array | Array | 无 |
 | role |  int | self::ROLE_SIMPLE | 无 |
 
 

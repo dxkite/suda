@@ -25,9 +25,7 @@
 | 参数名 | 类型 | 默认值 | 说明 |
 |--------|-----|-------|-------|
 | where |  [type] | 无 | 无 |
-| bind |  array | # Error> htmlspecialchars() expects parameter 1 to be string, array given
-	Cause By D:\Server\Local\suda\script\docme\template\method.md.tpl:31
- | 无 |
+| bind |  array | Array | 无 |
 
 
 

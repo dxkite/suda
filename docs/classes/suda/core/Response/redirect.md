@@ -24,7 +24,7 @@
 |--------|-----|-------|-------|
 | url |  string | 无 | 无 |
 | time |  int | 1 | 无 |
-| message |  string | 无 | 无 |
+| message |  string | null | 无 |
 
 
 

@@ -2,7 +2,7 @@
 
 
 
-> *文件信息* D:\Server\Local\suda\script\docme\src\ClassExport.php: 19~126
+> *文件信息* D:\Server\Local\suda\script\docme\src\ClassExport.php: 19~114
 
 ## 所属类 
 

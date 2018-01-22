@@ -23,7 +23,7 @@
 | 参数名 | 类型 | 默认值 | 说明 |
 |--------|-----|-------|-------|
 | name |  string | 无 | 无 |
-| parent |  string | 无 | 无 |
+| parent |  string | null | 无 |
 
 
 

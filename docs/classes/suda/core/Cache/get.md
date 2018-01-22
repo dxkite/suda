@@ -26,7 +26,7 @@
 | name |  string | 无 |  名 |
 | defalut |  # Error> htmlspecialchars() expects parameter 1 to be string, array given
 	Cause By D:\Server\Local\suda\script\docme\template\method.md.tpl:31
- | 无 | 无 |
+ | null | 无 |
 
 
 

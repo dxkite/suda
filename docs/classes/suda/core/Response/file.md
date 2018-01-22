@@ -23,8 +23,8 @@
 | 参数名 | 类型 | 默认值 | 说明 |
 |--------|-----|-------|-------|
 | path |  string | 无 | 无 |
-| filename |  string | 无 | 无 |
-| type |  string | 无 | 无 |
+| filename |  string | null | 无 |
+| type |  string | null | 无 |
 
 
 

@@ -23,7 +23,7 @@
 | 参数名 | 类型 | 默认值 | 说明 |
 |--------|-----|-------|-------|
 | name |  string | 无 | 无 |
-| viewpath |  string | 无 | 无 |
+| viewpath |  string | null | 无 |
 
 
 

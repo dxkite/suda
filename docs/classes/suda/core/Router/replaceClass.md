@@ -24,8 +24,8 @@
 |--------|-----|-------|-------|
 | name |  string | 无 | 无 |
 | class |  string | 无 | 无 |
-| module |  string | 无 | 无 |
-| method |  array | 无 | 无 |
+| module |  string | null | 无 |
+| method |  array | null | 无 |
 
 
 

@@ -23,7 +23,7 @@
 | 参数名 | 类型 | 默认值 | 说明 |
 |--------|-----|-------|-------|
 | command |  string | 无 | 无 |
-| stateReturn |  int | 无 | 无 |
+| stateReturn |  int | null | 无 |
 
 
 

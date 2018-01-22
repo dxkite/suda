@@ -1,6 +1,6 @@
 #  FunctionExport 
 
-> *文件信息* D:\Server\Local\suda\script\docme\src\FunctionExport.php: 19~137
+> *文件信息* D:\Server\Local\suda\script\docme\src\FunctionExport.php: 19~149
 
 
 
@@ -29,4 +29,5 @@
 | public static|[getUserDefinedFunctions](FunctionExport/getUserDefinedFunctions.md) |  |
 | public static|[getFunctionInfo](FunctionExport/getFunctionInfo.md) |  |
 | public static|[getDoc](FunctionExport/getDoc.md) |  |
+| public static|[getValue](FunctionExport/getValue.md) |  |
 | public static|[docField](FunctionExport/docField.md) |  |

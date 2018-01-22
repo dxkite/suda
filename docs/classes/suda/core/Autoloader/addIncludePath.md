@@ -23,7 +23,7 @@
 | 参数名 | 类型 | 默认值 | 说明 |
 |--------|-----|-------|-------|
 | path |  string | 无 | 无 |
-| namespace |  string | 无 | 无 |
+| namespace |  string | null | 无 |
 
 
 

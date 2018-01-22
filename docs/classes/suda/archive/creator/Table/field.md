@@ -24,7 +24,7 @@
 |--------|-----|-------|-------|
 | name |  string | 无 | 无 |
 | type |  string | 无 | 无 |
-| length |  int | 无 | 无 |
+| length |  int | null | 无 |
 
 
 
