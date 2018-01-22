@@ -1,6 +1,6 @@
 # Command::_absoluteCall
 
-绝对调用函数，包括私有和保护函数
+绝对调用函数，可调用类私有和保护函数
 
 > *文件信息* suda\tool\Command.php: 20~151
 

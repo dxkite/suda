@@ -21,6 +21,7 @@ use suda\core\Config;
 use suda\core\Storage;
 use suda\exception\SQLException;
 use suda\archive\creator\InputValue;
+use suda\tool\Command;
 
 // 数据库查询方案
 class SQLQuery
@@ -34,12 +35,26 @@ class SQLQuery
     protected $object;
 
     protected $stmt=null;
-    // 查询语句
+
+    /**
+     * 查询语句
+     *
+     * @var [type]
+     */
     protected $query=null;
-    // 模板值
+    /**
+     *  模板值
+     *
+     * @var [type]
+     */
     protected $values=null;
     protected $scroll=false;
-    // 使用的数据库
+    
+    /**
+     * 使用的数据库
+     *
+     * @var [type]
+     */
     protected $database=null;
     protected $dbchange=false;
    
@@ -62,6 +77,12 @@ class SQLQuery
         $this->object=null;
     }
 
+    /**
+     * 获取查询结果的一列
+     *
+     * @param integer $fetch_style 结果集形式
+     * @return array|false 查询成功则返回一列查询结果，否则返回false
+     */
     public function fetch(int $fetch_style = PDO::FETCH_ASSOC)
     {
         if ($this->stmt) {
@@ -76,6 +97,12 @@ class SQLQuery
         return false;
     }
 
+    /**
+     * 获取查询结果的一列，并作为类对象
+     *
+     * @param string $class 类名
+     * @return array|false 查询成功则返回一列查询结果，否则返回false
+     */
     public function fetchObject(string $class='stdClass')
     {
         if ($this->stmt) {
@@ -88,6 +115,12 @@ class SQLQuery
         return false;
     }
     
+    /**
+     * 获取全部的查询结果
+     *
+     * @param integer $fetch_style 结果集形式
+     * @return array|false 查询成功则返回查询结果，否则返回false
+     */
     public function fetchAll(int $fetch_style = PDO::FETCH_ASSOC)
     {
         if (self::__query($this->query, $this->values)) {
@@ -98,6 +131,11 @@ class SQLQuery
         return false;
     }
     
+    /**
+     * 运行SQL语句
+     *
+     * @return integer 返回影响的数据行数目
+     */
     public function exec():int
     {
         if (self::__query($this->query, $this->values)) {
@@ -106,17 +144,38 @@ class SQLQuery
         return 0;
     }
 
+    /**
+     * 生成一个数据输入值
+     *
+     * @param string $name 列名
+     * @param [type] $value 值
+     * @param integer $type 类型
+     * @return InputValue 输入变量类
+     */
     public static function value(string $name, $value, int $type=PDO::PARAM_STR):InputValue
     {
         return new InputValue($name, $value, $type);
     }
 
+    /**
+     * SQL语句模板绑定值
+     *
+     * @param array $values
+     * @return SQLQuery
+     */
     public function values(array $values)
     {
         $this->values=array_merge($this->values, $values);
         return $this;
     }
 
+    /**
+     * 生成一条查询语句
+     *
+     * @param string $query 查询语句模板
+     * @param array $array 查询语句模板值
+     * @return SQLQuery
+     */
     public function query(string $query, array $array=[])
     {
         $this->query=$query;
@@ -125,13 +184,25 @@ class SQLQuery
         return $this;
     }
     
+    /**
+     * 切换使用的数据表
+     *
+     * @param string $name
+     * @return SQLQuery
+     */
     public function use(string $name=null)
     {
         $this->database=$name;
         $this->dbchange=true;
         return $this;
     }
-    // 获取错误
+    
+    
+    /**
+     * 获取语句查询错误
+     *
+     * @return bool|array 错误结果,false获取失败
+     */
     public function error()
     {
         if ($this->stmt) {
@@ -140,6 +211,11 @@ class SQLQuery
         return false;
     }
 
+    /**
+     * 获取语句查询错误编号
+     *
+     * @return bool|array 语句编号结错误结果,false获取失败果
+     */
     public function erron()
     {
         if ($this->stmt) {
@@ -148,6 +224,12 @@ class SQLQuery
         return false;
     }
 
+    /**
+     * 获取最后一次插入的主键ID（用于自增值
+     *
+     * @param string $name
+     * @return false|int false则获取失败，整数则获取成功
+     */
     public static function lastInsertId(string $name=null)
     {
         if (is_null($name)) {
@@ -158,13 +240,21 @@ class SQLQuery
         return false;
     }
 
-    // 事务系列
+    /**
+     * 事务系列，开启事务
+     *
+     * @return any
+     */
     public static function begin()
     {
         return self::beginTransaction();
     }
 
-    // 事务系列
+    /**
+     * 事务系列，开启事务
+     *
+     * @return any
+     */
     public static function beginTransaction()
     {
         self::connectPdo();
@@ -173,7 +263,12 @@ class SQLQuery
             self::$pdo->beginTransaction();
         }
     }
-    
+
+    /**
+     * 事务系列，提交事务
+     *
+     * @return any
+     */
     public static function commit()
     {
         self::connectPdo();
@@ -183,6 +278,11 @@ class SQLQuery
         static::$transaction--;
     }
 
+    /**
+     * 事务系列，撤销事务
+     *
+     * @return any
+     */
     public static function rollBack()
     {
         self::connectPdo();
@@ -305,8 +405,9 @@ class SQLQuery
     }
 
     /**
-     * 转换数据，数据库统处理输入输出数据
-     * 转换函数
+     * 转换函数；统一处理数据库输入输出
+     * 
+     * 只处理InputValue类型的数据
      *
      * @param string $name
      * @param string $fieldName
@@ -317,13 +418,10 @@ class SQLQuery
     {
         $methodName='_'.$name.ucfirst($fieldName).'Field';
         if ($this->object) {
-            if (method_exists($this->object, $methodName)) {
-                debug()->debug('query_invoke '.get_class($this->object).'->'.$methodName);
-                $method = new \ReflectionMethod($this->object, $methodName);
-                if ($method->isPrivate() || $method->isProtected()) {
-                    $method->setAccessible(true);
-                }
-                $inputData= $method->invokeArgs($this->object, [$inputData]);
+            if (method_exists($this->object, '__dataTransfrom')) {
+                return Command::_absoluteCall([$this->object,'__dataTransfrom'], func_get_args());
+            } elseif (method_exists($this->object, $methodName)) {
+                $inputData= Command::_absoluteCall([$this->object,$methodName], [$inputData]);
             }
         }
         return $inputData;
@@ -355,7 +453,7 @@ class SQLQuery
     private function __outputObjectTransfrom($object)
     {
         $reflect=new \ReflectionClass($object);
-        $props=$reflect->getProperties(\ReflectionProperty::IS_PUBLIC | \ReflectionProperty::IS_PROTECTED|\ReflectionProperty::IS_PUBLIC | ReflectionProperty::IS_PRIVATE);
+        $props=$reflect->getProperties(\ReflectionProperty::IS_PUBLIC | \ReflectionProperty::IS_PROTECTED | ReflectionProperty::IS_PRIVATE);
         foreach ($props as $prop) {
             $prop->setAccessible(true);
             $prop->setValue($object, self::__dataTransfrom('output', $prop->getName(), $prop->getValue()));

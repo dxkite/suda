@@ -1,8 +1,8 @@
 # SQLQuery::value
 
+生成一个数据输入值
 
-
-> *文件信息* suda\archive\SQLQuery.php: 26~365
+> *文件信息* suda\archive\SQLQuery.php: 27~463
 
 ## 所属类 
 
@@ -14,7 +14,7 @@
 
 ## 说明
 
-该函数暂时无说明
+
 
 
 ## 参数
@@ -22,14 +22,18 @@
 
 | 参数名 | 类型 | 默认值 | 说明 |
 |--------|-----|-------|-------|
-| name |  string | 无 | 无 |
-| type |  int | PDO::PARAM_STR | 无 |
+| name |  string | 无 |  列名 |
+| value |  [type] | 无 |  值 |
+| type |  int | PDO::PARAM_STR |  类型 |
 
 
 
 ## 返回值
 
-返回值类型不定
+类型：InputValue
+
+ 输入变量类
+
 
 
 ## 例子

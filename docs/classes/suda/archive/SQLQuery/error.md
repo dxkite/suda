@@ -1,8 +1,8 @@
 # SQLQuery::error
 
+获取语句查询错误
 
-
-> *文件信息* suda\archive\SQLQuery.php: 26~365
+> *文件信息* suda\archive\SQLQuery.php: 27~463
 
 ## 所属类 
 
@@ -14,7 +14,7 @@
 
 ## 说明
 
-该函数暂时无说明
+
 
 
 ## 参数
@@ -25,7 +25,10 @@
 
 ## 返回值
 
-返回值类型不定
+类型：bool|array
+
+ 错误结果,false获取失败
+
 
 
 ## 例子

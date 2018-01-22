@@ -1,8 +1,8 @@
 # SQLQuery::__dataTransfrom
 
-转换数据，数据库统处理输入输出数据
+转换函数；统一处理数据库输入输出
 
-> *文件信息* suda\archive\SQLQuery.php: 26~365
+> *文件信息* suda\archive\SQLQuery.php: 27~463
 
 ## 所属类 
 
@@ -14,7 +14,8 @@
 
 ## 说明
 
-转换函数
+
+只处理InputValue类型的数据
 
 
 

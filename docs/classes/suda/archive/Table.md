@@ -1,10 +1,11 @@
 #  Table 
 
-> *文件信息* suda\archive\Table.php: 30~673
+> *文件信息* suda\archive\Table.php: 31~674
 
 数据表抽象对象
 
 ## 描述
+
 
 用于提供对数据表的操作
 

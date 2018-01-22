@@ -1,8 +1,8 @@
 # SQLQuery::lastInsertId
 
+获取最后一次插入的主键ID（用于自增值
 
-
-> *文件信息* suda\archive\SQLQuery.php: 26~365
+> *文件信息* suda\archive\SQLQuery.php: 27~463
 
 ## 所属类 
 
@@ -14,7 +14,7 @@
 
 ## 说明
 
-该函数暂时无说明
+
 
 
 ## 参数
@@ -28,7 +28,10 @@
 
 ## 返回值
 
-返回值类型不定
+类型：false|int
+
+ false则获取失败，整数则获取成功
+
 
 
 ## 例子
