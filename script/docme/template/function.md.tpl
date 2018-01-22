@@ -1,4 +1,4 @@
-<?php  class Classd35d0413a63f0337c6b2544715efa344 extends suda\template\compiler\suda\Template { protected $name="249e2d6ccc4269e2daa90e63af947e4d";protected $module=""; protected function _render_template() {  ?># 方法 `<?php echo htmlspecialchars(__($this->get("functionName"))); ?>`
+<?php  class Class34294da453628d22d8e73735c0371213 extends suda\template\compiler\suda\Template { protected $name="d85c842beb49d162241f3abc53db5e32";protected $module=""; protected function _render_template() {  ?># 函数 `<?php echo htmlspecialchars(__($this->get("functionName"))); ?>`
 
 <?php echo $this->get("functionDoc",'该函数暂时无注释文档'); ?>
 
@@ -6,19 +6,7 @@
 > *文件信息* <?php echo htmlspecialchars(__($this->get("fileName",'未知文件'))); ?>: <?php echo htmlspecialchars(__($this->get("lineStart",'未知'))); ?>~<?php echo htmlspecialchars(__($this->get("lineEnd",'未知'))); ?>
 
 
-## 所属类 
-
-[<?php echo htmlspecialchars(__($this->get("className"))); ?>](../<?php echo htmlspecialchars(__($this->get("className"))); ?>.md)
-
-## 可见性
-
-<?php echo htmlspecialchars(__($this->get("abstract").' '));  echo htmlspecialchars(__($this->get("visibility").' '));  echo htmlspecialchars(__($this->get("static"))); ?>
-
-
-## 说明
-
 <?php echo $this->get("document",'该函数暂时无说明'); ?>
-
 
 
 ## 参数

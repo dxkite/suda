@@ -14,7 +14,7 @@
  * @version    since 1.2.13
  */
 
-namespace doc;
+namespace docme;
 
 class ClassExport
 {
@@ -38,7 +38,7 @@ class ClassExport
             'classDoc' => $doc,
         ]);
         
-        $classData['fileName']= Summary::path($reflect->getFileName());
+        $classData['fileName']= Docme::path($reflect->getFileName());
         $classData['lineStart']= $reflect->getStartLine();
         $classData['lineEnd']=  $reflect->getEndLine();
 

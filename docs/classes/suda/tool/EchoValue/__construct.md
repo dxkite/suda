@@ -23,9 +23,9 @@ Value constructor.
 | 参数名 | 类型 | 默认值 | 说明 |
 |--------|-----|-------|-------|
 | var |  # Error> htmlspecialchars() expects parameter 1 to be string, array given
-	Cause By D:\Server\Local\suda\script\doc\template\method.md.tpl:30
+	Cause By D:\Server\Local\suda\script\docme\template\method.md.tpl:30
  | # Error> htmlspecialchars() expects parameter 1 to be string, array given
-	Cause By D:\Server\Local\suda\script\doc\template\method.md.tpl:30
+	Cause By D:\Server\Local\suda\script\docme\template\method.md.tpl:30
  | 无 |
 
 

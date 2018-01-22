@@ -16,12 +16,12 @@
 
 require_once __DIR__ .'/../system/suda-console.php';
 
-\suda\core\Autoloader::addIncludePath(__DIR__.'/doc/src','doc');
+\suda\core\Autoloader::addIncludePath(__DIR__.'/docme/src','docme');
 
 
-$summary=new doc\Summary;
+$summary=new docme\Docme;
 
 $summary->include(SYSTEM_DIR.'/src');
-$summary->setFunctions(doc\FunctionExport::getUserDefinedFunctions());
-$summary->setClasses(doc\ClassExport::getUserDefinedClasses());
+$summary->setFunctions(docme\FunctionExport::getUserDefinedFunctions());
+$summary->setClasses(docme\ClassExport::getUserDefinedClasses());
 $summary->export(__DIR__.'/../docs');

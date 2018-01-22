@@ -1,4 +1,4 @@
-<?php  class Classce8673339ca4c7dbaa7d1321832ab005 extends suda\template\compiler\suda\Template { protected $name="838b7d9c8975a7bef96013130ba706a5";protected $module=""; protected function _render_template() {  ?>#  类 <?php echo htmlspecialchars(__($this->get("className"))); ?>
+<?php  class Class7da95941b8390a37cc15f99588b0b455 extends suda\template\compiler\suda\Template { protected $name="55c1cc2edb1c85ff12389cca9648951f";protected $module=""; protected function _render_template() {  ?>#  类 <?php echo htmlspecialchars(__($this->get("className"))); ?>
 
 
 > *文件信息* <?php echo htmlspecialchars(__($this->get("fileName",'未知文件'))); ?>: <?php echo htmlspecialchars(__($this->get("lineStart",'未知'))); ?>~<?php echo htmlspecialchars(__($this->get("lineEnd",'未知'))); ?>

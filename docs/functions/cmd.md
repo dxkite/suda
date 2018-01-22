@@ -25,7 +25,7 @@
 |--------|-----|-------|-------|
 | command |  [type] | 无 |  可调用的对象 |
 | params |  array | # Error> htmlspecialchars() expects parameter 1 to be string, array given
-	Cause By D:\Server\Local\suda\script\doc\template\function.md.tpl:18
+	Cause By D:\Server\Local\suda\script\docme\template\function.md.tpl:18
  |  调用时的参数 |
 
 

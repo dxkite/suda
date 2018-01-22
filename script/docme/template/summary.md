@@ -14,5 +14,5 @@
 
 | 类名 | 说明 |
 |------|-----|
-@foreach($:classes as $name => $info)|[{{$name}}](classes/{{ doc\Summary::realPath($name)}}.md) | {{!$info['classDoc']}} |
+@foreach($:classes as $name => $info)|[{{$name}}](classes/{{ docme\Docme::realPath($name)}}.md) | {{!$info['classDoc']}} |
 @endforeach

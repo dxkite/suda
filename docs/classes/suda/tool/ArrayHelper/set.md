@@ -27,7 +27,7 @@
 | array |  array | 无 | 无 |
 | name |  string | 无 | 无 |
 | def |  # Error> htmlspecialchars() expects parameter 1 to be string, array given
-	Cause By D:\Server\Local\suda\script\doc\template\method.md.tpl:30
+	Cause By D:\Server\Local\suda\script\docme\template\method.md.tpl:30
  | 无 | 无 |
 
 

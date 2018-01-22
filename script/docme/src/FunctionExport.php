@@ -14,7 +14,7 @@
  * @version    since 1.2.13
  */
 
-namespace doc;
+namespace docme;
 
 class FunctionExport
 {
@@ -48,7 +48,7 @@ class FunctionExport
         $value=$exData;
         $value['functionName']=$reflect->getName();
         $value['functionDoc']=$comment;
-        $value['fileName']= Summary::path($reflect->getFileName());
+        $value['fileName']= Docme::path($reflect->getFileName());
         $value['lineStart']= $reflect->getStartLine();
         $value['lineEnd']=  $reflect->getEndLine();
         

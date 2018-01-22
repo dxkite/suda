@@ -14,7 +14,7 @@
  * @version    since 1.2.13
  */
 
-namespace doc;
+namespace docme;
 
 use suda\template\Manager;
 use suda\core\Storage;

@@ -14,7 +14,7 @@
  * @version    since 1.2.13
  */
 
-namespace doc;
+namespace docme;
 
 use suda\core\Storage;
 
@@ -22,7 +22,7 @@ use suda\core\Storage;
 /**
  * 反射导出注释文档
  */
-class Summary
+class Docme
 {
     protected $exportClass;
     protected $exportFunction;
