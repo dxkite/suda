@@ -1,8 +1,8 @@
 # Query::insert
 
-插入行
+向数据表中插入一行
 
-> *文件信息* suda\core\Query.php: 20~201
+> *文件信息* suda\core\Query.php: 26~263
 
 ## 所属类 
 
@@ -14,7 +14,8 @@
 
 ## 说明
 
-返回： 当ID>0时返回ID，否者返回true/false
+提供了数据库的查询方式
+
 
 
 ## 参数
@@ -33,9 +34,9 @@
 
 ## 返回值
 
-类型：void
+类型：array|false
 
-无
+ 当ID&gt;0时返回ID，否者返回true/false
 
 
 

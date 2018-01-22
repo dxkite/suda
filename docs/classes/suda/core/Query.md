@@ -1,12 +1,13 @@
 #  Query 
 
-> *文件信息* suda\core\Query.php: 20~201
+> *文件信息* suda\core\Query.php: 26~263
 
-
+数据库查询类
 
 ## 描述
 
-该类暂时无说明
+提供了数据库的查询方式
+
 
 
 
@@ -35,12 +36,12 @@
 
 | 可见性 | 方法名 | 说明 |
 |--------|-------|------|
-| public static|[insert](Query/insert.md) | 插入行 |
-| public static|[where](Query/where.md) |  |
-| public static|[search](Query/search.md) |  |
-| public static|[select](Query/select.md) |  |
-| public static|[update](Query/update.md) |  |
-| public static|[delete](Query/delete.md) |  |
+| public static|[insert](Query/insert.md) | 向数据表中插入一行 |
+| public static|[where](Query/where.md) | 在数据表总搜索 |
+| public static|[search](Query/search.md) | 搜索列 |
+| public static|[select](Query/select.md) | 选择列 |
+| public static|[update](Query/update.md) | 更新列 |
+| public static|[delete](Query/delete.md) | 删除列 |
 | public static|[prepareIn](Query/prepareIn.md) |  |
 | public static|[prepareWhere](Query/prepareWhere.md) |  |
 | public static|[count](Query/count.md) |  |

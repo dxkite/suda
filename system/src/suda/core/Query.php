@@ -16,18 +16,23 @@
 namespace suda\core;
 
 use suda\archive\SQLQuery;
+use suda\exception\SQLException;
 
+/**
+ * 数据库查询类
+ * 提供了数据库的查询方式
+ * 
+ */
 class Query extends SQLQuery
 {
     /**
-     * 插入行
-     * 返回： 当ID>0时返回ID，否者返回true/false
+     * 向数据表中插入一行
      * @param string $table
      * @param [type] $values
      * @param array $binds
-     * @return void
+     * @return array|false 当ID>0时返回ID，否者返回true/false
      */
-    public static function insert(string $table, $values, array $binds=[],$object=null)
+    public static function insert(string $table, $values, array $binds=[], $object=null)
     {
         $table=self::table($table);
         if (is_string($values)) {
@@ -39,7 +44,7 @@ class Query extends SQLQuery
                 $bindName=$name.count($binds);
                 $bind.=':'.$bindName.',';
                 $names.='`'.$name.'`,';
-                $binds[$bindName]=static::value($name,$value);
+                $binds[$bindName]=static::value($name, $value);
             }
             $sql='INSERT INTO `'.$table.'` ('.trim($names, ',').') VALUES ('.trim($bind, ',').');';
         }
@@ -55,12 +60,36 @@ class Query extends SQLQuery
         return false;
     }
 
+
+    /**
+     * 在数据表总搜索
+     *
+     * @param string $table 表名
+     * @param string|array $wants 提取的列
+     * @param string|array $condithon 提取的条件
+     * @param array $binds 模板绑定的值
+     * @param array $page 分页获取
+     * @param boolean $scroll 滚动获取
+     * @return SQLQuery
+     */
     public static function where(string $table, $wants='*', $condithon='1', array $binds=[], array $page=null, bool $scroll=false):SQLQuery
     {
         $where=self::prepareWhere($condithon, $binds);
         return self::select($table, $wants, $where, $binds, $page, $scroll);
     }
 
+
+    /**
+     * 搜索列
+     *
+     * @param string $table 表名
+     * @param string|array $wants 提取的列
+     * @param [type] $field 搜索的列，支持对一列或者多列搜索
+     * @param string $search 搜索的值
+     * @param array $page 分页获取
+     * @param boolean $scroll 滚动获取
+     * @return SQLQuery
+     */
     public static function search(string $table, $wants='*', $field, string $search, array $page=null, bool $scroll=false):SQLQuery
     {
         $search=preg_replace('/([%_])/', '\\\\$1', $search);
@@ -79,6 +108,17 @@ class Query extends SQLQuery
         return self::where($table, $wants, $search_str, $bind, $page, $scroll);
     }
 
+    /**
+     * 选择列
+     *
+     * @param string $table
+     * @param [type] $wants
+     * @param [type] $conditions
+     * @param array $binds
+     * @param array $page
+     * @param boolean $scroll
+     * @return void
+     */
     public static function select(string $table, $wants, $conditions, array $binds=[], array $page=null, bool $scroll=false)
     {
         $table=self::table($table);
@@ -95,7 +135,17 @@ class Query extends SQLQuery
         return new SQLQuery('SELECT '.$fields.' FROM `'.$table.'` '.trim($conditions, ';').$limit.';', $binds, $scroll);
     }
 
-    public static function update(string $table, $set_fields, $where='1', array $binds=[],$object=null):int
+    /**
+     * 更新列
+     *
+     * @param string $table
+     * @param [type] $set_fields
+     * @param string $where
+     * @param array $binds
+     * @param [type] $object
+     * @return integer
+     */
+    public static function update(string $table, $set_fields, $where='1', array $binds=[], $object=null):int
     {
         $table=self::table($table);
         $count=0;
@@ -103,7 +153,7 @@ class Query extends SQLQuery
             $sets=[];
             foreach ($set_fields as $name=>$value) {
                 $bname= $name.($count++);
-                $binds[$bname]=static::value($name,$value);
+                $binds[$bname]=static::value($name, $value);
                 $sets[]="`{$name}`=:{$bname}";
             }
             $sql='UPDATE `'.$table.'` SET '.implode(',', $sets).' '.self::prepareWhere($where, $binds).';';
@@ -113,7 +163,16 @@ class Query extends SQLQuery
         return (new Query($sql, $binds))->object($object)->exec();
     }
 
-    public static function delete(string $table, $where='1', array $binds=[],$object=null):int
+    /**
+     * 删除列
+     *
+     * @param string $table
+     * @param string $where
+     * @param array $binds
+     * @param [type] $object
+     * @return integer
+     */
+    public static function delete(string $table, $where='1', array $binds=[], $object=null):int
     {
         $table=self::table($table);
         $sql='DELETE FROM `'.$table.'` '.self::prepareWhere($where, $binds).';';
@@ -122,12 +181,15 @@ class Query extends SQLQuery
 
     public static function prepareIn(string $name, array $invalues, string $prefix='in_')
     {
+        if (count($invalues)<=0) {
+            throw new SQLException('on field '.$name.' value can\'t be empty array');
+        }
         $count=0;
         $names=[];
         $param=[];
         foreach ($invalues as $key=>$value) {
             $bname=$prefix. preg_replace('/[_]+/', '_', preg_replace('/[`.{}#]/', '_', $name)).$key.($count++);
-            $param[$bname]= static::value($name,$value);
+            $param[$bname]= static::value($name, $value);
             $names[]=':'.$bname;
         }
         $sql=$name.' IN ('.implode(',', $names).')';
@@ -145,12 +207,12 @@ class Query extends SQLQuery
                 $bname= $name.($count++);
                 // in cause
                 if (is_array($value)) {
-                    list($sql,$in_param)=self::prepareIn($name, $value);
+                    list($sql, $in_param)=self::prepareIn($name, $value);
                     $and[]=$sql;
-                    $param=array_merge($param,$in_param);
+                    $param=array_merge($param, $in_param);
                 } else {
                     $and[]="`{$name}`=:{$bname}";
-                    $param[$bname]=static::value($name,$value);
+                    $param[$bname]=static::value($name, $value);
                 }
             }
 
@@ -162,7 +224,7 @@ class Query extends SQLQuery
     }
 
     
-    public static function count(string $table, $where='1', array $binds=[],$object=null):int
+    public static function count(string $table, $where='1', array $binds=[], $object=null):int
     {
         $table=self::table($table);
         $where=self::prepareWhere($where, $binds);

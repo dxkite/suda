@@ -58,7 +58,7 @@
 |[suda\core\Cache](classes/suda/core/Cache.md) | 文件缓存 |
 |[suda\core\Cookie](classes/suda/core/Cookie.md) | Class Cookie |
 |[suda\core\Exception](classes/suda/core/Exception.md) |  |
-|[suda\core\Query](classes/suda/core/Query.md) |  |
+|[suda\core\Query](classes/suda/core/Query.md) | 数据库查询类 |
 |[suda\core\Response](classes/suda/core/Response.md) |  |
 |[suda\core\route\Mapping](classes/suda/core/route/Mapping.md) |  |
 |[suda\core\Router](classes/suda/core/Router.md) |  |
