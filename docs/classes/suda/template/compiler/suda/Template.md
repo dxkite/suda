@@ -9,7 +9,20 @@
 该类暂时无说明
 
 
-## 变量
+
+
+
+## 变量列表
+| 可见性 |  变量名  |  值| 说明 |
+|--------|----|---|---|
+| protected   | value | 无默认值 | 模板的值| 
+| protected   | response | 无默认值 | 模板所属于的响应| 
+| protected   | name | 无默认值 | | 
+| protected   | parent | 无默认值 | | 
+| protected   | hooks | 无默认值 | | 
+| protected   | module | 无默认值 | | 
+| protected static  | render | Array | | 
+
 
 
 ## 方法

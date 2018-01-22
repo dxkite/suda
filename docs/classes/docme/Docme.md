@@ -9,7 +9,16 @@
 该类暂时无说明
 
 
-## 变量
+
+
+
+## 变量列表
+| 可见性 |  变量名  |  值| 说明 |
+|--------|----|---|---|
+| protected   | exportClass | 无默认值 | | 
+| protected   | exportFunction | 无默认值 | | 
+| protected static  | rootPath | D:\Server\Local\suda\system/src | | 
+
 
 
 ## 方法

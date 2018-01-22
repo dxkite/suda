@@ -1,6 +1,6 @@
 #  类 ClassExport
 
-> *文件信息* D:\Server\Local\suda\script\docme\src\ClassExport.php: 19~99
+> *文件信息* D:\Server\Local\suda\script\docme\src\ClassExport.php: 19~131
 
 
 
@@ -9,7 +9,14 @@
 该类暂时无说明
 
 
-## 变量
+
+
+
+## 变量列表
+| 可见性 |  变量名  |  值| 说明 |
+|--------|----|---|---|
+| protected   | reflect | 无默认值 | | 
+
 
 
 ## 方法
@@ -19,5 +26,7 @@
 |--------|-------|------|
 | public |[__construct](ClassExport/__construct.md) |  |
 | public |[export](ClassExport/export.md) |  |
+| public static|[exportValues](ClassExport/exportValues.md) |  |
 | public |[exportMethod](ClassExport/exportMethod.md) |  |
 | public static|[getUserDefinedClasses](ClassExport/getUserDefinedClasses.md) |  |
+| public static|[getValue](ClassExport/getValue.md) |  |

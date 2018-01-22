@@ -9,7 +9,25 @@
 该类暂时无说明
 
 
-## 变量
+
+
+
+## 变量列表
+| 可见性 |  变量名  |  值| 说明 |
+|--------|----|---|---|
+| protected static  | queryCount | 0 | | 
+| protected static  | times | 0 | | 
+| protected static  | pdo | null | | 
+| protected static  | prefix | null | | 
+| protected static  | transaction | 0 | | 
+| protected   | object | 0 | | 
+| protected   | stmt | 0 | | 
+| protected   | query | 0 | | 
+| protected   | values | 0 | | 
+| protected   | scroll | 0 | | 
+| protected   | database | 0 | | 
+| protected   | dbchange | 0 | | 
+
 
 
 ## 方法

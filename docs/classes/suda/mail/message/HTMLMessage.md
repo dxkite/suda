@@ -9,7 +9,20 @@
 该类暂时无说明
 
 
-## 变量
+
+
+
+## 变量列表
+| 可见性 |  变量名  |  值| 说明 |
+|--------|----|---|---|
+| protected   | from | 无默认值 | | 
+| protected   | to | 无默认值 | | 
+| protected   | cc | 无默认值 | | 
+| protected   | bcc | 无默认值 | | 
+| protected   | subject | 无默认值 | | 
+| protected   | body | 无默认值 | | 
+| protected   | attachment | 无默认值 | | 
+
 
 
 ## 方法

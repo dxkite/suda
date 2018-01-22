@@ -9,7 +9,18 @@
 该类暂时无说明
 
 
-## 变量
+
+
+
+## 变量列表
+| 可见性 |  变量名  |  值| 说明 |
+|--------|----|---|---|
+| public static  | extRaw | .tpl. | 模板输入扩展| 
+| public static  | extCpl | .tpl | 模板输出扩展| 
+| protected static  | theme | default | 默认样式| 
+| protected static  | templateSource | Array | 模板搜索目录| 
+| protected static  | templateSourceInit | Array | 模板搜索目录初始化| 
+
 
 
 ## 方法

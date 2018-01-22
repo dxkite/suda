@@ -9,7 +9,27 @@ Suda 模板编译器
 该类暂时无说明
 
 
-## 变量
+## 常量列表
+| 常量名  |  值|
+|--------|----|
+|Template | suda\template\compiler\suda\Template | 
+
+
+
+
+
+## 变量列表
+| 可见性 |  变量名  |  值| 说明 |
+|--------|----|---|---|
+| protected static  | rawTag | Array | | 
+| protected static  | echoTag | Array | | 
+| protected static  | hookTag | Array | | 
+| protected static  | commentTag | Array | | 
+| protected static  | strTransTag | Array | | 
+| protected static  | rawTransTag | Array | | 
+| protected static  | template | suda\template\compiler\suda\Template | | 
+| protected static  | command | Array | 附加模板命令| 
+
 
 
 ## 方法

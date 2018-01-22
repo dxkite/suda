@@ -1,6 +1,6 @@
 # 函数 `cookie`
 
-获取当运行的请求的单例对象
+获取Cookie对象
 
 > *文件信息* suda\core\functions.php: 188~191
 
@@ -14,9 +14,9 @@
 
 ## 返回值
 
-类型：suda\core\Request
+类型：suda\core\Cookie
 
- 获取的请求单例对象
+ 获取的Cookie对象
 
 
 

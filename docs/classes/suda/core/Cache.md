@@ -10,7 +10,21 @@
 你可以把常用的数据和更改很少的数据查询数据库以后缓存到文件里面，用来加快页面加载速度。
 
 
-## 变量
+## 常量列表
+| 常量名  |  值|
+|--------|----|
+|CACHE_DEFAULT | 86400 | 
+
+
+
+
+
+## 变量列表
+| 可见性 |  变量名  |  值| 说明 |
+|--------|----|---|---|
+| public static  | cache | null | | 
+| public static  | storage | D:\Server\Local\suda\app\data\cache/data/ | | 
+
 
 
 ## 方法

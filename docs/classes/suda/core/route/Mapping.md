@@ -9,7 +9,35 @@
 该类暂时无说明
 
 
-## 变量
+## 常量列表
+| 常量名  |  值|
+|--------|----|
+|ROLE_ADMIN | 0 | 
+|ROLE_SIMPLE | 1 | 
+
+
+
+
+
+## 变量列表
+| 可见性 |  变量名  |  值| 说明 |
+|--------|----|---|---|
+| protected   | method | 无默认值 | | 
+| protected   | url | 无默认值 | | 
+| protected   | mapping | 无默认值 | | 
+| protected   | callback | 无默认值 | | 
+| protected   | module | 无默认值 | | 
+| protected   | name | 无默认值 | | 
+| protected   | role | 无默认值 | | 
+| protected   | types | 无默认值 | | 
+| protected   | param | 无默认值 | | 
+| protected   | value | 无默认值 | | 
+| protected   | antiPrefix | 无默认值 | | 
+| protected   | hidden | 无默认值 | | 
+| protected   | dynamic | 无默认值 | | 
+| protected static  | urlType | Array | | 
+| public static  | current | null | | 
+
 
 
 ## 方法

@@ -10,7 +10,29 @@
 
 
 
-## 变量
+## 常量列表
+| 常量名  |  值|
+|--------|----|
+|ORDER_ASC | 0 | 
+|ORDER_DESC | 1 | 
+
+
+
+
+
+## 变量列表
+| 可见性 |  变量名  |  值| 说明 |
+|--------|----|---|---|
+| protected   | fields | 无默认值 | | 
+| protected   | wants | 无默认值 | | 
+| protected   | fieldChecks | 无默认值 | 验证：类型，长度，正则| 
+| protected   | primaryKey | 无默认值 | | 
+| protected   | tableName | 无默认值 | | 
+| protected   | cachePath | 无默认值 | | 
+| protected   | creator | 无默认值 | | 
+| protected   | order_field | 无默认值 | | 
+| protected   | order | 无默认值 | | 
+
 
 
 ## 方法

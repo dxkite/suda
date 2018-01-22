@@ -9,7 +9,34 @@
 该类暂时无说明
 
 
-## 变量
+## 常量列表
+| 常量名  |  值|
+|--------|----|
+|Template | suda\template\compiler\suda\Template | 
+
+
+
+
+
+## 变量列表
+| 可见性 |  变量名  |  值| 说明 |
+|--------|----|---|---|
+| protected   | values | 无默认值 | | 
+| protected   | includes | 无默认值 | | 
+| protected   | includes_info | 无默认值 | | 
+| protected   | name | 无默认值 | | 
+| protected   | module | 无默认值 | | 
+| protected   | path | 无默认值 | | 
+| protected static  | templates | null | | 
+| protected static  | rawTag | Array | | 
+| protected static  | echoTag | Array | | 
+| protected static  | hookTag | Array | | 
+| protected static  | commentTag | Array | | 
+| protected static  | strTransTag | Array | | 
+| protected static  | rawTransTag | Array | | 
+| protected static  | template | suda\template\compiler\suda\Template | | 
+| protected static  | command | Array | 附加模板命令| 
+
 
 
 ## 方法

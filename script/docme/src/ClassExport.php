@@ -37,11 +37,12 @@ class ClassExport
             'classFullName'=>$reflect->getName(),
             'classDoc' => $doc,
         ]);
-        
+
+        $classData['constants'] =$reflect->getConstants();
         $classData['fileName']= Docme::path($reflect->getFileName());
         $classData['lineStart']= $reflect->getStartLine();
         $classData['lineEnd']=  $reflect->getEndLine();
-
+        $classData['properties']=static::exportValues($reflect);
         $methodPath=$path.'/'.$reflect->getName();
 
         $template=new ExportTemplate;
@@ -63,7 +64,26 @@ class ClassExport
         $template->export($destPath);
         return $classData;
     }
-    
+
+
+    public static function exportValues($reflect) {
+        $props=$reflect->getProperties(\ReflectionProperty::IS_PUBLIC |\ReflectionProperty::IS_PROTECTED);
+        $propInfos=[];
+        foreach($props as $prop){
+           list($doc)=FunctionExport::getDoc($prop->getDocComment());
+           
+           $propInfo['visibility']=$prop->isProtected()? 'protected':'public';
+           $propInfo['static'] = $prop->isStatic()? 'static':'';
+           $propInfo['docs']=$doc;
+           if ($prop->isStatic()){
+                $prop->setAccessible(true);
+                $propInfo['value']=static::getValue($prop->getValue());
+           }
+           $propInfos[$prop->getName()]=$propInfo;
+        }
+        return $propInfos;
+    }
+
     public function exportMethod($reflect, array $classData, string $path)
     {
         $template=new ExportTemplate;
@@ -95,5 +115,17 @@ class ClassExport
             }
         }
         return $userClasses;
+    }
+
+    public static function getValue($value){
+        if (is_null($value)) {
+            $value='null';
+        } elseif (is_array($value)) {
+            $value='Array';
+        }
+        elseif (is_object($value)) {
+            $value='Object '.get_class($value);
+        }
+        return $value;
     }
 }

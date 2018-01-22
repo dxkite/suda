@@ -12,8 +12,27 @@
 <?php echo $this->get("document",'该类暂时无说明'); ?>
 
 
+<?php if(count($this->get("constants"))): ?>
 
-## 变量
+## 常量列表
+| 常量名  |  值|
+|--------|----|
+<?php foreach($this->get("constants")as $name => $value): ?>|<?php echo htmlspecialchars(__($name)); ?> | <?php echo $value; ?> | 
+<?php endforeach; ?>
+
+<?php endif; ?>
+
+
+
+<?php if(count($this->get("properties"))): ?>
+
+## 变量列表
+| 可见性 |  变量名  |  值| 说明 |
+|--------|----|---|---|
+<?php foreach($this->get("properties")as $name => $info): ?>| <?php echo htmlspecialchars(__($info['visibility'].' '));  echo htmlspecialchars(__($info['static'])); ?>  | <?php echo htmlspecialchars(__($name)); ?> | <?php echo $info['value']??'无默认值'; ?> | <?php echo htmlspecialchars(__($info['docs']??'无')); ?>| 
+<?php endforeach; ?>
+
+<?php endif; ?>
 
 
 ## 方法

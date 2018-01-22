@@ -9,7 +9,19 @@
 该类暂时无说明
 
 
-## 变量
+
+
+
+## 变量列表
+| 可见性 |  变量名  |  值| 说明 |
+|--------|----|---|---|
+| public   | command | 无默认值 | | 
+| public   | file | 无默认值 | | 
+| public   | static | 无默认值 | | 
+| public   | params | 无默认值 | | 
+| public   | func_bind | 无默认值 | | 
+| public   | name | 无默认值 | | 
+
 
 
 ## 方法

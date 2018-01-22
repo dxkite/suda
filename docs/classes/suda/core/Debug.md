@@ -9,7 +9,30 @@
 该类暂时无说明
 
 
-## 变量
+## 常量列表
+| 常量名  |  值|
+|--------|----|
+|MAX_LOG_SIZE | 2097152 | 
+|TRACE | trace | 
+|DEBUG | debug | 
+|INFO | info | 
+|NOTICE | notice | 
+|WARNING | warning | 
+|ERROR | error | 
+
+
+
+
+
+## 变量列表
+| 可见性 |  变量名  |  值| 说明 |
+|--------|----|---|---|
+| protected static  | level | Array | | 
+| protected static  | run_info | Array | | 
+| protected static  | log | Array | | 
+| protected static  | time | Array | | 
+| protected static  | hash | e8caca | | 
+
 
 
 ## 方法

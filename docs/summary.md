@@ -17,12 +17,12 @@
 | [app](functions/app.md) |  获取当运行的APP单例对象  |
 | [router](functions/router.md) |  获取当运行的路由单例对象  |
 | [request](functions/request.md) |  获取当运行的请求的单例对象  |
-| [hook](functions/hook.md) |  获取当运行的请求的单例对象  |
-| [cookie](functions/cookie.md) |  获取当运行的请求的单例对象  |
+| [hook](functions/hook.md) |  获取当系统钩子对象  |
+| [cookie](functions/cookie.md) |  获取Cookie对象  |
 | [cache](functions/cache.md) |  获取一个缓存对象  |
 | [storage](functions/storage.md) |  获取一个储存对象  |
 | [config](functions/config.md) |  获取一个配置对象  |
-| [cmd](functions/cmd.md) |  新建一个命令对象，命令对象可以是一个字符串或者一个数组，也可以是一个匿名包对象  |
+| [cmd](functions/cmd.md) |  新建一个命令对象  |
 | [class_name](functions/class_name.md) |  获取类名，将JAVA包式的类名转化为 PHP的标准类名  |
 | [table](functions/table.md) |  获取数据表对象，该对象需要在module.json文件中注册过  |
 

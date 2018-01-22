@@ -8,9 +8,22 @@
 
 {{! $:document('该类暂时无说明') }}
 
+@if (count($:constants))
+## 常量列表
+| 常量名  |  值|
+|--------|----|
+@foreach ($:constants as $name => $value)|{{$name}} | {{! $value}} | 
+@endforeach
+@endif
 
-## 变量
 
+@if (count($:properties))
+## 变量列表
+| 可见性 |  变量名  |  值| 说明 |
+|--------|----|---|---|
+@foreach ($:properties as $name => $info)| {{$info['visibility'].' ' }} {{$info['static']}}  | {{$name}} | {{! $info['value']??'无默认值' }} | {{ $info['docs']??'无' }}| 
+@endforeach
+@endif
 
 ## 方法
 

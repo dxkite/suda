@@ -9,7 +9,22 @@
 该类暂时无说明
 
 
-## 变量
+
+
+
+## 变量列表
+| 可见性 |  变量名  |  值| 说明 |
+|--------|----|---|---|
+| protected   | userName | 无默认值 | | 
+| protected   | password | 无默认值 | | 
+| protected   | server | 无默认值 | | 
+| protected   | port | 无默认值 | | 
+| protected   | isSecurity | 无默认值 | | 
+| protected   | timeout | 无默认值 | | 
+| protected   | socket | 无默认值 | | 
+| protected   | error | 无默认值 | | 
+| protected   | message | 无默认值 | | 
+
 
 
 ## 方法

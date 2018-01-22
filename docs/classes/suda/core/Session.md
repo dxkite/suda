@@ -9,7 +9,14 @@
 该类暂时无说明
 
 
-## 变量
+
+
+
+## 变量列表
+| 可见性 |  变量名  |  值| 说明 |
+|--------|----|---|---|
+| protected static  | instance | Object suda\core\Session | | 
+
 
 
 ## 方法

@@ -9,7 +9,21 @@
 该类暂时无说明
 
 
-## 变量
+## 常量列表
+| 常量名  |  值|
+|--------|----|
+|APP_CACHE | app.cache | 
+
+
+
+
+
+## 变量列表
+| 可见性 |  变量名  |  值| 说明 |
+|--------|----|---|---|
+| protected static  | app_instance | Object suda\core\Application | | 
+| protected static  | application_class | suda\core\Application | | 
+
 
 
 ## 方法

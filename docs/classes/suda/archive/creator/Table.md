@@ -9,7 +9,32 @@
 该类暂时无说明
 
 
-## 变量
+## 常量列表
+| 常量名  |  值|
+|--------|----|
+|ENGINE_MyISAM | MyISAM | 
+|ENGINE_InnoDB | InnoDB | 
+
+
+
+
+
+## 变量列表
+| 可见性 |  变量名  |  值| 说明 |
+|--------|----|---|---|
+| protected   | fields | 无默认值 | | 
+| protected   | name | 无默认值 | | 
+| protected   | engine | 无默认值 | | 
+| protected   | comment | 无默认值 | | 
+| protected   | collate | 无默认值 | | 
+| protected   | charset | 无默认值 | | 
+| protected   | auto | 无默认值 | | 
+| protected   | indexKeys | 无默认值 | | 
+| protected   | foreignKeys | 无默认值 | | 
+| protected   | primaryKeys | 无默认值 | | 
+| protected   | uniqueKeys | 无默认值 | | 
+| protected   | keys | 无默认值 | | 
+
 
 
 ## 方法

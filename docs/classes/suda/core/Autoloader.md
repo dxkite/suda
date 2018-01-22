@@ -1,6 +1,6 @@
 #  类 Autoloader
 
-> *文件信息* suda\core\Autoloader.php: 18~129
+> *文件信息* suda\core\Autoloader.php: 18~134
 
 
 
@@ -9,7 +9,15 @@
 该类暂时无说明
 
 
-## 变量
+
+
+
+## 变量列表
+| 可见性 |  变量名  |  值| 说明 |
+|--------|----|---|---|
+| protected static  | namespace | Array | 默认命名空间| 
+| protected static  | include_path | Array | | 
+
 
 
 ## 方法

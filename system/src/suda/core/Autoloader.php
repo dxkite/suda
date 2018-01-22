@@ -17,6 +17,11 @@ namespace suda\core;
 
 class Autoloader
 {
+    /**
+     * 默认命名空间
+     *
+     * @var array
+     */
     protected static $namespace=['suda\\core'];
     protected static $include_path=[];
 

@@ -9,7 +9,24 @@
 该类暂时无说明
 
 
-## 变量
+## 常量列表
+| 常量名  |  值|
+|--------|----|
+|CACHE_NAME | route.mapping | 
+
+
+
+
+
+## 变量列表
+| 可见性 |  变量名  |  值| 说明 |
+|--------|----|---|---|
+| protected static  | urltype | Array | | 
+| protected static  | router | null | | 
+| protected   | routers | null | | 
+| protected static  | cacheName | null | | 
+| protected static  | cacheModules | null | | 
+
 
 
 ## 方法

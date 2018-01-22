@@ -9,7 +9,18 @@
 该类暂时无说明
 
 
-## 变量
+
+
+
+## 变量列表
+| 可见性 |  变量名  |  值| 说明 |
+|--------|----|---|---|
+| protected   | message | 无默认值 | | 
+| protected   | code | 无默认值 | | 
+| protected   | file | 无默认值 | | 
+| protected   | line | 无默认值 | | 
+| protected   | severity | 无默认值 | | 
+
 
 
 ## 方法

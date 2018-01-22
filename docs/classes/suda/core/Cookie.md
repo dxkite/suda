@@ -9,7 +9,14 @@ Class Cookie
 用于获取Cookie
 
 
-## 变量
+
+
+
+## 变量列表
+| 可见性 |  变量名  |  值| 说明 |
+|--------|----|---|---|
+| public static  | values | Array | | 
+
 
 
 ## 方法

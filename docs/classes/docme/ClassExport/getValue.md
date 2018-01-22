@@ -1,12 +1,12 @@
-# 方法 `getFunctionInfo`
+# 方法 `getValue`
 
 
 
-> *文件信息* D:\Server\Local\suda\script\doc\src\FunctionExport.php: 19~137
+> *文件信息* D:\Server\Local\suda\script\docme\src\ClassExport.php: 19~131
 
 ## 所属类 
 
-[FunctionExport](../FunctionExport.md)
+[ClassExport](../ClassExport.md)
 
 ## 可见性
 

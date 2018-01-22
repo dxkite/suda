@@ -171,9 +171,9 @@ function request()
 }
 
 /**
- * 获取当运行的请求的单例对象
+ * 获取当系统钩子对象
  *
- * @return suda\core\Request 获取的请求单例对象
+ * @return suda\core\Hook 获取的系统钩子对象
  */
 function hook()
 {
@@ -181,9 +181,9 @@ function hook()
 }
 
 /**
- * 获取当运行的请求的单例对象
+ * 获取Cookie对象
  *
- * @return suda\core\Request 获取的请求单例对象
+ * @return suda\core\Cookie 获取的Cookie对象
  */
 function cookie()
 {
@@ -221,15 +221,15 @@ function config()
 }
 
 /**
- * 新建一个命令对象，命令对象可以是一个字符串或者一个数组，也可以是一个匿名包对象
- * 还可以是一个标准可调用的格式的字符串
+ * 新建一个命令对象
  * 
- * ### 静态方法
+ * 命令对象可以是一个字符串或者一个数组，也可以是一个匿名包对象
+ * 还可以是一个标准可调用的格式的字符串
+ * 静态方法
  * ```
  * 类名::方法名
  * ```
- * 
- * ### 动态方法
+ * 动态方法
  *
  * ```
  * 类名->方法名

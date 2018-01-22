@@ -1,6 +1,6 @@
 # 函数 `hook`
 
-获取当运行的请求的单例对象
+获取当系统钩子对象
 
 > *文件信息* suda\core\functions.php: 178~181
 
@@ -14,9 +14,9 @@
 
 ## 返回值
 
-类型：suda\core\Request
+类型：suda\core\Hook
 
- 获取的请求单例对象
+ 获取的系统钩子对象
 
 
 
