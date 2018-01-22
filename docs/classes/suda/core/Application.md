@@ -1,4 +1,4 @@
-#  类 Application
+#  Application 
 
 > *文件信息* suda\core\Application.php: 24~440
 

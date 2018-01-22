@@ -1,4 +1,4 @@
-# 方法 `__toString`
+# SQLException::__toString
 
 
 

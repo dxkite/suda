@@ -1,4 +1,4 @@
-# 方法 `displayExt`
+# Manager::displayExt
 
 根据模板ID显示模板
 

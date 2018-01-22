@@ -1,4 +1,4 @@
-#  类 Exception
+#  Exception 
 
 > *文件信息* suda\core\Exception.php: 21~61
 
@@ -13,17 +13,17 @@
 
 
 ## 变量列表
-| 可见性 |  变量名  |  值| 说明 |
-|--------|----|---|---|
-| protected   | name | 无默认值 | | 
-| protected   | backtrace | 无默认值 | | 
-| protected   | show_start | 无默认值 | | 
-| protected   | show_end | 无默认值 | | 
-| protected   | message | 无默认值 | | 
-| protected   | code | 无默认值 | | 
-| protected   | file | 无默认值 | | 
-| protected   | line | 无默认值 | | 
-| protected   | severity | 无默认值 | | 
+| 可见性 |  变量名   | 说明 |
+|--------|----|------|
+| protected   | name | | 
+| protected   | backtrace | | 
+| protected   | show_start | | 
+| protected   | show_end | | 
+| protected   | message | | 
+| protected   | code | | 
+| protected   | file | | 
+| protected   | line | | 
+| protected   | severity | | 
 
 
 

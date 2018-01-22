@@ -1,4 +1,4 @@
-# 方法 `page`
+# Response::page
 
 输出HTML页面
 
@@ -25,7 +25,7 @@ $values 页面模板的值
 |--------|-----|-------|-------|
 | template |  string | 无 | 无 |
 | values |  array | # Error> htmlspecialchars() expects parameter 1 to be string, array given
-	Cause By D:\Server\Local\suda\script\docme\template\method.md.tpl:30
+	Cause By D:\Server\Local\suda\script\docme\template\method.md.tpl:31
  | 无 |
 
 

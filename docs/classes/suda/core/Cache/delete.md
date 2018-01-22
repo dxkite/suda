@@ -1,4 +1,4 @@
-# 方法 `delete`
+# Cache::delete
 
 删除值
 

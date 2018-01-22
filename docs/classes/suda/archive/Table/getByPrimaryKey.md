@@ -1,4 +1,4 @@
-# 方法 `getByPrimaryKey`
+# Table::getByPrimaryKey
 
 通过主键查找元素
 

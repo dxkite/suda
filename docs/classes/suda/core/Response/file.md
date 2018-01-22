@@ -1,4 +1,4 @@
-# 方法 `file`
+# Response::file
 
  直接输出文件
 

@@ -1,4 +1,4 @@
-# 方法 `__construct`
+# CommandException::__construct
 
 
 

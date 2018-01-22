@@ -1,4 +1,4 @@
-# 方法 `rmdirs`
+# Storage::rmdirs
 
 
 

@@ -1,4 +1,4 @@
-# 方法 `insertValue`
+# Table::insertValue
 
 插入一行记录
 

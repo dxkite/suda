@@ -1,4 +1,4 @@
-# 方法 `parseU`
+# TemplateInfo::parseU
 
 
 

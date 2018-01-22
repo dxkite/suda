@@ -1,4 +1,4 @@
-# 方法 `getModules`
+# Application::getModules
 
 获取所有模块
 

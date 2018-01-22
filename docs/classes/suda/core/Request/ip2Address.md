@@ -1,4 +1,4 @@
-# 方法 `ip2Address`
+# Request::ip2Address
 
 
 

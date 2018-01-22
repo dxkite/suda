@@ -1,4 +1,4 @@
-# 方法 `getTableName`
+# Table::getTableName
 
 获取表名
 

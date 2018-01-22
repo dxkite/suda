@@ -1,4 +1,4 @@
-# 方法 `compile`
+# Compiler::compile
 
 编译文件
 

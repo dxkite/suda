@@ -1,4 +1,4 @@
-# 方法 `setPrimaryKey`
+# Table::setPrimaryKey
 
 设置主键
 

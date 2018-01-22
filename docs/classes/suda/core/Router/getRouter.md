@@ -1,4 +1,4 @@
-# 方法 `getRouter`
+# Router::getRouter
 
 获取路由
 

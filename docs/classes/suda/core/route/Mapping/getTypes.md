@@ -1,4 +1,4 @@
-# 方法 `getTypes`
+# Mapping::getTypes
 
 
 

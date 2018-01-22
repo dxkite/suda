@@ -1,4 +1,4 @@
-#  类 Command
+#  Command 
 
 > *文件信息* suda\tool\Command.php: 20~151
 
@@ -13,14 +13,14 @@
 
 
 ## 变量列表
-| 可见性 |  变量名  |  值| 说明 |
-|--------|----|---|---|
-| public   | command | 无默认值 | | 
-| public   | file | 无默认值 | | 
-| public   | static | 无默认值 | | 
-| public   | params | 无默认值 | | 
-| public   | func_bind | 无默认值 | | 
-| public   | name | 无默认值 | | 
+| 可见性 |  变量名   | 说明 |
+|--------|----|------|
+| public   | command | | 
+| public   | file | | 
+| public   | static | | 
+| public   | params | | 
+| public   | func_bind | | 
+| public   | name | | 
 
 
 

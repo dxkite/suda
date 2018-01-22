@@ -1,4 +1,4 @@
-# 方法 `select`
+# Table::select
 
 根据条件删除列
 

@@ -1,4 +1,4 @@
-# 方法 `getDataString`
+# Table::getDataString
 
 获取数据SQL字符串
 

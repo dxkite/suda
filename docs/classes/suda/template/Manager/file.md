@@ -1,4 +1,4 @@
-# 方法 `file`
+# Manager::file
 
 编译动态文件
 

@@ -1,4 +1,4 @@
-# 方法 `include`
+# Locale::include
 
 包含本地化语言数组
 

@@ -1,4 +1,4 @@
-# 方法 `_render_end`
+# Template::_render_end
 
 
 

@@ -1,4 +1,4 @@
-# 方法 `routerReplace`
+# Router::routerReplace
 
 路由替换
 

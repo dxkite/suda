@@ -1,4 +1,4 @@
-#  类 Manager
+#  Manager 
 
 > *文件信息* suda\template\Manager.php: 29~490
 
@@ -13,13 +13,13 @@
 
 
 ## 变量列表
-| 可见性 |  变量名  |  值| 说明 |
-|--------|----|---|---|
-| public static  | extRaw | .tpl. | 模板输入扩展| 
-| public static  | extCpl | .tpl | 模板输出扩展| 
-| protected static  | theme | default | 默认样式| 
-| protected static  | templateSource | Array | 模板搜索目录| 
-| protected static  | templateSourceInit | Array | 模板搜索目录初始化| 
+| 可见性 |  变量名   | 说明 |
+|--------|----|------|
+| public static  | extRaw | 模板输入扩展| 
+| public static  | extCpl | 模板输出扩展| 
+| protected static  | theme | 默认样式| 
+| protected static  | templateSource | 模板搜索目录| 
+| protected static  | templateSourceInit | 模板搜索目录初始化| 
 
 
 

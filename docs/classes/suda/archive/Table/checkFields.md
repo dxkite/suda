@@ -1,4 +1,4 @@
-# 方法 `checkFields`
+# Table::checkFields
 
 检查参数列
 

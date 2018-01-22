@@ -1,4 +1,4 @@
-# 方法 `getModuleDir`
+# Application::getModuleDir
 
 获取模块所在的文件夹名
 

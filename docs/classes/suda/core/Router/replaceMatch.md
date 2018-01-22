@@ -1,4 +1,4 @@
-# 方法 `replaceMatch`
+# Router::replaceMatch
 
 替换匹配表达式
 

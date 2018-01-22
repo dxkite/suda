@@ -1,4 +1,4 @@
-# 方法 `hasCommand`
+# Compiler::hasCommand
 
 检查模板扩展命令是否存在
 

@@ -1,4 +1,4 @@
-# 方法 `drop`
+# Table::drop
 
 删除数据表
 

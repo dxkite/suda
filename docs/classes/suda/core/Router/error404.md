@@ -1,4 +1,4 @@
-# 方法 `error404`
+# Router::error404
 
 
 

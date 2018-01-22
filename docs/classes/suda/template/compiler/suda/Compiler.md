@@ -1,4 +1,4 @@
-#  类 Compiler
+#  Compiler 
 
 > *文件信息* suda\template\compiler\suda\Compiler.php: 30~364
 
@@ -19,16 +19,16 @@ Suda 模板编译器
 
 
 ## 变量列表
-| 可见性 |  变量名  |  值| 说明 |
-|--------|----|---|---|
-| protected static  | rawTag | Array | | 
-| protected static  | echoTag | Array | | 
-| protected static  | hookTag | Array | | 
-| protected static  | commentTag | Array | | 
-| protected static  | strTransTag | Array | | 
-| protected static  | rawTransTag | Array | | 
-| protected static  | template | suda\template\compiler\suda\Template | | 
-| protected static  | command | Array | 附加模板命令| 
+| 可见性 |  变量名   | 说明 |
+|--------|----|------|
+| protected static  | rawTag | | 
+| protected static  | echoTag | | 
+| protected static  | hookTag | | 
+| protected static  | commentTag | | 
+| protected static  | strTransTag | | 
+| protected static  | rawTransTag | | 
+| protected static  | template | | 
+| protected static  | command | 附加模板命令| 
 
 
 

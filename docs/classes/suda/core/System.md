@@ -1,4 +1,4 @@
-#  类 System
+#  System 
 
 > *文件信息* suda\core\System.php: 37~200
 
@@ -19,10 +19,10 @@
 
 
 ## 变量列表
-| 可见性 |  变量名  |  值| 说明 |
-|--------|----|---|---|
-| protected static  | app_instance | Object suda\core\Application | | 
-| protected static  | application_class | suda\core\Application | | 
+| 可见性 |  变量名   | 说明 |
+|--------|----|------|
+| protected static  | app_instance | | 
+| protected static  | application_class | | 
 
 
 

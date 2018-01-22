@@ -1,4 +1,4 @@
-# 函数 `cookie`
+# cookie
 
 获取Cookie对象
 

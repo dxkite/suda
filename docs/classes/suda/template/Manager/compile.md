@@ -1,4 +1,4 @@
-# 方法 `compile`
+# Manager::compile
 
 编译文件
 

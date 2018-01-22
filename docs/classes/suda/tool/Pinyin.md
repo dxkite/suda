@@ -1,4 +1,4 @@
-#  类 Pinyin
+#  Pinyin 
 
 > *文件信息* suda\tool\Pinyin.php: 18~145
 

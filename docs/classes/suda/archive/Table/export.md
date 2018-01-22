@@ -1,4 +1,4 @@
-# 方法 `export`
+# Table::export
 
 导出数据到文件
 

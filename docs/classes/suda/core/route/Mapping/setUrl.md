@@ -1,4 +1,4 @@
-# 方法 `setUrl`
+# Mapping::setUrl
 
 
 

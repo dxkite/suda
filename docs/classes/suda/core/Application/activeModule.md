@@ -1,4 +1,4 @@
-# 方法 `activeModule`
+# Application::activeModule
 
 激活运行的模块
 

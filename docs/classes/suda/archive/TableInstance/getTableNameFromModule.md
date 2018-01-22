@@ -1,4 +1,4 @@
-# 方法 `getTableNameFromModule`
+# TableInstance::getTableNameFromModule
 
 
 

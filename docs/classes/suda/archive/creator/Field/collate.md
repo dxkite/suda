@@ -1,4 +1,4 @@
-# 方法 `collate`
+# Field::collate
 
 
 

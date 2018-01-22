@@ -1,4 +1,4 @@
-# 方法 `getCode`
+# CommandException::getCode
 
 
 

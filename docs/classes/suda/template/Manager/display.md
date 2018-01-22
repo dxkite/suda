@@ -1,4 +1,4 @@
-# 方法 `display`
+# Manager::display
 
 根据模板ID显示HTML模板
 

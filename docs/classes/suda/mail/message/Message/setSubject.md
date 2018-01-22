@@ -1,4 +1,4 @@
-# 方法 `setSubject`
+# Message::setSubject
 
 
 

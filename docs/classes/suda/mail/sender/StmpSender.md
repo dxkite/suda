@@ -1,4 +1,4 @@
-#  类 StmpSender
+#  StmpSender 
 
 > *文件信息* suda\mail\sender\StmpSender.php: 21~243
 
@@ -13,17 +13,17 @@
 
 
 ## 变量列表
-| 可见性 |  变量名  |  值| 说明 |
-|--------|----|---|---|
-| protected   | userName | 无默认值 | | 
-| protected   | password | 无默认值 | | 
-| protected   | server | 无默认值 | | 
-| protected   | port | 无默认值 | | 
-| protected   | isSecurity | 无默认值 | | 
-| protected   | timeout | 无默认值 | | 
-| protected   | socket | 无默认值 | | 
-| protected   | error | 无默认值 | | 
-| protected   | message | 无默认值 | | 
+| 可见性 |  变量名   | 说明 |
+|--------|----|------|
+| protected   | userName | | 
+| protected   | password | | 
+| protected   | server | | 
+| protected   | port | | 
+| protected   | isSecurity | | 
+| protected   | timeout | | 
+| protected   | socket | | 
+| protected   | error | | 
+| protected   | message | | 
 
 
 

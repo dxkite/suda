@@ -1,4 +1,4 @@
-# 函数 `import`
+# import
 
 导入PHP文件
 

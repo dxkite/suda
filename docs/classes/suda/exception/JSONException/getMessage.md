@@ -1,4 +1,4 @@
-# 方法 `getMessage`
+# JSONException::getMessage
 
 
 

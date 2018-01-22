@@ -1,4 +1,4 @@
-#  类 Hook
+#  Hook 
 
 > *文件信息* suda\core\Hook.php: 19~127
 

@@ -1,4 +1,4 @@
-#  类 Storage
+#  Storage 
 
 > *文件信息* suda\core\Storage.php: 18~381
 
@@ -13,9 +13,9 @@
 
 
 ## 变量列表
-| 可见性 |  变量名  |  值| 说明 |
-|--------|----|---|---|
-| public static  | charset | Array | | 
+| 可见性 |  变量名   | 说明 |
+|--------|----|------|
+| public static  | charset | | 
 
 
 

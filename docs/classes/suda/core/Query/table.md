@@ -1,4 +1,4 @@
-# 方法 `table`
+# Query::table
 
 
 

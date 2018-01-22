@@ -1,4 +1,4 @@
-# 方法 `getMethod`
+# Request::getMethod
 
 
 

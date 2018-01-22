@@ -1,4 +1,4 @@
-# 方法 `getSeverity`
+# Exception::getSeverity
 
 
 

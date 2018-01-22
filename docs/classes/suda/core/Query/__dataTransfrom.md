@@ -1,4 +1,4 @@
-# 方法 `__dataTransfrom`
+# Query::__dataTransfrom
 
 转换数据，数据库统处理输入输出数据
 

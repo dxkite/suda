@@ -1,4 +1,4 @@
-# 方法 `setRouterAlias`
+# Router::setRouterAlias
 
 设置路由别名
 

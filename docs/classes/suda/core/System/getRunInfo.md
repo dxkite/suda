@@ -1,4 +1,4 @@
-# 方法 `getRunInfo`
+# System::getRunInfo
 
 
 

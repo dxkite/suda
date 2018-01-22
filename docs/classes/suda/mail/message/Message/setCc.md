@@ -1,4 +1,4 @@
-# 方法 `setCc`
+# Message::setCc
 
 
 

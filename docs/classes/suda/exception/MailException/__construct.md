@@ -1,4 +1,4 @@
-# 方法 `__construct`
+# MailException::__construct
 
 
 

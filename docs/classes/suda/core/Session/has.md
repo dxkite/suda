@@ -1,4 +1,4 @@
-# 方法 `has`
+# Session::has
 
 
 

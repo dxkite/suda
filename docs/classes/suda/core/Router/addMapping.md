@@ -1,4 +1,4 @@
-# 方法 `addMapping`
+# Router::addMapping
 
 
 

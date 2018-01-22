@@ -1,4 +1,4 @@
-#  类 Cookie
+#  Cookie 
 
 > *文件信息* suda\core\Cookie.php: 24~95
 
@@ -13,9 +13,9 @@ Class Cookie
 
 
 ## 变量列表
-| 可见性 |  变量名  |  值| 说明 |
-|--------|----|---|---|
-| public static  | values | Array | | 
+| 可见性 |  变量名   | 说明 |
+|--------|----|------|
+| public static  | values | | 
 
 
 

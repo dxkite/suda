@@ -1,4 +1,4 @@
-# 方法 `render`
+# Template::render
 
 渲染页面
 

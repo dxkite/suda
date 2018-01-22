@@ -1,4 +1,4 @@
-#  类 {{$:className }}
+#  {{$:className }} 
 
 > *文件信息* {{$:fileName('未知文件')}}: {{$:lineStart('未知')}}~{{$:lineEnd('未知')}}
 
@@ -19,9 +19,9 @@
 
 @if (count($:properties))
 ## 变量列表
-| 可见性 |  变量名  |  值| 说明 |
-|--------|----|---|---|
-@foreach ($:properties as $name => $info)| {{$info['visibility'].' ' }} {{$info['static']}}  | {{$name}} | {{! $info['value']??'无默认值' }} | {{ $info['docs']??'无' }}| 
+| 可见性 |  变量名   | 说明 |
+|--------|----|------|
+@foreach ($:properties as $name => $info)| {{$info['visibility'].' ' }} {{$info['static']}}  | {{$name}} | {{ $info['docs']??'无' }}| 
 @endforeach
 @endif
 

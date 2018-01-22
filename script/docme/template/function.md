@@ -1,4 +1,4 @@
-# 函数 `{{$:functionName}}`
+# {{$:functionName}}
 
 {{! $:functionDoc('该函数暂时无注释文档') }}
 

@@ -1,4 +1,4 @@
-# 函数 `assets`
+# assets
 
 根据模块名称获取资源URL
 

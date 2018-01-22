@@ -1,4 +1,4 @@
-# 方法 `build`
+# Mapping::build
 
 
 

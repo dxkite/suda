@@ -1,4 +1,4 @@
-# 方法 `assign`
+# Template::assign
 
 直接压入值
 

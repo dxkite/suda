@@ -1,4 +1,4 @@
-# 方法 `replaceClass`
+# Router::replaceClass
 
 替换路由指定类
 

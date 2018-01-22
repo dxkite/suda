@@ -1,4 +1,4 @@
-#  类 Debug
+#  Debug 
 
 > *文件信息* suda\core\Debug.php: 22~446
 
@@ -25,13 +25,13 @@
 
 
 ## 变量列表
-| 可见性 |  变量名  |  值| 说明 |
-|--------|----|---|---|
-| protected static  | level | Array | | 
-| protected static  | run_info | Array | | 
-| protected static  | log | Array | | 
-| protected static  | time | Array | | 
-| protected static  | hash | e8caca | | 
+| 可见性 |  变量名   | 说明 |
+|--------|----|------|
+| protected static  | level | | 
+| protected static  | run_info | | 
+| protected static  | log | | 
+| protected static  | time | | 
+| protected static  | hash | | 
 
 
 

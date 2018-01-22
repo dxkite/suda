@@ -1,4 +1,4 @@
-# 方法 `getInputFile`
+# Manager::getInputFile
 
 模板输入路径
 

@@ -1,4 +1,4 @@
-# 方法 `_render_start`
+# Template::_render_start
 
 
 

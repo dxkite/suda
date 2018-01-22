@@ -1,4 +1,4 @@
-# 方法 `zip`
+# ZipHelper::zip
 
 压缩目录到文件
 

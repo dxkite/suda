@@ -1,4 +1,4 @@
-# 方法 `__toString`
+# CommandException::__toString
 
 
 

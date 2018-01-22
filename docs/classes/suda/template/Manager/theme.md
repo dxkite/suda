@@ -1,4 +1,4 @@
-# 方法 `theme`
+# Manager::theme
 
 获取/设置模板样式
 

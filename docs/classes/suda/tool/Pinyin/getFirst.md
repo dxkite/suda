@@ -1,4 +1,4 @@
-# 方法 `getFirst`
+# Pinyin::getFirst
 
 
 

@@ -1,4 +1,4 @@
-#  类 FunctionExport
+#  FunctionExport 
 
 > *文件信息* D:\Server\Local\suda\script\docme\src\FunctionExport.php: 19~137
 
@@ -13,9 +13,9 @@
 
 
 ## 变量列表
-| 可见性 |  变量名  |  值| 说明 |
-|--------|----|---|---|
-| protected   | reflect | 无默认值 | | 
+| 可见性 |  变量名   | 说明 |
+|--------|----|------|
+| protected   | reflect | | 
 
 
 

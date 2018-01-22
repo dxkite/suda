@@ -1,4 +1,4 @@
-# 方法 `routerMove`
+# Router::routerMove
 
 路由移动
 

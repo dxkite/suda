@@ -1,4 +1,4 @@
-# 方法 `initFromTable`
+# Table::initFromTable
 
 
 

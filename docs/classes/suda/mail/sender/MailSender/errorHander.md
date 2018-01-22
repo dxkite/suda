@@ -1,4 +1,4 @@
-# 方法 `errorHander`
+# MailSender::errorHander
 
 
 

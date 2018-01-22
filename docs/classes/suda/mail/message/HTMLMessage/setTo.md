@@ -1,4 +1,4 @@
-# 方法 `setTo`
+# HTMLMessage::setTo
 
 
 

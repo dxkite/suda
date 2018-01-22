@@ -1,4 +1,4 @@
-#  类 Router
+#  Router 
 
 > *文件信息* suda\core\Router.php: 26~460
 
@@ -19,13 +19,13 @@
 
 
 ## 变量列表
-| 可见性 |  变量名  |  值| 说明 |
-|--------|----|---|---|
-| protected static  | urltype | Array | | 
-| protected static  | router | null | | 
-| protected   | routers | null | | 
-| protected static  | cacheName | null | | 
-| protected static  | cacheModules | null | | 
+| 可见性 |  变量名   | 说明 |
+|--------|----|------|
+| protected static  | urltype | | 
+| protected static  | router | | 
+| protected   | routers | | 
+| protected static  | cacheName | | 
+| protected static  | cacheModules | | 
 
 
 

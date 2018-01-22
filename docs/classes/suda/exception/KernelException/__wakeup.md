@@ -1,4 +1,4 @@
-# 方法 `__wakeup`
+# KernelException::__wakeup
 
 
 

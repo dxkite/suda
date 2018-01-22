@@ -1,4 +1,4 @@
-# 函数 `class_name`
+# class_name
 
 获取类名，将JAVA包式的类名转化为 PHP的标准类名
 

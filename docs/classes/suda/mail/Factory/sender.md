@@ -1,4 +1,4 @@
-# 方法 `sender`
+# Factory::sender
 
 
 

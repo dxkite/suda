@@ -1,8 +1,8 @@
-# 方法 `getValue`
+# ClassExport::getValue
 
 
 
-> *文件信息* D:\Server\Local\suda\script\docme\src\ClassExport.php: 19~131
+> *文件信息* D:\Server\Local\suda\script\docme\src\ClassExport.php: 19~126
 
 ## 所属类 
 

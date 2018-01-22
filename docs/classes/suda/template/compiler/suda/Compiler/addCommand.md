@@ -1,4 +1,4 @@
-# 方法 `addCommand`
+# Compiler::addCommand
 
 扩展模板命令
 

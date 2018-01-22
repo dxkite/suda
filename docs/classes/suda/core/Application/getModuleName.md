@@ -1,4 +1,4 @@
-# 方法 `getModuleName`
+# Application::getModuleName
 
 获取模块名，不包含版本号
 

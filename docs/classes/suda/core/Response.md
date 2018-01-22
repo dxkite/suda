@@ -1,4 +1,4 @@
-#  类 Response
+#  Response 
 
 > *文件信息* suda\core\Response.php: 27~250
 
@@ -13,10 +13,10 @@
 
 
 ## 变量列表
-| 可见性 |  变量名  |  值| 说明 |
-|--------|----|---|---|
-| public static  | name | null | | 
-| protected   | type | null | | 
+| 可见性 |  变量名   | 说明 |
+|--------|----|------|
+| public static  | name | | 
+| protected   | type | | 
 
 
 

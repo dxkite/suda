@@ -1,4 +1,4 @@
-# 方法 `delete`
+# Table::delete
 
 根据条件获取列
 

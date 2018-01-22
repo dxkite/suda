@@ -1,4 +1,4 @@
-# 方法 `displayFile`
+# Manager::displayFile
 
 根据路径显示模板
 

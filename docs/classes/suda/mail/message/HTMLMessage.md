@@ -1,4 +1,4 @@
-#  类 HTMLMessage
+#  HTMLMessage 
 
 > *文件信息* suda\mail\message\HTMLMessage.php: 20~26
 
@@ -13,15 +13,15 @@
 
 
 ## 变量列表
-| 可见性 |  变量名  |  值| 说明 |
-|--------|----|---|---|
-| protected   | from | 无默认值 | | 
-| protected   | to | 无默认值 | | 
-| protected   | cc | 无默认值 | | 
-| protected   | bcc | 无默认值 | | 
-| protected   | subject | 无默认值 | | 
-| protected   | body | 无默认值 | | 
-| protected   | attachment | 无默认值 | | 
+| 可见性 |  变量名   | 说明 |
+|--------|----|------|
+| protected   | from | | 
+| protected   | to | | 
+| protected   | cc | | 
+| protected   | bcc | | 
+| protected   | subject | | 
+| protected   | body | | 
+| protected   | attachment | | 
 
 
 

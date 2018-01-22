@@ -1,4 +1,4 @@
-# 方法 `cookie`
+# Request::cookie
 
 
 

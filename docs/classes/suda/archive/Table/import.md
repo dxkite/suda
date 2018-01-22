@@ -1,4 +1,4 @@
-# 方法 `import`
+# Table::import
 
 从导出文件中恢复数据
 

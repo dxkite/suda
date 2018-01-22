@@ -1,4 +1,4 @@
-# 方法 `getStaticAssetPath`
+# Manager::getStaticAssetPath
 
 
 

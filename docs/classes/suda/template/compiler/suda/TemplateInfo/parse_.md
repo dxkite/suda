@@ -1,4 +1,4 @@
-# 方法 `parse_`
+# TemplateInfo::parse_
 
 
 

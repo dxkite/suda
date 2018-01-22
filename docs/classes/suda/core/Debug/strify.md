@@ -1,4 +1,4 @@
-# 方法 `strify`
+# Debug::strify
 
 
 

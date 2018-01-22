@@ -1,4 +1,4 @@
-#  类 Mapping
+#  Mapping 
 
 > *文件信息* suda\core\route\Mapping.php: 22~307
 
@@ -20,23 +20,23 @@
 
 
 ## 变量列表
-| 可见性 |  变量名  |  值| 说明 |
-|--------|----|---|---|
-| protected   | method | 无默认值 | | 
-| protected   | url | 无默认值 | | 
-| protected   | mapping | 无默认值 | | 
-| protected   | callback | 无默认值 | | 
-| protected   | module | 无默认值 | | 
-| protected   | name | 无默认值 | | 
-| protected   | role | 无默认值 | | 
-| protected   | types | 无默认值 | | 
-| protected   | param | 无默认值 | | 
-| protected   | value | 无默认值 | | 
-| protected   | antiPrefix | 无默认值 | | 
-| protected   | hidden | 无默认值 | | 
-| protected   | dynamic | 无默认值 | | 
-| protected static  | urlType | Array | | 
-| public static  | current | null | | 
+| 可见性 |  变量名   | 说明 |
+|--------|----|------|
+| protected   | method | | 
+| protected   | url | | 
+| protected   | mapping | | 
+| protected   | callback | | 
+| protected   | module | | 
+| protected   | name | | 
+| protected   | role | | 
+| protected   | types | | 
+| protected   | param | | 
+| protected   | value | | 
+| protected   | antiPrefix | | 
+| protected   | hidden | | 
+| protected   | dynamic | | 
+| protected static  | urlType | | 
+| public static  | current | | 
 
 
 

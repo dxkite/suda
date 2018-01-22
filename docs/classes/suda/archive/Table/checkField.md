@@ -1,4 +1,4 @@
-# 方法 `checkField`
+# Table::checkField
 
 
 

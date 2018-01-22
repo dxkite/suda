@@ -1,4 +1,4 @@
-# 方法 `checkFieldsType`
+# Table::checkFieldsType
 
 检查参数列
 

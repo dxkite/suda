@@ -1,4 +1,4 @@
-#  类 TemplateInfo
+#  TemplateInfo 
 
 > *文件信息* suda\template\compiler\suda\TemplateInfo.php: 21~100
 
@@ -19,23 +19,23 @@
 
 
 ## 变量列表
-| 可见性 |  变量名  |  值| 说明 |
-|--------|----|---|---|
-| protected   | values | 无默认值 | | 
-| protected   | includes | 无默认值 | | 
-| protected   | includes_info | 无默认值 | | 
-| protected   | name | 无默认值 | | 
-| protected   | module | 无默认值 | | 
-| protected   | path | 无默认值 | | 
-| protected static  | templates | null | | 
-| protected static  | rawTag | Array | | 
-| protected static  | echoTag | Array | | 
-| protected static  | hookTag | Array | | 
-| protected static  | commentTag | Array | | 
-| protected static  | strTransTag | Array | | 
-| protected static  | rawTransTag | Array | | 
-| protected static  | template | suda\template\compiler\suda\Template | | 
-| protected static  | command | Array | 附加模板命令| 
+| 可见性 |  变量名   | 说明 |
+|--------|----|------|
+| protected   | values | | 
+| protected   | includes | | 
+| protected   | includes_info | | 
+| protected   | name | | 
+| protected   | module | | 
+| protected   | path | | 
+| protected static  | templates | | 
+| protected static  | rawTag | | 
+| protected static  | echoTag | | 
+| protected static  | hookTag | | 
+| protected static  | commentTag | | 
+| protected static  | strTransTag | | 
+| protected static  | rawTransTag | | 
+| protected static  | template | | 
+| protected static  | command | 附加模板命令| 
 
 
 

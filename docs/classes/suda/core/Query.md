@@ -1,4 +1,4 @@
-#  类 Query
+#  Query 
 
 > *文件信息* suda\core\Query.php: 20~201
 
@@ -13,20 +13,20 @@
 
 
 ## 变量列表
-| 可见性 |  变量名  |  值| 说明 |
-|--------|----|---|---|
-| protected static  | queryCount | 0 | | 
-| protected static  | times | 0 | | 
-| protected static  | pdo | null | | 
-| protected static  | prefix | null | | 
-| protected static  | transaction | 0 | | 
-| protected   | object | 0 | | 
-| protected   | stmt | 0 | | 
-| protected   | query | 0 | | 
-| protected   | values | 0 | | 
-| protected   | scroll | 0 | | 
-| protected   | database | 0 | | 
-| protected   | dbchange | 0 | | 
+| 可见性 |  变量名   | 说明 |
+|--------|----|------|
+| protected static  | queryCount | | 
+| protected static  | times | | 
+| protected static  | pdo | | 
+| protected static  | prefix | | 
+| protected static  | transaction | | 
+| protected   | object | | 
+| protected   | stmt | | 
+| protected   | query | | 
+| protected   | values | | 
+| protected   | scroll | | 
+| protected   | database | | 
+| protected   | dbchange | | 
 
 
 

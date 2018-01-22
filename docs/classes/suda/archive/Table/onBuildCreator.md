@@ -1,4 +1,4 @@
-# 方法 `onBuildCreator`
+# Table::onBuildCreator
 
 
 

@@ -1,4 +1,4 @@
-# 方法 `download`
+# Storage::download
 
 
 

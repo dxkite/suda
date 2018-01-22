@@ -1,4 +1,4 @@
-# 方法 `getFrom`
+# HTMLMessage::getFrom
 
 
 

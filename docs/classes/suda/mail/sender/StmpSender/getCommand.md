@@ -1,4 +1,4 @@
-# 方法 `getCommand`
+# StmpSender::getCommand
 
 
 

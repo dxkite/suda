@@ -1,4 +1,4 @@
-# 方法 `loadCompile`
+# Manager::loadCompile
 
 载入模板编译器
 

@@ -1,4 +1,4 @@
-# 方法 `parseName`
+# Router::parseName
 
 解析模板名
 

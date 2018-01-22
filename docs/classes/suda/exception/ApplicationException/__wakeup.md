@@ -1,4 +1,4 @@
-# 方法 `__wakeup`
+# ApplicationException::__wakeup
 
 
 

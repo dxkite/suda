@@ -1,4 +1,4 @@
-# 方法 `addCommand`
+# TemplateInfo::addCommand
 
 扩展模板命令
 

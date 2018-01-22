@@ -1,4 +1,4 @@
-# 方法 `sendCookies`
+# Cookie::sendCookies
 
 发送Cookie至浏览器
 

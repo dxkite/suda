@@ -1,4 +1,4 @@
-# 方法 `getRenderedString`
+# Template::getRenderedString
 
 获取渲染后的字符串
 

@@ -1,4 +1,4 @@
-#  类 Request
+#  Request 
 
 > *文件信息* suda\core\Request.php: 21~337
 

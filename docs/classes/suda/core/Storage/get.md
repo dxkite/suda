@@ -1,4 +1,4 @@
-# 方法 `get`
+# Storage::get
 
 
 

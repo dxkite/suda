@@ -1,4 +1,4 @@
-# 方法 `deleteByPrimaryKey`
+# Table::deleteByPrimaryKey
 
 通过主键删除元素
 

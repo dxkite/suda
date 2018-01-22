@@ -1,5 +1,4 @@
-<?php  class Class7da95941b8390a37cc15f99588b0b455 extends suda\template\compiler\suda\Template { protected $name="55c1cc2edb1c85ff12389cca9648951f";protected $module=""; protected function _render_template() {  ?>#  类 <?php echo htmlspecialchars(__($this->get("className"))); ?>
-
+<?php  class Class7da95941b8390a37cc15f99588b0b455 extends suda\template\compiler\suda\Template { protected $name="55c1cc2edb1c85ff12389cca9648951f";protected $module=""; protected function _render_template() {  ?>#  <?php echo htmlspecialchars(__($this->get("className"))); ?> 
 
 > *文件信息* <?php echo htmlspecialchars(__($this->get("fileName",'未知文件'))); ?>: <?php echo htmlspecialchars(__($this->get("lineStart",'未知'))); ?>~<?php echo htmlspecialchars(__($this->get("lineEnd",'未知'))); ?>
 
@@ -27,9 +26,9 @@
 <?php if(count($this->get("properties"))): ?>
 
 ## 变量列表
-| 可见性 |  变量名  |  值| 说明 |
-|--------|----|---|---|
-<?php foreach($this->get("properties")as $name => $info): ?>| <?php echo htmlspecialchars(__($info['visibility'].' '));  echo htmlspecialchars(__($info['static'])); ?>  | <?php echo htmlspecialchars(__($name)); ?> | <?php echo $info['value']??'无默认值'; ?> | <?php echo htmlspecialchars(__($info['docs']??'无')); ?>| 
+| 可见性 |  变量名   | 说明 |
+|--------|----|------|
+<?php foreach($this->get("properties")as $name => $info): ?>| <?php echo htmlspecialchars(__($info['visibility'].' '));  echo htmlspecialchars(__($info['static'])); ?>  | <?php echo htmlspecialchars(__($name)); ?> | <?php echo htmlspecialchars(__($info['docs']??'无')); ?>| 
 <?php endforeach; ?>
 
 <?php endif; ?>

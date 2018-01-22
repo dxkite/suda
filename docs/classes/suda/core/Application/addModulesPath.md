@@ -1,4 +1,4 @@
-# 方法 `addModulesPath`
+# Application::addModulesPath
 
 添加模块扫描目录
 

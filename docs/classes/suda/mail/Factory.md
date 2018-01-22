@@ -1,4 +1,4 @@
-#  类 Factory
+#  Factory 
 
 > *文件信息* suda\mail\Factory.php: 23~36
 

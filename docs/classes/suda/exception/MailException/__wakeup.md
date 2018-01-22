@@ -1,4 +1,4 @@
-# 方法 `__wakeup`
+# MailException::__wakeup
 
 
 

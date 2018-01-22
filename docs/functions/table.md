@@ -1,4 +1,4 @@
-# 函数 `table`
+# table
 
 获取数据表对象，该对象需要在module.json文件中注册过
 

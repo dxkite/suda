@@ -1,4 +1,4 @@
-# 方法 `response`
+# Template::response
 
 创建模板
 

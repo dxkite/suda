@@ -1,4 +1,4 @@
-# 方法 `getInstance`
+# TableInstance::getInstance
 
 
 

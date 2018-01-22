@@ -1,4 +1,4 @@
-# 方法 `moduleName`
+# Application::moduleName
 
 根据模块目录名转换成模块名
 

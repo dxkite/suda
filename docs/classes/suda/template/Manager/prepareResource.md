@@ -1,4 +1,4 @@
-# 方法 `prepareResource`
+# Manager::prepareResource
 
 准备静态资源
 

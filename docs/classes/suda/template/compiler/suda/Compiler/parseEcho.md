@@ -1,4 +1,4 @@
-# 方法 `parseEcho`
+# Compiler::parseEcho
 
 
 

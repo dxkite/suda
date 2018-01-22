@@ -1,4 +1,4 @@
-#  类 ArrayHelper
+#  ArrayHelper 
 
 > *文件信息* suda\tool\ArrayHelper.php: 24~197
 

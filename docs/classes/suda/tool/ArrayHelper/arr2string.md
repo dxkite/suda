@@ -1,4 +1,4 @@
-# 方法 `arr2string`
+# ArrayHelper::arr2string
 
 
 

@@ -1,4 +1,4 @@
-# 方法 `__toString`
+# Template::__toString
 
 获取当前模板的字符串
 

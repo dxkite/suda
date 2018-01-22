@@ -1,4 +1,4 @@
-# 方法 `parseFromString`
+# Cookie::parseFromString
 
 从字符串设置cookie
 

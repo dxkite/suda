@@ -1,4 +1,4 @@
-# 方法 `addTemplateSource`
+# Manager::addTemplateSource
 
 设置模板源
 

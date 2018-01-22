@@ -1,4 +1,4 @@
-# 方法 `buildUrl`
+# Router::buildUrl
 
 
 
@@ -24,7 +24,7 @@
 |--------|-----|-------|-------|
 | name |  string | 无 | 无 |
 | values |  array | # Error> htmlspecialchars() expects parameter 1 to be string, array given
-	Cause By D:\Server\Local\suda\script\docme\template\method.md.tpl:30
+	Cause By D:\Server\Local\suda\script\docme\template\method.md.tpl:31
  | 无 |
 
 

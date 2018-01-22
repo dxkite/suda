@@ -1,4 +1,4 @@
-# 函数 `use_namespace`
+# use_namespace
 
 使用命名空间
 

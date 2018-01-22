@@ -1,4 +1,4 @@
-#  类 InputValue
+#  InputValue 
 
 > *文件信息* suda\archive\creator\InputValue.php: 20~60
 

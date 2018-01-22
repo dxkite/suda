@@ -1,4 +1,4 @@
-# 方法 `value`
+# SQLQuery::value
 
 
 

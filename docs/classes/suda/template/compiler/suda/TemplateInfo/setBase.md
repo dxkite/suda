@@ -1,4 +1,4 @@
-# 方法 `setBase`
+# TemplateInfo::setBase
 
 
 

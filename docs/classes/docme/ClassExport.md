@@ -1,6 +1,6 @@
-#  类 ClassExport
+#  ClassExport 
 
-> *文件信息* D:\Server\Local\suda\script\docme\src\ClassExport.php: 19~131
+> *文件信息* D:\Server\Local\suda\script\docme\src\ClassExport.php: 19~126
 
 
 
@@ -13,9 +13,9 @@
 
 
 ## 变量列表
-| 可见性 |  变量名  |  值| 说明 |
-|--------|----|---|---|
-| protected   | reflect | 无默认值 | | 
+| 可见性 |  变量名   | 说明 |
+|--------|----|------|
+| protected   | reflect | | 
 
 
 

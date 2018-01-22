@@ -1,4 +1,4 @@
-# 方法 `__call`
+# Debug::__call
 
 
 

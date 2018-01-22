@@ -1,4 +1,4 @@
-#  类 EchoValue
+#  EchoValue 
 
 > *文件信息* suda\tool\EchoValue.php: 18~38
 
@@ -13,10 +13,10 @@
 
 
 ## 变量列表
-| 可见性 |  变量名  |  值| 说明 |
-|--------|----|---|---|
-| protected   | var | 无默认值 | @var| 
-| protected   | key | 无默认值 | | 
+| 可见性 |  变量名   | 说明 |
+|--------|----|------|
+| protected   | var | @var| 
+| protected   | key | | 
 
 
 

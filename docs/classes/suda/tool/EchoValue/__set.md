@@ -1,4 +1,4 @@
-# 方法 `__set`
+# EchoValue::__set
 
 @param $value
 

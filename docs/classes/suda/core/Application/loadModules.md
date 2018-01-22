@@ -1,4 +1,4 @@
-# 方法 `loadModules`
+# Application::loadModules
 
 载入模块
 

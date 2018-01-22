@@ -1,4 +1,4 @@
-#  类 CookieSetter
+#  CookieSetter 
 
 > *文件信息* suda\tool\CookieSetter.php: 18~112
 

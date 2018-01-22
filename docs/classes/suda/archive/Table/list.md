@@ -1,4 +1,4 @@
-# 方法 `list`
+# Table::list
 
 分页列出元素
 

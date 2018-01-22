@@ -1,4 +1,4 @@
-# 方法 `updateByPrimaryKey`
+# Table::updateByPrimaryKey
 
 通过主键更新元素
 

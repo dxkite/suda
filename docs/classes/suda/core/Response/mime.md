@@ -1,4 +1,4 @@
-# 方法 `mime`
+# Response::mime
 
  页面MIME类型
 

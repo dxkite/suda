@@ -1,4 +1,4 @@
-# 方法 `update`
+# Table::update
 
 根据条件更新列
 
@@ -25,7 +25,7 @@
 |--------|-----|-------|-------|
 | where |  [type] | 无 | 无 |
 | bind |  array | # Error> htmlspecialchars() expects parameter 1 to be string, array given
-	Cause By D:\Server\Local\suda\script\docme\template\method.md.tpl:30
+	Cause By D:\Server\Local\suda\script\docme\template\method.md.tpl:31
  | 无 |
 
 

@@ -1,4 +1,4 @@
-#  类 Table
+#  Table 
 
 > *文件信息* suda\archive\creator\Table.php: 19~204
 
@@ -20,20 +20,20 @@
 
 
 ## 变量列表
-| 可见性 |  变量名  |  值| 说明 |
-|--------|----|---|---|
-| protected   | fields | 无默认值 | | 
-| protected   | name | 无默认值 | | 
-| protected   | engine | 无默认值 | | 
-| protected   | comment | 无默认值 | | 
-| protected   | collate | 无默认值 | | 
-| protected   | charset | 无默认值 | | 
-| protected   | auto | 无默认值 | | 
-| protected   | indexKeys | 无默认值 | | 
-| protected   | foreignKeys | 无默认值 | | 
-| protected   | primaryKeys | 无默认值 | | 
-| protected   | uniqueKeys | 无默认值 | | 
-| protected   | keys | 无默认值 | | 
+| 可见性 |  变量名   | 说明 |
+|--------|----|------|
+| protected   | fields | | 
+| protected   | name | | 
+| protected   | engine | | 
+| protected   | comment | | 
+| protected   | collate | | 
+| protected   | charset | | 
+| protected   | auto | | 
+| protected   | indexKeys | | 
+| protected   | foreignKeys | | 
+| protected   | primaryKeys | | 
+| protected   | uniqueKeys | | 
+| protected   | keys | | 
 
 
 

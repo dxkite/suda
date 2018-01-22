@@ -1,4 +1,4 @@
-#  类 Session
+#  Session 
 
 > *文件信息* suda\core\Session.php: 18~63
 
@@ -13,9 +13,9 @@
 
 
 ## 变量列表
-| 可见性 |  变量名  |  值| 说明 |
-|--------|----|---|---|
-| protected static  | instance | Object suda\core\Session | | 
+| 可见性 |  变量名   | 说明 |
+|--------|----|------|
+| protected static  | instance | | 
 
 
 

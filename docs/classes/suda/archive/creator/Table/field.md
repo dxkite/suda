@@ -1,4 +1,4 @@
-# 方法 `field`
+# Table::field
 
 新建表列
 

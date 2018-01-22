@@ -1,4 +1,4 @@
-# 方法 `init`
+# Autoloader::init
 
 
 

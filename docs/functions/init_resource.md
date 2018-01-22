@@ -1,4 +1,4 @@
-# 函数 `init_resource`
+# init_resource
 
 初始化资源
 

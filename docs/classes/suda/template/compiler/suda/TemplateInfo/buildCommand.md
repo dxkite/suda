@@ -1,4 +1,4 @@
-# 方法 `buildCommand`
+# TemplateInfo::buildCommand
 
 创建模板扩展命令
 

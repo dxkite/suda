@@ -1,4 +1,4 @@
-# 方法 `__callStatic`
+# Debug::__callStatic
 
 
 

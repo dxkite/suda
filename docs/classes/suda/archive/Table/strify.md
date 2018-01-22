@@ -1,4 +1,4 @@
-# 方法 `strify`
+# Table::strify
 
 
 

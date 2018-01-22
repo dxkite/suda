@@ -1,4 +1,4 @@
-# 方法 `getTemplateSource`
+# Manager::getTemplateSource
 
 获取模板源
 

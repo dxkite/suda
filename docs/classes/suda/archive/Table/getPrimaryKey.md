@@ -1,4 +1,4 @@
-# 方法 `getPrimaryKey`
+# Table::getPrimaryKey
 
 获取主键
 

@@ -1,4 +1,4 @@
-# 方法 `__construct`
+# Session::__construct
 
 
 

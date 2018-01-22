@@ -1,4 +1,4 @@
-# 方法 `export`
+# ArrayHelper::export
 
 @ref 将数组导出
 

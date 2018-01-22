@@ -1,4 +1,4 @@
-# 方法 `parseSelf`
+# Compiler::parseSelf
 
 
 

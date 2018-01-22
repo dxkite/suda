@@ -1,4 +1,4 @@
-# 方法 `setHeader`
+# Response::setHeader
 
 安全设置Header值
 

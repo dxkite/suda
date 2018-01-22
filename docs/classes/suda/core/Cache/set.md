@@ -1,4 +1,4 @@
-# 方法 `set`
+# Cache::set
 
 设置
 

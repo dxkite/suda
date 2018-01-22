@@ -1,4 +1,4 @@
-# 方法 `setWants`
+# Table::setWants
 
 设置想要的列
 

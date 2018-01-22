@@ -1,4 +1,4 @@
-# 方法 `getAppThemePath`
+# Manager::getAppThemePath
 
 模块模板文件目录
 

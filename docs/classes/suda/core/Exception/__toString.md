@@ -1,4 +1,4 @@
-# 方法 `__toString`
+# Exception::__toString
 
 
 

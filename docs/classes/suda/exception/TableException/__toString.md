@@ -1,4 +1,4 @@
-# 方法 `__toString`
+# TableException::__toString
 
 
 

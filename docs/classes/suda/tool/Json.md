@@ -1,4 +1,4 @@
-#  类 Json
+#  Json 
 
 > *文件信息* suda\tool\Json.php: 20~84
 
@@ -13,9 +13,9 @@
 
 
 ## 变量列表
-| 可见性 |  变量名  |  值| 说明 |
-|--------|----|---|---|
-| public static  | error | Array | | 
+| 可见性 |  变量名   | 说明 |
+|--------|----|------|
+| public static  | error | | 
 
 
 

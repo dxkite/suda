@@ -1,4 +1,4 @@
-# 方法 `_order`
+# Table::_order
 
 
 

@@ -1,4 +1,4 @@
-# 方法 `remove`
+# Storage::remove
 
 该函数暂时无注释文档
 

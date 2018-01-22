@@ -1,4 +1,4 @@
-# 方法 `json`
+# Response::json
 
 构建JSON输出
 

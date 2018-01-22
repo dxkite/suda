@@ -1,4 +1,4 @@
-# 方法 `setFields`
+# Table::setFields
 
 设置表列
 

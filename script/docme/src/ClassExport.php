@@ -71,14 +71,9 @@ class ClassExport
         $propInfos=[];
         foreach($props as $prop){
            list($doc)=FunctionExport::getDoc($prop->getDocComment());
-           
            $propInfo['visibility']=$prop->isProtected()? 'protected':'public';
            $propInfo['static'] = $prop->isStatic()? 'static':'';
            $propInfo['docs']=$doc;
-           if ($prop->isStatic()){
-                $prop->setAccessible(true);
-                $propInfo['value']=static::getValue($prop->getValue());
-           }
            $propInfos[$prop->getName()]=$propInfo;
         }
         return $propInfos;

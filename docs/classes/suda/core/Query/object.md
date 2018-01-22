@@ -1,4 +1,4 @@
-# 方法 `object`
+# Query::object
 
 添加列处理类
 

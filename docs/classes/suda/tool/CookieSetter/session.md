@@ -1,4 +1,4 @@
-# 方法 `session`
+# CookieSetter::session
 
 
 

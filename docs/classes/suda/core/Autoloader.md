@@ -1,4 +1,4 @@
-#  类 Autoloader
+#  Autoloader 
 
 > *文件信息* suda\core\Autoloader.php: 18~134
 
@@ -13,10 +13,10 @@
 
 
 ## 变量列表
-| 可见性 |  变量名  |  值| 说明 |
-|--------|----|---|---|
-| protected static  | namespace | Array | 默认命名空间| 
-| protected static  | include_path | Array | | 
+| 可见性 |  变量名   | 说明 |
+|--------|----|------|
+| protected static  | namespace | 默认命名空间| 
+| protected static  | include_path | | 
 
 
 

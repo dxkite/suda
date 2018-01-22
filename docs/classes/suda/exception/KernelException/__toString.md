@@ -1,4 +1,4 @@
-# 方法 `__toString`
+# KernelException::__toString
 
 
 

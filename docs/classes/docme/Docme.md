@@ -1,4 +1,4 @@
-#  类 Docme
+#  Docme 
 
 > *文件信息* D:\Server\Local\suda\script\docme\src\Docme.php: 25~85
 
@@ -13,11 +13,11 @@
 
 
 ## 变量列表
-| 可见性 |  变量名  |  值| 说明 |
-|--------|----|---|---|
-| protected   | exportClass | 无默认值 | | 
-| protected   | exportFunction | 无默认值 | | 
-| protected static  | rootPath | D:\Server\Local\suda\system/src | | 
+| 可见性 |  变量名   | 说明 |
+|--------|----|------|
+| protected   | exportClass | | 
+| protected   | exportFunction | | 
+| protected static  | rootPath | | 
 
 
 

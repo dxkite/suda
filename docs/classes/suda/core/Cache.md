@@ -1,4 +1,4 @@
-#  类 Cache
+#  Cache 
 
 > *文件信息* suda\core\Cache.php: 23~135
 
@@ -20,10 +20,10 @@
 
 
 ## 变量列表
-| 可见性 |  变量名  |  值| 说明 |
-|--------|----|---|---|
-| public static  | cache | null | | 
-| public static  | storage | D:\Server\Local\suda\app\data\cache/data/ | | 
+| 可见性 |  变量名   | 说明 |
+|--------|----|------|
+| public static  | cache | | 
+| public static  | storage | | 
 
 
 

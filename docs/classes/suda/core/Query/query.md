@@ -1,4 +1,4 @@
-# 方法 `query`
+# Query::query
 
 
 
@@ -24,7 +24,7 @@
 |--------|-----|-------|-------|
 | query |  string | 无 | 无 |
 | array |  array | # Error> htmlspecialchars() expects parameter 1 to be string, array given
-	Cause By D:\Server\Local\suda\script\docme\template\method.md.tpl:30
+	Cause By D:\Server\Local\suda\script\docme\template\method.md.tpl:31
  | 无 |
 
 

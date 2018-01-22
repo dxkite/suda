@@ -1,4 +1,4 @@
-# 方法 `load`
+# Locale::load
 
 加载语言本地化文件
 

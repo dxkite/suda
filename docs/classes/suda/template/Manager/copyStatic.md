@@ -1,4 +1,4 @@
-# 方法 `copyStatic`
+# Manager::copyStatic
 
 复制模板目录下静态文件
 

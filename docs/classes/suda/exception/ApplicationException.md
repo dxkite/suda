@@ -1,4 +1,4 @@
-#  类 ApplicationException
+#  ApplicationException 
 
 > *文件信息* suda\exception\ApplicationException.php: 17~17
 
@@ -13,12 +13,12 @@
 
 
 ## 变量列表
-| 可见性 |  变量名  |  值| 说明 |
-|--------|----|---|---|
-| protected   | message | 无默认值 | | 
-| protected   | code | 无默认值 | | 
-| protected   | file | 无默认值 | | 
-| protected   | line | 无默认值 | | 
+| 可见性 |  变量名   | 说明 |
+|--------|----|------|
+| protected   | message | | 
+| protected   | code | | 
+| protected   | file | | 
+| protected   | line | | 
 
 
 

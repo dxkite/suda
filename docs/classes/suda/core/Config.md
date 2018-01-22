@@ -1,4 +1,4 @@
-#  类 Config
+#  Config 
 
 > *文件信息* suda\core\Config.php: 21~47
 
@@ -13,9 +13,9 @@
 
 
 ## 变量列表
-| 可见性 |  变量名  |  值| 说明 |
-|--------|----|---|---|
-| public static  | config | Array | | 
+| 可见性 |  变量名   | 说明 |
+|--------|----|------|
+| public static  | config | | 
 
 
 

@@ -1,4 +1,4 @@
-# 方法 `__wakeup`
+# SQLException::__wakeup
 
 
 

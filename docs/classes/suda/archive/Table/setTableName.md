@@ -1,4 +1,4 @@
-# 方法 `setTableName`
+# Table::setTableName
 
 设置表名
 

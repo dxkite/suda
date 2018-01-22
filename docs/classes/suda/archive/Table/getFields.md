@@ -1,4 +1,4 @@
-# 方法 `getFields`
+# Table::getFields
 
 获取全部的列
 

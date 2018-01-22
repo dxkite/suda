@@ -1,4 +1,4 @@
-# 方法 `assign`
+# Config::assign
 
 
 

@@ -1,4 +1,4 @@
-#  类 Field
+#  Field 
 
 > *文件信息* suda\archive\creator\Field.php: 19~188
 
@@ -24,21 +24,21 @@
 
 
 ## 变量列表
-| 可见性 |  变量名  |  值| 说明 |
-|--------|----|---|---|
-| protected   | auto | 无默认值 | | 
-| protected   | comment | 无默认值 | | 
-| protected   | key | 无默认值 | | 
-| protected   | foreign | 无默认值 | | 
-| protected   | name | 无默认值 | | 
-| protected   | type | 无默认值 | | 
-| protected   | length | 无默认值 | | 
-| protected   | default | 无默认值 | | 
-| protected   | isDefault | 无默认值 | | 
-| protected   | null | 无默认值 | | 
-| protected   | attribute | 无默认值 | | 
-| protected   | collation | 无默认值 | | 
-| protected   | tableName | 无默认值 | | 
+| 可见性 |  变量名   | 说明 |
+|--------|----|------|
+| protected   | auto | | 
+| protected   | comment | | 
+| protected   | key | | 
+| protected   | foreign | | 
+| protected   | name | | 
+| protected   | type | | 
+| protected   | length | | 
+| protected   | default | | 
+| protected   | isDefault | | 
+| protected   | null | | 
+| protected   | attribute | | 
+| protected   | collation | | 
+| protected   | tableName | | 
 
 
 

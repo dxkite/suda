@@ -1,4 +1,4 @@
-# 方法 `getWants`
+# Table::getWants
 
 获取设置了的列
 

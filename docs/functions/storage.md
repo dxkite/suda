@@ -1,4 +1,4 @@
-# 函数 `storage`
+# storage
 
 获取一个储存对象
 

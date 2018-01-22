@@ -1,4 +1,4 @@
-# 方法 `_render_template`
+# Template::_render_template
 
 渲染语句
 

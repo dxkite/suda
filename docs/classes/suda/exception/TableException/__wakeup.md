@@ -1,4 +1,4 @@
-# 方法 `__wakeup`
+# TableException::__wakeup
 
 
 

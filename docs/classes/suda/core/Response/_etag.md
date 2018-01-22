@@ -1,4 +1,4 @@
-# 方法 `_etag`
+# Response::_etag
 
 
 

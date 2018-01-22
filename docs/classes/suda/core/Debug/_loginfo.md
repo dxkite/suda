@@ -1,4 +1,4 @@
-# 方法 `_loginfo`
+# Debug::_loginfo
 
 
 

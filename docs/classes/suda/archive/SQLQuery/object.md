@@ -1,4 +1,4 @@
-# 方法 `object`
+# SQLQuery::object
 
 添加列处理类
 

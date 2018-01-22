@@ -1,4 +1,4 @@
-# 方法 `__construct`
+# SQLQuery::__construct
 
 构造查询
 
@@ -24,7 +24,7 @@
 |--------|-----|-------|-------|
 | query |  string | 无 | 无 |
 | binds |  array | # Error> htmlspecialchars() expects parameter 1 to be string, array given
-	Cause By D:\Server\Local\suda\script\docme\template\method.md.tpl:30
+	Cause By D:\Server\Local\suda\script\docme\template\method.md.tpl:31
  | 无 |
 | scroll |  bool |  | 无 |
 

@@ -1,4 +1,4 @@
-# 方法 `redirect`
+# Response::redirect
 
 
 

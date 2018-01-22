@@ -1,4 +1,4 @@
-# 方法 `truncate`
+# Table::truncate
 
 清空数据表
 

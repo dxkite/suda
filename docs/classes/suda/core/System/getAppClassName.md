@@ -1,4 +1,4 @@
-# 方法 `getAppClassName`
+# System::getAppClassName
 
 
 

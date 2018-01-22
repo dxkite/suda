@@ -1,4 +1,4 @@
-# 函数 `debug`
+# debug
 
 获取debug对象
 

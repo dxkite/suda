@@ -1,4 +1,4 @@
-# 方法 `__construct`
+# TableException::__construct
 
 
 

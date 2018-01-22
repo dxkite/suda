@@ -1,4 +1,4 @@
-# 方法 `getOutputFile`
+# Manager::getOutputFile
 
 模板编译后输出路径
 

@@ -1,4 +1,4 @@
-# 方法 `_absoluteCall`
+# Command::_absoluteCall
 
 绝对调用函数，包括私有和保护函数
 

@@ -1,4 +1,4 @@
-#  类 TableInstance
+#  TableInstance 
 
 > *文件信息* suda\archive\TableInstance.php: 21~97
 
@@ -13,11 +13,11 @@
 
 
 ## 变量列表
-| 可见性 |  变量名  |  值| 说明 |
-|--------|----|---|---|
-| protected static  | tableInstances | null | | 
-| protected static  | instance | null | | 
-| protected static  | tableClass | null | | 
+| 可见性 |  变量名   | 说明 |
+|--------|----|------|
+| protected static  | tableInstances | | 
+| protected static  | instance | | 
+| protected static  | tableClass | | 
 
 
 

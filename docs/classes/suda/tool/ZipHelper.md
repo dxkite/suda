@@ -1,4 +1,4 @@
-#  类 ZipHelper
+#  ZipHelper 
 
 > *文件信息* suda\tool\ZipHelper.php: 21~84
 

@@ -1,4 +1,4 @@
-# 方法 `compile`
+# TemplateInfo::compile
 
 编译文件
 

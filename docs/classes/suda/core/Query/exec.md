@@ -1,4 +1,4 @@
-# 方法 `exec`
+# Query::exec
 
 
 

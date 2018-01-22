@@ -1,4 +1,4 @@
-# 方法 `log`
+# StmpSender::log
 
 
 

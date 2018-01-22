@@ -1,4 +1,4 @@
-#  类 Locale
+#  Locale 
 
 > *文件信息* suda\core\Locale.php: 23~103
 

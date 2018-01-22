@@ -1,4 +1,4 @@
-# 方法 `expire`
+# CookieSetter::expire
 
 
 

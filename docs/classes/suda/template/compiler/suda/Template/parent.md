@@ -1,4 +1,4 @@
-# 方法 `parent`
+# Template::parent
 
 创建模板
 

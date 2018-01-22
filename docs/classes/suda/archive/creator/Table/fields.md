@@ -1,4 +1,4 @@
-# 方法 `fields`
+# Table::fields
 
 表全部的列
 
