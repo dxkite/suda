@@ -1,8 +1,9 @@
 # 函数 `config`
 
-> *文件信息* suda\core\functions.php: 217~220
-
 获取一个配置对象
+
+> *文件信息* suda\core\functions.php: 218~221
+
 
 
 ## 参数
@@ -17,3 +18,8 @@
 
  获取的配置对象
 
+
+
+## 例子
+
+example

@@ -1,6 +1,8 @@
 # 方法 `buildCommand`
 
-> *文件信息* suda\template\compiler\suda\Compiler.php: 148~165
+创建模板扩展命令
+
+> *文件信息* suda\template\compiler\suda\Compiler.php: 30~364
 
 ## 所属类 
 
@@ -12,7 +14,7 @@
 
 ## 说明
 
-创建模板扩展命令
+
 
 
 ## 参数
@@ -31,3 +33,8 @@
 
 无
 
+
+
+## 例子
+
+example

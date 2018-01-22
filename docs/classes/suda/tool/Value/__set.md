@@ -1,6 +1,8 @@
 # 方法 `__set`
 
-> *文件信息* suda\tool\Value.php: 68~71
+@param $value
+
+> *文件信息* suda\tool\Value.php: 22~131
 
 ## 所属类 
 
@@ -12,7 +14,8 @@
 
 ## 说明
 
-@param $value
+@package Core
+
 
 ## 参数
 
@@ -29,3 +32,8 @@
 
 无
 
+
+
+## 例子
+
+example

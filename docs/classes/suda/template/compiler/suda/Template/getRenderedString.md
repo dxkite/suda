@@ -1,6 +1,8 @@
 # 方法 `getRenderedString`
 
-> *文件信息* suda\template\compiler\suda\Template.php: 78~86
+获取渲染后的字符串
+
+> *文件信息* suda\template\compiler\suda\Template.php: 25~246
 
 ## 所属类 
 
@@ -12,7 +14,8 @@
 
 ## 说明
 
-获取渲染后的字符串
+该函数暂时无说明
+
 
 ## 参数
 
@@ -22,4 +25,9 @@
 
 ## 返回值
 
-无返回值
+返回值类型不定
+
+
+## 例子
+
+example

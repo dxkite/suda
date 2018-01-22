@@ -1,6 +1,8 @@
 # 方法 `etag`
 
-> *文件信息* suda\core\Response.php: 190~202
+使用Etag
+
+> *文件信息* suda\core\Response.php: 27~250
 
 ## 所属类 
 
@@ -12,8 +14,8 @@
 
 ## 说明
 
-使用Etag
 注意：请不要再输出内容
+
 
 
 ## 参数
@@ -31,3 +33,8 @@
 
 无
 
+
+
+## 例子
+
+example

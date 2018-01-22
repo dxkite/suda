@@ -1,6 +1,8 @@
 # 方法 `addIncludePath`
 
-> *文件信息* suda\core\Autoloader.php: 85~94
+
+
+> *文件信息* suda\core\Autoloader.php: 18~122
 
 ## 所属类 
 
@@ -12,6 +14,7 @@
 
 ## 说明
 
+该函数暂时无说明
 
 
 ## 参数
@@ -26,4 +29,9 @@
 
 ## 返回值
 
-无返回值
+返回值类型不定
+
+
+## 例子
+
+example

@@ -1,6 +1,11 @@
 #  类 Locale
 
+> *文件信息* suda\core\Locale.php: 23~103
+
 I18N 国际化支持
+
+## 描述
+
 语言控制文件
 
 

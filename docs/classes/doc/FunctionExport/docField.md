@@ -1,12 +1,12 @@
-# 方法 `logException`
+# 方法 `docField`
 
 
 
-> *文件信息* suda\core\Debug.php: 22~446
+> *文件信息* D:\Server\Local\suda\script\doc\src\FunctionExport.php: 19~137
 
 ## 所属类 
 
-[Debug](../Debug.md)
+[FunctionExport](../FunctionExport.md)
 
 ## 可见性
 
@@ -22,7 +22,7 @@
 
 | 参数名 | 类型 | 默认值 | 说明 |
 |--------|-----|-------|-------|
-| e |  Exception | 无 | 无 |
+| lines |  array | 无 | 无 |
 
 
 

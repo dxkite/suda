@@ -1,8 +1,9 @@
 # 函数 `use_namespace`
 
+使用命名空间
+
 > *文件信息* suda\core\functions.php: 73~76
 
-使用命名空间
 
 
 ## 参数
@@ -20,3 +21,8 @@
 
 无
 
+
+
+## 例子
+
+example

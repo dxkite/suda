@@ -1,6 +1,8 @@
 # 方法 `_render_template`
 
-> *文件信息* suda\template\compiler\suda\Template.php: 73~73
+渲染语句
+
+> *文件信息* suda\template\compiler\suda\Template.php: 25~246
 
 ## 所属类 
 
@@ -12,7 +14,8 @@ abstract protected
 
 ## 说明
 
-渲染语句
+该函数暂时无说明
+
 
 ## 参数
 
@@ -22,4 +25,9 @@ abstract protected
 
 ## 返回值
 
-无返回值
+返回值类型不定
+
+
+## 例子
+
+example

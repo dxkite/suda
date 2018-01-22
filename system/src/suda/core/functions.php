@@ -29,7 +29,7 @@ function mime(string $type)
 /**
  * 语言翻译，I18N支持，依赖locales文件夹下的文件
  * 
- * ## 使用例子
+ * @example
  * 
  * ```php
  *  echo __('text is %d',1);
@@ -77,6 +77,7 @@ function use_namespace(string $namespace)
 
 /**
  * 根据路由名获取URL
+ * 
  * 如果第一个参数为字符串，则将字符串作为路由名称，第二个参数作为路由的值获取组合后的路由
  * 如果第一个参数为数组，则获取正在运行的路由的URL，参数使用第一个参数
  *

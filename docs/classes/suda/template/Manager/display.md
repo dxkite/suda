@@ -1,6 +1,8 @@
 # 方法 `display`
 
-> *文件信息* suda\template\Manager.php: 136~139
+根据模板ID显示HTML模板
+
+> *文件信息* suda\template\Manager.php: 29~490
 
 ## 所属类 
 
@@ -12,7 +14,7 @@
 
 ## 说明
 
-根据模板ID显示HTML模板
+
 
 
 ## 参数
@@ -31,3 +33,8 @@
 
 无
 
+
+
+## 例子
+
+example

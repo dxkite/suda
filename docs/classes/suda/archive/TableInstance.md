@@ -1,6 +1,12 @@
 #  类 TableInstance
 
+> *文件信息* suda\archive\TableInstance.php: 21~97
 
+
+
+## 描述
+
+该类暂时无说明
 
 
 ## 变量

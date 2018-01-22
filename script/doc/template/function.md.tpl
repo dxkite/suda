@@ -1,9 +1,12 @@
 <?php  class Class0f568d3c3d2ea0cdd4c6dffbcd41812d extends suda\template\compiler\suda\Template { protected $name="3087eff0ca8ef71fab9957305ac4df4e";protected $module=""; protected function _render_template() {  ?># 函数 `<?php echo htmlspecialchars(__($this->get("functionName"))); ?>`
 
+<?php echo $this->get("functionDoc",'该函数暂时无注释文档'); ?>
+
+
 > *文件信息* <?php echo htmlspecialchars(__($this->get("fileName",'未知文件'))); ?>: <?php echo htmlspecialchars(__($this->get("lineStart",'未知'))); ?>~<?php echo htmlspecialchars(__($this->get("lineEnd",'未知'))); ?>
 
 
-<?php echo $this->get("functionDoc",'该函数暂时无注释文档'); ?>
+<?php echo $this->get("document",'该函数暂时无说明'); ?>
 
 
 ## 参数
@@ -32,5 +35,10 @@
 
 <?php else: ?>
 
-无返回值
-<?php endif; ?><?php }}
+返回值类型不定
+<?php endif; ?>
+
+
+## 例子
+
+<?php echo $this->get("example"); ?><?php }}

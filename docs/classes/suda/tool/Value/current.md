@@ -1,6 +1,8 @@
 # 方法 `current`
 
-> *文件信息* suda\tool\Value.php: 104~107
+
+
+> *文件信息* suda\tool\Value.php: 22~131
 
 ## 所属类 
 
@@ -12,6 +14,7 @@
 
 ## 说明
 
+@package Core
 
 
 ## 参数
@@ -22,4 +25,9 @@
 
 ## 返回值
 
-无返回值
+返回值类型不定
+
+
+## 例子
+
+example

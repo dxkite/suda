@@ -1,6 +1,12 @@
 #  类 Mapping
 
+> *文件信息* suda\core\route\Mapping.php: 22~307
 
+
+
+## 描述
+
+该类暂时无说明
 
 
 ## 变量

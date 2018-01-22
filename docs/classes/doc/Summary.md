@@ -1,6 +1,12 @@
 #  类 Summary
 
+> *文件信息* D:\Server\Local\suda\script\doc\src\Summary.php: 25~85
+
 反射导出注释文档
+
+## 描述
+
+该类暂时无说明
 
 
 ## 变量

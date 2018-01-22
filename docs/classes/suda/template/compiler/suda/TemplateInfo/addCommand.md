@@ -1,6 +1,8 @@
 # 方法 `addCommand`
 
-> *文件信息* suda\template\compiler\suda\Compiler.php: 123~127
+扩展模板命令
+
+> *文件信息* suda\template\compiler\suda\TemplateInfo.php: 21~100
 
 ## 所属类 
 
@@ -12,7 +14,7 @@
 
 ## 说明
 
-扩展模板命令
+
 
 
 ## 参数
@@ -32,3 +34,8 @@
 
 无
 
+
+
+## 例子
+
+example

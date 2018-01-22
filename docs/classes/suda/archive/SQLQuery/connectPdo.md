@@ -1,6 +1,8 @@
 # 方法 `connectPdo`
 
-> *文件信息* suda\archive\SQLQuery.php: 279~293
+
+
+> *文件信息* suda\archive\SQLQuery.php: 26~365
 
 ## 所属类 
 
@@ -12,6 +14,7 @@
 
 ## 说明
 
+该函数暂时无说明
 
 
 ## 参数
@@ -22,4 +25,9 @@
 
 ## 返回值
 
-无返回值
+返回值类型不定
+
+
+## 例子
+
+example

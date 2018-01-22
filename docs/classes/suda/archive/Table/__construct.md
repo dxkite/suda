@@ -1,6 +1,8 @@
 # 方法 `__construct`
 
-> *文件信息* suda\archive\Table.php: 52~60
+
+
+> *文件信息* suda\archive\Table.php: 30~673
 
 ## 所属类 
 
@@ -11,6 +13,8 @@
  public 
 
 ## 说明
+
+用于提供对数据表的操作
 
 
 
@@ -25,4 +29,9 @@
 
 ## 返回值
 
-无返回值
+返回值类型不定
+
+
+## 例子
+
+example

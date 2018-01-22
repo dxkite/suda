@@ -1,6 +1,8 @@
 # 方法 `sendCookies`
 
-> *文件信息* suda\core\Cookie.php: 77~82
+发送Cookie至浏览器
+
+> *文件信息* suda\core\Cookie.php: 24~95
 
 ## 所属类 
 
@@ -12,7 +14,8 @@
 
 ## 说明
 
-发送Cookie至浏览器
+用于获取Cookie
+
 
 ## 参数
 
@@ -22,4 +25,9 @@
 
 ## 返回值
 
-无返回值
+返回值类型不定
+
+
+## 例子
+
+example

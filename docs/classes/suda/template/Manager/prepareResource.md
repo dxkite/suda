@@ -1,6 +1,8 @@
 # 方法 `prepareResource`
 
-> *文件信息* suda\template\Manager.php: 184~203
+准备静态资源
+
+> *文件信息* suda\template\Manager.php: 29~490
 
 ## 所属类 
 
@@ -12,7 +14,7 @@
 
 ## 说明
 
-准备静态资源
+
 
 
 ## 参数
@@ -31,3 +33,8 @@
 
 无
 
+
+
+## 例子
+
+example

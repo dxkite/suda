@@ -1,6 +1,8 @@
 # 方法 `get`
 
-> *文件信息* suda\core\Request.php: 86~97
+
+
+> *文件信息* suda\core\Request.php: 21~337
 
 ## 所属类 
 
@@ -12,6 +14,7 @@
 
 ## 说明
 
+该函数暂时无说明
 
 
 ## 参数
@@ -21,11 +24,16 @@
 |--------|-----|-------|-------|
 | name |  string |  | 无 |
 | default |  # Error> htmlspecialchars() expects parameter 1 to be string, array given
-	Cause By D:\Server\Local\suda\script\doc\template\method.md.tpl:26
+	Cause By D:\Server\Local\suda\script\doc\template\method.md.tpl:30
  | 无 | 无 |
 
 
 
 ## 返回值
 
-无返回值
+返回值类型不定
+
+
+## 例子
+
+example

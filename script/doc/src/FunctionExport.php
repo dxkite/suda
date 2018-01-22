@@ -42,10 +42,11 @@ class FunctionExport
         return get_defined_functions()['user'];
     }
 
-    public static function getFunctionInfo($reflect) {
-        $value=[];
+    public static function getFunctionInfo($reflect)
+    {
+        list($comment, $params, $return, $exData)= static::getDoc($reflect->getDocComment());
+        $value=$exData;
         $value['functionName']=$reflect->getName();
-        list($comment, $params, $return)= static::getDoc($reflect->getDocComment());
         $value['functionDoc']=$comment;
         $value['fileName']= Summary::path($reflect->getFileName());
         $value['lineStart']= $reflect->getStartLine();
@@ -87,7 +88,7 @@ class FunctionExport
         $return=[];
         $docs=[];
         foreach ($lines as $index=> $line) {
-            $line= substr(ltrim(trim($line), '*'), 1);
+            $line= substr(ltrim(trim($line), '*'), 1)??' ';
             if (preg_match('/^@param\s+(.+?)\s+(.+?)(\s+(.+))?$/', $line, $match)) {
                 if (!isset($match[3])) {
                     $match[3]='无';
@@ -109,6 +110,28 @@ class FunctionExport
                 $docs[]=$line;
             }
         }
-        return [implode("\r\n", $docs),$params,$return];
+        $datas=static::docField($docs);
+        return [$datas['description'],$params,$return,$datas];
+    }
+
+    public static function docField(array $lines)
+    {
+        $field='document';
+        $datas=[
+            'description'=>array_shift($lines)
+        ];
+        foreach ($lines as $line) {
+            if (preg_match('/^@(\w+?)(\s+)?$/', $line, $match)) {
+                list($line, $field)=$match;
+            } else {
+                $datas[$field][] = $line;
+            }
+        }
+        foreach ($datas as $name=> $content) {
+            if (is_array($content)) {
+                $datas[$name]=implode("\r\n", $content);
+            }
+        }
+        return $datas;
     }
 }

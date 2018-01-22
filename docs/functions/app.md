@@ -1,8 +1,9 @@
 # 函数 `app`
 
-> *文件信息* suda\core\functions.php: 147~150
-
 获取当运行的APP单例对象
+
+> *文件信息* suda\core\functions.php: 148~151
+
 
 
 ## 参数
@@ -17,3 +18,8 @@
 
  获取的APP单例对象
 
+
+
+## 例子
+
+example

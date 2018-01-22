@@ -1,8 +1,9 @@
 # 函数 `table`
 
-> *文件信息* suda\core\functions.php: 271~274
-
 获取数据表对象，该对象需要在module.json文件中注册过
+
+> *文件信息* suda\core\functions.php: 272~275
+
 如：
 ```json
 {
@@ -28,3 +29,8 @@
 
  获取的表对象
 
+
+
+## 例子
+
+example

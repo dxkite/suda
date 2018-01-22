@@ -1,6 +1,12 @@
 #  类 Message
 
+> *文件信息* suda\mail\message\Message.php: 19~235
 
+
+
+## 描述
+
+该类暂时无说明
 
 
 ## 变量

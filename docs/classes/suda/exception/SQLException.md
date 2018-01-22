@@ -1,6 +1,12 @@
 #  类 SQLException
 
+> *文件信息* suda\exception\SQLException.php: 18~40
 
+
+
+## 描述
+
+该类暂时无说明
 
 
 ## 变量

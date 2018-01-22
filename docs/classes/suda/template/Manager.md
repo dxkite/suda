@@ -1,6 +1,12 @@
 #  类 Manager
 
+> *文件信息* suda\template\Manager.php: 29~490
+
 模板管理类
+
+## 描述
+
+该类暂时无说明
 
 
 ## 变量
@@ -15,7 +21,7 @@
 | public static|[setTemplate](Manager/setTemplate.md) |  |
 | public static|[getCompiler](Manager/getCompiler.md) |  |
 | public static|[theme](Manager/theme.md) | 获取/设置模板样式 |
-| public static|[compile](Manager/compile.md) | 编译文件 @param $input |
+| public static|[compile](Manager/compile.md) | 编译文件 |
 | public static|[display](Manager/display.md) | 根据模板ID显示HTML模板 |
 | public static|[displayExt](Manager/displayExt.md) | 根据模板ID显示模板 |
 | public static|[displayFile](Manager/displayFile.md) | 根据路径显示模板 |

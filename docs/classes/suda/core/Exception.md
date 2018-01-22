@@ -1,6 +1,12 @@
 #  类 Exception
 
+> *文件信息* suda\core\Exception.php: 21~61
 
+
+
+## 描述
+
+该类暂时无说明
 
 
 ## 变量

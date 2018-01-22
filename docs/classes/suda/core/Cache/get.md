@@ -1,6 +1,8 @@
 # 方法 `get`
 
-> *文件信息* suda\core\Cache.php: 52~74
+获取值
+
+> *文件信息* suda\core\Cache.php: 23~135
 
 ## 所属类 
 
@@ -12,7 +14,9 @@
 
 ## 说明
 
-获取值
+由于访问数据库的效率远远低于访问文件的效率，所以我添加了一个文件缓存类，
+你可以把常用的数据和更改很少的数据查询数据库以后缓存到文件里面，用来加快页面加载速度。
+
 
 ## 参数
 
@@ -21,7 +25,7 @@
 |--------|-----|-------|-------|
 | name |  string | 无 |  名 |
 | defalut |  # Error> htmlspecialchars() expects parameter 1 to be string, array given
-	Cause By D:\Server\Local\suda\script\doc\template\method.md.tpl:26
+	Cause By D:\Server\Local\suda\script\doc\template\method.md.tpl:30
  | 无 | 无 |
 
 
@@ -32,3 +36,8 @@
 
 无
 
+
+
+## 例子
+
+example

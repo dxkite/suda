@@ -1,6 +1,8 @@
 # 方法 `getOutputFile`
 
-> *文件信息* suda\template\Manager.php: 404~411
+模板编译后输出路径
+
+> *文件信息* suda\template\Manager.php: 29~490
 
 ## 所属类 
 
@@ -12,7 +14,7 @@
 
 ## 说明
 
-模板编译后输出路径
+
 
 
 ## 参数
@@ -30,3 +32,8 @@
 
 无
 
+
+
+## 例子
+
+example

@@ -1,6 +1,12 @@
 #  类 Template
 
+> *文件信息* suda\template\compiler\suda\Template.php: 25~246
 
+
+
+## 描述
+
+该类暂时无说明
 
 
 ## 变量

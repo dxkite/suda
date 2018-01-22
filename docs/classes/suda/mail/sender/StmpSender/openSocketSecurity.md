@@ -1,6 +1,8 @@
 # 方法 `openSocketSecurity`
 
-> *文件信息* suda\mail\sender\StmpSender.php: 133~149
+
+
+> *文件信息* suda\mail\sender\StmpSender.php: 21~243
 
 ## 所属类 
 
@@ -12,6 +14,7 @@
 
 ## 说明
 
+该函数暂时无说明
 
 
 ## 参数
@@ -22,4 +25,9 @@
 
 ## 返回值
 
-无返回值
+返回值类型不定
+
+
+## 例子
+
+example

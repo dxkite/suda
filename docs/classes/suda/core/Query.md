@@ -1,6 +1,12 @@
 #  类 Query
 
+> *文件信息* suda\core\Query.php: 20~201
 
+
+
+## 描述
+
+该类暂时无说明
 
 
 ## 变量
@@ -11,7 +17,7 @@
 
 | 可见性 | 方法名 | 说明 |
 |--------|-------|------|
-| public static|[insert](Query/insert.md) | 插入行 返回： 当ID&gt;0时返回ID，否者返回true/false |
+| public static|[insert](Query/insert.md) | 插入行 |
 | public static|[where](Query/where.md) |  |
 | public static|[search](Query/search.md) |  |
 | public static|[select](Query/select.md) |  |
@@ -44,4 +50,4 @@
 | public static|[getRuninfo](Query/getRuninfo.md) |  |
 | protected static|[connectPdo](Query/connectPdo.md) |  |
 | public |[object](Query/object.md) | 添加列处理类 |
-| protected |[__dataTransfrom](Query/__dataTransfrom.md) | 转换数据，数据库统处理输入输出数据 转换函数 |
+| protected |[__dataTransfrom](Query/__dataTransfrom.md) | 转换数据，数据库统处理输入输出数据 |

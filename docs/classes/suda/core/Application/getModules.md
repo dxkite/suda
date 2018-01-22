@@ -1,6 +1,8 @@
 # 方法 `getModules`
 
-> *文件信息* suda\core\Application.php: 193~196
+获取所有模块
+
+> *文件信息* suda\core\Application.php: 24~440
 
 ## 所属类 
 
@@ -12,7 +14,7 @@
 
 ## 说明
 
-获取所有模块
+
 
 
 ## 参数
@@ -27,3 +29,8 @@
 
 无
 
+
+
+## 例子
+
+example

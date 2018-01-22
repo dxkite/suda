@@ -1,6 +1,8 @@
 # 方法 `getAppThemePath`
 
-> *文件信息* suda\template\Manager.php: 234~239
+模块模板文件目录
+
+> *文件信息* suda\template\Manager.php: 29~490
 
 ## 所属类 
 
@@ -12,7 +14,7 @@
 
 ## 说明
 
-模块模板文件目录
+
 
 
 ## 参数
@@ -30,3 +32,8 @@
 
 无
 
+
+
+## 例子
+
+example

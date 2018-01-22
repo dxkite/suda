@@ -1,8 +1,10 @@
 # 函数 `{{$:functionName}}`
 
+{{! $:functionDoc('该函数暂时无注释文档') }}
+
 > *文件信息* {{$:fileName('未知文件')}}: {{$:lineStart('未知')}}~{{$:lineEnd('未知')}}
 
-{{! $:functionDoc('该函数暂时无注释文档') }}
+{{! $:document('该函数暂时无说明') }}
 
 ## 参数
 
@@ -22,5 +24,9 @@
 @{$:return['description']}
 
 @else
-无返回值
+返回值类型不定
 @endif
+
+## 例子
+
+{{! $:example }}

@@ -1,8 +1,9 @@
 # 函数 `cache`
 
-> *文件信息* suda\core\functions.php: 197~200
-
 获取一个缓存对象
+
+> *文件信息* suda\core\functions.php: 198~201
+
 
 
 ## 参数
@@ -17,3 +18,8 @@
 
  获取的缓存对象
 
+
+
+## 例子
+
+example

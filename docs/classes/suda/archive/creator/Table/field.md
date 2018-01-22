@@ -1,6 +1,8 @@
 # 方法 `field`
 
-> *文件信息* suda\archive\creator\Table.php: 51~54
+新建表列
+
+> *文件信息* suda\archive\creator\Table.php: 19~204
 
 ## 所属类 
 
@@ -12,7 +14,7 @@
 
 ## 说明
 
-新建表列
+
 
 
 ## 参数
@@ -32,3 +34,8 @@
 
 无
 
+
+
+## 例子
+
+example

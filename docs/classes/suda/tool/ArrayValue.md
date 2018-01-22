@@ -1,6 +1,12 @@
 #  类 ArrayValue
 
+> *文件信息* suda\tool\ArrayValue.php: 18~25
 
+
+
+## 描述
+
+该类暂时无说明
 
 
 ## 变量
@@ -12,7 +18,7 @@
 | 可见性 | 方法名 | 说明 |
 |--------|-------|------|
 | public |[current](ArrayValue/current.md) |  |
-| public |[__construct](ArrayValue/__construct.md) | Value constructor. @param $var |
+| public |[__construct](ArrayValue/__construct.md) | Value constructor. |
 | public |[_getVar](ArrayValue/_getVar.md) |  |
 | public |[_setVar](ArrayValue/_setVar.md) |  |
 | public |[__get](ArrayValue/__get.md) |  |

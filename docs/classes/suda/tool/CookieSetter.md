@@ -1,6 +1,12 @@
 #  类 CookieSetter
 
+> *文件信息* suda\tool\CookieSetter.php: 18~112
 
+
+
+## 描述
+
+该类暂时无说明
 
 
 ## 变量

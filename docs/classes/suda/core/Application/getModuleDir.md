@@ -1,6 +1,8 @@
 # 方法 `getModuleDir`
 
-> *文件信息* suda\core\Application.php: 363~370
+获取模块所在的文件夹名
+
+> *文件信息* suda\core\Application.php: 24~440
 
 ## 所属类 
 
@@ -12,7 +14,7 @@
 
 ## 说明
 
-获取模块所在的文件夹名
+
 
 
 ## 参数
@@ -30,3 +32,8 @@
 
 无
 
+
+
+## 例子
+
+example

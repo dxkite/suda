@@ -1,6 +1,12 @@
 #  类 ArchiveException
 
+> *文件信息* suda\exception\ArchiveException.php: 17~21
 
+
+
+## 描述
+
+该类暂时无说明
 
 
 ## 变量

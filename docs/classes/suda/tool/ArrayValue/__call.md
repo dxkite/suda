@@ -1,6 +1,8 @@
 # 方法 `__call`
 
-> *文件信息* suda\tool\Value.php: 87~96
+@param $args
+
+> *文件信息* suda\tool\ArrayValue.php: 18~25
 
 ## 所属类 
 
@@ -12,7 +14,8 @@
 
 ## 说明
 
-@param $args
+该函数暂时无说明
+
 
 ## 参数
 
@@ -29,3 +32,8 @@
 
 无
 
+
+
+## 例子
+
+example

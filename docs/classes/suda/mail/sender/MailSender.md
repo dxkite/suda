@@ -1,6 +1,12 @@
 #  类 MailSender
 
+> *文件信息* suda\mail\sender\MailSender.php: 21~57
 
+
+
+## 描述
+
+该类暂时无说明
 
 
 ## 变量

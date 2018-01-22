@@ -1,8 +1,9 @@
 # 函数 `init_resource`
 
-> *文件信息* suda\core\functions.php: 137~140
-
 初始化资源
+
+> *文件信息* suda\core\functions.php: 138~141
+
 
 
 ## 参数
@@ -20,3 +21,8 @@
 
  资源初始化结果
 
+
+
+## 例子
+
+example

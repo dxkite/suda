@@ -1,6 +1,8 @@
 # 方法 `getModuleName`
 
-> *文件信息* suda\core\Application.php: 313~317
+获取模块名，不包含版本号
+
+> *文件信息* suda\core\Application.php: 24~440
 
 ## 所属类 
 
@@ -12,7 +14,7 @@
 
 ## 说明
 
-获取模块名，不包含版本号
+
 
 
 ## 参数
@@ -30,3 +32,8 @@
 
 无
 
+
+
+## 例子
+
+example

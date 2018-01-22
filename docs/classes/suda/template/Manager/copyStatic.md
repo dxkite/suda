@@ -1,6 +1,8 @@
 # 方法 `copyStatic`
 
-> *文件信息* suda\template\Manager.php: 299~312
+复制模板目录下静态文件
+
+> *文件信息* suda\template\Manager.php: 29~490
 
 ## 所属类 
 
@@ -12,7 +14,7 @@
 
 ## 说明
 
-复制模板目录下静态文件
+
 
 
 ## 参数
@@ -31,3 +33,8 @@
 
 无
 
+
+
+## 例子
+
+example

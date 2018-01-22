@@ -1,6 +1,8 @@
 # 方法 `routerReplace`
 
-> *文件信息* suda\core\Router.php: 318~327
+路由替换
+
+> *文件信息* suda\core\Router.php: 26~460
 
 ## 所属类 
 
@@ -12,7 +14,7 @@
 
 ## 说明
 
-路由替换
+
 
 
 ## 参数
@@ -31,3 +33,8 @@
 
 无
 
+
+
+## 例子
+
+example

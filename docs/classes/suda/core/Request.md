@@ -1,6 +1,12 @@
 #  类 Request
 
+> *文件信息* suda\core\Request.php: 21~337
 
+
+
+## 描述
+
+该类暂时无说明
 
 
 ## 变量

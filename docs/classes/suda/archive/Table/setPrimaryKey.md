@@ -1,6 +1,8 @@
 # 方法 `setPrimaryKey`
 
-> *文件信息* suda\archive\Table.php: 262~266
+设置主键
+
+> *文件信息* suda\archive\Table.php: 30~673
 
 ## 所属类 
 
@@ -12,7 +14,8 @@
 
 ## 说明
 
-设置主键
+用于提供对数据表的操作
+
 
 
 ## 参数
@@ -30,3 +33,8 @@
 
 无
 
+
+
+## 例子
+
+example

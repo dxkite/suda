@@ -1,6 +1,8 @@
 # 方法 `page`
 
-> *文件信息* suda\core\Response.php: 130~137
+输出HTML页面
+
+> *文件信息* suda\core\Response.php: 27~250
 
 ## 所属类 
 
@@ -12,9 +14,9 @@
 
 ## 说明
 
-输出HTML页面
 $template HTML页面模板
 $values 页面模板的值
+
 
 ## 参数
 
@@ -23,11 +25,16 @@ $values 页面模板的值
 |--------|-----|-------|-------|
 | template |  string | 无 | 无 |
 | values |  array | # Error> htmlspecialchars() expects parameter 1 to be string, array given
-	Cause By D:\Server\Local\suda\script\doc\template\method.md.tpl:26
+	Cause By D:\Server\Local\suda\script\doc\template\method.md.tpl:30
  | 无 |
 
 
 
 ## 返回值
 
-无返回值
+返回值类型不定
+
+
+## 例子
+
+example

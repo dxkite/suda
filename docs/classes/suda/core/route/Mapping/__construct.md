@@ -1,6 +1,8 @@
 # 方法 `__construct`
 
-> *文件信息* suda\core\route\Mapping.php: 45~56
+
+
+> *文件信息* suda\core\route\Mapping.php: 22~307
 
 ## 所属类 
 
@@ -12,6 +14,7 @@
 
 ## 说明
 
+该函数暂时无说明
 
 
 ## 参数
@@ -24,7 +27,7 @@
 | callback |  string | 无 | 无 |
 | module |  string | 无 | 无 |
 | method |  array | # Error> htmlspecialchars() expects parameter 1 to be string, array given
-	Cause By D:\Server\Local\suda\script\doc\template\method.md.tpl:26
+	Cause By D:\Server\Local\suda\script\doc\template\method.md.tpl:30
  | 无 |
 | role |  int | self::ROLE_SIMPLE | 无 |
 
@@ -32,4 +35,9 @@
 
 ## 返回值
 
-无返回值
+返回值类型不定
+
+
+## 例子
+
+example

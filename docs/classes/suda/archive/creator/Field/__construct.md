@@ -1,6 +1,8 @@
 # 方法 `__construct`
 
-> *文件信息* suda\archive\creator\Field.php: 48~55
+
+
+> *文件信息* suda\archive\creator\Field.php: 19~188
 
 ## 所属类 
 
@@ -12,6 +14,7 @@
 
 ## 说明
 
+该函数暂时无说明
 
 
 ## 参数
@@ -28,4 +31,9 @@
 
 ## 返回值
 
-无返回值
+返回值类型不定
+
+
+## 例子
+
+example

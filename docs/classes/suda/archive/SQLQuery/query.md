@@ -1,6 +1,8 @@
 # 方法 `query`
 
-> *文件信息* suda\archive\SQLQuery.php: 120~126
+
+
+> *文件信息* suda\archive\SQLQuery.php: 26~365
 
 ## 所属类 
 
@@ -12,6 +14,7 @@
 
 ## 说明
 
+该函数暂时无说明
 
 
 ## 参数
@@ -21,11 +24,16 @@
 |--------|-----|-------|-------|
 | query |  string | 无 | 无 |
 | array |  array | # Error> htmlspecialchars() expects parameter 1 to be string, array given
-	Cause By D:\Server\Local\suda\script\doc\template\method.md.tpl:26
+	Cause By D:\Server\Local\suda\script\doc\template\method.md.tpl:30
  | 无 |
 
 
 
 ## 返回值
 
-无返回值
+返回值类型不定
+
+
+## 例子
+
+example

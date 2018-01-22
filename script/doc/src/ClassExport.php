@@ -30,13 +30,18 @@ class ClassExport
         $reflect=$this->reflect;
         $methods=$reflect->getMethods(\ReflectionMethod::IS_PUBLIC | \ReflectionMethod::IS_PROTECTED);
 
-        list($doc)=FunctionExport::getDoc($reflect->getDocComment());
+        list($doc, $params, $return, $exData)=FunctionExport::getDoc($reflect->getDocComment());
 
-        $classData= [
+        $classData=array_merge($exData, [
             'className'=>$reflect->getShortName(),
             'classFullName'=>$reflect->getName(),
             'classDoc' => $doc,
-        ];
+        ]);
+        
+        $classData['fileName']= Summary::path($reflect->getFileName());
+        $classData['lineStart']= $reflect->getStartLine();
+        $classData['lineEnd']=  $reflect->getEndLine();
+
         $methodPath=$path.'/'.$reflect->getName();
 
         $template=new ExportTemplate;
@@ -49,7 +54,7 @@ class ClassExport
 
         foreach ($methods as $method) {
             $methodInfo=self::exportMethod($method, $classData, $methodPath);
-            $methodInfo['functionDoc']=trim(preg_replace('/\r?\n/',' ',$methodInfo['functionDoc']));
+            $methodInfo['functionDoc']=trim(preg_replace('/\r?\n/', ' ', $methodInfo['functionDoc']));
             $methodsInfo[$method->getName()]=$methodInfo;
         }
 
@@ -64,7 +69,7 @@ class ClassExport
         $template=new ExportTemplate;
         $template->setSrc(__DIR__.'/../template/method.md');
         $value=FunctionExport::getFunctionInfo($reflect);
-        $value['visibility'] = $reflect->isProtected ()? 'protected':'public';
+        $value['visibility'] = $reflect->isProtected()? 'protected':'public';
         $value['abstract'] = $reflect->isAbstract()? 'abstract':'';
         $value['static'] = $reflect->isStatic()? 'static':'';
         $value=array_merge($value, $classData);

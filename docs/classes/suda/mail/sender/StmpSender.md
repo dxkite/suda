@@ -1,6 +1,12 @@
 #  类 StmpSender
 
+> *文件信息* suda\mail\sender\StmpSender.php: 21~243
 
+
+
+## 描述
+
+该类暂时无说明
 
 
 ## 变量

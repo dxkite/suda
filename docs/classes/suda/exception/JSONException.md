@@ -1,6 +1,12 @@
 #  类 JSONException
 
+> *文件信息* suda\exception\JSONException.php: 18~18
 
+
+
+## 描述
+
+该类暂时无说明
 
 
 ## 变量

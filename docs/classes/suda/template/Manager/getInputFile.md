@@ -1,6 +1,8 @@
 # 方法 `getInputFile`
 
-> *文件信息* suda\template\Manager.php: 384~396
+模板输入路径
+
+> *文件信息* suda\template\Manager.php: 29~490
 
 ## 所属类 
 
@@ -12,7 +14,7 @@
 
 ## 说明
 
-模板输入路径
+
 
 
 ## 参数
@@ -32,3 +34,8 @@
 
 无
 
+
+
+## 例子
+
+example

@@ -1,6 +1,8 @@
 # 方法 `__call`
 
-> *文件信息* suda\tool\Value.php: 87~96
+@param $args
+
+> *文件信息* suda\tool\Value.php: 22~131
 
 ## 所属类 
 
@@ -12,7 +14,8 @@
 
 ## 说明
 
-@param $args
+@package Core
+
 
 ## 参数
 
@@ -29,3 +32,8 @@
 
 无
 
+
+
+## 例子
+
+example

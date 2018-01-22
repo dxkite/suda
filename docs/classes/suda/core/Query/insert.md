@@ -1,6 +1,8 @@
 # 方法 `insert`
 
-> *文件信息* suda\core\Query.php: 30~56
+插入行
+
+> *文件信息* suda\core\Query.php: 20~201
 
 ## 所属类 
 
@@ -12,8 +14,8 @@
 
 ## 说明
 
-插入行
 返回： 当ID>0时返回ID，否者返回true/false
+
 
 ## 参数
 
@@ -23,10 +25,10 @@
 | table |  string | 无 | 无 |
 | values |  [type] | 无 | 无 |
 | binds |  array | # Error> htmlspecialchars() expects parameter 1 to be string, array given
-	Cause By D:\Server\Local\suda\script\doc\template\method.md.tpl:26
+	Cause By D:\Server\Local\suda\script\doc\template\method.md.tpl:30
  | 无 |
 | object |  # Error> htmlspecialchars() expects parameter 1 to be string, array given
-	Cause By D:\Server\Local\suda\script\doc\template\method.md.tpl:26
+	Cause By D:\Server\Local\suda\script\doc\template\method.md.tpl:30
  | 无 | 无 |
 
 
@@ -37,3 +39,8 @@
 
 无
 
+
+
+## 例子
+
+example

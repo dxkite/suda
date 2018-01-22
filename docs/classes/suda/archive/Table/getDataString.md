@@ -1,6 +1,8 @@
 # 方法 `getDataString`
 
-> *文件信息* suda\archive\Table.php: 636~672
+获取数据SQL字符串
+
+> *文件信息* suda\archive\Table.php: 30~673
 
 ## 所属类 
 
@@ -12,7 +14,8 @@
 
 ## 说明
 
-获取数据SQL字符串
+用于提供对数据表的操作
+
 
 
 ## 参数
@@ -27,3 +30,8 @@
 
 无
 
+
+
+## 例子
+
+example

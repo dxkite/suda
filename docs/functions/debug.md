@@ -1,8 +1,9 @@
 # 函数 `debug`
 
+获取debug对象
+
 > *文件信息* suda\core\functions.php: 50~53
 
-获取debug对象
 
 
 ## 参数
@@ -17,3 +18,8 @@
 
  调试用对象实例
 
+
+
+## 例子
+
+example

@@ -1,6 +1,8 @@
 # 方法 `__construct`
 
-> *文件信息* suda\tool\Value.php: 33~36
+Value constructor.
+
+> *文件信息* suda\tool\Value.php: 22~131
 
 ## 所属类 
 
@@ -12,8 +14,8 @@
 
 ## 说明
 
-Value constructor.
-@param $var
+@package Core
+
 
 ## 参数
 
@@ -21,13 +23,18 @@ Value constructor.
 | 参数名 | 类型 | 默认值 | 说明 |
 |--------|-----|-------|-------|
 | var |  # Error> htmlspecialchars() expects parameter 1 to be string, array given
-	Cause By D:\Server\Local\suda\script\doc\template\method.md.tpl:26
+	Cause By D:\Server\Local\suda\script\doc\template\method.md.tpl:30
  | # Error> htmlspecialchars() expects parameter 1 to be string, array given
-	Cause By D:\Server\Local\suda\script\doc\template\method.md.tpl:26
+	Cause By D:\Server\Local\suda\script\doc\template\method.md.tpl:30
  | 无 |
 
 
 
 ## 返回值
 
-无返回值
+返回值类型不定
+
+
+## 例子
+
+example

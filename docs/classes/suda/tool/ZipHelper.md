@@ -1,6 +1,12 @@
 #  类 ZipHelper
 
+> *文件信息* suda\tool\ZipHelper.php: 21~84
 
+
+
+## 描述
+
+该类暂时无说明
 
 
 ## 变量

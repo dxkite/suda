@@ -1,6 +1,12 @@
 #  类 InputValue
 
+> *文件信息* suda\archive\creator\InputValue.php: 20~60
 
+
+
+## 描述
+
+该类暂时无说明
 
 
 ## 变量

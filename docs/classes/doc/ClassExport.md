@@ -1,6 +1,12 @@
 #  类 ClassExport
 
+> *文件信息* D:\Server\Local\suda\script\doc\src\ClassExport.php: 19~97
 
+
+
+## 描述
+
+该类暂时无说明
 
 
 ## 变量

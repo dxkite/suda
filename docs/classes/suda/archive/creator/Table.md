@@ -1,6 +1,12 @@
 #  类 Table
 
+> *文件信息* suda\archive\creator\Table.php: 19~204
 
+
+
+## 描述
+
+该类暂时无说明
 
 
 ## 变量

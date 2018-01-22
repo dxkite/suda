@@ -1,6 +1,8 @@
 # 方法 `addTemplateSource`
 
-> *文件信息* suda\template\Manager.php: 248~260
+设置模板源
+
+> *文件信息* suda\template\Manager.php: 29~490
 
 ## 所属类 
 
@@ -12,7 +14,7 @@
 
 ## 说明
 
-设置模板源
+
 
 
 ## 参数
@@ -31,3 +33,8 @@
 
 无
 
+
+
+## 例子
+
+example

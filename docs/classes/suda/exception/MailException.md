@@ -1,6 +1,12 @@
 #  类 MailException
 
+> *文件信息* suda\exception\MailException.php: 17~17
 
+
+
+## 描述
+
+该类暂时无说明
 
 
 ## 变量

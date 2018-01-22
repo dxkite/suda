@@ -1,6 +1,12 @@
 #  类 Storage
 
+> *文件信息* suda\core\Storage.php: 18~381
 
+
+
+## 描述
+
+该类暂时无说明
 
 
 ## 变量

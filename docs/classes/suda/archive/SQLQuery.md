@@ -1,6 +1,12 @@
 #  类 SQLQuery
 
+> *文件信息* suda\archive\SQLQuery.php: 26~365
 
+
+
+## 描述
+
+该类暂时无说明
 
 
 ## 变量
@@ -32,4 +38,4 @@
 | public static|[getRuninfo](SQLQuery/getRuninfo.md) |  |
 | protected static|[connectPdo](SQLQuery/connectPdo.md) |  |
 | public |[object](SQLQuery/object.md) | 添加列处理类 |
-| protected |[__dataTransfrom](SQLQuery/__dataTransfrom.md) | 转换数据，数据库统处理输入输出数据 转换函数 |
+| protected |[__dataTransfrom](SQLQuery/__dataTransfrom.md) | 转换数据，数据库统处理输入输出数据 |

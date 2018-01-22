@@ -1,8 +1,9 @@
 # 函数 `mime`
 
+根据文件类型获取MIME描述
+
 > *文件信息* suda\core\functions.php: 24~27
 
-根据文件类型获取MIME描述
 其中文本硬编码为UTF-8
 
 
@@ -21,3 +22,8 @@
 
  获取的MIME字符串
 
+
+
+## 例子
+
+example

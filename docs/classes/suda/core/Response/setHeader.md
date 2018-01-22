@@ -1,6 +1,8 @@
 # 方法 `setHeader`
 
-> *文件信息* suda\core\Response.php: 228~233
+安全设置Header值
+
+> *文件信息* suda\core\Response.php: 27~250
 
 ## 所属类 
 
@@ -12,7 +14,8 @@
 
 ## 说明
 
-安全设置Header值
+该函数暂时无说明
+
 
 ## 参数
 
@@ -26,4 +29,9 @@
 
 ## 返回值
 
-无返回值
+返回值类型不定
+
+
+## 例子
+
+example

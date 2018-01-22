@@ -1,6 +1,8 @@
 # 方法 `fields`
 
-> *文件信息* suda\archive\creator\Table.php: 72~81
+表全部的列
+
+> *文件信息* suda\archive\creator\Table.php: 19~204
 
 ## 所属类 
 
@@ -12,7 +14,7 @@
 
 ## 说明
 
-表全部的列
+
 
 
 ## 参数
@@ -30,3 +32,8 @@
 
 无
 
+
+
+## 例子
+
+example

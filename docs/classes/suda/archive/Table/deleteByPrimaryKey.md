@@ -1,6 +1,8 @@
 # 方法 `deleteByPrimaryKey`
 
-> *文件信息* suda\archive\Table.php: 128~131
+通过主键删除元素
+
+> *文件信息* suda\archive\Table.php: 30~673
 
 ## 所属类 
 
@@ -12,7 +14,8 @@
 
 ## 说明
 
-通过主键删除元素
+用于提供对数据表的操作
+
 
 
 ## 参数
@@ -30,3 +33,8 @@
 
 无
 
+
+
+## 例子
+
+example

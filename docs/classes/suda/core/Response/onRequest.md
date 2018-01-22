@@ -1,6 +1,8 @@
 # 方法 `onRequest`
 
-> *文件信息* suda\core\Response.php: 59~59
+
+
+> *文件信息* suda\core\Response.php: 27~250
 
 ## 所属类 
 
@@ -12,6 +14,7 @@ abstract public
 
 ## 说明
 
+该函数暂时无说明
 
 
 ## 参数
@@ -25,4 +28,9 @@ abstract public
 
 ## 返回值
 
-无返回值
+返回值类型不定
+
+
+## 例子
+
+example

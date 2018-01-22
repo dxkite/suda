@@ -1,6 +1,12 @@
 #  类 TemplateInfo
 
+> *文件信息* suda\template\compiler\suda\TemplateInfo.php: 21~100
 
+
+
+## 描述
+
+该类暂时无说明
 
 
 ## 变量
@@ -19,7 +25,7 @@
 | protected static|[getModuleTemplate](TemplateInfo/getModuleTemplate.md) |  |
 | public static|[setBase](TemplateInfo/setBase.md) |  |
 | public |[compileText](TemplateInfo/compileText.md) |  |
-| public |[compile](TemplateInfo/compile.md) | 编译文件 @param $input |
+| public |[compile](TemplateInfo/compile.md) | 编译文件 |
 | public |[render](TemplateInfo/render.md) |  |
 | public static|[addCommand](TemplateInfo/addCommand.md) | 扩展模板命令 |
 | public static|[hasCommand](TemplateInfo/hasCommand.md) | 检查模板扩展命令是否存在 |

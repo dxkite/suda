@@ -1,6 +1,8 @@
 # 方法 `hasCommand`
 
-> *文件信息* suda\template\compiler\suda\Compiler.php: 135~139
+检查模板扩展命令是否存在
+
+> *文件信息* suda\template\compiler\suda\TemplateInfo.php: 21~100
 
 ## 所属类 
 
@@ -12,7 +14,7 @@
 
 ## 说明
 
-检查模板扩展命令是否存在
+
 
 
 ## 参数
@@ -30,3 +32,8 @@
 
 无
 
+
+
+## 例子
+
+example

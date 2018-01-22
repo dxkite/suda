@@ -1,6 +1,8 @@
 # 方法 `getModuleFullName`
 
-> *文件信息* suda\core\Application.php: 327~355
+获取模块全名（包括版本）
+
+> *文件信息* suda\core\Application.php: 24~440
 
 ## 所属类 
 
@@ -12,9 +14,9 @@
 
 ## 说明
 
-获取模块全名（包括版本）
 name:version,name,namespace/name => namespace/name:version
 未指定版本则调整到最优先版本
+
 
 
 ## 参数
@@ -32,3 +34,8 @@ name:version,name,namespace/name => namespace/name:version
 
 无
 
+
+
+## 例子
+
+example

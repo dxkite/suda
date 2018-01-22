@@ -1,6 +1,8 @@
 # 方法 `routerMove`
 
-> *文件信息* suda\core\Router.php: 336~341
+路由移动
+
+> *文件信息* suda\core\Router.php: 26~460
 
 ## 所属类 
 
@@ -12,7 +14,7 @@
 
 ## 说明
 
-路由移动
+
 
 
 ## 参数
@@ -31,3 +33,8 @@
 
 无
 
+
+
+## 例子
+
+example

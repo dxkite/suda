@@ -1,8 +1,9 @@
 # 函数 `hook`
 
-> *文件信息* suda\core\functions.php: 177~180
-
 获取当运行的请求的单例对象
+
+> *文件信息* suda\core\functions.php: 178~181
+
 
 
 ## 参数
@@ -17,3 +18,8 @@
 
  获取的请求单例对象
 
+
+
+## 例子
+
+example

@@ -1,6 +1,8 @@
 # 方法 `getName`
 
-> *文件信息* suda\archive\creator\InputValue.php: 33~36
+
+
+> *文件信息* suda\archive\creator\InputValue.php: 20~60
 
 ## 所属类 
 
@@ -12,6 +14,7 @@
 
 ## 说明
 
+该函数暂时无说明
 
 
 ## 参数
@@ -22,4 +25,9 @@
 
 ## 返回值
 
-无返回值
+返回值类型不定
+
+
+## 例子
+
+example

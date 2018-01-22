@@ -1,8 +1,9 @@
 # 函数 `import`
 
-> *文件信息* suda\core\functions.php: 126~129
-
 导入PHP文件
+
+> *文件信息* suda\core\functions.php: 127~130
+
 
 
 ## 参数
@@ -20,3 +21,8 @@
 
  是否导入成功
 
+
+
+## 例子
+
+example

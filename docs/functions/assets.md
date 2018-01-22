@@ -1,8 +1,9 @@
 # 函数 `assets`
 
-> *文件信息* suda\core\functions.php: 111~118
-
 根据模块名称获取资源URL
+
+> *文件信息* suda\core\functions.php: 112~119
+
 
 
 ## 参数
@@ -22,3 +23,8 @@
 
  获取到的资源URL
 
+
+
+## 例子
+
+example

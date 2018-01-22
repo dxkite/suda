@@ -1,6 +1,12 @@
 #  类 EchoValue
 
+> *文件信息* suda\tool\EchoValue.php: 18~38
 
+
+
+## 描述
+
+该类暂时无说明
 
 
 ## 变量
@@ -14,7 +20,7 @@
 | public |[__get](EchoValue/__get.md) |  |
 | public |[_](EchoValue/_.md) |  |
 | public |[__call](EchoValue/__call.md) |  |
-| public |[__construct](EchoValue/__construct.md) | Value constructor. @param $var |
+| public |[__construct](EchoValue/__construct.md) | Value constructor. |
 | public |[_getVar](EchoValue/_getVar.md) |  |
 | public |[_setVar](EchoValue/_setVar.md) |  |
 | public |[__set](EchoValue/__set.md) | @param $value |

@@ -1,6 +1,12 @@
 #  类 Command
 
+> *文件信息* suda\tool\Command.php: 20~151
 
+
+
+## 描述
+
+该类暂时无说明
 
 
 ## 变量

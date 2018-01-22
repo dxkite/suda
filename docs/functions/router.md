@@ -1,8 +1,9 @@
 # 函数 `router`
 
-> *文件信息* suda\core\functions.php: 157~160
-
 获取当运行的路由单例对象
+
+> *文件信息* suda\core\functions.php: 158~161
+
 
 
 ## 参数
@@ -17,3 +18,8 @@
 
  获取的路由单例对象
 
+
+
+## 例子
+
+example

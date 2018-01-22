@@ -1,6 +1,8 @@
 # 方法 `get`
 
-> *文件信息* suda\core\Cookie.php: 66~72
+获取Cookie的值
+
+> *文件信息* suda\core\Cookie.php: 24~95
 
 ## 所属类 
 
@@ -12,7 +14,8 @@
 
 ## 说明
 
-获取Cookie的值
+用于获取Cookie
+
 
 ## 参数
 
@@ -21,7 +24,7 @@
 |--------|-----|-------|-------|
 | name |  string | 无 | 无 |
 | default |  # Error> htmlspecialchars() expects parameter 1 to be string, array given
-	Cause By D:\Server\Local\suda\script\doc\template\method.md.tpl:26
+	Cause By D:\Server\Local\suda\script\doc\template\method.md.tpl:30
  |  | 无 |
 
 
@@ -32,3 +35,8 @@
 
  cookie的值
 
+
+
+## 例子
+
+example

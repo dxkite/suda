@@ -1,6 +1,11 @@
 #  类 Cookie
 
+> *文件信息* suda\core\Cookie.php: 24~95
+
 Class Cookie
+
+## 描述
+
 用于获取Cookie
 
 

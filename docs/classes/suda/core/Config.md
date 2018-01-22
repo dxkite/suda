@@ -1,6 +1,12 @@
 #  类 Config
 
+> *文件信息* suda\core\Config.php: 21~47
 
+
+
+## 描述
+
+该类暂时无说明
 
 
 ## 变量

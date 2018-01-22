@@ -1,6 +1,8 @@
 # 方法 `getTemplateSource`
 
-> *文件信息* suda\template\Manager.php: 268~272
+获取模板源
+
+> *文件信息* suda\template\Manager.php: 29~490
 
 ## 所属类 
 
@@ -12,7 +14,7 @@
 
 ## 说明
 
-获取模板源
+
 
 
 ## 参数
@@ -30,3 +32,8 @@
 
 无
 
+
+
+## 例子
+
+example

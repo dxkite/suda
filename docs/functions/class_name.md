@@ -1,8 +1,9 @@
 # 函数 `class_name`
 
-> *文件信息* suda\core\functions.php: 252~255
-
 获取类名，将JAVA包式的类名转化为 PHP的标准类名
+
+> *文件信息* suda\core\functions.php: 253~256
+
 
 
 ## 参数
@@ -20,3 +21,8 @@
 
  转换后的类名
 
+
+
+## 例子
+
+example

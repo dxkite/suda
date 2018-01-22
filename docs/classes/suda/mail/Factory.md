@@ -1,6 +1,12 @@
 #  类 Factory
 
+> *文件信息* suda\mail\Factory.php: 23~36
 
+
+
+## 描述
+
+该类暂时无说明
 
 
 ## 变量

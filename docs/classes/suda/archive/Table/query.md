@@ -1,6 +1,8 @@
 # 方法 `query`
 
-> *文件信息* suda\archive\Table.php: 226~230
+纯查询
+
+> *文件信息* suda\archive\Table.php: 30~673
 
 ## 所属类 
 
@@ -12,7 +14,8 @@
 
 ## 说明
 
-纯查询
+用于提供对数据表的操作
+
 
 
 ## 参数
@@ -22,7 +25,7 @@
 |--------|-----|-------|-------|
 | query |  string | 无 | 无 |
 | binds |  array | # Error> htmlspecialchars() expects parameter 1 to be string, array given
-	Cause By D:\Server\Local\suda\script\doc\template\method.md.tpl:26
+	Cause By D:\Server\Local\suda\script\doc\template\method.md.tpl:30
  | 无 |
 | scroll |  bool |  | 无 |
 
@@ -34,3 +37,8 @@
 
 无
 
+
+
+## 例子
+
+example

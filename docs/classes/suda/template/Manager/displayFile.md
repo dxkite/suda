@@ -1,6 +1,8 @@
 # 方法 `displayFile`
 
-> *文件信息* suda\template\Manager.php: 172~175
+根据路径显示模板
+
+> *文件信息* suda\template\Manager.php: 29~490
 
 ## 所属类 
 
@@ -12,7 +14,7 @@
 
 ## 说明
 
-根据路径显示模板
+
 
 
 ## 参数
@@ -31,3 +33,8 @@
 
 无
 
+
+
+## 例子
+
+example

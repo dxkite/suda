@@ -1,6 +1,8 @@
 # 方法 `setRouterAlias`
 
-> *文件信息* suda\core\Router.php: 302~309
+设置路由别名
+
+> *文件信息* suda\core\Router.php: 26~460
 
 ## 所属类 
 
@@ -12,7 +14,7 @@
 
 ## 说明
 
-设置路由别名
+
 
 
 ## 参数
@@ -31,3 +33,8 @@
 
 无
 
+
+
+## 例子
+
+example

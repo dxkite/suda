@@ -3,11 +3,9 @@
 > **注：** 文档由程序自动生成
 
 ## 函数列表 
-
-<?php foreach($this->get("functions")as $name => $info): ?>
-
-### [<?php echo htmlspecialchars(__($name)); ?>](functions/<?php echo htmlspecialchars(__($name)); ?>.md)
- <?php echo $info['functionDoc']; ?> 
+| 类名 | 说明 |
+|------|-----|  
+<?php foreach($this->get("functions")as $name => $info): ?>| [<?php echo htmlspecialchars(__($name)); ?>](functions/<?php echo htmlspecialchars(__($name)); ?>.md) |  <?php echo $info['functionDoc']; ?>  |
 <?php endforeach; ?>
 
 
@@ -15,8 +13,7 @@
 
 ## 类列表
 
-<?php foreach($this->get("classes")as $name => $info): ?>
-
-### [<?php echo htmlspecialchars(__($name)); ?>](classes/<?php echo htmlspecialchars(__(doc\Summary::realPath($name))); ?>.md)
-<?php echo $info['classDoc']; ?> 
+| 类名 | 说明 |
+|------|-----|
+<?php foreach($this->get("classes")as $name => $info): ?>|[<?php echo htmlspecialchars(__($name)); ?>](classes/<?php echo htmlspecialchars(__(doc\Summary::realPath($name))); ?>.md) | <?php echo $info['classDoc']; ?> |
 <?php endforeach; ?><?php }}

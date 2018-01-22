@@ -1,6 +1,8 @@
 # 方法 `__get`
 
-> *文件信息* suda\tool\Value.php: 58~61
+该函数暂时无注释文档
+
+> *文件信息* suda\tool\Value.php: 22~131
 
 ## 所属类 
 
@@ -12,6 +14,7 @@
 
 ## 说明
 
+@package Core
 
 
 ## 参数
@@ -29,3 +32,8 @@
 
 无
 
+
+
+## 例子
+
+example

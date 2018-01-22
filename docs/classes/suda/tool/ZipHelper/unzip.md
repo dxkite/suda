@@ -1,6 +1,8 @@
 # 方法 `unzip`
 
-> *文件信息* suda\tool\ZipHelper.php: 31~46
+解压文件到目录
+
+> *文件信息* suda\tool\ZipHelper.php: 21~84
 
 ## 所属类 
 
@@ -12,7 +14,7 @@
 
 ## 说明
 
-解压文件到目录
+
 
 
 ## 参数
@@ -32,3 +34,8 @@
 
 无
 
+
+
+## 例子
+
+example

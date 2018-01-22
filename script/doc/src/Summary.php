@@ -51,20 +51,22 @@ class Summary
             // $functionInfo['functionDoc']=trim(preg_replace('/\r?\n/',' ',$functionInfo['functionDoc']));
             $functions[$function]=$functionInfo;
         }
-
+ 
         foreach ($this->exportClass as $class) {
             $classInfo=(new ClassExport($class))->export($path.'/classes');
             // $classInfo['classDoc']=trim(preg_replace('/\r?\n/',' ',$classInfo['classDoc']));
             $classes[$class]=$classInfo;
         }
-
+        
         $template=new ExportTemplate;
         $template->setSrc(__DIR__.'/../template/summary.md');
         $template->setValues([
             'classes'=>$classes,
             'functions'=>$functions,
         ]);
-        $template->export($path.'/summary.md');
+        $destPath=$path.'/summary.md';
+        $template->export( $destPath);
+        print 'generate summary  --> '.$destPath ."\r\n";
     }
 
     public function setFunctions(array $functions)

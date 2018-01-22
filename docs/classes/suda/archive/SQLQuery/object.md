@@ -1,6 +1,8 @@
 # 方法 `object`
 
-> *文件信息* suda\archive\SQLQuery.php: 301~305
+添加列处理类
+
+> *文件信息* suda\archive\SQLQuery.php: 26~365
 
 ## 所属类 
 
@@ -12,7 +14,7 @@
 
 ## 说明
 
-添加列处理类
+
 
 
 ## 参数
@@ -30,3 +32,8 @@
 
 无
 
+
+
+## 例子
+
+example

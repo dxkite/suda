@@ -1,6 +1,11 @@
 #  类 Table
 
+> *文件信息* suda\archive\Table.php: 30~673
+
 数据表抽象对象
+
+## 描述
+
 用于提供对数据表的操作
 
 
@@ -16,7 +21,7 @@
 | public |[__construct](Table/__construct.md) |  |
 | public |[insert](Table/insert.md) | 插入一行记录 |
 | public |[insertValue](Table/insertValue.md) | 插入一行记录 |
-| public |[getByPrimaryKey](Table/getByPrimaryKey.md) | 通过主键查找元素 主键的值可以为关联数组或单独的一个值 查询成功返回查询成功的列，失败返回false |
+| public |[getByPrimaryKey](Table/getByPrimaryKey.md) | 通过主键查找元素 |
 | public |[updateByPrimaryKey](Table/updateByPrimaryKey.md) | 通过主键更新元素 |
 | public |[deleteByPrimaryKey](Table/deleteByPrimaryKey.md) | 通过主键删除元素 |
 | public |[search](Table/search.md) |  |

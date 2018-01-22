@@ -1,6 +1,8 @@
 # 方法 `activeModule`
 
-> *文件信息* suda\core\Application.php: 261~287
+激活运行的模块
+
+> *文件信息* suda\core\Application.php: 24~440
 
 ## 所属类 
 
@@ -12,7 +14,7 @@
 
 ## 说明
 
-激活运行的模块
+
 
 
 ## 参数
@@ -30,3 +32,8 @@
 
 无
 
+
+
+## 例子
+
+example

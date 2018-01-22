@@ -1,6 +1,12 @@
 #  类 Compiler
 
+> *文件信息* suda\template\compiler\suda\Compiler.php: 30~364
+
 Suda 模板编译器
+
+## 描述
+
+该类暂时无说明
 
 
 ## 变量
@@ -14,7 +20,7 @@ Suda 模板编译器
 | public static|[setBase](Compiler/setBase.md) |  |
 | public |[__construct](Compiler/__construct.md) |  |
 | public |[compileText](Compiler/compileText.md) |  |
-| public |[compile](Compiler/compile.md) | 编译文件 @param $input |
+| public |[compile](Compiler/compile.md) | 编译文件 |
 | public |[render](Compiler/render.md) |  |
 | public static|[addCommand](Compiler/addCommand.md) | 扩展模板命令 |
 | public static|[hasCommand](Compiler/hasCommand.md) | 检查模板扩展命令是否存在 |

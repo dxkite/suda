@@ -1,6 +1,8 @@
 # 方法 `compile`
 
-> *文件信息* suda\template\Manager.php: 121~127
+编译文件
+
+> *文件信息* suda\template\Manager.php: 29~490
 
 ## 所属类 
 
@@ -12,8 +14,8 @@
 
 ## 说明
 
-编译文件
 @param $input
+
 
 ## 参数
 
@@ -31,3 +33,8 @@
 
 无
 
+
+
+## 例子
+
+example

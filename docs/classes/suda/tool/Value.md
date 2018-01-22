@@ -1,6 +1,11 @@
 #  类 Value
 
+> *文件信息* suda\tool\Value.php: 22~131
+
 Class Value
+
+## 描述
+
 @package Core
 
 
@@ -12,7 +17,7 @@ Class Value
 
 | 可见性 | 方法名 | 说明 |
 |--------|-------|------|
-| public |[__construct](Value/__construct.md) | Value constructor. @param $var |
+| public |[__construct](Value/__construct.md) | Value constructor. |
 | public |[_getVar](Value/_getVar.md) |  |
 | public |[_setVar](Value/_setVar.md) |  |
 | public |[__get](Value/__get.md) |  |

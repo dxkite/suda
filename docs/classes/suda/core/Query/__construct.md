@@ -1,6 +1,8 @@
 # 方法 `__construct`
 
-> *文件信息* suda\archive\SQLQuery.php: 56~63
+构造查询
+
+> *文件信息* suda\core\Query.php: 20~201
 
 ## 所属类 
 
@@ -12,7 +14,7 @@
 
 ## 说明
 
-构造查询
+
 
 
 ## 参数
@@ -22,7 +24,7 @@
 |--------|-----|-------|-------|
 | query |  string | 无 | 无 |
 | binds |  array | # Error> htmlspecialchars() expects parameter 1 to be string, array given
-	Cause By D:\Server\Local\suda\script\doc\template\method.md.tpl:26
+	Cause By D:\Server\Local\suda\script\doc\template\method.md.tpl:30
  | 无 |
 | scroll |  bool |  | 无 |
 
@@ -30,4 +32,9 @@
 
 ## 返回值
 
-无返回值
+返回值类型不定
+
+
+## 例子
+
+example

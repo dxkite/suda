@@ -1,6 +1,12 @@
 #  类 HTMLMessage
 
+> *文件信息* suda\mail\message\HTMLMessage.php: 20~26
 
+
+
+## 描述
+
+该类暂时无说明
 
 
 ## 变量
