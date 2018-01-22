@@ -22,7 +22,12 @@ use suda\core\Storage;
 use suda\exception\SQLException;
 use suda\archive\creator\InputValue;
 
-// 数据库查询方案
+/**
+ * 数据库查询方案，简化数据库查
+ * 
+ * @example
+ * 
+ */
 class SQLQuery
 {
     protected static $queryCount=0;

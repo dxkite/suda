@@ -52,7 +52,7 @@
 |[suda\archive\creator\Field](classes/suda/archive/creator/Field.md) |  |
 |[suda\archive\creator\InputValue](classes/suda/archive/creator/InputValue.md) |  |
 |[suda\archive\creator\Table](classes/suda/archive/creator/Table.md) |  |
-|[suda\archive\SQLQuery](classes/suda/archive/SQLQuery.md) |  |
+|[suda\archive\SQLQuery](classes/suda/archive/SQLQuery.md) | 数据库查询方案，简化数据库查 |
 |[suda\archive\Table](classes/suda/archive/Table.md) | 数据表抽象对象 |
 |[suda\archive\TableInstance](classes/suda/archive/TableInstance.md) |  |
 |[suda\core\Cache](classes/suda/core/Cache.md) | 文件缓存 |

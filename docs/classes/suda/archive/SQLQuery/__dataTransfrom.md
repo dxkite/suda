@@ -2,7 +2,7 @@
 
 转换数据，数据库统处理输入输出数据
 
-> *文件信息* suda\archive\SQLQuery.php: 26~365
+> *文件信息* suda\archive\SQLQuery.php: 31~370
 
 ## 所属类 
 
@@ -14,7 +14,6 @@
 
 ## 说明
 
-转换函数
 
 
 
@@ -39,4 +38,3 @@
 
 ## 例子
 
-example

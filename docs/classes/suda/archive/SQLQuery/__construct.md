@@ -2,7 +2,7 @@
 
 构造查询
 
-> *文件信息* suda\archive\SQLQuery.php: 26~365
+> *文件信息* suda\archive\SQLQuery.php: 31~370
 
 ## 所属类 
 
@@ -37,4 +37,3 @@
 
 ## 例子
 
-example

@@ -1,12 +1,12 @@
 #  SQLQuery 
 
-> *文件信息* suda\archive\SQLQuery.php: 26~365
+> *文件信息* suda\archive\SQLQuery.php: 31~370
 
-
+数据库查询方案，简化数据库查
 
 ## 描述
 
-该类暂时无说明
+
 
 
 
