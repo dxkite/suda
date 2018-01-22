@@ -1,5 +1,6 @@
 # SQLQuery::exec
 
+运行SQL语句
 
 
 > *文件信息* suda\archive\SQLQuery.php: 31~370
@@ -25,7 +26,10 @@
 
 ## 返回值
 
-返回值类型不定
+类型：integer
+
+ 返回影响的数据行数目
+
 
 
 ## 例子

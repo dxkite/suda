@@ -2,7 +2,7 @@
 
 获取数据SQL字符串
 
-> *文件信息* suda\archive\Table.php: 30~673
+> *文件信息* suda\archive\Table.php: 31~674
 
 ## 所属类 
 
@@ -13,6 +13,7 @@
  protected 
 
 ## 说明
+
 
 用于提供对数据表的操作
 

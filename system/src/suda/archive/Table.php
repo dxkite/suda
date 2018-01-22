@@ -24,6 +24,7 @@ use suda\exception\TableException;
 
 /**
  * 数据表抽象对象
+ * 
  * 用于提供对数据表的操作
  * 
  */ 

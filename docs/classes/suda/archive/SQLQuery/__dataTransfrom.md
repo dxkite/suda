@@ -1,6 +1,6 @@
 # SQLQuery::__dataTransfrom
 
-转换数据，数据库统处理输入输出数据
+转换函数；统一处理数据库输入输出
 
 > *文件信息* suda\archive\SQLQuery.php: 31~370
 

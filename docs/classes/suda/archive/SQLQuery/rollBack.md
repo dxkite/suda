@@ -1,5 +1,6 @@
 # SQLQuery::rollBack
 
+事务系列，撤销事务
 
 
 > *文件信息* suda\archive\SQLQuery.php: 31~370
@@ -25,7 +26,10 @@
 
 ## 返回值
 
-返回值类型不定
+类型：any
+
+无
+
 
 
 ## 例子

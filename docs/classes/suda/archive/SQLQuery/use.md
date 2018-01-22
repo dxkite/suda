@@ -1,5 +1,6 @@
 # SQLQuery::use
 
+切换使用的数据表
 
 
 > *文件信息* suda\archive\SQLQuery.php: 31~370
@@ -28,7 +29,10 @@
 
 ## 返回值
 
-返回值类型不定
+类型：SQLQuery
+
+无
+
 
 
 ## 例子

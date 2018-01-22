@@ -34,4 +34,4 @@
 | public |[params](Command/params.md) |  |
 | public |[exec](Command/exec.md) |  |
 | public |[args](Command/args.md) |  |
-| public static|[_absoluteCall](Command/_absoluteCall.md) | 绝对调用函数，包括私有和保护函数 |
+| public static|[_absoluteCall](Command/_absoluteCall.md) | 绝对调用函数，可调用类私有和保护函数 |
