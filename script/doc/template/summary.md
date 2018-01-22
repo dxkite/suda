@@ -3,7 +3,7 @@
 > **注：** 文档由程序自动生成
 
 ## 函数列表 
-| 类名 | 说明 |
+| 函数名 | 说明 |
 |------|-----|  
 @foreach($:functions as $name => $info)| [{{$name}}](functions/{{$name}}.md) |  {{!$info['functionDoc']}}  |
 @endforeach
