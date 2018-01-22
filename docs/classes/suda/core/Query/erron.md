@@ -2,7 +2,7 @@
 
 获取语句查询错误编号
 
-> *文件信息* suda\core\Query.php: 26~263
+> *文件信息* suda\core\Query.php: 26~265
 
 ## 所属类 
 

@@ -2,7 +2,7 @@
 
 向数据表中插入一行
 
-> *文件信息* suda\core\Query.php: 26~263
+> *文件信息* suda\core\Query.php: 26~265
 
 ## 所属类 
 
@@ -26,9 +26,7 @@
 | table |  string | 无 | 无 |
 | values |  [type] | 无 | 无 |
 | binds |  array | Array | 无 |
-| object |  # Error> htmlspecialchars() expects parameter 1 to be string, array given
-	Cause By D:\Server\Local\suda\script\docme\template\method.md.tpl:31
- | null | 无 |
+| object |  [type] | null | 无 |
 
 
 

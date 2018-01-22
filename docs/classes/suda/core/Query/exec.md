@@ -2,7 +2,7 @@
 
 运行SQL语句
 
-> *文件信息* suda\core\Query.php: 26~263
+> *文件信息* suda\core\Query.php: 26~265
 
 ## 所属类 
 

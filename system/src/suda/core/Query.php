@@ -25,11 +25,13 @@ use suda\exception\SQLException;
  */
 class Query extends SQLQuery
 {
+    
     /**
      * 向数据表中插入一行
      * @param string $table
      * @param [type] $values
      * @param array $binds
+     * @param [type] $object
      * @return array|false 当ID>0时返回ID，否者返回true/false
      */
     public static function insert(string $table, $values, array $binds=[], $object=null)
