@@ -62,7 +62,10 @@ class Query extends SQLQuery
         return false;
     }
 
-
+    public static function that($object) {
+        return (new Query)->object($object);
+    }
+    
     /**
      * 在数据表总搜索
      *
@@ -134,7 +137,7 @@ class Query extends SQLQuery
             $fields=implode(',', $field);
         }
         $limit=is_null($page)?'': ' LIMIT '.self::page($page[0], $page[1]);
-        return (new SQLQuery('SELECT '.$fields.' FROM `'.$table.'` '.trim($conditions, ';').$limit.';', $binds, $scroll))->object($object);
+        return new SQLQuery('SELECT '.$fields.' FROM `'.$table.'` '.trim($conditions, ';').$limit.';', $binds, $scroll);
     }
 
     /**

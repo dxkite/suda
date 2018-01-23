@@ -73,7 +73,7 @@ class SQLQuery
      * @param array $binds
      * @param boolean $scroll
      */
-    public function __construct(string $query, array $binds=[], bool $scroll=false)
+    public function __construct(string $query='', array $binds=[], bool $scroll=false)
     {
         self::connectPdo();
         $this->query=$query;
