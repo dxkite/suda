@@ -134,7 +134,7 @@ class Query extends SQLQuery
             $fields=implode(',', $field);
         }
         $limit=is_null($page)?'': ' LIMIT '.self::page($page[0], $page[1]);
-        return new SQLQuery('SELECT '.$fields.' FROM `'.$table.'` '.trim($conditions, ';').$limit.';', $binds, $scroll);
+        return (new SQLQuery('SELECT '.$fields.' FROM `'.$table.'` '.trim($conditions, ';').$limit.';', $binds, $scroll))->object($object);
     }
 
     /**
