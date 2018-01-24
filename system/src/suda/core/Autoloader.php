@@ -25,10 +25,17 @@ class Autoloader
     protected static $namespace=['suda\\core'];
     protected static $include_path=[];
 
+    /**
+     * 将JAVA，路径分割转换为PHP分割符
+     *
+     * @param string $name 类名
+     * @return string 真实分隔符
+     */
     public static function realName(string $name)
     {
         return preg_replace('/[.\/\\\\]+/', '\\', $name);
     }
+    
     public static function realPath(string $name)
     {
         return preg_replace('/[\\\\\/]+/', DIRECTORY_SEPARATOR, $name);

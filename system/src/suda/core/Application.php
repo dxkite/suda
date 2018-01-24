@@ -23,19 +23,43 @@ use suda\exception\JSONException;
 
 class Application
 {
-    // app 目录
+    /**
+     * app 目录
+     *
+     * @var [type]
+     */
     private $path;
-    // 当前模块名
-    private $active_module;
-    // 激活的模块
-    private $module_live=null;
-    // 模块配置
-    private $module_configs=null;
-    // 模块名缓存
-    private $module_name_cache=[];
-    // 模块目录装换成模块名
-    private $module_dir_name=[];
-    private $modules_path=[];
+    /**
+     * 当前模块名
+     *
+     * @var [type]
+     */
+    private $activeModule;
+    /**
+     * 激活的模块
+     *
+     * @var [type]
+     */
+    private $moduleLive=null;
+    /**
+     * 模块配置
+     *
+     * @var [type]
+     */
+    private $moduleConfigs=null;
+    /**
+     * 模块名缓存
+     *
+     * @var array
+     */
+    private $moduleNameCache=[];
+    /**
+     * 模块目录装换成模块名
+     *
+     * @var array
+     */
+    private $moduleDirName=[];
+    private $modulesPath=[];
 
 
     private static $instance;
@@ -75,10 +99,6 @@ class Application
         // 注册模块目录
         $this->addModulesPath(SYSTEM_RESOURCE.'/modules');
         $this->addModulesPath(MODULES_DIR);
-        // 读取目录，注册所有模块
-        $this->registerModules();
-        // 加载模块
-        $this->loadModules();
     }
 
     public static function getInstance()
@@ -91,6 +111,8 @@ class Application
 
     public function init()
     {
+        // 读取目录，注册所有模块
+        $this->registerModules();
         // 调整模板
         Manager::theme(conf('app.template', 'default'));
         Hook::exec('Application:init');
@@ -103,6 +125,8 @@ class Application
         hook()->listen('system:shutdown', [$this, 'onShutdown']);
         hook()->listen('system:uncaughtException', [$this,'uncaughtException']);
         hook()->listen('system:uncaughtError', [$this, 'uncaughtError']);
+        // 加载模块
+        $this->loadModules();
     }
 
     /**
@@ -114,8 +138,8 @@ class Application
     public function addModulesPath(string $path)
     {
         $path=Storage::abspath($path);
-        if ($path && !in_array($path, $this->modules_path)) {
-            $this->modules_path[]=$path;
+        if ($path && !in_array($path, $this->modulesPath)) {
+            $this->modulesPath[]=$path;
         }
     }
 
@@ -135,6 +159,20 @@ class Application
             $root=self::getModulePath($module_temp);
             $config=self::getModuleConfig($module_temp);
 
+            if (isset($config['require'])) {
+                foreach ($config['require'] as $module => $version) {
+                    $require=$this->getModuleConfig($module);
+                    if ($this->checkModuleExist($module) && isset($require['version'])) {
+                        if (!empty($version)) {
+                            if (version_compare($config['version'], $version, '<')) {
+                                throw new ApplicationException(__('module %s require module %s v%s and now is v%s', $config['name'], $module, $version,$require['version']));
+                            }
+                        }
+                    } else {
+                        throw new ApplicationException(__('module %s require module %s', $config['name'], $module));
+                    }
+                }
+            }
             // 注册模块共享目录自动加载
             foreach ($config['autoload']['share'] as $namespace=>$path) {
                 if (Storage::isDir($share_path=$root.DIRECTORY_SEPARATOR.$path)) {
@@ -192,30 +230,30 @@ class Application
      */
     public function getModules()
     {
-        return array_values($this->module_dir_name);
+        return array_values($this->moduleDirName);
     }
 
     public function getModuleDirs()
     {
-        return array_keys($this->module_dir_name);
+        return array_keys($this->moduleDirName);
     }
 
     
     public function getActiveModule()
     {
-        return $this->active_module;
+        return $this->activeModule;
     }
 
     public function getModuleConfig(string $module)
     {
-        return $this->module_configs[self::getModuleFullName($module)]??[];
+        return $this->moduleConfigs[self::getModuleFullName($module)]??[];
     }
 
     public function getModulePrefix(string $module)
     {
         $prefix=conf('module-prefix.'.$module, null);
         if (is_null($prefix)) {
-            $prefix=$this->module_configs[self::getModuleFullName($module)]['prefix']??null;
+            $prefix=$this->moduleConfigs[self::getModuleFullName($module)]['prefix']??null;
         }
         return $prefix;
     }
@@ -227,8 +265,8 @@ class Application
 
     public function getLiveModules()
     {
-        if ($this->module_live) {
-            return $this->module_live;
+        if ($this->moduleLive) {
+            return $this->moduleLive;
         }
         $modules=conf('app.modules', self::getModules());
         $exclude=defined('DISABLE_MODULES')?explode(',', trim(DISABLE_MODULES, ',')):[];
@@ -249,7 +287,7 @@ class Application
         // 排序，保证为数组
         sort($modules);
         debug()->trace('live modules', json_encode($modules));
-        return $this->module_live=$modules;
+        return $this->moduleLive=$modules;
     }
 
     /**
@@ -262,7 +300,7 @@ class Application
     {
         Hook::exec('Application:active', [$module]);
         debug()->trace(__('active module %s', $module));
-        $this->active_module=$module;
+        $this->activeModule=$module;
         $root=self::getModulePath($module);
         $module_config=self::getModuleConfig($module);
         define('MODULE_RESOURCE', Storage::path($root.'/resource'));
@@ -294,9 +332,7 @@ class Application
     
     public function onShutdown()
     {
-        // TODO: CACHE Appication Info
-        // ArrayHelper::export(CACHE_DIR.'/module_configs.cache.php','module_configs',$this->module_configs);
-        // ArrayHelper::export(CACHE_DIR.'/module_dir_name.cache.php','module_dir_name',$this->module_dir_name);
+        return true;
     }
 
     public function uncaughtException($e)
@@ -327,8 +363,8 @@ class Application
     public function getModuleFullName(string $name)
     {
         // 存在缓存则返回缓存
-        if (isset($this->module_name_cache[$name])) {
-            return $this->module_name_cache[$name];
+        if (isset($this->moduleNameCache[$name])) {
+            return $this->moduleNameCache[$name];
         }
         preg_match('/^(?:([a-zA-Z0-9_-]+)\/)?([a-zA-Z0-9_-]+)(?::(.+))?$/', $name, $matchname);
         $preg='/^'.(isset($matchname[1])&&$matchname[1]? preg_quote($matchname[1]).'\/':'(\w+\/)?') // 限制域
@@ -337,7 +373,7 @@ class Application
         $targets=[];
         // debug()->debug($matchname, $preg);
         // 匹配模块名，查找符合格式的模块
-        foreach ($this->module_configs as $module_name=>$module_config) {
+        foreach ($this->moduleConfigs as $module_name=>$module_config) {
             // 匹配到模块名
             if (preg_match($preg, $module_name)) {
                 preg_match('/^(?:(\w+)\/)?(\w+)(?::(.+))?$/', $module_name, $matchname);
@@ -363,8 +399,8 @@ class Application
     public function getModuleDir(string $name)
     {
         $name=self::getModuleFullName($name);
-        if (isset($this->module_configs[$name])) {
-            return $this->module_configs[$name]['directory'];
+        if (isset($this->moduleConfigs[$name])) {
+            return $this->moduleConfigs[$name]['directory'];
         }
         return false;
     }
@@ -377,7 +413,7 @@ class Application
      */
     public function moduleName(string $dirname)
     {
-        return $this->module_dir_name[$dirname]?:$name;
+        return $this->moduleDirName[$dirname]?:$name;
     }
 
     /**
@@ -387,7 +423,7 @@ class Application
      */
     private function registerModules()
     {
-        foreach ($this->modules_path as $path) {
+        foreach ($this->modulesPath as $path) {
             $dirs=Storage::readDirs($path);
             foreach ($dirs as $dir) {
                 self::registerModule($path.'/'.$dir);
@@ -411,21 +447,21 @@ class Application
             ], $json['autoload']??[]);
             $json['import']= $json['import']??[];
             $name.=isset($json['version'])?':'.$json['version']:'';
-            $this->module_configs[$name]=$json;
-            $this->module_dir_name[$dir]=$name;
+            $this->moduleConfigs[$name]=$json;
+            $this->moduleDirName[$dir]=$name;
         }
     }
 
     public function getModulesInfo()
     {
-        return $this->module_configs;
+        return $this->moduleConfigs;
     }
 
     public function getModulePath(string $module)
     {
         $name=self::getModuleFullName($module);
-        if (isset($this->module_configs[$name])) {
-            return $this->module_configs[$name]['path'];
+        if (isset($this->moduleConfigs[$name])) {
+            return $this->moduleConfigs[$name]['path'];
         }
         return false;
     }
