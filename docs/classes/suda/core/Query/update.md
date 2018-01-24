@@ -2,7 +2,7 @@
 
 更新列
 
-> *文件信息* suda\core\Query.php: 26~265
+> *文件信息* suda\core\Query.php: 26~268
 
 ## 所属类 
 

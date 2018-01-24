@@ -109,25 +109,7 @@ class Application
         return static::$instance;
     }
 
-    public function init()
-    {
-        // 读取目录，注册所有模块
-        $this->registerModules();
-        // 调整模板
-        Manager::theme(conf('app.template', 'default'));
-        Hook::exec('Application:init');
-        // 初次运行初始化资源
-        if (conf('app.init')) {
-            init_resource();
-        }
-        Locale::path($this->path.'/resource/locales/');
-        hook()->listen('Router:dispatch::before', [$this, 'onRequest']);
-        hook()->listen('system:shutdown', [$this, 'onShutdown']);
-        hook()->listen('system:uncaughtException', [$this,'uncaughtException']);
-        hook()->listen('system:uncaughtError', [$this, 'uncaughtError']);
-        // 加载模块
-        $this->loadModules();
-    }
+
 
     /**
      * 添加模块扫描目录
@@ -158,14 +140,14 @@ class Application
         foreach ($module_all as $module_temp) {
             $root=self::getModulePath($module_temp);
             $config=self::getModuleConfig($module_temp);
-
+            // 检查依赖
             if (isset($config['require'])) {
                 foreach ($config['require'] as $module => $version) {
                     $require=$this->getModuleConfig($module);
                     if ($this->checkModuleExist($module) && isset($require['version'])) {
                         if (!empty($version)) {
                             if (version_compare($config['version'], $version, '<')) {
-                                throw new ApplicationException(__('module %s require module %s v%s and now is v%s', $config['name'], $module, $version,$require['version']));
+                                throw new ApplicationException(__('module %s require module %s v%s and now is v%s', $config['name'], $module, $version, $require['version']));
                             }
                         }
                     } else {
@@ -191,7 +173,6 @@ class Application
                     self::installModule($module_temp);
                 });
             }
-
             // 是否激活
             $is_live_module=in_array($module_temp, $module_use);
             if ($is_live_module) {
@@ -201,8 +182,29 @@ class Application
                 }
                 // 设置语言包库
                 Locale::path($root.'/resource/locales/');
+                Manager::initTemplateSource($module_temp);
             }
         }
+    }
+
+    public function init()
+    {
+        // 读取目录，注册所有模块
+        $this->registerModules();
+        // 加载模块
+        $this->loadModules();
+        // 调整模板
+        Manager::theme(conf('app.template', 'default'));   
+        // 初次运行初始化资源
+        if (conf('app.init')) {
+            init_resource();
+        }
+        Hook::exec('Application:init');
+        Locale::path($this->path.'/resource/locales/');
+        hook()->listen('Router:dispatch::before', [$this, 'onRequest']);
+        hook()->listen('system:shutdown', [$this, 'onShutdown']);
+        hook()->listen('system:uncaughtException', [$this,'uncaughtException']);
+        hook()->listen('system:uncaughtError', [$this, 'uncaughtError']);
     }
 
     public function installModule(string $module)

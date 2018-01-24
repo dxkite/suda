@@ -60,12 +60,7 @@ class Manager
      * @var array
      */
     protected static $templateSource=[];
-    /**
-     * 模板搜索目录初始化
-     *
-     * @var array
-     */
-    protected static $templateSourceInit=[];
+
     /**
      * 载入模板编译器
      */
@@ -93,7 +88,8 @@ class Manager
         return self::$compiler->setBase($template);
     }
 
-    public static function getCompiler() {
+    public static function getCompiler()
+    {
         return static::$compiler;
     }
 
@@ -106,7 +102,6 @@ class Manager
     {
         if (!is_null($theme)) {
             self::$theme=$theme;
-            self::initTemplateSource();
             Hook::exec('template:theme::change', [$theme]);
             debug()->info('change themes:'.$theme);
         }
@@ -118,9 +113,9 @@ class Manager
      * @param $input
      * @return mixed
      */
-    public static function compile(string $name,string $ext='html')
+    public static function compile(string $name, string $ext='html')
     {
-        if ($path=self::getInputFile($name,true,$ext)) {
+        if ($path=self::getInputFile($name, true, $ext)) {
             return self::$compiler->compile($name, $path, self::getOutputFile($name));
         }
         return false;
@@ -135,7 +130,7 @@ class Manager
      */
     public static function display(string $name, string $viewpath=null)
     {
-        return self::displayExt($name,'html',$viewpath??'');
+        return static::displayExt($name, 'html', $viewpath??'');
     }
 
     /**
@@ -145,21 +140,21 @@ class Manager
      * @param string $viewpath
      * @return void
      */
-    public static function displayExt(string $name, string $ext='html',string $viewpath=null)
+    public static function displayExt(string $name, string $ext='html', string $viewpath=null)
     {
         if (empty($viewpath)) {
-            $viewpath=self::getOutputFile($name);
+            $viewpath=static::getOutputFile($name);
         }
-        if (Config::get('debug', true)) {
-            if (!self::compile($name,$ext)) {
-                echo '<b>compile theme</b> &lt;<span style="color:red;">'.self::$theme.'</span>&gt; error: '.$name.' location '.$viewpath. ' missing raw template file</br>';
+        if (Config::get('debug', true) || Config::get('exception', false)) {
+            if (!static::compile($name, $ext)) {
+                echo '<b>compile theme</b> &lt;<span style="color:red;">'.static::$theme.'</span>&gt; error: '.$name.' location '.$viewpath. ' missing raw template file</br>';
                 return;
             }
         } elseif (!Storage::exist($viewpath)) {
-            echo '<b>missing theme</b> &lt;<span style="color:red;">'.self::$theme.'</span>&gt; template file '.$name.'  location '. Storage::cut($viewpath, DATA_DIR). '</br>';
+            echo '<b>missing theme</b> &lt;<span style="color:red;">'.static::$theme.'</span>&gt; template file '.$name.'  location '. Storage::cut($viewpath, DATA_DIR). '</br>';
             return;
         }
-        return self::displayFile($viewpath, $name);
+        return static::displayFile($viewpath, $name);
     }
 
     /**
@@ -171,7 +166,7 @@ class Manager
      */
     public static function displayFile(string $file, string $name)
     {
-        return self::$compiler->render($name, $file);
+        return static::$compiler->render($name, $file);
     }
 
     /**
@@ -221,8 +216,7 @@ class Manager
      */
     public static function getThemePath(string $module):string
     {
-        $theme=Application::getInstance()->getModulePath($module).'/resource/template/'.self::$theme;
-        return Storage::abspath($theme);
+        return Application::getInstance()->getModulePath($module).'/resource/template/{theme}';
     }
 
     /**
@@ -234,8 +228,7 @@ class Manager
     public static function getAppThemePath(string $module):string
     {
         $moduleName=Application::getInstance()->getModuleName($module);
-        $theme=RESOURCE_DIR.'/template/'.self::$theme.'/'.$moduleName;
-        return Storage::abspath($theme);
+        return RESOURCE_DIR.'/template/{theme}/'.$moduleName;
     }
 
     /**
@@ -254,8 +247,8 @@ class Manager
         if (!isset(self::$templateSource[$moduleName])) {
             self::$templateSource[$moduleName]=[];
         }
-        if (!in_array($path, self::$templateSource[$moduleName]) && $abspath= Storage::abspath($path)) {
-            array_unshift(self::$templateSource[$moduleName], $abspath);
+        if (!in_array($path, self::$templateSource[$moduleName])) {
+            array_unshift(self::$templateSource[$moduleName], $path);
         }
     }
 
@@ -268,27 +261,31 @@ class Manager
     public static function getTemplateSource(string $module)
     {
         $moduleName=Application::getInstance()->getModuleName($module);
-        return self::$templateSource[$moduleName]??[];
+        $sources=[];
+        if (isset(self::$templateSource[$moduleName])) {
+            foreach (self::$templateSource[$moduleName] as $source) {
+                if ($path=Storage::abspath(preg_replace('/\{theme\}/', static::$theme, $source))) {
+                    $sources[]=$path;
+                }
+                if ($path=Storage::abspath(preg_replace('/\{theme\}/', 'default', $source))) {
+                    $sources[]=$path;
+                }
+            }
+        }
+        return $sources;
     }
 
-    public static function initTemplateSource()
+    public static function initTemplateSource(string $module)
     {
-        $init_theme=isset(self::$templateSourceInit[self::$theme]) && self::$templateSourceInit[self::$theme];
-        if (!$init_theme) {
-            // 初始化
-            foreach (Application::getInstance()->getLiveModules() as $module) {
-                if ($path=self::getThemePath($module)) {
-                    self::addTemplateSource($module, $path);
-                }
-                if ($path=self::getAppThemePath($module)) {
-                    self::addTemplateSource($module, $path);
-                }
-                debug()->trace('init_template_source_'.$module, self::getTemplateSource($module));
-            }
-            self::$templateSourceInit[self::$theme]=true;
+        // 初始化
+        if ($path=self::getThemePath($module)) {
+            self::addTemplateSource($module, $path);
+        }
+        if ($path=self::getAppThemePath($module)) {
+            self::addTemplateSource($module, $path);
         }
     }
-    
+
     /**
      * 复制模板目录下静态文件
      *
@@ -335,7 +332,7 @@ class Manager
         $outpath=APP_PUBLIC.'/'.self::$dynamicPath.'/'.self::shadowName($module_dir).'/'.$basename;
         $path=Storage::path(dirname($outpath));
         // 编译检查
-        if (Config::get('debug', true)) {
+        if (Config::get('debug', true) || Config::get('exception', false)) {
             if (!self::$compiler->compile($name, $input, $output)) {
                 echo '<b>compile theme &lt;<span style="color:red;">'.self::$theme.'</span>&gt; file '.$input. ' missing file</b>';
                 return;
@@ -381,7 +378,7 @@ class Manager
      * @param string $name
      * @return string
      */
-    public static function getInputFile(string & $name, bool $ext=true,string $extRaw='html')
+    public static function getInputFile(string & $name, bool $ext=true, string $extRaw='html')
     {
         list($module, $basename)=Router::parseName($name);
         $name=$module.':'.$basename;
@@ -457,10 +454,10 @@ class Manager
 
     private static function compileFile(string $path, string $module, string $root)
     {
-        $ex=pathinfo($path,PATHINFO_EXTENSION);
+        $ex=pathinfo($path, PATHINFO_EXTENSION);
         $basenmae=preg_replace('/^('.preg_quote($root, '/').')?(.+)'.preg_quote(self::$extRaw.$ex).'/', '$2', $path);
         $name=$module.':'.trim($basenmae, '/');
-        $success=self::compile($name,$ex);
+        $success=self::compile($name, $ex);
         return $success;
     }
     
@@ -489,4 +486,5 @@ class Manager
     }
 }
 
+// 加载编译器
 Manager::loadCompile();

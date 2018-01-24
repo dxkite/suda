@@ -2,7 +2,7 @@
 
 添加模块扫描目录
 
-> *文件信息* suda\core\Application.php: 24~440
+> *文件信息* suda\core\Application.php: 24~478
 
 ## 所属类 
 

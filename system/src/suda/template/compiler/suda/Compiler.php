@@ -49,14 +49,10 @@ class Compiler implements CompilerImpl
         self::$template=$tpl;
     }
 
-    public function __construct()
-    {
-        Hook::exec('template:SudaCompiler:init', [$this]);
-    }
-    
     // 编译文本
     public function compileText(string $text)
     {
+        Hook::exec('template:SudaCompiler:init', [$this]);
         $result='';
         foreach (token_get_all($text) as $token) {
             if (is_array($token)) {

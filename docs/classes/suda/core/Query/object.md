@@ -2,7 +2,7 @@
 
 添加列处理类
 
-> *文件信息* suda\core\Query.php: 26~265
+> *文件信息* suda\core\Query.php: 26~268
 
 ## 所属类 
 

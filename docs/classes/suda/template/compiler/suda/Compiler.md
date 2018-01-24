@@ -1,6 +1,6 @@
 #  Compiler 
 
-> *文件信息* suda\template\compiler\suda\Compiler.php: 30~364
+> *文件信息* suda\template\compiler\suda\Compiler.php: 30~360
 
 Suda 模板编译器
 
@@ -38,7 +38,6 @@ Suda 模板编译器
 | 可见性 | 方法名 | 说明 |
 |--------|-------|------|
 | public static|[setBase](Compiler/setBase.md) |  |
-| public |[__construct](Compiler/__construct.md) |  |
 | public |[compileText](Compiler/compileText.md) |  |
 | public |[compile](Compiler/compile.md) | 编译文件 |
 | public |[render](Compiler/render.md) |  |

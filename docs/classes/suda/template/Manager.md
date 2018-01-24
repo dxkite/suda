@@ -1,6 +1,6 @@
 #  Manager 
 
-> *文件信息* suda\template\Manager.php: 29~490
+> *文件信息* suda\template\Manager.php: 29~487
 
 模板管理类
 
@@ -19,7 +19,6 @@
 | public static  | extCpl | 模板输出扩展| 
 | protected static  | theme | 默认样式| 
 | protected static  | templateSource | 模板搜索目录| 
-| protected static  | templateSourceInit | 模板搜索目录初始化| 
 
 
 

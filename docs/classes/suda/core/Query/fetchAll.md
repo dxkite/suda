@@ -2,7 +2,7 @@
 
 获取全部的查询结果
 
-> *文件信息* suda\core\Query.php: 26~265
+> *文件信息* suda\core\Query.php: 26~268
 
 ## 所属类 
 

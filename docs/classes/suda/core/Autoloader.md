@@ -1,6 +1,6 @@
 #  Autoloader 
 
-> *文件信息* suda\core\Autoloader.php: 18~134
+> *文件信息* suda\core\Autoloader.php: 18~141
 
 
 
@@ -25,7 +25,7 @@
 
 | 可见性 | 方法名 | 说明 |
 |--------|-------|------|
-| public static|[realName](Autoloader/realName.md) |  |
+| public static|[realName](Autoloader/realName.md) | 将JAVA，路径分割转换为PHP分割符 |
 | public static|[realPath](Autoloader/realPath.md) |  |
 | public static|[init](Autoloader/init.md) |  |
 | public static|[import](Autoloader/import.md) |  |

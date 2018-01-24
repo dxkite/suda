@@ -1,6 +1,6 @@
 #  Application 
 
-> *文件信息* suda\core\Application.php: 24~440
+> *文件信息* suda\core\Application.php: 24~478
 
 
 
@@ -19,9 +19,9 @@
 | 可见性 | 方法名 | 说明 |
 |--------|-------|------|
 | public static|[getInstance](Application/getInstance.md) |  |
-| public |[init](Application/init.md) |  |
 | public |[addModulesPath](Application/addModulesPath.md) | 添加模块扫描目录 |
 | protected |[loadModules](Application/loadModules.md) | 载入模块 |
+| public |[init](Application/init.md) |  |
 | public |[installModule](Application/installModule.md) |  |
 | public |[getModules](Application/getModules.md) | 获取所有模块 |
 | public |[getModuleDirs](Application/getModuleDirs.md) |  |

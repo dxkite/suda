@@ -22,7 +22,7 @@
 
 | 参数名 | 类型 | 默认值 | 说明 |
 |--------|-----|-------|-------|
-| query |  string | 无 | 无 |
+| query |  string |  | 无 |
 | binds |  array | Array | 无 |
 | scroll |  bool |  | 无 |
 

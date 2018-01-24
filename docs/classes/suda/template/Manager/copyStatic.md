@@ -2,7 +2,7 @@
 
 复制模板目录下静态文件
 
-> *文件信息* suda\template\Manager.php: 29~490
+> *文件信息* suda\template\Manager.php: 29~487
 
 ## 所属类 
 

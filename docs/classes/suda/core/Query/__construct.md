@@ -2,7 +2,7 @@
 
 构造查询
 
-> *文件信息* suda\core\Query.php: 26~265
+> *文件信息* suda\core\Query.php: 26~268
 
 ## 所属类 
 
@@ -23,7 +23,7 @@
 
 | 参数名 | 类型 | 默认值 | 说明 |
 |--------|-----|-------|-------|
-| query |  string | 无 | 无 |
+| query |  string |  | 无 |
 | binds |  array | Array | 无 |
 | scroll |  bool |  | 无 |
 

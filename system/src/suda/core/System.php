@@ -161,6 +161,7 @@ class System
 
     public static function uncaughtException($exception)
     {
+        Config::set('exception',true);
         if (!$exception instanceof Exception) {
             $exception=new Exception($exception);
         }

@@ -2,7 +2,7 @@
 
 模块模板文件目录
 
-> *文件信息* suda\template\Manager.php: 29~490
+> *文件信息* suda\template\Manager.php: 29~487
 
 ## 所属类 
 

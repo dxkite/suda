@@ -1,6 +1,6 @@
 #  Query 
 
-> *文件信息* suda\core\Query.php: 26~265
+> *文件信息* suda\core\Query.php: 26~268
 
 数据库查询类
 
@@ -37,6 +37,7 @@
 | 可见性 | 方法名 | 说明 |
 |--------|-------|------|
 | public static|[insert](Query/insert.md) | 向数据表中插入一行 |
+| public static|[that](Query/that.md) |  |
 | public static|[where](Query/where.md) | 在数据表总搜索 |
 | public static|[search](Query/search.md) | 搜索列 |
 | public static|[select](Query/select.md) | 选择列 |

@@ -2,7 +2,7 @@
 
 SQL语句模板绑定值
 
-> *文件信息* suda\core\Query.php: 26~265
+> *文件信息* suda\core\Query.php: 26~268
 
 ## 所属类 
 
