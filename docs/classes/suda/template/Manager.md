@@ -1,6 +1,6 @@
 #  Manager 
 
-> *文件信息* suda\template\Manager.php: 29~487
+> *文件信息* suda\template\Manager.php: 29~504
 
 模板管理类
 
@@ -28,8 +28,8 @@
 | 可见性 | 方法名 | 说明 |
 |--------|-------|------|
 | public static|[loadCompile](Manager/loadCompile.md) | 载入模板编译器 |
-| public static|[setTemplate](Manager/setTemplate.md) |  |
-| public static|[getCompiler](Manager/getCompiler.md) |  |
+| public static|[setTemplate](Manager/setTemplate.md) | 设置模板基类 |
+| public static|[getCompiler](Manager/getCompiler.md) | 获取编译器 |
 | public static|[theme](Manager/theme.md) | 获取/设置模板样式 |
 | public static|[compile](Manager/compile.md) | 编译文件 |
 | public static|[display](Manager/display.md) | 根据模板ID显示HTML模板 |
@@ -41,7 +41,7 @@
 | public static|[getAppThemePath](Manager/getAppThemePath.md) | 模块模板文件目录 |
 | public static|[addTemplateSource](Manager/addTemplateSource.md) | 设置模板源 |
 | public static|[getTemplateSource](Manager/getTemplateSource.md) | 获取模板源 |
-| public static|[initTemplateSource](Manager/initTemplateSource.md) |  |
+| public static|[registerTemplateSource](Manager/registerTemplateSource.md) | 注册模块模板资源目录 |
 | protected static|[copyStatic](Manager/copyStatic.md) | 复制模板目录下静态文件 |
 | public static|[file](Manager/file.md) | 编译动态文件 |
 | public static|[include](Manager/include.md) |  |

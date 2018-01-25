@@ -1,6 +1,6 @@
-# Manager::compile
+# Manager::registerTemplateSource
 
-编译文件
+注册模块模板资源目录
 
 > *文件信息* suda\template\Manager.php: 29~504
 
@@ -14,7 +14,7 @@
 
 ## 说明
 
-@param $input
+
 
 
 ## 参数
@@ -22,14 +22,13 @@
 
 | 参数名 | 类型 | 默认值 | 说明 |
 |--------|-----|-------|-------|
-| name |  string | 无 | 无 |
-| ext |  string | html | 无 |
+| module |  string | 无 |  模块名 |
 
 
 
 ## 返回值
 
-类型：mixed
+类型：void
 
 无
 

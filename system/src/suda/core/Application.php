@@ -182,7 +182,6 @@ class Application
                 }
                 // 设置语言包库
                 Locale::path($root.'/resource/locales/');
-                Manager::initTemplateSource($module_temp);
             }
         }
     }
@@ -451,6 +450,8 @@ class Application
             $name.=isset($json['version'])?':'.$json['version']:'';
             $this->moduleConfigs[$name]=$json;
             $this->moduleDirName[$dir]=$name;
+            // 注册资源
+            Manager::registerTemplateSource($name);
         }
     }
 

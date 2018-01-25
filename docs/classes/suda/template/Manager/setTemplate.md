@@ -1,8 +1,8 @@
 # Manager::setTemplate
 
+设置模板基类
 
-
-> *文件信息* suda\template\Manager.php: 29~487
+> *文件信息* suda\template\Manager.php: 29~504
 
 ## 所属类 
 
@@ -14,7 +14,7 @@
 
 ## 说明
 
-该函数暂时无说明
+
 
 
 ## 参数
@@ -28,7 +28,10 @@
 
 ## 返回值
 
-返回值类型不定
+类型：void
+
+无
+
 
 
 ## 例子

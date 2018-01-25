@@ -64,7 +64,7 @@ class Docme
             'classes'=>$classes,
             'functions'=>$functions,
         ]);
-        $destPath=$path.'/summary.md';
+        $destPath=$path.'/README.md';
         $template->export( $destPath);
         print 'generate summary  --> '.$destPath ."\r\n";
     }

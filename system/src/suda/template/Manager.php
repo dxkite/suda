@@ -79,7 +79,12 @@ class Manager
         }
     }
 
-    // 设置模板基类
+    /**
+     * 设置模板基类
+     *
+     * @param string $template
+     * @return void
+     */
     public static function setTemplate(string $template=null)
     {
         if (is_null($template)) {
@@ -88,6 +93,11 @@ class Manager
         return self::$compiler->setBase($template);
     }
 
+    /**
+     * 获取编译器
+     *
+     * @return void
+     */
     public static function getCompiler()
     {
         return static::$compiler;
@@ -275,7 +285,14 @@ class Manager
         return $sources;
     }
 
-    public static function initTemplateSource(string $module)
+
+    /**
+     * 注册模块模板资源目录
+     *
+     * @param string $module 模块名
+     * @return void
+     */
+    public static function registerTemplateSource(string $module)
     {
         // 初始化
         if ($path=self::getThemePath($module)) {

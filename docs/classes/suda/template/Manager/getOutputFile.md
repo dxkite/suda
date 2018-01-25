@@ -2,7 +2,7 @@
 
 模板编译后输出路径
 
-> *文件信息* suda\template\Manager.php: 29~487
+> *文件信息* suda\template\Manager.php: 29~504
 
 ## 所属类 
 
