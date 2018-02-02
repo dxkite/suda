@@ -36,8 +36,8 @@ use suda\exception\JSONException;
 
 class System
 {
-    protected static $app_instance=null;
-    protected static $application_class=null;
+    protected static $appInstance=null;
+    protected static $applicationClass=null;
     const APP_CACHE='app.cache';
 
     public static function init()
@@ -72,15 +72,15 @@ class System
  
     public static function getAppInstance()
     {
-        return self::$app_instance;
+        return self::$appInstance;
     }
     
     public static function getAppClassName()
     {
-        if (is_null(self::$application_class)) {
-            self::$application_class = class_name(Config::get('app.application', 'suda.core.Application'));
+        if (is_null(self::$applicationClass)) {
+            self::$applicationClass = class_name(Config::get('app.application', 'suda.core.Application'));
         }
-        return self::$application_class;
+        return self::$applicationClass;
     }
 
     public static function run()
@@ -98,10 +98,10 @@ class System
     {
         $app=Storage::path(APP_DIR);
         self::readManifast(APP_DIR.'/manifast.json');
-        $name=Autoloader::realName(self::$application_class);
+        $name=Autoloader::realName(self::$applicationClass);
         debug()->trace(__('loading application %s from %s', $name, $app));
-        self::$app_instance= $name::getInstance();
-        self::$app_instance->init();
+        self::$appInstance= $name::getInstance();
+        self::$appInstance->init();
     }
 
     protected static function readManifast(string $manifast)
@@ -124,7 +124,7 @@ class System
         // 载入配置前设置配置
         Hook::exec('core:loadManifast');
         // 默认应用控制器
-        self::$application_class=self::getAppClassName();
+        self::$applicationClass=self::getAppClassName();
     }
 
 

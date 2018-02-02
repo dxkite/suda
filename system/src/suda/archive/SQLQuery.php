@@ -3,7 +3,7 @@
  * Suda FrameWork
  *
  * An open source application development framework for PHP 7.0.0 or newer
- * 
+ *
  * Copyright (c)  2017 DXkite
  *
  * @category   PHP FrameWork
@@ -25,9 +25,9 @@ use suda\tool\Command;
 
 /**
  * 数据库查询方案，简化数据库查
- * 
+ *
  * @example
- * 
+ *
  */
 class SQLQuery
 {
@@ -411,7 +411,7 @@ class SQLQuery
 
     /**
      * 转换函数；统一处理数据库输入输出
-     * 
+     *
      * 只处理InputValue类型的数据
      *
      * @param string $name

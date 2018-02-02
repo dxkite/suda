@@ -41,7 +41,7 @@ class Autoloader
         return preg_replace('/[\\\\\/]+/', DIRECTORY_SEPARATOR, $name);
     }
 
-    public static function init()
+    public static function register()
     {
         spl_autoload_register(array('suda\\core\\Autoloader', 'classLoader'));
         self::addIncludePath(dirname(dirname(__DIR__)));
