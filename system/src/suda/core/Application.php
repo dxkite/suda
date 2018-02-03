@@ -21,6 +21,11 @@ use suda\tool\ArrayHelper;
 use suda\exception\ApplicationException;
 use suda\exception\JSONException;
 
+/**
+ * 应用处理类
+ * 
+ * 包含了应用的各种处理方式
+ */
 class Application
 {
     /**
@@ -103,13 +108,11 @@ class Application
 
     public static function getInstance()
     {
-        if (is_null(static::$instance)) {
-            static::$instance=new self();
+        if (is_null(self::$instance)) {
+            self::$instance=new self();
         }
-        return static::$instance;
+        return self::$instance;
     }
-
-
 
     /**
      * 添加模块扫描目录
@@ -222,7 +225,6 @@ class Application
             file_put_contents($install_lock, 'name='.$module."\r\n".'time='.microtime(true));
         }
     }
-
 
     /**
      * 获取所有模块

@@ -1,8 +1,8 @@
 # Request::get
 
+获取请求的GET数据
 
-
-> *文件信息* suda\core\Request.php: 21~337
+> *文件信息* suda\core\Request.php: 21~473
 
 ## 所属类 
 
@@ -14,7 +14,7 @@
 
 ## 说明
 
-该函数暂时无说明
+
 
 
 ## 参数
@@ -22,16 +22,17 @@
 
 | 参数名 | 类型 | 默认值 | 说明 |
 |--------|-----|-------|-------|
-| name |  string |  | 无 |
-| default |  # Error> htmlspecialchars() expects parameter 1 to be string, array given
-	Cause By D:\Server\Local\suda\script\docme\template\method.md.tpl:31
- | null | 无 |
+| name |  string |  |  GET名 |
+| default |  [type] | null |  GET值 |
 
 
 
 ## 返回值
 
-返回值类型不定
+类型：[type]
+
+ 获取的值
+
 
 
 ## 例子

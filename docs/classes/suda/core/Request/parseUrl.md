@@ -1,8 +1,8 @@
 # Request::parseUrl
 
+处理请求的URL
 
-
-> *文件信息* suda\core\Request.php: 21~337
+> *文件信息* suda\core\Request.php: 21~473
 
 ## 所属类 
 
@@ -14,7 +14,7 @@
 
 ## 说明
 
-该函数暂时无说明
+
 
 
 ## 参数
@@ -28,7 +28,10 @@
 
 ## 返回值
 
-返回值类型不定
+类型：array($path,$queryString,$phpSelf)
+
+ 处理的数据
+
 
 
 ## 例子

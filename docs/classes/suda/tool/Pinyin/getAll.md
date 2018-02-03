@@ -1,8 +1,8 @@
 # Pinyin::getAll
 
+获取中文拼音
 
-
-> *文件信息* suda\tool\Pinyin.php: 18~145
+> *文件信息* suda\tool\Pinyin.php: 22~163
 
 ## 所属类 
 
@@ -14,7 +14,7 @@
 
 ## 说明
 
-该函数暂时无说明
+简易库
 
 
 ## 参数
@@ -22,16 +22,19 @@
 
 | 参数名 | 类型 | 默认值 | 说明 |
 |--------|-----|-------|-------|
-| chinese |  string | 无 | 无 |
-| delimiter |  string |  | 无 |
-| length |  int | 0 | 无 |
-| charset |  int | self::UTF8 | 无 |
+| chinese |  string | 无 |  中文 |
+| delimiter |  string |  |  分割符 |
+| length |  int | 0 |  最大长度，0表示不限制 |
+| charset |  int | self::UTF8 |  字符集，默认UTF8 |
 
 
 
 ## 返回值
 
-返回值类型不定
+类型：string
+
+ 拼音
+
 
 
 ## 例子

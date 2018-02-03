@@ -27,7 +27,7 @@
 |--------|-------|------|
 | public static|[realName](Autoloader/realName.md) | 将JAVA，路径分割转换为PHP分割符 |
 | public static|[realPath](Autoloader/realPath.md) |  |
-| public static|[init](Autoloader/init.md) |  |
+| public static|[register](Autoloader/register.md) |  |
 | public static|[import](Autoloader/import.md) |  |
 | public static|[classLoader](Autoloader/classLoader.md) |  |
 | public static|[getClassPath](Autoloader/getClassPath.md) |  |

@@ -1,8 +1,8 @@
 # ArrayHelper::get
 
-@ref  获取数组元素
+获取数组元素
 
-> *文件信息* suda\tool\ArrayHelper.php: 24~197
+> *文件信息* suda\tool\ArrayHelper.php: 23~201
 
 ## 所属类 
 
@@ -14,9 +14,8 @@
 
 ## 说明
 
-设置值，
-获取值
-导出成文件
+
+设置值， 获取值，导出成文件
 
 
 ## 参数
@@ -42,4 +41,5 @@
 
 ## 例子
 
-example
+array_get_value('a.b.c.d',$arr);
+返回 $arr['a']['b']['c']['d'];

@@ -16,7 +16,6 @@
 | 可见性 |  变量名   | 说明 |
 |--------|----|------|
 | protected   | var | @var| 
-| protected   | key | | 
 
 
 

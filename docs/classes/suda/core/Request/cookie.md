@@ -1,8 +1,8 @@
 # Request::cookie
 
+获取Cookie的值
 
-
-> *文件信息* suda\core\Request.php: 21~337
+> *文件信息* suda\core\Request.php: 21~473
 
 ## 所属类 
 
@@ -14,7 +14,7 @@
 
 ## 说明
 
-该函数暂时无说明
+
 
 
 ## 参数
@@ -22,13 +22,17 @@
 
 | 参数名 | 类型 | 默认值 | 说明 |
 |--------|-----|-------|-------|
-| name |  string | 无 | 无 |
+| name |  string | 无 |  cookie名 |
+| default |  [type] | 无 |  cookie的默认值 |
 
 
 
 ## 返回值
 
-返回值类型不定
+类型：[type]
+
+ 获取的值，如果没有，则是default设置的值
+
 
 
 ## 例子

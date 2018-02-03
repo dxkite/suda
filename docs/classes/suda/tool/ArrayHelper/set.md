@@ -1,8 +1,8 @@
 # ArrayHelper::set
 
+设置数组的值
 
-
-> *文件信息* suda\tool\ArrayHelper.php: 24~197
+> *文件信息* suda\tool\ArrayHelper.php: 23~201
 
 ## 所属类 
 
@@ -14,9 +14,8 @@
 
 ## 说明
 
-设置值，
-获取值
-导出成文件
+
+设置值， 获取值，导出成文件
 
 
 ## 参数
@@ -26,15 +25,17 @@
 |--------|-----|-------|-------|
 | array |  array | 无 | 无 |
 | name |  string | 无 | 无 |
-| def |  # Error> htmlspecialchars() expects parameter 1 to be string, array given
-	Cause By D:\Server\Local\suda\script\docme\template\method.md.tpl:31
- | null | 无 |
+| value |  [type] | 无 | 无 |
+| def |  [type] | null | 无 |
 
 
 
 ## 返回值
 
-返回值类型不定
+类型：void
+
+无
+
 
 
 ## 例子

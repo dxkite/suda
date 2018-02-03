@@ -77,6 +77,12 @@ class Json
         return self:: {$name} ($content, true);
     }
 
+    /**
+     * 简单处理注释
+     *
+     * @param string $json
+     * @return string 
+     */
     protected static function parseComments(string $json)
     {
         return preg_replace('/\/\*.*?\*\//ms', '', preg_replace('/(?<!:)\/\/.*$/m', '', $json));

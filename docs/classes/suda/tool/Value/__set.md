@@ -2,7 +2,7 @@
 
 @param $value
 
-> *文件信息* suda\tool\Value.php: 22~131
+> *文件信息* suda\tool\Value.php: 26~135
 
 ## 所属类 
 
@@ -14,7 +14,11 @@
 
 ## 说明
 
-@package Core
+
+通用指可以使用迭代器和JSON化成字符串
+并且包含魔术变量用于处理其值
+
+@package suda\tool
 
 
 ## 参数

@@ -1,16 +1,16 @@
-# Compiler::__construct
+# Autoloader::register
 
 
 
-> *文件信息* suda\template\compiler\suda\Compiler.php: 30~364
+> *文件信息* suda\core\Autoloader.php: 18~141
 
 ## 所属类 
 
-[Compiler](../Compiler.md)
+[Autoloader](../Autoloader.md)
 
 ## 可见性
 
- public 
+ public static
 
 ## 说明
 

@@ -37,10 +37,10 @@
 |[suda\core\System](classes/suda/core/System.md) |  |
 |[suda\core\Debug](classes/suda/core/Debug.md) |  |
 |[suda\core\Request](classes/suda/core/Request.md) |  |
-|[suda\tool\Value](classes/suda/tool/Value.md) | Class Value |
+|[suda\tool\Value](classes/suda/tool/Value.md) | 普通通用值 |
 |[suda\core\Storage](classes/suda/core/Storage.md) |  |
 |[suda\core\Config](classes/suda/core/Config.md) |  |
-|[suda\tool\ArrayHelper](classes/suda/tool/ArrayHelper.md) | 数组操纵， |
+|[suda\tool\ArrayHelper](classes/suda/tool/ArrayHelper.md) | 数组操纵 |
 |[suda\core\Hook](classes/suda/core/Hook.md) |  |
 |[suda\core\Locale](classes/suda/core/Locale.md) | I18N 国际化支持 |
 |[suda\tool\Json](classes/suda/tool/Json.md) |  |
@@ -81,7 +81,7 @@
 |[suda\tool\ArrayValue](classes/suda/tool/ArrayValue.md) |  |
 |[suda\tool\CookieSetter](classes/suda/tool/CookieSetter.md) |  |
 |[suda\tool\EchoValue](classes/suda/tool/EchoValue.md) |  |
-|[suda\tool\Pinyin](classes/suda/tool/Pinyin.md) |  |
+|[suda\tool\Pinyin](classes/suda/tool/Pinyin.md) | 将中文转换成拼音 |
 |[suda\tool\ZipHelper](classes/suda/tool/ZipHelper.md) |  |
 |[docme\FunctionExport](classes/docme/FunctionExport.md) |  |
 |[docme\ClassExport](classes/docme/ClassExport.md) |  |

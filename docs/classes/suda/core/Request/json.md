@@ -1,8 +1,8 @@
 # Request::json
 
+获取请求的JSON文档
 
-
-> *文件信息* suda\core\Request.php: 21~337
+> *文件信息* suda\core\Request.php: 21~473
 
 ## 所属类 
 
@@ -10,11 +10,11 @@
 
 ## 可见性
 
- public static
+ public 
 
 ## 说明
 
-该函数暂时无说明
+
 
 
 ## 参数
@@ -25,7 +25,10 @@
 
 ## 返回值
 
-返回值类型不定
+类型：array|null
+
+ 如果请求为json则数据是数组，否则数据为空
+
 
 
 ## 例子

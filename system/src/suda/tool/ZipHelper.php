@@ -26,7 +26,7 @@ class ZipHelper
      *
      * @param string $inputFile
      * @param string $output
-     * @return void
+     * @return boolean 解压结果
      */
     public static function unzip(string $inputFile, string $output, bool $cutself=false)
     {
@@ -51,7 +51,7 @@ class ZipHelper
      *
      * @param string $path
      * @param string $output
-     * @return void
+     * @return boolean 压缩结果
      */
     public static function zip(string $path, string $output)
     {
@@ -63,6 +63,7 @@ class ZipHelper
         } else {
             return false;
         }
+        return false;
     }
 
     protected static function zipFolder(ZipArchive & $zip, string $folder)

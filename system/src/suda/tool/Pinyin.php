@@ -15,6 +15,10 @@
  */
 namespace suda\tool;
 
+/**
+ * 将中文转换成拼音
+ * 简易库
+ */
 class Pinyin
 {
     const  UTF8=1;
@@ -46,7 +50,15 @@ class Pinyin
     'za'=>-11055,'zai'=>-11052,'zan'=>-11045,'zang'=>-11041,'zao'=>-11038,'ze'=>-11024,'zei'=>-11020,'zen'=>-11019,'zeng'=>-11018,'zha'=>-11014,'zhai'=>-10838,'zhan'=>-10832,'zhang'=>-10815,'zhao'=>-10800,'zhe'=>-10790,'zhen'=>-10780,'zheng'=>-10764,'zhi'=>-10587,'zhong'=>-10544,'zhou'=>-10533,'zhu'=>-10519,'zhua'=>-10331,'zhuai'=>-10329,'zhuan'=>-10328,'zhuang'=>-10322,'zhui'=>-10315,'zhun'=>-10309,'zhuo'=>-10307,'zi'=>-10296,'zong'=>-10281,'zou'=>-10274,'zu'=>-10270,'zuan'=>-10262,'zui'=>-10260,'zun'=>-10256,'zuo'=>-10254
     );
 
-    // 获取中文拼音
+    /**
+     * 获取中文拼音
+     *
+     * @param string $chinese 中文
+     * @param string $delimiter 分割符
+     * @param integer $length 最大长度，0表示不限制
+     * @param integer $charset 字符集，默认UTF8
+     * @return string 拼音
+     */
     public static function getAll(string $chinese, string $delimiter = '', int $length = 0, int $charset=self::UTF8)
     {
         // 提取中文
@@ -60,7 +72,13 @@ class Pinyin
         return $py;
     }
 
-    // 获取首字母
+    /**
+     * 获取首字母
+     *
+     * @param string $chinese 中文字符
+     * @param integer $charset 字符集，默认UTF8
+     * @return string 拼音
+     */
     public static function getFirst(string $chinese, int $charset=self::UTF8)
     {
         if ($charset != self::GB2312) {

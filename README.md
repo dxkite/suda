@@ -54,7 +54,7 @@ cp -R ./suda/system/resource/project/* .
 
 ## 文档说明
 
-[自动文档](docs/summary.md)    
+[自动文档](docs/README.md)    
 
 ## Suggest Application Modules 
 - function modules

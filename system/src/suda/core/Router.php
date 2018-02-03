@@ -20,9 +20,10 @@ use suda\tool\Json;
 use suda\tool\ArrayHelper;
 use suda\core\route\Mapping;
 
-// TODO:路由强化
-// TODO:路由模块化（添加命名空间）
-
+/**
+ * 路由处理类
+ * 用于处理访问的路由信息
+ */
 class Router
 {
     protected static $urltype=['int'=>'\d+','string'=>'[^\/]+','url'=>'.+'];

@@ -3,7 +3,7 @@
  * Suda FrameWork
  *
  * An open source application development framework for PHP 7.0.0 or newer
- * 
+ *
  * Copyright (c)  2017 DXkite
  *
  * @category   PHP FrameWork
@@ -16,20 +16,20 @@
 namespace suda\tool;
 
 /**
- * 数组操纵，
- * 设置值，
- * 获取值
- * 导出成文件
-*/
+ * 数组操纵
+ * 
+ * 设置值， 获取值，导出成文件
+ */
 class ArrayHelper
 {
-    /**
-    * @ref  获取数组元素
-    * @param  $name 查询列
-    * <code>
+   /**
+    * 获取数组元素
+    *
+    * @example
     * array_get_value('a.b.c.d',$arr);
     * 返回 $arr['a']['b']['c']['d'];
-    * </code>
+    *  
+    * @param  $name 查询列
     * @param  $array 查询的数组
     * @return mixed 查询的值
     */
@@ -47,23 +47,18 @@ class ArrayHelper
 
             if (count($path) > 1) {
                 # >4级
-
                 while (($next = array_shift($path)) || $array !== null) {
                     if (is_null($next)) {
                         break;
                     }
-
-                    $array =   $array[$next] ??  null;
+                    $array = $array[$next] ??  null;
                 }
-
                 if ($array === null) {
                     return $def;
                 }
-
                 $value =  $array[$aim] ?? $def;
             } elseif (count($path) === 1) {
                 #3级
-
                 if (isset($array[$path[0]]) && is_array($array[$path[0]])) {
                     $value =   $array[$path[0]][$aim] ?? $def;
                 } else {
@@ -71,7 +66,6 @@ class ArrayHelper
                 }
             } else {
                 #2级
-
                 if (is_array($array)) {
                     $value =  $array[$aim] ?? $def;
                 } else {
@@ -84,6 +78,15 @@ class ArrayHelper
         return $value;
     }
 
+    /**
+     * 设置数组的值
+     *
+     * @param array $array
+     * @param string $name
+     * @param [type] $value
+     * @param [type] $def
+     * @return void
+     */
     public static function set(array &$array, string $name, $value, $def=null)
     {
         if (strpos($name, '.')) {
@@ -115,11 +118,12 @@ class ArrayHelper
     }
 
     /**
-    * @ref 将数组导出
-    * @param $path 路径
-    * @param $name 导出的数组名
-    * @param $array 导出的数组
-    */
+     * 将数组导出
+     *
+     * @param $path 路径
+     * @param $name 导出的数组名
+     * @param $array 导出的数组
+     */
     public static function export(string $path, string $name, array $array, bool $sort = true, bool $beautify=false)
     {
         if ($beautify) {

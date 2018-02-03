@@ -1,6 +1,6 @@
 #  Json 
 
-> *文件信息* suda\tool\Json.php: 20~84
+> *文件信息* suda\tool\Json.php: 20~90
 
 
 
@@ -30,4 +30,4 @@
 | public static|[parseFile](Json/parseFile.md) |  |
 | public static|[saveFile](Json/saveFile.md) |  |
 | public static|[loadFile](Json/loadFile.md) |  |
-| protected static|[parseComments](Json/parseComments.md) |  |
+| protected static|[parseComments](Json/parseComments.md) | 简单处理注释 |

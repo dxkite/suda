@@ -16,8 +16,12 @@
 namespace suda\tool;
 
 /**
- * Class Value
- * @package Core
+ * 普通通用值
+ * 
+ * 通用指可以使用迭代器和JSON化成字符串
+ * 并且包含魔术变量用于处理其值
+ * 
+ * @package suda\tool
  */
 class Value implements \Iterator,\JsonSerializable
 {
@@ -25,7 +29,6 @@ class Value implements \Iterator,\JsonSerializable
      * @var
      */
     protected $var;
-    protected $key;
     /**
      * Value constructor.
      * @param $var
@@ -98,7 +101,6 @@ class Value implements \Iterator,\JsonSerializable
     public function rewind()
     {
         reset($this->var);
-        $this->key=key($this->var);
     }
 
     public function current()
@@ -108,22 +110,24 @@ class Value implements \Iterator,\JsonSerializable
 
     public function key()
     {
-        return $this->key=key($this->var);
+        return key($this->var);
     }
 
     public function next()
     {
-        next($this->var);
+        return next($this->var);
     }
 
     public function valid()
     {
-        return isset($this->var[$this->key]);
+        return $this->current() !== false;
     }
+
     public function jsonSerialize()
     {
         return $this->var;
     }
+
     public function __toString()
     {
         return json_encode($this);

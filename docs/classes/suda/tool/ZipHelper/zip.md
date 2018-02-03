@@ -2,7 +2,7 @@
 
 压缩目录到文件
 
-> *文件信息* suda\tool\ZipHelper.php: 21~84
+> *文件信息* suda\tool\ZipHelper.php: 21~85
 
 ## 所属类 
 
@@ -29,9 +29,9 @@
 
 ## 返回值
 
-类型：void
+类型：boolean
 
-无
+ 压缩结果
 
 
 

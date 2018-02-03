@@ -21,8 +21,8 @@
 ## 变量列表
 | 可见性 |  变量名   | 说明 |
 |--------|----|------|
-| protected static  | app_instance | | 
-| protected static  | application_class | | 
+| protected static  | appInstance | | 
+| protected static  | applicationClass | | 
 
 
 

@@ -1,12 +1,12 @@
 #  Pinyin 
 
-> *文件信息* suda\tool\Pinyin.php: 18~145
+> *文件信息* suda\tool\Pinyin.php: 22~163
 
-
+将中文转换成拼音
 
 ## 描述
 
-该类暂时无说明
+简易库
 
 
 ## 常量列表
@@ -25,5 +25,5 @@
 
 | 可见性 | 方法名 | 说明 |
 |--------|-------|------|
-| public static|[getAll](Pinyin/getAll.md) |  |
-| public static|[getFirst](Pinyin/getFirst.md) |  |
+| public static|[getAll](Pinyin/getAll.md) | 获取中文拼音 |
+| public static|[getFirst](Pinyin/getFirst.md) | 获取首字母 |

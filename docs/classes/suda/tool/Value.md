@@ -1,12 +1,16 @@
 #  Value 
 
-> *文件信息* suda\tool\Value.php: 22~131
+> *文件信息* suda\tool\Value.php: 26~135
 
-Class Value
+普通通用值
 
 ## 描述
 
-@package Core
+
+通用指可以使用迭代器和JSON化成字符串
+并且包含魔术变量用于处理其值
+
+@package suda\tool
 
 
 
@@ -16,7 +20,6 @@ Class Value
 | 可见性 |  变量名   | 说明 |
 |--------|----|------|
 | protected   | var | @var| 
-| protected   | key | | 
 
 
 

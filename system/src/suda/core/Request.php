@@ -3,7 +3,7 @@
  * Suda FrameWork
  *
  * An open source application development framework for PHP 7.0.0 or newer
- * 
+ *
  * Copyright (c)  2017 DXkite
  *
  * @category   PHP FrameWork
@@ -46,7 +46,12 @@ final class Request
         return self::$instance;
     }
 
-    public static function json()
+    /**
+     * 获取请求的JSON文档
+     *
+     * @return array|null 如果请求为json则数据是数组，否则数据为空
+     */
+    public function json()
     {
         if (self::$json) {
             return self::$json;
@@ -58,31 +63,66 @@ final class Request
         return Json::decode($datastr, true);
     }
 
+    /**
+     * 获取请求的原始输入
+     *
+     * @return string 读取请求的输入流内容
+     */
     public static function input()
     {
         return file_get_contents('php://input');
     }
-    
-    public static function method()
+
+    /**
+     * 获取请求的方法
+     *
+     * @return string 方法类型
+     */
+    public static function method() : string
     {
-        return  $_SERVER['REQUEST_METHOD'] ?? 'GET';
+        return  strtoupper($_SERVER['REQUEST_METHOD'] ?? 'GET');
     }
 
-    public static function getMethod()
+    /**
+     * 获取请求的方法
+     *
+     * @return string 方法类型
+     */
+    public static function getMethod():string
     {
         return  self::method();
     }
     
-    public static function url()
+    /**
+     * 获取请求的URL数据
+     *
+     * @return string 处理过的URL
+     */
+    public static function url():string
     {
         return self::$url;
     }
     
+    /**
+     * 设置get的值
+     *
+     * @param string $name GET名
+     * @param [type] $value GET的值
+     * @return void
+     */
     public static function set(string $name, $value)
     {
         self::$get->$name=$value;
     }
 
+
+    /**
+     * 获取请求的GET数据
+     *
+     * @param string $name GET名
+     * @param [type] $default GET值
+     * @return [type] 获取的值
+     */
     public static function get(string $name='', $default=null)
     {
         if ($name) {
@@ -96,19 +136,45 @@ final class Request
         }
     }
     
+    /**
+     * 获取Cookie的值
+     *
+     * @param string $name cookie名
+     * @param [type] $default cookie的默认值
+     * @return [type] 获取的值，如果没有，则是default设置的值
+     */
     public static function cookie(string $name, $default)
     {
         return Cookie::get($name, $default);
     }
 
-    public static function post(string $name='')
+
+    /**
+     * 获取POST请求的值
+     *
+     * @param string $name
+     * @param [type] $default
+     * @return [type] 获取的值
+     */
+    public static function post(string $name='', $default=null)
     {
         if ($name) {
-            return self::$post->$name;
+            if (isset(self::$post->$name)) {
+                return self::$post->$name;
+            } else {
+                return $default;
+            }
         } else {
             return self::$post;
         }
     }
+
+    /**
+     * 获取请求的文件
+     *
+     * @param string $name 如果指定了文件则是所有的文件
+     * @return array 文件属性
+     */
     public static function files(string $name='')
     {
         if ($name) {
@@ -118,6 +184,11 @@ final class Request
         }
     }
 
+    /**
+     * 获取请求的 IP
+     *
+     * @return string ip地址
+     */
     public static function ip()
     {
         if (getenv('HTTP_CLIENT_IP')) {
@@ -136,6 +207,12 @@ final class Request
         return $ip;
     }
 
+    /**
+     * 利用淘宝 ip.taobao.com 将IP转换成地址
+     *
+     * @param [type] $ip
+     * @return array ip地址详情
+     */
     public static function ip2Address($ip)
     {
         $url="http://ip.taobao.com/service/getIpInfo.php?ip=".$ip;
@@ -143,26 +220,53 @@ final class Request
         return $ip;
     }
 
+    /**
+     * 判断是否是POST请求
+     *
+     * @return boolean
+     */
     public static function isPost()
     {
-        return strtoupper(self::method())==='POST';
+        return self::method()==='POST';
     }
 
+    /**
+     * 判断是否是GET请求
+     *
+     * @return boolean
+     */
     public static function isGet()
     {
-        return strtoupper(self::method())==='GET';
+        return self::method()==='GET';
     }
 
+
+    /**
+     * 判断是否有GET请求
+     *
+     * @return boolean
+     */
     public static function hasGet()
     {
         return count($_GET);
     }
 
+    /**
+     * 判断是否有POST数据请求
+     *
+     * @return boolean
+     */
     public static function hasPost()
     {
         return count($_POST);
     }
 
+
+    /**
+     * 判断是否有JSON数据请求
+     *
+     * @return boolean
+     */
     public static function hasJson()
     {
         if (self::isJson()) {
@@ -175,25 +279,34 @@ final class Request
         return true;
     }
 
+
+    /**
+     * 判断请求的数据是否为 json
+     *
+     * @return boolean
+     */
     public static function isJson()
     {
         return isset($_SERVER['CONTENT_TYPE']) && preg_match('/json/i', $_SERVER['CONTENT_TYPE']);
     }
     
+    /**
+     * 根据IP生成HASH
+     *
+     * @return string ip地址的md5哈希值
+     */
     public static function signature()
     {
         return md5(self::ip());
     }
 
-    // TODO:for shell
-    protected static function parseCommand()
-    {
-        $command=getopt('r:');
-        if (isset($command['r'])) {
-            $_SERVER['REQUEST_URI']=$command['r'];
-        }
-    }
-
+    /**
+     * 获取请求头的内容
+     *
+     * @param string $name
+     * @param string $default
+     * @return string 请求头的内容
+     */
     public static function getHeader(string $name, string $default=null)
     {
         $name='HTTP_'.strtoupper(preg_replace('/[^\w]/', '_', $name));
@@ -203,12 +316,26 @@ final class Request
         return $default;
     }
     
+
+    /**
+     * 判断请求头中是否包含某一字段
+     *
+     * @param string $name 请求头名
+     * @return boolean
+     */
     public static function hasHeader(string $name)
     {
         $name='HTTP_'.strtoupper(preg_replace('/[^\w]/', '_', $name));
         return isset($_SERVER[$name]);
     }
 
+
+    /**
+     * 处理请求的URL
+     *
+     * @param string $url
+     * @return array($path,$queryString,$phpSelf) 处理的数据
+     */
     public static function parseUrl(string $url)
     {
         $path= '';
@@ -239,6 +366,15 @@ final class Request
         $path=preg_replace('/[\/]+/', '/', $path);
         $path=($path==='/'?$path:rtrim($path, '/'));
         return [$path,$queryString,$phpSelf];
+    }
+
+    // TODO:for shell
+    protected static function parseCommand()
+    {
+        $command=getopt('r:');
+        if (isset($command['r'])) {
+            $_SERVER['REQUEST_URI']=$command['r'];
+        }
     }
 
     protected static function parseServer()
