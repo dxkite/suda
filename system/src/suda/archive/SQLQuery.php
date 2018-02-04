@@ -434,14 +434,19 @@ class SQLQuery
 
     private function __inputFieldTransfrom(string $name, $inputData)
     {
-        return self::__dataTransfrom('input', $name, $inputData);
+        return $this->__dataTransfrom('input', $name, $inputData);
+    }
+
+    private function __outputFieldTransfrom(string $name, $inputData)
+    {
+        return $this->__dataTransfrom('output', $name, $inputData);
     }
 
     private function __outputRowsTransfrom(array $inputRows)
     {
         foreach ($inputRows as $id=>$inputData) {
             foreach ($inputData as $fieldName => $fieldData) {
-                $inputRows[$id][$fieldName]=self::__dataTransfrom('output', $fieldName, $fieldData);
+                $inputRows[$id][$fieldName]=$this->__outputFieldTransfrom($fieldName, $fieldData);
             }
         }
         return $inputRows;
@@ -450,7 +455,7 @@ class SQLQuery
     private function __outputRowTransfrom(array $inputData)
     {
         foreach ($inputData as $fieldName => $fieldData) {
-            $inputData[$fieldName]=self::__dataTransfrom('output', $fieldName, $fieldData);
+            $inputData[$fieldName]=$this->__outputFieldTransfrom($fieldName, $fieldData);
         }
         return $inputData;
     }
@@ -461,7 +466,7 @@ class SQLQuery
         $props=$reflect->getProperties(\ReflectionProperty::IS_PUBLIC | \ReflectionProperty::IS_PROTECTED | ReflectionProperty::IS_PRIVATE);
         foreach ($props as $prop) {
             $prop->setAccessible(true);
-            $prop->setValue($object, self::__dataTransfrom('output', $prop->getName(), $prop->getValue()));
+            $prop->setValue($object, $this->__outputFieldTransfrom($prop->getName(), $prop->getValue()));
         }
         return $object;
     }

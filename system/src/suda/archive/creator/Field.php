@@ -171,6 +171,12 @@ class Field
     {
         return $this->name;
     }
+    
+    public function getType()
+    {
+        return $this->type;
+    }
+
     public function getTableName()
     {
         return $this->tableName;

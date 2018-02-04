@@ -3,7 +3,7 @@
  * Suda FrameWork
  *
  * An open source application development framework for PHP 7.0.0 or newer
- * 
+ *
  * Copyright (c)  2017 DXkite
  *
  * @category   PHP FrameWork
@@ -24,10 +24,10 @@ use suda\exception\TableException;
 
 /**
  * 数据表抽象对象
- * 
+ *
  * 用于提供对数据表的操作
- * 
- */ 
+ *
+ */
 abstract class Table
 {
     protected $fields=[];
@@ -70,7 +70,7 @@ abstract class Table
         if (is_array($values) && !($this->checkFields(array_keys($values)) && $this->checkFieldsType($values))) {
             return false;
         }
-        return Query::insert($this->getTableName(), $values,[],$this);
+        return Query::insert($this->getTableName(), $values, [], $this);
     }
 
     /**
@@ -88,14 +88,14 @@ abstract class Table
                 $insert[$field]=$value;
             }
         }
-        return Query::insert($this->getTableName(), $insert,[],$this);
+        return Query::insert($this->getTableName(), $insert, [], $this);
     }
 
     /**
      * 通过主键查找元素
      * 主键的值可以为关联数组或单独的一个值
      * 查询成功返回查询成功的列，失败返回false
-     * 
+     *
      * @param [type] $value 主键的值
      * @return array|false
      */
@@ -117,7 +117,7 @@ abstract class Table
         if (is_array($values) && !($this->checkFields(array_keys($values)) && $this->checkFieldsType($values))) {
             return false;
         }
-        return Query::update($this->getTableName(), $values, $this->checkPrimaryKey($value),[],$this);
+        return Query::update($this->getTableName(), $values, $this->checkPrimaryKey($value), [], $this);
     }
     
     /**
@@ -128,7 +128,7 @@ abstract class Table
      */
     public function deleteByPrimaryKey($value):int
     {
-        return Query::delete($this->getTableName(), $this->checkPrimaryKey($value),[],$this);
+        return Query::delete($this->getTableName(), $this->checkPrimaryKey($value), [], $this);
     }
 
     
@@ -164,7 +164,7 @@ abstract class Table
      * @param int $rows 分页的元素个数
      * @return array|false
      */
-    public function listWhere($where,array $binds=[], int $page=null, int $rows=10)
+    public function listWhere($where, array $binds=[], int $page=null, int $rows=10)
     {
         $where_str=Query::prepareWhere($where, $binds);
         $where=preg_replace('/WHERE(.+)$/', '$1', $where_str).' '.self::_order();
@@ -182,7 +182,7 @@ abstract class Table
      * @param [type] $where
      * @return int
      */
-    public function update($values,$where,array $bind=[])
+    public function update($values, $where, array $bind=[])
     {
         if (is_array($where) && !$this->checkFields(array_keys($where))) {
             return false;
@@ -190,7 +190,7 @@ abstract class Table
         if (is_array($values) && !($this->checkFields(array_keys($values)) && $this->checkFieldsType($values))) {
             return false;
         }
-        return Query::update($this->getTableName(), $values, $where,$bind,$this);
+        return Query::update($this->getTableName(), $values, $where, $bind, $this);
     }
 
 
@@ -226,7 +226,7 @@ abstract class Table
      */
     public function query(string $query, array $binds=[], bool $scroll=false)
     {
-        $queryString=preg_replace('/@table@/i',$this->getTableName(),$query);
+        $queryString=preg_replace('/@table@/i', $this->getTableName(), $query);
         return (new SQLQuery($queryString, $binds, $scroll))->object($this);
     }
 
@@ -241,7 +241,7 @@ abstract class Table
         if (is_array($where) && !$this->checkFields(array_keys($where))) {
             return false;
         }
-        return Query::delete($this->getTableName(), $where,[],$this);
+        return Query::delete($this->getTableName(), $where, [], $this);
     }
 
     /**
@@ -344,7 +344,7 @@ abstract class Table
      */
     public function count($where='1', array $binds=[]):int
     {
-        return Query::count($this->getTableName(), $where, $binds,$this);
+        return Query::count($this->getTableName(), $where, $binds, $this);
     }
 
 
@@ -366,10 +366,15 @@ abstract class Table
     {
         // 删除数据表
         $this->drop();
-        return self::initFromTable(self::getCreateSql());
+        return self::initFromTable(self::getCreator());
     }
     
-    public function getCreateSql()
+    public function getCreateSql():string
+    {
+        return (string)$this->getCreator();
+    }
+
+    public function getCreator()
     {
         if (is_null($this->creator)) {
             $this->creator=$this->onBuildCreator(new TableCreator($this->tableName, 'utf8'));
@@ -377,15 +382,18 @@ abstract class Table
         return $this->creator;
     }
 
-    public static function begin() {
+    public static function begin()
+    {
         return SQLQuery::begin();
     }
 
-    public static function commit() {
+    public static function commit()
+    {
         return SQLQuery::commit();
     }
 
-    public static function rollBack(){
+    public static function rollBack()
+    {
         return SQLQuery::rollBack();
     }
 

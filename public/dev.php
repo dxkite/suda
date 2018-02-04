@@ -1,4 +1,4 @@
-<?php #1517282610
+<?php #1517724763
     
     // 应用所在目录
     define('APP_DIR', __DIR__.'/../app');
@@ -13,7 +13,7 @@
     // 日志纪录等级
     define('LOG_LEVEL', 'trace');
     // 输出日志详细信息到json文档
-    define('LOG_JSON',true);
+    define('LOG_JSON',false);
     // 输出详细信息添加到日志末尾
     define('LOG_FILE_APPEND',true);
     require_once SYSTEM.'/suda.php';
