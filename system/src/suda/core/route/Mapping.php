@@ -35,7 +35,7 @@ class Mapping
     protected $antiPrefix=false;
     protected $hidden=false;
     protected $dynamic=false;
-
+    
     const ROLE_ADMIN=0;
     const ROLE_SIMPLE=1;
 
@@ -231,7 +231,7 @@ class Mapping
         return Request::getInstance()->baseUrl(). trim($url, '/');
     }
 
-    public function createUrl(array $args)
+    public function createUrl(array $args,bool $query=true)
     {
         $url='/'.trim($this->url, '/');
         if (!$this->antiPrefix) {
@@ -253,7 +253,7 @@ class Mapping
                 return $param_default;
             }
         }, preg_replace('/\[(.+?)\]/', '$1', $url));
-        if (count($args)) {
+        if (count($args) && $query) {
             return Request::getInstance()->baseUrl(). trim($url, '/').'?'.http_build_query($args, 'v', '&', PHP_QUERY_RFC3986);
         }
         return Request::getInstance()->baseUrl(). trim($url, '/');

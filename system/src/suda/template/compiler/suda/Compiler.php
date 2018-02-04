@@ -293,7 +293,7 @@ class Compiler implements CompilerImpl
     
     protected function parseSelf()
     {
-        return "<?php echo u(\$_GET); ?>";
+        return '<?php echo suda\core\Router::getInstance()->buildUrl(suda\core\Response::$name,$_GET,false); ?>';
     }
 
     protected function parseSet($exp)
