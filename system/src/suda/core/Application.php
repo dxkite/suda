@@ -3,7 +3,7 @@
  * Suda FrameWork
  *
  * An open source application development framework for PHP 7.0.0 or newer
- * 
+ *
  * Copyright (c)  2017 DXkite
  *
  * @category   PHP FrameWork
@@ -23,7 +23,7 @@ use suda\exception\JSONException;
 
 /**
  * 应用处理类
- * 
+ *
  * 包含了应用的各种处理方式
  */
 class Application
@@ -135,12 +135,10 @@ class Application
      */
     protected function loadModules()
     {
-        // 模块共享库
-        $module_all=self::getModules();
         // 激活模块
-        $module_use=self::getLiveModules();
-        // 安装 启用 活动
-        foreach ($module_all as $module_temp) {
+        $moduleUse=self::getLiveModules();
+        // 安装、启用使用的模块
+        foreach ($moduleUse as $module_temp) {
             $root=self::getModulePath($module_temp);
             $config=self::getModuleConfig($module_temp);
             // 检查依赖
@@ -176,16 +174,12 @@ class Application
                     self::installModule($module_temp);
                 });
             }
-            // 是否激活
-            $is_live_module=in_array($module_temp, $module_use);
-            if ($is_live_module) {
-                // 加载监听器
-                if (Storage::exist($listener_path=$root.'/resource/config/listener.json')) {
-                    Hook::loadJson($listener_path);
-                }
-                // 设置语言包库
-                Locale::path($root.'/resource/locales/');
+            // 加载监听器
+            if (Storage::exist($listener_path=$root.'/resource/config/listener.json')) {
+                Hook::loadJson($listener_path);
             }
+            // 设置语言包库
+            Locale::path($root.'/resource/locales/');
         }
     }
 
@@ -196,7 +190,7 @@ class Application
         // 加载模块
         $this->loadModules();
         // 调整模板
-        Manager::theme(conf('app.template', 'default'));   
+        Manager::theme(conf('app.template', 'default'));
         // 初次运行初始化资源
         if (conf('app.init')) {
             init_resource();

@@ -223,6 +223,14 @@ class Mapping
         return $this;
     }
 
+    public function getUrlTemplate() {
+        $url='/'.trim($this->url, '/');
+        if (!$this->antiPrefix) {
+            $url='/'.trim($this->getPrefix().$this->url, '/');
+        }
+        return Request::getInstance()->baseUrl(). trim($url, '/');
+    }
+
     public function createUrl(array $args)
     {
         $url='/'.trim($this->url, '/');
