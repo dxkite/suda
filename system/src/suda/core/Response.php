@@ -15,10 +15,10 @@
  */
 namespace suda\core;
 
-use suda\tool\Json;
 use suda\tool\ArrayHelper;
 use suda\template\Manager;
 use suda\exception\ApplicationException;
+use suda\exception\JSONException;
 
 // TODO: If-Modified-Since
 // TODO: Access-Control
@@ -91,6 +91,9 @@ abstract class Response
     public function json($values)
     {
         $jsonstr=json_encode($values,JSON_UNESCAPED_UNICODE);
+        if ($jsonstr === false && json_last_error()!==JSON_ERROR_NONE) {
+            throw new JSONException(json_last_error());
+        }
         self::type('json');
         Hook::exec('display:output', [&$jsonstr, $this->type]);
         if (conf('app.calcContentLength', !conf('debug'))) {

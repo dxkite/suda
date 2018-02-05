@@ -33,7 +33,7 @@ class Json
         $json=self::parseComments($json);
         $value=json_decode($json, $assoc, $depth, $options);
         if (json_last_error()!==JSON_ERROR_NONE) {
-            throw new JSONException(self::$error[json_last_error()] ?? 'Unknown error');
+            throw new JSONException(json_last_error());
         }
         return $value;
     }
@@ -42,7 +42,7 @@ class Json
     {
         $value=json_decode($json, $assoc, $depth, $options);
         if (json_last_error()!==JSON_ERROR_NONE) {
-            throw new JSONException(self::$error[json_last_error()] ?? 'Unknown error');
+            throw new JSONException(json_last_error());
         }
         return $value;
     }
