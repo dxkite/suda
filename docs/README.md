@@ -25,11 +25,6 @@
 | [cmd](functions/cmd.md) |  新建一个命令对象  |
 | [class_name](functions/class_name.md) |  获取类名，将JAVA包式的类名转化为 PHP的标准类名  |
 | [table](functions/table.md) |  获取数据表对象，该对象需要在module.json文件中注册过  |
-| [proxy](functions/proxy.md) |    |
-| [context](functions/context.md) |    |
-| [visitor](functions/visitor.md) |    |
-| [setting](functions/setting.md) |    |
-| [setting_set](functions/setting_set.md) |    |
 
 
 
@@ -52,21 +47,17 @@
 |[suda\core\Application](classes/suda/core/Application.md) | 应用处理类 |
 |[suda\template\Manager](classes/suda/template/Manager.md) | 模板管理类 |
 |[suda\template\compiler\suda\Compiler](classes/suda/template/compiler/suda/Compiler.md) | Suda 模板编译器 |
-|[suda\tool\Command](classes/suda/tool/Command.md) |  |
-|[dxkite\support\template\Manager](classes/dxkite/support/template/Manager.md) | 模板管理类 |
-|[dxkite\support\setting\Setting](classes/dxkite/support/setting/Setting.md) |  |
-|[suda\core\Cache](classes/suda/core/Cache.md) | 文件缓存 |
-|[suda\archive\Table](classes/suda/archive/Table.md) | 数据表抽象对象 |
-|[dxkite\support\table\setting\SettingTable](classes/dxkite/support/table/setting/SettingTable.md) |  |
-|[suda\archive\SQLQuery](classes/suda/archive/SQLQuery.md) | 数据库查询方案，简化数据库查 |
-|[suda\core\Query](classes/suda/core/Query.md) | 数据库查询类 |
 |[docme\Docme](classes/docme/Docme.md) | 反射导出注释文档 |
 |[suda\archive\creator\Field](classes/suda/archive/creator/Field.md) |  |
 |[suda\archive\creator\InputValue](classes/suda/archive/creator/InputValue.md) |  |
 |[suda\archive\creator\Table](classes/suda/archive/creator/Table.md) |  |
+|[suda\archive\SQLQuery](classes/suda/archive/SQLQuery.md) | 数据库查询方案，简化数据库查 |
+|[suda\archive\Table](classes/suda/archive/Table.md) | 数据表抽象对象 |
 |[suda\archive\TableInstance](classes/suda/archive/TableInstance.md) |  |
+|[suda\core\Cache](classes/suda/core/Cache.md) | 文件缓存 |
 |[suda\core\Cookie](classes/suda/core/Cookie.md) | Cookie操作封装类 |
 |[suda\core\Exception](classes/suda/core/Exception.md) |  |
+|[suda\core\Query](classes/suda/core/Query.md) | 数据库查询类 |
 |[suda\core\Response](classes/suda/core/Response.md) |  |
 |[suda\core\route\Mapping](classes/suda/core/route/Mapping.md) |  |
 |[suda\core\Router](classes/suda/core/Router.md) | 路由处理类 |
@@ -87,6 +78,7 @@
 |[suda\template\compiler\suda\Template](classes/suda/template/compiler/suda/Template.md) |  |
 |[suda\template\compiler\suda\TemplateInfo](classes/suda/template/compiler/suda/TemplateInfo.md) |  |
 |[suda\tool\ArrayValue](classes/suda/tool/ArrayValue.md) |  |
+|[suda\tool\Command](classes/suda/tool/Command.md) |  |
 |[suda\tool\CookieSetter](classes/suda/tool/CookieSetter.md) |  |
 |[suda\tool\EchoValue](classes/suda/tool/EchoValue.md) |  |
 |[suda\tool\Pinyin](classes/suda/tool/Pinyin.md) | 将中文转换成拼音 |
