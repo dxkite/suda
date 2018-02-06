@@ -1,12 +1,12 @@
 #  Debug 
 
-> *文件信息* suda\core\Debug.php: 22~446
+> *文件信息* suda\core\Debug.php: 26~450
 
-
+异常日志类
 
 ## 描述
 
-该类暂时无说明
+用于记录运行日志和运行信息以及提供错误显示
 
 
 ## 常量列表
@@ -61,3 +61,9 @@
 | public static|[__callStatic](Debug/__callStatic.md) |  |
 | protected static|[strify](Debug/strify.md) |  |
 | public |[__call](Debug/__call.md) |  |
+
+
+
+## 例子
+
+example

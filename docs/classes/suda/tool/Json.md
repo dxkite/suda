@@ -31,3 +31,9 @@
 | public static|[saveFile](Json/saveFile.md) |  |
 | public static|[loadFile](Json/loadFile.md) |  |
 | protected static|[parseComments](Json/parseComments.md) | 简单处理注释 |
+
+
+
+## 例子
+
+example

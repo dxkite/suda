@@ -1,6 +1,6 @@
 #  Response 
 
-> *文件信息* suda\core\Response.php: 27~250
+> *文件信息* suda\core\Response.php: 27~253
 
 
 
@@ -45,3 +45,9 @@
 | public static|[mime](Response/mime.md) | 页面MIME类型 |
 | public static|[setHeader](Response/setHeader.md) | 安全设置Header值 |
 | protected static|[_etag](Response/_etag.md) |  |
+
+
+
+## 例子
+
+example

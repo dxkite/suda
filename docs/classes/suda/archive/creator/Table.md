@@ -57,3 +57,9 @@
 | public |[setCollate](Table/setCollate.md) |  |
 | public |[getFieldsName](Table/getFieldsName.md) |  |
 | public |[getPrimaryKeyName](Table/getPrimaryKeyName.md) |  |
+
+
+
+## 例子
+
+example

@@ -17,7 +17,18 @@
 namespace suda\mail\message;
 use suda\template\Manager;
 
+/**
+ * HTML邮件信息
+ * 
+ */
 class HTMLMessage extends Message {
+    /**
+     * HTML邮件信息
+     *
+     * @param string $subject 主题
+     * @param string $template 邮件模板
+     * @param array $values 模板压值
+     */
     public function __construct(string $subject,string $template,array $values){
         $message=Manager::display($template);
         $message->assign($values);     

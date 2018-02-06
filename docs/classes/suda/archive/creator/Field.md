@@ -1,6 +1,6 @@
 #  Field 
 
-> *文件信息* suda\archive\creator\Field.php: 19~188
+> *文件信息* suda\archive\creator\Field.php: 19~194
 
 
 
@@ -64,6 +64,13 @@
 | public |[getFieldSQL](Field/getFieldSQL.md) |  |
 | public |[getKeyType](Field/getKeyType.md) |  |
 | public |[getName](Field/getName.md) |  |
+| public |[getType](Field/getType.md) |  |
 | public |[getTableName](Field/getTableName.md) |  |
 | public |[getForeignKey](Field/getForeignKey.md) |  |
 | public |[getAutoIncrement](Field/getAutoIncrement.md) |  |
+
+
+
+## 例子
+
+example

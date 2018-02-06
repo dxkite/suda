@@ -2,7 +2,7 @@
 
 
 
-> *文件信息* suda\exception\JSONException.php: 18~18
+> *文件信息* suda\exception\JSONException.php: 18~31
 
 ## 所属类 
 
@@ -20,7 +20,10 @@
 ## 参数
 
 
-无参数
+| 参数名 | 类型 | 默认值 | 说明 |
+|--------|-----|-------|-------|
+| error |  int | 无 | 无 |
+
 
 
 ## 返回值

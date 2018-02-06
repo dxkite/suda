@@ -2,7 +2,7 @@
 
 
 
-> *文件信息* suda\mail\sender\MailSender.php: 21~57
+> *文件信息* suda\mail\sender\MailSender.php: 25~61
 
 ## 所属类 
 
@@ -14,7 +14,7 @@
 
 ## 说明
 
-该函数暂时无说明
+使用sendmail发送邮件，请保证sendmail的配置
 
 
 ## 参数

@@ -1,12 +1,12 @@
 #  HTMLMessage 
 
-> *文件信息* suda\mail\message\HTMLMessage.php: 20~26
+> *文件信息* suda\mail\message\HTMLMessage.php: 24~37
 
-
+HTML邮件信息
 
 ## 描述
 
-该类暂时无说明
+
 
 
 
@@ -30,14 +30,14 @@
 
 | 可见性 | 方法名 | 说明 |
 |--------|-------|------|
-| public |[__construct](HTMLMessage/__construct.md) |  |
-| public |[setFrom](HTMLMessage/setFrom.md) |  |
-| public |[setTo](HTMLMessage/setTo.md) |  |
+| public |[__construct](HTMLMessage/__construct.md) | HTML邮件信息 |
+| public |[setFrom](HTMLMessage/setFrom.md) | 设置发送者 |
+| public |[setTo](HTMLMessage/setTo.md) | 设置对象 |
 | public |[setCc](HTMLMessage/setCc.md) |  |
 | public |[setBcc](HTMLMessage/setBcc.md) |  |
 | public |[setSubject](HTMLMessage/setSubject.md) |  |
 | public |[setBody](HTMLMessage/setBody.md) |  |
-| public |[addAttachment](HTMLMessage/addAttachment.md) |  |
+| public |[addAttachment](HTMLMessage/addAttachment.md) | 添加附件 |
 | public |[getBody](HTMLMessage/getBody.md) |  |
 | public |[getTo](HTMLMessage/getTo.md) |  |
 | public |[getFrom](HTMLMessage/getFrom.md) |  |
@@ -50,3 +50,9 @@
 | protected |[getMIMEType](HTMLMessage/getMIMEType.md) |  |
 | protected |[readFile](HTMLMessage/readFile.md) |  |
 | public |[getAttachment](HTMLMessage/getAttachment.md) |  |
+
+
+
+## 例子
+
+example

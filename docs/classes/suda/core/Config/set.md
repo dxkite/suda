@@ -2,7 +2,7 @@
 
 
 
-> *文件信息* suda\core\Config.php: 21~47
+> *文件信息* suda\core\Config.php: 24~50
 
 ## 所属类 
 

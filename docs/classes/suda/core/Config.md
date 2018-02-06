@@ -1,8 +1,8 @@
 #  Config 
 
-> *文件信息* suda\core\Config.php: 21~47
+> *文件信息* suda\core\Config.php: 24~50
 
-
+文件配置类
 
 ## 描述
 
@@ -28,3 +28,9 @@
 | public static|[assign](Config/assign.md) |  |
 | public static|[get](Config/get.md) |  |
 | public static|[set](Config/set.md) |  |
+
+
+
+## 例子
+
+example

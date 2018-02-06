@@ -2,7 +2,7 @@
 
 输出HTML页面
 
-> *文件信息* suda\core\Response.php: 27~250
+> *文件信息* suda\core\Response.php: 27~253
 
 ## 所属类 
 

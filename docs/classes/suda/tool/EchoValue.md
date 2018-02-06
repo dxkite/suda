@@ -39,3 +39,9 @@
 | public |[valid](EchoValue/valid.md) |  |
 | public |[jsonSerialize](EchoValue/jsonSerialize.md) |  |
 | public |[__toString](EchoValue/__toString.md) |  |
+
+
+
+## 例子
+
+example

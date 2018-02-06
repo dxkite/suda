@@ -52,3 +52,9 @@
 | public static|[getStaticAssetPath](Manager/getStaticAssetPath.md) |  |
 | public static|[getDynamicAssetPath](Manager/getDynamicAssetPath.md) |  |
 | public static|[assetServer](Manager/assetServer.md) |  |
+
+
+
+## 例子
+
+example

@@ -18,6 +18,10 @@ namespace suda\mail\sender;
 
 use suda\mail\message\Message;
 
+/**
+ * sendmail 邮件发送
+ * 使用sendmail发送邮件，请保证sendmail的配置
+ */
 class MailSender implements Sender
 {
     protected $error;

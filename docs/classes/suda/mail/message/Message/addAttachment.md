@@ -1,8 +1,8 @@
 # Message::addAttachment
 
+添加附件
 
-
-> *文件信息* suda\mail\message\Message.php: 19~235
+> *文件信息* suda\mail\message\Message.php: 23~273
 
 ## 所属类 
 
@@ -14,7 +14,7 @@
 
 ## 说明
 
-该函数暂时无说明
+
 
 
 ## 参数
@@ -22,15 +22,22 @@
 
 | 参数名 | 类型 | 默认值 | 说明 |
 |--------|-----|-------|-------|
-| file |  string | 无 | 无 |
+| file |  string | 无 |  附件文件路径 |
 
 
 
 ## 返回值
 
-返回值类型不定
+类型：void
+
+无
+
 
 
 ## 例子
 
-example
+···php
+$sender=new StmpSender('smtp.163.com', 465, 500, 'dxkite@163.com', 'password', true);
+$this->json($sender->send((new Message('我的邮件', '测试发送邮件'))
+->setTo('dxkite@qq.com')
+->addAttachment(__FILE__)));

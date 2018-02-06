@@ -35,3 +35,9 @@
 | public static|[getIncludePath](Autoloader/getIncludePath.md) |  |
 | public static|[getNamespace](Autoloader/getNamespace.md) |  |
 | public static|[setNamespace](Autoloader/setNamespace.md) |  |
+
+
+
+## 例子
+
+example

@@ -18,6 +18,9 @@ namespace suda\core;
 use suda\tool\Json;
 use suda\tool\ArrayHelper;
 
+/**
+ * 文件配置类
+ */
 class Config
 {
     public static $config=[];

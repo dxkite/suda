@@ -47,3 +47,9 @@
 | public |[getPrevious](ArchiveException/getPrevious.md) |  |
 | public |[getTraceAsString](ArchiveException/getTraceAsString.md) |  |
 | public |[__toString](ArchiveException/__toString.md) |  |
+
+
+
+## 例子
+
+example

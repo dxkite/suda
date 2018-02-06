@@ -18,7 +18,11 @@ namespace suda\core;
 use ZipArchive;
 
 defined('APP_LOG') or define('APP_LOG', APP_DIR.'/data/logs');
-// TODO: 记录异常类型
+
+/**
+ * 异常日志类
+ * 用于记录运行日志和运行信息以及提供错误显示
+ */
 class Debug
 {
     const MAX_LOG_SIZE=2097152;

@@ -25,3 +25,9 @@
 | protected static|[combine](ArrayHelper/combine.md) |  |
 | protected static|[arr2string](ArrayHelper/arr2string.md) |  |
 | protected static|[parserArraySub](ArrayHelper/parserArraySub.md) |  |
+
+
+
+## 例子
+
+example

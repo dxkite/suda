@@ -1,12 +1,13 @@
 #  Application 
 
-> *文件信息* suda\core\Application.php: 24~479
+> *文件信息* suda\core\Application.php: 29~475
 
-
+应用处理类
 
 ## 描述
 
-该类暂时无说明
+
+包含了应用的各种处理方式
 
 
 
@@ -41,3 +42,9 @@
 | public |[registerModule](Application/registerModule.md) |  |
 | public |[getModulesInfo](Application/getModulesInfo.md) |  |
 | public |[getModulePath](Application/getModulePath.md) |  |
+
+
+
+## 例子
+
+example

@@ -26,3 +26,9 @@
 | 可见性 | 方法名 | 说明 |
 |--------|-------|------|
 | public static|[sender](Factory/sender.md) |  |
+
+
+
+## 例子
+
+example

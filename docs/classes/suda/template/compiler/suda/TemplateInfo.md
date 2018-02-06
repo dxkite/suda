@@ -85,3 +85,9 @@
 | protected |[parseInsert](TemplateInfo/parseInsert.md) |  |
 | public |[error](TemplateInfo/error.md) |  |
 | public |[erron](TemplateInfo/erron.md) |  |
+
+
+
+## 例子
+
+example

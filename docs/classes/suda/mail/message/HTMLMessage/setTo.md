@@ -1,8 +1,8 @@
 # HTMLMessage::setTo
 
+设置对象
 
-
-> *文件信息* suda\mail\message\HTMLMessage.php: 20~26
+> *文件信息* suda\mail\message\HTMLMessage.php: 24~37
 
 ## 所属类 
 
@@ -14,7 +14,7 @@
 
 ## 说明
 
-该函数暂时无说明
+
 
 
 ## 参数
@@ -22,14 +22,17 @@
 
 | 参数名 | 类型 | 默认值 | 说明 |
 |--------|-----|-------|-------|
-| toEmail |  string | 无 | 无 |
-| name |  string |  | 无 |
+| toEmail |  string | 无 |  对方邮箱 |
+| name |  string |  |  对方称呼 |
 
 
 
 ## 返回值
 
-返回值类型不定
+类型：Message
+
+无
+
 
 
 ## 例子

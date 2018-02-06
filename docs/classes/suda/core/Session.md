@@ -30,3 +30,9 @@
 | public static|[get](Session/get.md) |  |
 | public static|[has](Session/has.md) |  |
 | public static|[destroy](Session/destroy.md) |  |
+
+
+
+## 例子
+
+example

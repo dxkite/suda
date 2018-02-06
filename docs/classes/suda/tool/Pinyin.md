@@ -27,3 +27,9 @@
 |--------|-------|------|
 | public static|[getAll](Pinyin/getAll.md) | 获取中文拼音 |
 | public static|[getFirst](Pinyin/getFirst.md) | 获取首字母 |
+
+
+
+## 例子
+
+example

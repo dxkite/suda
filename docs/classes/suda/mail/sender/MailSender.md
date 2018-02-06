@@ -1,12 +1,12 @@
 #  MailSender 
 
-> *文件信息* suda\mail\sender\MailSender.php: 21~57
+> *文件信息* suda\mail\sender\MailSender.php: 25~61
 
-
+sendmail 邮件发送
 
 ## 描述
 
-该类暂时无说明
+使用sendmail发送邮件，请保证sendmail的配置
 
 
 
@@ -30,3 +30,9 @@
 | protected |[errorHander](MailSender/errorHander.md) |  |
 | protected |[setError](MailSender/setError.md) |  |
 | protected |[log](MailSender/log.md) |  |
+
+
+
+## 例子
+
+example

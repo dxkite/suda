@@ -2,7 +2,7 @@
 
 生成一个数据输入值
 
-> *文件信息* suda\archive\SQLQuery.php: 32~468
+> *文件信息* suda\archive\SQLQuery.php: 32~473
 
 ## 所属类 
 

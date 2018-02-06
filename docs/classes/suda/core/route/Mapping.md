@@ -1,6 +1,6 @@
 #  Mapping 
 
-> *文件信息* suda\core\route\Mapping.php: 22~307
+> *文件信息* suda\core\route\Mapping.php: 22~315
 
 
 
@@ -69,7 +69,14 @@
 | public |[setHidden](Mapping/setHidden.md) |  |
 | public |[setMapping](Mapping/setMapping.md) |  |
 | public |[setUrl](Mapping/setUrl.md) |  |
+| public |[getUrlTemplate](Mapping/getUrlTemplate.md) |  |
 | public |[createUrl](Mapping/createUrl.md) |  |
 | public |[getPrefix](Mapping/getPrefix.md) |  |
 | protected |[buildMatch](Mapping/buildMatch.md) |  |
 | public static|[createFromRouteArray](Mapping/createFromRouteArray.md) |  |
+
+
+
+## 例子
+
+example

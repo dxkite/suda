@@ -2,11 +2,11 @@
 
 > *文件信息* suda\core\Cookie.php: 24~95
 
-Class Cookie
+Cookie操作封装类
 
 ## 描述
 
-用于获取Cookie
+用于操作Cookie
 
 
 
@@ -31,3 +31,9 @@ Class Cookie
 | public static|[get](Cookie/get.md) | 获取Cookie的值 |
 | public static|[sendCookies](Cookie/sendCookies.md) | 发送Cookie至浏览器 |
 | public static|[parseFromString](Cookie/parseFromString.md) | 从字符串设置cookie |
+
+
+
+## 例子
+
+example

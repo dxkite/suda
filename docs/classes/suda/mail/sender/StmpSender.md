@@ -1,12 +1,12 @@
 #  StmpSender 
 
-> *文件信息* suda\mail\sender\StmpSender.php: 21~243
+> *文件信息* suda\mail\sender\StmpSender.php: 33~276
 
-
+SMTP邮件发送器
 
 ## 描述
 
-该类暂时无说明
+
 
 
 
@@ -32,8 +32,8 @@
 
 | 可见性 | 方法名 | 说明 |
 |--------|-------|------|
-| public |[__construct](StmpSender/__construct.md) |  |
-| public |[send](StmpSender/send.md) |  |
+| public |[__construct](StmpSender/__construct.md) | 创建一个SMTP发送 |
+| public |[send](StmpSender/send.md) | 发送信息 |
 | protected |[getCommand](StmpSender/getCommand.md) |  |
 | protected |[getData](StmpSender/getData.md) |  |
 | protected |[openSocket](StmpSender/openSocket.md) |  |
@@ -45,3 +45,15 @@
 | public |[getError](StmpSender/getError.md) |  |
 | protected |[setError](StmpSender/setError.md) |  |
 | protected |[log](StmpSender/log.md) |  |
+
+
+
+## 例子
+
+```php
+$sender=new StmpSender('smtp.163.com', 465, 500, 'dxkite@163.com', 'password', true);
+$this->json($sender->send(
+     (new Message('我的邮件', '测试发送邮件'))
+     ->setFrom('dxkite@163.com')
+     ->setTo('dxkite@qq.com')));
+```

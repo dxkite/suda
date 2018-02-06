@@ -1,6 +1,6 @@
 #  JSONException 
 
-> *文件信息* suda\exception\JSONException.php: 18~18
+> *文件信息* suda\exception\JSONException.php: 18~31
 
 
 
@@ -15,6 +15,7 @@
 ## 变量列表
 | 可见性 |  变量名   | 说明 |
 |--------|----|------|
+| protected static  | error | | 
 | protected   | message | | 
 | protected   | code | | 
 | protected   | file | | 
@@ -37,3 +38,9 @@
 | public |[getPrevious](JSONException/getPrevious.md) |  |
 | public |[getTraceAsString](JSONException/getTraceAsString.md) |  |
 | public |[__toString](JSONException/__toString.md) |  |
+
+
+
+## 例子
+
+example

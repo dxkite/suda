@@ -45,3 +45,9 @@
 | public |[getPrevious](CommandException/getPrevious.md) |  |
 | public |[getTraceAsString](CommandException/getTraceAsString.md) |  |
 | public |[__toString](CommandException/__toString.md) |  |
+
+
+
+## 例子
+
+example

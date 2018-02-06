@@ -1,8 +1,8 @@
 # Message::__construct
 
+构造基本信息
 
-
-> *文件信息* suda\mail\message\Message.php: 19~235
+> *文件信息* suda\mail\message\Message.php: 23~273
 
 ## 所属类 
 
@@ -14,7 +14,7 @@
 
 ## 说明
 
-该函数暂时无说明
+
 
 
 ## 参数
@@ -22,8 +22,8 @@
 
 | 参数名 | 类型 | 默认值 | 说明 |
 |--------|-----|-------|-------|
-| subject |  string | 无 | 无 |
-| body |  string | 无 | 无 |
+| subject |  string | 无 |  主题 |
+| body |  string | 无 |  信息内容 |
 
 
 

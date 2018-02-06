@@ -1,8 +1,8 @@
 # HTMLMessage::__construct
 
+HTML邮件信息
 
-
-> *文件信息* suda\mail\message\HTMLMessage.php: 20~26
+> *文件信息* suda\mail\message\HTMLMessage.php: 24~37
 
 ## 所属类 
 
@@ -14,7 +14,7 @@
 
 ## 说明
 
-该函数暂时无说明
+
 
 
 ## 参数
@@ -22,9 +22,9 @@
 
 | 参数名 | 类型 | 默认值 | 说明 |
 |--------|-----|-------|-------|
-| subject |  string | 无 | 无 |
-| template |  string | 无 | 无 |
-| values |  array | 无 | 无 |
+| subject |  string | 无 |  主题 |
+| template |  string | 无 |  邮件模板 |
+| values |  array | 无 |  模板压值 |
 
 
 

@@ -38,3 +38,9 @@
 | public static|[has](Cache/has.md) | 检测是否存在 |
 | public static|[gc](Cache/gc.md) | 垃圾回收 |
 | public static|[clear](Cache/clear.md) |  |
+
+
+
+## 例子
+
+example

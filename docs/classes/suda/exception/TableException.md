@@ -39,3 +39,9 @@
 | public |[getPrevious](TableException/getPrevious.md) |  |
 | public |[getTraceAsString](TableException/getTraceAsString.md) |  |
 | public |[__toString](TableException/__toString.md) |  |
+
+
+
+## 例子
+
+example

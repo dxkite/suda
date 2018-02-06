@@ -32,3 +32,9 @@
 | public |[setFunctions](Docme/setFunctions.md) |  |
 | public |[setClasses](Docme/setClasses.md) |  |
 | public static|[realPath](Docme/realPath.md) |  |
+
+
+
+## 例子
+
+example

@@ -1,6 +1,6 @@
 #  SQLQuery 
 
-> *文件信息* suda\archive\SQLQuery.php: 32~468
+> *文件信息* suda\archive\SQLQuery.php: 32~473
 
 数据库查询方案，简化数据库查
 
@@ -57,3 +57,8 @@
 | protected static|[connectPdo](SQLQuery/connectPdo.md) |  |
 | public |[object](SQLQuery/object.md) | 添加列处理类 |
 | protected |[__dataTransfrom](SQLQuery/__dataTransfrom.md) | 转换函数；统一处理数据库输入输出 |
+
+
+
+## 例子
+

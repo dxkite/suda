@@ -42,3 +42,9 @@
 | public static|[uncaughtError](System/uncaughtError.md) |  |
 | public static|[getRunInfo](System/getRunInfo.md) |  |
 | public static|[sigHandler](System/sigHandler.md) |  |
+
+
+
+## 例子
+
+example

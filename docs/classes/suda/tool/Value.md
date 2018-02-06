@@ -42,3 +42,9 @@
 | public |[valid](Value/valid.md) |  |
 | public |[jsonSerialize](Value/jsonSerialize.md) |  |
 | public |[__toString](Value/__toString.md) |  |
+
+
+
+## 例子
+
+example

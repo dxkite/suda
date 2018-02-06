@@ -74,3 +74,9 @@ Suda 模板编译器
 | protected |[parseInsert](Compiler/parseInsert.md) |  |
 | public |[error](Compiler/error.md) |  |
 | public |[erron](Compiler/erron.md) |  |
+
+
+
+## 例子
+
+example

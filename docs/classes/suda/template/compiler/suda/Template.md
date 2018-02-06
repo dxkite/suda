@@ -54,3 +54,9 @@
 | public |[getModule](Template/getModule.md) |  |
 | public |[getValue](Template/getValue.md) |  |
 | public |[getResponse](Template/getResponse.md) |  |
+
+
+
+## 例子
+
+example

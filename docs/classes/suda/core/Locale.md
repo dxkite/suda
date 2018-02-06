@@ -30,3 +30,9 @@ I18N 国际化支持
 | public static|[load](Locale/load.md) | 加载语言本地化文件 |
 | public static|[loadFile](Locale/loadFile.md) | 加载语言本地化文件 |
 | public static|[_](Locale/_.md) |  |
+
+
+
+## 例子
+
+example

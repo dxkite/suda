@@ -51,3 +51,9 @@
 | public static|[curl](Storage/curl.md) |  |
 | public static|[type](Storage/type.md) |  |
 | public static|[exist](Storage/exist.md) |  |
+
+
+
+## 例子
+
+example

@@ -2,7 +2,7 @@
 
 
 
-> *文件信息* suda\mail\message\HTMLMessage.php: 20~26
+> *文件信息* suda\mail\message\HTMLMessage.php: 24~37
 
 ## 所属类 
 
@@ -14,7 +14,7 @@
 
 ## 说明
 
-该函数暂时无说明
+
 
 
 ## 参数

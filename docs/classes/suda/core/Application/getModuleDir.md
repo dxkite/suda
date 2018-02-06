@@ -2,7 +2,7 @@
 
 获取模块所在的文件夹名
 
-> *文件信息* suda\core\Application.php: 24~479
+> *文件信息* suda\core\Application.php: 29~475
 
 ## 所属类 
 
@@ -15,6 +15,7 @@
 ## 说明
 
 
+包含了应用的各种处理方式
 
 
 ## 参数

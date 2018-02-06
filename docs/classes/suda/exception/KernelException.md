@@ -37,3 +37,9 @@
 | public |[getPrevious](KernelException/getPrevious.md) |  |
 | public |[getTraceAsString](KernelException/getTraceAsString.md) |  |
 | public |[__toString](KernelException/__toString.md) |  |
+
+
+
+## 例子
+
+example

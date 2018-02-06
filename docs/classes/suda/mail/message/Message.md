@@ -1,12 +1,12 @@
 #  Message 
 
-> *文件信息* suda\mail\message\Message.php: 19~235
+> *文件信息* suda\mail\message\Message.php: 23~273
 
-
+文本邮件信息
 
 ## 描述
 
-该类暂时无说明
+
 
 
 
@@ -30,14 +30,14 @@
 
 | 可见性 | 方法名 | 说明 |
 |--------|-------|------|
-| public |[__construct](Message/__construct.md) |  |
-| public |[setFrom](Message/setFrom.md) |  |
-| public |[setTo](Message/setTo.md) |  |
+| public |[__construct](Message/__construct.md) | 构造基本信息 |
+| public |[setFrom](Message/setFrom.md) | 设置发送者 |
+| public |[setTo](Message/setTo.md) | 设置对象 |
 | public |[setCc](Message/setCc.md) |  |
 | public |[setBcc](Message/setBcc.md) |  |
 | public |[setSubject](Message/setSubject.md) |  |
 | public |[setBody](Message/setBody.md) |  |
-| public |[addAttachment](Message/addAttachment.md) |  |
+| public |[addAttachment](Message/addAttachment.md) | 添加附件 |
 | public |[getBody](Message/getBody.md) |  |
 | public |[getTo](Message/getTo.md) |  |
 | public |[getFrom](Message/getFrom.md) |  |
@@ -50,3 +50,9 @@
 | protected |[getMIMEType](Message/getMIMEType.md) |  |
 | protected |[readFile](Message/readFile.md) |  |
 | public |[getAttachment](Message/getAttachment.md) |  |
+
+
+
+## 例子
+
+example

@@ -37,3 +37,9 @@
 | public |[getPrevious](MailException/getPrevious.md) |  |
 | public |[getTraceAsString](MailException/getTraceAsString.md) |  |
 | public |[__toString](MailException/__toString.md) |  |
+
+
+
+## 例子
+
+example

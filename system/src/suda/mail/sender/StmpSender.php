@@ -3,7 +3,7 @@
  * Suda FrameWork
  *
  * An open source application development framework for PHP 7.0.0 or newer
- * 
+ *
  * Copyright (c)  2017 DXkite
  *
  * @category   PHP FrameWork
@@ -18,6 +18,18 @@ namespace suda\mail\sender;
 
 use suda\mail\message\Message;
 
+/**
+ * SMTP邮件发送器
+ *
+ * @example
+ * ```php
+ * $sender=new StmpSender('smtp.163.com', 465, 500, 'dxkite@163.com', 'password', true);
+ * $this->json($sender->send(
+ *      (new Message('我的邮件', '测试发送邮件'))
+ *      ->setFrom('dxkite@163.com')
+ *      ->setTo('dxkite@qq.com')));
+ * ```
+ */
 class StmpSender implements Sender
 {
     protected $userName;
@@ -31,6 +43,16 @@ class StmpSender implements Sender
     protected $error;
     protected $message;
 
+    /**
+     * 创建一个SMTP发送
+     *
+     * @param string $server SMTP邮件服务器
+     * @param integer $port 端口号
+     * @param integer $timeout 设置发送超时
+     * @param string $name 邮箱用户名
+     * @param string $password 邮箱密码
+     * @param boolean $isSecurity 是否使用SSL，需要开启 OpenSSL 模块
+     */
     public function __construct(string $server, int $port, int $timeout, string $name, string $password, bool $isSecurity=true)
     {
         $this->userName=$name;
@@ -41,9 +63,19 @@ class StmpSender implements Sender
         $this->timeout=$timeout;
     }
 
+
+    /**
+     * 发送信息
+     *
+     * @param Message $message 信息体
+     * @return boolean
+     */
     public function send(Message $message):bool
     {
         $this->message=$message;
+        if ($this->message->getFrom() == null) {
+            $this->message->setFrom($this->userName);
+        }
         $commands=$this->getCommand();
         if ($this->isSecurity) {
             if ($this->openSocketSecurity()) {
@@ -106,7 +138,8 @@ class StmpSender implements Sender
         return $command;
     }
 
-    protected function getData(){
+    protected function getData()
+    {
         $data=$this->message->getHeader();
         $data.='Subject: =?UTF-8?B?'.base64_encode($this->message->getSubject()).'?='."\r\n";
         $data.=$this->message->getMessage();
@@ -116,7 +149,7 @@ class StmpSender implements Sender
     protected function openSocket()
     {
         //创建socket资源
-         $this->socket = fsockopen($this->server, $this->port, $errno, $errstr, $this->timeout);
+        $this->socket = fsockopen($this->server, $this->port, $errno, $errstr, $this->timeout);
         if (!$this->socket) {
             $this->setError($errstr);
             return false;

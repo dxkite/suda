@@ -2,7 +2,7 @@
 
 获取模块全名（包括版本）
 
-> *文件信息* suda\core\Application.php: 24~479
+> *文件信息* suda\core\Application.php: 29~475
 
 ## 所属类 
 
@@ -14,9 +14,8 @@
 
 ## 说明
 
-name:version,name,namespace/name => namespace/name:version
-未指定版本则调整到最优先版本
 
+包含了应用的各种处理方式
 
 
 ## 参数

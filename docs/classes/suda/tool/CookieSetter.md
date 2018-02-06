@@ -29,3 +29,9 @@
 | public |[session](CookieSetter/session.md) |  |
 | public |[reset](CookieSetter/reset.md) |  |
 | public |[set](CookieSetter/set.md) |  |
+
+
+
+## 例子
+
+example

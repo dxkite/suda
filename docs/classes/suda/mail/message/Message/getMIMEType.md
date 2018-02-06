@@ -2,7 +2,7 @@
 
 
 
-> *文件信息* suda\mail\message\Message.php: 19~235
+> *文件信息* suda\mail\message\Message.php: 23~273
 
 ## 所属类 
 
@@ -14,7 +14,7 @@
 
 ## 说明
 
-该函数暂时无说明
+
 
 
 ## 参数

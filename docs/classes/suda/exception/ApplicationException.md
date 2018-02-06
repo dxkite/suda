@@ -37,3 +37,9 @@
 | public |[getPrevious](ApplicationException/getPrevious.md) |  |
 | public |[getTraceAsString](ApplicationException/getTraceAsString.md) |  |
 | public |[__toString](ApplicationException/__toString.md) |  |
+
+
+
+## 例子
+
+example

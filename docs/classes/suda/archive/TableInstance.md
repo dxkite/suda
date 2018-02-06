@@ -35,3 +35,9 @@
 | protected |[getTableNameFromModule](TableInstance/getTableNameFromModule.md) |  |
 | protected |[formatTableName](TableInstance/formatTableName.md) |  |
 | protected |[getClassName](TableInstance/getClassName.md) |  |
+
+
+
+## 例子
+
+example

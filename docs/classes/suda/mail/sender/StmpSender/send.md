@@ -1,8 +1,8 @@
 # StmpSender::send
 
+发送信息
 
-
-> *文件信息* suda\mail\sender\StmpSender.php: 21~243
+> *文件信息* suda\mail\sender\StmpSender.php: 33~276
 
 ## 所属类 
 
@@ -14,7 +14,7 @@
 
 ## 说明
 
-该函数暂时无说明
+
 
 
 ## 参数
@@ -22,15 +22,24 @@
 
 | 参数名 | 类型 | 默认值 | 说明 |
 |--------|-----|-------|-------|
-| message |  suda\mail\message\Message | 无 | 无 |
+| message |  suda\mail\message\Message | 无 |  信息体 |
 
 
 
 ## 返回值
 
-返回值类型不定
+类型：boolean
+
+无
+
 
 
 ## 例子
 
-example
+```php
+$sender=new StmpSender('smtp.163.com', 465, 500, 'dxkite@163.com', 'password', true);
+$this->json($sender->send(
+     (new Message('我的邮件', '测试发送邮件'))
+     ->setFrom('dxkite@163.com')
+     ->setTo('dxkite@qq.com')));
+```

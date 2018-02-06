@@ -44,4 +44,10 @@
 <?php endforeach;  else: ?>
 
 无方法
-<?php endif; ?><?php }}
+<?php endif; ?>
+
+
+
+## 例子
+
+<?php echo $this->get("example"); ?><?php }}

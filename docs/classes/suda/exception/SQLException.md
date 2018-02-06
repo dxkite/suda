@@ -45,3 +45,9 @@
 | public |[getPrevious](SQLException/getPrevious.md) |  |
 | public |[getTraceAsString](SQLException/getTraceAsString.md) |  |
 | public |[__toString](SQLException/__toString.md) |  |
+
+
+
+## 例子
+
+example

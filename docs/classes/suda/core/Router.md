@@ -1,12 +1,12 @@
 #  Router 
 
-> *文件信息* suda\core\Router.php: 26~459
+> *文件信息* suda\core\Router.php: 27~460
 
-
+路由处理类
 
 ## 描述
 
-该类暂时无说明
+用于处理访问的路由信息
 
 
 ## 常量列表
@@ -61,3 +61,9 @@
 | protected static|[runRouter](Router/runRouter.md) |  |
 | public static|[error404](Router/error404.md) |  |
 | public |[getRouters](Router/getRouters.md) |  |
+
+
+
+## 例子
+
+example

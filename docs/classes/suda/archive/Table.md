@@ -1,6 +1,6 @@
 #  Table 
 
-> *文件信息* suda\archive\Table.php: 31~674
+> *文件信息* suda\archive\Table.php: 31~682
 
 数据表抽象对象
 
@@ -66,6 +66,7 @@
 | public |[order](Table/order.md) | 排序 |
 | public |[createTable](Table/createTable.md) |  |
 | public |[getCreateSql](Table/getCreateSql.md) |  |
+| public |[getCreator](Table/getCreator.md) |  |
 | public static|[begin](Table/begin.md) |  |
 | public static|[commit](Table/commit.md) |  |
 | public static|[rollBack](Table/rollBack.md) |  |
@@ -86,3 +87,9 @@
 | protected static|[strify](Table/strify.md) |  |
 | protected |[_order](Table/_order.md) |  |
 | protected |[getDataString](Table/getDataString.md) | 获取数据SQL字符串 |
+
+
+
+## 例子
+
+example

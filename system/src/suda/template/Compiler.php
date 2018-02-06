@@ -16,12 +16,12 @@
 namespace suda\template;
 
 /**
- * 画类图还不熟练啊，，，，
- *
+ * 编译器接口
  */
 interface Compiler
 {
     /**
+     * 编译文本
      * @param string $text
      */
     public function compileText(string $text);

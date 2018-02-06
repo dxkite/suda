@@ -34,3 +34,8 @@
 @endforeach @else
 无方法
 @endif
+
+
+## 例子
+
+{{! $:example }}

@@ -35,3 +35,9 @@
 | public |[exec](Command/exec.md) |  |
 | public |[args](Command/args.md) |  |
 | public static|[_absoluteCall](Command/_absoluteCall.md) | 绝对调用函数，可调用类私有和保护函数 |
+
+
+
+## 例子
+
+example

@@ -31,3 +31,9 @@
 | public static|[getDoc](FunctionExport/getDoc.md) |  |
 | public static|[getValue](FunctionExport/getValue.md) |  |
 | public static|[docField](FunctionExport/docField.md) |  |
+
+
+
+## 例子
+
+example

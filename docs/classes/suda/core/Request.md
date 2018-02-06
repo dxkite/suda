@@ -48,3 +48,9 @@
 | public static|[hostBase](Request/hostBase.md) |  |
 | public static|[baseUrl](Request/baseUrl.md) |  |
 | public |[isCrawler](Request/isCrawler.md) |  |
+
+
+
+## 例子
+
+example

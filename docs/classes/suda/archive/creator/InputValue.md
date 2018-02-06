@@ -23,3 +23,9 @@
 | public |[getBindType](InputValue/getBindType.md) |  |
 | public |[getValue](InputValue/getValue.md) |  |
 | public static|[bindParam](InputValue/bindParam.md) |  |
+
+
+
+## 例子
+
+example

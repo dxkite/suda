@@ -71,3 +71,9 @@
 | protected static|[connectPdo](Query/connectPdo.md) |  |
 | public |[object](Query/object.md) | 添加列处理类 |
 | protected |[__dataTransfrom](Query/__dataTransfrom.md) | 转换函数；统一处理数据库输入输出 |
+
+
+
+## 例子
+
+example

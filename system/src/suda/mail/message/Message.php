@@ -16,9 +16,13 @@
 
 namespace suda\mail\message;
 
+/**
+ * 文本邮件信息
+ * 
+ */
 class Message
 {
-    protected $from;
+    protected $from =null;
     protected $to=[];
     protected $cc=[];
     protected $bcc=[];
@@ -26,12 +30,25 @@ class Message
     protected $body;
     protected $attachment=[];
     
+    /**
+     * 构造基本信息
+     *
+     * @param string $subject 主题
+     * @param string $body 信息内容
+     */
     public function __construct(string $subject, string $body)
     {
         $this->setSubject($subject);
         $this->setBody($body);
     }
 
+    /**
+     * 设置发送者
+     *
+     * @param string $fromEmail
+     * @param string $name
+     * @return Message
+     */
     public function setFrom(string $fromEmail, string $name='')
     {
         $name=self::utf8($name);
@@ -39,6 +56,14 @@ class Message
         return $this;
     }
 
+    /**
+     * 设置对象
+     * 可以多次设置
+     *
+     * @param string $toEmail 对方邮箱
+     * @param string $name 对方称呼
+     * @return Message
+     */
     public function setTo(string $toEmail, string $name='')
     {
         $name=self::utf8($name);
@@ -72,6 +97,19 @@ class Message
         return $this;
     }
 
+    /**
+     * 添加附件
+     * 
+     * @example 
+     * ···php
+     * $sender=new StmpSender('smtp.163.com', 465, 500, 'dxkite@163.com', 'password', true);
+     * $this->json($sender->send((new Message('我的邮件', '测试发送邮件'))
+     * ->setTo('dxkite@qq.com')
+     * ->addAttachment(__FILE__)));
+     * 
+     * @param string $file 附件文件路径
+     * @return void
+     */
     public function addAttachment(string $file)
     {
         if (file_exists($file) && !in_array($file, $this->attachment)) {

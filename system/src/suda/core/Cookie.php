@@ -18,8 +18,8 @@ namespace suda\core;
 use suda\tool\CookieSetter as Setter;
 
 /**
- * Class Cookie
- * 用于获取Cookie
+ * Cookie操作封装类
+ * 用于操作Cookie
  */
 class Cookie
 {
