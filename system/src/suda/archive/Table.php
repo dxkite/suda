@@ -199,9 +199,10 @@ abstract class Table
      *
      * @param [type] $wants
      * @param [type] $where
-     * @return int
+     * @param [type] $whereBinder
+     * @return Query|false
      */
-    public function select($wants, $where)
+    public function select($wants, $where, $whereBinder=[])
     {
         if (is_array($where) && !$this->checkFields(array_keys($where))) {
             return false;
@@ -209,7 +210,10 @@ abstract class Table
         if (is_array($wants) && !$this->checkFields($wants)) {
             return false;
         }
-        return Query::where($this->getTableName(), $wants, $where)->object($this);
+        if (!$this->checkFields(array_keys($whereBinder))) {
+            return false;
+        }
+        return Query::where($this->getTableName(), $wants, $where, $whereBinder)->object($this);
     }
 
     /**
