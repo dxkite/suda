@@ -216,8 +216,9 @@ final class Request
     public static function ip2Address($ip)
     {
         $url="http://ip.taobao.com/service/getIpInfo.php?ip=".$ip;
-        $ip=json_decode(@file_get_contents($url), true);
-        return $ip;
+        $content=storage()->curl($url,3);
+        $addr=json_decode($content, true);
+        return $addr;
     }
 
     /**

@@ -75,10 +75,6 @@ class Command
                     }
                 }
             }
-            
-            if (!is_callable($this->command)) {
-                throw (new CommandException(__('command {%s} is uncallable', $this->name)))->setCmd($this->name)->setParams($this->params);
-            }
             return static::_absoluteCall($this->command, $this->params);
         } elseif ($this->file) {
             // 文件参数引入

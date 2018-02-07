@@ -208,10 +208,6 @@ abstract class Table
         }
         if (is_array($wants) && !$this->checkFields($wants)) {
             return false;
-        } elseif (is_string($wants)) {
-            if (!in_array($wants, $this->fields)) {
-                return false;
-            }
         }
         return Query::where($this->getTableName(), $wants, $where)->object($this);
     }
