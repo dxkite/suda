@@ -18,7 +18,7 @@ namespace suda\core;
 use suda\tool\Value;
 use suda\tool\Json;
 
-final class Request
+class Request
 {
     private static $get=null;
     private static $post=null;

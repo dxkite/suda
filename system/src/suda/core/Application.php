@@ -138,23 +138,27 @@ class Application
         // 激活模块
         $moduleUse=self::getLiveModules();
         // 安装、启用使用的模块
-        foreach ($moduleUse as $module_temp) {
-            $root=self::getModulePath($module_temp);
-            $config=self::getModuleConfig($module_temp);
+        foreach ($moduleUse as $moduleTemp) {
+            $root=self::getModulePath($moduleTemp);
+            $config=self::getModuleConfig($moduleTemp);
             // 检查依赖
             if (isset($config['require'])) {
                 foreach ($config['require'] as $module => $version) {
                     $require=$this->getModuleConfig($module);
                     if ($this->checkModuleExist($module) && isset($require['version'])) {
                         if (!empty($version)) {
-                            if (version_compare($config['version'], $version, '<')) {
-                                throw new ApplicationException(__('module %s require module %s v%s and now is v%s', $config['name'], $module, $version, $require['version']));
+                            if (!static::versionCompire($version, $config['version'])) {
+                                throw new ApplicationException(__('module %s require module %s %s and now is %s', $config['name'], $module, $version, $require['version']));
                             }
                         }
                     } else {
                         throw new ApplicationException(__('module %s require module %s', $config['name'], $module));
                     }
                 }
+            }
+            // 框架依赖
+            if (isset($config['suda']) && !static::versionCompire($config['suda'], SUDA_VERSION)) {
+                throw new ApplicationException(__('module %s require suda version %s and now is %s', $moduleTemp, $config['suda'], SUDA_VERSION));
             }
             // 注册模块共享目录自动加载
             foreach ($config['autoload']['share'] as $namespace=>$path) {
@@ -170,8 +174,8 @@ class Application
             }
             // 自动安装
             if (conf('auto-install', true)) {
-                Hook::listen('Application:init', function () use ($module_temp) {
-                    self::installModule($module_temp);
+                Hook::listen('Application:init', function () use ($moduleTemp) {
+                    self::installModule($moduleTemp);
                 });
             }
             // 加载监听器
@@ -471,5 +475,23 @@ class Application
             $config=include $path;
             Config::set('database', $config);
         }
+    }
+
+    /**
+     * 比较版本
+     *
+     * @param string $version 比较用的版本，包含比较符号
+     * @param string $compire 对比的版本
+     * @return void
+     */
+    protected static function versionCompire(string $version, string $compire)
+    {
+        $oparetor=['lt','<=','le','gt','>=','ge','==','=','eq','!=','<>','ne','<','>'];
+        $preg=implode('|', $oparetor);
+        if (preg_match('/^('.$preg.')(.+)$/i', $version, $match)) {
+            list($s, $op, $ver)=$match;
+            return  version_compare($compire, $ver, strtolower($op));
+        }
+        return version_compare($compire, $version, '>=');
     }
 }
