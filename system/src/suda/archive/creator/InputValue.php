@@ -3,7 +3,7 @@
  * Suda FrameWork
  *
  * An open source application development framework for PHP 7.0.0 or newer
- * 
+ *
  * Copyright (c)  2017 DXkite
  *
  * @category   PHP FrameWork
@@ -15,9 +15,10 @@
  */
 
 namespace suda\archive\creator;
+
 use PDO;
 
-class InputValue
+class InputValue implements \JsonSerializable
 {
     private $name;
     private $value;
@@ -45,7 +46,8 @@ class InputValue
         return $this->value;
     }
 
-    public static function bindParam($value){
+    public static function bindParam($value)
+    {
         if (is_null($value)) {
             $type=PDO::PARAM_NULL;
         } elseif (is_bool($value)) {
@@ -56,5 +58,20 @@ class InputValue
             $type=PDO::PARAM_STR;
         }
         return $type;
+    }
+
+    
+    public function jsonSerialize()
+    {
+        return [
+            'name'=>$this->name,
+            'value'=>$this->value,
+            'type'=>$this->bindType
+        ];
+    }
+
+    public function __toString()
+    {
+        return json_encode($this->jsonSerialize());
     }
 }

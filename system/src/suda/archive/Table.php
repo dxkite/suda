@@ -32,20 +32,12 @@ abstract class Table
 {
     protected $fields=[];
     protected $wants;
-
-    /**
-     * 验证：类型，长度，正则
-     * fieldname=>verify_type,error_message
-     * @var array
-     */
-    protected $fieldChecks=[];
-
     protected $primaryKey;
     protected $tableName;
     protected $cachePath;
     protected $creator;
 
-    protected $order_field=null;
+    protected $orderField=null;
     protected $order=null;
     const ORDER_ASC=0;
     const ORDER_DESC=1;
@@ -67,8 +59,8 @@ abstract class Table
      */
     public function insert(array $values)
     {
-        if (is_array($values) && !($this->checkFields(array_keys($values)) && $this->checkFieldsType($values))) {
-            return false;
+        if (is_array($values)) {
+            $this->checkFields(array_keys($values));
         }
         return Query::insert($this->getTableName(), $values, [], $this);
     }
@@ -114,8 +106,8 @@ abstract class Table
      */
     public function updateByPrimaryKey($value, $values)
     {
-        if (is_array($values) && !($this->checkFields(array_keys($values)) && $this->checkFieldsType($values))) {
-            return false;
+        if (is_array($values)) {
+            $this->checkFields(array_keys($values));
         }
         return Query::update($this->getTableName(), $values, $this->checkPrimaryKey($value), [], $this);
     }
@@ -184,11 +176,11 @@ abstract class Table
      */
     public function update($values, $where, array $bind=[])
     {
-        if (is_array($where) && !$this->checkFields(array_keys($where))) {
-            return false;
+        if (is_array($where)) {
+            $this->checkFields(array_keys($where));
         }
-        if (is_array($values) && !($this->checkFields(array_keys($values)) && $this->checkFieldsType($values))) {
-            return false;
+        if (is_array($values)) {
+            $this->checkFields(array_keys($values));
         }
         return Query::update($this->getTableName(), $values, $where, $bind, $this);
     }
@@ -204,15 +196,13 @@ abstract class Table
      */
     public function select($wants, $where, $whereBinder=[])
     {
-        if (is_array($where) && !$this->checkFields(array_keys($where))) {
-            return false;
+        if (is_array($where)) {
+            $this->checkFields(array_keys($where));
         }
-        if (is_array($wants) && !$this->checkFields($wants)) {
-            return false;
+        if (is_array($wants)) {
+            $this->checkFields($wants);
         }
-        if (!$this->checkFields(array_keys($whereBinder))) {
-            return false;
-        }
+        $this->checkFields(array_keys($whereBinder));
         return Query::where($this->getTableName(), $wants, $where, $whereBinder)->object($this);
     }
 
@@ -357,7 +347,7 @@ abstract class Table
      */
     public function order(string $field, int $order=self::ORDER_ASC)
     {
-        $this->order_field=$field;
+        $this->orderField=$field;
         $this->order=$order;
         return $this;
     }
@@ -479,91 +469,16 @@ abstract class Table
      * 检查参数列
      *
      * @param array $values
-     * @return bool
      */
-    protected function checkFields(array $values):bool
+    protected function checkFields(array $values)
     {
         foreach ($values as $key) {
             if (!in_array($key, $this->fields)) {
                 throw new TableException(__('field %s is not exsits in table', $key));
             }
         }
-        return true;
     }
 
-    /**
-     * 检查参数列
-     *
-     * @param array $values
-     * @return bool
-     */
-    protected function checkFieldsType($values):bool
-    {
-        $check= $this->fieldChecks;
-        $keys=array_keys($check);
-        foreach ($keys as $key) {
-            if (isset($values[$key]) && !$this->checkField($key, $values[$key])) {
-                $message=str_replace(['{key}','{value}','{check}'], [$key,self::strify($values[$key]),$this->fieldChecks[$key][0]], $this->fieldChecks[$key][1]??'field {key} value {value} type is not valid');
-                $debug=debug_backtrace();
-                throw new TableException(__($message), 0, E_ERROR, $debug[1]['file'], $debug[1]['line']);
-            }
-        }
-        return true;
-    }
-
-    protected function checkField(string $field, $value):bool
-    {
-        if (isset($this->fieldChecks[$field][0])) {
-            return $this->checkValueType($this->fieldChecks[$field][0], $value);
-        }
-        return true;
-    }
-
-
-    protected function checkValueType(string $check, $value)
-    {
-        static $type2name=[
-            'int'=>'numeric',
-            'integer'=>'numeric',
-            'boolean'=>'bool',
-            'bool'=>'bool',
-            'double'=>'float',
-            'float'=>'float',
-            'string'=>'string',
-            'array'=>'array',
-            'object'=>'object',
-            'resource'=>'resource',
-        ];
-        // debug()->info($check, $value);
-        // 类型检测
-        if (preg_match('/^'. implode('|', array_keys($type2name)) .'$/', $check)) {
-            // debug()->info('type check');
-            $name='is_'.$type2name[$check];
-            if (!$name($value)) {
-                return false;
-            }
-            // 长度检测
-        } elseif (preg_match('/^(\d+)(?:\,(\d+))?$/', $check, $match)) {
-            // debug()->info('length check',$match);
-            if (isset($match[2])) {
-                $min=$match[1];
-                $max=$match[2];
-                if (strlen($value) < $min || strlen($value) > $max) {
-                    return false;
-                }
-            } elseif (strlen($value)!==intval($match[1])) {
-                return false;
-            }
-            // 正则检测
-        } elseif (preg_match('/^[\/](\S+)[\/]([imsxeADSXUuJ]+)?$/', $check)) {
-            // debug()->info('preg check');
-            if (!preg_match($check, $value)) {
-                return false;
-            }
-        }
-        return true;
-    }
-    
     abstract protected function onBuildCreator($table);
     
     protected function initFromTable(TableCreator $table)
@@ -630,10 +545,10 @@ abstract class Table
 
     protected function _order()
     {
-        if (is_null($this->order_field)) {
+        if (is_null($this->orderField)) {
             return '';
         } else {
-            return ' ORDER BY '. $this->order_field  .' '. ($this->order==self::ORDER_ASC?'ASC':'DESC');
+            return ' ORDER BY '. $this->orderField  .' '. ($this->order==self::ORDER_ASC?'ASC':'DESC');
         }
     }
 
