@@ -3,7 +3,7 @@
  * Suda FrameWork
  *
  * An open source application development framework for PHP 7.0.0 or newer
- * 
+ *
  * Copyright (c)  2017 DXkite
  *
  * @category   PHP FrameWork
@@ -19,17 +19,22 @@ namespace docme;
 class FunctionExport
 {
     protected $reflect;
+    protected $docme;
 
-    public function __construct(string $function)
+    public function __construct(string $function, $docme)
     {
         $this->reflect=new \ReflectionFunction($function);
+        $this->docme=$docme;
     }
 
     public function export(string $path)
     {
+        if (!$this->docme->isTarget($this->reflect->getFileName())){
+            return false;
+        }
         $template=new ExportTemplate;
         $template->setSrc(__DIR__.'/../template/function.md');
-        $value=static::getFunctionInfo($this->reflect);
+        $value=static::getFunctionInfo($this->reflect,$this->docme);
         $template->setValues($value);
         $destPath=$path.'/'.$this->reflect->getName().'.md';
         print 'doc function '.$value['functionName'] .' --> '.$destPath ."\r\n";
@@ -42,13 +47,13 @@ class FunctionExport
         return get_defined_functions()['user'];
     }
 
-    public static function getFunctionInfo($reflect)
+    public static function getFunctionInfo($reflect,$docme)
     {
         list($comment, $params, $return, $exData)= static::getDoc($reflect->getDocComment());
         $value=$exData;
         $value['functionName']=$reflect->getName();
         $value['functionDoc']=$comment;
-        $value['fileName']= Docme::path($reflect->getFileName());
+        $value['fileName']= $docme->path($reflect->getFileName());
         $value['lineStart']= $reflect->getStartLine();
         $value['lineEnd']=  $reflect->getEndLine();
         
@@ -114,13 +119,13 @@ class FunctionExport
         return [$datas['description'],$params,$return,$datas];
     }
 
-    public static function getValue($value){
+    public static function getValue($value)
+    {
         if (is_null($value)) {
             $value='null';
         } elseif (is_array($value)) {
             $value='Array';
-        }
-        elseif (is_object($value)) {
+        } elseif (is_object($value)) {
             $value='Object '.get_class($value);
         }
         return $value;

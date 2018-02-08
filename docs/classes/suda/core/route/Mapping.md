@@ -1,6 +1,6 @@
 #  Mapping 
 
-> *文件信息* suda\core\route\Mapping.php: 22~315
+> *文件信息* suda\core\route\Mapping.php: 22~332
 
 
 
@@ -50,7 +50,8 @@
 | public |[matchUrlValue](Mapping/matchUrlValue.md) |  |
 | public |[run](Mapping/run.md) |  |
 | public |[build](Mapping/build.md) |  |
-| public |[is](Mapping/is.md) |  |
+| public |[is](Mapping/is.md) | 判断路由是否为指定路由 |
+| public |[inModule](Mapping/inModule.md) | 判断路由似乎否是在指定模块中 |
 | public |[getFullName](Mapping/getFullName.md) |  |
 | public |[setParam](Mapping/setParam.md) |  |
 | public |[getParam](Mapping/getParam.md) |  |

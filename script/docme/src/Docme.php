@@ -3,7 +3,7 @@
  * Suda FrameWork
  *
  * An open source application development framework for PHP 7.0.0 or newer
- * 
+ *
  * Copyright (c)  2017 DXkite
  *
  * @category   PHP FrameWork
@@ -18,7 +18,6 @@ namespace docme;
 
 use suda\core\Storage;
 
-
 /**
  * 反射导出注释文档
  */
@@ -26,15 +25,23 @@ class Docme
 {
     protected $exportClass;
     protected $exportFunction;
-    protected static $rootPath;
+    protected $rootPath;
 
-    public static  function path(string $path) {
-       return Storage::cut(Storage::abspath($path),Storage::abspath(static::$rootPath));
+    public function path(string $path)
+    {
+        return Storage::cut(Storage::abspath($path), Storage::abspath($this->rootPath));
     }
 
-    public function include(string $path)
+    public function isTarget(string $file)
     {
-        static::$rootPath=$path;
+        $filePath=Storage::abspath($file);
+        $preg='/^'.preg_quote($this->rootPath, '/').'/';
+        return preg_match($preg, $filePath);
+    }
+
+    public function root(string $path)
+    {
+        $this->rootPath=Storage::abspath($path);
         $files=Storage::readDirFiles($path, true, '/\.php$/');
         foreach ($files as $file) {
             include_once $file;
@@ -47,15 +54,17 @@ class Docme
         $functions=[];
 
         foreach ($this->exportFunction as $function) {
-            $functionInfo=(new FunctionExport($function))->export($path.'/functions');
-            // $functionInfo['functionDoc']=trim(preg_replace('/\r?\n/',' ',$functionInfo['functionDoc']));
-            $functions[$function]=$functionInfo;
+            $functionInfo=(new FunctionExport($function, $this))->export($path.'/functions');
+            if ($functionInfo) {
+                $functions[$function]=$functionInfo;
+            }
         }
  
         foreach ($this->exportClass as $class) {
-            $classInfo=(new ClassExport($class))->export($path.'/classes');
-            // $classInfo['classDoc']=trim(preg_replace('/\r?\n/',' ',$classInfo['classDoc']));
-            $classes[$class]=$classInfo;
+            $classInfo=(new ClassExport($class, $this))->export($path.'/classes');
+            if ($classInfo) {
+                $classes[$class]=$classInfo;
+            }
         }
         
         $template=new ExportTemplate;
@@ -65,7 +74,7 @@ class Docme
             'functions'=>$functions,
         ]);
         $destPath=$path.'/README.md';
-        $template->export( $destPath);
+        $template->export($destPath);
         print 'generate summary  --> '.$destPath ."\r\n";
     }
 
@@ -79,7 +88,8 @@ class Docme
         $this->exportClass=$classes;
     }
 
-    public static function realPath(string $path){
+    public static function realPath(string $path)
+    {
         return preg_replace('/[\\\\\/]+/', '/', $path);
     }
 }

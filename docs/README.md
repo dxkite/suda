@@ -1,7 +1,10 @@
 # 文档清单
 
 > **注：** 文档由程序自动生成
-> Suda  1.2.14
+
+- suda 1.2.14 
+- 2018-02-09 07:18:38
+
 ## 函数列表 
 | 函数名 | 说明 |
 |------|-----|  
@@ -25,11 +28,6 @@
 | [cmd](functions/cmd.md) |  新建一个命令对象  |
 | [class_name](functions/class_name.md) |  获取类名，将JAVA包式的类名转化为 PHP的标准类名  |
 | [table](functions/table.md) |  获取数据表对象，该对象需要在module.json文件中注册过  |
-| [proxy](functions/proxy.md) |    |
-| [context](functions/context.md) |    |
-| [visitor](functions/visitor.md) |    |
-| [setting](functions/setting.md) |    |
-| [setting_set](functions/setting_set.md) |    |
 
 
 
@@ -53,14 +51,10 @@
 |[suda\template\Manager](classes/suda/template/Manager.md) | 模板管理类 |
 |[suda\template\compiler\suda\Compiler](classes/suda/template/compiler/suda/Compiler.md) | Suda 模板编译器 |
 |[suda\tool\Command](classes/suda/tool/Command.md) |  |
-|[dxkite\support\template\Manager](classes/dxkite/support/template/Manager.md) | 模板管理类 |
-|[dxkite\support\setting\Setting](classes/dxkite/support/setting/Setting.md) |  |
 |[suda\core\Cache](classes/suda/core/Cache.md) | 文件缓存 |
 |[suda\archive\Table](classes/suda/archive/Table.md) | 数据表抽象对象 |
-|[dxkite\support\table\setting\SettingTable](classes/dxkite/support/table/setting/SettingTable.md) |  |
 |[suda\archive\SQLQuery](classes/suda/archive/SQLQuery.md) | 数据库查询方案，简化数据库查 |
 |[suda\core\Query](classes/suda/core/Query.md) | 数据库查询类 |
-|[docme\Docme](classes/docme/Docme.md) | 反射导出注释文档 |
 |[suda\archive\creator\Field](classes/suda/archive/creator/Field.md) |  |
 |[suda\archive\creator\InputValue](classes/suda/archive/creator/InputValue.md) |  |
 |[suda\archive\creator\Table](classes/suda/archive/creator/Table.md) |  |
@@ -91,5 +85,3 @@
 |[suda\tool\EchoValue](classes/suda/tool/EchoValue.md) |  |
 |[suda\tool\Pinyin](classes/suda/tool/Pinyin.md) | 将中文转换成拼音 |
 |[suda\tool\ZipHelper](classes/suda/tool/ZipHelper.md) |  |
-|[docme\FunctionExport](classes/docme/FunctionExport.md) |  |
-|[docme\ClassExport](classes/docme/ClassExport.md) |  |

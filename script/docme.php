@@ -21,7 +21,7 @@ require_once __DIR__ .'/../system/suda-console.php';
 
 $summary=new docme\Docme;
 
-$summary->include(SYSTEM_DIR.'/src');
+$summary->root(SYSTEM_DIR.'/src');
 $summary->setFunctions(docme\FunctionExport::getUserDefinedFunctions());
 $summary->setClasses(docme\ClassExport::getUserDefinedClasses());
 $summary->export(__DIR__.'/../docs');

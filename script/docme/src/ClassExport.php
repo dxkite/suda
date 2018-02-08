@@ -19,15 +19,20 @@ namespace docme;
 class ClassExport
 {
     protected $reflect;
+    protected $docme;
 
-    public function __construct(string $class)
+    public function __construct(string $class,$docme)
     {
         $this->reflect=new \ReflectionClass($class);
+        $this->docme=$docme;
     }
 
     public function export(string $path)
     {
         $reflect=$this->reflect;
+        if (!$this->docme->isTarget($reflect->getFileName())){
+            return false;
+        }
         $methods=$reflect->getMethods(\ReflectionMethod::IS_PUBLIC | \ReflectionMethod::IS_PROTECTED);
 
         list($doc, $params, $return, $exData)=FunctionExport::getDoc($reflect->getDocComment());
@@ -39,7 +44,7 @@ class ClassExport
         ]);
 
         $classData['constants'] =$reflect->getConstants();
-        $classData['fileName']= Docme::path($reflect->getFileName());
+        $classData['fileName']=  $this->docme->path($reflect->getFileName());
         $classData['lineStart']= $reflect->getStartLine();
         $classData['lineEnd']=  $reflect->getEndLine();
         $classData['properties']=static::exportValues($reflect);
@@ -83,7 +88,7 @@ class ClassExport
     {
         $template=new ExportTemplate;
         $template->setSrc(__DIR__.'/../template/method.md');
-        $value=FunctionExport::getFunctionInfo($reflect);
+        $value=FunctionExport::getFunctionInfo($reflect,$this->docme);
         $value['visibility'] = $reflect->isProtected()? 'protected':'public';
         $value['abstract'] = $reflect->isAbstract()? 'abstract':'';
         $value['static'] = $reflect->isStatic()? 'static':'';

@@ -1,8 +1,8 @@
 # Mapping::is
 
+判断路由是否为指定路由
 
-
-> *文件信息* suda\core\route\Mapping.php: 22~315
+> *文件信息* suda\core\route\Mapping.php: 22~332
 
 ## 所属类 
 
@@ -14,7 +14,7 @@
 
 ## 说明
 
-该函数暂时无说明
+
 
 
 ## 参数
@@ -28,7 +28,10 @@
 
 ## 返回值
 
-返回值类型不定
+类型：boolean
+
+无
+
 
 
 ## 例子

@@ -118,11 +118,28 @@ class Mapping
         return $this;
     }
 
+    /**
+     * 判断路由是否为指定路由
+     *
+     * @param string $that
+     * @return boolean
+     */
     public function is(string $that) {
         list($module,$name)=router()->parseName($that);
         return app()->getModuleFullName($module).':'.$name == $this->getFullName();
     }
     
+    /**
+     * 判断路由似乎否是在指定模块中
+     *
+     * @param string $that
+     * @return void
+     */
+    public function inModule(string $that) {
+        list($module,$name)=router()->parseName($module);
+        return  app()->getModuleFullName($module) == $this->module;
+    }
+
     public function getFullName()
     {
         return $this->module.':'.$this->name;
