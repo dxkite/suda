@@ -2,7 +2,7 @@
 
 通过主键查找元素
 
-> *文件信息* suda\archive\Table.php: 31~682
+> *文件信息* suda\archive\Table.php: 31~597
 
 ## 所属类 
 

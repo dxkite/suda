@@ -2,7 +2,7 @@
 
 根据条件删除列
 
-> *文件信息* suda\archive\Table.php: 31~682
+> *文件信息* suda\archive\Table.php: 31~597
 
 ## 所属类 
 
@@ -26,12 +26,13 @@
 |--------|-----|-------|-------|
 | wants |  [type] | 无 | 无 |
 | where |  [type] | 无 | 无 |
+| whereBinder |  [type] | Array | 无 |
 
 
 
 ## 返回值
 
-类型：int
+类型：Query|false
 
 无
 

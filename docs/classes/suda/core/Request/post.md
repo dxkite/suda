@@ -2,7 +2,7 @@
 
 获取POST请求的值
 
-> *文件信息* suda\core\Request.php: 21~473
+> *文件信息* suda\core\Request.php: 21~474
 
 ## 所属类 
 

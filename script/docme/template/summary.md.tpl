@@ -1,6 +1,7 @@
 <?php  class Class50d353145cda0486e7fc5c2e44f4d6b6 extends suda\template\compiler\suda\Template { protected $name="bfebe9cb6427c22f838afaa6ad462d33";protected $module=""; protected function _render_template() {  ?># 文档清单
 
 > **注：** 文档由程序自动生成
+> Suda  <?php echo htmlspecialchars(__(SUDA_VERSION)); ?>
 
 ## 函数列表 
 | 函数名 | 说明 |

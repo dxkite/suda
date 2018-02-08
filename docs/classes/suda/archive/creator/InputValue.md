@@ -1,6 +1,6 @@
 #  InputValue 
 
-> *文件信息* suda\archive\creator\InputValue.php: 20~60
+> *文件信息* suda\archive\creator\InputValue.php: 21~77
 
 
 
@@ -23,6 +23,8 @@
 | public |[getBindType](InputValue/getBindType.md) |  |
 | public |[getValue](InputValue/getValue.md) |  |
 | public static|[bindParam](InputValue/bindParam.md) |  |
+| public |[jsonSerialize](InputValue/jsonSerialize.md) |  |
+| public |[__toString](InputValue/__toString.md) |  |
 
 
 

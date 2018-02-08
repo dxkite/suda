@@ -1,6 +1,6 @@
 #  Application 
 
-> *文件信息* suda\core\Application.php: 29~475
+> *文件信息* suda\core\Application.php: 29~497
 
 应用处理类
 
@@ -42,6 +42,7 @@
 | public |[registerModule](Application/registerModule.md) |  |
 | public |[getModulesInfo](Application/getModulesInfo.md) |  |
 | public |[getModulePath](Application/getModulePath.md) |  |
+| protected static|[versionCompire](Application/versionCompire.md) | 比较版本 |
 
 
 

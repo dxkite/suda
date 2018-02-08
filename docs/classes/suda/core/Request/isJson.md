@@ -2,7 +2,7 @@
 
 判断请求的数据是否为 json
 
-> *文件信息* suda\core\Request.php: 21~473
+> *文件信息* suda\core\Request.php: 21~474
 
 ## 所属类 
 

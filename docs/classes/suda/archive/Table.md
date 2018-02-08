@@ -1,6 +1,6 @@
 #  Table 
 
-> *文件信息* suda\archive\Table.php: 31~682
+> *文件信息* suda\archive\Table.php: 31~597
 
 数据表抽象对象
 
@@ -26,12 +26,11 @@
 |--------|----|------|
 | protected   | fields | | 
 | protected   | wants | | 
-| protected   | fieldChecks | 验证：类型，长度，正则| 
 | protected   | primaryKey | | 
 | protected   | tableName | | 
 | protected   | cachePath | | 
 | protected   | creator | | 
-| protected   | order_field | | 
+| protected   | orderField | | 
 | protected   | order | | 
 
 
@@ -76,9 +75,6 @@
 | public |[import](Table/import.md) | 从导出文件中恢复数据 |
 | protected |[checkPrimaryKey](Table/checkPrimaryKey.md) |  |
 | protected |[checkFields](Table/checkFields.md) | 检查参数列 |
-| protected |[checkFieldsType](Table/checkFieldsType.md) | 检查参数列 |
-| protected |[checkField](Table/checkField.md) |  |
-| protected |[checkValueType](Table/checkValueType.md) |  |
 |abstract protected |[onBuildCreator](Table/onBuildCreator.md) |  |
 | protected |[initFromTable](Table/initFromTable.md) |  |
 | protected |[initTableFields](Table/initTableFields.md) |  |

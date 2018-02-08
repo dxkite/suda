@@ -2,7 +2,7 @@
 
 获取设置了的列
 
-> *文件信息* suda\archive\Table.php: 31~682
+> *文件信息* suda\archive\Table.php: 31~597
 
 ## 所属类 
 
