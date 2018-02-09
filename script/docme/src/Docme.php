@@ -53,6 +53,9 @@ class Docme
         $classes=[];
         $functions=[];
 
+        storage()->delete($path.'/functions');
+        storage()->delete($path.'/classes');
+        
         foreach ($this->exportFunction as $function) {
             $functionInfo=(new FunctionExport($function, $this))->export($path.'/functions');
             if ($functionInfo) {
