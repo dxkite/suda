@@ -3,7 +3,7 @@
  * Suda FrameWork
  *
  * An open source application development framework for PHP 7.0.0 or newer
- * 
+ *
  * Copyright (c)  2017 DXkite
  *
  * @category   PHP FrameWork
@@ -84,9 +84,10 @@ final class CookieSetter
         return $this;
     }
     
-    public function reset() {
+    public function reset()
+    {
         $this->set=false;
-        if(isset($_COOKIE[$this->name])){
+        if (isset($_COOKIE[$this->name])) {
             unset($_COOKIE[$this->name]);
         }
         return $this;
@@ -104,7 +105,7 @@ final class CookieSetter
         } else {
             $this->set=true;
             $time= $this->fulltime ? $this->expire : time()+$this->expire;
-            $expire= $this->session ? 0 : $this->expire;
+            $expire= $this->session ? 0 :  $time;
             setcookie($this->name, $this->value, $expire, $this->path, $this->domain, $this->secure, $this->httponly);
         }
         return $this;

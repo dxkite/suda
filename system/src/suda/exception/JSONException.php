@@ -26,6 +26,6 @@ class JSONException extends \RuntimeException {
      ];
 
      public function __construct(int $error) {
-        paret::__construct(self::$error[$error] ?? 'Unknown error');
+        parent::__construct(self::$error[$error] ?? 'Unknown error');
      }
 }

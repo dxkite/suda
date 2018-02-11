@@ -3,7 +3,7 @@
  * Suda FrameWork
  *
  * An open source application development framework for PHP 7.0.0 or newer
- * 
+ *
  * Copyright (c)  2017 DXkite
  *
  * @category   PHP FrameWork
@@ -90,7 +90,7 @@ abstract class Response
     */
     public function json($values)
     {
-        $jsonstr=json_encode($values,JSON_UNESCAPED_UNICODE);
+        $jsonstr=json_encode($values, JSON_UNESCAPED_UNICODE);
         if ($jsonstr === false && json_last_error()!==JSON_ERROR_NONE) {
             throw new JSONException(json_last_error());
         }
@@ -156,7 +156,7 @@ abstract class Response
 
     public function refresh()
     {
-        return $this->go(u(self::$name, $_GET));
+        return $this->go(Router::getInstance()->buildUrl(self::$name,$_GET,false));
     }
 
     public function forward()
