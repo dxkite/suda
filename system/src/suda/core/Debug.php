@@ -322,7 +322,7 @@ class Debug
             return self::displayLog($log);
         }
         
-        $str="\t[".number_format($log['time'], 10).'s:'.self::memshow($log['mem'], 2).']'."\t".$log['level'].'>In '.$log['file'].':'.$log['line']."\t\t".$log['name']."\t".$log['message'];
+        $str="\t[".number_format($log['time'], 10).' s : '.self::memshow($log['mem'], 2)."]\t[".$log['level']."]\t[".$log['file'].':'.$log['line']."]\t\t".$log['name']."\t".$log['message'];
         $str=preg_replace('/\n/', "\n\t\t", $str)."\r\n";
         // 添加调用栈 高级或者同级则记录
         if ((defined('LOG_FILE_APPEND') && LOG_FILE_APPEND) && self::compareLevel($log['level'], conf('debug-backtrace', Debug::ERROR)) >= 0) {
@@ -339,7 +339,7 @@ class Debug
             $mem /= 1024;
             $pos++;
         }
-        return round($mem, $dec) . $human[$pos];
+        return round($mem, $dec) .' '. $human[$pos];
     }
 
     public static function beforeSystemRun()

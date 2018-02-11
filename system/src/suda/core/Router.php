@@ -3,7 +3,7 @@
  * Suda FrameWork
  *
  * An open source application development framework for PHP 7.0.0 or newer
- * 
+ *
  * Copyright (c)  2017 DXkite
  *
  * @category   PHP FrameWork
@@ -194,22 +194,24 @@ class Router
     {
         // MODULE_NAME_PREG
         // [模块前缀名称/]模块名[:版本号]:(模板名|路由ID)
-       preg_match('/^((?:[a-zA-Z0-9_-]+\/)?[a-zA-Z0-9_-]+)(?::([^:]+))?(?::(.+))?$/', $name, $match);
+        preg_match('/^((?:[a-zA-Z0-9_-]+\/)?[a-zA-Z0-9_-]+)(?::([^:]+))?(?::(.+))?$/', $name, $match);
         if (count($match)===0) {
             $module=$module_default??Application::getInstance()->getInstance()->getActiveModule();
             $info=$name;
         } elseif (isset($match[1]) && count($match)==2) {
             // 单纯路由或者模板
-                $module=$module_default??Application::getInstance()->getInstance()->getActiveModule();
+            $module=$module_default??Application::getInstance()->getInstance()->getActiveModule();
             $info=$match[0];
         } else {
             $info=isset($match[3])?$match[3]:$match[2];
             $module=isset($match[3])?
-                            (isset($match[1])?
+                            (
+                                isset($match[1])?
                                 $match[1].(
                                     $match[2]?
                                     ':'.$match[2]
-                                    :'')
+                                    :''
+                                )
                                 :($module_default??Application::getInstance()->getInstance()->getActiveModule()) // 未指定模板名
                             )
                         :$match[1];
@@ -247,13 +249,13 @@ class Router
         return [];
     }
 
-    public function buildUrl(string $name, array $values=[],bool $query=true)
+    public function buildUrl(string $name, array $values=[], bool $query=true)
     {
         list($module, $name)=self::parseName($name);
         $module=Application::getInstance()->getInstance()->getModuleFullName($module);
         $name=$module.':'.$name;
         if (isset($this->routers[$name])) {
-            return $this->routers[$name]->createUrl($values,$query);
+            return $this->routers[$name]->createUrl($values, $query);
         } else {
             debug()->warning(__('get url for %s failed,module:%s args:%s', $name, $module, json_encode($values)));
             return '#the-router-['.$name.']-is-undefined--please-check-out-router-list';
@@ -345,8 +347,16 @@ class Router
     {
         $this->routers[$mapping->getFullName()]=$mapping;
         $mapping->build();
-        $mapping->setDynamic();
         return $this;
+    }
+
+    public function refreshMapping(Mapping $mapping)
+    {
+        $name= $mapping->getFullName();
+        if (isset($this->routers[$name])) {
+            $this->routers[$name]=$mapping;
+            return $this->routers[$name]->build();
+        }
     }
 
     /**
@@ -431,7 +441,7 @@ class Router
     public static function error404()
     {
         $render=new class extends Response {
-            public   function onRequest(Request $request)
+            public function onRequest(Request $request)
             {
                 $this->state(404);
                 $this->page('suda:error404', ['title'=>'404 Error', 'path'=>$request->url()])->render();

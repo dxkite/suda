@@ -420,7 +420,7 @@ class Request
 
     public static function referer()
     {
-        return $_SERVER['HTTP_REFERER']??'';
+        return $_SERVER['HTTP_REFERER']??false;
     }
 
     public static function hostBase()

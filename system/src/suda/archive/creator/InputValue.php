@@ -52,7 +52,7 @@ class InputValue implements \JsonSerializable
             $type=PDO::PARAM_NULL;
         } elseif (is_bool($value)) {
             $type=PDO::PARAM_BOOL;
-        } elseif (is_numeric($value)) {
+        } elseif (is_numeric($value) && intval($value) == $value) {
             $type=PDO::PARAM_INT;
         } else {
             $type=PDO::PARAM_STR;

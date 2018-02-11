@@ -329,4 +329,8 @@ class Mapping
         $mapping->build();
         return $mapping;
     }
+
+    public static function current() {
+        return  self::$current;
+    }
 }
