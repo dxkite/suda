@@ -163,6 +163,11 @@ abstract class Template
 
     public function data(string $name)
     {
+        if (func_num_args()>1){
+            $args=func_get_args();
+            $args[0]=$this;
+            return (new Command($name))->exec($args);
+        }
         return (new Command($name))->exec([$this]);
     }
     

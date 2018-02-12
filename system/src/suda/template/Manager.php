@@ -275,10 +275,14 @@ class Manager
         if (isset(self::$templateSource[$moduleName])) {
             foreach (self::$templateSource[$moduleName] as $source) {
                 if ($path=Storage::abspath(preg_replace('/\{theme\}/', static::$theme, $source))) {
-                    $sources[]=$path;
+                    if (!in_array($path,$sources)) {
+                        $sources[]=$path;
+                    }
                 }
                 if ($path=Storage::abspath(preg_replace('/\{theme\}/', 'default', $source))) {
-                    $sources[]=$path;
+                    if (!in_array($path,$sources)) {
+                        $sources[]=$path;
+                    }
                 }
             }
         }

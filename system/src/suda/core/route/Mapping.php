@@ -110,9 +110,9 @@ class Mapping
 
     public function build()
     {
-        $urlMapping='/'.trim($this->url, '/');
+        $urlMapping=rtrim($this->url, '/');
         if (!$this->antiPrefix) {
-            $urlMapping='/'.trim($this->getPrefix().$urlMapping, '/');
+            $urlMapping='/'.trim(rtrim($this->getPrefix(),'/').$urlMapping, '/');
         }
         $this->mapping=$this->buildMatch($urlMapping);
         return $this;
