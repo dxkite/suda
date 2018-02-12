@@ -228,8 +228,8 @@ abstract class Table
      */
     public function delete($where)
     {
-        if (is_array($where) && !$this->checkFields(array_keys($where))) {
-            return false;
+        if (is_array($where)) {
+            $this->checkFields(array_keys($where));
         }
         return Query::delete($this->getTableName(), $where, [], $this);
     }

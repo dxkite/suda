@@ -3,7 +3,7 @@
  * Suda FrameWork
  *
  * An open source application development framework for PHP 7.0.0 or newer
- * 
+ *
  * Copyright (c)  2017 DXkite
  *
  * @category   PHP FrameWork
@@ -124,8 +124,9 @@ class Mapping
      * @param string $that
      * @return boolean
      */
-    public function is(string $that) {
-        list($module,$name)=router()->parseName($that);
+    public function is(string $that)
+    {
+        list($module, $name)=router()->parseName($that);
         return app()->getModuleFullName($module).':'.$name == $this->getFullName();
     }
     
@@ -135,8 +136,9 @@ class Mapping
      * @param string $that
      * @return void
      */
-    public function inModule(string $that) {
-        list($module,$name)=router()->parseName($module);
+    public function inModule(string $that)
+    {
+        list($module, $name)=router()->parseName($module);
         return  app()->getModuleFullName($module) == $this->module;
     }
 
@@ -240,7 +242,8 @@ class Mapping
         return $this;
     }
 
-    public function getUrlTemplate() {
+    public function getUrlTemplate()
+    {
         $url='/'.trim($this->url, '/');
         if (!$this->antiPrefix) {
             $url='/'.trim($this->getPrefix().$this->url, '/');
@@ -248,7 +251,7 @@ class Mapping
         return Request::getInstance()->baseUrl(). trim($url, '/');
     }
 
-    public function createUrl(array $args,bool $query=true)
+    public function createUrl(array $args, bool $query=true, array $queryArr=[])
     {
         $url='/'.trim($this->url, '/');
         if (!$this->antiPrefix) {
@@ -273,7 +276,7 @@ class Mapping
         if (count($args) && $query) {
             return Request::getInstance()->baseUrl(). trim($url, '/').'?'.http_build_query($args, 'v', '&', PHP_QUERY_RFC3986);
         }
-        return Request::getInstance()->baseUrl(). trim($url, '/');
+        return Request::getInstance()->baseUrl(). trim($url, '/'). (count($queryArr)?'?'.http_build_query($queryArr, 'v', '&', PHP_QUERY_RFC3986):'');
     }
 
     public function getPrefix()
@@ -330,7 +333,8 @@ class Mapping
         return $mapping;
     }
 
-    public static function current() {
+    public static function current()
+    {
         return  self::$current;
     }
 }

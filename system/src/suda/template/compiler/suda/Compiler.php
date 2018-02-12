@@ -3,7 +3,7 @@
  * Suda FrameWork
  *
  * An open source application development framework for PHP 7.0.0 or newer
- * 
+ *
  * Copyright (c)  2017 DXkite
  *
  * @category   PHP FrameWork
@@ -291,8 +291,11 @@ class Compiler implements CompilerImpl
         return "<?php echo u$exp; ?>";
     }
     
-    protected function parseSelf()
+    protected function parseSelf($exp)
     {
+        if ($exp) {
+            return '<?php echo suda\core\Router::getInstance()->buildUrl(suda\core\Response::$name,$_GET,false,'.$exp.'); ?>';
+        }
         return '<?php echo suda\core\Router::getInstance()->buildUrl(suda\core\Response::$name,$_GET,false); ?>';
     }
 

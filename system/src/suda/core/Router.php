@@ -249,13 +249,13 @@ class Router
         return [];
     }
 
-    public function buildUrl(string $name, array $values=[], bool $query=true)
+    public function buildUrl(string $name, array $values=[], bool $query=true,array $queryArr=[])
     {
         list($module, $name)=self::parseName($name);
         $module=Application::getInstance()->getInstance()->getModuleFullName($module);
         $name=$module.':'.$name;
         if (isset($this->routers[$name])) {
-            return $this->routers[$name]->createUrl($values, $query);
+            return $this->routers[$name]->createUrl($values, $query,$queryArr);
         } else {
             debug()->warning(__('get url for %s failed,module:%s args:%s', $name, $module, json_encode($values)));
             return '#the-router-['.$name.']-is-undefined--please-check-out-router-list';
