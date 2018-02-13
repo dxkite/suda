@@ -160,15 +160,10 @@ class Application
             if (isset($config['suda']) && !static::versionCompire($config['suda'], SUDA_VERSION)) {
                 throw new ApplicationException(__('module %s require suda version %s and now is %s', $moduleTemp, $config['suda'], SUDA_VERSION));
             }
-            // 注册模块共享目录自动加载
-            foreach ($config['autoload']['share'] as $namespace=>$path) {
-                if (Storage::isDir($share_path=$root.DIRECTORY_SEPARATOR.$path)) {
-                    Autoloader::addIncludePath($share_path, $namespace);
-                }
-            }
-            // 注册Import函数
-            foreach ($config['import'] as $path) {
-                if (Storage::isFile($importPath=$root.DIRECTORY_SEPARATOR.$path)) {
+            foreach ($config['import']['share'] as $namespace=>$path) {
+                if (Storage::isDir($dirPath=$root.DIRECTORY_SEPARATOR.$path)) {
+                    Autoloader::addIncludePath($dirPath, $namespace);
+                } elseif (Storage::isFile($importPath=$root.DIRECTORY_SEPARATOR.$path)) {
                     Autoloader::import($importPath);
                 }
             }
@@ -313,10 +308,13 @@ class Application
             // 缩减命名空间
             Autoloader::setNamespace($module_config['namespace']);
         }
+
         // 自动加载私有库
-        foreach ($module_config['autoload']['src'] as $namespace=>$path) {
+        foreach ($module_config['import']['src'] as $namespace=>$path) {
             if (Storage::isDir($srcPath=$root.DIRECTORY_SEPARATOR.$path)) {
                 Autoloader::addIncludePath($srcPath, $namespace);
+            } elseif (Storage::isFile($importPath=$root.DIRECTORY_SEPARATOR.$path)) {
+                Autoloader::import($importPath);
             }
         }
         // 加载模块配置到 module命名空间
@@ -442,11 +440,10 @@ class Application
             $json['directory']=$dir;
             $json['path']=$path;
             // 注册默认自动加载
-            $json['autoload']=array_merge([
+            $json['import']=array_merge([
                 'share'=>[''=>'share/'],
                 'src'=>[''=>'src/']
-            ], $json['autoload']??[]);
-            $json['import']= $json['import']??[];
+            ], $json['import']??[]);
             $name.=isset($json['version'])?':'.$json['version']:'';
             $this->moduleConfigs[$name]=$json;
             $this->moduleDirName[$dir]=$name;
