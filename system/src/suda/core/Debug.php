@@ -299,7 +299,7 @@ class Debug
         $all=self::memshow($info['memory']*$peo, 4);
         file_put_contents(self::$latest, $body, FILE_APPEND);
         file_put_contents(self::$latest, "====={$hash}====={$time}====={$mem}====={$peo}:{$all}=====\r\n\r\n", FILE_APPEND);
-        unlink(self::$file);
+        Storage::delete(self::$file);
         self::$saved=true;
         if (defined('LOG_JSON') && LOG_JSON) {
             $loginfo=self::getInfo();

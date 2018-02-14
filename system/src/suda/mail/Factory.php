@@ -28,7 +28,7 @@ class Factory
     {
         switch ($sender) {
             case self::SMTP:
-                return new StmpSender(conf('smtp.server'), conf('smtp.port', 465), conf('smtp.timeout', 500), conf('smtp.email'), conf('smtp.passwd'), conf('smtp.ssl', true));
+                return new StmpSender(conf('smtp.server'), conf('smtp.port', 465), conf('smtp.timeout', 500), conf('smtp.email'), conf('smtp.passwd'), conf('smtp.ssl', false));
             case self::SENDMAIL:
                 return new MailSender;
         }

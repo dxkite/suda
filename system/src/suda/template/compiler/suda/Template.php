@@ -57,10 +57,16 @@ abstract class Template
         if (conf('app.calcContentLength', !conf('debug'))) {
             $length=strlen($content);
             // 输出页面长度
-            $this->response->setHeader('Content-Length:'.$length);
+            if ($this->response) {
+                $this->response->setHeader('Content-Length:'.$length);
+            }
         }
-        $this->response->type('html');
-        if (conf('app.etag', !conf('debug'))  && $this->response->etag(md5($content))) {
+        if ($this->response) {
+            $this->response->type('html');
+            if (conf('app.etag', !conf('debug'))  && $this->response->etag(md5($content))) {
+            } else {
+                echo $content;
+            }
         } else {
             echo $content;
         }
