@@ -3,7 +3,7 @@
  * Suda FrameWork
  *
  * An open source application development framework for PHP 7.0.0 or newer
- * 
+ *
  * Copyright (c)  2017 DXkite
  *
  * @category   PHP FrameWork
@@ -163,7 +163,7 @@ abstract class Template
 
     public function data(string $name)
     {
-        if (func_num_args()>1){
+        if (func_num_args()>1) {
             $args=func_get_args();
             $args[0]=$this;
             return (new Command($name))->exec($args);
@@ -224,9 +224,17 @@ abstract class Template
         return $this->response->getName();
     }
 
-    public function isMe(string $name)
+    public function isMe(string $name, array $param=[])
     {
-        return $this->response->getName()==Router::getInstance()->getRouterFullName($name);
+        if ($this->response->getName()!=Router::getInstance()->getRouterFullName($name)) {
+            return false;
+        }
+        foreach ($param as $name=>$item) {
+            if (request()->get($name)!=$item) {
+                return false;
+            }
+        }
+        return  true;
     }
 
     public function boolecho($values, string $true, string $false='')

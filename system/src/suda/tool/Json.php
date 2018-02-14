@@ -3,7 +3,7 @@
  * Suda FrameWork
  *
  * An open source application development framework for PHP 7.0.0 or newer
- * 
+ *
  * Copyright (c)  2017 DXkite
  *
  * @category   PHP FrameWork
@@ -81,10 +81,10 @@ class Json
      * 简单处理注释
      *
      * @param string $json
-     * @return string 
+     * @return string
      */
     protected static function parseComments(string $json)
     {
-        return preg_replace('/\/\*.*?\*\//ms', '', preg_replace('/(?<!:)\/\/.*$/m', '', $json));
+        return preg_replace('/\/\*[\s\S]+?\*\//', '', $json);
     }
 }

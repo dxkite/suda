@@ -416,7 +416,7 @@ class Debug
         } elseif (is_object($object)) {
             return serialize($object);
         } elseif (is_array($object)) {
-            return json_encode($object);
+            return json_encode($object,JSON_UNESCAPED_UNICODE);
         }
         return $object;
     }

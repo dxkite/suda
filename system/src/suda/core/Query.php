@@ -97,19 +97,7 @@ class Query extends SQLQuery
      */
     public static function search(string $table, $wants='*', $field, string $search, array $page=null, bool $scroll=false):SQLQuery
     {
-        $search=preg_replace('/([%_])/', '\\\\$1', $search);
-        $search=preg_replace('/\s+/', '%', $search);
-        if (is_array($field)) {
-            $search_str=[];
-            foreach ($field as $item=>$want) {
-                $search_str[]="`{$want}` LIKE CONCAT('%',:search,'%')";
-                $bind['search']=$search;
-            }
-            $search_str=implode(' OR ', $search_str);
-        } else {
-            $search_str='`'.$field.'` LIKE CONCAT(\'%\',:search,\'%\')';
-            $bind=['search'=>$search];
-        }
+        list($search_str,$bind)=self::prepareSearch($field,$search);
         return self::where($table, $wants, $search_str, $bind, $page, $scroll);
     }
 
@@ -199,6 +187,23 @@ class Query extends SQLQuery
         }
         $sql=$name.' IN ('.implode(',', $names).')';
         return [$sql,$param];
+    }
+
+    public static function prepareSearch($field,string $search) {
+        $search=preg_replace('/([%_])/', '\\\\$1', $search);
+        $search=preg_replace('/\s+/', '%', $search);
+        if (is_array($field)) {
+            $search_str=[];
+            foreach ($field as $item=>$want) {
+                $search_str[]="`{$want}` LIKE CONCAT('%',:search,'%')";
+                $bind['search']=$search;
+            }
+            $search_str=implode(' OR ', $search_str);
+        } else {
+            $search_str='`'.$field.'` LIKE CONCAT(\'%\',:search,\'%\')';
+            $bind['search']=$search;
+        }
+        return [$search_str,$bind];
     }
 
     public static function prepareWhere($where, array &$bind)

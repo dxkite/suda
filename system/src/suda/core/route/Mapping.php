@@ -105,14 +105,14 @@ class Mapping
     public function run()
     {
         self::$current=$this;
-        return (new Command($this->callback))->exec([Request::getInstance()]);
+        return (new Command($this->callback))->exec([Request::getInstance()->setMapping($this)]);
     }
 
     public function build()
     {
         $urlMapping=rtrim($this->url, '/');
         if (!$this->antiPrefix) {
-            $urlMapping='/'.trim(rtrim($this->getPrefix(),'/').$urlMapping, '/');
+            $urlMapping='/'.trim(rtrim($this->getPrefix(), '/').$urlMapping, '/');
         }
         $this->mapping=$this->buildMatch($urlMapping);
         return $this;
@@ -240,6 +240,11 @@ class Mapping
     {
         $this->url=$url;
         return $this;
+    }
+    
+    public function getUrl()
+    {
+        return  $this->url;
     }
 
     public function getUrlTemplate()

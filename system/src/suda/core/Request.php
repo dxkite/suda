@@ -29,7 +29,8 @@ class Request
     private static $instance=null;
     private static $query='';
     private static $crawlers=null;
-    
+    private $mapping=null;
+
     private function __construct()
     {
         if (!isset($_SERVER['REQUEST_URI'])) {
@@ -46,12 +47,17 @@ class Request
         return self::$instance;
     }
 
+    public function setMapping($mapping){
+        $this->mapping=$mapping;
+        return $this;
+    }
+
     /**
      * 获取请求的JSON文档
      *
      * @return array|null 如果请求为json则数据是数组，否则数据为空
      */
-    public function json()
+    public static function json()
     {
         if (self::$json) {
             return self::$json;
@@ -470,5 +476,9 @@ class Request
             }
         }
         return false;
+    }
+
+    public function getMapping() {
+        return $this->mapping;
     }
 }

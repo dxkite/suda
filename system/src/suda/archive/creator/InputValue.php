@@ -72,6 +72,6 @@ class InputValue implements \JsonSerializable
 
     public function __toString()
     {
-        return json_encode($this->jsonSerialize());
+        return json_encode($this->jsonSerialize(),JSON_UNESCAPED_UNICODE);
     }
 }

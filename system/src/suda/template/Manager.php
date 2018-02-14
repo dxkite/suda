@@ -275,12 +275,12 @@ class Manager
         if (isset(self::$templateSource[$moduleName])) {
             foreach (self::$templateSource[$moduleName] as $source) {
                 if ($path=Storage::abspath(preg_replace('/\{theme\}/', static::$theme, $source))) {
-                    if (!in_array($path,$sources)) {
+                    if (!in_array($path, $sources)) {
                         $sources[]=$path;
                     }
                 }
                 if ($path=Storage::abspath(preg_replace('/\{theme\}/', 'default', $source))) {
-                    if (!in_array($path,$sources)) {
+                    if (!in_array($path, $sources)) {
                         $sources[]=$path;
                     }
                 }
@@ -343,7 +343,7 @@ class Manager
         $input=self::getInputFile($name, false);
         if (!Storage::exist($input)) {
             echo '<b>compile theme &lt;<span style="color:red;">'.self::$theme.'</span>&gt; file '.$input. ' missing file</b>';
-            return; //文件目录不存在
+            return;
         }
         // 获取文件夹
         $module_dir=Application::getInstance()->getModuleDir($module);

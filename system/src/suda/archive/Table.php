@@ -133,6 +133,17 @@ abstract class Table
         }
     }
 
+    public function searchWhere($field, string $search, $where, array $bind=[])
+    {
+        list($searchStr, $searchBind)=Query::prepareSearch($field, $search);
+        $whereStr=Query::prepareSearch($where, $bind);
+        if (is_null($page)) {
+            return Query::select($this->getTableName(), $this->getWants(), $$whereStr . ' AND '. $searchStr .' '. self::_order(), array_merge($searchBind, $bind))->object($this);
+        } else {
+            return Query::select($this->getTableName(), $this->getWants(), $$whereStr . ' AND '. $searchStr.' '. self::_order(), array_merge($searchBind, $bind))->object($this);
+        }
+    }
+
     /**
      * 分页列出元素
      *
