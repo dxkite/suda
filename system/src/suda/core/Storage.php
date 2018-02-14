@@ -3,7 +3,7 @@
  * Suda FrameWork
  *
  * An open source application development framework for PHP 7.0.0 or newer
- * 
+ *
  * Copyright (c)  2017 DXkite
  *
  * @category   PHP FrameWork
@@ -21,13 +21,12 @@ class Storage
     // 递归创建文件夹
     public static function mkdirs(string $dir, int $mode=0777):bool
     {
-        $dir=self::tpath($dir);
-        if (!self::isDir($dir)) {
-            if (!self::mkdirs(dirname($dir), $mode)) {
+        $path=self::osPath($dir);
+        if (!self::isDir($path)) {
+            if (!self::mkdirs(dirname($path), $mode)) {
                 return false;
             }
-            // debug()->warning(__('mkdir %s->%o', $dir,$mode));
-            if (!self::mkdir($dir, $mode)) {
+            if (!self::mkdir($path, $mode)) {
                 return false;
             }
         }
@@ -36,7 +35,7 @@ class Storage
     
     public static function path(string $path)
     {
-        $path=self::tpath($path);
+        $path=self::osPath($path);
         self::mkdirs($path);
         return realpath($path);
     }
@@ -46,7 +45,7 @@ class Storage
         if (empty($path)) {
             return false;
         }
-        $path=self::tpath($path);
+        $path=self::osPath($path);
         return realpath($path);
     }
 
@@ -87,7 +86,7 @@ class Storage
 
     public static function readDirs(string $dirs, bool $repeat=false, string $preg='/^.+$/'):array
     {
-        $dirs=self::tpath($dirs);
+        $dirs=self::osPath($dirs);
         $reads=[];
         if (self::isDir($dirs)) {
             $hd=opendir($dirs);
@@ -164,9 +163,8 @@ class Storage
 
     public static function copydir(string $src, string $dest, string $preg='/^.+$/')
     {
-        $src=self::tpath($src);
-        $dest=self::tpath($dest);
-        // debug()->trace(__('copy %s->%s', $src, $dest));
+        $src=self::osPath($src);
+        $dest=self::osPath($dest);
         self::mkdirs($dest);
         $hd=opendir($src);
         while ($read=readdir($hd)) {
@@ -184,8 +182,8 @@ class Storage
     
     public static function movedir(string $src, string $dest, string $preg='/^.+$/')
     {
-        $src=self::tpath($src);
-        $dest=self::tpath($dest);
+        $src=self::osPath($src);
+        $dest=self::osPath($dest);
         self::mkdirs($dest);
         $hd=opendir($src);
         while ($read=readdir($hd)) {
@@ -203,8 +201,8 @@ class Storage
     
     public static function copy(string $source, string $dest):bool
     {
-        $source=self::tpath($source);
-        $dest=self::tpath($dest);
+        $source=self::osPath($source);
+        $dest=self::osPath($dest);
         if (self::exist($source)) {
             return copy($source, $dest);
         }
@@ -213,8 +211,8 @@ class Storage
 
     public static function move(string $src, string $dest):bool
     {
-        $src=self::tpath($src);
-        $dest=self::tpath($dest);
+        $src=self::osPath($src);
+        $dest=self::osPath($dest);
         if (self::exist($src)) {
             return rename($src, $dest);
         }
@@ -224,22 +222,25 @@ class Storage
     // 创建文件夹
     public static function mkdir(string $path, int $mode=0777):bool
     {
-        $path=self::tpath($path);
-        return !self::isDir($path) && mkdir($path, $mode);
+        $path=self::osPath($path);
+        if (!self::isDir($path) && is_writable(dirname($path))) {
+            return mkdir($path, $mode);
+        }
+        return false;
     }
 
     // 删除文件夹
     public static function rmdir(string $path):bool
     {
-        $path=self::tpath($path);
+        $path=self::osPath($path);
         return rmdir($path);
     }
 
     public static function put(string $name, $content, int $flags = 0):bool
     {
-        $name=self::tpath($name);
-        if (self::isDir(dirname($name))) {
-            debug()->trace(__('put file %s', $name));
+        $name=self::osPath($name);
+        $dirname=dirname($name);
+        if (self::isDir($dirname) && is_writable($dirname)) {
             return file_put_contents($name, $content, $flags);
         }
         return false;
@@ -247,12 +248,14 @@ class Storage
 
     public static function get(string $name):string
     {
-        $name=self::tpath($name);
+        $name=self::osPath($name);
         if ($file=self::exist($name)) {
             if (is_string($file)) {
                 $name=$file;
             }
-            return file_get_contents($name);
+            if (is_readable($name)) {
+                return file_get_contents($name);
+            }
         }
         return '';
     }
@@ -263,7 +266,7 @@ class Storage
      */
     public static function remove(string $name) : bool
     {
-        $name=self::tpath($name);
+        $name=self::osPath($name);
         if ($file=self::exist($name)) {
             if (is_string($file)) {
                 $name=$file;
@@ -275,31 +278,31 @@ class Storage
     
     public static function isFile(string $name):bool
     {
-        $name=self::tpath($name);
+        $name=self::osPath($name);
         return is_file($name);
     }
 
     public static function isDir(string $name):bool
     {
-        $name=self::tpath($name);
+        $name=self::osPath($name);
         return is_dir($name);
     }
 
     public static function isReadable(string $name):bool
     {
-        $name=self::tpath($name);
+        $name=self::osPath($name);
         return is_readable($name);
     }
 
     public static function isWritable(string $name):bool
     {
-        $name=self::tpath($name);
+        $name=self::osPath($name);
         return is_writable($name);
     }
     
     public static function size(string $name):int
     {
-        $name=self::tpath($name);
+        $name=self::osPath($name);
         if ($file=self::exist($name)) {
             if (is_string($file)) {
                 $name=$file;
@@ -311,7 +314,7 @@ class Storage
 
     public static function download(string $url, string $save):int
     {
-        $save=self::tpath($save);
+        $save=self::osPath($save);
         return self::put($save, self::curl($url));
     }
     
@@ -328,7 +331,7 @@ class Storage
 
     public static function type(string $name):int
     {
-        $name=self::tpath($name);
+        $name=self::osPath($name);
         if ($file=self::exist($name)) {
             if (is_string($file)) {
                 $name=$file;
@@ -340,16 +343,16 @@ class Storage
 
     public static function exist(string $name, array $charset=[])
     {
-        $name=self::tpath($name);
+        $path=self::osPath($name);
         // UTF-8 格式文件路径
-        if (self::exist_case($name)) {
+        if (self::existCase($path)) {
             return true;
         }
         // Windows 文件中文编码
         $charset=array_merge(self::$charset, $charset);
         foreach ($charset as $code) {
-            $file = iconv('UTF-8', $code, $name);
-            if (self::exist_case($file)) {
+            $file = iconv('UTF-8', $code, $path);
+            if (self::existCase($file)) {
                 return $file;
             }
         }
@@ -357,9 +360,9 @@ class Storage
     }
 
     // 判断文件存在
-    private static function exist_case($name):bool
+    private static function existCase($name):bool
     {
-        $name=self::tpath($name);
+        $name=self::osPath($name);
         if (file_exists($name) && is_file($name) && $real=realpath($name)) {
             if (basename($real) === basename($name)) {
                 return true;
@@ -374,7 +377,7 @@ class Storage
      * @param string $path
      * @return void
      */
-    private static function tpath(string $path)
+    private static function osPath(string $path)
     {
         return preg_replace('/[\\\\\/]+/', DIRECTORY_SEPARATOR, $path);
     }

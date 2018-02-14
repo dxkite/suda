@@ -3,7 +3,7 @@
  * Suda FrameWork
  *
  * An open source application development framework for PHP 7.0.0 or newer
- * 
+ *
  * Copyright (c)  2017 DXkite
  *
  * @category   PHP FrameWork
@@ -45,18 +45,19 @@ class Debug
     protected static $time=[];
     protected static $hash;
     private static $file;
-    private static $latest=APP_LOG.'/latest.log';
+    private static $latest=false;
     private static $saved=false;
 
     public static function init()
     {
         $request=Request::getInstance();
         self::$hash=$hash=substr(md5(microtime().''.$request->ip()), 0, 6);
-        self::$file=APP_LOG.'/tmps/'.self::$hash.'.tmp';
-        Storage::mkdirs(dirname(self::$file));
-        touch(self::$file);
+        self::$file= tempnam(sys_get_temp_dir(),'dx_');
         file_put_contents(self::$file, '====='.self::$hash.'====='.$request->ip().'====='.(conf('debug', defined('DEBUG') && DEBUG)?'debug':'normal')."=====\r\n", FILE_APPEND);
         file_put_contents(self::$file, self::printHead()."\r\n", FILE_APPEND);
+        if (defined('APP_LOG') && Storage::path(APP_LOG)) {
+            self::$latest =APP_LOG.'/latest.log';
+        }
     }
 
     public static function time(string $name, string $type='info')
@@ -297,21 +298,23 @@ class Debug
         $mem=self::memshow($info['memory'], 4);
         $peo=ceil(1/$time);
         $all=self::memshow($info['memory']*$peo, 4);
-        file_put_contents(self::$latest, $body, FILE_APPEND);
-        file_put_contents(self::$latest, "====={$hash}====={$time}====={$mem}====={$peo}:{$all}=====\r\n\r\n", FILE_APPEND);
-        Storage::delete(self::$file);
-        self::$saved=true;
-        if (defined('LOG_JSON') && LOG_JSON) {
-            $loginfo=self::getInfo();
-            $loginfo['request']=[
-                'ip'=>Request::ip(),
-                'method'=>Request::method(),
-                'url'=>Request::virtualUrl(),
-            ];
-            $loginfo['logs']=self::$log;
-            $filejson=RUNTIME_DIR.'/log-json/'.self::$hash.'.json';
-            Storage::mkdirs(dirname($filejson));
-            file_put_contents($filejson, json_encode($loginfo));
+        if (self::$latest) {
+            file_put_contents(self::$latest, $body, FILE_APPEND);
+            file_put_contents(self::$latest, "====={$hash}====={$time}====={$mem}====={$peo}:{$all}=====\r\n\r\n", FILE_APPEND);
+            Storage::delete(self::$file);
+            self::$saved=true;
+            if (defined('LOG_JSON') && LOG_JSON && is_writable(RUNTIME_DIR.'/log-json')) {
+                $loginfo=self::getInfo();
+                $loginfo['request']=[
+                    'ip'=>Request::ip(),
+                    'method'=>Request::method(),
+                    'url'=>Request::virtualUrl(),
+                ];
+                $loginfo['logs']=self::$log;
+                $filejson=RUNTIME_DIR.'/log-json/'.self::$hash.'.json';
+                Storage::mkdirs(dirname($filejson));
+                file_put_contents($filejson, json_encode($loginfo));
+            }
         }
     }
 
@@ -416,7 +419,7 @@ class Debug
         } elseif (is_object($object)) {
             return serialize($object);
         } elseif (is_array($object)) {
-            return json_encode($object,JSON_UNESCAPED_UNICODE);
+            return json_encode($object, JSON_UNESCAPED_UNICODE);
         }
         return $object;
     }

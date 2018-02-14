@@ -28,15 +28,7 @@ class Json
        JSON_ERROR_UTF8=>'Malformed UTF-8 characters, possibly incorrectly encoded',
     ];
     
-    public static function decodeEx(string $json, bool $assoc = false, int $depth = 512, int $options = 0)
-    {
-        $json=self::parseComments($json);
-        $value=json_decode($json, $assoc, $depth, $options);
-        if (json_last_error()!==JSON_ERROR_NONE) {
-            throw new JSONException(json_last_error());
-        }
-        return $value;
-    }
+
     
     public static function decode(string $json, bool $assoc = false, int $depth = 512, int $options = 0)
     {
@@ -52,14 +44,13 @@ class Json
         return call_user_func_array('json_encode', func_get_args());
     }
 
-    public static function parseFile(string $path, bool $raw=false)
+    public static function parseFile(string $path)
     {
         if (!file_exists($path)) {
             throw new JSONException("File {$path} No Found");
         }
         $content=file_get_contents($path);
-        $name=$raw?'decode':'decodeEx';
-        return self:: {$name} ($content, true);
+        return self::decode($content, true);
     }
     
     public static function saveFile(string $path, $jsonable)
@@ -68,23 +59,11 @@ class Json
         return file_put_contents($path, $json);
     }
     
-    public static function loadFile(string $path, bool $raw=false)
+    public static function loadFile(string $path)
     {
         ob_start();
         require $path;
         $content=ob_get_clean();
-        $name=$raw?'decode':'decodeEx';
-        return self:: {$name} ($content, true);
-    }
-
-    /**
-     * 简单处理注释
-     *
-     * @param string $json
-     * @return string
-     */
-    protected static function parseComments(string $json)
-    {
-        return preg_replace('/\/\*[\s\S]+?\*\//', '', $json);
+        return self::decode($content, true);
     }
 }

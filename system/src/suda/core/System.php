@@ -3,7 +3,7 @@
  * Suda FrameWork
  *
  * An open source application development framework for PHP 7.0.0 or newer
- * 
+ *
  * Copyright (c)  2017 DXkite
  *
  * @category   PHP FrameWork
@@ -134,10 +134,10 @@ class System
         if (!is_null($error=error_get_last())) {
             // 防止重复调用
             error_clear_last();
-            self::uncaughtException(new \ErrorException($error['message'], $error['type'], $error['type'], $error['file'],$error['line']));
+            self::uncaughtException(new \ErrorException($error['message'], $error['type'], $error['type'], $error['file'], $error['line']));
         }
         // 忽略用户停止脚本
-        ignore_user_abort(true);                                              
+        ignore_user_abort(true);
         debug()->timeEnd('before shutdown');
         debug()->time('shutdown');
         // 发送Cookie
@@ -161,7 +161,7 @@ class System
 
     public static function uncaughtException($exception)
     {
-        Config::set('exception',true);
+        Config::set('exception', true);
         if (!$exception instanceof Exception) {
             $exception=new Exception($exception);
         }
