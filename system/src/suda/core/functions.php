@@ -97,7 +97,7 @@ function u($name=null, $values=null)
     } elseif (is_array($name)) {
         return suda\core\Router::getInstance()->buildUrl(suda\core\Response::$name, $name);
     } else {
-        return suda\core\Router::getInstance()->buildUrl(suda\core\Response::$name);
+        return suda\core\Router::getInstance()->buildUrl(suda\core\Response::$name,$_GET,false);
     }
 }
 
