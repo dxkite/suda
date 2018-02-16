@@ -250,7 +250,7 @@ class Manager
      */
     public static function addTemplateSource(string $module, string $path)
     {
-        if (empty($path)) {
+        if (empty($path) ||  !Application::getInstance()->checkModuleExist($module)) {
             return;
         }
         $moduleName=Application::getInstance()->getModuleName($module);

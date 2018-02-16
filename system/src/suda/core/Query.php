@@ -3,7 +3,7 @@
  * Suda FrameWork
  *
  * An open source application development framework for PHP 7.0.0 or newer
- * 
+ *
  * Copyright (c)  2017 DXkite
  *
  * @category   PHP FrameWork
@@ -21,7 +21,7 @@ use suda\exception\SQLException;
 /**
  * 数据库查询类
  * 提供了数据库的查询方式
- * 
+ *
  */
 class Query extends SQLQuery
 {
@@ -62,7 +62,8 @@ class Query extends SQLQuery
         return false;
     }
 
-    public static function that($object) {
+    public static function that($object)
+    {
         return (new Query)->object($object);
     }
     
@@ -97,7 +98,7 @@ class Query extends SQLQuery
      */
     public static function search(string $table, $wants='*', $field, string $search, array $page=null, bool $scroll=false):SQLQuery
     {
-        list($search_str,$bind)=self::prepareSearch($field,$search);
+        list($search_str, $bind)=self::prepareSearch($field, $search);
         return self::where($table, $wants, $search_str, $bind, $page, $scroll);
     }
 
@@ -124,7 +125,7 @@ class Query extends SQLQuery
             }
             $fields=implode(',', $field);
         }
-        $limit=is_null($page)?'': ' LIMIT '.self::page($page[0], $page[1]);
+        $limit=is_null($page)?'': ' LIMIT '.self::page($page);
         return new SQLQuery('SELECT '.$fields.' FROM `'.$table.'` '.trim($conditions, ';').$limit.';', $binds, $scroll);
     }
 
@@ -189,7 +190,8 @@ class Query extends SQLQuery
         return [$sql,$param];
     }
 
-    public static function prepareSearch($field,string $search) {
+    public static function prepareSearch($field, string $search)
+    {
         $search=preg_replace('/([%_])/', '\\\\$1', $search);
         $search=preg_replace('/\s+/', '%', $search);
         if (is_array($field)) {
@@ -260,14 +262,24 @@ class Query extends SQLQuery
         return Config::get('database.prefix', '').$name;
     }
 
-    protected static function page(int $page=0, int $percount=1)
+    protected static function page(array $page)
     {
-        if ($percount<1) {
-            $percount=1;
+        if (count($page)>2) {
+            list($page, $row, $offset)=$page;
+        } else {
+            list($page, $row)=$page;
+            $offset=false;
+        }
+        if ($row<1) {
+            $row=1;
         }
         if ($page < 1) {
             $page = 1;
         }
-        return ((intval($page) - 1) * intval($percount)) . ', ' . intval($percount);
+        if ($offset) {
+            return $page .',' .$row;
+        } else {
+            return ((intval($page) - 1) * intval($row)) . ', ' . intval($row);
+        }
     }
 }

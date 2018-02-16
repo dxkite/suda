@@ -114,6 +114,9 @@ class Mapping
         if (!$this->antiPrefix) {
             $urlMapping='/'.trim(rtrim($this->getPrefix(), '/').$urlMapping, '/');
         }
+        if (empty($urlMapping)) {
+            $urlMapping='/';
+        }
         $this->mapping=$this->buildMatch($urlMapping);
         return $this;
     }

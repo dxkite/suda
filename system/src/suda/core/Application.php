@@ -143,18 +143,7 @@ class Application
             $config=self::getModuleConfig($moduleTemp);
             // 检查依赖
             if (isset($config['require'])) {
-                foreach ($config['require'] as $module => $version) {
-                    $require=$this->getModuleConfig($module);
-                    if ($this->checkModuleExist($module) && isset($require['version'])) {
-                        if (!empty($version)) {
-                            if (!static::versionCompire($version, $config['version'])) {
-                                throw new ApplicationException(__('module %s require module %s %s and now is %s', $config['name'], $module, $version, $require['version']));
-                            }
-                        }
-                    } else {
-                        throw new ApplicationException(__('module %s require module %s', $config['name'], $module));
-                    }
-                }
+                $this->checkModuleRequire(__('module %s', $config['name']), $config['require']);
             }
             // 框架依赖
             if (isset($config['suda']) && !static::versionCompire($config['suda'], SUDA_VERSION)) {
@@ -179,6 +168,22 @@ class Application
             }
             // 设置语言包库
             Locale::path($root.'/resource/locales/');
+        }
+    }
+ 
+    public function checkModuleRequire(string $name, array $requires)
+    {
+        foreach ($requires as $module => $version) {
+            $require=$this->getModuleConfig($module);
+            if ($this->checkModuleExist($module) && isset($require['version'])) {
+                if (!empty($version)) {
+                    if (!static::versionCompire($version, $require['version'])) {
+                        throw new ApplicationException(__('%s require module %s %s and now is %s', $name, $module, $version, $require['version']));
+                    }
+                }
+            } else {
+                throw new ApplicationException(__('%s require module %s', $name, $module));
+            }
         }
     }
 

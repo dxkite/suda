@@ -151,12 +151,12 @@ abstract class Table
      * @param int $rows 分页的元素个数
      * @return array|false
      */
-    public function list(int $page=null, int $rows=10)
+    public function list(int $page=null, int $rows=10, bool $offset=false)
     {
         if (is_null($page)) {
             return Query::where($this->getTableName(), $this->getWants(), '1 '. self::_order())->object($this)->fetchAll();
         } else {
-            return Query::where($this->getTableName(), $this->getWants(), '1 '.  self::_order(), [], [$page, $rows])->object($this)->fetchAll();
+            return Query::where($this->getTableName(), $this->getWants(), '1 '.  self::_order(), [], [$page, $rows,$offset])->object($this)->fetchAll();
         }
     }
 
@@ -167,14 +167,14 @@ abstract class Table
      * @param int $rows 分页的元素个数
      * @return array|false
      */
-    public function listWhere($where, array $binds=[], int $page=null, int $rows=10)
+    public function listWhere($where, array $binds=[], int $page=null, int $rows=10, bool $offset=false)
     {
         $where_str=Query::prepareWhere($where, $binds);
         $where=preg_replace('/WHERE(.+)$/', '$1', $where_str).' '.self::_order();
         if (is_null($page)) {
             return Query::where($this->getTableName(), $this->getWants(), $where, $binds)->object($this)->fetchAll();
         } else {
-            return Query::where($this->getTableName(), $this->getWants(), $where, $binds, [$page, $rows])->object($this)->fetchAll();
+            return Query::where($this->getTableName(), $this->getWants(), $where, $binds, [$page, $rows,$offset])->object($this)->fetchAll();
         }
     }
 
