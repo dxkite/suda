@@ -99,7 +99,7 @@ class Compiler implements CompilerImpl
         Storage::put($output, $content);
         debug()->timeEnd('compile '.$name);
         $syntax=Manager::checkSyntax($output);
-        if ($syntax !== true){
+        if ($syntax !== true) {
             debug()->warning(__('compile error: %s near line %d', $syntax->getMessage(), $syntax->getLine()));
             storage()->delete($output);
         }
@@ -109,7 +109,12 @@ class Compiler implements CompilerImpl
     public function render(string $name, string $viewfile)
     {
         $classname=Manager::className($name);
-        require_once $viewfile;
+        if (class_exists($classname)) {
+            $class=new \ReflectionClass($classname);
+            debug()->warning(__('template %s is already in %s defined',$name,$class->getFileName()));
+        } else {
+            require_once $viewfile;
+        }
         return $template=new $classname;
     }
     
