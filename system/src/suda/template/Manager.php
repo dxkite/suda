@@ -505,6 +505,36 @@ class Manager
     {
         return conf('asset-server', Request::hostBase()).$url;
     }
+
+    /**
+     * 检查语法
+     *
+     * @param string $file
+     * @return void
+     */
+    public static function checkSyntax(string $file)
+    {
+        if (storage()->exist($file)) {
+            $fileContent=storage()->get($file);
+            if (conf('template.checkSyntax', 'eval') == 'eval') {
+                try {
+                    eval('return true; ?>'.$fileContent);
+                } catch (\ParseError $e) {
+                    return $e;
+                }
+            } else {
+                $fileTemp=RUNTIME_DIR.'/checkSyntax-'.md5($fileContent);
+                storage()->put($fileTemp, '<?php return true ?>'."\n" .$fileContent);
+                try {
+                    include $fileTemp;
+                } catch (\ParseError $e) {
+                    return $e;
+                }
+            }
+            return true;
+        }
+        return false;
+    }
 }
 
 // 加载编译器

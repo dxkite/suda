@@ -85,7 +85,7 @@ class Compiler implements CompilerImpl
     {
         debug()->time('compile '.$name);
         if (!Storage::exist($input)) {
-            debug()->warning(__('compile_error:no sorce file => %s %s', $name, $input));
+            debug()->warning(__('compile error:no sorce file => %s %s', $name, $input));
             return false;
         }
         $content= $this->compileText(Storage::get($input));
@@ -98,7 +98,12 @@ class Compiler implements CompilerImpl
         $content='<?php  class '.$classname.' extends '.self::$template.' { protected $name="'.$name.'";protected $module="'.$module.'"; protected function _render_template() {  ?>'.$content.'<?php }}';
         Storage::put($output, $content);
         debug()->timeEnd('compile '.$name);
-        return true;
+        $syntax=Manager::checkSyntax($output);
+        if ($syntax !== true){
+            debug()->warning(__('compile error: %s near line %d', $syntax->getMessage(), $syntax->getLine()));
+            storage()->delete($output);
+        }
+        return $syntax===true?:$syntax;
     }
 
     public function render(string $name, string $viewfile)
