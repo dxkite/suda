@@ -444,19 +444,38 @@ class Manager
             if (!Application::getInstance()->checkModuleExist($module)) {
                 continue;
             }
-            $sources=self::getTemplateSource($module);
-            // 覆盖顺序：栈顶优先级高，覆盖栈底元素
-            while ($path=array_pop($sources)) {
-                self::compileModulleFile($module, $path, $path);
+            $init[$module]['static']=self::prepareResource($module, true);
+            $tempaltes=self::findModuleTemplates($module);
+            foreach ($tempaltes as $name) {
+                $success=self::compile($module.':'.$name);
+                if ($success != true) {
+                    $init[$module]['template'][$name]=false;
+                } else {
+                    $init[$module]['template'][$name]=true;
+                }
             }
-            $init[$module]=self::prepareResource($module, true);
         }
         debug()->timeEnd('init resource');
         return $init;
     }
 
-    private static function compileModulleFile(string $module, string $root, string $dirs)
+    public static function findModuleTemplates(string $module)
     {
+        $templates=[];
+        if (!app()->checkModuleExist($module)) {
+            return false;
+        }
+        if ($sources=Manager::getTemplateSource($module)) {
+            foreach ($sources as $source) {
+                $templates=array_merge($templates, self::_findModuleTemplate($module, $source, $source));
+            }
+        }
+        return $templates;
+    }
+
+    protected static function _findModuleTemplate(string $module, string $root, string $dirs)
+    {
+        $templates=[];
         $hd=opendir($dirs);
         while ($read=readdir($hd)) {
             if (strcmp($read, '.') !== 0 && strcmp($read, '..') !==0) {
@@ -465,21 +484,14 @@ class Manager
                     continue;
                 }
                 if (is_file($path) && preg_match('/\.tpl\..+$/', $path)) {
-                    self::compileFile($path, $module, $root);
+                    $name=preg_replace('/^'.preg_quote($root, '/').'\/(.+)\.tpl\..+$/', '$1', $path);
+                    $templates[]=$name;
                 } elseif (is_dir($path)) {
-                    self::compileModulleFile($module, $root, $path);
+                    $templates=array_merge($templates, self::_findModuleTemplate($module, $root, $path));
                 }
             }
         }
-    }
-
-    private static function compileFile(string $path, string $module, string $root)
-    {
-        $ex=pathinfo($path, PATHINFO_EXTENSION);
-        $basenmae=preg_replace('/^('.preg_quote($root, '/').')?(.+)'.preg_quote(self::$extRaw.$ex).'/', '$2', $path);
-        $name=$module.':'.trim($basenmae, '/');
-        $success=self::compile($name, $ex);
-        return $success;
+        return $templates;
     }
     
     public static function getStaticAssetPath(string $module=null)
