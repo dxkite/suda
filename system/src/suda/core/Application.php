@@ -269,7 +269,11 @@ class Application
         if ($this->moduleLive) {
             return $this->moduleLive;
         }
-        $modules=conf('app.modules', self::getModules());
+        if (file_exists($path=RUNTIME_DIR.'/modules.config.php')) {
+            $modules=include $path;
+        }else{
+            $modules=conf('app.modules', self::getModules());
+        }
         $exclude=defined('DISABLE_MODULES')?explode(',', trim(DISABLE_MODULES, ',')):[];
         foreach ($exclude as $index=>$name) {
             $exclude[$index]=$this->getModuleFullName($name);
