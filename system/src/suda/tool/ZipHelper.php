@@ -57,7 +57,7 @@ class ZipHelper
     {
         $zip=new ZipArchive;
         if ($zip->open($output, ZipArchive::CREATE|ZipArchive::OVERWRITE)) {
-            self::zipFolder($zip, $path);
+            self::zipFolder($zip, $path, $path);
             $zip->close();
             return true;
         } else {
@@ -66,16 +66,20 @@ class ZipHelper
         return false;
     }
 
-    protected static function zipFolder(ZipArchive & $zip, string $folder)
+    protected static function zipFolder(ZipArchive & $zip, string $folder,string $root)
     {
         if (is_dir($folder)) {
             if ($dh = opendir($folder)) {
-                while (($file = readdir($folder)) !== false) {
-                    $path=$dir.'/'.$file;
-                    if (is_dir($path)) {
-                        self::zipFolder($zip, $path);
-                    } else {
-                        $zip->addFile($path);
+                while (($file = readdir($dh)) !== false) {
+                    if ($file!='.' &&  $file!='..'){
+                        $path=$folder.'/'.$file;
+                        if (is_dir($path)) {
+                            self::zipFolder($zip, $path,$root);
+                        } else {
+                            $cutPath=storage()->cut($path,$root);
+                            $localPath=preg_replace('/[\\\\\\/]+/','/',$cutPath);
+                            $zip->addFile($path,$localPath);
+                        }
                     }
                 }
                 closedir($dh);
