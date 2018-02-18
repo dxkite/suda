@@ -273,7 +273,7 @@ class Router
                 $this->runRouter($mapping);
                 debug()->timeEnd('run router');
             } else {
-                Hook::exec('system:404');
+                Hook::execTail('system:404');
             }
         } else {
             Hook::execTail('Router:dispatch::error');
