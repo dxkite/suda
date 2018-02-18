@@ -523,15 +523,17 @@ abstract class Table
         } catch (\suda\exception\SQLException  $e) {
             return false;
         }
-        
-        foreach ($columns as $column) {
-            $fields[]=$column['Field'];
-            if ($column['Key']==='PRI') {
-                $this->primaryKey[]=$column['Field'];
+        if (is_array($columns)) {
+            foreach ($columns as $column) {
+                $fields[]=$column['Field'];
+                if ($column['Key']==='PRI') {
+                    $this->primaryKey[]=$column['Field'];
+                }
             }
+            $this->setFields($fields);
+            return true;
         }
-        $this->setFields($fields);
-        return true;
+        return false;
     }
 
     protected function cacheDbInfo()

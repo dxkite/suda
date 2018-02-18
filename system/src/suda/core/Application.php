@@ -165,6 +165,7 @@ class Application
             // 加载监听器
             if (Storage::exist($listener_path=$root.'/resource/config/listener.json')) {
                 Hook::loadJson($listener_path);
+                Hook::exec('loadModule:'.self::getModuleName($moduleTemp));
             }
             // 设置语言包库
             Locale::path($root.'/resource/locales/');

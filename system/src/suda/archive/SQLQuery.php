@@ -325,6 +325,9 @@ class SQLQuery
 
     private function __query(string $query, array $array=[])
     {
+        if (!conf('enableQuery',true)){
+            return false;
+        }
         $query=self::__SqlPrefix($query);
         $debug=debug_backtrace();
         // 调整数据表
@@ -381,6 +384,7 @@ class SQLQuery
         $this->stmt=$stmt;
         return $return;
     }
+
     protected static function connectPdo()
     {
         // 链接数据库
