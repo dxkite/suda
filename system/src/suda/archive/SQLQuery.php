@@ -388,7 +388,7 @@ class SQLQuery
     protected static function connectPdo()
     {
         // 链接数据库
-        if (!self::$pdo) {
+        if (!self::$pdo && conf('enableQuery',true)) {
             $pdo='mysql:host='.Config::get('database.host', 'localhost').';charset='.Config::get('database.charset', 'utf8').';port='.Config::get('database.port', 3306);
             self::$prefix=Config::get('database.prefix', '');
             try {
