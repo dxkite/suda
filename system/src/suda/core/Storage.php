@@ -170,7 +170,7 @@ class Storage
         while ($read=readdir($hd)) {
             if (strcmp($read, '.') !== 0 && strcmp($read, '..') !==0 && preg_match($preg, $read)) {
                 if (self::isDir($src.'/'.$read)) {
-                    self::copydir($src.'/'.$read, $dest.'/'.$read);
+                    self::copydir($src.'/'.$read, $dest.'/'.$read, $preg);
                 } else {
                     self::copy($src.'/'.$read, $dest.'/'.$read);
                 }
