@@ -2,7 +2,7 @@
 
 
 
-> *文件信息* suda\core\route\Mapping.php: 22~332
+> *文件信息* suda\core\route\Mapping.php: 22~347
 
 ## 所属类 
 
@@ -24,6 +24,7 @@
 |--------|-----|-------|-------|
 | args |  array | 无 | 无 |
 | query |  bool | 1 | 无 |
+| queryArr |  array | Array | 无 |
 
 
 

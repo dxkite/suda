@@ -2,7 +2,7 @@
 
 压缩目录到文件
 
-> *文件信息* suda\tool\ZipHelper.php: 21~85
+> *文件信息* suda\tool\ZipHelper.php: 21~89
 
 ## 所属类 
 

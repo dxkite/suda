@@ -2,7 +2,7 @@
 
 生成一条查询语句
 
-> *文件信息* suda\archive\SQLQuery.php: 32~473
+> *文件信息* suda\archive\SQLQuery.php: 32~477
 
 ## 所属类 
 

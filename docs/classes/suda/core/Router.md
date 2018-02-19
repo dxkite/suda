@@ -1,6 +1,6 @@
 #  Router 
 
-> *文件信息* suda\core\Router.php: 27~460
+> *文件信息* suda\core\Router.php: 27~470
 
 路由处理类
 
@@ -55,6 +55,7 @@
 | public |[routerReplace](Router/routerReplace.md) | 路由替换 |
 | public |[routerMove](Router/routerMove.md) | 路由移动 |
 | public |[addMapping](Router/addMapping.md) |  |
+| public |[refreshMapping](Router/refreshMapping.md) |  |
 | public |[addRouter](Router/addRouter.md) | 动态添加运行命令 |
 | public |[replaceMatch](Router/replaceMatch.md) | 替换匹配表达式 |
 | public |[replaceClass](Router/replaceClass.md) | 替换路由指定类 |

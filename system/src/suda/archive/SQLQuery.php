@@ -25,7 +25,7 @@ use suda\tool\Command;
 
 /**
  * 数据库查询方案，简化数据库查
- *
+ * 
  * @example
  *
  */

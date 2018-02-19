@@ -25,13 +25,24 @@ use suda\exception\SQLException;
  */
 class Query extends SQLQuery
 {
-    
     /**
      * 向数据表中插入一行
-     * @param string $table
-     * @param [type] $values
-     * @param array $binds
-     * @param [type] $object
+     * 
+     * @example 
+     * ```php
+     * // 建议使用
+     * $id = Query::insert('user',['name'=>$name,'password'=>  $password ,'group'=>$group, 'available'=>false,'email'=>$email,'ip'=>$ip,]);
+     * // 或
+     * $id = Query::insert('user',"(`name`,`password`,`group`,`available`,`email`,`ip`)", ['name'=>$name, 'password'=>  $password ,'group'=>$group,'available'=>false,'email'=>$email,'ip'=>$ip,]
+     * ```
+     * 以上调用会编译成类似如下模板
+     * ```sql
+     * INSERT INTO `mc_user` (`name`,`password`,`group`,`available`,`email`,`ip`) VALUES (:name,:password,:group,:available,:email,:ip); 
+     * ```
+     * @param string $table 为数据表名，会自动添加数据表前缀。
+     * @param [type] $values  为插入的值，可以为字符串或者MAP数组。
+     * @param array $binds 为values中出现的模板控制待绑定字符。
+     * @param [type] $object 数据库回调对象
      * @return array|false 当ID>0时返回ID，否者返回true/false
      */
     public static function insert(string $table, $values, array $binds=[], $object=null)
@@ -69,7 +80,18 @@ class Query extends SQLQuery
     
     /**
      * 在数据表总搜索
-     *
+     * 
+     * 查询后会返回一个 `archive\Query ` 的实例对象，通过 fetch 或者 fetchAll 获取查询结果。
+     * 
+     * @example 
+     * 如下语句
+     * ```php
+     * $fetch=Query::where('user', ['id', 'name', 'email', 'available', 'avatar', 'ip'], '1', [], [$page, $count])->fetchAll();
+     * ```
+     * 与如下SQL语句等价
+     * ```sql
+     * SELECT `id`, `name`,`email`,`available`, `avatar`, `ip` FROM mc_user WHERE 1; 
+     * ```
      * @param string $table 表名
      * @param string|array $wants 提取的列
      * @param string|array $condithon 提取的条件
@@ -104,13 +126,22 @@ class Query extends SQLQuery
 
     /**
      * 选择列
-     *
-     * @param string $table
-     * @param [type] $wants
-     * @param [type] $conditions
-     * @param array $binds
-     * @param array $page
-     * @param boolean $scroll
+     * 查询后会返回一个 `archive\Query ` 的实例对象，通过 fetch 或者 fetchAll 获取查询结果。
+     * @example
+     * 
+     * ```php
+     * $fetch=Query::select('user_group', 'auths', ' JOIN `#{user}` ON `#{user}`.`id` = :id  WHERE `user` = :id  or `#{user_group}`.`id` =`#{user}`.`group` LIMIT 1;', ['id'=>$uid])->fetch()
+     * ```
+     * 等价于
+     * ```sql
+     * SELECT auths FROM `mc_user_group`  JOIN `mc_user` ON `mc_user`.`id` = :id  WHERE `user` = :id  or `mc_user_group`.`id` =`mc_user`.`group` LIMIT 1; 
+     * ```
+     * @param string $table 数据表名
+     * @param [type] $wants 为查询的字段，可以为字符串如`"field1,field2"` 或者数组 `[ "field1","field2" ]`； 建议使用数组模式。
+     * @param [type] $conditions 为查询的条件 ，可以为字符串 或者数组 ， 建议使用数组模式。
+     * @param array $binds 查询字符串中绑定的数据
+     * @param array $page 分页查询，接受数组 ，格式为： [为分页的页数,每页长度,是否为OFFSET]
+     * @param boolean $scroll 滚动查询，一次取出一条记录 
      * @return void
      */
     public static function select(string $table, $wants, $conditions, array $binds=[], array $page=null, bool $scroll=false)
@@ -131,12 +162,23 @@ class Query extends SQLQuery
 
     /**
      * 更新列
-     *
-     * @param string $table
-     * @param [type] $set_fields
-     * @param string $where
-     * @param array $binds
-     * @param [type] $object
+     * 
+     * 返回影响的记录数
+     * 
+     * @example
+     * 
+     * ```php
+     * Query::update('user_token', 'expire = :time , token=:new_token,value=:refresh', 'id=:id AND UNIX_TIMESTAMP() < `time` + :alive AND value = :value ', ['id'=>$id, 'value'=>$value, 'new_token'=>$new, 'refresh'=>$refresh, 'time'=>time() + $get['beat'], 'alive'=>$get['alive']]);
+     * ```
+     * 等价于
+     * ```sql
+     * UPDATE `mc_user_token` SET expire = :time , token=:new_token,value=:refresh  WHERE id=:id AND UNIX_TIMESTAMP() < `time` + :alive AND value = :value ; 
+     * ```
+     * @param string $table 数据表名
+     * @param [type] $set_fields 为设置的字段，使用键值数组式设置值。
+     * @param string $where 为更新的条件 ，可以为字符串 或者数组 ， 建议使用数组模式。
+     * @param array $binds 查询字符串中绑定的数据
+     * @param [type] $object 数据库回调对象
      * @return integer
      */
     public static function update(string $table, $set_fields, $where='1', array $binds=[], $object=null):int
@@ -160,9 +202,9 @@ class Query extends SQLQuery
     /**
      * 删除列
      *
-     * @param string $table
-     * @param string $where
-     * @param array $binds
+     * @param string $table 数据表名
+     * @param string $where 为删除的条件 ，可以为字符串 或者数组 ， 建议使用数组模式。
+     * @param array $binds 查询字符串中绑定的数据
      * @param [type] $object
      * @return integer
      */

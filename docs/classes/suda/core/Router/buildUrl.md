@@ -2,7 +2,7 @@
 
 
 
-> *文件信息* suda\core\Router.php: 27~460
+> *文件信息* suda\core\Router.php: 27~470
 
 ## 所属类 
 
@@ -25,6 +25,7 @@
 | name |  string | 无 | 无 |
 | values |  array | Array | 无 |
 | query |  bool | 1 | 无 |
+| queryArr |  array | Array | 无 |
 
 
 

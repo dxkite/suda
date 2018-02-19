@@ -2,7 +2,7 @@
 
 获取模块所在的文件夹名
 
-> *文件信息* suda\core\Application.php: 29~497
+> *文件信息* suda\core\Application.php: 29~504
 
 ## 所属类 
 

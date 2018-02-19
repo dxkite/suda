@@ -1,6 +1,6 @@
 #  Request 
 
-> *文件信息* suda\core\Request.php: 21~474
+> *文件信息* suda\core\Request.php: 21~484
 
 
 
@@ -19,7 +19,8 @@
 | 可见性 | 方法名 | 说明 |
 |--------|-------|------|
 | public static|[getInstance](Request/getInstance.md) |  |
-| public |[json](Request/json.md) | 获取请求的JSON文档 |
+| public |[setMapping](Request/setMapping.md) |  |
+| public static|[json](Request/json.md) | 获取请求的JSON文档 |
 | public static|[input](Request/input.md) | 获取请求的原始输入 |
 | public static|[method](Request/method.md) | 获取请求的方法 |
 | public static|[getMethod](Request/getMethod.md) | 获取请求的方法 |
@@ -48,6 +49,7 @@
 | public static|[hostBase](Request/hostBase.md) |  |
 | public static|[baseUrl](Request/baseUrl.md) |  |
 | public |[isCrawler](Request/isCrawler.md) |  |
+| public |[getMapping](Request/getMapping.md) |  |
 
 
 

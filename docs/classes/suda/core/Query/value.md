@@ -2,7 +2,7 @@
 
 生成一个数据输入值
 
-> *文件信息* suda\core\Query.php: 26~268
+> *文件信息* suda\core\Query.php: 26~327
 
 ## 所属类 
 

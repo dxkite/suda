@@ -2,7 +2,7 @@
 
 获取查询结果的一列，并作为类对象
 
-> *文件信息* suda\archive\SQLQuery.php: 32~473
+> *文件信息* suda\archive\SQLQuery.php: 32~477
 
 ## 所属类 
 

@@ -2,7 +2,7 @@
 
 载入模板编译器
 
-> *文件信息* suda\template\Manager.php: 29~504
+> *文件信息* suda\template\Manager.php: 29~550
 
 ## 所属类 
 

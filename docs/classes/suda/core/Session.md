@@ -1,12 +1,12 @@
 #  Session 
 
-> *文件信息* suda\core\Session.php: 18~63
+> *文件信息* suda\core\Session.php: 22~70
 
-
+会话操纵类
 
 ## 描述
 
-该类暂时无说明
+控制PHP全局会话，
 
 
 

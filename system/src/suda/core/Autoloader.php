@@ -15,6 +15,10 @@
  */
 namespace suda\core;
 
+/**
+ * 自动加载控制器
+ * 控制按照一定的规则自动加载文件或者类
+ */
 class Autoloader
 {
     /**

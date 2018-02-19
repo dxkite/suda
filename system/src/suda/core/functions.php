@@ -273,3 +273,8 @@ function table(string $tableName)
 {
     return suda\archive\TableInstance::new($tableName);
 }
+
+function session()
+{
+    return suda\core\Session::getInstance();
+}

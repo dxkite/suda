@@ -1,6 +1,6 @@
 #  Query 
 
-> *文件信息* suda\core\Query.php: 26~268
+> *文件信息* suda\core\Query.php: 26~327
 
 数据库查询类
 
@@ -44,6 +44,7 @@
 | public static|[update](Query/update.md) | 更新列 |
 | public static|[delete](Query/delete.md) | 删除列 |
 | public static|[prepareIn](Query/prepareIn.md) |  |
+| public static|[prepareSearch](Query/prepareSearch.md) |  |
 | public static|[prepareWhere](Query/prepareWhere.md) |  |
 | public static|[count](Query/count.md) |  |
 | public static|[nextId](Query/nextId.md) |  |

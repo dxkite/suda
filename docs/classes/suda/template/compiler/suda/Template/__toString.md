@@ -2,7 +2,7 @@
 
 获取当前模板的字符串
 
-> *文件信息* suda\template\compiler\suda\Template.php: 25~246
+> *文件信息* suda\template\compiler\suda\Template.php: 25~265
 
 ## 所属类 
 

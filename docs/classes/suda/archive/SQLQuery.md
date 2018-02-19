@@ -1,6 +1,6 @@
 #  SQLQuery 
 
-> *文件信息* suda\archive\SQLQuery.php: 32~473
+> *文件信息* suda\archive\SQLQuery.php: 32~477
 
 数据库查询方案，简化数据库查
 

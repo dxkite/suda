@@ -2,7 +2,7 @@
 
 获取全部的查询结果
 
-> *文件信息* suda\archive\SQLQuery.php: 32~473
+> *文件信息* suda\archive\SQLQuery.php: 32~477
 
 ## 所属类 
 

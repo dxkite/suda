@@ -2,7 +2,7 @@
 
 
 
-> *文件信息* suda\tool\ZipHelper.php: 21~85
+> *文件信息* suda\tool\ZipHelper.php: 21~89
 
 ## 所属类 
 
@@ -24,6 +24,7 @@
 |--------|-----|-------|-------|
 | zip |  ZipArchive | 无 | 无 |
 | folder |  string | 无 | 无 |
+| root |  string | 无 | 无 |
 
 
 

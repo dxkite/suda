@@ -2,7 +2,7 @@
 
 获取语句查询错误
 
-> *文件信息* suda\core\Query.php: 26~268
+> *文件信息* suda\core\Query.php: 26~327
 
 ## 所属类 
 

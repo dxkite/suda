@@ -2,7 +2,7 @@
 
 获取语句查询错误
 
-> *文件信息* suda\archive\SQLQuery.php: 32~473
+> *文件信息* suda\archive\SQLQuery.php: 32~477
 
 ## 所属类 
 

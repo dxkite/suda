@@ -2,7 +2,7 @@
 
 
 
-> *文件信息* suda\template\compiler\suda\Template.php: 25~246
+> *文件信息* suda\template\compiler\suda\Template.php: 25~265
 
 ## 所属类 
 
@@ -23,6 +23,7 @@
 | 参数名 | 类型 | 默认值 | 说明 |
 |--------|-----|-------|-------|
 | name |  string | 无 | 无 |
+| param |  array | Array | 无 |
 
 
 

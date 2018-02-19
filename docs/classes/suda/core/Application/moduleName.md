@@ -2,7 +2,7 @@
 
 根据模块目录名转换成模块名
 
-> *文件信息* suda\core\Application.php: 29~497
+> *文件信息* suda\core\Application.php: 29~504
 
 ## 所属类 
 

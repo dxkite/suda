@@ -2,7 +2,7 @@
 
 判断请求头中是否包含某一字段
 
-> *文件信息* suda\core\Request.php: 21~474
+> *文件信息* suda\core\Request.php: 21~484
 
 ## 所属类 
 

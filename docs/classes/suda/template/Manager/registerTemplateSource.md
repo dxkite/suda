@@ -2,7 +2,7 @@
 
 注册模块模板资源目录
 
-> *文件信息* suda\template\Manager.php: 29~504
+> *文件信息* suda\template\Manager.php: 29~550
 
 ## 所属类 
 

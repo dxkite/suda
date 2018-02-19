@@ -2,7 +2,7 @@
 
 获取最后一次插入的主键ID（用于自增值
 
-> *文件信息* suda\archive\SQLQuery.php: 32~473
+> *文件信息* suda\archive\SQLQuery.php: 32~477
 
 ## 所属类 
 

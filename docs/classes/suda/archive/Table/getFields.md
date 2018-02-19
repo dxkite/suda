@@ -2,7 +2,7 @@
 
 获取全部的列
 
-> *文件信息* suda\archive\Table.php: 31~597
+> *文件信息* suda\archive\Table.php: 31~610
 
 ## 所属类 
 

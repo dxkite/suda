@@ -2,7 +2,7 @@
 
 根据模板ID显示HTML模板
 
-> *文件信息* suda\template\Manager.php: 29~504
+> *文件信息* suda\template\Manager.php: 29~550
 
 ## 所属类 
 

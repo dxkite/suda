@@ -1,12 +1,12 @@
-# Json::decodeEx
+# Manager::findModuleTemplates
 
 
 
-> *文件信息* suda\tool\Json.php: 20~90
+> *文件信息* suda\template\Manager.php: 29~550
 
 ## 所属类 
 
-[Json](../Json.md)
+[Manager](../Manager.md)
 
 ## 可见性
 
@@ -22,10 +22,7 @@
 
 | 参数名 | 类型 | 默认值 | 说明 |
 |--------|-----|-------|-------|
-| json |  string | 无 | 无 |
-| assoc |  bool |  | 无 |
-| depth |  int | 512 | 无 |
-| options |  int | 0 | 无 |
+| module |  string | 无 | 无 |
 
 
 

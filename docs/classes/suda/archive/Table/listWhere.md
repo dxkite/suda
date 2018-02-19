@@ -2,7 +2,7 @@
 
 条件列出元素
 
-> *文件信息* suda\archive\Table.php: 31~597
+> *文件信息* suda\archive\Table.php: 31~610
 
 ## 所属类 
 
@@ -27,6 +27,7 @@
 | binds |  array | Array | 无 |
 | page |  int | null |   是否分页（页数） |
 | rows |  int | 10 |  分页的元素个数 |
+| offset |  bool |  | 无 |
 
 
 

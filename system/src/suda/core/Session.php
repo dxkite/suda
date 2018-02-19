@@ -3,7 +3,7 @@
  * Suda FrameWork
  *
  * An open source application development framework for PHP 7.0.0 or newer
- * 
+ *
  * Copyright (c)  2017 DXkite
  *
  * @category   PHP FrameWork
@@ -15,9 +15,14 @@
  */
 namespace suda\core;
 
+/**
+ * 会话操纵类
+ * 控制PHP全局会话，
+ */
 class Session
 {
     protected static $instance;
+    
     public static function getInstance()
     {
         if (!self::$instance) {
@@ -28,13 +33,15 @@ class Session
     
     protected function __construct()
     {
-        $path=DATA_DIR.'/session';
-        Storage::mkdirs($path);
-        session_save_path($path);
-        session_name(conf('session.name', 'session'));
-        session_cache_limiter(conf('session.limiter', 'private'));
-        session_cache_expire(conf('session.expire', 0));
-        session_start();
+        if (session_status()==PHP_SESSION_NONE) {
+            $path=DATA_DIR.'/session';
+            Storage::mkdirs($path);
+            session_save_path($path);
+            session_name(conf('session.name', 'session'));
+            session_cache_limiter(conf('session.limiter', 'private'));
+            session_cache_expire(conf('session.expire', 0));
+            session_start();
+        }
     }
 
     public static function set(string $name, $value)

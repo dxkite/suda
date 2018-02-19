@@ -1,6 +1,6 @@
 #  Manager 
 
-> *文件信息* suda\template\Manager.php: 29~504
+> *文件信息* suda\template\Manager.php: 29~550
 
 模板管理类
 
@@ -49,9 +49,12 @@
 | public static|[getOutputFile](Manager/getOutputFile.md) | 模板编译后输出路径 |
 | public static|[className](Manager/className.md) |  |
 | public static|[initResource](Manager/initResource.md) |  |
+| public static|[findModuleTemplates](Manager/findModuleTemplates.md) |  |
+| protected static|[_findModuleTemplate](Manager/_findModuleTemplate.md) |  |
 | public static|[getStaticAssetPath](Manager/getStaticAssetPath.md) |  |
 | public static|[getDynamicAssetPath](Manager/getDynamicAssetPath.md) |  |
 | public static|[assetServer](Manager/assetServer.md) |  |
+| public static|[checkSyntax](Manager/checkSyntax.md) | 检查语法 |
 
 
 

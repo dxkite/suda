@@ -2,7 +2,7 @@
 
 转换函数；统一处理数据库输入输出
 
-> *文件信息* suda\archive\SQLQuery.php: 32~473
+> *文件信息* suda\archive\SQLQuery.php: 32~477
 
 ## 所属类 
 

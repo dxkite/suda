@@ -2,7 +2,7 @@
 
 在数据表总搜索
 
-> *文件信息* suda\core\Query.php: 26~268
+> *文件信息* suda\core\Query.php: 26~327
 
 ## 所属类 
 
@@ -42,4 +42,11 @@
 
 ## 例子
 
-example
+如下语句
+```php
+$fetch=Query::where('user', ['id', 'name', 'email', 'available', 'avatar', 'ip'], '1', [], [$page, $count])->fetchAll();
+```
+与如下SQL语句等价
+```sql
+SELECT `id`, `name`,`email`,`available`, `avatar`, `ip` FROM mc_user WHERE 1;
+```

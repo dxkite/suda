@@ -2,7 +2,7 @@
 
 判断是否是POST请求
 
-> *文件信息* suda\core\Request.php: 21~474
+> *文件信息* suda\core\Request.php: 21~484
 
 ## 所属类 
 
