@@ -3,7 +3,7 @@
  * Suda FrameWork
  *
  * An open source application development framework for PHP 7.0.0 or newer
- * 
+ *
  * Copyright (c)  2017 DXkite
  *
  * @category   PHP FrameWork
@@ -75,21 +75,15 @@ class TableInstance
                 } else {
                     $tableName=substr(strrchr($className, '\\'), 1);
                 }
-                self::$tableClass[$tableName]=$className;
+                self::$tableClass[$tableName]=$className; 
             }
         }
     }
     
-    protected function formatTableName(string $className)
-    {
-        return $className;
-    }
-
     protected function getClassName(string $tableName)
     {
-        $tableRawName=$this->formatTableName($tableName);
-        if (isset(self::$tableClass[$tableRawName])) {
-            return self::$tableClass[$tableRawName];
+        if (isset(self::$tableClass[$tableName])) {
+            return self::$tableClass[$tableName];
         } else {
             throw new TableException(__('table %s class not exist', $tableName));
         }

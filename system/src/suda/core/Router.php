@@ -188,33 +188,42 @@ class Router
     }
     
     /**
-    * 解析模板名
-    */
-    public static function parseName(string $name, string $module_default=null)
+     * 解析模板名
+     *
+     * @param string $name
+     * @param string $moduleDefault
+     * @return list(module,name)
+     */
+    public static function parseName(string $name, string $moduleDefault=null)
     {
-        // MODULE_NAME_PREG
+        if (func_num_args()==2&&empty($moduleDefault)) {
+            $moduleDefault=null;
+        } elseif (empty($moduleDefault)) {
+            $moduleDefault=Application::getInstance()->getInstance()->getActiveModule();
+        }
         // [模块前缀名称/]模块名[:版本号]:(模板名|路由ID)
-        preg_match('/^((?:[a-zA-Z0-9_-]+\/)?[a-zA-Z0-9_-]+)(?::([^:]+))?(?::(.+))?$/', $name, $match);
-        if (count($match)===0) {
-            $module=$module_default??Application::getInstance()->getInstance()->getActiveModule();
-            $info=$name;
-        } elseif (isset($match[1]) && count($match)==2) {
-            // 单纯路由或者模板
-            $module=$module_default??Application::getInstance()->getInstance()->getActiveModule();
-            $info=$match[0];
-        } else {
-            $info=isset($match[3])?$match[3]:$match[2];
-            $module=isset($match[3])?
-                            (
-                                isset($match[1])?
-                                $match[1].(
-                                    $match[2]?
-                                    ':'.$match[2]
-                                    :''
+        if (preg_match('/^((?:[a-zA-Z0-9_-]+\/)?[a-zA-Z0-9_-]+)(?::([^:]+))?(?::(.+))?$/', $name, $match)) {
+            if (isset($match[1]) && count($match)==2) {
+                // 单纯路由或者模板
+                $module=$moduleDefault;
+                $info=$match[0];
+            } else {
+                $info=isset($match[3])?$match[3]:$match[2];
+                $module=isset($match[3])?
+                                (
+                                    isset($match[1])?
+                                    $match[1].(
+                                        $match[2]?
+                                        ':'.$match[2]
+                                        :''
+                                    )
+                                    :$moduleDefault // 未指定模板名
                                 )
-                                :($module_default??Application::getInstance()->getInstance()->getActiveModule()) // 未指定模板名
-                            )
-                        :$match[1];
+                            :$match[1];
+            }
+        } else {
+            $module=$moduleDefault;
+            $info=$name;
         }
         return [$module,$info];
     }
@@ -249,13 +258,13 @@ class Router
         return [];
     }
 
-    public function buildUrl(string $name, array $values=[], bool $query=true,array $queryArr=[])
+    public function buildUrl(string $name, array $values=[], bool $query=true, array $queryArr=[])
     {
         list($module, $name)=self::parseName($name);
         $module=Application::getInstance()->getInstance()->getModuleFullName($module);
         $name=$module.':'.$name;
         if (isset($this->routers[$name])) {
-            return $this->routers[$name]->createUrl($values, $query,$queryArr);
+            return $this->routers[$name]->createUrl($values, $query, $queryArr);
         } else {
             debug()->warning(__('get url for %s failed,module:%s args:%s', $name, $module, json_encode($values)));
             return '#the-router-['.$name.']-is-undefined--please-check-out-router-list';
