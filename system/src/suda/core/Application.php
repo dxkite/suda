@@ -156,16 +156,16 @@ class Application
                     Autoloader::import($importPath);
                 }
             }
+            // 加载监听器
+            if (Storage::exist($listener_path=$root.'/resource/config/listener.json')) {
+                Hook::loadJson($listener_path);
+                Hook::exec('loadModule:'.self::getModuleName($moduleTemp));
+            }
             // 自动安装
             if (conf('auto-install', true)) {
                 Hook::listen('Application:init', function () use ($moduleTemp) {
                     self::installModule($moduleTemp);
                 });
-            }
-            // 加载监听器
-            if (Storage::exist($listener_path=$root.'/resource/config/listener.json')) {
-                Hook::loadJson($listener_path);
-                Hook::exec('loadModule:'.self::getModuleName($moduleTemp));
             }
             // 设置语言包库
             Locale::path($root.'/resource/locales/');
@@ -272,7 +272,7 @@ class Application
         }
         if (file_exists($path=RUNTIME_DIR.'/modules.config.php')) {
             $modules=include $path;
-        }else{
+        } else {
             $modules=conf('app.modules', self::getModules());
         }
         $exclude=defined('DISABLE_MODULES')?explode(',', trim(DISABLE_MODULES, ',')):[];
