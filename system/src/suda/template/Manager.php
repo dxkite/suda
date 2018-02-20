@@ -123,10 +123,13 @@ class Manager
      * @param $input
      * @return mixed
      */
-    public static function compile(string $name, string $ext='html')
+    public static function compile(string $name, string $ext='html', string $outpath=null)
     {
         if ($path=self::getInputFile($name, true, $ext)) {
-            return self::$compiler->compile($name, $path, self::getOutputFile($name));
+            if (is_null($outpath)) {
+                $outpath=self::getOutputFile($name);
+            }
+            return self::$compiler->compile($name, $path, $outpath);
         }
         return false;
     }
@@ -155,14 +158,20 @@ class Manager
         if (empty($viewpath)) {
             $viewpath=static::getOutputFile($name);
         }
-        if (Config::get('debug', true) || Config::get('exception', false)) {
-            if (!static::compile($name, $ext)) {
-                echo '<b>compile theme</b> &lt;<span style="color:red;">'.static::$theme.'</span>&gt; error: '.$name.' location '.$viewpath. ' missing raw template file</br>';
-                return;
+        if (Storage::exist($viewpath)){
+            if (Config::get('debug', true) || Config::get('exception', false)) {
+                if (!static::compile($name, $ext)) {
+                    echo '<b>compile theme</b> &lt;<span style="color:red;">'.static::$theme.'</span>&gt; error: '.$name.' location '.$viewpath. ' missing raw template file</br>';
+                    return;
+                }
+            } 
+        }else{
+            if (!storage()->isWritable($viewpath)) {
+                $viewpath=storage()->temp('tpl_');
             }
-        } elseif (!Storage::exist($viewpath)) {
-            echo '<b>missing theme</b> &lt;<span style="color:red;">'.static::$theme.'</span>&gt; template file '.$name.'  location '. Storage::cut($viewpath, DATA_DIR). '</br>';
-            return;
+            if (!static::compile($name, $ext, $viewpath)) {
+                echo '<b>missing theme</b> &lt;<span style="color:red;">'.static::$theme.'</span>&gt; template  '.$name.' file not exist '.$viewpath.'</br>';
+            }
         }
         return static::displayFile($viewpath, $name);
     }
@@ -198,7 +207,7 @@ class Manager
         $public_path=self::getPublicModulePath($module);
         $sources=self::getTemplateSource($module);
         $return=false;
-        if (storage()->isWritable($public_path)){
+        if (storage()->isWritable($public_path)) {
             foreach ($sources as $source) {
                 if ($path=Storage::abspath($source.'/static')) {
                     self::copyStatic($path, $public_path);

@@ -121,6 +121,10 @@ class Cache
         return Storage::delete($data?self::$storage:CACHE_DIR);
     }
 
+    public static function enable() {
+        return is_writable(CACHE_DIR);
+    }
+    
     private static function getPath(string $name)
     {
         if (strpos($name,'.')) {

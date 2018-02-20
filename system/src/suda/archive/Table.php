@@ -540,8 +540,10 @@ abstract class Table
     {
         $info['fields']=$this->getFields();
         $info['primaryKey']=$this->getPrimaryKey();
-        Storage::path(dirname($this->cachePath));
-        ArrayHelper::export($this->cachePath, '_fieldinfos', $info);
+        if (cache()->enable()) {
+            Storage::path(dirname($this->cachePath));
+            ArrayHelper::export($this->cachePath, '_fieldinfos', $info);
+        }
     }
 
     protected static function strify($object)

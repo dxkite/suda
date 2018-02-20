@@ -399,4 +399,8 @@ class Storage
     {
         return preg_replace('/[\\\\\/]+/', DIRECTORY_SEPARATOR, $path);
     }
+
+    public static function temp(string $prefix='dx_') {
+        return tempnam(sys_get_temp_dir(),$prefix);
+    }
 }
