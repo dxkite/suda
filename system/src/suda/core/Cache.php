@@ -3,7 +3,7 @@
  * Suda FrameWork
  *
  * An open source application development framework for PHP 7.0.0 or newer
- * 
+ *
  * Copyright (c)  2017 DXkite
  *
  * @category   PHP FrameWork
@@ -17,7 +17,7 @@ namespace suda\core;
 
 /**
  * 文件缓存
- * 由于访问数据库的效率远远低于访问文件的效率，所以我添加了一个文件缓存类， 
+ * 由于访问数据库的效率远远低于访问文件的效率，所以我添加了一个文件缓存类，
  * 你可以把常用的数据和更改很少的数据查询数据库以后缓存到文件里面，用来加快页面加载速度。
  */
 class Cache
@@ -35,6 +35,9 @@ class Cache
      */
     public static function set(string $name, $value, int $expire=null):bool
     {
+        if (!self::disable()) {
+            return false;
+        }
         $path=self::getPath($name);
         self::$cache[$name]=$value;
         Storage::mkdirs(dirname($path));
@@ -107,7 +110,7 @@ class Cache
             if (Config::get('cache', true)) {
                 $value=Storage::get($file);
                 list($time, $value)=explode('|', $value, 2);
-                if (time()>intval($time)) {                 
+                if (time()>intval($time)) {
                     Storage::remove($file);
                 }
             } else {
@@ -117,17 +120,23 @@ class Cache
         debug()->timeEnd('cache gc');
     }
 
-    public static function clear(bool $data=true) {
+    public static function clear(bool $data=true)
+    {
         return Storage::delete($data?self::$storage:CACHE_DIR);
     }
 
-    public static function enable() {
+    public static function enable()
+    {
         return is_writable(CACHE_DIR);
     }
-    
+    public static function disable()
+    {
+        return !self::enable();
+    }
+
     private static function getPath(string $name)
     {
-        if (strpos($name,'.')) {
+        if (strpos($name, '.')) {
             list($main, $sub)=explode('.', $name, 2);
         } else {
             $main=$name;
