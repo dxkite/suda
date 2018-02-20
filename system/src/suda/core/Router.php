@@ -122,12 +122,15 @@ class Router
         }
     }
 
-
     public function routerCached()
     {
+        if (!storage()->isWritable(CACHE_DIR)) {
+            return false;
+        }
         if (!file_exists($this->cacheFile(self::CACHE_NAME))) {
             return false;
         }
+        return true;
     }
 
     public function prepareRouterInfo()
@@ -138,7 +141,9 @@ class Router
         }
         Hook::exec('Router:prepareRouterInfo', [$this]);
         // 缓存路由信息
-        self::saveFile();
+        if (storage()->isWritable(CACHE_DIR)) {
+            self::saveFile();
+        }
     }
 
 
