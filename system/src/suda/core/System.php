@@ -162,7 +162,7 @@ class System
     public static function uncaughtException($exception)
     {
         Config::set('exception', true);
-        if (Hook::execIf('system:displayException', [$exception], false)) {
+        if (!Hook::execIf('system:displayException', [$exception], true)) {
             if (!$exception instanceof Exception) {
                 $exception=new Exception($exception);
             }
