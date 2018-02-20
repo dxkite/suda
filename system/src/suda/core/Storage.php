@@ -165,10 +165,12 @@ class Storage
     {
         $src=self::osPath($src);
         $dest=self::osPath($dest);
-        if (!is_writable($dest)) {
+        self::mkdirs($dest);
+        if (is_writable($dest)) {
+            $dest=self::path($dest);
+        } else {
             return false;
         }
-        self::mkdirs($dest);
         $hd=opendir($src);
         while ($read=readdir($hd)) {
             if (strcmp($read, '.') !== 0 && strcmp($read, '..') !==0 && preg_match($preg, $read)) {
@@ -187,10 +189,12 @@ class Storage
     {
         $src=self::osPath($src);
         $dest=self::osPath($dest);
-        if (!is_writable($dest)) {
+        self::mkdirs($dest);
+        if (is_writable($dest)) {
+            $dest=self::path($dest);
+        } else {
             return false;
         }
-        self::mkdirs($dest);
         $hd=opendir($src);
         while ($read=readdir($hd)) {
             if (strcmp($read, '.') !== 0 && strcmp($read, '..') !==0 && preg_match($preg, $read)) {
@@ -209,7 +213,7 @@ class Storage
     {
         $source=self::osPath($source);
         $dest=self::osPath($dest);
-        if (!is_writable($dest)) {
+        if (!is_writable(dirname($dest))) {
             return false;
         }
         if (self::exist($source)) {
@@ -222,7 +226,7 @@ class Storage
     {
         $src=self::osPath($src);
         $dest=self::osPath($dest);
-        if (!is_writable($dest)) {
+        if (!is_writable(dirname($dest))) {
             return false;
         }
         if (self::exist($src)) {
@@ -400,7 +404,8 @@ class Storage
         return preg_replace('/[\\\\\/]+/', DIRECTORY_SEPARATOR, $path);
     }
 
-    public static function temp(string $prefix='dx_') {
-        return tempnam(sys_get_temp_dir(),$prefix);
+    public static function temp(string $prefix='dx_')
+    {
+        return tempnam(sys_get_temp_dir(), $prefix);
     }
 }

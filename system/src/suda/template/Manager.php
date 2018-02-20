@@ -158,15 +158,17 @@ class Manager
         if (empty($viewpath)) {
             $viewpath=static::getOutputFile($name);
         }
-        if (Storage::exist($viewpath)){
+        if (Storage::exist($viewpath)) {
             if (Config::get('debug', true) || Config::get('exception', false)) {
                 if (!static::compile($name, $ext)) {
                     echo '<b>compile theme</b> &lt;<span style="color:red;">'.static::$theme.'</span>&gt; error: '.$name.' location '.$viewpath. ' missing raw template file</br>';
                     return;
                 }
-            } 
-        }else{
-            if (!storage()->isWritable($viewpath)) {
+            }
+        } else {
+            $pathOutput=dirname($viewpath);
+            storage()->mkdirs($pathOutput);
+            if (!storage()->isWritable($pathOutput)) {
                 $viewpath=storage()->temp('tpl_');
             }
             if (!static::compile($name, $ext, $viewpath)) {
@@ -364,12 +366,19 @@ class Manager
         $outpath=APP_PUBLIC.'/'.self::$dynamicPath.'/'.self::shadowName($module_dir).'/'.$basename;
         $path=Storage::path(dirname($outpath));
         // 编译检查
-        if (Config::get('debug', true) || Config::get('exception', false)) {
-            if (!self::$compiler->compile($name, $input, $output)) {
-                echo '<b>compile theme &lt;<span style="color:red;">'.self::$theme.'</span>&gt; file '.$input. ' missing file</b>';
-                return;
+        if (Storage::exist($output)) {
+            if (Config::get('debug', true) || Config::get('exception', false)) {
+                if (!self::$compiler->compile($name, $input, $output)) {
+                    echo '<b>compile theme &lt;<span style="color:red;">'.self::$theme.'</span>&gt; file '.$input. ' missing file</b>';
+                    return;
+                }
             }
-        } elseif (!Storage::exist($output)) {
+        } else {
+            $pathOutput=dirname($output);
+            storage()->mkdirs($pathOutput);
+            if (!storage()->isWritable($pathOutput)) {
+                $output=storage()->temp('tpl_');
+            }
             if (!self::$compiler->compile($name, $input, $output)) {
                 echo '<b>missing theme &lt;<span style="color:red;">'.self::$theme.'</span>&gt; file '.$input. ' missing file</b>';
                 return;
