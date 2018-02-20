@@ -67,7 +67,7 @@ class Mapping
         $paramGet=[];
         if ($this->matchUrlValue($request->url(), $ignoreCase, $paramGet)) {
             // 自定义过滤
-            if (!hook()->execIf('Router:filter', [$this->getFullName(),$this], true)) {
+            if (hook()->execIf('Router:filter', [$this->getFullName(),$this], true)) {
                 return false;
             }
             foreach ($paramGet as $paramName=>$value) {

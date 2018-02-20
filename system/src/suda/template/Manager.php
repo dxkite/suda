@@ -207,13 +207,16 @@ class Manager
         }
         // 向下兼容
         defined('APP_PUBLIC') or define('APP_PUBLIC', Storage::abspath('.'));
-        $public_path=self::getPublicModulePath($module);
+        $publicPath=self::getPublicModulePath($module);
         $sources=self::getTemplateSource($module);
         $return=false;
-        if (storage()->isWritable($public_path)) {
+        if (!storage()->isDir($publicPath)) {
+            storage()->mkdirs($publicPath);
+        }
+        if (storage()->isWritable($publicPath)) {
             foreach ($sources as $source) {
                 if ($path=Storage::abspath($source.'/static')) {
-                    self::copyStatic($path, $public_path);
+                    self::copyStatic($path, $publicPath);
                     $return=true;
                 }
             }
@@ -613,7 +616,7 @@ class Manager
                         }
                     }
                     $this->state(404);
-                    echo 'assets not find ： '.$path;
+                    echo 'assets not find ：'.$module.'?'.$path;
                 }
                 public function getFile(string $path)
                 {
