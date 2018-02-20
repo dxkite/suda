@@ -165,6 +165,9 @@ class Storage
     {
         $src=self::osPath($src);
         $dest=self::osPath($dest);
+        if (!is_writable($dest)) {
+            return false;
+        }
         self::mkdirs($dest);
         $hd=opendir($src);
         while ($read=readdir($hd)) {
@@ -184,6 +187,9 @@ class Storage
     {
         $src=self::osPath($src);
         $dest=self::osPath($dest);
+        if (!is_writable($dest)) {
+            return false;
+        }
         self::mkdirs($dest);
         $hd=opendir($src);
         while ($read=readdir($hd)) {
@@ -203,6 +209,9 @@ class Storage
     {
         $source=self::osPath($source);
         $dest=self::osPath($dest);
+        if (!is_writable($dest)) {
+            return false;
+        }
         if (self::exist($source)) {
             return copy($source, $dest);
         }
@@ -213,6 +222,9 @@ class Storage
     {
         $src=self::osPath($src);
         $dest=self::osPath($dest);
+        if (!is_writable($dest)) {
+            return false;
+        }
         if (self::exist($src)) {
             return rename($src, $dest);
         }
@@ -233,6 +245,9 @@ class Storage
     public static function rmdir(string $path):bool
     {
         $path=self::osPath($path);
+        if (!is_writable($path)) {
+            return false;
+        }
         return rmdir($path);
     }
 
@@ -270,6 +285,9 @@ class Storage
         if ($file=self::exist($name)) {
             if (is_string($file)) {
                 $name=$file;
+            }
+            if (!is_writable($name)) {
+                return false;
             }
             return unlink($name);
         }

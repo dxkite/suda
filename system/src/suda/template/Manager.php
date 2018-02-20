@@ -198,10 +198,12 @@ class Manager
         $public_path=self::getPublicModulePath($module);
         $sources=self::getTemplateSource($module);
         $return=false;
-        foreach ($sources as $source) {
-            if ($path=Storage::abspath($source.'/static')) {
-                self::copyStatic($path, $public_path);
-                $return=true;
+        if (storage()->isWritable($public_path)){
+            foreach ($sources as $source) {
+                if ($path=Storage::abspath($source.'/static')) {
+                    self::copyStatic($path, $public_path);
+                    $return=true;
+                }
             }
         }
         return $return;
@@ -210,7 +212,7 @@ class Manager
     private static function getPublicModulePath(string $module)
     {
         $module_dir=Application::getInstance()->getModuleDir($module);
-        return Storage::path(APP_PUBLIC.'/'.self::$staticPath.'/'.self::shadowName($module_dir));
+        return APP_PUBLIC.'/'.self::$staticPath.'/'.self::shadowName($module_dir);
     }
 
     public static function shadowName(string $name)

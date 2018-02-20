@@ -100,7 +100,9 @@ class Compiler implements CompilerImpl
         debug()->timeEnd('compile '.$name);
         $syntax=Manager::checkSyntax($output);
         if ($syntax !== true) {
-            debug()->warning(__('compile error: %s near line %d', $syntax->getMessage(), $syntax->getLine()));
+            if ($syntax instanceof \Exception) {
+                debug()->warning(__('compile error: %s near line %d', $syntax->getMessage(), $syntax->getLine()));
+            }
             storage()->delete($output);
         }
         return $syntax===true?:$syntax;
