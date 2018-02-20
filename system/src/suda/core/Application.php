@@ -501,4 +501,24 @@ class Application
         }
         return version_compare($compire, $version, '>=');
     }
+
+    
+    public static function getThisModule(int $deep=0) {
+        $debug=debug_backtrace();
+        $info=$debug[$deep];
+        while (!isset($info['file']))  {
+            $deep++;
+            $info=$debug[$deep];
+        }
+        $file=$info['file'];
+        $modules=app()->getModules();
+        foreach ($modules as $module) {
+            $config=app()->getModuleConfig($module);
+            $modulePath=storage()->path($config['path']);
+           if ($modulePath == substr($file,0,strlen($modulePath))){
+               return $module;
+           }
+        }
+        return false;
+    }
 }
