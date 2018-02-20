@@ -55,7 +55,7 @@ class Debug
         self::$file= tempnam(sys_get_temp_dir(),'dx_');
         file_put_contents(self::$file, '====='.self::$hash.'====='.$request->ip().'====='.(conf('debug', defined('DEBUG') && DEBUG)?'debug':'normal')."=====\r\n", FILE_APPEND);
         file_put_contents(self::$file, self::printHead()."\r\n", FILE_APPEND);
-        if (defined('APP_LOG') && Storage::path(APP_LOG)) {
+        if (defined('APP_LOG') && Storage::path(APP_LOG) && is_writable(APP_LOG)) {
             self::$latest =APP_LOG.'/latest.log';
         }
     }
