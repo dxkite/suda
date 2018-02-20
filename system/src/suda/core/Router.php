@@ -287,7 +287,9 @@ class Router
                 $this->runRouter($mapping);
                 debug()->timeEnd('run router');
             } else {
-                Hook::execTail('system:404');
+                if (!Hook::execIf('Router:extra',[Request::getInstance()],true)){
+                    Hook::execTail('system:404');
+                }
             }
         } else {
             Hook::execTail('Router:dispatch::error');

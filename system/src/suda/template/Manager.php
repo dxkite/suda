@@ -76,6 +76,7 @@ class Manager
             } else {
                 throw new KernelException(__('app template compiler must be instance of suda\template\Compier '));
             }
+            Hook::listen('Router:extra', [__CLASS__,'assetsResponse']);
         }
     }
 
@@ -563,6 +564,73 @@ class Manager
                     return $e;
                 }
             }
+            return true;
+        }
+        return false;
+    }
+
+    protected static function assetsResponse(Request $request)
+    {
+        $url=$request->url();
+        if (preg_match('/^\/assets\/([^\/]+)\/(.+)$/', $url, $match)) {
+            list($url, $name, $path) =$match;
+            $assets=new class extends \suda\core\Response {
+                public $assetName;
+                public $assetPath;
+                public function onRequest(Request $request)
+                {
+                    $name=$this->assetName;
+                    $path=$this->assetPath;
+                    if ($name == 'static') {
+                        preg_match('/^([^\/]+)\/(.+)$/', $path, $match);
+                        if (count($match) ==3) {
+                            $moduleHash=$match[1];
+                            $path='static/'.$match[2];
+                        }
+                    } else {
+                        $moduleHash=$name;
+                    }
+                    $modules= app()->getLiveModules();
+                    $module=null;
+                    foreach ($modules as $temp) {
+                        $dir=app()->getModuleDir($temp);
+                        if (Manager::shadowName($dir) == $moduleHash) {
+                            $module=$temp;
+                            break;
+                        }
+                    }
+                    if ($module) {
+                        $root=app()->getModulePath($module);
+                        $res=Manager::getTemplateSource($module);
+                        foreach ($res as $templateRoot) {
+                            $assetPath=$templateRoot.'/'.$path;
+                            if ($assetPath=storage()->abspath($assetPath)) {
+                                if (preg_match('/^'.preg_quote($templateRoot, '/').'/', $assetPath)) {
+                                    $this->getFile($assetPath);
+                                    return;
+                                }
+                            }
+                        }
+                    }
+                    $this->state(404);
+                    echo 'assets not find ： '.$path;
+                }
+                public function getFile(string $path)
+                {
+                    $content=file_get_contents($path);
+                    $hash   = md5($content);
+                    $size   = strlen($content);
+                    if (!$this->_etag($hash)) {
+                        $type   = $type ?? pathinfo($path, PATHINFO_EXTENSION);
+                        $this->type($type);
+                        self::setHeader('Content-Length:'.$size);
+                        echo $content;
+                    }
+                }
+            };
+            $assets->assetName=$name;
+            $assets->assetPath=$path;
+            $assets->onRequest($request);
             return true;
         }
         return false;

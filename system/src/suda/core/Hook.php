@@ -75,7 +75,7 @@ class Hook
     }
 
     /**
-     * 运行，遇到返回指定条件则停止并返回false
+     * 运行，遇到返回指定条件则停止并返回true
      *
      * @param string $name
      * @param array $args
@@ -86,12 +86,12 @@ class Hook
     {
         if (isset(self::$hooks[$name]) && is_array(self::$hooks[$name])) {
             foreach (self::$hooks[$name] as $command) {
-                if (self::call($command, $args)!==$condition) {
-                    return false;
+                if (self::call($command, $args)===$condition) {
+                    return true;
                 }
             }
         }
-        return true;
+        return false;
     }
 
     public static function execNotNull(string $name, array $args=[])

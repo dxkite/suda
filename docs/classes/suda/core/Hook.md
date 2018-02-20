@@ -26,7 +26,7 @@
 | public static|[addTop](Hook/addTop.md) |  |
 | public static|[remove](Hook/remove.md) |  |
 | public static|[exec](Hook/exec.md) |  |
-| public static|[execIf](Hook/execIf.md) | 运行，遇到返回指定条件则停止并返回false |
+| public static|[](Hook/.md) | 运行，遇到返回指定条件则停止并返回false |
 | public static|[execNotNull](Hook/execNotNull.md) |  |
 | public static|[execTop](Hook/execTop.md) |  |
 | public static|[execTail](Hook/execTail.md) |  |
