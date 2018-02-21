@@ -360,7 +360,8 @@ class SQLQuery
         foreach ($array as $key=> $value) {
             $bindName=':'.ltrim($key, ':');
             if ($value instanceof InputValue) {
-                $stmt->bindValue($bindName, self::__inputFieldTransfrom($value->getName(), $value->getValue()), $value->getBindType());
+                $data= self::__inputFieldTransfrom($value->getName(), $value->getValue());
+                $stmt->bindValue($bindName,$data , InputValue::bindParam( $data));
             } else {
                 $stmt->bindValue($bindName, $value, InputValue::bindParam($value));
             }

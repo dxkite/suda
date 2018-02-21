@@ -22,11 +22,10 @@ class InputValue implements \JsonSerializable
 {
     private $name;
     private $value;
-    private $bindType;
+
 
     public function __construct(string $name, $value, int $bindType=PDO::PARAM_STR)
     {
-        $this->bindType=static::bindParam($value);
         $this->name=$name;
         $this->value=$value;
     }
@@ -36,10 +35,6 @@ class InputValue implements \JsonSerializable
         return $this->name;
     }
 
-    public function getBindType():int
-    {
-        return $this->bindType;
-    }
 
     public function getValue()
     {
@@ -65,13 +60,12 @@ class InputValue implements \JsonSerializable
     {
         return [
             'name'=>$this->name,
-            'value'=>$this->value,
-            'type'=>$this->bindType
+            'value'=>$this->value
         ];
     }
 
     public function __toString()
     {
-        return json_encode($this->jsonSerialize(),JSON_UNESCAPED_UNICODE);
+        return json_encode($this->jsonSerialize(), JSON_UNESCAPED_UNICODE);
     }
 }
