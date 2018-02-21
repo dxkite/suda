@@ -133,15 +133,15 @@ abstract class Table
         }
     }
 
-    public function searchWhere($field, string $search, $where, array $bind=[])
+    public function searchWhere($field, string $search, $where, array $bind=[],int $page=null, int $rows=10, bool $offset=false)
     {
         list($searchStr, $searchBind)=Query::prepareSearch($field, $search);
-        $whereStr=Query::prepareSearch($where, $bind);
+        $whereStr=Query::prepareWhere($where, $bind);
+
         if (is_null($page)) {
-            return Query::select($this->getTableName(), $this->getWants(), $$whereStr . ' AND '. $searchStr .' '. self::_order(), array_merge($searchBind, $bind))->object($this);
-        } else {
-            return Query::select($this->getTableName(), $this->getWants(), $$whereStr . ' AND '. $searchStr.' '. self::_order(), array_merge($searchBind, $bind))->object($this);
+            return Query::select($this->getTableName(), $this->getWants(), $whereStr . ' AND ('. $searchStr.') '. self::_order(), array_merge($searchBind, $bind))->object($this);
         }
+        return Query::select($this->getTableName(), $this->getWants(), $whereStr . ' AND ('. $searchStr.') '. self::_order(), array_merge($searchBind, $bind),[$page,$rows,$offset])->object($this);
     }
 
     /**
@@ -205,7 +205,7 @@ abstract class Table
      * @param [type] $whereBinder
      * @return Query|false
      */
-    public function select($wants, $where, $whereBinder=[])
+    public function select($wants, $where, $whereBinder=[],int $page=null,int $rowa=10, bool $offset=false)
     {
         if (is_array($where)) {
             $this->checkFields(array_keys($where));
@@ -213,8 +213,10 @@ abstract class Table
         if (is_array($wants)) {
             $this->checkFields($wants);
         }
-        $this->checkFields(array_keys($whereBinder));
-        return Query::where($this->getTableName(), $wants, $where, $whereBinder)->object($this);
+        if (is_null($page)) {
+            return Query::where($this->getTableName(), $wants, $where, $whereBinder)->object($this);
+        }
+        return Query::where($this->getTableName(), $wants, $where, $whereBinder,[$page,$rowa,$offset])->object($this);
     }
 
     /**
