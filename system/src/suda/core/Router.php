@@ -26,7 +26,6 @@ use suda\core\route\Mapping;
  */
 class Router
 {
-    protected static $urltype=['int'=>'\d+','string'=>'[^\/]+','url'=>'.+'];
     protected static $router=null;
     protected $routers=[];
     const CACHE_NAME='route.mapping';
@@ -465,6 +464,7 @@ class Router
             }
         };
         $render->onRequest(Request::getInstance());
+        return true;
     }
 
     public function getRouters()

@@ -38,10 +38,9 @@ class Mapping
     
     const ROLE_ADMIN=0;
     const ROLE_SIMPLE=1;
-
-    protected static $urlType=['int'=>'\d+','string'=>'[^\/]+','url'=>'.+'];
+    protected static $urlType=['int'=>'\d+', 'string'=>'[^\/]+','url'=>'.+'];
     public static $current;
-    
+
     public function __construct(string $name, string $url, string $callback, string $module, array $method=[], int $role=self::ROLE_SIMPLE)
     {
         $this->module=app()->getModuleFullName($module);
@@ -313,7 +312,7 @@ class Mapping
         // 转义字符
         $url=preg_replace('/([\/\.\\\\\+\*\(\^\)\?\$\!\<\>\-])/', '\\\\$1', $url);
         // 添加忽略
-        $url=preg_replace('/\[(\S+)\]/', '(?:$1)?', $url);
+        $url=preg_replace('/(\[)([^\[\]]+)(?(1)\])/', '(?:$2)?', $url);
         // 编译页面参数
         $url=preg_replace_callback('/\{(?:(\w+)(?::(\w+))?)(?:=(\w+))?\}([?])?/', function ($match) use (&$types, $urltype) {
             $size=isset($types)?count($types):0;
