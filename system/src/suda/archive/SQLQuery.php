@@ -25,7 +25,7 @@ use suda\tool\Command;
 
 /**
  * 数据库查询方案，简化数据库查
- * 
+ *
  * @example
  *
  */
@@ -266,7 +266,6 @@ class SQLQuery
         static::$transaction ++;
         if (static::$transaction == 1) {
             self::$pdo->beginTransaction();
-            debug()->waring('SQL Begin Transaction');
         }
     }
 
@@ -280,7 +279,6 @@ class SQLQuery
         self::connectPdo();
         if (static::$transaction == 1) {
             self::$pdo->commit();
-            debug()->waring('SQL Commit');
         }
         static::$transaction--;
     }
@@ -327,7 +325,7 @@ class SQLQuery
 
     private function __query(string $query, array $array=[])
     {
-        if (!conf('enableQuery',true)){
+        if (!conf('enableQuery', true)) {
             return false;
         }
         $query=self::__SqlPrefix($query);
@@ -363,7 +361,7 @@ class SQLQuery
             $bindName=':'.ltrim($key, ':');
             if ($value instanceof InputValue) {
                 $data= self::__inputFieldTransfrom($value->getName(), $value->getValue());
-                $stmt->bindValue($bindName,$data , InputValue::bindParam( $data));
+                $stmt->bindValue($bindName, $data, InputValue::bindParam($data));
             } else {
                 $stmt->bindValue($bindName, $value, InputValue::bindParam($value));
             }
@@ -391,13 +389,19 @@ class SQLQuery
     protected static function connectPdo()
     {
         // 链接数据库
-        if (!self::$pdo && conf('enableQuery',true)) {
+        if (!self::$pdo && conf('enableQuery', true)) {
             $pdo='mysql:host='.Config::get('database.host', 'localhost').';charset='.Config::get('database.charset', 'utf8').';port='.Config::get('database.port', 3306);
             self::$prefix=Config::get('database.prefix', '');
             try {
                 debug()->time('connect database');
                 self::$pdo = new PDO($pdo, Config::get('database.user', 'root'), Config::get('database.passwd', ''));
                 debug()->timeEnd('connect database');
+                $transaction = self::$transaction;
+                hook()->listen('system:shutdown::before', function () use ($transaction) {
+                    if ($transaction > 0) {
+                        debug()->error('SQL transaction is open' . $transaction);
+                    }
+                });
             } catch (PDOException $e) {
                 throw new SQLException('connect database error:'.$e->getMessage(), $e->getCode(), E_ERROR, __FILE__, __LINE__, $e);
             }
