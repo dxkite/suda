@@ -98,7 +98,7 @@ class Compiler implements CompilerImpl
         $content='<?php  class '.$classname.' extends '.self::$template.' { protected $name="'.$name.'";protected $module="'.$module.'"; protected function _render_template() {  ?>'.$content.'<?php }}';
         Storage::put($output, $content);
         debug()->timeEnd('compile '.$name);
-        $syntax=Manager::checkSyntax($output);
+        $syntax=Manager::checkSyntax($output,$classname);
         if ($syntax !== true) {
             if ($syntax instanceof \Exception || $syntax instanceof \Error) {
                 debug()->warning(__('compile error: %s near line %d', $syntax->getMessage(), $syntax->getLine()));

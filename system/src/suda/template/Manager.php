@@ -548,9 +548,12 @@ class Manager
      * @param string $file
      * @return void
      */
-    public static function checkSyntax(string $file)
+    public static function checkSyntax(string $file, string $className='')
     {
         if (storage()->exist($file)) {
+            if ($className && class_exists($className)) {
+                return true;
+            }
             $fileContent=storage()->get($file);
             if (conf('template.checkSyntax', 'eval') == 'eval') {
                 try {

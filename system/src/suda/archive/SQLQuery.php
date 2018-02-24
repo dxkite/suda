@@ -266,6 +266,7 @@ class SQLQuery
         static::$transaction ++;
         if (static::$transaction == 1) {
             self::$pdo->beginTransaction();
+            debug()->waring('SQL Begin Transaction');
         }
     }
 
@@ -279,6 +280,7 @@ class SQLQuery
         self::connectPdo();
         if (static::$transaction == 1) {
             self::$pdo->commit();
+            debug()->waring('SQL Commit');
         }
         static::$transaction--;
     }
@@ -367,7 +369,7 @@ class SQLQuery
             }
         }
 
-        $markstring='query '.$stmt->queryString;
+        $markstring='SQL Query "'.$stmt->queryString.'"';
         debug()->time($markstring);
         $return=$stmt->execute();
         self::$times+=debug()->timeEnd($markstring);
