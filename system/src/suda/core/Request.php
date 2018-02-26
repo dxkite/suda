@@ -47,7 +47,8 @@ class Request
         return self::$instance;
     }
 
-    public function setMapping($mapping){
+    public function setMapping($mapping)
+    {
         $this->mapping=$mapping;
         return $this;
     }
@@ -197,20 +198,18 @@ class Request
      */
     public static function ip()
     {
-        if (getenv('HTTP_CLIENT_IP')) {
-            $ip = getenv('HTTP_CLIENT_IP');
-        } elseif (getenv('HTTP_X_FORWARDED_FOR')) {
-            $ip = getenv('HTTP_X_FORWARDED_FOR');
-        } elseif (getenv('HTTP_X_FORWARDED')) {
-            $ip = getenv('HTTP_X_FORWARDED');
-        } elseif (getenv('HTTP_FORWARDED_FOR')) {
-            $ip = getenv('HTTP_FORWARDED_FOR');
-        } elseif (getenv('HTTP_FORWARDED')) {
-            $ip = getenv('HTTP_FORWARDED');
-        } else {
-            $ip =  $_SERVER['REMOTE_ADDR'] ?? '127.0.0.1';
+        static $ipFrom = ['HTTP_CLIENT_IP','HTTP_X_FORWARDED_FOR','HTTP_X_FORWARDED', 'HTTP_X_CLUSTER_CLIENT_IP','HTTP_FORWARDED_FOR','HTTP_FORWARDED','REMOTE_ADDR'];
+        foreach ( $ipFrom as $key) {
+            if (array_key_exists($key, $_SERVER)) {
+                foreach (explode(',', $_SERVER[$key]) as $ip) {
+                    $ip = trim($ip);
+                    if ((bool) filter_var($ip,FILTER_VALIDATE_IP, FILTER_FLAG_IPV4 |FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE)) {
+                        return $ip;
+                    }
+                }
+            }
         }
-        return $ip;
+        return  '127.0.0.1';
     }
 
     /**
@@ -222,7 +221,7 @@ class Request
     public static function ip2Address($ip)
     {
         $url="http://ip.taobao.com/service/getIpInfo.php?ip=".$ip;
-        $content=storage()->curl($url,3);
+        $content=storage()->curl($url, 3);
         $addr=json_decode($content, true);
         return $addr;
     }
@@ -478,7 +477,8 @@ class Request
         return false;
     }
 
-    public function getMapping() {
+    public function getMapping()
+    {
         return $this->mapping;
     }
 }
