@@ -101,7 +101,7 @@ abstract class Template
     protected function _render_end()
     {
         array_pop(self::$render);
-        $content=ob_get_clean();
+        $content=trim(ob_get_clean());
         debug()->trace('free render ['.strlen($content).']', $this->name);
         return $content;
     }

@@ -69,10 +69,12 @@ class Compiler implements CompilerImpl
                 $result .=$token;
             }
         }
+        /*
         // 合并相邻标签
         $result=preg_replace('/\?\>([^\S\r\n]*?)\<\?php/i', '', $result);
         // PHP行末标签吃掉换行符处理
         $result=preg_replace('/\?\>\r?\n/ms', "?>\r\n\r\n", $result);
+        */
         return $result;
     }
 
