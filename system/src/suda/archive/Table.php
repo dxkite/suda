@@ -408,7 +408,7 @@ abstract class Table
      */
     public function truncate()
     {
-        return (new SQLQuery('TRUNCATE TABLE `#{'.$this->tableName.'}`;'))->exec();
+        return (new SQLQuery('TRUNCATE TABLE `'.conf('database.name').'`.`#{'.$this->tableName.'}`;'))->exec();
     }
 
     /**
@@ -418,7 +418,7 @@ abstract class Table
      */
     public function drop()
     {
-        return (new SQLQuery('DROP TABLE IF EXISTS `#{'.$this->tableName.'}`;'))->exec();
+        return (new SQLQuery('DROP TABLE IF EXISTS `'.conf('database.name').'`.`#{'.$this->tableName.'}`;'))->exec();
     }
 
     /**
