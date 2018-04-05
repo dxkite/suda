@@ -32,6 +32,10 @@ class Mapping
     protected $param;
     protected $value;
 
+    protected $host = null;
+    protected $port;
+    protected $scheme;
+ 
     protected $antiPrefix=false;
     protected $hidden=false;
     protected $dynamic=false;
@@ -280,9 +284,17 @@ class Mapping
             }
         }, preg_replace('/\[(.+?)\]/', '$1', $url));
         if (count($args) && $query) {
-            return Request::getInstance()->baseUrl(). trim($url, '/').'?'.http_build_query($args, 'v', '&', PHP_QUERY_RFC3986);
+            return $this->getBaseUrl(). trim($url, '/').'?'.http_build_query($args, 'v', '&', PHP_QUERY_RFC3986);
         }
-        return Request::getInstance()->baseUrl(). trim($url, '/'). (count($queryArr)?'?'.http_build_query($queryArr, 'v', '&', PHP_QUERY_RFC3986):'');
+        return $this->getBaseUrl(). trim($url, '/'). (count($queryArr)?'?'.http_build_query($queryArr, 'v', '&', PHP_QUERY_RFC3986):'');
+    }
+
+    public function getBaseUrl()
+    {
+        if (is_null($this->host)) {
+            return Request::getInstance()->baseUrl();
+        }
+        return $this->scheme.'://'. $this->host.($this->port!=80?':'. $this->port:'').'/';
     }
 
     public function getPrefix()
@@ -335,6 +347,11 @@ class Mapping
         $mapping->antiPrefix=isset($json['anti-prefix'])?$json['anti-prefix']:false;
         $mapping->hidden=isset($json['hidden'])?$json['hidden']:false;
         $mapping->param= $json['param'] ?? null;
+        if (isset($json['host'])) {
+            $mapping->host = $json['host'];
+            $mapping->scheme = $json['scheme'] ?? $_SERVER['REQUEST_SCHEME'] ?? 'http';
+            $mapping->port = $json['port'] ??$_SERVER["SERVER_PORT"]?? 80;
+        }
         $mapping->build();
         return $mapping;
     }
