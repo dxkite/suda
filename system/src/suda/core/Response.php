@@ -161,7 +161,10 @@ abstract class Response
 
     public function forward()
     {
-        $referer=Request::referer();
+        if (Cookie::has('redirect_uri')) {
+            $referer =Cookie::get('redirect_uri',$_GET['redirect_uri']??Request::referer());
+            Cookie::delete('redirect_uri');
+        } 
         return $referer?$this->go($referer):false;
     }
 
