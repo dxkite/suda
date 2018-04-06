@@ -394,12 +394,13 @@ class SQLQuery
             self::$prefix=Config::get('database.prefix', '');
             try {
                 debug()->time('connect database');
+                hook()->exec('SQL:connectPdo::before');
                 self::$pdo = new PDO($pdo, Config::get('database.user', 'root'), Config::get('database.passwd', ''));
                 debug()->timeEnd('connect database');
                 $transaction = self::$transaction;
                 hook()->listen('system:shutdown::before', function () use ($transaction) {
                     if ($transaction > 0) {
-                        debug()->error('SQL transaction is open' . $transaction);
+                        debug()->error('SQL transaction is open ' . $transaction);
                     }
                 });
             } catch (PDOException $e) {
