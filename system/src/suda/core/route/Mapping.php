@@ -345,7 +345,7 @@ class Mapping
     {
         $mapping= new self($name, $json['url']??$json['visit'], $json['class'].'->onRequest', $module, $json['method']??[], $role);
         $mapping->antiPrefix=isset($json['anti-prefix'])?$json['anti-prefix']:false;
-        $mapping->hidden=isset($json['hidden'])?$json['hidden']:false;
+        $mapping->hidden= $json['disable'] ?? $json['hidden'] ?? false;
         $mapping->param= $json['param'] ?? null;
         if (isset($json['host'])) {
             $mapping->host = $json['host'];

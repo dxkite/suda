@@ -135,7 +135,7 @@ class Router
 
     public function prepareRouterInfo()
     {
-        $modules=Application::getInstance()->getInstance()->getLiveModules();
+        $modules=Application::getInstance()->getInstance()->getReachableModules();
         foreach ($modules as $module) {
             self::load($module);
         }

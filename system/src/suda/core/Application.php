@@ -46,6 +46,13 @@ class Application
      * @var [type]
      */
     private $moduleLive=null;
+
+    /**
+     * 启用路由的模块
+     *
+     * @var [type]
+     */
+    private $routeReachable = null;
     /**
      * 模块配置
      *
@@ -279,8 +286,6 @@ class Application
         foreach ($exclude as $index=>$name) {
             $exclude[$index]=$this->getModuleFullName($name);
         }
-        // debug()->trace('modules', json_encode($modules));
-        // debug()->trace('exclude', json_encode($exclude));
         foreach ($modules as $index => $name) {
             $fullname=$this->getModuleFullName($name);
             // 剔除模块名
@@ -290,12 +295,39 @@ class Application
                 $modules[$index]=$fullname;
             }
         }
-        // 排序，保证为数组
         sort($modules);
         debug()->trace('live modules', json_encode($modules));
         return $this->moduleLive=$modules;
     }
 
+    public function getReachableModules()
+    {
+        if ($this->routeReachable) {
+            return $this->routeReachable;
+        }
+        if (file_exists($path=RUNTIME_DIR.'/reachable.config.php')) {
+            $modules=include $path;
+        } else {
+            $modules=conf('app.reachable', self::getLiveModules());
+        }
+        $exclude=[];
+        foreach ($exclude as $index=>$name) {
+            $exclude[$index]=$this->getModuleFullName($name);
+        }
+        foreach ($modules as $index => $name) {
+            $fullname=$this->getModuleFullName($name);
+            // 剔除模块名
+            if (!self::checkModuleExist($name) || in_array($fullname, $exclude)) {
+                unset($modules[$index]);
+            } else {
+                $modules[$index]=$fullname;
+            }
+        }
+        sort($modules);
+        debug()->trace('reachable modules', json_encode($modules));
+        return $this->routeReachable=$modules;
+    }
+    
     /**
      * 激活运行的模块
      *
