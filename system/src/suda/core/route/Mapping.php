@@ -268,6 +268,24 @@ class Mapping
             $url='/'.trim($this->getPrefix().$this->url, '/');
         }
         $url=preg_replace('/[?|]/', '\\\1', $url);
+        // 如果没有设置忽略部分则去除忽略部分的表达式匹配
+        $url=preg_replace_callback('/\[(.+?)\]/', function ($match) use ($args) {
+            if (preg_match('/\{(?:(\w+)(?::(\w+))?)(?:=(\w+))?\}/', $match[1], $paramsArray)) {
+                if (is_array($paramsArray[1])) {
+                    foreach ($paramsArray[1] as $name) {
+                        if (!array_key_exists($name, $args)) {
+                            return '';
+                        }
+                    }
+                } elseif (!array_key_exists($paramsArray[1], $args)) {
+                    return '';
+                }
+                return $match[1];
+            } else {
+                return '';
+            }
+        }, $url);
+        // 匹配设置的参数
         $url=preg_replace_callback('/\{(?:(\w+)(?::(\w+))?)(?:=(\w+))?\}/', function ($match) use (& $args) {
             $param_name=$match[1];
             $param_type= $match[2] ?? 'url';
@@ -282,13 +300,13 @@ class Mapping
             } else {
                 return $param_default;
             }
-        }, preg_replace('/\[(.+?)\]/', '$1', $url));
+        }, $url);
         if (count($args) && $query) {
             return $this->getBaseUrl(). trim($url, '/').'?'.http_build_query($args, 'v', '&', PHP_QUERY_RFC3986);
         }
         return $this->getBaseUrl(). trim($url, '/'). (count($queryArr)?'?'.http_build_query($queryArr, 'v', '&', PHP_QUERY_RFC3986):'');
     }
-
+    
     public function getBaseUrl()
     {
         if (is_null($this->host)) {
