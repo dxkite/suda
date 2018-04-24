@@ -3,7 +3,7 @@
  * Suda FrameWork
  *
  * An open source application development framework for PHP 7.0.0 or newer
- * 
+ *
  * Copyright (c)  2017 DXkite
  *
  * @category   PHP FrameWork
@@ -14,13 +14,16 @@
  * @version    since 1.2.4
  */
 namespace suda\core;
-use suda\tool\{Command,Json};
+
+use suda\tool\Command;
+use suda\tool\Json;
 
 class Hook
 {
     private static $hooks=[];
 
-    public static function loadJson(string $path){
+    public static function loadJson(string $path)
+    {
         $hooks=Json::loadFile($path);
         debug()->trace($path);
         self::load($hooks?:[]);
@@ -109,19 +112,32 @@ class Hook
     public static function execTop(string $name, array $args=[])
     {
         if (isset(self::$hooks[$name]) && is_array(self::$hooks[$name])) {
-            return  self::call(array_shift(self::$hooks[$name]),$args);
+            return  self::call(array_shift(self::$hooks[$name]), $args);
         }
     }
 
     public static function execTail(string $name, array $args=[])
     {
         if (isset(self::$hooks[$name]) && is_array(self::$hooks[$name])) {
-            return  self::call(array_pop(self::$hooks[$name]),$args);
+            return  self::call(array_pop(self::$hooks[$name]), $args);
         }
     }
 
     protected static function call($command, array &$args)
     {
+        if (is_string($command)) {
+            if (preg_match('/^debug\=/', $command)) {
+                if (conf('debug')) {
+                    return (new Command(preg_replace('/^debug\=/', '', $command)))->exec($args);
+                }
+            } elseif (preg_match('/^normal\=/', $command)) {
+                if (conf('debug') == false) {
+                    return (new Command(preg_replace('/^normal\=/', '', $command)))->exec($args);
+                }
+            } else {
+                return (new Command($command))->exec($args);
+            }
+        }
         return (new Command($command))->exec($args);
     }
 }
