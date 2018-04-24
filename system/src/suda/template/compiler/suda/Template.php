@@ -37,6 +37,8 @@ abstract class Template
     protected $hooks=[];
     // 所在模块
     protected $module=null;
+    // 源文件
+    protected $source=null;
     // 渲染堆栈
     protected static $render=[];
     
