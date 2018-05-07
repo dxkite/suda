@@ -3,7 +3,7 @@
  * Suda FrameWork
  *
  * An open source application development framework for PHP 7.0.0 or newer
- * 
+ *
  * Copyright (c)  2017 DXkite
  *
  * @category   PHP FrameWork
@@ -17,7 +17,7 @@
 /**
  * 根据文件类型获取MIME描述
  * 其中文本硬编码为UTF-8
- * 
+ *
  * @param string $type 文件类型
  * @return string 获取的MIME字符串
  */
@@ -28,9 +28,9 @@ function mime(string $type)
 
 /**
  * 语言翻译，I18N支持，依赖locales文件夹下的文件
- * 
+ *
  * @example
- * 
+ *
  * ```php
  *  echo __('text is %d',1);
  * ```
@@ -77,7 +77,7 @@ function use_namespace(string $namespace)
 
 /**
  * 根据路由名获取URL
- * 
+ *
  * 如果第一个参数为字符串，则将字符串作为路由名称，第二个参数作为路由的值获取组合后的路由
  * 如果第一个参数为数组，则获取正在运行的路由的URL，参数使用第一个参数
  *
@@ -97,7 +97,7 @@ function u($name=null, $values=null)
     } elseif (is_array($name)) {
         return suda\core\Router::getInstance()->buildUrl(suda\core\Response::$name, $name);
     } else {
-        return suda\core\Router::getInstance()->buildUrl(suda\core\Response::$name,$_GET,false);
+        return suda\core\Router::getInstance()->buildUrl(suda\core\Response::$name, $_GET, false);
     }
 }
 
@@ -145,7 +145,7 @@ function init_resource(array $modules=null)
  *
  * @return any 获取的APP单例对象
  */
-function app() 
+function app()
 {
     return suda\core\System::getAppInstance();
 }
@@ -222,7 +222,7 @@ function config()
 
 /**
  * 新建一个命令对象
- * 
+ *
  * 命令对象可以是一个字符串或者一个数组，也可以是一个匿名包对象
  * 还可以是一个标准可调用的格式的字符串
  * 静态方法
@@ -233,8 +233,8 @@ function config()
  *
  * ```
  * 类名->方法名
- * ``` 
- * 
+ * ```
+ *
  * @param [type] $command 可调用的对象
  * @param array $params 调用时的参数
  * @return suda\tool\Command 可调用命令对象
@@ -261,8 +261,8 @@ function class_name(string $name)
  * ```json
  * {
  *    "table":{
- *        "user":"classNameOfUserTable" 
- *     } 
+ *        "user":"classNameOfUserTable"
+ *     }
  * }
  * ```
  *
@@ -277,4 +277,12 @@ function table(string $tableName)
 function session()
 {
     return suda\core\Session::getInstance();
+}
+
+function module($var=0)
+{
+    if (is_numeric($var)) {
+        return app()->getThisModule($var+1);
+    }
+    return app()->getFileModule($var);
 }

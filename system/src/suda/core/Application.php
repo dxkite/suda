@@ -542,7 +542,10 @@ class Application
             $deep++;
             $info=$debug[$deep];
         }
-        $file=$info['file'];
+        return self::getFileModule($info['file']);
+    }
+
+    public static function getFileModule(string $file) {
         $modules=app()->getModules();
         foreach ($modules as $module) {
             $config=app()->getModuleConfig($module);
