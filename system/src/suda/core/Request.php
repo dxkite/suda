@@ -437,15 +437,15 @@ class Request
     }
 
     public static function getScheme() {
-        return conf('module.scheme',conf('app.scheme',$_SERVER['REQUEST_SCHEME'] ?? 'http'));
+        return conf('app.router.scheme',$_SERVER['REQUEST_SCHEME'] ?? 'http');
     }
     
     public static function getHost() {
-        return  conf('module.host',conf('app.host',$_SERVER['HTTP_HOST'] ?? 'localhost'));
+        return  conf('app.router.host',$_SERVER['HTTP_HOST'] ?? 'localhost');
     }
 
     public static function getPort() {
-        return conf('module.port',conf('app.port', $_SERVER["SERVER_PORT"]??80));
+        return conf('app.router.port', $_SERVER["SERVER_PORT"]??80);
     }
 
     public static function baseUrl()
