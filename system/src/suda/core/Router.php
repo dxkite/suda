@@ -105,7 +105,7 @@ class Router
     {
         storage()->put($this->cacheFile('.modules'), implode("\r\n", self::$cacheModules));
         storage()->put($this->cacheFile(self::CACHE_NAME), serialize($this->routers));
-        storage()->put($this->cacheFile(self::CACHE_NAME.'.php'),'<?php '.var_export($this->routers,true));
+        storage()->put($this->cacheFile(self::CACHE_NAME.'.php'), '<?php '.var_export($this->routers, true));
     }
 
     protected function loadModulesRouter()
@@ -287,7 +287,7 @@ class Router
                 $this->runRouter($mapping);
                 debug()->timeEnd('run router');
             } else {
-                if (!Hook::execIf('Router:extra',[Request::getInstance()],true)){
+                if (!Hook::execIf('Router:extra', [Request::getInstance()], true)) {
                     Hook::execTail('system:404');
                 }
             }

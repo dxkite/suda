@@ -199,11 +199,11 @@ class Request
     public static function ip()
     {
         static $ipFrom = ['HTTP_CLIENT_IP','HTTP_X_FORWARDED_FOR','HTTP_X_FORWARDED', 'HTTP_X_CLUSTER_CLIENT_IP','HTTP_FORWARDED_FOR','HTTP_FORWARDED','REMOTE_ADDR'];
-        foreach ( $ipFrom as $key) {
+        foreach ($ipFrom as $key) {
             if (array_key_exists($key, $_SERVER)) {
                 foreach (explode(',', $_SERVER[$key]) as $ip) {
                     $ip = trim($ip);
-                    if ((bool) filter_var($ip,FILTER_VALIDATE_IP, FILTER_FLAG_IPV4 |FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE)) {
+                    if ((bool) filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4 |FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE)) {
                         return $ip;
                     }
                 }
@@ -430,21 +430,24 @@ class Request
 
     public static function hostBase()
     {
-        $scheme = self::getScheme(); 
+        $scheme = self::getScheme();
         $host= self::getHost();
-        $port=self::getPort(); 
+        $port=self::getPort();
         return $scheme.'://'.$host.($port!=80?':'.$port:'');
     }
 
-    public static function getScheme() {
-        return conf('app.router.scheme',$_SERVER['REQUEST_SCHEME'] ?? 'http');
+    public static function getScheme()
+    {
+        return conf('app.router.scheme', $_SERVER['REQUEST_SCHEME'] ?? 'http');
     }
     
-    public static function getHost() {
-        return  conf('app.router.host',$_SERVER['HTTP_HOST'] ?? 'localhost');
+    public static function getHost()
+    {
+        return  conf('app.router.host', $_SERVER['HTTP_HOST'] ?? 'localhost');
     }
 
-    public static function getPort() {
+    public static function getPort()
+    {
         return conf('app.router.port', $_SERVER["SERVER_PORT"]??80);
     }
 
