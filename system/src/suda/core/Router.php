@@ -155,7 +155,7 @@ class Router
             parse_str($info['query'], $paramValue);
         }
         if (isset($info['host'])) {
-            if ($info['host']!=$_SERVER['HTTP_HOST'] &&  $info['host']!='localhost') {
+            if ($info['host']!= Request::getHost() &&  $info['host']!='localhost') {
                 return false;
             }
         }

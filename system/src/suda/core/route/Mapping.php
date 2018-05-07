@@ -125,7 +125,7 @@ class Mapping
     }
 
     /**
-     * 判断路由是否为指定路由
+     * 判断路由是否为指定模块的路由
      *
      * @param string $that
      * @return boolean

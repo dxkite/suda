@@ -430,10 +430,22 @@ class Request
 
     public static function hostBase()
     {
-        $scheme = $_SERVER['REQUEST_SCHEME'] ?? 'http';
-        $host= $_SERVER['HTTP_HOST'] ?? 'localhost';
-        $port=$_SERVER["SERVER_PORT"]??80;
+        $scheme = self::getScheme(); 
+        $host= self::getHost();
+        $port=self::getPort(); 
         return $scheme.'://'.$host.($port!=80?':'.$port:'');
+    }
+
+    public static function getScheme() {
+        return conf('module.scheme',conf('app.scheme',$_SERVER['REQUEST_SCHEME'] ?? 'http'));
+    }
+    
+    public static function getHost() {
+        return  conf('module.host',conf('app.host',$_SERVER['HTTP_HOST'] ?? 'localhost'));
+    }
+
+    public static function getPort() {
+        return conf('module.port',conf('app.port', $_SERVER["SERVER_PORT"]??80));
     }
 
     public static function baseUrl()
