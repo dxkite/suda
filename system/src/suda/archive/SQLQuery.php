@@ -101,7 +101,6 @@ class SQLQuery
 
     public static function connectTo(Connection $connection)
     {
-        self::$connectionDefault=$connection;
         self::$connection = $connection;
     }
 
@@ -382,7 +381,10 @@ class SQLQuery
     {
         // 链接数据库
         if (self::$connection == null) {
-            self::$connection = Connection::getDefaultConnection();
+            if (self::$connectionDefault == null) {
+                self::$connectionDefault = Connection::getDefaultConnection();
+            }
+            self::$connection = self::$connectionDefault;
         }
         if (!self::$connection->isConnected()) {
             self::$connection->connect();
