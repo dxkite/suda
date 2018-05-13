@@ -6,13 +6,13 @@
     "timezone": "PRC",
     "markVersion":false,
     "database": {
-        "prefix": "dx_",
+        "prefix": "dx_", 
+        "host": "127.0.0.1", 
+        "port": 3306,
         "name": "suda", 
         "user": "root",
         "passwd": "root", 
-        "charset": "utf8", 
-        "host": "localhost", 
-        "port": 3306
+        "charset": "utf8"
     },
     "non-static": "php"
 }
