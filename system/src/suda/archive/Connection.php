@@ -78,14 +78,14 @@ class Connection
                 $this->pdo = new PDO($this->getDsn(), $this->user, $this->password);
                 debug()->timeEnd('connect database');
                 $this->id =static::$_id;
-                static::$_id ++;
-              
+                static::$_id ++;       
                 hook()->listen('system:shutdown::before', [$this,'onBeforeSystemShutdown']);
                 debug()->info('connected ('.$this->id.') '.$this->__toString());
             } catch (PDOException $e) {
                 throw new SQLException($this->__toString().' connect database error:'.$e->getMessage(), $e->getCode(), E_ERROR, __FILE__, __LINE__, $e);
             }
         }
+        return $this;
     }
 
     public function getPdo()

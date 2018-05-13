@@ -25,44 +25,16 @@ use suda\tool\Command;
 
 /**
  * 数据库查询方案，简化数据库查
+ * 单列数据查询方案
  *
  * @example
  *
  */
 class SQLQuery
 {
-    protected static $connectionDefault = null;
-    protected static $connection = null;
-    
-    protected $object;
-
-    protected $stmt=null;
-
-    /**
-     * 查询语句
-     *
-     * @var [type]
-     */
-    protected $query=null;
-    /**
-     *  模板值
-     *
-     * @var [type]
-     */
-    protected $values=null;
-    protected $scroll=false;
-    
-    /**
-     * 使用的数据库
-     *
-     * @var [type]
-     */
-    protected $database=null;
-    protected $dbchange=false;
-   
-
-    // TODO:  支持超大查询 max_allowed_packet
-
+    protected static $defaultQuery = null;
+    protected static $query = null;
+    protected $rawQuery;
     /**
      * 构造查询
      *
@@ -72,11 +44,8 @@ class SQLQuery
      */
     public function __construct(string $query='', array $binds=[], bool $scroll=false)
     {
-        self::connectPdo();
-        $this->query=$query;
-        $this->values=$binds;
-        $this->scroll=$scroll;
-        $this->object=null;
+        self::_connect();
+        $this->rawQuery=self::$query->query($query, $binds, $scroll);
     }
 
     /**
@@ -85,28 +54,19 @@ class SQLQuery
      * @param integer $fetch_style 结果集形式
      * @return array|false 查询成功则返回一列查询结果，否则返回false
      */
-    public function fetch(int $fetch_style = PDO::FETCH_ASSOC)
+    public function fetch(int $fetchStyle = PDO::FETCH_ASSOC)
     {
-        if ($this->stmt) {
-            return $this->stmt->fetch($fetch_style);
-        } else {
-            if (self::__query($this->query, $this->values)) {
-                if ($data=$this->stmt->fetch($fetch_style)) {
-                    return self::__outputRowTransfrom($data);
-                }
-            }
-        }
-        return false;
+        return $this->rawQuery->fetch($fetchStyle);
     }
 
-    public static function connectTo(Connection $connection)
+    public static function useQuery(RawQuery $query)
     {
-        self::$connection = $connection;
+        self::$query = $query;
     }
 
-    public static function resetDefault()
+    public static function resetQuery()
     {
-        self::$connection = self::$connectionDefault;
+        self::$query = self::$defaultQuery;
     }
 
     /**
@@ -117,14 +77,7 @@ class SQLQuery
      */
     public function fetchObject(string $class='stdClass')
     {
-        if ($this->stmt) {
-            return $this->stmt->fetchObject($class);
-        } else {
-            if (self::__query($this->query, $this->values)) {
-                return self::__outputObjectTransfrom($this->stmt->fetchObject($class));
-            }
-        }
-        return false;
+        return $this->rawQuery->fetchObject($class);
     }
     
     /**
@@ -133,14 +86,9 @@ class SQLQuery
      * @param integer $fetch_style 结果集形式
      * @return array|false 查询成功则返回查询结果，否则返回false
      */
-    public function fetchAll(int $fetch_style = PDO::FETCH_ASSOC)
+    public function fetchAll(int $fetchStyle = PDO::FETCH_ASSOC)
     {
-        if (self::__query($this->query, $this->values)) {
-            if ($data=$this->stmt->fetchAll($fetch_style)) {
-                return self::__outputRowsTransfrom($data);
-            }
-        }
-        return false;
+        return $this->rawQuery->fetchAll($fetchStyle);
     }
     
     /**
@@ -150,10 +98,7 @@ class SQLQuery
      */
     public function exec():int
     {
-        if (self::__query($this->query, $this->values)) {
-            return $this->stmt->rowCount();
-        }
-        return 0;
+        return $this->rawQuery->exec();
     }
 
     /**
@@ -177,7 +122,7 @@ class SQLQuery
      */
     public function values(array $values)
     {
-        $this->values=array_merge($this->values, $values);
+        $this->rawQuery->values($values);
         return $this;
     }
 
@@ -188,11 +133,9 @@ class SQLQuery
      * @param array $array 查询语句模板值
      * @return SQLQuery
      */
-    public function query(string $query, array $array=[])
+    public function query(string $query, array $array=[],bool $scroll=false)
     {
-        $this->query=$query;
-        $this->values=$array;
-        $this->stmt=null;
+        $this->rawQuery->query($query,$array,$scroll);
         return $this;
     }
     
@@ -204,8 +147,7 @@ class SQLQuery
      */
     public function use(string $name=null)
     {
-        $this->database=$name;
-        $this->dbchange=true;
+        $this->rawQuery->use($name);
         return $this;
     }
     
@@ -217,10 +159,7 @@ class SQLQuery
      */
     public function error()
     {
-        if ($this->stmt) {
-            return $this->stmt->errorInfo();
-        }
-        return false;
+        return $this->rawQuery->error();
     }
 
     /**
@@ -230,10 +169,7 @@ class SQLQuery
      */
     public function erron()
     {
-        if ($this->stmt) {
-            return $this->stmt->errorCode();
-        }
-        return false;
+        return $this->rawQuery->erron();
     }
 
     /**
@@ -245,9 +181,9 @@ class SQLQuery
     public static function lastInsertId(string $name=null)
     {
         if (is_null($name)) {
-            return self::$connection->getPdo()->lastInsertId();
+            return $this->rawQuery->lastInsertId();
         } else {
-            return self::$connection->getPdo()->lastInsertId($name);
+            return $this->rawQuery->lastInsertId($name);
         }
         return false;
     }
@@ -270,7 +206,7 @@ class SQLQuery
     public static function beginTransaction()
     {
         self::connectPdo();
-        self::$connection->beginTransaction();
+        self::$query->beginTransaction();
     }
 
     /**
@@ -281,7 +217,7 @@ class SQLQuery
     public static function commit()
     {
         self::connectPdo();
-        self::$connection->commit();
+        self::$query->commit();
     }
 
     /**
@@ -292,102 +228,32 @@ class SQLQuery
     public static function rollBack()
     {
         self::connectPdo();
-        self::$connection->rollBack();
+        self::$query->rollBack();
     }
 
     public function quote($string)
     {
-        return self::$connection->getPdo()->quote($string);
+        return self::$query->quote($string);
     }
 
     public function arrayQuote(array $array)
     {
-        $temp = array();
-        foreach ($array as $value) {
-            $temp[] = is_int($value) ? $value : self::$connection->getPdo()->quote($value);
-        }
-        return implode($temp, ',');
+        return self::$query->arrayQuote($array);
     }
 
-    private function __SqlPrefix(string $query)
+    protected static function _connect(Connection $connection=null)
     {
-        return preg_replace('/#{(\S+?)}/', self::$connection->prefix.'$1', $query);
-    }
-
-    private function __query(string $query, array $array=[])
-    {
-        if (!conf('enableQuery', true)) {
-            return false;
-        }
-        $query=self::__SqlPrefix($query);
-        $debug=debug_backtrace();
-        // 调整数据表
-        if ($this->database && $this->dbchange) {
-            if (self::$connection->getPdo()->query('USE '.$this->database)) {
-                $this->dbchange=false;
-                $this->database=null;
-            } else {
-                throw new SQLException(__('could not select database:%s, please check the table if exist.', $this->database), 0, E_ERROR, $debug[1]['file'], $debug[1]['line']);
+        // 链接默认数据库
+        if ($connection == null) {
+            if (self::$defaultQuery == null) {
+                self::$defaultQuery = new RawQuery(Connection::getDefaultConnection()->connect());
             }
-        } elseif (is_null($this->database)) {
-            $database=self::$connection->database;
-            if ($database) {
-                if (self::$connection->getPdo()->query('USE '.$database)) {
-                    $this->database=$database;
-                } else {
-                    debug()->warning(__('could not select database:%s, maybe you should create database.', $database), 0, E_ERROR, $debug[1]['file'], $debug[1]['line']);
-                }
-            } else {
-                throw new SQLException(__('make sure you have set database info'), 0, E_ERROR, $debug[1]['file'], $debug[1]['line']);
-            }
-        }
-
-        if ($this->scroll) {
-            $stmt=self::$connection->getPdo()->prepare($query, [PDO::ATTR_CURSOR=>PDO::CURSOR_SCROLL]);
+            self::$query = self::$defaultQuery;
         } else {
-            $stmt=self::$connection->getPdo()->prepare($query);
-        }
-        
-        foreach ($array as $key=> $value) {
-            $bindName=':'.ltrim($key, ':');
-            if ($value instanceof InputValue) {
-                $data= self::__inputFieldTransfrom($value->getName(), $value->getValue());
-                $stmt->bindValue($bindName, $data, InputValue::bindParam($data));
-            } else {
-                $stmt->bindValue($bindName, $value, InputValue::bindParam($value));
+            if (!$connection->isConnected()) {
+                $connection->connect();
             }
-        }
-
-        $markstring='SQL Query '.self::$connection->id.' "'.$stmt->queryString.'"';
-        debug()->time($markstring);
-        $return=$stmt->execute();
-        debug()->timeEnd($markstring);
-        // self::$queryCount++;
-        if ($return) {
-            if (Config::get('debug')) {
-                debug()->debug($stmt->queryString, $this->values);
-            }
-        } else {
-            debug()->warning($stmt->errorInfo()[2].':'.$stmt->queryString, $this->values);
-            if (!conf('database.ignoreError', false)) {
-                throw (new SQLException($stmt->errorInfo()[2], intval($stmt->errorCode()), E_ERROR, $debug[1]['file'], $debug[1]['line']))->setSql($stmt->queryString)->setBinds($this->values);
-            }
-        }
-        $this->stmt=$stmt;
-        return $return;
-    }
-
-    protected static function connectPdo()
-    {
-        // 链接数据库
-        if (self::$connection == null) {
-            if (self::$connectionDefault == null) {
-                self::$connectionDefault = Connection::getDefaultConnection();
-            }
-            self::$connection = self::$connectionDefault;
-        }
-        if (!self::$connection->isConnected()) {
-            self::$connection->connect();
+            self::$query =new RawQuery($connection);
         }
     }
     
@@ -399,69 +265,7 @@ class SQLQuery
      */
     public function object($object)
     {
-        $this->object=$object;
+        $this->rawQuery->object($object);
         return $this;
-    }
-
-    /**
-     * 转换函数；统一处理数据库输入输出
-     *
-     * 只处理InputValue类型的数据
-     *
-     * @param string $name
-     * @param string $fieldName
-     * @param [type] $inputData
-     * @return void
-     */
-    protected function __dataTransfrom(string $name, string $fieldName, $inputData)
-    {
-        $methodName='_'.$name.ucfirst($fieldName).'Field';
-        if ($this->object) {
-            if (method_exists($this->object, '__dataTransfrom')) {
-                return Command::_absoluteCall([$this->object,'__dataTransfrom'], func_get_args());
-            } elseif (method_exists($this->object, $methodName)) {
-                $inputData= Command::_absoluteCall([$this->object,$methodName], [$inputData]);
-            }
-        }
-        return $inputData;
-    }
-
-    private function __inputFieldTransfrom(string $name, $inputData)
-    {
-        return $this->__dataTransfrom('input', $name, $inputData);
-    }
-
-    private function __outputFieldTransfrom(string $name, $inputData)
-    {
-        return $this->__dataTransfrom('output', $name, $inputData);
-    }
-
-    private function __outputRowsTransfrom(array $inputRows)
-    {
-        foreach ($inputRows as $id=>$inputData) {
-            foreach ($inputData as $fieldName => $fieldData) {
-                $inputRows[$id][$fieldName]=$this->__outputFieldTransfrom($fieldName, $fieldData);
-            }
-        }
-        return $inputRows;
-    }
-
-    private function __outputRowTransfrom(array $inputData)
-    {
-        foreach ($inputData as $fieldName => $fieldData) {
-            $inputData[$fieldName]=$this->__outputFieldTransfrom($fieldName, $fieldData);
-        }
-        return $inputData;
-    }
-
-    private function __outputObjectTransfrom($object)
-    {
-        $reflect=new \ReflectionClass($object);
-        $props=$reflect->getProperties(\ReflectionProperty::IS_PUBLIC | \ReflectionProperty::IS_PROTECTED | ReflectionProperty::IS_PRIVATE);
-        foreach ($props as $prop) {
-            $prop->setAccessible(true);
-            $prop->setValue($object, $this->__outputFieldTransfrom($prop->getName(), $prop->getValue()));
-        }
-        return $object;
     }
 }
