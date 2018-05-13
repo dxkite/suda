@@ -1,0 +1,159 @@
+<?php
+/**
+ * Suda FrameWork
+ *
+ * An open source application development framework for PHP 7.0.0 or newer
+ *
+ * Copyright (c)  2017 DXkite
+ *
+ * @category   PHP FrameWork
+ * @package    Suda
+ * @copyright  Copyright (c) DXkite
+ * @license    MIT
+ * @link       https://github.com/DXkite/suda
+ * @version    since 1.2.10
+ */
+
+namespace suda\archive;
+
+use PDO;
+use PDOException;
+use suda\exception\SQLException;
+use suda\core\Config;
+
+/**
+ * 数据表链接对象
+ *
+ */
+class Connection
+{
+    public $type = 'mysql';
+    public $host = '127.0.0.1';
+    public $port = 3306;
+    public $charset ='utf8';
+    public $prefix ='dx_';
+    public $user='root';
+    public $password='';
+    public $database ='';
+    public $id =0;
+
+    protected $queryCount=0;
+    protected $times=0;
+    protected $pdo=null;
+    protected $transaction = 0;
+    protected static $_id=0;
+ 
+
+    public function __toString()
+    {
+        return 'DB Connection {'.$this->getDsn().'}';
+    }
+
+    public static function getDefaultConnection()
+    {
+        $conn = new self();
+        $conn->type= 'mysql';
+        $conn->host= Config::get('database.host', 'localhost');
+        $conn->database= Config::get('database.name', 'suda_framework');
+        $conn->charset=Config::get('database.charset', 'utf8');
+        $conn->port=Config::get('database.port', 3306);
+        $conn->user = Config::get('database.user', 'root');
+        $conn->password = Config::get('database.passwd', '');
+        return $conn;
+    }
+
+    protected function getDsn()
+    {
+        return $this->type.':dbname='.$this->database.';host='.$this->host.';charset='.$this->charset.';port='.$this->port;
+    }
+    
+    public function connect()
+    {
+        // 链接数据库
+        if (!$this->pdo && conf('enableQuery', true)) {
+            $this->prefix=Config::get('database.prefix', '');
+            try {
+                debug()->time('connect database');
+                hook()->exec('SQL:connectPdo::before');
+                $this->pdo = new PDO($this->getDsn(), $this->user, $this->password);
+                debug()->timeEnd('connect database');
+                $this->id =static::$_id;
+                static::$_id ++;
+              
+                hook()->listen('system:shutdown::before', [$this,'onBeforeSystemShutdown']);
+                debug()->info('connected ('.$this->id.') '.$this->__toString());
+            } catch (PDOException $e) {
+                throw new SQLException($this->__toString().' connect database error:'.$e->getMessage(), $e->getCode(), E_ERROR, __FILE__, __LINE__, $e);
+            }
+        }
+    }
+
+    public function getPdo()
+    {
+        return $this->pdo;
+    }
+
+        /**
+     * 事务系列，开启事务
+     *
+     * @return any
+     */
+    public function begin()
+    {
+        return self::beginTransaction();
+    }
+
+    /**
+     * 事务系列，开启事务
+     *
+     * @return any
+     */
+    public function beginTransaction()
+    {
+        $this->transaction ++;
+        if ($this->transaction == 1) {
+            $this->pdo->beginTransaction();
+        }
+    }
+
+    public function isConnected()
+    {
+        return $this->pdo != null;
+    }
+
+    /**
+     * 事务系列，提交事务
+     *
+     * @return any
+     */
+    public function commit()
+    {
+        if ($this->transaction == 1) {
+            $this->pdo->commit();
+        }
+        $this->transaction--;
+    }
+
+    /**
+     * 事务系列，撤销事务
+     *
+     * @return any
+     */
+    public function rollBack()
+    {
+        if ($this->transaction == 1) {
+            $this->transaction=0;
+            $this->pdo->rollBack();
+        } else {
+            $this->transaction--;
+        }
+    }
+
+
+    protected function onBeforeSystemShutdown()
+    {
+        if ($this->transaction > 0) {
+            debug()->error('SQL transaction is open (' . $transaction.') in connection '.$this->__toString());
+        }
+    }
+}

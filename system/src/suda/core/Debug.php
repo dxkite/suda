@@ -47,12 +47,13 @@ class Debug
     private static $file;
     private static $latest=false;
     private static $saved=false;
+    private static $shutdown=false;
 
     public static function init()
     {
         $request=Request::getInstance();
         self::$hash=$hash=substr(md5(microtime().''.$request->ip()), 0, 6);
-        self::$file= tempnam(sys_get_temp_dir(),'dx_');
+        self::$file= tempnam(sys_get_temp_dir(), 'dx_');
         file_put_contents(self::$file, '====='.self::$hash.'====='.$request->ip().'====='.(conf('debug', defined('DEBUG') && DEBUG)?'debug':'normal')."=====\r\n", FILE_APPEND);
         file_put_contents(self::$file, self::printHead()."\r\n", FILE_APPEND);
         if (defined('APP_LOG') && Storage::path(APP_LOG) && is_writable(APP_LOG)) {
@@ -321,7 +322,10 @@ class Debug
     private static function writeLine(array $log)
     {
         if (self::$saved || is_null(self::$file)) {
-            // 无法记录错误时直接显示错误
+            if (self::$shutdown) {
+                // 无法记录错误时跳过
+                return;
+            }
             return self::displayLog($log);
         }
         
@@ -373,6 +377,7 @@ class Debug
 
     public static function phpShutdown()
     {
+        self::$shutdown =true;
         self::afterSystemRun();
         self::save();
     }

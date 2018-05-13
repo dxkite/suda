@@ -31,12 +31,9 @@ use suda\tool\Command;
  */
 class SQLQuery
 {
-    protected static $queryCount=0;
-    protected static $times=0;
-    protected static $pdo=null;
-    protected static $prefix=null;
-    protected static $transaction = 0;
-
+    protected static $connectionDefault = null;
+    protected static $connection = null;
+    
     protected $object;
 
     protected $stmt=null;
@@ -100,6 +97,17 @@ class SQLQuery
             }
         }
         return false;
+    }
+
+    public static function connectTo(Connection $connection)
+    {
+        self::$connectionDefault=$connection;
+        self::$connection = $connection;
+    }
+
+    public static function resetDefault()
+    {
+        self::$connection = self::$connectionDefault;
     }
 
     /**
@@ -238,9 +246,9 @@ class SQLQuery
     public static function lastInsertId(string $name=null)
     {
         if (is_null($name)) {
-            return self::$pdo->lastInsertId();
+            return self::$connection->getPdo()->lastInsertId();
         } else {
-            return self::$pdo->lastInsertId($name);
+            return self::$connection->getPdo()->lastInsertId($name);
         }
         return false;
     }
@@ -263,10 +271,7 @@ class SQLQuery
     public static function beginTransaction()
     {
         self::connectPdo();
-        static::$transaction ++;
-        if (static::$transaction == 1) {
-            self::$pdo->beginTransaction();
-        }
+        self::$connection->beginTransaction();
     }
 
     /**
@@ -277,10 +282,7 @@ class SQLQuery
     public static function commit()
     {
         self::connectPdo();
-        if (static::$transaction == 1) {
-            self::$pdo->commit();
-        }
-        static::$transaction--;
+        self::$connection->commit();
     }
 
     /**
@@ -291,36 +293,26 @@ class SQLQuery
     public static function rollBack()
     {
         self::connectPdo();
-        if (static::$transaction == 1) {
-            static::$transaction=0;
-            self::$pdo->rollBack();
-        } else {
-            static::$transaction--;
-        }
+        self::$connection->rollBack();
     }
 
     public function quote($string)
     {
-        return self::$pdo->quote($string);
+        return self::$connection->getPdo()->quote($string);
     }
 
     public function arrayQuote(array $array)
     {
         $temp = array();
         foreach ($array as $value) {
-            $temp[] = is_int($value) ? $value : self::$pdo->quote($value);
+            $temp[] = is_int($value) ? $value : self::$connection->getPdo()->quote($value);
         }
         return implode($temp, ',');
     }
 
-    public static function getRuninfo()
-    {
-        return ['times'=>self::$times,'counts'=>self::$queryCount];
-    }
-
     private function __SqlPrefix(string $query)
     {
-        return preg_replace('/#{(\S+?)}/', self::$prefix.'$1', $query);
+        return preg_replace('/#{(\S+?)}/', self::$connection->prefix.'$1', $query);
     }
 
     private function __query(string $query, array $array=[])
@@ -332,16 +324,16 @@ class SQLQuery
         $debug=debug_backtrace();
         // 调整数据表
         if ($this->database && $this->dbchange) {
-            if (self::$pdo->query('USE '.$this->database)) {
+            if (self::$connection->getPdo()->query('USE '.$this->database)) {
                 $this->dbchange=false;
                 $this->database=null;
             } else {
                 throw new SQLException(__('could not select database:%s, please check the table if exist.', $this->database), 0, E_ERROR, $debug[1]['file'], $debug[1]['line']);
             }
         } elseif (is_null($this->database)) {
-            $database=Config::get('database.name');
+            $database=self::$connection->database;
             if ($database) {
-                if (self::$pdo->query('USE '.$database)) {
+                if (self::$connection->getPdo()->query('USE '.$database)) {
                     $this->database=$database;
                 } else {
                     debug()->warning(__('could not select database:%s, maybe you should create database.', $database), 0, E_ERROR, $debug[1]['file'], $debug[1]['line']);
@@ -352,9 +344,9 @@ class SQLQuery
         }
 
         if ($this->scroll) {
-            $stmt=self::$pdo->prepare($query, [PDO::ATTR_CURSOR=>PDO::CURSOR_SCROLL]);
+            $stmt=self::$connection->getPdo()->prepare($query, [PDO::ATTR_CURSOR=>PDO::CURSOR_SCROLL]);
         } else {
-            $stmt=self::$pdo->prepare($query);
+            $stmt=self::$connection->getPdo()->prepare($query);
         }
         
         foreach ($array as $key=> $value) {
@@ -367,11 +359,11 @@ class SQLQuery
             }
         }
 
-        $markstring='SQL Query "'.$stmt->queryString.'"';
+        $markstring='SQL Query '.self::$connection->id.' "'.$stmt->queryString.'"';
         debug()->time($markstring);
         $return=$stmt->execute();
-        self::$times+=debug()->timeEnd($markstring);
-        self::$queryCount++;
+        debug()->timeEnd($markstring);
+        // self::$queryCount++;
         if ($return) {
             if (Config::get('debug')) {
                 debug()->debug($stmt->queryString, $this->values);
@@ -389,23 +381,11 @@ class SQLQuery
     protected static function connectPdo()
     {
         // 链接数据库
-        if (!self::$pdo && conf('enableQuery', true)) {
-            $pdo='mysql:host='.Config::get('database.host', 'localhost').';charset='.Config::get('database.charset', 'utf8').';port='.Config::get('database.port', 3306);
-            self::$prefix=Config::get('database.prefix', '');
-            try {
-                debug()->time('connect database');
-                hook()->exec('SQL:connectPdo::before');
-                self::$pdo = new PDO($pdo, Config::get('database.user', 'root'), Config::get('database.passwd', ''));
-                debug()->timeEnd('connect database');
-                $transaction = self::$transaction;
-                hook()->listen('system:shutdown::before', function () use ($transaction) {
-                    if ($transaction > 0) {
-                        debug()->error('SQL transaction is open ' . $transaction);
-                    }
-                });
-            } catch (PDOException $e) {
-                throw new SQLException('connect database error:'.$e->getMessage(), $e->getCode(), E_ERROR, __FILE__, __LINE__, $e);
-            }
+        if (self::$connection == null) {
+            self::$connection = Connection::getDefaultConnection();
+        }
+        if (!self::$connection->isConnected()) {
+            self::$connection->connect();
         }
     }
     

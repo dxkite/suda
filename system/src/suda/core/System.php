@@ -179,7 +179,6 @@ class System
     public static function getRunInfo()
     {
         $info=Debug::getInfo();
-        $info=array_merge($info, SQLQuery::getRunInfo());
         return $info;
     }
 
