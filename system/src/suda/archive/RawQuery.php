@@ -27,7 +27,7 @@ use suda\tool\Command;
  * 数据库查询方案，提供原始查询方案
  *
  */
-class RawQuery
+class RawQuery implements SQLStatement
 {
     protected $connection = null;
     

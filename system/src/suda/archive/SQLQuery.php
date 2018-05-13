@@ -30,7 +30,7 @@ use suda\tool\Command;
  * @example
  *
  */
-class SQLQuery
+class SQLQuery implements SQLStatement
 {
     protected static $defaultQuery = null;
     protected static $query = null;
@@ -46,6 +46,10 @@ class SQLQuery
     {
         self::_connect();
         $this->rawQuery=self::$query->query($query, $binds, $scroll);
+    }
+
+    public function getConnection() {
+        return $this->rawQuery->getConnection();
     }
 
     /**

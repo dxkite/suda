@@ -93,7 +93,23 @@ class Connection
         return $this->pdo;
     }
 
-        /**
+    /**
+     * 获取最后一次插入的主键ID（用于自增值
+     *
+     * @param string $name
+     * @return false|int false则获取失败，整数则获取成功
+     */
+    public function lastInsertId(string $name=null)
+    {
+        if (is_null($name)) {
+            return $this->pdo->lastInsertId();
+        } else {
+            return $this->pdo->lastInsertId($name);
+        }
+        return false;
+    }
+
+    /**
      * 事务系列，开启事务
      *
      * @return any
@@ -155,5 +171,24 @@ class Connection
         if ($this->transaction > 0 || $this->pdo->inTransaction()) {
             debug()->error('SQL transaction is open (' . $transaction.') in connection '.$this->__toString());
         }
+    }
+
+    public function quote($string)
+    {
+        return $this->pdo->quote($string);
+    }
+
+    public function arrayQuote(array $array)
+    {
+        $temp = array();
+        foreach ($array as $value) {
+            $temp[] = is_int($value) ? $value : $this->pdo->quote($value);
+        }
+        return implode($temp, ',');
+    }
+
+    public function prefixStr(string $query)
+    {
+        return preg_replace('/#{(\S+?)}/', $this->prefix.'$1', $query);
     }
 }
