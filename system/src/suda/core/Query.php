@@ -61,9 +61,9 @@ class Query extends SQLQuery
             }
             $sql='INSERT INTO `'.$table.'` ('.trim($names, ',').') VALUES ('.trim($bind, ',').');';
         }
-        $count=(new SQLQuery($sql, $binds))->object($object)->exec();
+        $count=($q=new SQLQuery($sql, $binds))->object($object)->exec();
         if ($count) {
-            $id=SQLQuery::lastInsertId();
+            $id=$q->lastInsertId();
             if ($id>0) {
                 return $id;
             } else {

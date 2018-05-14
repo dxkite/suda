@@ -230,7 +230,7 @@ class RawQuery implements SQLStatement
      * @param string $name
      * @return false|int false则获取失败，整数则获取成功
      */
-    public static function lastInsertId(string $name=null)
+    public function lastInsertId(string $name=null)
     {
         if (is_null($name)) {
             return $this->connection->getPdo()->lastInsertId();
@@ -245,7 +245,7 @@ class RawQuery implements SQLStatement
      *
      * @return any
      */
-    public static function begin()
+    public function begin()
     {
         return self::beginTransaction();
     }
