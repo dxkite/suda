@@ -150,7 +150,7 @@ class Request
      * @param [type] $default cookie的默认值
      * @return [type] 获取的值，如果没有，则是default设置的值
      */
-    public static function cookie(string $name, $default)
+    public static function cookie(string $name, $default ='')
     {
         return Cookie::get($name, $default);
     }
@@ -303,7 +303,7 @@ class Request
      */
     public static function signature()
     {
-        return md5(self::ip());
+        return md5(self::getHeader('User-Agent').self::ip());
     }
 
     /**
