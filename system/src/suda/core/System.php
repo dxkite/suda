@@ -86,10 +86,14 @@ class System
     public static function run()
     {
         debug()->time('init application');
+        $router=Router::getInstance();
         self::console();
         debug()->timeEnd('init application');
+        debug()->time('init router');
+        $router->loadModulesRouter();
+        debug()->timeEnd('init router');
         debug()->time('run request');
-        Router::getInstance()->dispatch();
+        $router->dispatch();
         debug()->timeEnd('run request');
         debug()->time('before shutdown');
     }
@@ -99,6 +103,15 @@ class System
         $app=Storage::path(APP_DIR);
         self::readManifast(APP_DIR.'/manifast.json');
         $name=Autoloader::realName(self::$applicationClass);
+         // 加载共享库
+         foreach (Config::get('app.import', [''=>SHRAE_DIR]) as $namespace=>$path) {
+             if (Storage::isDir($srcPath=APP_DIR.DIRECTORY_SEPARATOR.$path)) {
+                 Autoloader::addIncludePath($srcPath, $namespace);
+             } elseif (Storage::isFile($importPath=APP_DIR.DIRECTORY_SEPARATOR.$path)) {
+                 Autoloader::import($importPath);
+             }
+         }
+        Config::set('app.application', $name);
         debug()->trace(__('loading application %s from %s', $name, $app));
         self::$appInstance= $name::getInstance();
         self::$appInstance->init();
@@ -142,7 +155,6 @@ class System
         debug()->time('shutdown');
         // 发送Cookie
         if (connection_status() == CONNECTION_NORMAL) {
-            Cookie::sendCookies();
             Hook::exec('system:shutdown::before');
         }
         // 停止响应输出

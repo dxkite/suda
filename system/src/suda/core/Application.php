@@ -74,7 +74,7 @@ class Application
     private $modulesPath=[];
 
 
-    private static $instance;
+    protected static $instance;
 
     private function __construct()
     {
@@ -107,7 +107,7 @@ class Application
         // 设置默认命名空间
         Autoloader::setNamespace(Config::get('app.namespace'));
         // 系统共享库
-        Autoloader::addIncludePath(SHRAE_DIR);
+        // Autoloader::addIncludePath(SHRAE_DIR);
         // 注册模块目录
         $this->addModulesPath(SYSTEM_RESOURCE.'/modules');
         $this->addModulesPath(MODULES_DIR);
@@ -115,8 +115,9 @@ class Application
 
     public static function getInstance()
     {
+        $name=Config::get('app.application');
         if (is_null(self::$instance)) {
-            self::$instance=new self();
+            self::$instance=new $name();
         }
         return self::$instance;
     }
@@ -535,24 +536,26 @@ class Application
     }
 
     
-    public static function getThisModule(int $deep=0) {
+    public static function getThisModule(int $deep=0)
+    {
         $debug=debug_backtrace();
         $info=$debug[$deep];
-        while (!isset($info['file']))  {
+        while (!isset($info['file'])) {
             $deep++;
             $info=$debug[$deep];
         }
         return self::getFileModule($info['file']);
     }
 
-    public static function getFileModule(string $file) {
+    public static function getFileModule(string $file)
+    {
         $modules=app()->getModules();
         foreach ($modules as $module) {
             $config=app()->getModuleConfig($module);
             $modulePath=storage()->path($config['path']);
-           if ($modulePath == substr($file,0,strlen($modulePath))){
-               return $module;
-           }
+            if ($modulePath == substr($file, 0, strlen($modulePath))) {
+                return $module;
+            }
         }
         return false;
     }

@@ -36,7 +36,6 @@ class Router
     {
         Hook::listen('system:404', 'Router::error404');
         Hook::listen('Router:dispatch::error', 'Router::error404');
-        self::loadModulesRouter();
     }
 
     public static function getInstance()
@@ -108,7 +107,7 @@ class Router
         storage()->put($this->cacheFile(self::CACHE_NAME.'.php'), '<?php '.var_export($this->routers, true));
     }
 
-    protected function loadModulesRouter()
+    public function loadModulesRouter()
     {
         // 如果DEBUG模式
         if (conf('debug', false)) {
