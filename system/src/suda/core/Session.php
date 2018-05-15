@@ -59,6 +59,11 @@ class Session
         }
     }
 
+    public static function delete(string $name)
+    {
+        unset($_SESSION[$name]);
+    }
+
     public static function has(string $name)
     {
         return isset($_SESSION[$name]);

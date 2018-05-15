@@ -108,7 +108,36 @@ class Mapping
     public function run()
     {
         self::$current=$this;
-        return (new Command($this->callback))->exec([Request::getInstance()->setMapping($this)]);
+        $callback = new Command($this->callback);
+        if ($command  = $callback->command) {
+            $method = null;
+            if (is_string($command)) {
+                if (!function_exists($command) && $callback->file) {
+                    require_once $callback->file;
+                }
+                $method=new \ReflectionFunction($command[0], $command[1]);
+            } elseif (is_array($command)) {
+                $method=new \ReflectionMethod($command[0], $command[1]);
+            }
+            $ob =true;
+            if ($doc = $method->getDocComment()) {
+                if (preg_match('/@ob\s+(\w+)\s+/ims', $docs, $match)) {
+                    // 开启OB
+                    if (!filter_var(strtolower($match[1]??'true'), FILTER_VALIDATE_BOOLEAN)) {
+                        $ob =false;
+                    }
+                }
+            }
+            if ($ob) {
+                ob_start();
+                $callback->exec([Request::getInstance()->setMapping($this)]);
+                $content=ob_get_clean();
+                cookie()->sendCookies();
+                echo $content;
+                return true;
+            }
+        }
+        return $callback->exec([Request::getInstance()->setMapping($this)]);
     }
 
     public function build()

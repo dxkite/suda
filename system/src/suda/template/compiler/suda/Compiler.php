@@ -100,7 +100,7 @@ class Compiler implements CompilerImpl
         $content='<?php  class '.$classname.' extends '.self::$template.' { protected $name="'. addslashes($name) .'";protected $module="'.addslashes($module).'"; protected $source="'. addslashes($input).'";protected function _render_template() {  ?>'.$content.'<?php }}';
         Storage::put($output, $content);
         debug()->timeEnd('compile '.$name);
-        $syntax=Manager::checkSyntax($output,$classname);
+        $syntax=Manager::checkSyntax($output, $classname);
         if ($syntax !== true) {
             if ($syntax instanceof \Exception || $syntax instanceof \Error) {
                 debug()->warning(__('compile error: %s near line %d', $syntax->getMessage(), $syntax->getLine()));
@@ -115,7 +115,7 @@ class Compiler implements CompilerImpl
         $classname=Manager::className($name);
         if (class_exists($classname)) {
             $class=new \ReflectionClass($classname);
-            debug()->warning(__('template %s is already in %s defined',$name,$class->getFileName()));
+            debug()->warning(__('template %s is already in %s defined', $name, $class->getFileName()));
         } else {
             require_once $viewfile;
         }
@@ -206,13 +206,16 @@ class Compiler implements CompilerImpl
     protected function echoValue($var)
     {
         // 任意变量名: 中文点下划线英文数字
-        return preg_replace_callback('/\B[$][:]([.\w\x{4e00}-\x{9aff}]+)(\s*)(\( ( (?>[^()]+) | (?3) )* \) )?/ux', [$this,'echoValueCallback'], $var);
+        return preg_replace_callback('/\B[$](\?)?[:]([.\w\x{4e00}-\x{9aff}]+)(\s*)(\( ( (?>[^()]+) | (?3) )* \) )?/ux', [$this,'echoValueCallback'], $var);
     }
     
     protected function echoValueCallback($matchs)
     {
-        $name=$matchs[1];
-        $args=isset($matchs[4])?','.$matchs[4]:'';
+        $name=$matchs[2];
+        if ($matchs[1]==='?') {
+            return '$this->has("'.$name.'")';
+        }
+        $args=isset($matchs[5]) && !empty($matchs[5]) ?','.$matchs[5]:'';
         return '$this->get("'.$name.'"'.$args.')';
     }
 
@@ -294,7 +297,7 @@ class Compiler implements CompilerImpl
     {
         preg_match('/\((.+)\)/', $exp, $v);
         $name=str_replace('\'', '-', trim($v[1], '"\''));
-        return "<?php suda\\template\\Manager::include('{$name}',\$this)->render(); ?>";
+        return "<?php echo suda\\template\\Manager::include('{$name}',\$this)->getRenderedString(); ?>";
     }
 
     protected function parseU($exp)
