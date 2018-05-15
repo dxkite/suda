@@ -52,9 +52,9 @@ abstract class Template
     */
     public function render()
     {
-        debug()->trace('echo '.$this->name);
-        // 渲染页面
         $content=self::getRenderedString();
+        hook()->exec('Template:render::before', [&$content]);
+        debug()->trace('echo '.$this->name);
         // 计算输出页面长度
         if (conf('app.calcContentLength', !conf('debug'))) {
             $length=strlen($content);
@@ -155,6 +155,7 @@ abstract class Template
         $this->response=$response;
         return $this;
     }
+
     /**
     * 创建模板获取值
     */
@@ -167,6 +168,14 @@ abstract class Template
             return call_user_func_array('sprintf', $args);
         }
         return $fmt;
+    }
+
+    /**
+    * 检测值
+    */
+    public function has(string $name)
+    {
+        return ArrayHelper::exist($this->value, $name);
     }
 
     public function data(string $name)
