@@ -329,6 +329,11 @@ class Application
         return $this->routeReachable=$modules;
     }
     
+    public function isModuleReachable(string $name)
+    {
+        return in_array($this->getModuleFullName($name),$this->getReachableModules());
+    }
+
     /**
      * 激活运行的模块
      *

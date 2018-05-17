@@ -125,12 +125,13 @@ class Hook
 
     protected static function call($command, array &$args)
     {
+        // TODO isModuleReachable
         if (is_string($command)) {
-            if (preg_match('/^debug\=/', $command)) {
+            if (preg_match('/^(debug)|d\=/', $command)) {
                 if (conf('debug')) {
                     return (new Command(preg_replace('/^debug\=/', '', $command)))->exec($args);
                 }
-            } elseif (preg_match('/^normal\=/', $command)) {
+            } elseif (preg_match('/^(normal)|n\=/', $command)) {
                 if (conf('debug') == false) {
                     return (new Command(preg_replace('/^normal\=/', '', $command)))->exec($args);
                 }

@@ -59,13 +59,13 @@ class Locale
         self::load($locale);
     }
 
- /**
+    /**
     * 加载语言本地化文件
     */
     public static function load(string $locale)
     {
-        // 清空历史
-        self::$langs=[];
+        // INFO: 不用清空
+        // self::$langs=[];
         debug()->trace(__('loaded paths %s',implode(';',self::$paths)));
         // 重写
         foreach (self::$paths as $path){
@@ -74,6 +74,7 @@ class Locale
             }
         }
     }
+    
     /**
     * 加载语言本地化文件
     */
