@@ -117,7 +117,11 @@ class Compiler implements CompilerImpl
             $class=new \ReflectionClass($classname);
             debug()->warning(__('template %s is already in %s defined', $name, $class->getFileName()));
         } else {
-            require_once $viewfile;
+            if (storage()->exist($viewfile)) {
+                require_once $viewfile;
+            }else{
+                throw new \suda\exception\KernelException(__('template %s is not ready!', $name));
+            }
         }
         return $template=new $classname;
     }
