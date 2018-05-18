@@ -53,7 +53,9 @@ class System
             pcntl_signal(SIGTERM, 'suda\\core\\System::sigHandler');
             pcntl_signal(SIGKILL, 'suda\\core\\System::sigHandler');
         }
-
+        if (!DEBUG) {
+            ini_set('display_errors', 'Off');
+        }
         // 注册基本常量
         defined('MODULES_DIR') or define('MODULES_DIR', Storage::path(APP_DIR.'/modules'));
         defined('RESOURCE_DIR') or define('RESOURCE_DIR', Storage::path(APP_DIR.'/resource'));
