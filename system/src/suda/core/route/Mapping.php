@@ -322,8 +322,11 @@ class Mapping
             if (isset($args[$param_name])) {
                 if ($param_type==='int') {
                     $val= intval($args[$param_name]);
+                } elseif ($param_type === 'string') {
+                    $val=urlencode($args[$param_name]);
+                } else {
+                    $val=$args[$param_name];
                 }
-                $val=$args[$param_name];
                 unset($args[$param_name]);
                 return $val;
             } else {
