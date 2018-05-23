@@ -60,7 +60,7 @@ class Debug
             self::$latest =APP_LOG.'/latest.log';
         }
         if (DEBUG) {
-            cookie()->set(conf('debugCookie','__debug'),conf('debugSecret'));
+            cookie()->set(conf('debugCookie','__debug'),conf('debugSecret',base64_encode('dxkite')));
         }
     }
 
@@ -189,7 +189,7 @@ class Debug
     protected static function printHTML(Exception $e)
     {
         // // 非致命错误
-        if ($e->getSeverity()!==E_ERROR && cookie()->get(conf('debugCookie','__debug')) == conf('debugSecret')) {
+        if ($e->getSeverity()!==E_ERROR && cookie()->get(conf('debugCookie','__debug')) == conf('debugSecret',base64_encode('dxkite'))) {
             echo "<div class=\"suda-error\" style=\"color:red\"><b>{$e->getName()}</b>: {$e->getMessage()} at {$e->getFile()}#{$e->getLine()}</div>";
             return;
         }
