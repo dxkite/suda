@@ -59,6 +59,9 @@ class Debug
         if (defined('APP_LOG') && Storage::path(APP_LOG) && is_writable(APP_LOG)) {
             self::$latest =APP_LOG.'/latest.log';
         }
+        if (DEBUG) {
+            cookie()->set(conf('debugCookie','__debug'),conf('debugSecret'));
+        }
     }
 
     public static function time(string $name, string $type='info')
@@ -186,7 +189,7 @@ class Debug
     protected static function printHTML(Exception $e)
     {
         // // 非致命错误
-        if ($e->getSeverity()!==E_ERROR) {
+        if ($e->getSeverity()!==E_ERROR && cookie()->get(conf('debugCookie','__debug')) == conf('debugSecret')) {
             echo "<div class=\"suda-error\" style=\"color:red\"><b>{$e->getName()}</b>: {$e->getMessage()} at {$e->getFile()}#{$e->getLine()}</div>";
             return;
         }
@@ -454,6 +457,13 @@ class Debug
                 rename($file, APP_LOG . '/' . date('Y-m-d'). '-'. substr(md5_file($file), 0, 8).'.log');
             }
         }
+    }
+
+    protected static function buildLocalInfo() {
+        $env=  [
+            'PHP' => PHP_VERSION
+        ];
+        return $env;
     }
 }
 

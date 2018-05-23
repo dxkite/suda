@@ -47,12 +47,6 @@ class System
         register_shutdown_function('suda\\core\\System::onShutdown');
         set_error_handler('suda\\core\\System::uncaughtError');
         set_exception_handler('suda\\core\\System::uncaughtException');
-
-        // 如果开启了进程信号处理
-        if (function_exists('pcntl_signal')) {
-            pcntl_signal(SIGTERM, 'suda\\core\\System::sigHandler');
-            pcntl_signal(SIGKILL, 'suda\\core\\System::sigHandler');
-        }
         if (!DEBUG) {
             ini_set('display_errors', 'Off');
         }
@@ -194,21 +188,5 @@ class System
     {
         $info=Debug::getInfo();
         return $info;
-    }
-
-    public static function sigHandler(int $signo)
-    {
-        static $sig=[
-            SIGTERM=>'SIGTERM',
-            SIGHUP=>'SIGHUP',
-            SIGINT=>'SIGINT',
-            SIGQUIT=>'SIGQUIT',
-            SIGILL=>'SIGILL',
-            SIGPIPE=>'SIGPIPE',
-            SIGALRM=>'SIGALRM',
-            SIGKILL=>'SIGKILL',
-        ];
-        debug()->die(__('exit sig %s', $sig[$signo]));
-        exit;
     }
 }

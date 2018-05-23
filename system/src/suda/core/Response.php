@@ -31,7 +31,8 @@ abstract class Response
     private static $mime;
     public static $name;
     protected $type;
-    
+    const EnableOutputBuffer = true;
+
     public function __construct()
     {
         // Mark Version

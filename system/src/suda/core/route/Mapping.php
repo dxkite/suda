@@ -111,22 +111,16 @@ class Mapping
         $callback = new Command($this->callback);
         if ($command  = $callback->command) {
             $method = null;
+            $ob =true;
             if (is_string($command)) {
                 if (!function_exists($command) && $callback->file) {
                     require_once $callback->file;
                 }
-                $method=new \ReflectionFunction($command[0], $command[1]);
+                $method=new \ReflectionFunction($command);
+                $ob = self::getResponseObStatus($method);
             } elseif (is_array($command)) {
                 $method=new \ReflectionMethod($command[0], $command[1]);
-            }
-            $ob =true;
-            if ($doc = $method->getDocComment()) {
-                if (preg_match('/@ob\s+(\w+)\s+/ims', $docs, $match)) {
-                    // 开启OB
-                    if (!filter_var(strtolower($match[1]??'true'), FILTER_VALIDATE_BOOLEAN)) {
-                        $ob =false;
-                    }
-                }
+                $ob = self::getResponseObStatus($method, $command[0]);
             }
             if ($ob) {
                 ob_start();
@@ -138,6 +132,25 @@ class Mapping
             }
         }
         return $callback->exec([Request::getInstance()->setMapping($this)]);
+    }
+
+    protected function getResponseObStatus($method, $class=false)
+    {
+        if ($doc = $method->getDocComment()) {
+            if (preg_match('/@ob\s+(\w+)\s+/ims', $docs, $match)) {
+                // 开启OB
+                if (!filter_var(strtolower($match[1]??'true'), FILTER_VALIDATE_BOOLEAN)) {
+                    return false;
+                }
+            }
+        }
+        if ($class) {
+            $class = new \ReflectionClass($class);
+            if (!$class->getConstant('EnableOutputBuffer')) {
+                return false;
+            }
+        }
+        return true;
     }
 
     public function build()
