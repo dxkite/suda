@@ -80,8 +80,8 @@ class Autoloader
         $namepath=self::realPath($className);
         $classname=self::realName($className);
         // 搜索路径
-        foreach (self::$include_path as $include_namesapce => $include_path) {
-            if (!is_numeric($include_namesapce) && preg_match('/^'.preg_quote(static::realName($include_namesapce), '/').'(.+)$/', $classname, $match)) {
+        foreach (self::$include_path as $include_namespace => $include_path) {
+            if (!is_numeric($include_namespace) && preg_match('/^'.preg_quote(static::realName($include_namespace), '/').'(.+)$/', $classname, $match)) {
                 $path=preg_replace('/[\\\\\\/]+/', DIRECTORY_SEPARATOR, $include_path.DIRECTORY_SEPARATOR.static::realPath($match[1]).'.php');
             } else {
                 $path=preg_replace('/[\\\\\\/]+/', DIRECTORY_SEPARATOR, $include_path.DIRECTORY_SEPARATOR.$namepath.'.php');
@@ -107,10 +107,10 @@ class Autoloader
 
     public static function addIncludePath(string $path, string $namespace=null)
     {
-        if (!in_array($path, self::$include_path) && $path=realpath($path)) {
-            if (empty($namespace)) {
+        if (realpath($path)) {
+            if (empty($namespace) && !in_array($path, self::$include_path)) {
                 self::$include_path[]=$path;
-            } else {
+            } else if(array_search($path, self::$include_path) != $namespace) {
                 self::$include_path[$namespace]=$path;
             }
         }

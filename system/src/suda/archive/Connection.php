@@ -64,7 +64,7 @@ class Connection
 
     protected function getDsn()
     {
-        return $this->type.':dbname='.$this->database.';host='.$this->host.';charset='.$this->charset.';port='.$this->port;
+        return $this->type.':host='.$this->host.';charset='.$this->charset.';port='.$this->port;
     }
     
     public function connect()

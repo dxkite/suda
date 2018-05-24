@@ -139,12 +139,6 @@ class System
 
     public static function onShutdown()
     {
-        // 处理 E_ERROR、 E_PARSE、 E_CORE_ERROR、 E_CORE_WARNING、 E_COMPILE_ERROR、 E_COMPILE_WARNING
-        if (!is_null($error=error_get_last())) {
-            // 防止重复调用
-            error_clear_last();
-            self::uncaughtException(new \ErrorException($error['message'], $error['type'], $error['type'], $error['file'], $error['line']));
-        }
         // 忽略用户停止脚本
         ignore_user_abort(true);
         debug()->timeEnd('before shutdown');

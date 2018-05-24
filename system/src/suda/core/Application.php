@@ -178,6 +178,7 @@ class Application
             // 设置语言包库
             Locale::path($root.'/resource/locales/');
         }
+        Hook::exec('loadModule');
     }
  
     public function checkModuleRequire(string $name, array $requires)
