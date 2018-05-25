@@ -1,35 +1,25 @@
-# System::sigHandler
-
-
-
-> *文件信息* suda\core\System.php: 37~201
-
+# Template::has
+检测值
+> *文件信息* suda\template\compiler\suda\Template.php: 25~276
 ## 所属类 
 
-[System](../System.md)
+[Template](../Template.md)
 
 ## 可见性
 
- public static
-
+  public  
 ## 说明
 
-该函数暂时无说明
-
+document
 
 ## 参数
 
-
 | 参数名 | 类型 | 默认值 | 说明 |
 |--------|-----|-------|-------|
-| signo |  int | 无 | 无 |
-
-
+| name |  string | 无 | 无 |
 
 ## 返回值
-
 返回值类型不定
-
 
 ## 例子
 

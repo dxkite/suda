@@ -1,24 +1,18 @@
 # Router::buildUrl
 
-
-
-> *文件信息* suda\core\Router.php: 27~470
-
+> *文件信息* suda\core\Router.php: 27~486
 ## 所属类 
 
 [Router](../Router.md)
 
 ## 可见性
 
- public 
-
+  public  
 ## 说明
 
 用于处理访问的路由信息
 
-
 ## 参数
-
 
 | 参数名 | 类型 | 默认值 | 说明 |
 |--------|-----|-------|-------|
@@ -27,12 +21,8 @@
 | query |  bool | 1 | 无 |
 | queryArr |  array | Array | 无 |
 
-
-
 ## 返回值
-
 返回值类型不定
-
 
 ## 例子
 

@@ -1,38 +1,26 @@
 # HTMLMessage::addAttachment
-
 添加附件
-
 > *文件信息* suda\mail\message\HTMLMessage.php: 24~37
-
 ## 所属类 
 
 [HTMLMessage](../HTMLMessage.md)
 
 ## 可见性
 
- public 
-
+  public  
 ## 说明
-
 
 
 
 ## 参数
 
-
 | 参数名 | 类型 | 默认值 | 说明 |
 |--------|-----|-------|-------|
 | file |  string | 无 |  附件文件路径 |
 
-
-
 ## 返回值
-
 类型：void
-
 无
-
-
 
 ## 例子
 

@@ -1,24 +1,18 @@
 # StmpSender::__construct
-
 创建一个SMTP发送
-
 > *文件信息* suda\mail\sender\StmpSender.php: 33~276
-
 ## 所属类 
 
 [StmpSender](../StmpSender.md)
 
 ## 可见性
 
- public 
-
+  public  
 ## 说明
 
 
 
-
 ## 参数
-
 
 | 参数名 | 类型 | 默认值 | 说明 |
 |--------|-----|-------|-------|
@@ -29,12 +23,8 @@
 | password |  string | 无 |  邮箱密码 |
 | isSecurity |  bool | 1 |  是否使用SSL，需要开启 OpenSSL 模块 |
 
-
-
 ## 返回值
-
 返回值类型不定
-
 
 ## 例子
 

@@ -1,35 +1,24 @@
 # SQLQuery::error
-
 获取语句查询错误
-
-> *文件信息* suda\archive\SQLQuery.php: 32~477
-
+> *文件信息* suda\archive\SQLQuery.php: 33~275
 ## 所属类 
 
 [SQLQuery](../SQLQuery.md)
 
 ## 可见性
 
- public 
-
+  public  
 ## 说明
 
-
+单列数据查询方案
 
 
 ## 参数
 
-
 无参数
 
-
 ## 返回值
-
 类型：bool|array
-
  错误结果,false获取失败
 
-
-
 ## 例子
-

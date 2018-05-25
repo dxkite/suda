@@ -1,32 +1,23 @@
 # Template::_render_template
-
 渲染语句
-
-> *文件信息* suda\template\compiler\suda\Template.php: 25~265
-
+> *文件信息* suda\template\compiler\suda\Template.php: 25~276
 ## 所属类 
 
 [Template](../Template.md)
 
 ## 可见性
 
-abstract protected 
-
+abstract  protected  
 ## 说明
 
-该函数暂时无说明
-
+document
 
 ## 参数
 
-
 无参数
 
-
 ## 返回值
-
 返回值类型不定
-
 
 ## 例子
 

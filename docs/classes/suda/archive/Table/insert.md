@@ -1,40 +1,28 @@
 # Table::insert
-
 插入一行记录
-
-> *文件信息* suda\archive\Table.php: 31~610
-
+> *文件信息* suda\archive\Table.php: 31~614
 ## 所属类 
 
 [Table](../Table.md)
 
 ## 可见性
 
- public 
-
+  public  
 ## 说明
 
 
 用于提供对数据表的操作
 
 
-
 ## 参数
-
 
 | 参数名 | 类型 | 默认值 | 说明 |
 |--------|-----|-------|-------|
 | values |  array | 无 |  待插入的值 |
 
-
-
 ## 返回值
-
 类型：int
-
  插入影响的行数
-
-
 
 ## 例子
 

@@ -3,8 +3,7 @@
 > **注：** 文档由程序自动生成
 
 - suda 1.2.14 
-- 2018-02-19 16:13:18
-
+- 2018-05-25 18:46:42
 ## 函数列表 
 | 函数名 | 说明 |
 |------|-----|  
@@ -29,7 +28,7 @@
 | [class_name](functions/class_name.md) |  获取类名，将JAVA包式的类名转化为 PHP的标准类名  |
 | [table](functions/table.md) |  获取数据表对象，该对象需要在module.json文件中注册过  |
 | [session](functions/session.md) |    |
-
+| [module](functions/module.md) |    |
 
 
 
@@ -45,6 +44,8 @@
 |[suda\core\Config](classes/suda/core/Config.md) | 文件配置类 |
 |[suda\tool\ArrayHelper](classes/suda/tool/ArrayHelper.md) | 数组操纵 |
 |[suda\core\Storage](classes/suda/core/Storage.md) |  |
+|[suda\core\Cookie](classes/suda/core/Cookie.md) | Cookie操作封装类 |
+|[suda\tool\CookieSetter](classes/suda/tool/CookieSetter.md) |  |
 |[suda\core\Hook](classes/suda/core/Hook.md) |  |
 |[suda\core\Locale](classes/suda/core/Locale.md) | I18N 国际化支持 |
 |[suda\tool\Json](classes/suda/tool/Json.md) |  |
@@ -52,14 +53,15 @@
 |[suda\template\Manager](classes/suda/template/Manager.md) | 模板管理类 |
 |[suda\template\compiler\suda\Compiler](classes/suda/template/compiler/suda/Compiler.md) | Suda 模板编译器 |
 |[suda\tool\Command](classes/suda/tool/Command.md) |  |
+|[suda\archive\Connection](classes/suda/archive/Connection.md) | 数据表链接对象 |
 |[suda\archive\creator\Field](classes/suda/archive/creator/Field.md) |  |
 |[suda\archive\creator\InputValue](classes/suda/archive/creator/InputValue.md) |  |
 |[suda\archive\creator\Table](classes/suda/archive/creator/Table.md) |  |
+|[suda\archive\RawQuery](classes/suda/archive/RawQuery.md) | 数据库查询方案，提供原始查询方案 |
 |[suda\archive\SQLQuery](classes/suda/archive/SQLQuery.md) | 数据库查询方案，简化数据库查 |
 |[suda\archive\Table](classes/suda/archive/Table.md) | 数据表抽象对象 |
 |[suda\archive\TableInstance](classes/suda/archive/TableInstance.md) |  |
 |[suda\core\Cache](classes/suda/core/Cache.md) | 文件缓存 |
-|[suda\core\Cookie](classes/suda/core/Cookie.md) | Cookie操作封装类 |
 |[suda\core\Exception](classes/suda/core/Exception.md) |  |
 |[suda\core\Query](classes/suda/core/Query.md) | 数据库查询类 |
 |[suda\core\Response](classes/suda/core/Response.md) |  |
@@ -82,7 +84,6 @@
 |[suda\template\compiler\suda\Template](classes/suda/template/compiler/suda/Template.md) |  |
 |[suda\template\compiler\suda\TemplateInfo](classes/suda/template/compiler/suda/TemplateInfo.md) |  |
 |[suda\tool\ArrayValue](classes/suda/tool/ArrayValue.md) |  |
-|[suda\tool\CookieSetter](classes/suda/tool/CookieSetter.md) |  |
 |[suda\tool\EchoValue](classes/suda/tool/EchoValue.md) |  |
 |[suda\tool\Pinyin](classes/suda/tool/Pinyin.md) | 将中文转换成拼音 |
 |[suda\tool\ZipHelper](classes/suda/tool/ZipHelper.md) |  |

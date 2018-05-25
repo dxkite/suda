@@ -1,17 +1,13 @@
 # Value::__construct
-
 Value constructor.
-
 > *文件信息* suda\tool\Value.php: 26~135
-
 ## 所属类 
 
 [Value](../Value.md)
 
 ## 可见性
 
- public 
-
+  public  
 ## 说明
 
 
@@ -20,22 +16,16 @@ Value constructor.
 
 @package suda\tool
 
-
 ## 参数
-
 
 | 参数名 | 类型 | 默认值 | 说明 |
 |--------|-----|-------|-------|
 | var |  # Error> htmlspecialchars() expects parameter 1 to be string, array given
-	Cause By D:\Server\Local\suda\script\docme\template\method.md.tpl:31
+	Cause By D:\Server\Local\suda\script\docme\template\method.md.tpl:25
  | Array | 无 |
 
-
-
 ## 返回值
-
 返回值类型不定
-
 
 ## 例子
 

@@ -5,13 +5,11 @@
 - suda <?php echo htmlspecialchars(__(SUDA_VERSION)); ?> 
 - <?php echo htmlspecialchars(__(date('Y-m-d H:i:s'))); ?>
 
-
 ## 函数列表 
 | 函数名 | 说明 |
 |------|-----|  
 <?php foreach($this->get("functions")as $name => $info): ?>| [<?php echo htmlspecialchars(__($name)); ?>](functions/<?php echo htmlspecialchars(__($name)); ?>.md) |  <?php echo $info['functionDoc']; ?>  |
 <?php endforeach; ?>
-
 
 
 
