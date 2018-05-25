@@ -1,1 +1,6 @@
-{"index":{"class":"cn\\atd3\\response\\IndexResponse","visit":"\/"}}
+{
+    "index": {
+        "class": "cn\\atd3\\response\\IndexResponse",
+        "visit": "\/"
+    }
+}

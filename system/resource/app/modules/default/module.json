@@ -5,8 +5,16 @@
         "name": "dxkite",
         "email": "dxkite@qq.com"
     }],
-    "discription":"网站测试模块",
+    "import": {
+        "share": {
+            "cn\\atd3": "share"
+        },
+        "src": {
+            "cn\\atd3\\response": "src"
+        }
+    },
+    "discription": "网站测试模块",
     "require": {},
     "version": "1.0.0-dev",
-    "install":"cn\\atd3\\Install::task"
+    "install": "cn\\atd3\\Install::task"
 }
