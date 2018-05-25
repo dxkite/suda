@@ -11,6 +11,3 @@ echo '<?php return ["passwd" => ""]; ' > /app/data/runtime/database.config.php
 
 lampp startmysql
 lampp startapache
-
-
-
