@@ -575,6 +575,12 @@ class Manager
         return false;
     }
 
+    /**
+     * 动态加载静态资源
+     *
+     * @param Request $request
+     * @return void
+     */
     protected static function assetsResponse(Request $request)
     {
         $url=$request->url();

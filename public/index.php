@@ -8,8 +8,8 @@
     define('SYSTEM', __DIR__.'/../system/');
     // 网站根目录位置
     define('APP_PUBLIC', __DIR__);
-    // 关闭模块
-    define('DISABLE_MODULES', 'suda');
+    // 不可达模块
+    define('UNREACHABLE_MODULES', 'suda');
     // 开发者关闭模式
     define('DEBUG', false);
     // 错误等级

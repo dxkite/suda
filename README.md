@@ -20,27 +20,41 @@ Suda框架是一款基于PHP7开发的轻量级PHP框架。
 - 简化的数据表操作
 - 分布式路由
 
-## 基本使用
 
-### 步骤一 下载框架代码
+## Dokcer 安装
 
-#### 从github克隆
+### 一键使用
+一键安装环境，并在 `~/app` 创建可执行的应用 App
 
 ```bash
-git clone https://github.com/DXkite/suda  suda
+sudo docker-compose up -d
 ```
-#### 作为git子模块克隆
+
+### 自定义应用位置
 
 ```bash
+sudo docker build -t suda-system .
+sudo docker run -p 80:80 -v [应用目录，绝对路径]:/app suda-system 
+```
+
+## 手动安装
+
+### 步骤一：安装框架
+选择工作目录，打开命令窗口,输入以下命令。
+
+```bash
+git init
 git submodule add https://github.com/DXkite/suda
-```
-
-### 步骤二 复制基本配置文件
-
-```bash
 cp -R ./suda/system/resource/project/* .
 ```
-### 步骤三 调整根目录至 `public` 
+
+### 步骤二：配置服务器
+
+讲网站的更目录指定到 `public` 目录
+
+### 步骤四
+
+访问public/dev.php文件，框架会自动创建应用
 
 > **Linux用户注意** 请保证目录的可读写性，参考配置：
 > ```bash
@@ -49,23 +63,9 @@ cp -R ./suda/system/resource/project/* .
 > sudo chmod g+rw document_directory
 > ```
 
-### 步骤四
-
-访问public/dev.php文件，框架会自动创建应用
-
 ## 文档说明
 
 [自动文档](docs/README.md)    
-
-## Suggest Application Modules 
-- function modules
-    - a function module
-        - admin router (*module functions admin*)
-        - simple router (*user web interface*)
-    - another function module
-- install module (*for install this application*)
-- admin module (*the admin panel*)
-- suda base admin module *(admin suda `auto create when init this application`)*
 
 ## Historys Or Demos
 

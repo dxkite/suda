@@ -87,6 +87,11 @@ class Application
             } catch (JSONException $e) {
                 debug()->die(__('parse application config.json error'));
             }
+            // 动态配置覆盖
+            if (Storage::exist($path=RUNTIME_DIR.'/global.config.php')) {
+                $config=include $path;
+                Config::assign($config);
+            }
             // 开发状态覆盖
             if (defined('DEBUG')) {
                 Config::set('debug', DEBUG);
@@ -312,7 +317,7 @@ class Application
         } else {
             $modules=conf('app.reachable', self::getLiveModules());
         }
-        $exclude=[];
+        $exclude=defined('UNREACHABLE_MODULES')?explode(',', trim(UNREACHABLE_MODULES, ',')):[];
         foreach ($exclude as $index=>$name) {
             $exclude[$index]=$this->getModuleFullName($name);
         }
