@@ -4,7 +4,7 @@
     "debug-local": true,
     "timelimit": 0,
     "timezone": "PRC",
-    "markVersion":false,
+    "markVersion":true,
     "database": {
         "prefix": "dx_", 
         "host": "127.0.0.1", 

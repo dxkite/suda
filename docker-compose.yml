@@ -1,0 +1,12 @@
+version: '2'
+services:
+  suda:
+    build: .
+    volumes:
+      - ~/app:/app
+    ports:
+      - "80:80"
+    command:
+      - /bin/sh
+      - -c
+      - sh /suda/script/docker_start.sh && tail -f /opt/lampp/logs/access_log
