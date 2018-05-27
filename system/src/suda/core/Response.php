@@ -158,11 +158,11 @@ abstract class Response
      * 输出模板
      *
      * @param string $template 模板路径
-     * @param string $name 模板名
      * @param array $values 页面值
+     * @param string $name 模板名
      * @return void
      */
-    public function template(string $filepath, string $name, array $values=[])
+    public function template(string $filepath, array $values=[], ?string  $name=null)
     {
         // Template lost
         $tpl=Manager::displayFile($filepath, $name);
