@@ -25,6 +25,6 @@ interface Compiler
      * @param string $text
      */
     public function compileText(string $text);
-    public function compile(string $name,string $input,string $output);
-    public function render(string $name,string $viewfile);
+    public function compile(string $name, string $input, string $output);
+    public function render(string $viewfile,?string $name = null);
 }

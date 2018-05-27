@@ -97,7 +97,7 @@ class Compiler implements CompilerImpl
         $classname=Manager::className($name);
         preg_match('/^((?:[a-zA-Z0-9_-]+\/)?[a-zA-Z0-9_-]+)(?::([^:]+))?(?::(.+))?$/', $name, $match);
         $module = isset($match[3])?$match[1].(isset($match[2])?':'.$match[2]:''):$match[1];
-        $content='<?php  class '.$classname.' extends '.self::$template.' { protected $name="'. addslashes($name) .'";protected $module="'.addslashes($module).'"; protected $source="'. addslashes($input).'";protected function _render_template() {  ?>'.$content.'<?php }}';
+        $content='<?php if (!class_exists("'.$classname.'")) { class '.$classname.' extends '.self::$template.' { protected $name="'. addslashes($name) .'";protected $module="'.addslashes($module).'"; protected $source="'. addslashes($input).'";protected function _render_template() {  ?>'.$content.'<?php }} } return ["class"=>"'.$classname.'","name"=>"'.addslashes($name).'","source"=>"'.addslashes($input).'","module"=>"'.addslashes($module).'"]; ';
         Storage::put($output, $content);
         debug()->timeEnd('compile '.$name);
         $syntax=Manager::checkSyntax($output, $classname);
@@ -110,20 +110,15 @@ class Compiler implements CompilerImpl
         return $syntax===true?:$syntax;
     }
 
-    public function render(string $name, string $viewfile)
+    public function render(string $viewfile,?string $name =null)
     {
-        $classname=Manager::className($name);
-        if (class_exists($classname)) {
-            $class=new \ReflectionClass($classname);
-            debug()->warning(__('template %s is already in %s defined', $name, $class->getFileName()));
+        if (storage()->exist($viewfile)) {
+            $templateInfo =  require_once $viewfile;
+            $classname = $templateInfo['class'];
+            return $template=new $classname;
         } else {
-            if (storage()->exist($viewfile)) {
-                require_once $viewfile;
-            }else{
-                throw new \suda\exception\KernelException(__('template %s is not ready!', $name));
-            }
+            throw new \suda\exception\KernelException(__('template %s is not ready!', $name ?? $viewfile));
         }
-        return $template=new $classname;
     }
     
     /**

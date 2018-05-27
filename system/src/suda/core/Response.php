@@ -133,40 +133,57 @@ abstract class Response
     */
     public function page(string $template, array $values=[])
     {
-        $tpl=Manager::display($template);
-        if ($tpl) {
-            return $tpl->response($this)->assign($values);
+        $view = $this->view($template, $values);
+        if ($view) {
+            return $view;
         }
         throw new ApplicationException(__('template[%s] file not exist: %s', $template, $template));
     }
-        
+
     /**
     * 输出HTML页面
     * $template HTML页面模板
     * $values 页面模板的值
     */
-    public function pagefile(string $template, string $name, array $values=[])
+    public function view(string $template, array $values=[])
     {
-        // Template lost
-        $tpl=Manager::displayFile($template, $name);
+        $tpl=Manager::display($template);
         if ($tpl) {
             return $tpl->response($this)->assign($values);
         }
-        throw new ApplicationException(__('template[%s] file not exist: %s', $name, $template));
+        return false;
+    }
+
+    /**
+     * 输出模板
+     *
+     * @param string $template 模板路径
+     * @param string $name 模板名
+     * @param array $values 页面值
+     * @return void
+     */
+    public function template(string $filepath, string $name, array $values=[])
+    {
+        // Template lost
+        $tpl=Manager::displayFile($filepath, $name);
+        if ($tpl) {
+            return $tpl->response($this)->assign($values);
+        }
+        return false;
     }
 
     public function refresh()
     {
-        return $this->go(Router::getInstance()->buildUrl(self::$name,$_GET,false));
+        return $this->go(Router::getInstance()->buildUrl(self::$name, $_GET, false));
     }
 
     public function forward()
     {
         $referer = null;
         if (Cookie::has('redirect_uri')) {
-            $referer =Cookie::get('redirect_uri',$_GET['redirect_uri']??Request::referer());
+            $referer =Cookie::get('redirect_uri', $_GET['redirect_uri']??Request::referer());
             Cookie::delete('redirect_uri');
-        } 
+        }
         return $referer?$this->go($referer):false;
     }
 

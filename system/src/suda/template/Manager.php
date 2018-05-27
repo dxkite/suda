@@ -186,9 +186,9 @@ class Manager
      * @param string $name
      * @return void
      */
-    public static function displayFile(string $file, string $name)
+    public static function displayFile(string $file, string $name = null)
     {
-        return static::$compiler->render($name, $file);
+        return static::$compiler->render($file, $name??$file);
     }
 
     /**
@@ -404,9 +404,13 @@ class Manager
             return $include->parent($parent)->assign($parent->getValue());
         } else {
             $class= new class {
+                public function getRenderedString()
+                {
+                    return '<div style="color:red" title="'.__('can\'t include %s', $this->moduleName.':'.$this->basename).'">{include:{'.$this->name.'}}</div>';
+                }
                 public function render()
                 {
-                    echo '<div style="color:red" title="'.__('can\'t include %s', $this->moduleName.':'.$this->basename).'">{include:{'.$this->name.'}}</div>';
+                    echo $this->getRenderedString();
                     return;
                 }
             };
