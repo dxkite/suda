@@ -24,7 +24,15 @@ class Exception extends ErrorException
     protected $backtrace;
     protected $show_start=0;
     protected $show_end=0;
-
+    protected $level = null;
+    protected static $levelTable = [
+        E_NOTICE => DEBUG::NOTICE,
+        E_USER_NOTICE => DEBUG::NOTICE,
+        E_USER_WARNING => DEBUG::WARNING,
+        E_COMPILE_WARNING => DEBUG::WARNING,
+        E_CORE_WARNING => DEBUG::WARNING,
+        E_DEPRECATED => DEBUG::WARNING,
+    ];
     public function __construct(Throwable $e)
     {
         $this->severity =$e instanceof ErrorException?$e->getSeverity():E_ERROR;
@@ -40,6 +48,13 @@ class Exception extends ErrorException
         return $this;
     }
     
+    public function getLevel() {
+        if (isset(self::$levelTable[$this->getSeverity()])) {
+            return self::$levelTable[$this->getSeverity()];
+        }
+        return Debug::ERROR;
+    }
+
     public function getBackTrace()
     {
         $trace=$this->backtrace;

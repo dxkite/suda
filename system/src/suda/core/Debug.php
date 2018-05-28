@@ -40,6 +40,7 @@ class Debug
         Debug::WARNING=>5,
         Debug::ERROR=>6,
     ];
+
     protected static $run_info;
     protected static $log=[];
     protected static $time=[];
@@ -63,7 +64,7 @@ class Debug
             self::$latest =APP_LOG.'/latest.log';
         }
         if (DEBUG) {
-            cookie()->set(conf('debugCookie', '__debug'), conf('debugSecret', base64_encode('dxkite')));
+            cookie()->set(conf('debugCookie', '__debug'), conf('debugSecret', base64_encode('dxkite')))->set();
         }
     }
 
@@ -192,8 +193,10 @@ class Debug
     protected static function printHTML(Exception $e)
     {
         // // 非致命错误
-        if ($e->getSeverity()!==E_ERROR && cookie()->get(conf('debugCookie', '__debug')) == conf('debugSecret', base64_encode('dxkite'))) {
-            echo "<div class=\"suda-error\" style=\"color:red\"><b>{$e->getName()}</b>: {$e->getMessage()} at {$e->getFile()}#{$e->getLine()}</div>";
+        if ($e->getSeverity()!==E_ERROR) {
+            if (cookie()->get(conf('debugCookie', '__debug')) == conf('debugSecret', base64_encode('dxkite'))) {
+                echo "<div class=\"suda-error\" style=\"color:red\"><b>{$e->getName()}</b>: {$e->getMessage()} at {$e->getFile()}#{$e->getLine()}</div>";
+            }
             return;
         }
         // echo "<div class=\"suda-error\"><b>{$e->getName()}</b>: {$e->getMessage()} at {$e->getFile()}#{$e->getLine()}</div>";
@@ -286,7 +289,7 @@ class Debug
         if (!$e instanceof Exception) {
             $e=new Exception($e);
         }
-        self::_loginfo(Debug::ERROR, $e->getName(), $e->getMessage(), $e->getFile(), $e->getLine(), $e->getBacktrace());
+        self::_loginfo($e->getLevel(), $e->getName(), $e->getMessage(), $e->getFile(), $e->getLine(), $e->getBacktrace());
     }
 
     private static function printHead()

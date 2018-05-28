@@ -374,7 +374,7 @@ class Storage
         $charset=array_merge(self::$charset, $charset);
         foreach ($charset as $code) {
             $file = iconv('UTF-8', $code, $path);
-            if (self::existCase($file)) {
+            if ($file && self::existCase($file)) {
                 return $file;
             }
         }

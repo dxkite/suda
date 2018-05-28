@@ -375,8 +375,8 @@ class Application
         if (Storage::exist($path=MODULE_CONFIG.'/config.json')) {
             Config::set('module', Json::loadFile($path));
         }
+        Config::set('module',Config::get('module',[]),$module_config);
     }
-
 
     public function onRequest(Request $request)
     {
