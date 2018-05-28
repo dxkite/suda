@@ -195,7 +195,7 @@ class Debug
         // // 非致命错误
         if ($e->getSeverity()!==E_ERROR) {
             if (cookie()->get(conf('debugCookie', '__debug')) == conf('debugSecret', base64_encode('dxkite'))) {
-                echo "<div class=\"suda-error\" style=\"color:red\"><b>{$e->getName()}</b>: {$e->getMessage()} at {$e->getFile()}#{$e->getLine()}</div>";
+                echo "<div class=\"suda-error\" style=\"color:red\"><b>{$e->getName()}[{$e->getLevel()}]</b>: {$e->getMessage()} at {$e->getFile()}#{$e->getLine()}</div>";
             }
             return;
         }

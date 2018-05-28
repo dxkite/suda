@@ -430,8 +430,13 @@ class Mapping
 
     public static function createFromRouteArray(int $role, string $module, string $name, array $json)
     {
-        $callback = isset($json['class'])?$json['class'].'->onRequest': __CLASS__.'::emptyResponse';
-        $callback = isset($json['template']) ? $callback : __CLASS__.'::sourceResponse';
+        if ($json['class']) {
+            $callback =  $json['class'].'->onRequest';
+        } elseif (isset($json['template'])) {
+            $callback = __CLASS__.'::emptyResponse';
+        } else {
+            $callback =   __CLASS__.'::sourceResponse';
+        }
         $mapping= new self($name, $json['url']??$json['visit'], $callback, $module, $json['method']??[], $role);
         $mapping->antiPrefix=isset($json['anti-prefix'])?$json['anti-prefix']:false;
         $mapping->hidden= $json['disable'] ?? $json['hidden'] ?? false;
@@ -459,10 +464,10 @@ class Mapping
             {
                 $mapping = Mapping::current();
                 if ($mapping) {
-                    if ($template=$mapping->getTemplate()){
-                        if ($view=$this->view($template, $mapping->getParam()??[])){
+                    if ($template=$mapping->getTemplate()) {
+                        if ($view=$this->view($template, $mapping->getParam()??[])) {
                             return $view->render();
-                        } 
+                        }
                     }
                 }
             }
@@ -478,7 +483,7 @@ class Mapping
             {
                 $mapping = Mapping::current();
                 if ($mapping) {
-                    if ($source=$mapping->getSource()){
+                    if ($source=$mapping->getSource()) {
                         $path = storage()->dynstr($source);
                         if (storage()->exist($path)) {
                             $content=file_get_contents($path);
@@ -490,7 +495,7 @@ class Mapping
                                 self::setHeader('Content-Length:'.$size);
                                 echo $content;
                             }
-                        }else{
+                        } else {
                             $this->state(404);
                             echo 'source not find:'.$mapping->getModule().'?'.$path;
                         }
