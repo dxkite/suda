@@ -119,11 +119,15 @@ class Mapping
                 if (!function_exists($command) && $callback->file) {
                     require_once $callback->file;
                 }
-                $method=new \ReflectionFunction($command);
-                $ob = self::getResponseObStatus($method);
+                if (function_exists($command)) {
+                    $method=new \ReflectionFunction($command);
+                    $ob = self::getResponseObStatus($method);
+                }
             } elseif (is_array($command)) {
-                $method=new \ReflectionMethod($command[0], $command[1]);
-                $ob = self::getResponseObStatus($method, $command[0]);
+                if (class_exists($command[0])) {
+                    $method=new \ReflectionMethod($command[0], $command[1]);
+                    $ob = self::getResponseObStatus($method, $command[0]);
+                }
             }
             if ($ob) {
                 ob_start();
@@ -430,7 +434,7 @@ class Mapping
 
     public static function createFromRouteArray(int $role, string $module, string $name, array $json)
     {
-        if ($json['class']) {
+        if (isset($json['class'])) {
             $callback =  $json['class'].'->onRequest';
         } elseif (isset($json['template'])) {
             $callback = __CLASS__.'::emptyResponse';

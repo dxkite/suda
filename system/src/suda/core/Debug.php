@@ -59,6 +59,7 @@ class Debug
         $request=Request::getInstance();
         self::$hash=$hash=substr(md5(microtime().''.$request->ip()), 0, 6);
         self::$file= tempnam(sys_get_temp_dir(), 'dx_');
+        Config::set('request', self::$hash);
         file_put_contents(self::$file, '====='.self::$hash.'====='.$request->ip().'====='.(conf('debug', defined('DEBUG') && DEBUG)?'debug':'normal')."=====\r\n", FILE_APPEND);
         file_put_contents(self::$file, self::printHead()."\r\n", FILE_APPEND);
         if (defined('APP_LOG') && Storage::path(APP_LOG) && is_writable(APP_LOG)) {
@@ -207,12 +208,16 @@ class Debug
         $line=$e->getLine();
         $file=$e->getFile();
         $backtrace=$e->getBacktrace();
+        $ex= substr(md5($e->getName().'#'.$e->getMessage().'#'.$e->getFile().'#'.$e->getLine()), 0, 8);
+        Config::set('request', $ex.'_'.self::$hash);
+        $dump = ['Exception'=>$e,'Dump'=>self::dumpArray()];
+        storage()->path(APP_LOG.'/dump');
+        storage()->put(APP_LOG.'/dump/'.$ex.'_'.self::$hash.'.dump', '<?php $dump='.var_export($dump, true).';');
         return self::displayLog(['line'=>$line,'file'=>$file,'backtrace'=>$backtrace,'name'=>$e->getName(),'message'=>$e->getMessage()]);
     }
     
     protected static function displayLog(array $logarray)
     {
-        
         /* ---- 外部变量 ----- */
         $line=$logarray['line'];
         $file=$logarray['file'];
@@ -305,6 +310,9 @@ class Debug
     protected static function save()
     {
         self::checkSize();
+        if (DEBUG) {
+            storage()->put(APP_LOG.'/request.dump', '<?php $dump='.var_export(self::dumpArray(), true).';');
+        }
         $body=file_get_contents(self::$file);
         $time=number_format(microtime(true) - D_START, 10);
         $hash=self::$hash;
@@ -428,11 +436,11 @@ class Debug
         $backtrace=debug_backtrace();
         $name=(isset($backtrace[2]['class'])?$backtrace[2]['class'].'#':'').$backtrace[2]['function'];
         self::_loginfo(
-            $level, 
-            self::strify(isset($args[1])?$args[0]:$name), 
-            self::strify($args[1]??$args[0]??null), 
-            $backtrace[1]['file'], 
-            $backtrace[1]['line'], 
+            $level,
+            self::strify(isset($args[1])?$args[0]:$name),
+            self::strify($args[1]??$args[0]??null),
+            $backtrace[1]['file'],
+            $backtrace[1]['line'],
             $backtrace);
     }
 
@@ -462,24 +470,37 @@ class Debug
     {
         $file=self::$latest;
         if (file_exists($file)  && filesize($file) > self::MAX_LOG_SIZE) {
-            $path=preg_replace('/[\\\\]+/', '/', Storage::path(APP_LOG).'/'.date('Y-m-d').'.zip');
+            $path=preg_replace('/[\\\\]+/', '/', Storage::path(APP_LOG.'/zip').'/'.date('Y-m-d').'.zip');
             $zip = new ZipArchive;
             $res = $zip->open($path, ZipArchive::CREATE);
+            $rm =[];
             if ($res === true) {
-                $zip->addFile($file, date('Y-m-d'). '-'. ($zip->numFiles +1).'.log');
+                if ($zip->addFile($file, date('Y-m-d'). '-'. $zip->numFiles .'.log')) {
+                    $rm[]=$file;
+                }
+                if ($files=storage()->readDirFiles(APP_LOG.'/dump')) {
+                    foreach ($files as $file) {
+                        if ($zip->addFile($file, 'dump/'.basename($file))) {
+                            $rm[]=$file;
+                        }
+                    }
+                }
                 $zip->close();
-                unlink($file);
             } else {
                 rename($file, APP_LOG . '/' . date('Y-m-d'). '-'. substr(md5_file($file), 0, 8).'.log');
+            }
+            foreach ($rm as $file) {
+                unlink($file);
             }
         }
     }
 
-    public static function addDump(string $key,$values){
+    public static function addDump(string $key, $values)
+    {
         self::$dump[$key] = $values;
     }
 
-    public static function dumpArray()
+    protected static function dumpArray()
     {
         $dump=  [
             '_ENV' => [
@@ -497,13 +518,13 @@ class Debug
             '_CONST'=> get_defined_constants(true)['user'],
             '_LOG' => self::$log,
             '_TIME' => self::$time,
-            '_COOKIE' => Cookie::$values, 
+            '_COOKIE' => Cookie::$values,
             '_INCLUDE' => Autoloader::getIncludePath(),
             '_LANG_PATH' => Locale::getLocalePaths(),
             '_LANG_STR' => Locale::getLangs(),
             '_CONFIG'=> Config::get(),
         ];
-        return array_merge($dump,self::$dump);
+        return array_merge($dump, self::$dump);
     }
 }
 
