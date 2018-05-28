@@ -22,7 +22,7 @@ defined('SYSTEM_DIR') or define('SYSTEM_DIR', dirname(dirname(dirname(__DIR__)))
 defined('SYSTEM_RESOURCE') or define('SYSTEM_RESOURCE', SYSTEM_DIR.'/resource');
 defined('DEBUG') or define('DEBUG', false);
 defined('IS_LINUX') or define('IS_LINUX', DIRECTORY_SEPARATOR ===  '/');
-define('SUDA_VERSION', '1.2.14');
+define('SUDA_VERSION', '1.2.15');
 
 require_once __DIR__.'/functions.php';
 require_once __DIR__.'/Debug.php';
@@ -154,8 +154,8 @@ class System
         Cache::gc();
         Hook::exec('system:shutdown');
         debug()->trace('connection status '. ['normal','aborted','timeout'][connection_status()]);
-        debug()->trace('include paths '.json_encode(Autoloader::getIncludePath()));
-        debug()->trace('runinfo', self::getRunInfo());
+        // debug()->trace('include paths '.json_encode(Autoloader::getIncludePath()));
+        // debug()->trace('runinfo', self::getRunInfo());
         debug()->trace('system shutdown');
         debug()->timeEnd('shutdown');
         Debug::phpShutdown();
@@ -176,11 +176,5 @@ class System
     public static function uncaughtError($errno, $errstr, $errfile, $errline)
     {
         self::uncaughtException(new \ErrorException($errstr, 0, $errno, $errfile, $errline));
-    }
-
-    public static function getRunInfo()
-    {
-        $info=Debug::getInfo();
-        return $info;
     }
 }

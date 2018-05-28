@@ -49,6 +49,7 @@ class Debug
     private static $latest=false;
     private static $saved=false;
     private static $shutdown=false;
+    protected static $dump=[];
 
     public static function init()
     {
@@ -77,6 +78,7 @@ class Debug
     {
         if (isset(self::$time[$name])) {
             $pass=microtime(true)-self::$time[$name]['time'];
+            self::$time[$name]['pass'] = $pass;
             $backtrace=debug_backtrace();
             $offset=1;
             if (!isset($backtrace[$offset]['file'])) {
@@ -112,7 +114,9 @@ class Debug
         $loginfo['time']=microtime(true)-D_START;
         $loginfo['mem']=memory_get_usage() - D_MEM;
         self::writeLine($loginfo);
-        if (defined('LOG_JSON') && LOG_JSON) {
+        $log_json = defined('LOG_JSON') && LOG_JSON;
+        $dump_log = defined('DEBUG_DUMP_LOG') && DEBUG_DUMP_LOG;
+        if ($log_json || $dump_log) {
             self::$log[]=$loginfo;
         }
     }
@@ -423,7 +427,13 @@ class Debug
         }
         $backtrace=debug_backtrace();
         $name=(isset($backtrace[2]['class'])?$backtrace[2]['class'].'#':'').$backtrace[2]['function'];
-        self::_loginfo($level, self::strify(isset($args[1])?$args[0]:$name), self::strify($args[1]??$args[0]), $backtrace[1]['file'], $backtrace[1]['line'], $backtrace);
+        self::_loginfo(
+            $level, 
+            self::strify(isset($args[1])?$args[0]:$name), 
+            self::strify($args[1]??$args[0]??null), 
+            $backtrace[1]['file'], 
+            $backtrace[1]['line'], 
+            $backtrace);
     }
 
     protected static function strify($object)
@@ -465,12 +475,35 @@ class Debug
         }
     }
 
-    protected static function buildLocalInfo()
+    public static function addDump(string $key,$values){
+        self::$dump[$key] = $values;
+    }
+
+    public static function dumpArray()
     {
-        $env=  [
-            'PHP' => PHP_VERSION
+        $dump=  [
+            '_ENV' => [
+                'PHP' =>  PHP_VERSION,
+                'SERVER' => $_SERVER['SERVER_SOFTWARE'],
+                'SUDA' => SUDA_VERSION
+            ],
+            '_PHP' => [
+                '_GET' => $_GET,
+                '_POST'=> $_POST,
+                '_FILES' => $_FILES,
+                '_SERVER' => $_SERVER,
+                '_COOKIE'=>$_COOKIE,
+            ],
+            '_CONST'=> get_defined_constants(true)['user'],
+            '_LOG' => self::$log,
+            '_TIME' => self::$time,
+            '_COOKIE' => Cookie::$values, 
+            '_INCLUDE' => Autoloader::getIncludePath(),
+            '_LANG_PATH' => Locale::getLocalePaths(),
+            '_LANG_STR' => Locale::getLangs(),
+            '_CONFIG'=> Config::get(),
         ];
-        return $env;
+        return array_merge($dump,self::$dump);
     }
 }
 

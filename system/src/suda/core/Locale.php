@@ -44,7 +44,7 @@ class Locale
     {
         if (!in_array($path, self::$paths)) {
             self::$paths[]=$path;
-            if (file_exists($file=$path.'/'.self::$set.'.json')){
+            if (file_exists($file=$path.'/'.self::$set.'.json')) {
                 self::loadFile($file);
             }
         }
@@ -66,10 +66,10 @@ class Locale
     {
         // INFO: 不用清空
         // self::$langs=[];
-        debug()->trace(__('loaded paths %s',implode(';',self::$paths)));
+        // debug()->trace(__('loaded paths %s',implode(';',self::$paths)));
         // 重写
-        foreach (self::$paths as $path){
-            if (file_exists($file=$path.'/'.$locale.'.json')){
+        foreach (self::$paths as $path) {
+            if (file_exists($file=$path.'/'.$locale.'.json')) {
                 self::loadFile($file);
             }
         }
@@ -100,5 +100,15 @@ class Locale
             return call_user_func_array('sprintf', $args);
         }
         return $string;
+    }
+
+    public static function getLocalePaths()
+    {
+        return self::$paths;
+    }
+
+    public static function getLangs()
+    {
+        return self::$langs;
     }
 }
