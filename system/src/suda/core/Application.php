@@ -491,6 +491,8 @@ class Application
             debug()->trace(__('load module config %s', $file));
             $json=Json::parseFile($file);
             $name=$json['name'] ?? $dir;
+            $version =  $json['version'] ?? '';
+
             $json['directory']=$dir;
             $json['path']=$path;
             // 注册默认自动加载
@@ -498,7 +500,14 @@ class Application
                 'share'=>[''=>'share/'],
                 'src'=>[''=>'src/']
             ], $json['import']??[]);
-            $name.=isset($json['version'])?':'.$json['version']:'';
+
+            $runtime = RUNTIME_DIR .'/module/'. $name . '/' . $version;
+            if (Storage::exist($runtimeFile=$runtime.'/module.config.php')) {
+                $runtimeConfig = include $runtimeFile;
+                $json = array_merge($json, $runtimeConfig);
+            }
+
+            $name.=empty($version)?'':':'.$version;
             $this->moduleConfigs[$name]=$json;
             $this->moduleDirName[$dir]=$name;
             // 注册资源
