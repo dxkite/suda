@@ -18,6 +18,7 @@ namespace suda\core\route;
 
 use suda\tool\Command;
 use suda\core\Request;
+use suda\core\Response;
 
 class Mapping
 {
@@ -25,6 +26,7 @@ class Mapping
     protected $url;
     protected $mapping;
     protected $callback;
+    protected $template;
     protected $module;
     protected $name;
     protected $role;
@@ -283,6 +285,12 @@ class Mapping
         return $this;
     }
 
+    public function setTemplate(string $template)
+    {
+        $this->template=$template;
+        return $this;
+    }
+
     public function setUrl(string $url)
     {
         $this->url=$url;
@@ -292,6 +300,11 @@ class Mapping
     public function getUrl()
     {
         return  $this->url;
+    }
+    
+    public function getTemplate()
+    {
+        return  $this->template;
     }
 
     public function getUrlTemplate()
@@ -406,10 +419,12 @@ class Mapping
 
     public static function createFromRouteArray(int $role, string $module, string $name, array $json)
     {
-        $mapping= new self($name, $json['url']??$json['visit'], $json['class'].'->onRequest', $module, $json['method']??[], $role);
+        $callback = isset($json['class'])?$json['class'].'->onRequest': __CLASS__.'::emptyResponse';
+        $mapping= new self($name, $json['url']??$json['visit'], $callback, $module, $json['method']??[], $role);
         $mapping->antiPrefix=isset($json['anti-prefix'])?$json['anti-prefix']:false;
         $mapping->hidden= $json['disable'] ?? $json['hidden'] ?? false;
         $mapping->param= $json['param'] ?? null;
+        $mapping->template = $json['template'] ?? null;
         if (isset($json['host'])) {
             $mapping->host = $json['host'];
             $mapping->scheme = $json['scheme'] ?? $_SERVER['REQUEST_SCHEME'] ?? 'http';
@@ -422,5 +437,24 @@ class Mapping
     public static function current()
     {
         return  self::$current;
+    }
+
+    protected static function emptyResponse()
+    {
+        $render=new class extends Response {
+            public function onRequest(Request $request)
+            {
+                $mapping = Mapping::current();
+                if ($mapping) {
+                    if ($template=$mapping->getTemplate()){
+                        if ($view=$this->view($template, $mapping->getParam()??[])){
+                            return $view->render();
+                        } 
+                    }
+                }
+            }
+        };
+        $render->onRequest(Request::getInstance());
+        return true;
     }
 }

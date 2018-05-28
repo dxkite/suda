@@ -1,6 +1,6 @@
 {
     "index": {
         "class": "cn\\atd3\\response\\IndexResponse",
-        "visit": "\/"
+        "url": "\/"
     }
 }
