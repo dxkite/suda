@@ -27,6 +27,7 @@ class Mapping
     protected $mapping;
     protected $callback;
     protected $template;
+    protected $source;
     protected $module;
     protected $name;
     protected $role;
@@ -290,6 +291,16 @@ class Mapping
         $this->template=$template;
         return $this;
     }
+    public function setSource(string $source)
+    {
+        $this->source=$source;
+        return $this;
+    }
+ 
+    public function getSource()
+    {
+        return  $this->source;
+    }
 
     public function setUrl(string $url)
     {
@@ -420,11 +431,13 @@ class Mapping
     public static function createFromRouteArray(int $role, string $module, string $name, array $json)
     {
         $callback = isset($json['class'])?$json['class'].'->onRequest': __CLASS__.'::emptyResponse';
+        $callback = isset($json['template']) ? $callback : __CLASS__.'::sourceResponse';
         $mapping= new self($name, $json['url']??$json['visit'], $callback, $module, $json['method']??[], $role);
         $mapping->antiPrefix=isset($json['anti-prefix'])?$json['anti-prefix']:false;
         $mapping->hidden= $json['disable'] ?? $json['hidden'] ?? false;
         $mapping->param= $json['param'] ?? null;
         $mapping->template = $json['template'] ?? null;
+        $mapping->source = $json['source'] ?? null;
         if (isset($json['host'])) {
             $mapping->host = $json['host'];
             $mapping->scheme = $json['scheme'] ?? $_SERVER['REQUEST_SCHEME'] ?? 'http';
@@ -450,6 +463,37 @@ class Mapping
                         if ($view=$this->view($template, $mapping->getParam()??[])){
                             return $view->render();
                         } 
+                    }
+                }
+            }
+        };
+        $render->onRequest(Request::getInstance());
+        return true;
+    }
+
+    protected static function sourceResponse()
+    {
+        $render=new class extends Response {
+            public function onRequest(Request $request)
+            {
+                $mapping = Mapping::current();
+                if ($mapping) {
+                    if ($source=$mapping->getSource()){
+                        $path = storage()->dynstr($source);
+                        if (storage()->exist($path)) {
+                            $content=file_get_contents($path);
+                            $hash   = md5($content);
+                            $size   = strlen($content);
+                            if (!$this->_etag($hash)) {
+                                $type   = $type ?? pathinfo($path, PATHINFO_EXTENSION);
+                                $this->type($type);
+                                self::setHeader('Content-Length:'.$size);
+                                echo $content;
+                            }
+                        }else{
+                            $this->state(404);
+                            echo 'source not find:'.$mapping->getModule().'?'.$path;
+                        }
                     }
                 }
             }

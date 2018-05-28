@@ -408,4 +408,21 @@ class Storage
     {
         return tempnam(sys_get_temp_dir(), $prefix);
     }
+
+    public static function dynstr(string $string)
+    {
+        $string = preg_replace_callback('/:(\w+)/', function ($m) {
+            if (defined($m[1])) {
+                return constant($m[1]);
+            }
+            return $m[0];
+        }, $string);
+        $string = preg_replace_callback('/\{(\S+)\}/', function ($m) {
+            if (Config::has($m[1])) {
+                return Config::get($m[1]);
+            }
+            return $m[0];
+        }, $string);
+        return $string;
+    }
 }

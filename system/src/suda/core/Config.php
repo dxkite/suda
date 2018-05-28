@@ -47,4 +47,9 @@ class Config
     {
         return ArrayHelper::set(self::$config, $name, $value, $combine);
     }
+
+    public static function has(string $name)
+    {
+        return ArrayHelper::exist(self::$config, $name);
+    }
 }
