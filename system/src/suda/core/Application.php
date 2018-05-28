@@ -108,7 +108,7 @@ class Application
         // 设置PHP属性
         set_time_limit(Config::get('timelimit', 0));
         // 设置时区
-        date_default_timezone_set(Config::get('timezone', 'PRC'));
+        date_default_timezone_set(Config::get('timezone', defined('DEFAULT_TIMEZONE')?DEFAULT_TIMEZONE:'RPC'));
         // 设置默认命名空间
         Autoloader::setNamespace(Config::get('app.namespace'));
         // 系统共享库
@@ -337,7 +337,7 @@ class Application
     
     public function isModuleReachable(string $name)
     {
-        return in_array($this->getModuleFullName($name),$this->getReachableModules());
+        return in_array($this->getModuleFullName($name), $this->getReachableModules());
     }
 
     /**

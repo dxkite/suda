@@ -17,4 +17,5 @@
     define('LOG_JSON',false);
     // 输出详细信息添加到日志末尾
     define('LOG_FILE_APPEND',true);
+    define('DEFAULT_TIMEZONE','PRC');
     require_once SYSTEM.'/suda.php';

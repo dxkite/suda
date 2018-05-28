@@ -1,4 +1,4 @@
-<?php #1527472608
+<?php #1527473548
     
     // 应用所在目录
     define('APP_DIR', __DIR__.'/../app');
@@ -16,4 +16,5 @@
     define('LOG_JSON',false);
     // 输出详细信息添加到日志末尾
     define('LOG_FILE_APPEND',true);
+    define('DEFAULT_TIMEZONE','PRC');
     require_once SYSTEM.'/suda.php';

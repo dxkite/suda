@@ -51,6 +51,9 @@ class Debug
 
     public static function init()
     {
+        if (defined('DEFAULT_TIMEZONE')) {
+            date_default_timezone_set(DEFAULT_TIMEZONE);
+        }
         $request=Request::getInstance();
         self::$hash=$hash=substr(md5(microtime().''.$request->ip()), 0, 6);
         self::$file= tempnam(sys_get_temp_dir(), 'dx_');
@@ -60,7 +63,7 @@ class Debug
             self::$latest =APP_LOG.'/latest.log';
         }
         if (DEBUG) {
-            cookie()->set(conf('debugCookie','__debug'),conf('debugSecret',base64_encode('dxkite')));
+            cookie()->set(conf('debugCookie', '__debug'), conf('debugSecret', base64_encode('dxkite')));
         }
     }
 
@@ -189,7 +192,7 @@ class Debug
     protected static function printHTML(Exception $e)
     {
         // // 非致命错误
-        if ($e->getSeverity()!==E_ERROR && cookie()->get(conf('debugCookie','__debug')) == conf('debugSecret',base64_encode('dxkite'))) {
+        if ($e->getSeverity()!==E_ERROR && cookie()->get(conf('debugCookie', '__debug')) == conf('debugSecret', base64_encode('dxkite'))) {
             echo "<div class=\"suda-error\" style=\"color:red\"><b>{$e->getName()}</b>: {$e->getMessage()} at {$e->getFile()}#{$e->getLine()}</div>";
             return;
         }
@@ -459,7 +462,8 @@ class Debug
         }
     }
 
-    protected static function buildLocalInfo() {
+    protected static function buildLocalInfo()
+    {
         $env=  [
             'PHP' => PHP_VERSION
         ];
