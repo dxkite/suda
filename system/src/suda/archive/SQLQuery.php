@@ -209,7 +209,6 @@ class SQLQuery implements SQLStatement
      */
     public static function beginTransaction()
     {
-        self::connectPdo();
         self::$query->beginTransaction();
     }
 
@@ -220,7 +219,6 @@ class SQLQuery implements SQLStatement
      */
     public static function commit()
     {
-        self::connectPdo();
         self::$query->commit();
     }
 
@@ -231,7 +229,6 @@ class SQLQuery implements SQLStatement
      */
     public static function rollBack()
     {
-        self::connectPdo();
         self::$query->rollBack();
     }
 

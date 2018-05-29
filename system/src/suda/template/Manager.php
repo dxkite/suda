@@ -389,7 +389,7 @@ class Manager
             }
         }
         // 输出内容
-        $public=self::$compiler->render($name, $output)->parent($parent)->getRenderedString();
+        $public=self::$compiler->render($output,$name)->parent($parent)->getRenderedString();
         Storage::put($outpath, $public);
         // 引用文件
         $static_url=Storage::cut($outpath, APP_PUBLIC);

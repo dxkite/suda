@@ -179,12 +179,12 @@ abstract class Response
 
     public function forward()
     {
-        $referer = null;
+        $referer =  $_GET['redirect_uri']??Request::referer();
         if (Cookie::has('redirect_uri')) {
-            $referer =Cookie::get('redirect_uri', $_GET['redirect_uri']??Request::referer());
+            $referer =Cookie::get('redirect_uri', $referer);
             Cookie::delete('redirect_uri');
         }
-        return $referer?$this->go($referer):false;
+        return is_null($referer)?false:$this->go($referer);
     }
 
     public function go(string $url)
@@ -241,7 +241,7 @@ abstract class Response
             self::$mime=parse_ini_file(SYSTEM_RESOURCE.'/mime.ini');
         }
         if ($name) {
-            return self::$mime[$name] ?? conf('mime.'.$name,$name);
+            return self::$mime[$name] ?? conf('mime.'.$name, $name);
         } else {
             return self::$mime;
         }
