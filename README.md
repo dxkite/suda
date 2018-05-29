@@ -66,7 +66,7 @@ cp -R ./suda/system/resource/project/* .
 ## 文档说明
 
 - [自动文档](docs/README.md)    
-- [Release](docs/RELEASE.md)
+- [Release](RELEASE.md)
 
 ## Historys Or Demos
 
