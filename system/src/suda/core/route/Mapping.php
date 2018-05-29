@@ -34,7 +34,7 @@ class Mapping
     protected $types;
     protected $param;
     protected $value;
-
+    protected $buffer=true;
     protected $host = null;
     protected $port;
     protected $scheme;
@@ -114,7 +114,7 @@ class Mapping
         $callback = new Command($this->callback);
         if ($command  = $callback->command) {
             $method = null;
-            $ob =true;
+            $ob =$this->buffer;
             if (is_string($command)) {
                 if (!function_exists($command) && $callback->file) {
                     require_once $callback->file;
@@ -447,6 +447,7 @@ class Mapping
         $mapping->param= $json['param'] ?? null;
         $mapping->template = $json['template'] ?? null;
         $mapping->source = $json['source'] ?? null;
+        $mapping->buffer = $json['buffer'] ?? true;
         if (isset($json['host'])) {
             $mapping->host = $json['host'];
             $mapping->scheme = $json['scheme'] ?? $_SERVER['REQUEST_SCHEME'] ?? 'http';
