@@ -214,7 +214,7 @@ class Compiler implements CompilerImpl
         if ($matchs[1]==='?') {
             return '$this->has("'.$name.'")';
         }
-        $args=isset($matchs[5]) && !empty($matchs[5]) ?','.$matchs[5]:'';
+        $args=isset($matchs[4]) && !empty($matchs[4]) ?','.$matchs[4]:'';
         return '$this->get("'.$name.'"'.$args.')';
     }
 
