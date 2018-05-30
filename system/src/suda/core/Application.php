@@ -375,7 +375,7 @@ class Application
         if (Storage::exist($path=MODULE_CONFIG.'/config.json')) {
             Config::set('module', Json::loadFile($path));
         }
-        Config::set('module',Config::get('module',[]),$module_config);
+        Config::set('module', Config::get('module', []), $module_config);
     }
 
     public function onRequest(Request $request)
@@ -426,8 +426,9 @@ class Application
         $targets=[];
         // debug()->debug($matchname, $preg);
         // 匹配模块名，查找符合格式的模块
-        foreach ($this->moduleConfigs as $module_name=>$module_config) {
-            // 匹配到模块名
+        if (is_array($this->moduleConfigs)) {
+            foreach ($this->moduleConfigs as $module_name=>$module_config) {
+                // 匹配到模块名
             if (preg_match($preg, $module_name)) {
                 preg_match('/^(?:(\w+)\/)?(\w+)(?::(.+))?$/', $module_name, $matchname);
                 // 获取版本号
@@ -436,6 +437,7 @@ class Application
                 } else {
                     $targets[]=$module_name;
                 }
+            }
             }
         }
         // 排序版本
@@ -484,7 +486,7 @@ class Application
         }
     }
 
-    public function registerModule(string $path,?string $config =null)
+    public function registerModule(string $path, ?string $config =null)
     {
         $config = is_null($config)?$path.'/module.json':$config;
         if (Storage::exist($path) && Storage::exist($config)) {

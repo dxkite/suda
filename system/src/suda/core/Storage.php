@@ -381,11 +381,11 @@ class Storage
         return false;
     }
 
-    // 判断文件存在
+    // 判断文件或者目录存在
     private static function existCase($name):bool
     {
         $name=self::osPath($name);
-        if (file_exists($name) && is_file($name) && $real=realpath($name)) {
+        if (file_exists($name) && $real=realpath($name)) {
             if (basename($real) === basename($name)) {
                 return true;
             }
