@@ -85,11 +85,9 @@ abstract class Template
     */
     public function getRenderedString()
     {
-        debug()->time('render '.$this->name);
         self::_render_start();
-        $this->_render_template();
+        $this->echo();
         $content=self::_render_end();
-        debug()->timeEnd('render '.$this->name);
         return $content;
     }
     
@@ -114,6 +112,18 @@ abstract class Template
     public function __toString()
     {
         return self::getRenderedString();
+    }
+
+    /**
+     * 输出当前模板
+     *
+     * @return void
+     */
+    public function echo()
+    {
+        debug()->time('render '.$this->name);
+        $this->_render_template();
+        debug()->timeEnd('render '.$this->name);
     }
 
     public function getRenderStack()

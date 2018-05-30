@@ -296,7 +296,7 @@ class Compiler implements CompilerImpl
     {
         preg_match('/\((.+)\)/', $exp, $v);
         $name=str_replace('\'', '-', trim($v[1], '"\''));
-        return "<?php echo suda\\template\\Manager::include('{$name}',\$this)->getRenderedString(); ?>";
+        return "<?php suda\\template\\Manager::include('{$name}',\$this)->echo(); ?>";
     }
 
     protected function parseU($exp)
