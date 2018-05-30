@@ -20,7 +20,7 @@ use suda\tool\Json;
 
 class Hook
 {
-    private static $hooks=[];
+    protected static $hooks=[];
 
     public static function loadJson(string $path)
     {
@@ -71,7 +71,6 @@ class Hook
     public static function exec(string $name, array $args=[])
     {
         if (isset(self::$hooks[$name]) && is_array(self::$hooks[$name])) {
-            self::$hooks[$name] = array_unique(self::$hooks[$name]);
             foreach (self::$hooks[$name] as $command) {
                 self::call($command, $args);
             }
@@ -89,7 +88,6 @@ class Hook
     public static function execIf(string $name, array $args=[], $condition = true)
     {
         if (isset(self::$hooks[$name]) && is_array(self::$hooks[$name])) {
-            self::$hooks[$name] = array_unique(self::$hooks[$name]);
             foreach (self::$hooks[$name] as $command) {
                 if (self::call($command, $args)===$condition) {
                     return true;
@@ -102,7 +100,6 @@ class Hook
     public static function execNotNull(string $name, array $args=[])
     {
         if (isset(self::$hooks[$name]) && is_array(self::$hooks[$name])) {
-            self::$hooks[$name] = array_unique(self::$hooks[$name]);
             foreach (self::$hooks[$name] as $command) {
                 if (!is_null($value=self::call($command, $args))) {
                     return $value;
