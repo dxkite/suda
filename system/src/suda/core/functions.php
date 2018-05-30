@@ -274,15 +274,36 @@ function table(string $tableName)
     return suda\archive\TableInstance::new($tableName);
 }
 
+/**
+ * 获取默认Session对象
+ *
+ * @return void
+ */
 function session()
 {
     return suda\core\Session::getInstance();
 }
 
+/**
+ * 获取当前文件所在的模块
+ *
+ * @param integer $var 文件路径或者回溯调用层数
+ * @return void
+ */
 function module($var=0)
 {
     if (is_numeric($var)) {
         return app()->getThisModule($var+1);
     }
     return app()->getFileModule($var);
+}
+
+/**
+ * 获取邮件发送 **使用前请设置完成SMTP规则**
+ * 
+ * @param integer|null $type 发送类型。0 使用 sendmail 发送邮件， 1使用 SMTP发送邮件
+ * @return void
+ */
+function email_poster(?int $type=null){
+    return suda\mail\Mailer::instance(is_null($type)?Mailer::SMTP:$type);
 }

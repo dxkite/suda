@@ -4,7 +4,6 @@
 @time:2017-05-25
 @dis: 本课将会讲述在PHPStudy的工作环境下配置开发环境。
 
-
 ---
 
 ### 开始前准备
@@ -39,5 +38,5 @@ git clone https://github.com/DXkite/suda.git
 可以看到如下页面，表示安装成功
 ![安装成功](img/installok.png)
 
-
 ----------------
+

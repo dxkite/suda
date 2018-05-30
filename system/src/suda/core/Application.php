@@ -484,15 +484,15 @@ class Application
         }
     }
 
-    public function registerModule(string $path)
+    public function registerModule(string $path,?string $config =null)
     {
-        if (Storage::exist($file=$path.'/module.json')) {
+        $config = is_null($config)?$path.'/module.json':$config;
+        if (Storage::exist($path) && Storage::exist($config)) {
             $dir=basename($path);
-            debug()->trace(__('load module config %s', $file));
-            $json=Json::parseFile($file);
+            debug()->trace(__('load module config %s', $config));
+            $json=Json::parseFile($config);
             $name=$json['name'] ?? $dir;
             $version =  $json['version'] ?? '';
-
             $json['directory']=$dir;
             $json['path']=$path;
             // 注册默认自动加载
@@ -500,13 +500,11 @@ class Application
                 'share'=>[''=>'share/'],
                 'src'=>[''=>'src/']
             ], $json['import']??[]);
-
             $runtime = RUNTIME_DIR .'/module/'. $name . '/' . $version;
             if (Storage::exist($runtimeFile=$runtime.'/module.config.php')) {
                 $runtimeConfig = include $runtimeFile;
                 $json = array_merge($json, $runtimeConfig);
             }
-
             $name.=empty($version)?'':':'.$version;
             $this->moduleConfigs[$name]=$json;
             $this->moduleDirName[$dir]=$name;
