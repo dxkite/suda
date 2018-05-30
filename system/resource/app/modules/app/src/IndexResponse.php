@@ -36,7 +36,7 @@ class IndexResponse extends \suda\core\Response
          * i was very happy that you choose suda as your php framework
          * 
          */
-        $page=$this->page('demo/default:index');
+        $page=$this->page('index');
         $page->set('title', 'Welcome to use Suda!');
         $page->set('helloworld', 'Hello,World!');
         // create database table instance

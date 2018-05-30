@@ -1,5 +1,7 @@
-# Manifast 项目
+# Manifast.json
+主要配置了App的各种信息
 
+## 主要配置项以及说明
 - `namespace` 配置基础的空间名
 - `version` 配置版本号
 - `application` 配置应用启动时创建的实例，默认 （`suda\core\Application`）

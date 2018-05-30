@@ -11,11 +11,11 @@
 
 - [框架基础]
     - [安装框架](01-install-framework/README.md)
-    - 
-- [页面路由]
-    - [创建静态页面]
-    - [创建动态页面]
-    - [创建活动页面]
+    - [创建模块](create-module/README.md)
+- [页面路由](router/README.md)
+    - [创建静态页面](router/static-page.md)
+    - [创建动态页面](router/template-page.md)
+    - [创建活动页面](router/action-page.md)
 - [数据处理]
     - [创建数据表]
     - [快捷操作表]
@@ -26,7 +26,7 @@
     - [I18N国际化支持]
     - [缓存与数据清理]
 - [配置文件]
-    - [app/manifast.json]
+    - [app/manifast.json](config-json/manifast.json.md)
     - [config/config.json]
     - [module/module.json]
     - [config/router.json]

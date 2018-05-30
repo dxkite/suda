@@ -1,8 +1,10 @@
 {
+    "name":"suda-test-app",
     "namespace": "cn\\atd3",
     "version": "1.0-dev",
     "application": "suda\\core\\Application",
-    "modules": ["suda", "default"],
+    "modules": ["suda", "app"],
+    "reachable": ["app"],
     "language": "zh-CN",
     "url": {
         "mode": 0,

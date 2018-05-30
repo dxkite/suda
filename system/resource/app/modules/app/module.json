@@ -1,5 +1,5 @@
 {
-    "name": "demo/default",
+    "name": "demo/app",
     "namespace": "cn\\atd3",
     "authors": [{
         "name": "dxkite",
@@ -13,7 +13,7 @@
             "cn\\atd3\\response": "src"
         }
     },
-    "discription": "网站测试模块",
+    "discription": "网站测试网页",
     "require": {},
     "version": "1.0.0-dev",
     "install": "cn\\atd3\\Install::task"
