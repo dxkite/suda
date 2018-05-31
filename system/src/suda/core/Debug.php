@@ -122,9 +122,8 @@ class Debug
         $loginfo['time']=microtime(true)-D_START;
         $loginfo['mem']=memory_get_usage() - D_MEM;
         self::writeLine($loginfo);
-        $log_json = defined('LOG_JSON') && LOG_JSON;
         $dump_log = defined('DEBUG_DUMP_LOG') && DEBUG_DUMP_LOG;
-        if ($log_json || $dump_log) {
+        if ($dump_log) {
             self::$log[]=$loginfo;
         }
     }
@@ -219,7 +218,7 @@ class Debug
         Config::set('request', $ex.'_'.self::$hash);
         $dump = ['Exception'=>$e,'Dump'=>self::dumpArray()];
         storage()->path(APP_LOG.'/dump');
-        storage()->put(APP_LOG.'/dump/'.$ex.'_'.self::$hash.'.dump', '<?php $dump='.var_export($dump, true).';');
+        storage()->put(APP_LOG.'/dump/'.$ex.'_'.self::$hash.'.json', json_encode($dump, JSON_UNESCAPED_UNICODE));
         return self::displayLog(['line'=>$line,'file'=>$file,'backtrace'=>$backtrace,'name'=>$e->getName(),'message'=>$e->getMessage()]);
     }
     
@@ -337,18 +336,6 @@ class Debug
         if (self::$latest) {
             file_put_contents(self::$latest, $body, FILE_APPEND);
             self::$saved=true;
-            if (defined('LOG_JSON') && LOG_JSON && is_writable(RUNTIME_DIR.'/log-json')) {
-                $loginfo=self::getInfo();
-                $loginfo['request']=[
-                    'ip'=>Request::ip(),
-                    'method'=>Request::method(),
-                    'url'=>Request::virtualUrl(),
-                ];
-                $loginfo['logs']=self::$log;
-                $filejson=RUNTIME_DIR.'/log-json/'.self::$hash.'.json';
-                Storage::mkdirs(dirname($filejson));
-                file_put_contents($filejson, json_encode($loginfo));
-            }
         }
     }
 

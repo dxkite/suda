@@ -17,8 +17,9 @@ namespace suda\core;
 
 use Throwable;
 use ErrorException;
+use JsonSerializable;
 
-class Exception extends ErrorException
+class Exception extends ErrorException implements JsonSerializable 
 {
     protected $name;
     protected $backtrace;
@@ -72,5 +73,16 @@ class Exception extends ErrorException
     public function getName()
     {
         return $this->name;
+    }
+    public function jsonSerialize() {
+        return  [
+            'name' => $this->getName(),
+            'message' => $this->getMessage(),
+            'file' => $this->getFile(),
+            'line' => $this->getLine(),
+            'level' => $this->getLevel(),
+            'severity' => $this->getSeverity(),
+            'backtrace'=> $this->getBackTrace(),
+        ];
     }
 }
