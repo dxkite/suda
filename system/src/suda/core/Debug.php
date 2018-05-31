@@ -46,6 +46,7 @@ class Debug
     protected static $time=[];
     protected static $hash;
     private static $file;
+    private static $tempname;
     private static $latest=false;
     private static $saved=false;
     private static $shutdown=false;
@@ -58,10 +59,16 @@ class Debug
         }
         $request=Request::getInstance();
         self::$hash=$hash=substr(md5(microtime().''.$request->ip()), 0, 6);
-        self::$file= tempnam(sys_get_temp_dir(), 'dx_');
+        $file = tmpfile();
+        if ($file === false)  {
+            self::$tempname =  APP_LOG .'/.tmp.log';
+            storage()->path(dirname(static::$tempname));
+            $file = fopen(static::$tempname,'w+');
+        }
+        self::$file= $file;
         Config::set('request', self::$hash);
-        file_put_contents(self::$file, '====='.self::$hash.'====='.$request->ip().'====='.(conf('debug', defined('DEBUG') && DEBUG)?'debug':'normal')."=====\r\n", FILE_APPEND);
-        file_put_contents(self::$file, self::printHead()."\r\n", FILE_APPEND);
+        fwrite(self::$file, '====='.self::$hash.'====='.$request->ip().'====='.(conf('debug', defined('DEBUG') && DEBUG)?'debug':'normal')."=====\r\n");
+        fwrite(self::$file, self::printHead()."\r\n");
         if (defined('APP_LOG') && Storage::path(APP_LOG) && is_writable(APP_LOG)) {
             self::$latest =APP_LOG.'/latest.log';
         }
@@ -310,20 +317,25 @@ class Debug
     protected static function save()
     {
         self::checkSize();
-        if (DEBUG) {
-            storage()->put(APP_LOG.'/request.dump', '<?php $dump='.var_export(self::dumpArray(), true).';');
-        }
-        $body=file_get_contents(self::$file);
+        // 获取日志信息
         $time=number_format(microtime(true) - D_START, 10);
         $hash=self::$hash;
         $info=self::getInfo();
         $mem=self::memshow($info['memory'], 4);
         $peo=ceil(1/$time);
-        $all=self::memshow($info['memory']*$peo, 4);
+        $all=self::memshow($info['memory']*$peo, 4); 
+        // 写入最终日志
+        fwrite(self::$file, "====={$hash}====={$time}====={$mem}====={$peo}:{$all}=====\r\n\r\n");
+        $size=ftell(self::$file);
+        fseek(self::$file, 0);
+        $body=fread(self::$file, $size);
+        fclose(self::$file);
+        if (self::$tempname) {
+            Storage::delete(self::$tempname);
+        }
+        // 是否可以写入
         if (self::$latest) {
             file_put_contents(self::$latest, $body, FILE_APPEND);
-            file_put_contents(self::$latest, "====={$hash}====={$time}====={$mem}====={$peo}:{$all}=====\r\n\r\n", FILE_APPEND);
-            Storage::delete(self::$file);
             self::$saved=true;
             if (defined('LOG_JSON') && LOG_JSON && is_writable(RUNTIME_DIR.'/log-json')) {
                 $loginfo=self::getInfo();
@@ -356,7 +368,7 @@ class Debug
         if ((defined('LOG_FILE_APPEND') && LOG_FILE_APPEND) && self::compareLevel($log['level'], conf('debug-backtrace', Debug::ERROR)) >= 0) {
             $str.=self::printTrace($log['backtrace'], true, "\t\t=> ")."\r\n";
         }
-        return file_put_contents(self::$file, $str, FILE_APPEND);
+        return fwrite(self::$file, $str);
     }
 
     public static function memshow(int $mem, int $dec)
