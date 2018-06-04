@@ -425,4 +425,32 @@ class Storage
         }, $string);
         return $string;
     }
+
+    public static function touchIndex(string $dest, string $content = 'dxkite-suda@'.SUDA_VERSION)
+    {
+        $dest=self::osPath($dest);
+        if (is_writable($dest)) {
+            $dest=self::path($dest);
+            $index = $dest.'/'.conf('defaultIndex', 'index.html');
+            if (!self::exist($index)) {
+                file_put_contents($index, $content);
+            }
+        } else {
+            return false;
+        }
+        $hd=opendir($dest);
+        while ($read=readdir($hd)) {
+            if (strcmp($read, '.') !== 0 && strcmp($read, '..') !==0) {
+                if (self::isDir($dest.'/'.$read)) {
+                    $index = $dest.'/'.$read.'/'.conf('defaultIndex', 'index.html');
+                    if (!self::exist($index)) {
+                        file_put_contents($index, $content);
+                    }
+                    self::touchIndex($dest.'/'.$read, $content);
+                }
+            }
+        }
+        closedir($hd);
+        return true;
+    }
 }

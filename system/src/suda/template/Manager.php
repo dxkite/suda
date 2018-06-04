@@ -221,6 +221,7 @@ class Manager
                 }
             }
         }
+        storage()->touchIndex(APP_PUBLIC.'/assets');
         return $return;
     }
 
