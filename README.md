@@ -52,7 +52,7 @@ cp -R ./suda/system/resource/project/* .
 
 讲网站的更目录指定到 `public` 目录
 
-### 步骤四
+### 步骤三
 
 访问public/dev.php文件，框架会自动创建应用
 
