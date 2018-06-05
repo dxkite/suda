@@ -1,21 +1,8 @@
-# 文档清单
+# Summary
 
-> **注：** 文档由程序自动生成
-
-- suda {{ SUDA_VERSION }} 
-- {{ date('Y-m-d H:i:s') }}
-
-## 函数列表 
-| 函数名 | 说明 |
-|------|-----|  
-@foreach($:functions as $name => $info)| [{{$name}}](functions/{{$name}}.md) |  {{!$info['functionDoc']}}  |
+* [内置函数](functions/README.md)
+@foreach($:functions as $name => $info)    * [{{$name}}](functions/{{$name}}.md) 
 @endforeach
-
-
-
-## 类列表
-
-| 类名 | 说明 |
-|------|-----|
-@foreach($:classes as $name => $info)|[{{$name}}](classes/{{ docme\Docme::realPath($name)}}.md) | {{!$info['classDoc']}} |
+* [核心类参考](classes/README.md)
+@foreach($:classes as $name => $info)    * [{{$name}}](classes/{{ docme\Docme::realPath($name)}}.md)
 @endforeach

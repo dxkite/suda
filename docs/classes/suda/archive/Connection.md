@@ -1,8 +1,14 @@
 #  Connection 
 
 > *文件信息* suda\archive\Connection.php: 28~194
+
+
 数据表链接对象
+
+
 ## 描述
+
+
 
 
 

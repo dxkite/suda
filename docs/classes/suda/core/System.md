@@ -1,10 +1,16 @@
 #  System 
 
-> *文件信息* suda\core\System.php: 37~186
+> *文件信息* suda\core\System.php: 40~183
+
+
+系统类，处理系统报错函数以及程序加载
+
 
 ## 描述
 
-document
+
+
+该类暂时无说明
 ## 常量列表
 | 常量名  |  值|
 |--------|----|
@@ -30,7 +36,6 @@ document
 |  public  static|[onShutdown](System/onShutdown.md) |  |
 |  public  static|[uncaughtException](System/uncaughtException.md) |  |
 |  public  static|[uncaughtError](System/uncaughtError.md) |  |
-|  public  static|[getRunInfo](System/getRunInfo.md) |  |
  
 
 ## 例子

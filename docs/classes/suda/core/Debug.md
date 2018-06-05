@@ -1,8 +1,14 @@
 #  Debug 
 
-> *文件信息* suda\core\Debug.php: 26~468
+> *文件信息* suda\core\Debug.php: 26~528
+
+
 异常日志类
+
+
 ## 描述
+
+
 
 用于记录运行日志和运行信息以及提供错误显示
 ## 常量列表
@@ -25,6 +31,7 @@
 | protected  static  | log | | 
 | protected  static  | time | | 
 | protected  static  | hash | | 
+| protected  static  | dump | | 
 
 ## 方法
 
@@ -51,7 +58,8 @@
 |  public  static|[__callStatic](Debug/__callStatic.md) |  |
 |  protected  static|[strify](Debug/strify.md) |  |
 |  public  |[__call](Debug/__call.md) |  |
-|  protected  static|[buildLocalInfo](Debug/buildLocalInfo.md) |  |
+|  public  static|[addDump](Debug/addDump.md) |  |
+|  protected  static|[dumpArray](Debug/dumpArray.md) |  |
  
 
 ## 例子

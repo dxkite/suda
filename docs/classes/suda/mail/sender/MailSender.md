@@ -1,8 +1,14 @@
 #  MailSender 
 
 > *文件信息* suda\mail\sender\MailSender.php: 25~61
+
+
 sendmail 邮件发送
+
+
 ## 描述
+
+
 
 使用sendmail发送邮件，请保证sendmail的配置
 

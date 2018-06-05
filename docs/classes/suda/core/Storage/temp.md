@@ -1,6 +1,6 @@
 # Storage::temp
 
-> *文件信息* suda\core\Storage.php: 18~411
+> *文件信息* suda\core\Storage.php: 22~460
 ## 所属类 
 
 [Storage](../Storage.md)
@@ -10,7 +10,7 @@
   public  static
 ## 说明
 
-document
+该函数暂时无说明
 
 ## 参数
 

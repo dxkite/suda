@@ -1,6 +1,6 @@
 # Config::load
 
-> *文件信息* suda\core\Config.php: 24~50
+> *文件信息* suda\core\Config.php: 24~55
 ## 所属类 
 
 [Config](../Config.md)
@@ -10,7 +10,7 @@
   public  static
 ## 说明
 
-document
+该函数暂时无说明
 
 ## 参数
 

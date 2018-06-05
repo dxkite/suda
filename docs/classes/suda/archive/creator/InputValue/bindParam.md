@@ -10,7 +10,7 @@
   public  static
 ## 说明
 
-document
+该函数暂时无说明
 
 ## 参数
 

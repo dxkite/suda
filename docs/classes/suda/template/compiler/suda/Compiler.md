@@ -1,10 +1,16 @@
 #  Compiler 
 
-> *文件信息* suda\template\compiler\suda\Compiler.php: 30~384
+> *文件信息* suda\template\compiler\suda\Compiler.php: 30~386
+
+
 Suda 模板编译器
+
+
 ## 描述
 
-document
+
+
+该类暂时无说明
 ## 常量列表
 | 常量名  |  值|
 |--------|----|

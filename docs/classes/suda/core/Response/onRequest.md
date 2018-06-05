@@ -1,6 +1,6 @@
 # Response::onRequest
 
-> *文件信息* suda\core\Response.php: 27~258
+> *文件信息* suda\core\Response.php: 30~278
 ## 所属类 
 
 [Response](../Response.md)
@@ -10,7 +10,7 @@
 abstract  public  
 ## 说明
 
-document
+
 
 ## 参数
 

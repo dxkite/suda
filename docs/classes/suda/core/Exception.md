@@ -1,10 +1,16 @@
 #  Exception 
 
-> *文件信息* suda\core\Exception.php: 21~61
+> *文件信息* suda\core\Exception.php: 25~91
+
+
+通用系统异常
+
 
 ## 描述
 
-document
+
+
+该类暂时无说明
 
 
 ## 变量列表
@@ -14,6 +20,8 @@ document
 | protected    | backtrace | | 
 | protected    | show_start | | 
 | protected    | show_end | | 
+| protected    | level | | 
+| protected  static  | levelTable | | 
 | protected    | message | | 
 | protected    | code | | 
 | protected    | file | | 
@@ -26,8 +34,10 @@ document
 |--------|-------|------|
 |  public  |[__construct](Exception/__construct.md) |  |
 |  public  |[show](Exception/show.md) |  |
+|  public  |[getLevel](Exception/getLevel.md) |  |
 |  public  |[getBackTrace](Exception/getBackTrace.md) |  |
 |  public  |[getName](Exception/getName.md) |  |
+|  public  |[jsonSerialize](Exception/jsonSerialize.md) |  |
 |  public  |[getSeverity](Exception/getSeverity.md) |  |
 |  public  |[__wakeup](Exception/__wakeup.md) |  |
 |  public  |[getMessage](Exception/getMessage.md) |  |

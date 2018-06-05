@@ -2,9 +2,15 @@
 
 > *文件信息* suda\exception\JSONException.php: 18~31
 
+
+
+
+
 ## 描述
 
-document
+
+
+该类暂时无说明
 
 
 ## 变量列表

@@ -214,8 +214,15 @@ class Compiler implements CompilerImpl
         if ($matchs[1]==='?') {
             return '$this->has("'.$name.'")';
         }
-        $args=isset($matchs[4]) && !empty($matchs[4]) ?','.$matchs[4]:'';
-        return '$this->get("'.$name.'"'.$args.')';
+        if (isset($matchs[4])){
+            preg_match('/\((.+)\)/', $matchs[4], $v);
+            if (isset($v[1])) {
+                $args = trim($v[1]);
+                $args= strlen( $args) ?','.$args:'';
+                return '$this->get("'.$name.'"'.$args.')';
+            }
+        }
+        return '$this->get("'.$name.'")';
     }
 
     protected static function parseValue($var)

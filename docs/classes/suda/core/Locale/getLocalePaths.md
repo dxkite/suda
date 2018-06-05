@@ -1,16 +1,16 @@
-# System::getRunInfo
+# Locale::getLocalePaths
 
-> *文件信息* suda\core\System.php: 37~186
+> *文件信息* suda\core\Locale.php: 23~114
 ## 所属类 
 
-[System](../System.md)
+[Locale](../Locale.md)
 
 ## 可见性
 
   public  static
 ## 说明
 
-document
+语言控制文件
 
 ## 参数
 

@@ -15,6 +15,10 @@
  */
 namespace suda\core;
 
+
+/**
+ * 文件存储系统包装类，封装了常用的文件系统函数
+ */
 class Storage
 {
     public static $charset=['GBK','GB2312','BIG5'];

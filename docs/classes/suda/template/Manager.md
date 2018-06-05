@@ -1,10 +1,16 @@
 #  Manager 
 
-> *文件信息* suda\template\Manager.php: 29~650
+> *文件信息* suda\template\Manager.php: 29~655
+
+
 模板管理类
+
+
 ## 描述
 
-document
+
+
+该类暂时无说明
 
 
 ## 变量列表

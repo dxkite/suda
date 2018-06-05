@@ -1,6 +1,6 @@
 # Request::parseUrl
 处理请求的URL
-> *文件信息* suda\core\Request.php: 21~499
+> *文件信息* suda\core\Request.php: 24~502
 ## 所属类 
 
 [Request](../Request.md)

@@ -23,7 +23,10 @@ use suda\exception\JSONException;
 // TODO: If-Modified-Since
 // TODO: Access-Control
 
-
+/**
+ * 网页响应类，用于处理来自服务器的请求
+ * 
+ */
 abstract class Response
 {
     // 状态输出

@@ -1,6 +1,6 @@
 # System::uncaughtException
 
-> *文件信息* suda\core\System.php: 37~186
+> *文件信息* suda\core\System.php: 40~183
 ## 所属类 
 
 [System](../System.md)
@@ -10,7 +10,7 @@
   public  static
 ## 说明
 
-document
+该函数暂时无说明
 
 ## 参数
 

@@ -1,10 +1,16 @@
 #  Response 
 
-> *文件信息* suda\core\Response.php: 27~258
+> *文件信息* suda\core\Response.php: 30~278
+
+
+网页响应类，用于处理来自服务器的请求
+
 
 ## 描述
 
-document
+
+
+
 ## 常量列表
 | 常量名  |  值|
 |--------|----|
@@ -31,7 +37,8 @@ document
 |  public  |[json](Response/json.md) | 构建JSON输出 |
 |  public  |[file](Response/file.md) | 直接输出文件 |
 |  public  |[page](Response/page.md) | 输出HTML页面 |
-|  public  |[pagefile](Response/pagefile.md) | 输出HTML页面 |
+|  public  |[view](Response/view.md) | 输出HTML页面 |
+|  public  |[template](Response/template.md) | 输出模板 |
 |  public  |[refresh](Response/refresh.md) |  |
 |  public  |[forward](Response/forward.md) |  |
 |  public  |[go](Response/go.md) |  |

@@ -1,13 +1,14 @@
 # session
+获取默认Session对象
+> *文件信息* suda\core\functions.php: 282~285
 
-> *文件信息* suda\core\functions.php: 277~280
-document
 ## 参数
 
 无参数
 
 ## 返回值
-返回值类型不定
+类型：void
+无
 
 ## 例子
 

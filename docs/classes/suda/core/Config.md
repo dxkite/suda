@@ -1,10 +1,16 @@
 #  Config 
 
-> *文件信息* suda\core\Config.php: 24~50
+> *文件信息* suda\core\Config.php: 24~55
+
+
 文件配置类
+
+
 ## 描述
 
-document
+
+
+该类暂时无说明
 
 
 ## 变量列表
@@ -20,6 +26,7 @@ document
 |  public  static|[assign](Config/assign.md) |  |
 |  public  static|[get](Config/get.md) |  |
 |  public  static|[set](Config/set.md) |  |
+|  public  static|[has](Config/has.md) |  |
  
 
 ## 例子

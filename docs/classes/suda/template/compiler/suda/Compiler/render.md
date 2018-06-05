@@ -1,6 +1,6 @@
 # Compiler::render
 
-> *文件信息* suda\template\compiler\suda\Compiler.php: 30~384
+> *文件信息* suda\template\compiler\suda\Compiler.php: 30~386
 ## 所属类 
 
 [Compiler](../Compiler.md)
@@ -10,14 +10,14 @@
   public  
 ## 说明
 
-document
+该函数暂时无说明
 
 ## 参数
 
 | 参数名 | 类型 | 默认值 | 说明 |
 |--------|-----|-------|-------|
-| name |  string | 无 | 无 |
 | viewfile |  string | 无 | 无 |
+| name |  string | null | 无 |
 
 ## 返回值
 返回值类型不定

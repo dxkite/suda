@@ -1,10 +1,16 @@
 #  Mapping 
 
-> *文件信息* suda\core\route\Mapping.php: 22~426
+> *文件信息* suda\core\route\Mapping.php: 23~514
+
+
+
+
 
 ## 描述
 
-document
+
+
+该类暂时无说明
 ## 常量列表
 | 常量名  |  值|
 |--------|----|
@@ -19,12 +25,15 @@ document
 | protected    | url | | 
 | protected    | mapping | | 
 | protected    | callback | | 
+| protected    | template | | 
+| protected    | source | | 
 | protected    | module | | 
 | protected    | name | | 
 | protected    | role | | 
 | protected    | types | | 
 | protected    | param | | 
 | protected    | value | | 
+| protected    | buffer | | 
 | protected    | host | | 
 | protected    | port | | 
 | protected    | scheme | | 
@@ -63,8 +72,12 @@ document
 |  public  |[setDynamic](Mapping/setDynamic.md) |  |
 |  public  |[setHidden](Mapping/setHidden.md) |  |
 |  public  |[setMapping](Mapping/setMapping.md) |  |
+|  public  |[setTemplate](Mapping/setTemplate.md) |  |
+|  public  |[setSource](Mapping/setSource.md) |  |
+|  public  |[getSource](Mapping/getSource.md) |  |
 |  public  |[setUrl](Mapping/setUrl.md) |  |
 |  public  |[getUrl](Mapping/getUrl.md) |  |
+|  public  |[getTemplate](Mapping/getTemplate.md) |  |
 |  public  |[getUrlTemplate](Mapping/getUrlTemplate.md) |  |
 |  public  |[createUrl](Mapping/createUrl.md) |  |
 |  public  |[getBaseUrl](Mapping/getBaseUrl.md) |  |
@@ -72,6 +85,8 @@ document
 |  protected  |[buildMatch](Mapping/buildMatch.md) |  |
 |  public  static|[createFromRouteArray](Mapping/createFromRouteArray.md) |  |
 |  public  static|[current](Mapping/current.md) |  |
+|  protected  static|[emptyResponse](Mapping/emptyResponse.md) |  |
+|  protected  static|[sourceResponse](Mapping/sourceResponse.md) |  |
  
 
 ## 例子

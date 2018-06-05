@@ -2,9 +2,15 @@
 
 > *文件信息* suda\exception\ArchiveException.php: 17~21
 
+
+
+
+
 ## 描述
 
-document
+
+
+该类暂时无说明
 ## 常量列表
 | 常量名  |  值|
 |--------|----|

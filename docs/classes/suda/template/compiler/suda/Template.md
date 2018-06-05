@@ -1,10 +1,16 @@
 #  Template 
 
-> *文件信息* suda\template\compiler\suda\Template.php: 25~276
+> *文件信息* suda\template\compiler\suda\Template.php: 25~286
+
+
+
+
 
 ## 描述
 
-document
+
+
+该类暂时无说明
 
 
 ## 变量列表
@@ -30,6 +36,7 @@ document
 |  protected  |[_render_start](Template/_render_start.md) |  |
 |  protected  |[_render_end](Template/_render_end.md) |  |
 |  public  |[__toString](Template/__toString.md) | 获取当前模板的字符串 |
+|  public  |[echo](Template/echo.md) | 输出当前模板 |
 |  public  |[getRenderStack](Template/getRenderStack.md) |  |
 |  public  |[set](Template/set.md) | 单个设置值 |
 |  public  |[assign](Template/assign.md) | 直接压入值 |

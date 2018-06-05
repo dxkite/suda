@@ -1,6 +1,6 @@
 # Mapping::setValue
 
-> *文件信息* suda\core\route\Mapping.php: 22~426
+> *文件信息* suda\core\route\Mapping.php: 23~514
 ## 所属类 
 
 [Mapping](../Mapping.md)
@@ -10,7 +10,7 @@
   public  
 ## 说明
 
-document
+该函数暂时无说明
 
 ## 参数
 

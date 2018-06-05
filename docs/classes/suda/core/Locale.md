@@ -1,8 +1,14 @@
 #  Locale 
 
-> *文件信息* suda\core\Locale.php: 23~104
+> *文件信息* suda\core\Locale.php: 23~114
+
+
 I18N 国际化支持
+
+
 ## 描述
+
+
 
 语言控制文件
 ## 常量列表
@@ -22,6 +28,8 @@ I18N 国际化支持
 |  public  static|[load](Locale/load.md) | 加载语言本地化文件 |
 |  public  static|[loadFile](Locale/loadFile.md) | 加载语言本地化文件 |
 |  public  static|[_](Locale/_.md) |  |
+|  public  static|[getLocalePaths](Locale/getLocalePaths.md) |  |
+|  public  static|[getLangs](Locale/getLangs.md) |  |
  
 
 ## 例子

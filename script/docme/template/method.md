@@ -10,7 +10,7 @@
 
 ## 可见性
 
-{{ $:abstract().' ' }} {{ $:visibility().' '  }} {{ $:static }}
+{{ $:abstract(0).' ' }} {{ $:visibility().' '  }} {{ $:static }}
 
 ## 说明
 

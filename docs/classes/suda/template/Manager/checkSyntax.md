@@ -1,6 +1,6 @@
 # Manager::checkSyntax
 检查语法
-> *文件信息* suda\template\Manager.php: 29~650
+> *文件信息* suda\template\Manager.php: 29~655
 ## 所属类 
 
 [Manager](../Manager.md)

@@ -1,6 +1,6 @@
 # Request::ip2Address
 利用淘宝 ip.taobao.com 将IP转换成地址
-> *文件信息* suda\core\Request.php: 21~499
+> *文件信息* suda\core\Request.php: 24~502
 ## 所属类 
 
 [Request](../Request.md)

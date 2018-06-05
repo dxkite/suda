@@ -1,6 +1,6 @@
 # SQLQuery::_connect
 
-> *文件信息* suda\archive\SQLQuery.php: 33~275
+> *文件信息* suda\archive\SQLQuery.php: 33~272
 ## 所属类 
 
 [SQLQuery](../SQLQuery.md)

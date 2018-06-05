@@ -1,17 +1,16 @@
 # module
+获取当前文件所在的模块
+> *文件信息* suda\core\functions.php: 293~299
 
-> *文件信息* suda\core\functions.php: 282~288
-document
 ## 参数
 
 | 参数名 | 类型 | 默认值 | 说明 |
 |--------|-----|-------|-------|
-| var |  # Error> htmlspecialchars() expects parameter 1 to be string, array given
-	Cause By D:\Server\Local\suda\script\docme\template\function.md.tpl:14
- | 0 | 无 |
+| var |  integer | 0 |  文件路径或者回溯调用层数 |
 
 ## 返回值
-返回值类型不定
+类型：void
+无
 
 ## 例子
 

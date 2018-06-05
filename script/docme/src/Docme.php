@@ -69,16 +69,56 @@ class Docme
                 $classes[$class]=$classInfo;
             }
         }
-        
+        $this->genIndexFunction($path,$functions);
+        $this->genIndexClass($path,$classes);
+        $this->genReadme($path,$classes,$functions);
+        $this->genSummary($path,$classes,$functions);
+    }
+
+    public function genIndexFunction($path,$functions) {
         $template=new ExportTemplate;
-        $template->setSrc(__DIR__.'/../template/summary.md');
+        $template->setSrc(__DIR__.'/../template/functions-readme.md');
+        $template->setValues([
+            'functions'=>$functions,
+        ]);
+        $destPath=$path.'/functions/README.md';
+        $template->export($destPath);
+        print 'generate functions-readme  --> '.$destPath ."\r\n";
+    }
+
+    public function genIndexClass($path,$classes) {
+        $template=new ExportTemplate;
+        $template->setSrc(__DIR__.'/../template/classes-readme.md');
+        $template->setValues([
+            'classes'=>$classes,
+        ]);
+        $destPath=$path.'/classes/README.md';
+        $template->export($destPath);
+        print 'generate classes-readme  --> '.$destPath ."\r\n";
+    }
+
+    public function genReadme($path,$classes,$functions) {
+        $template=new ExportTemplate;
+        $template->setSrc(__DIR__.'/../template/readme.md');
         $template->setValues([
             'classes'=>$classes,
             'functions'=>$functions,
         ]);
         $destPath=$path.'/README.md';
         $template->export($destPath);
-        print 'generate summary  --> '.$destPath ."\r\n";
+        print 'generate readme  --> '.$destPath ."\r\n";
+    }
+
+    public function genSummary($path,$classes,$functions) {
+        $template=new ExportTemplate;
+        $template->setSrc(__DIR__.'/../template/SUMMARY.md');
+        $template->setValues([
+            'classes'=>$classes,
+            'functions'=>$functions,
+        ]);
+        $destPath=$path.'/SUMMARY.md';
+        $template->export($destPath);
+        print 'generate SUMMARY  --> '.$destPath ."\r\n";
     }
 
     public function setFunctions(array $functions)

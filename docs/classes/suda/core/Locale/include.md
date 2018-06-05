@@ -1,6 +1,6 @@
 # Locale::include
 包含本地化语言数组
-> *文件信息* suda\core\Locale.php: 23~104
+> *文件信息* suda\core\Locale.php: 23~114
 ## 所属类 
 
 [Locale](../Locale.md)

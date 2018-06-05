@@ -2,9 +2,15 @@
 
 > *文件信息* suda\tool\ArrayValue.php: 18~25
 
+
+
+
+
 ## 描述
 
-document
+
+
+该类暂时无说明
 
 
 ## 变量列表

@@ -1,6 +1,6 @@
 # Exception::__construct
 
-> *文件信息* suda\core\Exception.php: 21~61
+> *文件信息* suda\core\Exception.php: 25~91
 ## 所属类 
 
 [Exception](../Exception.md)
@@ -10,7 +10,7 @@
   public  
 ## 说明
 
-document
+该函数暂时无说明
 
 ## 参数
 

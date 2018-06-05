@@ -1,10 +1,16 @@
 #  Storage 
 
-> *文件信息* suda\core\Storage.php: 18~411
+> *文件信息* suda\core\Storage.php: 22~460
+
+
+文件存储系统包装类，封装了常用的文件系统函数
+
 
 ## 描述
 
-document
+
+
+该类暂时无说明
 
 
 ## 变量列表
@@ -44,6 +50,8 @@ document
 |  public  static|[type](Storage/type.md) |  |
 |  public  static|[exist](Storage/exist.md) |  |
 |  public  static|[temp](Storage/temp.md) |  |
+|  public  static|[dynstr](Storage/dynstr.md) |  |
+|  public  static|[touchIndex](Storage/touchIndex.md) |  |
  
 
 ## 例子

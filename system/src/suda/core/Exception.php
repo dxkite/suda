@@ -19,6 +19,9 @@ use Throwable;
 use ErrorException;
 use JsonSerializable;
 
+/**
+ * 通用系统异常
+ */
 class Exception extends ErrorException implements JsonSerializable 
 {
     protected $name;

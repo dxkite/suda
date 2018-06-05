@@ -34,6 +34,9 @@ use suda\tool\Value;
 use suda\core\exception\ApplicationException;
 use suda\exception\JSONException;
 
+/**
+ * 系统类，处理系统报错函数以及程序加载
+ */
 class System
 {
     protected static $appInstance=null;

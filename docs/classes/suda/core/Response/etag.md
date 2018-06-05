@@ -1,6 +1,6 @@
 # Response::etag
 使用Etag
-> *文件信息* suda\core\Response.php: 27~258
+> *文件信息* suda\core\Response.php: 30~278
 ## 所属类 
 
 [Response](../Response.md)
@@ -10,7 +10,6 @@
   public  static
 ## 说明
 
-注意：请不要再输出内容
 
 
 ## 参数

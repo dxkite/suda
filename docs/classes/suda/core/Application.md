@@ -1,8 +1,14 @@
 #  Application 
 
-> *文件信息* suda\core\Application.php: 29~573
+> *文件信息* suda\core\Application.php: 29~582
+
+
 应用处理类
+
+
 ## 描述
+
+
 
 
 包含了应用的各种处理方式

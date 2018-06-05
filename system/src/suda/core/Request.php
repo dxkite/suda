@@ -18,6 +18,9 @@ namespace suda\core;
 use suda\tool\Value;
 use suda\tool\Json;
 
+/**
+ * 请求描述类，客户端向框架发送请求时会生成此类
+ */
 class Request
 {
     private static $get=null;

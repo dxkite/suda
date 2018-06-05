@@ -1,6 +1,6 @@
 # Hook::exec
 
-> *文件信息* suda\core\Hook.php: 21~144
+> *文件信息* suda\core\Hook.php: 24~147
 ## 所属类 
 
 [Hook](../Hook.md)
@@ -10,7 +10,7 @@
   public  static
 ## 说明
 
-document
+该函数暂时无说明
 
 ## 参数
 

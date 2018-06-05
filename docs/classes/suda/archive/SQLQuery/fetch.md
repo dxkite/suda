@@ -1,6 +1,6 @@
 # SQLQuery::fetch
 获取查询结果的一列
-> *文件信息* suda\archive\SQLQuery.php: 33~275
+> *文件信息* suda\archive\SQLQuery.php: 33~272
 ## 所属类 
 
 [SQLQuery](../SQLQuery.md)

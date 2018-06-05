@@ -1,6 +1,6 @@
 # Locale::set
 设置本地化语言类型
-> *文件信息* suda\core\Locale.php: 23~104
+> *文件信息* suda\core\Locale.php: 23~114
 ## 所属类 
 
 [Locale](../Locale.md)
