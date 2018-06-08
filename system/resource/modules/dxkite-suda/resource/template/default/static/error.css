@@ -29,11 +29,13 @@
     font-size: 4rem;
     font-weight: 300;
     margin-right: 1rem;
+    word-break: break-all;
+    word-wrap: break-word;
 }
 
 .error-items {
     display: flex;
-    flex-flow: nowrap;
+    flex-flow: wrap;
 }
 
 .error-item {
@@ -55,7 +57,7 @@
 }
 
 .error-code {
-    margin: 2em 0;
+    margin: 1em 0 2em 0;
 }
 
 .footer {
@@ -70,10 +72,10 @@
 }
 
 .footer-item {
-    padding: .3rem; 
+    padding: .3rem;
 }
 
-.footer a  {
+.footer a {
     color: #999;
     text-decoration: none;
 }
@@ -84,6 +86,8 @@ li.error-line {
 
 pre.prettyprint {
     border: none !important;
+    overflow-y: hidden;
+    overflow-x: scroll;
 }
 
 pre {
@@ -111,11 +115,14 @@ pre code {
     display: inline-block;
     border-left: 1px solid #fff;
 }
+
 .error-position {
-    color :#333;
+    color: #333;
+    word-break: break-all;
     word-wrap: break-word;
     font-weight: 300;
 }
+
 .panel {
     padding: 1em;
 }
@@ -124,27 +131,37 @@ pre code {
     padding-top: 1em;
 }
 
-
-
-.include-list,.trace-list {
+.include-list,
+.trace-list {
     list-style: none;
     padding: 0;
 }
+
+.trace-function,
+.include-item {
+    word-wrap: break-word;
+}
+
+.trace-function {
+    color: #7952b3;
+    font-weight: 500;
+}
+
 .trace-file {
-    color : #4288ce;
-    font-weight: 400;
+    color: #4288ce;
+    font-weight: 500;
     margin-right: .3em;
     cursor: pointer;
 }
 
-.trace-function,.include-item {
-    word-wrap: break-word;
-
+.trace-separator {
+    font-weight: 400;
+    padding: 0 .5em;
 }
 
-.trace-function {
+.trace-args {
     color: #ee8055;
-    font-weight: 350;  
+    font-weight: 400;
 }
 
 @media (min-width: 768px) {

@@ -162,7 +162,8 @@ class Manager
         if (Storage::exist($viewpath)) {
             if (Config::get('debug', true) || Config::get('exception', false)) {
                 if (!static::compile($name, $ext)) {
-                    echo '<b>compile theme</b> &lt;<span style="color:red;">'.static::$theme.'</span>&gt; error: '.$name.' location '.$viewpath. ' missing raw template file</br>';
+                    throw new KernelException(__('missing template %s:%s',self::$theme,$name));
+                    // echo '<b>compile theme</b> &lt;<span style="color:red;">'.static::$theme.'</span>&gt; error: '.$name.' location '.$viewpath. ' missing raw template file</br>';
                     return;
                 }
             }
@@ -170,10 +171,12 @@ class Manager
             $pathOutput=dirname($viewpath);
             storage()->mkdirs($pathOutput);
             if (!storage()->isWritable($pathOutput)) {
+                // NOTICE: 这里可能会创建临时文件失败
                 $viewpath=storage()->temp('tpl_');
             }
             if (!static::compile($name, $ext, $viewpath)) {
-                echo '<b>missing theme</b> &lt;<span style="color:red;">'.static::$theme.'</span>&gt; template  '.$name.' file not exist '.$viewpath.'</br>';
+                throw new KernelException(__('missing template %s:%s',self::$theme,$name));
+                // echo '<b>missing theme</b> &lt;<span style="color:red;">'.static::$theme.'</span>&gt; template  '.$name.' file not exist '.$viewpath.'</br>';
             }
         }
         return static::displayFile($viewpath, $name);
@@ -360,7 +363,8 @@ class Manager
         $name=$module.':'.$basename;
         $input=self::getInputFile($name, false);
         if (!Storage::exist($input)) {
-            echo '<b>compile theme &lt;<span style="color:red;">'.self::$theme.'</span>&gt; file '.$input. ' missing file</b>';
+            throw new KernelException(__('missing file %s:%s',self::$theme,$input));
+            // echo '<b>compile theme &lt;<span style="color:red;">'.self::$theme.'</span>&gt; file '.$input. ' missing file</b>';
             return;
         }
         // 获取文件夹
@@ -374,7 +378,8 @@ class Manager
         if (Storage::exist($output)) {
             if (Config::get('debug', true) || Config::get('exception', false)) {
                 if (!self::$compiler->compile($name, $input, $output)) {
-                    echo '<b>compile theme &lt;<span style="color:red;">'.self::$theme.'</span>&gt; file '.$input. ' missing file</b>';
+                    throw new KernelException(__('missing file %s:%s',self::$theme,$input));
+                    // echo '<b>compile theme &lt;<span style="color:red;">'.self::$theme.'</span>&gt; file '.$input. ' missing file</b>';
                     return;
                 }
             }
@@ -385,7 +390,8 @@ class Manager
                 $output=storage()->temp('tpl_');
             }
             if (!self::$compiler->compile($name, $input, $output)) {
-                echo '<b>missing theme &lt;<span style="color:red;">'.self::$theme.'</span>&gt; file '.$input. ' missing file</b>';
+                throw new KernelException(__('missing file %s:%s',self::$theme,$input));
+                // echo '<b>missing theme &lt;<span style="color:red;">'.self::$theme.'</span>&gt; file '.$input. ' missing file</b>';
                 return;
             }
         }

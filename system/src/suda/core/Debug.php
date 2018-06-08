@@ -258,7 +258,8 @@ class Debug
                 }
                 $args = rtrim($args, ',');
             }
-            $print .= '<span class="trace-function">'.$function.'('.$args.')</span>';
+            $args = str_replace(',','<span class="trace-separator">,</span>',$args);
+            $print .= '<span class="trace-function">'.$function.'</span> (<span class="trace-args">'.$args.'</span>)';
             $traces[] = $print;
         }
 
