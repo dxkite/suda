@@ -76,7 +76,10 @@ class RawQuery implements SQLStatement
     public function getConnection() {
         return $this->connection;
     }
-
+    public function setConnection(Connection $connection) {
+       $this->connection = $connection;
+       return $this;
+    }
     /**
      * 获取查询结果的一列
      *

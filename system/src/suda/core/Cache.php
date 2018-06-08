@@ -35,7 +35,7 @@ class Cache
      */
     public static function set(string $name, $value, int $expire=null):bool
     {
-        if (!self::disable()) {
+        if (self::disable()) {
             return false;
         }
         $path=self::getPath($name);

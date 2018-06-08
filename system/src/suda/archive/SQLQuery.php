@@ -51,7 +51,10 @@ class SQLQuery implements SQLStatement
     public function getConnection() {
         return $this->rawQuery->getConnection();
     }
-
+    public function setConnection(Connection $connection) {
+        $this->connection = $connection;
+        return $this;
+     }
     /**
      * 获取查询结果的一列
      *
@@ -70,7 +73,12 @@ class SQLQuery implements SQLStatement
 
     public static function resetQuery()
     {
+        if (!self::$defaultQuery->getConnection()->isConnected()) {
+            $connection=Connection::getDefaultConnection()->connect();
+            self::$defaultQuery->setConnection($connection);
+        }
         self::$query = self::$defaultQuery;
+        
     }
 
     /**
@@ -245,11 +253,16 @@ class SQLQuery implements SQLStatement
     protected static function _connect(Connection $connection=null)
     {
         // 链接默认数据库
-        if ($connection == null) {
-            if (self::$defaultQuery == null) {
-                self::$defaultQuery = new RawQuery(Connection::getDefaultConnection()->connect());
+        if (is_null($connection)) {
+            if (is_null(self::$defaultQuery) ) {
+                if (is_null(self::$query)) {
+                    self::$defaultQuery = new RawQuery(Connection::getDefaultConnection()->connect());
+                    self::$query = self::$defaultQuery;
+                }
+                else{
+                     self::$defaultQuery = self::$query;
+                }
             }
-            self::$query = self::$defaultQuery;
         } else {
             if (!$connection->isConnected()) {
                 $connection->connect();

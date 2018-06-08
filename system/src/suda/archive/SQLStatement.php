@@ -24,6 +24,8 @@ use suda\archive\creator\InputValue;
 interface SQLStatement
 {
     public function getConnection();
+    public function setConnection(Connection $connection);
+    
     /**
      * 获取查询结果的一列
      *
