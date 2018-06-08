@@ -236,7 +236,7 @@ abstract class Template
             echo '<div style="color:red" title="'.__('can\'t run page hook %s %s', $e->getCmd(), $e->getMessage()).'">{:'.$e->getCmd().'}</div>';
             return;
         }
-        if (conf('app.showPageHook', false)) {
+        if (is_null($this->parent) && conf('app.showPageHook', false)) {
             echo '<div style="color:green" title="'.__('page hook point').'">{#'.$name.'}</div>';
         }
     }
