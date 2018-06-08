@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="{{ $:lang('en') }}">
+@data('suda\core\Debug::assginDebugInfo')
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>{{ $:error_type('Error') }} @if ($?:error_code) - {{$:error_code('500')}} @endif | Powered By Suda System </title>
+  <link rel="stylesheet" href="@static/error.css"> @insert('error-head')
+</head>
+
+<body>
+  <div class="error-wrapper">
+    <div class="error-panel">
+      <div class="error-info">
+        <div class="error-type">{{ $:error_type('Error') }}</div>
+        @if ($?:error_code)
+        <div class="error-number">{{ $:error_code('500') }}</div> @endif
+        <div class="error-items">
+          <div class="error-item">{{ __('Request Id:%s', $:request_id ) }}</div>
+          <div class="error-item">{{ date('Y-m-d H:i:s e') }}</div>
+        </div>
+      </div>
+      <div class="error-message">{{ $:error_message }}</div>
+    </div>
+    @insert('error-content')
+    <div class="footer">
+      <div class="footer-item">{{ __('Memory Cost %s', $:memory_usage ) }}</div>
+      <div class="footer-item">{{ __('Time Cost：%s s', $:time_spend ) }}</div>
+      <div class="footer-item">{{ __('Requst Ip: %s', request()->ip() ) }}</div>
+      <div class="footer-item">
+        <a href="https://github.com/DXkite/suda" target="_black"> {{ __('Performance By Suda v%s',SUDA_VERSION) }}</a>
+      </div>
+    </div>
+  </div>
+  @insert('error-footer')
+</body>
+
+</html>

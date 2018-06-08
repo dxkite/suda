@@ -1,0 +1,166 @@
+.error-wrapper {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    text-align: left;
+    color: #404040;
+    font-family: "Microsoft YaHei", Helvetica, Arial, sans-serif;
+    line-height: 1.5;
+    text-decoration: none;
+    letter-spacing: normal;
+    text-decoration: none;
+    vertical-align: baseline;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.error-info {
+    display: flex;
+    flex-flow: wrap;
+    align-items: baseline;
+}
+
+.error-panel {
+    padding: 1em 0;
+}
+
+.error-type,
+.error-number {
+    font-size: 4rem;
+    font-weight: 300;
+    margin-right: 1rem;
+}
+
+.error-items {
+    display: flex;
+    flex-flow: nowrap;
+}
+
+.error-item {
+    font-size: 1rem;
+    margin: .25rem;
+    color: #333;
+    font-weight: 300;
+}
+
+.error-message {
+    font-size: 2rem;
+    color: #999;
+    font-weight: 300;
+}
+
+.message {
+    color: #999;
+    font-weight: 300;
+}
+
+.error-code {
+    margin: 2em 0;
+}
+
+.footer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-top: 1px #ebebeb solid;
+    padding: 2em;
+    margin-top: 1em;
+    flex-flow: wrap;
+    color: #999;
+}
+
+.footer-item {
+    padding: .3rem; 
+}
+
+.footer a  {
+    color: #999;
+    text-decoration: none;
+}
+
+li.error-line {
+    background: #f8cbcb;
+}
+
+pre.prettyprint {
+    border: none !important;
+}
+
+pre {
+    background-color: #fff;
+}
+
+pre ol {
+    margin: 0;
+    color: #4288ce;
+    display: inline-block;
+    min-width: 100%;
+    box-sizing: border-box;
+}
+
+pre li {
+    border-left: 1px solid #ddd;
+    height: 18px;
+    line-height: 18px;
+}
+
+pre code {
+    color: #333;
+    height: 100%;
+    padding-left: 6px;
+    display: inline-block;
+    border-left: 1px solid #fff;
+}
+.error-position {
+    color :#333;
+    word-wrap: break-word;
+    font-weight: 300;
+}
+.panel {
+    padding: 1em;
+}
+
+.info-panel {
+    padding-top: 1em;
+}
+
+
+
+.include-list,.trace-list {
+    list-style: none;
+    padding: 0;
+}
+.trace-file {
+    color : #4288ce;
+    font-weight: 400;
+    margin-right: .3em;
+    cursor: pointer;
+}
+
+.trace-function,.include-item {
+    word-wrap: break-word;
+
+}
+
+.trace-function {
+    color: #ee8055;
+    font-weight: 350;  
+}
+
+@media (min-width: 768px) {
+    .error-wrapper {
+        width: 708px;
+    }
+}
+
+@media (min-width: 992px) {
+    .error-wrapper {
+        width: 708px;
+    }
+}
+
+@media (min-width: 1200px) {
+    .error-wrapper {
+        width: 960px;
+    }
+}

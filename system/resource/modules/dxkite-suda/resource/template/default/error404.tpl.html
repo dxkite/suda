@@ -1,26 +1,5 @@
-@set('title','404 Error - Page no Found')
-@set('lang','Zh-cn')
-@startInsert('bs-head')
-  <style>
-    body {
-      padding-top: 40px;
-      padding-bottom: 40px;
-      background-color: #eee;
-    }
-  </style>
-@endInsert
-@startInsert('bs-content')
-  <div class="container">
-
-    <div class="jumbotron">
-      <h1 class="display-3">404 错误</h1>
-      <p class="lead">当前页面 {{$:path('文档')}} 不存在，请确认后继续。</p>
-      <hr class="my-4">
-      <p class="lead">
-        <a class="btn btn-primary btn-lg" href="/" role="button">返回首页</a>
-      </p>
-    </div>
-
-  </div>
-@endInsert
-@include('suda:bootstrap')
+@startInsert('error-content')
+<section class="message">
+  @if ($?:path) {{ __('page "%s"  is not found',$:path('文档')) }} @else {= 当前页面文档信息载服务器上找不到，请重试 } @endif
+</section>
+@endInsert @include ('error_layout')

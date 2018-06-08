@@ -1,89 +1,35 @@
-@set('title', $:error ) @set('lang','Zh-cn') @startInsert('bs-head')
+@startInsert('error-head')
 <link rel="stylesheet" href="@static('suda')/google-code-prettify/prettify.css">
-<style>
-    .error-line {
-        background: #f8cbcb;
-    }
-    
-    pre.prettyprint {
-        border: none;
-    }
-    
-    pre {
-        background-color: #fff;
-    }
-    
-    pre ol {
-        margin: 0;
-        color: #4288ce;
-        display: inline-block;
-        min-width: 100%;
-        box-sizing: border-box;
-        padding-left: 56px;
-    }
-    
-    pre li {
-        border-left: 1px solid #ddd;
-        height: 18px;
-        line-height: 18px;
-    }
-    
-    pre code {
-        color: #333;
-        height: 100%;
-        padding-left: 6px;
-        display: inline-block;
-        border-left: 1px solid #fff;
-    }
-    
-    .panel {
-        padding: 1em;
-    }
-    
-    .info-panel {
-        padding-top: 1em;
-    }
-</style>
-@endInsert @startInsert('bs-content')
-<div title="Runtime" style="position:fixed;top:0;right:0;z-index:99999;padding:3px 5px;background:rgba(0,0,0,.3);color:#FFF;font-size:12px;border-radius:0 0 0 3px ;">{{$:time}} - {{$:mem}}</div>
-<div class="panel">
-    <div class="alert alert-danger" role="alert">
-        <button class="btn btn-danger">{{ $:erron('Unknow Error') }} </button> {{ $:error }}
-    </div>
-    <div class="card">
-        <div class="card-header">{{ $:file }}#{{$:line(0) }}</div>
+@endInsert
+
+
+@startInsert('error-content')
+    @if ($?:message)
+    <section class="message">
+        {{ $:message }}
+    </section>
+    @endif
+
+    @if (DEBUG)
+    <div class="error-code">
+        <div class="error-position">{{ $:file }}#{{$:line(0) }}</div>
         <pre class="prettyprint lang-php"><ol start="{{ key($:lines) }}">@foreach( $:lines as $num =>$line_code )<li class="line-{{$num}} @if ($num==$:pos_num) error-line @endif "><code>{{$line_code}}</code></li>@endforeach</ol></pre>
     </div>
-    <div class="info-panel">
         @if(count($:traces))
-        <ul class="list-group">
-            <li class="list-group-item active"><strong>backtrace</strong></li>
+        <ul class="trace-list">
             @foreach ($:traces as $trace_info)
-            <li class="list-group-item">{{! $trace_info }}</li>
+            <li class="trace-item">{{! $trace_info }}</li>
             @endforeach
         </ul>
         @endif
-        <div style="padding-top:1em" id="accordion" role="tablist" aria-multiselectable="true">
-            <div class="card-header" role="tab" id="include">
-                <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne"><span class="badge badge-default">{{ count(get_included_files())}}</span><strong>Includes</strong></a>
-            </div>
-            <div id="collapseOne" class="collapse @if(!count($:traces)) show @endif" role="tabpanel" aria-labelledby="include">
-                <ul class="list-group">
-                @foreach( get_included_files() as $file)
-                <li class="list-group-item">{{ $file }}</li>
-                @endforeach
-                </ul>
-            </div>
-        </div>
-    </div>
-</div>
-@endInsert @startInsert('bs-footer')
-<script src="@static('suda')/google-code-prettify/prettify.js"></script>
+    @endif
+@endInsert
+
+@startInsert('error-footer')
+<script src="@static/google-code-prettify/prettify.js"></script>
 <script>
     window.addEventListener('load', function () {
         prettyPrint();
     });
 </script>
-</div>
-</div>
-@endInsert @include('suda:bootstrap')
+@endInsert @include ('error_layout')

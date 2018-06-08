@@ -216,10 +216,11 @@ class Debug
         $backtrace=$e->getBacktrace();
         $ex= substr(md5($e->getName().'#'.$e->getMessage().'#'.$e->getFile().'#'.$e->getLine()), 0, 8);
         Config::set('request', $ex.'_'.self::$hash);
+        self::$hash = $ex.'-'.self::$hash;
         $dump = ['Exception'=>$e,'Dump'=>self::dumpArray()];
         storage()->path(APP_LOG.'/dump');
-        storage()->put(APP_LOG.'/dump/'.$ex.'_'.self::$hash.'.json', json_encode($dump, JSON_UNESCAPED_UNICODE));
-        return self::displayLog(['line'=>$line,'file'=>$file,'backtrace'=>$backtrace,'name'=>$e->getName(),'message'=>$e->getMessage()]);
+        storage()->put(APP_LOG.'/dump/'.self::$hash.'.json', json_encode($dump, JSON_UNESCAPED_UNICODE));
+        return self::displayLog(['line'=>$line,'file'=>$file,'backtrace'=>$backtrace,'name'=>$e->getName(),'level'=>$e->getLevel(),'message'=>$e->getMessage()]);
     }
     
     protected static function displayLog(array $logarray)
@@ -230,7 +231,8 @@ class Debug
         $backtrace=$logarray['backtrace'];
         $name=$logarray['name'];
         $message=$logarray['message'];
- 
+        $level = $logarray['level'];
+
         $pos_num = $line - 1;
         $code_file = file($file);
         $start = $line - 5 < 0 ? 0 : $line - 5;
@@ -238,7 +240,7 @@ class Debug
         foreach ($backtrace as $trace) {
             $print = null;
             if (isset($trace['file'])) {
-                $print = '<a title="'.Storage::cut($trace['file']).'">'.basename($trace['file']).'</a>#'.$trace['line'];
+                $print = '<a class="trace-file" title="'.Storage::cut($trace['file']).'">'.basename($trace['file']).'#'.$trace['line'].'</a>';
             }
             if (isset($trace['class'])) {
                 $function = $trace['class'].$trace['type'].$trace['function'];
@@ -256,7 +258,7 @@ class Debug
                 }
                 $args = rtrim($args, ',');
             }
-            $print .= ' '.$function.'('.$args.')';
+            $print .= '<span class="trace-function">'.$function.'('.$args.')</span>';
             $traces[] = $print;
         }
 
@@ -265,12 +267,9 @@ class Debug
             public function onRequest(Request $request)
             {
                 $this->state(500);
-                if (conf('debug', false)) {
-                    $this->template=$this->page('suda:error');
-                } else {
-                    $this->template=$this->page('suda:alert');
-                }
+                $this->template=$this->page('suda:error');
             }
+            
             public function render()
             {
                 $stack=$this->template->getRenderStack();
@@ -284,12 +283,10 @@ class Debug
         $render->onRequest(Request::getInstance());
         $debug=self::getInfo();
         $render->template->assign([
-                'erron'=>$name,
-                'error'=>$message,
+                'error_type'=>$name,
+                'error_message'=>$message,
                 'file'=>$file,
                 'line'=>$line,
-                'time'=> $debug['time'].'S',
-                'mem'=> self::memshow($debug['memory'], 2),
                 'lines'=>$lines,
                 'pos_num'=>$pos_num,
                 'traces'=>$traces,
@@ -497,6 +494,12 @@ class Debug
     public static function addDump(string $key, $values)
     {
         self::$dump[$key] = $values;
+    }
+
+    protected static function assginDebugInfo($page) {
+        $page->set('request_id',self::$hash);
+        $page->set('memory_usage',self::memshow(memory_get_usage() - D_MEM,4));
+        $page->set('time_spend',number_format(microtime(true) - D_START,4));
     }
 
     protected static function dumpArray()

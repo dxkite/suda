@@ -459,7 +459,7 @@ class Router
             public function onRequest(Request $request)
             {
                 $this->state(404);
-                $this->page('suda:error404', ['title'=>'404 Error', 'path'=>$request->url()])->render();
+                $this->page('suda:error404', ['error_type'=>'Error','error_code'=>404,'error_message'=>'Not Found', 'path'=>$request->url()])->render();
             }
         };
         $render->onRequest(Request::getInstance());
