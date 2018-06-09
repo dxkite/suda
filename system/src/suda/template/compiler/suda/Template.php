@@ -44,8 +44,8 @@ abstract class Template
     
     public function __construct()
     {
-        preg_match('/^((?:[a-zA-Z0-9_-]+\/)?[a-zA-Z0-9_-]+)(?::([^:]+))?(?::(.+))?$/', $this->name, $match);
-        $this->module= isset($match[3])?$match[1].(isset($match[2])?':'.$match[2]:''):$match[1];
+        // preg_match('/^((?:[a-zA-Z0-9_-]+\/)?[a-zA-Z0-9_-]+)(?::([^:]+))?(?::(.+))?$/', $this->name, $match);
+        // $this->module= isset($match[3])?$match[1].(isset($match[2])?':'.$match[2]:''):$match[1];
     }
     /**
     * 渲染页面
@@ -218,6 +218,22 @@ abstract class Template
         }
         if (conf('app.showPageGlobalHook', false)) {
             echo '<div style="color:green" title="'.__('global hook point').'">{:'.$name.'}</div>';
+        }
+    }
+
+    public function url($name=null, $values=null)
+    {
+        if (is_string($name)) {
+            if (!is_array($values)) {
+                $args=func_get_args();
+                array_shift($args);
+                $values= Router::getInstance()->buildUrlArgs($name, $args,$this->module);
+            }
+            return Router::getInstance()->buildUrl($name, $values,true,[],$this->module);
+        } elseif (is_array($name)) {
+            return Router::getInstance()->buildUrl(Response::$name, $name,true,[],$this->module);
+        } else {
+            return Router::getInstance()->buildUrl(Response::$name, $_GET, false,[],$this->module);
         }
     }
 

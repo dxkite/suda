@@ -51,5 +51,9 @@
     "resource_prepare": {
         "class": "dxkite\\suda\\response\\ResourcePrepareResponse",
         "visit": "\/resource_prepare"
-    }
+    },
+    "debug_json_download" : {
+        "class": "dxkite\\suda\\response\\DownloadJsonResponse",
+        "visit": "\/debug\/json\/{id:string}"
+     }
 }

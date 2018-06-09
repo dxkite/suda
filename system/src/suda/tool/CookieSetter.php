@@ -15,7 +15,7 @@
  */
 namespace suda\tool;
 
-final class CookieSetter
+final class CookieSetter implements \JsonSerializable
 {
     private $name;
     private $value;
@@ -109,5 +109,15 @@ final class CookieSetter
             setcookie($this->name, $this->value, $expire, $this->path, $this->domain, $this->secure, $this->httponly);
         }
         return $this;
+    }
+
+    public function __toString(){
+        return $this->value;
+    }
+    public function jsonSerialize() {
+        return [
+            'name' => $this->name,
+            'value' => $this->value,
+        ];
     }
 }

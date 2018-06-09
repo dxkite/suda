@@ -198,11 +198,11 @@ class Router
      * @param string $moduleDefault
      * @return list(module,name)
      */
-    public static function parseName(string $name, string $moduleDefault=null)
+    public static function parseName(string $name, ?string $moduleDefault=null)
     {
         if (func_num_args()==2&&empty($moduleDefault)) {
             $moduleDefault=null;
-        } elseif (empty($moduleDefault)) {
+        } elseif (is_null($moduleDefault)) {
             $moduleDefault=Application::getInstance()->getInstance()->getActiveModule();
         }
         // [模块前缀名称/]模块名[:版本号]:(模板名|路由ID)
@@ -239,9 +239,9 @@ class Router
         return $module.':'.$name;
     }
     
-    public function buildUrlArgs(string $name, array $args)
+    public function buildUrlArgs(string $name, array $args,?string $moduleDefault =null)
     {
-        list($module, $name)=self::parseName($name);
+        list($module, $name)=self::parseName($name,$moduleDefault);
         $module=Application::getInstance()->getInstance()->getModuleFullName($module);
         $name=$module.':'.$name;
         if (isset($this->routers[$name])) {
@@ -262,9 +262,9 @@ class Router
         return [];
     }
 
-    public function buildUrl(string $name, array $values=[], bool $query=true, array $queryArr=[])
+    public function buildUrl(string $name, array $values=[], bool $query=true, array $queryArr=[],?string $moduleDefault =null)
     {
-        list($module, $name)=self::parseName($name);
+        list($module, $name)=self::parseName($name,$moduleDefault);
         $module=Application::getInstance()->getInstance()->getModuleFullName($module);
         $name=$module.':'.$name;
         if (isset($this->routers[$name])) {

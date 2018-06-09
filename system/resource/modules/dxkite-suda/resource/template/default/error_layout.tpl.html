@@ -18,7 +18,11 @@
         @if ($?:error_code)
         <div class="error-number">{{ $:error_code('500') }}</div> @endif
         <div class="error-items">
+          @if (DEBUG)
+          <a class="error-item" href="@u('debug_json_download',$:request_id)" target="_black">{{ __('Request Id:%s', $:request_id ) }}</a>
+          @else
           <div class="error-item">{{ __('Request Id:%s', $:request_id ) }}</div>
+          @endif
           <div class="error-item">{{ date('Y-m-d H:i:s e') }}</div>
         </div>
       </div>

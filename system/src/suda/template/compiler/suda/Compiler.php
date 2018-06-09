@@ -311,7 +311,7 @@ class Compiler implements CompilerImpl
         if ($exp==='') {
             $exp='()';
         }
-        return "<?php echo u$exp; ?>";
+        return "<?php echo \$this->url$exp; ?>";
     }
     
     protected function parseSelf($exp)
