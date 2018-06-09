@@ -455,14 +455,7 @@ class Router
 
     public static function error404()
     {
-        $render=new class extends Response {
-            public function onRequest(Request $request)
-            {
-                $this->state(404);
-                $this->page('suda:error404', ['error_type'=>'Error','error_code'=>404,'error_message'=>'Not Found', 'path'=>$request->url()])->render();
-            }
-        };
-        $render->onRequest(Request::getInstance());
+        System::error(404,'Error','Page Not Found',404,['path'=>request()->url()]);
         return true;
     }
 

@@ -180,4 +180,30 @@ class System
     {
         self::uncaughtException(new \ErrorException($errstr, 0, $errno, $errfile, $errline));
     }
+
+    public static function error(int $status,string $type,string $message,?int $code=null,array $params=[]) {
+        $render=new class($status,$type,$message,$code,$params) extends Response {
+            protected $status,$type,$message,$code,$params;
+            public function __construct(int $status,string $type,string $message,?int $code=null,array $params=[]) {
+                $this->status =$status;
+                $this->type =$type;
+                $this->message = $message;
+                $this->code = $code;
+                $this->params = $params;
+            }
+            public function onRequest(Request $request)
+            {
+                $this->state($this->status);
+                $page=$this->page('suda:error404', ['error_type'=> $this->type ,'error_message'=> $this->message]);
+                if (!is_null($this->code)){
+                    $page->set('error_code',$this->code);
+                }
+                if (is_array($this->params)){
+                    $page->assign($this->params);
+                }
+                $page->render();
+            }
+        };
+        $render->onRequest(Request::getInstance());
+    }
 }
