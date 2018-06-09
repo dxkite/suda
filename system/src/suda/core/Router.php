@@ -474,7 +474,7 @@ class Router
     private function cacheFile(string $name):string
     {
         if (is_null(self::$cacheName)) {
-            $module_use=app()->getLiveModules();
+            $module_use=app()->getReachableModules();
             sort($module_use);
             self::$cacheModules=$module_use;
             self::$cacheName=substr(md5(implode('-', $module_use)), 0, 8);
