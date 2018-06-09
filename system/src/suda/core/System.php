@@ -194,7 +194,7 @@ class System
             public function onRequest(Request $request)
             {
                 $this->state($this->status);
-                $page=$this->page('suda:error404', ['error_type'=> $this->type ,'error_message'=> $this->message]);
+                $page=$this->page('suda:error', ['error_type'=> $this->type ,'error_message'=> $this->message]);
                 if (!is_null($this->code)){
                     $page->set('error_code',$this->code);
                 }
