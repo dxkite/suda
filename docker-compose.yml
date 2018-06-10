@@ -9,4 +9,4 @@ services:
     command:
       - /bin/sh
       - -c
-      - sh /suda/script/docker_start.sh && tail -f /opt/lampp/logs/access_log
+      - sh /start.sh && tail -f /opt/lampp/logs/access_log
