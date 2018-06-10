@@ -40,7 +40,7 @@ abstract class Response
     {
         // Mark Version
         if (conf('markVersion', true)) {
-            self::setHeader('X-Framework: Suda/'.SUDA_VERSION.' '.conf('app.name', 'suda-app').'/'.conf('app.version').' '.self::$name .' request/' .conf('request'));
+            self::setHeader('X-Application:'.conf('app.name', 'suda-app').'/'.conf('app.version').' '.self::$name .' request/' .conf('request'));
         }
         
         if (conf('debug')) {

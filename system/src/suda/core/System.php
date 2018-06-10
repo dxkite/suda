@@ -15,14 +15,11 @@
  */
 namespace suda\core;
 
-defined('D_START') or define('D_START', microtime(true));
-defined('D_MEM') or define('D_MEM', memory_get_usage());
 defined('ROOT_PATH') or define('ROOT_PATH', dirname(dirname(dirname(dirname(__DIR__)))));
 defined('SYSTEM_DIR') or define('SYSTEM_DIR', dirname(dirname(dirname(__DIR__))));
 defined('SYSTEM_RESOURCE') or define('SYSTEM_RESOURCE', SYSTEM_DIR.'/resource');
 defined('DEBUG') or define('DEBUG', false);
 defined('IS_LINUX') or define('IS_LINUX', DIRECTORY_SEPARATOR ===  '/');
-define('SUDA_VERSION', '1.2.15');
 
 require_once __DIR__.'/functions.php';
 require_once __DIR__.'/Debug.php';
@@ -131,14 +128,15 @@ class System
             // 加载配置
             Config::set('app', Json::loadFile($manifast));
         } catch (JSONException $e) {
-            debug()->die(__('parse mainifast error %s', $e->getMessage()));
+            $message =__('Load application mainifast: parse mainifast.json error: %s', $e->getMessage());
+            debug()->error($message);
+            suda_panic('Kernal Panic',$message);
         }
         // 载入配置前设置配置
         Hook::exec('core:loadManifast');
         // 默认应用控制器
         self::$applicationClass=self::getAppClassName();
     }
-
 
     public static function onShutdown()
     {

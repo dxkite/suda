@@ -85,7 +85,9 @@ class Application
             try {
                 Config::load($path);
             } catch (JSONException $e) {
-                debug()->die(__('parse application config.json error'));
+                $message =__('Load application config: parse config.json error');
+                debug()->error( $message);
+                suda_panic('Kernal Panic', $message);
             }
             // 动态配置覆盖
             if (Storage::exist($path=RUNTIME_DIR.'/global.config.php')) {
