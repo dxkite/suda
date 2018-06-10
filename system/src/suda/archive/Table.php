@@ -123,8 +123,16 @@ abstract class Table
         return Query::delete($this->getTableName(), $this->checkPrimaryKey($value), [], $this);
     }
 
-    
-    public function search($field, string $search, int $page=null, int $rows=10)
+    /**
+     * 搜搜字段
+     *
+     * @param [type] $field 搜索的字段
+     * @param string $search 搜索列
+     * @param integer $page 页码
+     * @param integer $rows 每页数
+     * @return void
+     */
+    public function search($field, string $search, ?int $page=null, int $rows=10)
     {
         if (is_null($page)) {
             return Query::search($this->getTableName(), $this->getWants(), $field, $search)->object($this);
@@ -133,7 +141,20 @@ abstract class Table
         }
     }
 
-    public function searchWhere($field, string $search, $where, array $bind=[],int $page=null, int $rows=10, bool $offset=false)
+
+    /**
+     * 搜索指定字段
+     *
+     * @param [type] $field 搜索字段
+     * @param string $search 搜索值
+     * @param [type] $where 限制搜索条件
+     * @param array $bind 条件值绑定
+     * @param integer $page 条件页
+     * @param integer $rows 页列
+     * @param boolean $offset 是否是偏移
+     * @return void
+     */
+    public function searchWhere($field, string $search, $where, array $bind=[], ?int $page=null, int $rows=10, bool $offset=false)
     {
         list($searchStr, $searchBind)=Query::prepareSearch($field, $search);
         $whereStr=Query::prepareWhere($where, $bind);
@@ -141,7 +162,7 @@ abstract class Table
         if (is_null($page)) {
             return Query::select($this->getTableName(), $this->getWants(), $whereStr . ' AND ('. $searchStr.') '. self::_order(), array_merge($searchBind, $bind))->object($this);
         }
-        return Query::select($this->getTableName(), $this->getWants(), $whereStr . ' AND ('. $searchStr.') '. self::_order(), array_merge($searchBind, $bind),[$page,$rows,$offset])->object($this);
+        return Query::select($this->getTableName(), $this->getWants(), $whereStr . ' AND ('. $searchStr.') '. self::_order(), array_merge($searchBind, $bind), [$page,$rows,$offset])->object($this);
     }
 
     /**
@@ -149,9 +170,10 @@ abstract class Table
      *
      * @param int $page  是否分页（页数）
      * @param int $rows 分页的元素个数
+     * @param boolean $offset 使用Offset
      * @return array|false
      */
-    public function list(int $page=null, int $rows=10, bool $offset=false)
+    public function list(?int $page=null, int $rows=10, bool $offset=false)
     {
         if (is_null($page)) {
             return Query::where($this->getTableName(), $this->getWants(), '1 '. self::_order())->object($this)->fetchAll();
@@ -163,11 +185,14 @@ abstract class Table
     /**
      * 条件列出元素
      *
+     * @param [type] $where 条件描述
+     * @param array $binds  条件附带参数
      * @param int $page  是否分页（页数）
      * @param int $rows 分页的元素个数
+     * @param boolean $offset 使用Offset
      * @return array|false
      */
-    public function listWhere($where, array $binds=[], int $page=null, int $rows=10, bool $offset=false)
+    public function listWhere($where, array $binds=[], ?int $page=null, int $rows=10, bool $offset=false)
     {
         $where_str=Query::prepareWhere($where, $binds);
         $where=preg_replace('/WHERE(.+)$/', '$1', $where_str).' '.self::_order();
@@ -181,9 +206,10 @@ abstract class Table
     /**
      * 根据条件更新列
      *
-     * @param [type] $data
-     * @param [type] $where
-     * @return int
+     * @param [type] $values 更新的列
+     * @param [type] $where 条件区域
+     * @param array $bind 扩展条件值
+     * @return void
      */
     public function update($values, $where, array $bind=[])
     {
@@ -196,16 +222,18 @@ abstract class Table
         return Query::update($this->getTableName(), $values, $where, $bind, $this);
     }
 
-
     /**
      * 根据条件删除列
      *
      * @param [type] $wants
      * @param [type] $where
-     * @param [type] $whereBinder
+     * @param array $whereBinder
+     * @param integer|null $page
+     * @param integer $rowa
+     * @param boolean $offset
      * @return Query|false
      */
-    public function select($wants, $where, $whereBinder=[],int $page=null,int $rowa=10, bool $offset=false)
+    public function select($wants, $where, $whereBinder=[], ?int $page=null, int $rowa=10, bool $offset=false)
     {
         if (is_array($where)) {
             $this->checkFields(array_keys($where));
@@ -216,7 +244,7 @@ abstract class Table
         if (is_null($page)) {
             return Query::where($this->getTableName(), $wants, $where, $whereBinder)->object($this);
         }
-        return Query::where($this->getTableName(), $wants, $where, $whereBinder,[$page,$rowa,$offset])->object($this);
+        return Query::where($this->getTableName(), $wants, $where, $whereBinder, [$page,$rowa,$offset])->object($this);
     }
 
     /**
@@ -404,19 +432,19 @@ abstract class Table
     /**
      * 清空数据表
      *
-     * @return void
+     * @return int 返回影响的数据行数目
      */
-    public function truncate()
+    public function truncate():int
     {
         return (new SQLQuery('TRUNCATE TABLE `#{'.$this->tableName.'}`;'))->exec();
     }
-
+  
     /**
      * 删除数据表
      *
-     * @return void
+     * @return int 返回影响的数据行数目
      */
-    public function drop()
+    public function drop():int
     {
         return (new SQLQuery('DROP TABLE IF EXISTS `#{'.$this->tableName.'}`;'))->exec();
     }
@@ -425,7 +453,7 @@ abstract class Table
      * 导出数据到文件
      *
      * @param string $path
-     * @return void
+     * @return bool|int
      */
     public function export(string $path)
     {
@@ -442,7 +470,7 @@ abstract class Table
      * 从导出文件中恢复数据
      *
      * @param string $path
-     * @return void
+     * @return bool|int
      */
     public function import(string $path)
     {

@@ -3,7 +3,7 @@
  * Suda FrameWork
  *
  * An open source application development framework for PHP 7.0.0 or newer
- * 
+ *
  * Copyright (c)  2017 DXkite
  *
  * @category   PHP FrameWork
@@ -66,19 +66,21 @@ class RawQuery implements SQLStatement
      * @param array $binds
      * @param boolean $scroll
      */
-    public function __construct(Connection $connection,string $query='', array $binds=[], bool $scroll=false)
+    public function __construct(Connection $connection, string $query='', array $binds=[], bool $scroll=false)
     {
         $this->connection= $connection;
-        $this->object=null;        
-        $this->query($query,$binds,$scroll);
+        $this->object=null;
+        $this->query($query, $binds, $scroll);
     }
 
-    public function getConnection() {
+    public function getConnection()
+    {
         return $this->connection;
     }
-    public function setConnection(Connection $connection) {
-       $this->connection = $connection;
-       return $this;
+    public function setConnection(Connection $connection)
+    {
+        $this->connection = $connection;
+        return $this;
     }
     /**
      * 获取查询结果的一列
@@ -179,7 +181,7 @@ class RawQuery implements SQLStatement
      * @param array $array 查询语句模板值
      * @return SQLQuery
      */
-    public function query(string $query, array $array=[],bool $scroll=false)
+    public function query(string $query, array $array=[], bool $scroll=false)
     {
         $this->query=$query;
         $this->values=$array;

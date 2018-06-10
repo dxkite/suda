@@ -75,7 +75,7 @@ class TableInstance
                 } else {
                     $tableName=substr(strrchr($className, '\\'), 1);
                 }
-                self::$tableClass[$tableName]=$className; 
+                self::$tableClass[$tableName]=$className;
             }
         }
     }

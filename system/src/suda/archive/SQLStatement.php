@@ -82,7 +82,7 @@ interface SQLStatement
      * @param array $array 查询语句模板值
      * @return SQLQuery
      */
-    public function query(string $query, array $array=[],bool $scroll=false);
+    public function query(string $query, array $array=[], bool $scroll=false);
     /**
      * 切换使用的数据表
      *

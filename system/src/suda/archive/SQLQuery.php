@@ -35,6 +35,7 @@ class SQLQuery implements SQLStatement
     protected static $defaultQuery = null;
     protected static $query = null;
     protected $rawQuery;
+
     /**
      * 构造查询
      *
@@ -48,13 +49,17 @@ class SQLQuery implements SQLStatement
         $this->rawQuery=self::$query->query($query, $binds, $scroll);
     }
 
-    public function getConnection() {
+    public function getConnection()
+    {
         return $this->rawQuery->getConnection();
     }
-    public function setConnection(Connection $connection) {
+    
+    public function setConnection(Connection $connection)
+    {
         $this->connection = $connection;
         return $this;
-     }
+    }
+
     /**
      * 获取查询结果的一列
      *
@@ -78,7 +83,6 @@ class SQLQuery implements SQLStatement
             self::$defaultQuery->setConnection($connection);
         }
         self::$query = self::$defaultQuery;
-        
     }
 
     /**
@@ -145,9 +149,9 @@ class SQLQuery implements SQLStatement
      * @param array $array 查询语句模板值
      * @return SQLQuery
      */
-    public function query(string $query, array $array=[],bool $scroll=false)
+    public function query(string $query, array $array=[], bool $scroll=false)
     {
-        $this->rawQuery->query($query,$array,$scroll);
+        $this->rawQuery->query($query, $array, $scroll);
         return $this;
     }
     
@@ -254,13 +258,12 @@ class SQLQuery implements SQLStatement
     {
         // 链接默认数据库
         if (is_null($connection)) {
-            if (is_null(self::$defaultQuery) ) {
+            if (is_null(self::$defaultQuery)) {
                 if (is_null(self::$query)) {
                     self::$defaultQuery = new RawQuery(Connection::getDefaultConnection()->connect());
                     self::$query = self::$defaultQuery;
-                }
-                else{
-                     self::$defaultQuery = self::$query;
+                } else {
+                    self::$defaultQuery = self::$query;
                 }
             }
         } else {
