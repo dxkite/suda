@@ -37,12 +37,17 @@ class Exception extends ErrorException implements JsonSerializable
         E_CORE_WARNING => DEBUG::WARNING,
         E_DEPRECATED => DEBUG::WARNING,
     ];
-    public function __construct(Throwable $e)
+    public function __construct(Throwable $e,?string $name = null)
     {
         $this->severity =$e instanceof ErrorException?$e->getSeverity():E_ERROR;
         parent::__construct($e->getMessage(), $e->getCode(), $this->severity, $e->getFile(), $e->getLine(), $e->getPrevious());
-        $this->name=get_class($e);
+        $this->name=is_null($name)?get_class($e):$name;
         $this->backtrace=$e->getTrace();
+    }
+
+    public function setName(string $name) {
+        $this->name =$name;
+        return $this;
     }
 
     public function show(int $start, int $end=0)

@@ -102,15 +102,21 @@ class Compiler implements CompilerImpl
         debug()->timeEnd('compile '.$name);
         $syntax=Manager::checkSyntax($output, $classname);
         if ($syntax !== true) {
-            if ($syntax instanceof \Exception || $syntax instanceof \Error) {
-                debug()->warning(__('compile error: %s near line %d', $syntax->getMessage(), $syntax->getLine()));
+            if (!conf('debug')) {
+                storage()->delete($output);
             }
-            storage()->delete($output);
+            if ($syntax instanceof \Exception || $syntax instanceof \Error) {
+                if (conf('exception.compileError', true)) {
+                    throw (new \suda\core\Exception(new \ErrorException($syntax->getMessage(), $syntax->getCode(), E_ERROR, $input, $syntax->getLine()), get_class($syntax)));
+                } else {
+                    debug()->warning(__('compile error: %s near line %d', $syntax->getMessage(), $syntax->getLine()));
+                }
+            }
         }
         return $syntax===true?:$syntax;
     }
 
-    public function render(string $viewfile,?string $name =null)
+    public function render(string $viewfile, ?string $name =null)
     {
         if (storage()->exist($viewfile)) {
             $templateInfo =  require_once $viewfile;
@@ -214,11 +220,11 @@ class Compiler implements CompilerImpl
         if ($matchs[1]==='?') {
             return '$this->has("'.$name.'")';
         }
-        if (isset($matchs[4])){
+        if (isset($matchs[4])) {
             preg_match('/\((.+)\)/', $matchs[4], $v);
             if (isset($v[1])) {
                 $args = trim($v[1]);
-                $args= strlen( $args) ?','.$args:'';
+                $args= strlen($args) ?','.$args:'';
                 return '$this->get("'.$name.'"'.$args.')';
             }
         }
