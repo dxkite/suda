@@ -16,6 +16,12 @@
 
 defined('D_START') or define('D_START', microtime(true));
 defined('D_MEM') or define('D_MEM', memory_get_usage());
+defined('ROOT_PATH') or define('ROOT_PATH', dirname(__DIR__));
+defined('SYSTEM_DIR') or define('SYSTEM_DIR',__DIR__);
+defined('SYSTEM_RESOURCE') or define('SYSTEM_RESOURCE', SYSTEM_DIR.'/resource');
+defined('DEBUG') or define('DEBUG', false);
+defined('IS_LINUX') or define('IS_LINUX', DIRECTORY_SEPARATOR ===  '/');
+
 define('SUDA_VERSION', '1.2.15');
 header('X-Powered-By: Suda/'.SUDA_VERSION);
 // 报错函数检测

@@ -240,7 +240,12 @@ class Debug
         foreach ($backtrace as $trace) {
             $print = null;
             if (isset($trace['file'])) {
-                $print = '<a class="trace-file" title="'.Storage::cut($trace['file']).'">'.basename($trace['file']).'#'.$trace['line'].'</a>';
+                if(preg_match('/^'.preg_quote(SYSTEM_DIR, '/').'/',$trace['file'])){
+                    $print = '<a class="trace-file" title="';
+                }else{
+                    $print = '<a class="trace-user-file" title="';
+                }
+                $print .= Storage::cut($trace['file']).'">'.basename($trace['file']).'#'.$trace['line'].'</a>';
             }
             if (isset($trace['class'])) {
                 $function = $trace['class'].$trace['type'].$trace['function'];

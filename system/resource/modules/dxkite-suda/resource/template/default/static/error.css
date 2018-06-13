@@ -87,7 +87,7 @@ li.error-line {
 pre.prettyprint {
     border: none !important;
     overflow-y: hidden;
-    overflow-x: scroll;
+    overflow-x: auto;
 }
 
 pre {
@@ -147,11 +147,16 @@ pre code {
     font-weight: 500;
 }
 
-.trace-file {
+.trace-file,.trace-user-file {
     color: #4288ce;
     font-weight: 500;
     margin-right: .3em;
     cursor: pointer;
+}
+
+.trace-user-file {
+    color:#2e317c;
+    font-weight: 600;
 }
 
 .trace-separator {

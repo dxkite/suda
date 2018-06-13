@@ -15,12 +15,6 @@
  */
 namespace suda\core;
 
-defined('ROOT_PATH') or define('ROOT_PATH', dirname(dirname(dirname(dirname(__DIR__)))));
-defined('SYSTEM_DIR') or define('SYSTEM_DIR', dirname(dirname(dirname(__DIR__))));
-defined('SYSTEM_RESOURCE') or define('SYSTEM_RESOURCE', SYSTEM_DIR.'/resource');
-defined('DEBUG') or define('DEBUG', false);
-defined('IS_LINUX') or define('IS_LINUX', DIRECTORY_SEPARATOR ===  '/');
-
 require_once __DIR__.'/functions.php';
 require_once __DIR__.'/Debug.php';
 

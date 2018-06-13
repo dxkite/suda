@@ -106,11 +106,7 @@ class Compiler implements CompilerImpl
                 storage()->delete($output);
             }
             if ($syntax instanceof \Exception || $syntax instanceof \Error) {
-                if (conf('exception.compileError', true)) {
-                    throw (new \suda\core\Exception(new \ErrorException($syntax->getMessage(), $syntax->getCode(), E_ERROR, $input, $syntax->getLine()), get_class($syntax)));
-                } else {
-                    debug()->warning(__('compile error: %s near line %d', $syntax->getMessage(), $syntax->getLine()));
-                }
+                throw new \suda\core\Exception(new \ErrorException(__('compile error: %s near line %d', $syntax->getMessage(), $syntax->getLine()), $syntax->getCode(), conf('exception.compileError', true)?E_ERROR:E_WARNING , $input, $syntax->getLine()), 'TemplateError');
             }
         }
         return $syntax===true?:$syntax;
