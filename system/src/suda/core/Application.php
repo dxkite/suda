@@ -79,6 +79,10 @@ class Application
     private function __construct()
     {
         debug()->trace(__('application load %s', APP_DIR));
+        // 框架依赖检测
+        if (!static::versionCompire(Config::get('app.suda', SUDA_VERSION), SUDA_VERSION)) {
+            suda_panic('ApplicationException',__('application require suda version %s and now is %s',Config::get('app.suda'), SUDA_VERSION));
+        }
         $this->path=APP_DIR;
         // 获取基本配置信息
         if (Storage::exist($path=CONFIG_DIR.'/config.json')) {
@@ -86,7 +90,7 @@ class Application
                 Config::load($path);
             } catch (JSONException $e) {
                 $message =__('Load application config: parse config.json error');
-                debug()->error( $message);
+                debug()->error($message);
                 suda_panic('Kernal Panic', $message);
             }
             // 动态配置覆盖
@@ -431,15 +435,15 @@ class Application
         if (is_array($this->moduleConfigs)) {
             foreach ($this->moduleConfigs as $module_name=>$module_config) {
                 // 匹配到模块名
-            if (preg_match($preg, $module_name)) {
-                preg_match('/^(?:(\w+)\/)?(\w+)(?::(.+))?$/', $module_name, $matchname);
-                // 获取版本号
-                if (isset($matchname[3])&&$matchname[3]) {
-                    $targets[$matchname[3]]=$module_name;
-                } else {
-                    $targets[]=$module_name;
+                if (preg_match($preg, $module_name)) {
+                    preg_match('/^(?:(\w+)\/)?(\w+)(?::(.+))?$/', $module_name, $matchname);
+                    // 获取版本号
+                    if (isset($matchname[3])&&$matchname[3]) {
+                        $targets[$matchname[3]]=$module_name;
+                    } else {
+                        $targets[]=$module_name;
+                    }
                 }
-            }
             }
         }
         // 排序版本
