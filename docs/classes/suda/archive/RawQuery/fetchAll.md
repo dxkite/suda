@@ -1,6 +1,6 @@
 # RawQuery::fetchAll
 获取全部的查询结果
-> *文件信息* suda\archive\RawQuery.php: 31~440
+> *文件信息* suda\archive\RawQuery.php: 31~445
 ## 所属类 
 
 [RawQuery](../RawQuery.md)

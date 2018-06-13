@@ -9,5 +9,5 @@
 ## 函数列表 
 | 函数名 | 说明 |
 |------|-----|  
-@foreach($:functions as $name => $info)| [{{$name}}](functions/{{$name}}.md) |  {{!$info['functionDoc']}}  |
+@foreach($:functions as $name => $info)| [{{$name}}]({{$name}}.md) |  {{!$info['functionDoc']}}  |
 @endforeach

@@ -1,6 +1,6 @@
 # SQLQuery::lastInsertId
 获取最后一次插入的主键ID（用于自增值
-> *文件信息* suda\archive\SQLQuery.php: 33~272
+> *文件信息* suda\archive\SQLQuery.php: 33~288
 ## 所属类 
 
 [SQLQuery](../SQLQuery.md)

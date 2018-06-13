@@ -1,6 +1,6 @@
 # SQLQuery::quote
 
-> *文件信息* suda\archive\SQLQuery.php: 33~272
+> *文件信息* suda\archive\SQLQuery.php: 33~288
 ## 所属类 
 
 [SQLQuery](../SQLQuery.md)

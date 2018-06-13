@@ -1,6 +1,6 @@
 # Exception::__toString
 
-> *文件信息* suda\core\Exception.php: 25~91
+> *文件信息* suda\core\Exception.php: 25~96
 ## 所属类 
 
 [Exception](../Exception.md)

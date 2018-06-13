@@ -1,6 +1,6 @@
 # Table::drop
 删除数据表
-> *文件信息* suda\archive\Table.php: 31~614
+> *文件信息* suda\archive\Table.php: 31~642
 ## 所属类 
 
 [Table](../Table.md)
@@ -19,8 +19,8 @@
 无参数
 
 ## 返回值
-类型：void
-无
+类型：int
+ 返回影响的数据行数目
 
 ## 例子
 

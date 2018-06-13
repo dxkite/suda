@@ -1,6 +1,6 @@
 # Application::getModules
 获取所有模块
-> *文件信息* suda\core\Application.php: 29~582
+> *文件信息* suda\core\Application.php: 29~588
 ## 所属类 
 
 [Application](../Application.md)

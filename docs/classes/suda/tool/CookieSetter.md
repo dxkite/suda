@@ -1,6 +1,6 @@
 #  CookieSetter 
 
-> *文件信息* suda\tool\CookieSetter.php: 18~113
+> *文件信息* suda\tool\CookieSetter.php: 18~123
 
 
 
@@ -29,6 +29,8 @@
 |  public  |[session](CookieSetter/session.md) |  |
 |  public  |[reset](CookieSetter/reset.md) |  |
 |  public  |[set](CookieSetter/set.md) |  |
+|  public  |[__toString](CookieSetter/__toString.md) |  |
+|  public  |[jsonSerialize](CookieSetter/jsonSerialize.md) |  |
  
 
 ## 例子

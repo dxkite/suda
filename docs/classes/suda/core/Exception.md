@@ -1,6 +1,6 @@
 #  Exception 
 
-> *文件信息* suda\core\Exception.php: 25~91
+> *文件信息* suda\core\Exception.php: 25~96
 
 
 通用系统异常
@@ -33,6 +33,7 @@
 | 可见性 | 方法名 | 说明 |
 |--------|-------|------|
 |  public  |[__construct](Exception/__construct.md) |  |
+|  public  |[setName](Exception/setName.md) |  |
 |  public  |[show](Exception/show.md) |  |
 |  public  |[getLevel](Exception/getLevel.md) |  |
 |  public  |[getBackTrace](Exception/getBackTrace.md) |  |

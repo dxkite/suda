@@ -1,6 +1,6 @@
 #  Table 
 
-> *文件信息* suda\archive\Table.php: 31~614
+> *文件信息* suda\archive\Table.php: 31~642
 
 
 数据表抽象对象
@@ -42,8 +42,8 @@
 |  public  |[getByPrimaryKey](Table/getByPrimaryKey.md) | 通过主键查找元素 |
 |  public  |[updateByPrimaryKey](Table/updateByPrimaryKey.md) | 通过主键更新元素 |
 |  public  |[deleteByPrimaryKey](Table/deleteByPrimaryKey.md) | 通过主键删除元素 |
-|  public  |[search](Table/search.md) |  |
-|  public  |[searchWhere](Table/searchWhere.md) |  |
+|  public  |[search](Table/search.md) | 搜搜字段 |
+|  public  |[searchWhere](Table/searchWhere.md) | 搜索指定字段 |
 |  public  |[list](Table/list.md) | 分页列出元素 |
 |  public  |[listWhere](Table/listWhere.md) | 条件列出元素 |
 |  public  |[update](Table/update.md) | 根据条件更新列 |

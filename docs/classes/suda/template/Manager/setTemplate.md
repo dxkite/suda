@@ -1,6 +1,6 @@
 # Manager::setTemplate
 设置模板基类
-> *文件信息* suda\template\Manager.php: 29~655
+> *文件信息* suda\template\Manager.php: 29~661
 ## 所属类 
 
 [Manager](../Manager.md)

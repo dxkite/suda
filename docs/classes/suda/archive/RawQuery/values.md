@@ -1,6 +1,6 @@
 # RawQuery::values
 SQL语句模板绑定值
-> *文件信息* suda\archive\RawQuery.php: 31~440
+> *文件信息* suda\archive\RawQuery.php: 31~445
 ## 所属类 
 
 [RawQuery](../RawQuery.md)

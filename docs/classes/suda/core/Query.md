@@ -41,6 +41,7 @@
 |  protected  static|[page](Query/page.md) |  |
 |  public  |[__construct](Query/__construct.md) | 构造查询 |
 |  public  |[getConnection](Query/getConnection.md) |  |
+|  public  |[setConnection](Query/setConnection.md) |  |
 |  public  |[fetch](Query/fetch.md) | 获取查询结果的一列 |
 |  public  static|[useQuery](Query/useQuery.md) |  |
 |  public  static|[resetQuery](Query/resetQuery.md) |  |

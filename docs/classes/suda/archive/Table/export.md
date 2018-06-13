@@ -1,6 +1,6 @@
 # Table::export
 导出数据到文件
-> *文件信息* suda\archive\Table.php: 31~614
+> *文件信息* suda\archive\Table.php: 31~642
 ## 所属类 
 
 [Table](../Table.md)
@@ -21,7 +21,7 @@
 | path |  string | 无 | 无 |
 
 ## 返回值
-类型：void
+类型：bool|int
 无
 
 ## 例子

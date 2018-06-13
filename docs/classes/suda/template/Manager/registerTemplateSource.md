@@ -1,6 +1,6 @@
 # Manager::registerTemplateSource
 注册模块模板资源目录
-> *文件信息* suda\template\Manager.php: 29~655
+> *文件信息* suda\template\Manager.php: 29~661
 ## 所属类 
 
 [Manager](../Manager.md)

@@ -1,6 +1,6 @@
 # RawQuery::error
 获取语句查询错误
-> *文件信息* suda\archive\RawQuery.php: 31~440
+> *文件信息* suda\archive\RawQuery.php: 31~445
 ## 所属类 
 
 [RawQuery](../RawQuery.md)

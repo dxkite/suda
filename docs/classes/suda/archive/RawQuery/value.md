@@ -1,6 +1,6 @@
 # RawQuery::value
 生成一个数据输入值
-> *文件信息* suda\archive\RawQuery.php: 31~440
+> *文件信息* suda\archive\RawQuery.php: 31~445
 ## 所属类 
 
 [RawQuery](../RawQuery.md)

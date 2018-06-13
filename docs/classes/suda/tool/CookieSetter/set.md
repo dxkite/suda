@@ -1,6 +1,6 @@
 # CookieSetter::set
 
-> *文件信息* suda\tool\CookieSetter.php: 18~113
+> *文件信息* suda\tool\CookieSetter.php: 18~123
 ## 所属类 
 
 [CookieSetter](../CookieSetter.md)

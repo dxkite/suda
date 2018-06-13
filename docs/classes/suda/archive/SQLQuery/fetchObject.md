@@ -1,6 +1,6 @@
 # SQLQuery::fetchObject
 获取查询结果的一列，并作为类对象
-> *文件信息* suda\archive\SQLQuery.php: 33~272
+> *文件信息* suda\archive\SQLQuery.php: 33~288
 ## 所属类 
 
 [SQLQuery](../SQLQuery.md)

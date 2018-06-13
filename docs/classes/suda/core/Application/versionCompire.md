@@ -1,6 +1,6 @@
 # Application::versionCompire
 比较版本
-> *文件信息* suda\core\Application.php: 29~582
+> *文件信息* suda\core\Application.php: 29~588
 ## 所属类 
 
 [Application](../Application.md)

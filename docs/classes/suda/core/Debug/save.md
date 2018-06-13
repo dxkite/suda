@@ -1,6 +1,6 @@
 # Debug::save
 
-> *文件信息* suda\core\Debug.php: 26~528
+> *文件信息* suda\core\Debug.php: 26~537
 ## 所属类 
 
 [Debug](../Debug.md)

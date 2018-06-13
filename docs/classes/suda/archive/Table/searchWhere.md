@@ -1,6 +1,6 @@
 # Table::searchWhere
-
-> *文件信息* suda\archive\Table.php: 31~614
+搜索指定字段
+> *文件信息* suda\archive\Table.php: 31~642
 ## 所属类 
 
 [Table](../Table.md)
@@ -18,14 +18,17 @@
 
 | 参数名 | 类型 | 默认值 | 说明 |
 |--------|-----|-------|-------|
-| search |  string | 无 | 无 |
-| bind |  array | Array | 无 |
-| page |  int | null | 无 |
-| rows |  int | 10 | 无 |
-| offset |  bool |  | 无 |
+| field |  [type] | 无 |  搜索字段 |
+| search |  string | 无 |  搜索值 |
+| where |  [type] | 无 |  限制搜索条件 |
+| bind |  array | Array |  条件值绑定 |
+| page |  int | null |  条件页 |
+| rows |  int | 10 |  页列 |
+| offset |  bool |  |  是否是偏移 |
 
 ## 返回值
-返回值类型不定
+类型：void
+无
 
 ## 例子
 

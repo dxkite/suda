@@ -1,6 +1,6 @@
 #  System 
 
-> *文件信息* suda\core\System.php: 40~183
+> *文件信息* suda\core\System.php: 31~201
 
 
 系统类，处理系统报错函数以及程序加载
@@ -36,6 +36,7 @@
 |  public  static|[onShutdown](System/onShutdown.md) |  |
 |  public  static|[uncaughtException](System/uncaughtException.md) |  |
 |  public  static|[uncaughtError](System/uncaughtError.md) |  |
+|  public  static|[error](System/error.md) |  |
  
 
 ## 例子

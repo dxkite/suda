@@ -18,6 +18,7 @@
 |--------|-----|-------|-------|
 | name |  string | 无 | 无 |
 | args |  array | 无 | 无 |
+| moduleDefault |  string | null | 无 |
 
 ## 返回值
 返回值类型不定

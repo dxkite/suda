@@ -1,6 +1,6 @@
 # Table::select
 根据条件删除列
-> *文件信息* suda\archive\Table.php: 31~614
+> *文件信息* suda\archive\Table.php: 31~642
 ## 所属类 
 
 [Table](../Table.md)
@@ -20,7 +20,7 @@
 |--------|-----|-------|-------|
 | wants |  [type] | 无 | 无 |
 | where |  [type] | 无 | 无 |
-| whereBinder |  [type] | Array | 无 |
+| whereBinder |  array | Array | 无 |
 | page |  int | null | 无 |
 | rowa |  int | 10 | 无 |
 | offset |  bool |  | 无 |

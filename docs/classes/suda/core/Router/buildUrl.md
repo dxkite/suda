@@ -20,6 +20,7 @@
 | values |  array | Array | 无 |
 | query |  bool | 1 | 无 |
 | queryArr |  array | Array | 无 |
+| moduleDefault |  string | null | 无 |
 
 ## 返回值
 返回值类型不定

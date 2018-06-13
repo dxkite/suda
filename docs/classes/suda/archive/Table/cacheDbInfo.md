@@ -1,6 +1,6 @@
 # Table::cacheDbInfo
 
-> *文件信息* suda\archive\Table.php: 31~614
+> *文件信息* suda\archive\Table.php: 31~642
 ## 所属类 
 
 [Table](../Table.md)

@@ -1,6 +1,6 @@
 # Template::echo
 输出当前模板
-> *文件信息* suda\template\compiler\suda\Template.php: 25~286
+> *文件信息* suda\template\compiler\suda\Template.php: 25~302
 ## 所属类 
 
 [Template](../Template.md)

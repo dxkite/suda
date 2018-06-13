@@ -1,6 +1,6 @@
 # Application::getModuleDir
 获取模块所在的文件夹名
-> *文件信息* suda\core\Application.php: 29~582
+> *文件信息* suda\core\Application.php: 29~588
 ## 所属类 
 
 [Application](../Application.md)

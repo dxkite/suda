@@ -1,6 +1,6 @@
 #  SQLQuery 
 
-> *文件信息* suda\archive\SQLQuery.php: 33~272
+> *文件信息* suda\archive\SQLQuery.php: 33~288
 
 
 数据库查询方案，简化数据库查
@@ -27,6 +27,7 @@
 |--------|-------|------|
 |  public  |[__construct](SQLQuery/__construct.md) | 构造查询 |
 |  public  |[getConnection](SQLQuery/getConnection.md) |  |
+|  public  |[setConnection](SQLQuery/setConnection.md) |  |
 |  public  |[fetch](SQLQuery/fetch.md) | 获取查询结果的一列 |
 |  public  static|[useQuery](SQLQuery/useQuery.md) |  |
 |  public  static|[resetQuery](SQLQuery/resetQuery.md) |  |

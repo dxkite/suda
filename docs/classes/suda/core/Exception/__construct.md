@@ -1,6 +1,6 @@
 # Exception::__construct
 
-> *文件信息* suda\core\Exception.php: 25~91
+> *文件信息* suda\core\Exception.php: 25~96
 ## 所属类 
 
 [Exception](../Exception.md)
@@ -17,6 +17,7 @@
 | 参数名 | 类型 | 默认值 | 说明 |
 |--------|-----|-------|-------|
 | e |  Throwable | 无 | 无 |
+| name |  string | null | 无 |
 
 ## 返回值
 返回值类型不定

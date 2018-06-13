@@ -1,6 +1,6 @@
 #  RawQuery 
 
-> *文件信息* suda\archive\RawQuery.php: 31~440
+> *文件信息* suda\archive\RawQuery.php: 31~445
 
 
 数据库查询方案，提供原始查询方案
@@ -31,6 +31,7 @@
 |--------|-------|------|
 |  public  |[__construct](RawQuery/__construct.md) | 构造查询 |
 |  public  |[getConnection](RawQuery/getConnection.md) |  |
+|  public  |[setConnection](RawQuery/setConnection.md) |  |
 |  public  |[fetch](RawQuery/fetch.md) | 获取查询结果的一列 |
 |  public  |[fetchObject](RawQuery/fetchObject.md) | 获取查询结果的一列，并作为类对象 |
 |  public  |[fetchAll](RawQuery/fetchAll.md) | 获取全部的查询结果 |
