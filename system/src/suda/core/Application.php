@@ -166,7 +166,7 @@ class Application
             }
             // 框架依赖
             if (isset($config['suda']) && !static::versionCompire($config['suda'], SUDA_VERSION)) {
-                throw new ApplicationException(__('module %s require suda version %s and now is %s', $moduleTemp, $config['suda'], SUDA_VERSION));
+                suda_panic('ApplicationException',__('module %s require suda version %s and now is %s', $moduleTemp, $config['suda'], SUDA_VERSION));
             }
             foreach ($config['import']['share'] as $namespace=>$path) {
                 if (Storage::isDir($dirPath=$root.DIRECTORY_SEPARATOR.$path)) {
@@ -199,11 +199,11 @@ class Application
             if ($this->checkModuleExist($module) && isset($require['version'])) {
                 if (!empty($version)) {
                     if (!static::versionCompire($version, $require['version'])) {
-                        throw new ApplicationException(__('%s require module %s %s and now is %s', $name, $module, $version, $require['version']));
+                        suda_panic('ApplicationException',__('%s require module %s %s and now is %s', $name, $module, $version, $require['version']));
                     }
                 }
             } else {
-                throw new ApplicationException(__('%s require module %s', $name, $module));
+                suda_panic('ApplicationException',__('%s require module %s', $name, $module));
             }
         }
     }
