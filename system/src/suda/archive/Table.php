@@ -625,7 +625,11 @@ abstract class Table
                 $sql.='(';
                 $columns='';
                 foreach ($values as $val) {
-                    $columns.='\''.addslashes($val).'\',';
+                    if (is_null($val)) {
+                        $columns.='NULL,';
+                    }else{
+                        $columns.='\''.addslashes($val).'\',';
+                    }
                 }
                 $columns=rtrim($columns, ',');
                 $sql.= $columns;
