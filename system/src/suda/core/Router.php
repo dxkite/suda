@@ -200,9 +200,7 @@ class Router
      */
     public static function parseName(string $name, ?string $moduleDefault=null)
     {
-        if (func_num_args()==2&&empty($moduleDefault)) {
-            $moduleDefault=null;
-        } elseif (is_null($moduleDefault)) {
+        if (is_null($moduleDefault)) {
             $moduleDefault=Application::getInstance()->getInstance()->getActiveModule();
         }
         // [模块前缀名称/]模块名[:版本号]:(模板名|路由ID)
@@ -239,9 +237,9 @@ class Router
         return $module.':'.$name;
     }
     
-    public function buildUrlArgs(string $name, array $args,?string $moduleDefault =null)
+    public function buildUrlArgs(string $name, array $args, ?string $moduleDefault =null)
     {
-        list($module, $name)=self::parseName($name,$moduleDefault);
+        list($module, $name)=self::parseName($name, $moduleDefault);
         $module=Application::getInstance()->getInstance()->getModuleFullName($module);
         $name=$module.':'.$name;
         if (isset($this->routers[$name])) {
@@ -262,9 +260,36 @@ class Router
         return [];
     }
 
-    public function buildUrl(string $name, array $values=[], bool $query=true, array $queryArr=[],?string $moduleDefault =null)
+    public function decode(string $uri):?string
     {
-        list($module, $name)=self::parseName($name,$moduleDefault);
+        $values=parse_url($uri);
+        $type = $values['scheme'];
+        $host = $values['host'];
+        $name = trim($values['path']??'', '/');
+        parse_str($values['query'] ?? '', $params);
+        if ($type == 'router') {
+            return $this->buildUrl($name, $params);
+        }
+        return null;
+    }
+
+    public function encode(string $url):?string
+    {
+        $mapping = $this->parseUrl($url);
+        if ($mapping) {
+            $uri = 'router://'.$mapping->getHost().'/'.$mapping->getFullName();
+            $value = $mapping->getValue();
+            if (is_array($value) && count($value)) {
+                $uri .='?'. http_build_query($value);
+            }
+            return $uri;
+        }
+        return null;
+    }
+    
+    public function buildUrl(string $name, array $values=[], bool $query=true, array $queryArr=[], ?string $moduleDefault =null)
+    {
+        list($module, $name)=self::parseName($name, $moduleDefault);
         $module=Application::getInstance()->getInstance()->getModuleFullName($module);
         $name=$module.':'.$name;
         if (isset($this->routers[$name])) {

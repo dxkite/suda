@@ -322,6 +322,13 @@ class Mapping
         return  $this->template;
     }
 
+    public function getHost()
+    {
+        $host = is_null($this->host) ?'localhost':$this->host;
+        $port = ($this->port == 80  || is_null($this->port))?'': ':'.$this->port;
+        return $host.$port;
+    }
+
     public function getUrlTemplate()
     {
         $url='/'.trim($this->url, '/');
@@ -385,7 +392,7 @@ class Mapping
         if (is_null($this->host)) {
             return Request::getInstance()->baseUrl();
         }
-        return $this->scheme.'://'. $this->host.($this->port!=80?':'. $this->port:'').'/';
+        return $this->scheme.'://'. $this->getHost() .'/';
     }
 
     public function getPrefix()
