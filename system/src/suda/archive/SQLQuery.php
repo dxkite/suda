@@ -46,7 +46,7 @@ class SQLQuery implements SQLStatement
     public function __construct(string $query='', array $binds=[], bool $scroll=false)
     {
         self::_connect();
-        $this->rawQuery=self::$query->query($query, $binds, $scroll);
+        $this->rawQuery=clone self::$query->query($query, $binds, $scroll);
     }
 
     public function getConnection()
