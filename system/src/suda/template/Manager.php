@@ -411,14 +411,9 @@ class Manager
             return $include->parent($parent)->assign($parent->getValue());
         } else {
             $class= new class {
-                public function getRenderedString()
+                public function echo()
                 {
-                    return '<div style="color:red" title="'.__('can\'t include %s', $this->moduleName.':'.$this->basename).'">{include:{'.$this->name.'}}</div>';
-                }
-                public function render()
-                {
-                    echo $this->getRenderedString();
-                    return;
+                    echo '<div style="color:red" title="'.__('can\'t include %s', $this->moduleName.':'.$this->basename).'">{include:{'.$this->name.'}}</div>';
                 }
             };
             $class->moduleName=$moduleName;

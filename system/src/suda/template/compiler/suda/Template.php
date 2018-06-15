@@ -41,6 +41,8 @@ abstract class Template
     protected $source=null;
     // 渲染堆栈
     protected static $render=[];
+    protected $extend=null;
+
     
     public function __construct()
     {
@@ -123,7 +125,14 @@ abstract class Template
     {
         debug()->time('render '.$this->name);
         $this->_render_template();
+        if ($this->extend) {
+            \suda\template\Manager::include($this->extend,$this)->echo();
+        }
         debug()->timeEnd('render '.$this->name);
+    }
+
+    public function extend(string $name) {
+        $this->extend = $name;
     }
 
     public function getRenderStack()
