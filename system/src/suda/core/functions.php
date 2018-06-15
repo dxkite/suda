@@ -37,8 +37,11 @@ function mime(string $type)
  * @param string $message 输入的信息，支持不定参数，类似printf
  * @return string 翻译过的字符串，如果没有既定翻译，则原样输出
  */
-function __(string $message)
+function __(?string $message)
 {
+    if (is_null($message)) {
+        return null;
+    }
     return call_user_func_array('suda\core\Locale::_', func_get_args());
 }
 
