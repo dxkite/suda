@@ -34,7 +34,8 @@ class Router
 
     private function __construct()
     {
-        Hook::listen('system:404', 'Router::error404');
+        Hook::listen('system:404', 'Router::error');
+        Hook::listen('system:http_error', 'Router::error');
         Hook::listen('Router:dispatch::error', 'Router::error404');
     }
 
@@ -478,15 +479,21 @@ class Router
         Hook::exec('Router:runRouter::after', [&$mapping]);
     }
 
-    public static function error404()
+
+    public static function error(int $code=404)
     {
         $render=new class extends Response {
             public function onRequest(Request $request)
             {
-                $this->state(404);
-                $this->page('suda:error404', ['error_type'=>'Error','error_code'=>404,'error_message'=>'Not Found', 'path'=>$request->url()])->render();
+                $this->state($this->code);
+                $view=$this->page('suda:http_error', ['error_type'=>'Error','error_code'=>$this->code,'error_message'=> Response::statusMessage($this->code)]);
+                if ($this->code == 404) {
+                    $view->set('path', $request->url());
+                }
+                $view->render();
             }
         };
+        $render->code = $code ;
         $render->onRequest(Request::getInstance());
         return true;
     }

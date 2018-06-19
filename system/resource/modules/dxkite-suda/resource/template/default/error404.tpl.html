@@ -1,5 +1,0 @@
-@startInsert('error-content')
-<section class="message">
-  @if ($?:path) {{ __('page "%s"  is not found',$:path('文档')) }} @else {= 当前页面文档信息载服务器上找不到，请重试 } @endif
-</section>
-@endInsert @include ('error_layout')

@@ -64,8 +64,8 @@ abstract class Response
     
     public static function state(int $state)
     {
-        self::setHeader('HTTP/1.1 '.$state.' '.self::$status[$state]);
-        self::setHeader('Status:'.$state.' '.self::$status[$state]);
+        self::setHeader('HTTP/1.1 '.$state.' '.self::statusMessage($state));
+        self::setHeader('Status:'.$state.' '.self::statusMessage($state));
     }
 
     public static function setName(string $name)
@@ -267,8 +267,8 @@ abstract class Response
         }
         return false;
     }
-
-    private static function _status(int $state)
+   
+    public static function statusMessage(int $state)
     {
         if (is_null(self::$status)) {
             self::$status=parse_ini_file(SYSTEM_RESOURCE.'/status.ini');
