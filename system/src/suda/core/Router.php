@@ -486,7 +486,11 @@ class Router
             public function onRequest(Request $request)
             {
                 $this->state($this->code);
-                $view=$this->page('suda:http_error', ['error_type'=>'Error','error_code'=>$this->code,'error_message'=> Response::statusMessage($this->code)]);
+                $view=$this->view('suda:error/'.$this->code);
+                if (!$view) {
+                    $view=$this->page('suda:http_error');
+                }
+                $view->assign(['error_type'=>'Error','error_code'=>$this->code,'error_message'=> Response::statusMessage($this->code)]);
                 if ($this->code == 404) {
                     $view->set('path', $request->url());
                 }

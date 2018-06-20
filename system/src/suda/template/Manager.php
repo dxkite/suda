@@ -142,19 +142,24 @@ class Manager
      * @param string $viewpath
      * @return void
      */
-    public static function display(string $name, string $viewpath=null)
+    public static function display(string $name, ?string $viewpath=null)
     {
-        return static::displayExt($name, 'html', $viewpath??'');
+        $template = static::displaySource($name, 'html', $viewpath??'');
+        if (is_null($template)) {
+            throw new KernelException(__('missing template %s:%s',self::$theme,$name));
+        }
+        return $template;
     }
 
     /**
-     * 根据模板ID显示模板
+     * 根据名称显示源
      *
-     * @param string $name
-     * @param string $viewpath
-     * @return void
+     * @param string $name 模板名
+     * @param string $ext 扩展名
+     * @param string|null $viewpath 缓存模板路径
+     * @return Template|null 模板元素
      */
-    public static function displayExt(string $name, string $ext='html', string $viewpath=null)
+    public static function displaySource(string $name, string $ext='html', ?string $viewpath=null)
     {
         if (empty($viewpath)) {
             $viewpath=static::getOutputFile($name);
@@ -162,9 +167,7 @@ class Manager
         if (Storage::exist($viewpath)) {
             if (Config::get('debug', true) || Config::get('exception', false)) {
                 if (!static::compile($name, $ext)) {
-                    throw new KernelException(__('missing template %s:%s',self::$theme,$name));
-                    // echo '<b>compile theme</b> &lt;<span style="color:red;">'.static::$theme.'</span>&gt; error: '.$name.' location '.$viewpath. ' missing raw template file</br>';
-                    return;
+                    return null;
                 }
             }
         } else {
@@ -175,8 +178,7 @@ class Manager
                 $viewpath=storage()->temp('tpl_');
             }
             if (!static::compile($name, $ext, $viewpath)) {
-                throw new KernelException(__('missing template %s:%s',self::$theme,$name));
-                // echo '<b>missing theme</b> &lt;<span style="color:red;">'.static::$theme.'</span>&gt; template  '.$name.' file not exist '.$viewpath.'</br>';
+                return null;
             }
         }
         return static::displayFile($viewpath, $name);

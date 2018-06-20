@@ -150,7 +150,7 @@ abstract class Response
     */
     public function view(string $template, array $values=[])
     {
-        $tpl=Manager::display($template);
+        $tpl=Manager::displaySource($template,'html');
         if ($tpl) {
             return $tpl->response($this)->assign($values);
         }
