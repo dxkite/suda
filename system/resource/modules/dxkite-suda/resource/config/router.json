@@ -1,0 +1,6 @@
+{
+    "error_page" : {
+        "class": "dxkite\\suda\\response\\ErrorResponse",
+        "url": "\/error\/{code:int}.html"
+     }
+}

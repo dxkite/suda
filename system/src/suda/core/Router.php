@@ -36,7 +36,7 @@ class Router
     {
         Hook::listen('system:404', 'Router::error');
         Hook::listen('system:http_error', 'Router::error');
-        Hook::listen('Router:dispatch::error', 'Router::error404');
+        Hook::listen('Router:dispatch::error', 'Router::error');
     }
 
     public static function getInstance()

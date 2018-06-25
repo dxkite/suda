@@ -1,5 +1,5 @@
 {
-    "name":"suda-test-app",
+    "name": "suda-test-app",
     "namespace": "cn\\atd3",
     "version": "1.0-dev",
     "application": "suda\\core\\Application",

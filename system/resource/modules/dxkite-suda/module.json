@@ -16,5 +16,13 @@
     },
     "response": {
         "admin": "dxkite\\suda\\ACResponse"
+    },
+    "import": {
+        "share": {
+            "dxkite\\suda": "share"
+        },
+        "src": {
+            "dxkite\\suda\\response": "src"
+        }
     }
 }

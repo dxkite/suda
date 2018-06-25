@@ -1,59 +1,59 @@
 {
     "index": {
         "class": "dxkite\\suda\\response\\RouterList",
-        "visit": "\/","hidden":true
+        "url": "\/","hidden":true
     },
     "router_add": {
         "class": "dxkite\\suda\\response\\RouterAdd",
-        "visit": "\/router\/add","hidden":true
+        "url": "\/router\/add","hidden":true
     },
     "router_edit": {
         "class": "dxkite\\suda\\response\\RouterEdit",
-        "visit": "\/router\/edit","hidden":true
+        "url": "\/router\/edit","hidden":true
     },
     "router_list": {
         "class": "dxkite\\suda\\response\\RouterList",
-        "visit": "\/router[\/list]","hidden":true
+        "url": "\/router[\/list]","hidden":true
     },
     "system_admin": {
         "class": "dxkite\\suda\\response\\AdminModules",
-        "visit": "\/system[\/modules]"
+        "url": "\/system[\/modules]"
     },
     "config_database": {
         "class": "dxkite\\suda\\response\\ConfigDb",
-        "visit": "\/system\/config\/database"
+        "url": "\/system\/config\/database"
     },
     "config_mailer": {
         "class": "dxkite\\suda\\response\\ConfigMailer",
-        "visit": "\/system\/config\/mailer"
+        "url": "\/system\/config\/mailer"
     },
     "admin_database": {
         "class": "dxkite\\suda\\response\\AdminDb",
-        "visit": "\/system\/database"
+        "url": "\/system\/database"
     },
     "sendmail": {
         "class": "dxkite\\suda\\response\\SendMail",
-        "visit": "\/sendmail"
+        "url": "\/sendmail"
     },
     "add_module": {
         "class": "dxkite\\suda\\response\\ModuleAdd",
-        "visit": "\/add\/moduel"
+        "url": "\/add\/moduel"
     },
     "datebase_progress": {
         "class": "dxkite\\suda\\response\\DbProgress",
-        "visit": "\/database-process"
+        "url": "\/database-process"
     },
     "self_check": {
         "class": "dxkite\\suda\\response\\SelfCheck",
-        "visit": "\/self_check",
+        "url": "\/self_check",
         "method": ["GET"]
     },
     "resource_prepare": {
         "class": "dxkite\\suda\\response\\ResourcePrepareResponse",
-        "visit": "\/resource_prepare"
+        "url": "\/resource_prepare"
     },
     "debug_json_download" : {
         "class": "dxkite\\suda\\response\\DownloadJsonResponse",
-        "visit": "\/debug\/json\/{id:string}"
+        "url": "\/debug\/json\/{id:string}"
      }
 }
