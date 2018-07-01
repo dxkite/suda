@@ -1,7 +1,8 @@
-@startInsert('error-head')
-<link rel="stylesheet" href="@static('suda')/google-code-prettify/prettify.css">
-@endInsert
+@extend ('error_layout')
 
+@startInsert('error-head')
+<link rel="stylesheet" href="@static/google-code-prettify/prettify.css">
+@endInsert
 
 @startInsert('error-content')
     @if ($?:message)
@@ -32,4 +33,4 @@
         prettyPrint();
     });
 </script>
-@endInsert @include ('error_layout')
+@endInsert
