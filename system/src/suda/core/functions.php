@@ -308,5 +308,5 @@ function module($var=0)
  * @return void
  */
 function email_poster(?int $type=null){
-    return suda\mail\Mailer::instance(is_null($type)?Mailer::SMTP:$type);
+    return suda\mail\Factory::sender(is_null($type)?Mailer::SMTP:$type);
 }

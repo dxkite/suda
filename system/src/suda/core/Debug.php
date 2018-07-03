@@ -60,10 +60,10 @@ class Debug
         $request=Request::getInstance();
         self::$hash=$hash=substr(md5(microtime().''.$request->ip()), 0, 6);
         $file = tmpfile();
-        if ($file === false)  {
+        if ($file === false) {
             self::$tempname =  APP_LOG .'/.tmp.log';
             storage()->path(dirname(static::$tempname));
-            $file = fopen(static::$tempname,'w+');
+            $file = fopen(static::$tempname, 'w+');
         }
         self::$file= $file;
         Config::set('request', self::$hash);
@@ -240,9 +240,9 @@ class Debug
         foreach ($backtrace as $trace) {
             $print = null;
             if (isset($trace['file'])) {
-                if(preg_match('/^'.preg_quote(SYSTEM_DIR, '/').'/',$trace['file'])){
+                if (preg_match('/^'.preg_quote(SYSTEM_DIR, '/').'/', $trace['file'])) {
                     $print = '<a class="trace-file" title="';
-                }else{
+                } else {
                     $print = '<a class="trace-user-file" title="';
                 }
                 $print .= Storage::cut($trace['file']).'">'.basename($trace['file']).'#'.$trace['line'].'</a>';
@@ -263,7 +263,7 @@ class Debug
                 }
                 $args = rtrim($args, ',');
             }
-            $args = str_replace(',','<span class="trace-separator">,</span>',$args);
+            $args = str_replace(',', '<span class="trace-separator">,</span>', $args);
             $print .= '<span class="trace-function">'.$function.'</span> (<span class="trace-args">'.$args.'</span>)';
             $traces[] = $print;
         }
@@ -325,9 +325,10 @@ class Debug
         $info=self::getInfo();
         $mem=self::memshow($info['memory'], 4);
         $peo=ceil(1/$time);
-        $all=self::memshow($info['memory']*$peo, 4); 
+        $all=self::memshow($info['memory']*$peo, 4);
+        $peak=self::memshow(memory_get_peak_usage(), 4);
         // 写入最终日志
-        fwrite(self::$file, "====={$hash}====={$time}====={$mem}====={$peo}:{$all}=====\r\n\r\n");
+        fwrite(self::$file, "====={$hash}====={$time}====={$mem}:{$peak}====={$peo}:{$all}=====\r\n\r\n");
         $size=ftell(self::$file);
         fseek(self::$file, 0);
         $body=fread(self::$file, $size);
@@ -386,6 +387,7 @@ class Debug
         self::$run_info['time']=microtime(true) - D_START;
         self::$run_info['memory']=memory_get_usage() - D_MEM;
         self::$run_info['end_memory']=memory_get_usage();
+        self::$run_info['peak_memory']=memory_get_peak_usage();
         self::$run_info['included_files']=get_included_files();
         return self::$run_info;
     }
@@ -443,7 +445,8 @@ class Debug
             self::strify($args[1]??$args[0]??null),
             $backtrace[1]['file'],
             $backtrace[1]['line'],
-            $backtrace);
+            $backtrace
+        );
     }
 
     protected static function strify($object)
@@ -502,10 +505,12 @@ class Debug
         self::$dump[$key] = $values;
     }
 
-    protected static function assginDebugInfo($page) {
-        $page->set('request_id',self::$hash);
-        $page->set('memory_usage',self::memshow(memory_get_usage() - D_MEM,4));
-        $page->set('time_spend',number_format(microtime(true) - D_START,4));
+    protected static function assginDebugInfo($page)
+    {
+        $page->set('request_id', self::$hash);
+        $page->set('memory_usage', self::memshow(memory_get_usage() - D_MEM, 4));
+        $page->set('memory_peak_usage', self::memshow(memory_get_peak_usage(),4));
+        $page->set('time_spend', number_format(microtime(true) - D_START, 4));
     }
 
     protected static function dumpArray()
