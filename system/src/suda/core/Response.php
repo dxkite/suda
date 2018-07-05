@@ -260,6 +260,10 @@ abstract class Response
         }
     }
 
+    public static function addHeader(string $name,string $value) {
+        return self::setHeader(trim($name).':'.$value);
+    }
+
     protected static function _etag(string $etag)
     {
         if (conf('app.etag', !conf('debug'))) {
