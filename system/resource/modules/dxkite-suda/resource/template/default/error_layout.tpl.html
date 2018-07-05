@@ -30,7 +30,8 @@
     </div>
     @insert('error-content')
     <div class="footer">
-      <div class="footer-item">{{ __('Memory Cost %s', $:memory_usage ) }}</div>
+      <div class="footer-item">{{ __('Memory Cost: %s', $:memory_usage ) }}</div>
+      <div class="footer-item">{{ __('Memory Peak: %s', $:memory_peak_usage ) }}</div>
       <div class="footer-item">{{ __('Time Cost：%s s', $:time_spend ) }}</div>
       <div class="footer-item">{{ __('Requst Ip: %s', request()->ip() ) }}</div>
       <div class="footer-item">

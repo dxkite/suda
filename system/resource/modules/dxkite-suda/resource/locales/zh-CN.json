@@ -1,5 +1,6 @@
 {
-    "Memory Cost %s": "内存消耗：%s",
+    "Memory Cost: %s": "内存消耗：%s",
+    "Memory Peak: %s": "内存峰值：%s",
     "Time Cost：%s s": "时间消耗：%s秒",
     "Requst Ip: %s": "请求地址：%s",
     "Performance By Suda v%s": "由 Suda v%s 驱动",
