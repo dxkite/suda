@@ -231,9 +231,9 @@ class Router
         return [$module,$info];
     }
 
-    public function getRouterFullName(string $name)
+    public function getRouterFullName(string $name, ?string $moduleDefault=null)
     {
-        list($module, $name)=self::parseName($name);
+        list($module, $name)=self::parseName($name, $moduleDefault);
         $module=Application::getInstance()->getInstance()->getModuleFullName($module);
         return $module.':'.$name;
     }

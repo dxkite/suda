@@ -126,12 +126,13 @@ abstract class Template
         debug()->time('render '.$this->name);
         $this->_render_template();
         if ($this->extend) {
-            \suda\template\Manager::include($this->extend,$this)->echo();
+            \suda\template\Manager::include($this->extend, $this)->echo();
         }
         debug()->timeEnd('render '.$this->name);
     }
 
-    public function extend(string $name) {
+    public function extend(string $name)
+    {
         $this->extend = $name;
     }
 
@@ -236,13 +237,13 @@ abstract class Template
             if (!is_array($values)) {
                 $args=func_get_args();
                 array_shift($args);
-                $values= Router::getInstance()->buildUrlArgs($name, $args,$this->module);
+                $values= Router::getInstance()->buildUrlArgs($name, $args, $this->module);
             }
-            return Router::getInstance()->buildUrl($name, $values,true,[],$this->module);
+            return Router::getInstance()->buildUrl($name, $values, true, [], $this->module);
         } elseif (is_array($name)) {
-            return Router::getInstance()->buildUrl(Response::$name, $name,true,[],$this->module);
+            return Router::getInstance()->buildUrl(Response::$name, $name, true, [], $this->module);
         } else {
-            return Router::getInstance()->buildUrl(Response::$name, $_GET, false,[],$this->module);
+            return Router::getInstance()->buildUrl(Response::$name, $_GET, false, [], $this->module);
         }
     }
 
@@ -276,14 +277,16 @@ abstract class Template
         return $this->response->getName();
     }
 
-    public function isMe(string $name, array $param=[])
+    public function isMe(string $name, ?array $param=null):bool
     {
-        if ($this->response->getName()!=Router::getInstance()->getRouterFullName($name)) {
+        if ($this->response->getName()!=Router::getInstance()->getRouterFullName($name, $this->module)) {
             return false;
         }
-        foreach ($param as $name=>$item) {
-            if (request()->get($name)!=$item) {
-                return false;
+        if (is_array($param)) {
+            foreach ($param as $name=>$item) {
+                if (request()->get($name)!=$item) {
+                    return false;
+                }
             }
         }
         return  true;
