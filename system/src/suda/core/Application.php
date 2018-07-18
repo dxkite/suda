@@ -76,7 +76,7 @@ class Application
 
     protected static $instance;
 
-    private function __construct()
+    protected function __construct()
     {
         debug()->trace(__('application load %s', APP_DIR));
         // 框架依赖检测

@@ -1,7 +1,7 @@
 <?php 
 function suda_panic($error_type, $error_message, $error_code=null)
 {
-    date_default_timezone_set(defined('DEFAULT_TIMEZONE')?DEFAULT_TIMEZONE:'RPC');
+    date_default_timezone_set(defined('DEFAULT_TIMEZONE')?DEFAULT_TIMEZONE:'PRC');
     if (is_null($error_code)) {
         header('HTTP/1.1 500 Internal Server Error');
         header('Status:500 Internal Server Error');
