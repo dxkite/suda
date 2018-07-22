@@ -97,7 +97,7 @@ class Compiler implements CompilerImpl
         $classname=Manager::className($name);
         preg_match('/^((?:[a-zA-Z0-9_-]+\/)?[a-zA-Z0-9_-]+)(?::([^:]+))?(?::(.+))?$/', $name, $match);
         $module = isset($match[3])?$match[1].(isset($match[2])?':'.$match[2]:''):$match[1];
-        $content='<?php if (!class_exists("'.$classname.'")) { class '.$classname.' extends '.self::$template.' { protected $name="'. addslashes($name) .'";protected $module="'.addslashes($module).'"; protected $source="'. addslashes($input).'";protected function _render_template() {  ?>'.$content.'<?php }} } return ["class"=>"'.$classname.'","name"=>"'.addslashes($name).'","source"=>"'.addslashes($input).'","module"=>"'.addslashes($module).'"]; ';
+        $content='<?php if (!class_exists("'.$classname.'", false)) { class '.$classname.' extends '.self::$template.' { protected $name="'. addslashes($name) .'";protected $module="'.addslashes($module).'"; protected $source="'. addslashes($input).'";protected function _render_template() {  ?>'.$content.'<?php }} } return ["class"=>"'.$classname.'","name"=>"'.addslashes($name).'","source"=>"'.addslashes($input).'","module"=>"'.addslashes($module).'"]; ';
         Storage::put($output, $content);
         debug()->timeEnd('compile '.$name);
         $syntax=Manager::checkSyntax($output, $classname);

@@ -3,7 +3,7 @@
  * Suda FrameWork
  *
  * An open source application development framework for PHP 7.0.0 or newer
- * 
+ *
  * Copyright (c)  2017 DXkite
  *
  * @category   PHP FrameWork
@@ -69,7 +69,7 @@ class Autoloader
     public static function classLoader(string $classname)
     {
         if ($path=static::getClassPath($classname)) {
-            if (!class_exists($classname)) {
+            if (!class_exists($classname, false)) {
                 require_once $path;
             }
         }
@@ -94,7 +94,7 @@ class Autoloader
                     $path=preg_replace('/[\\\\]+/', DIRECTORY_SEPARATOR, $include_path.DIRECTORY_SEPARATOR.$namespace.DIRECTORY_SEPARATOR.$namepath.'.php');
                     if (self::file_exists($path)) {
                         // 精简类名
-                        if (!class_exists($classname)) {
+                        if (!class_exists($classname, false)) {
                             class_alias($namespace.'\\'.$classname, $classname);
                         }
                         return $path;
@@ -110,7 +110,7 @@ class Autoloader
         if (realpath($path)) {
             if (empty($namespace) && !in_array($path, self::$include_path)) {
                 self::$include_path[]=$path;
-            } else if(array_search($path, self::$include_path) != $namespace) {
+            } elseif (array_search($path, self::$include_path) != $namespace) {
                 self::$include_path[$namespace]=$path;
             }
         }

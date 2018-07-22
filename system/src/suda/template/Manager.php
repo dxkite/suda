@@ -559,7 +559,7 @@ class Manager
     public static function checkSyntax(string $file, string $className='')
     {
         if (storage()->exist($file)) {
-            if ($className && class_exists($className)) {
+            if ($className && class_exists($className, false)) {
                 return true;
             }
             $fileContent=storage()->get($file);
