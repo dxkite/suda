@@ -180,14 +180,26 @@ abstract class Response
         return $this->go(Router::getInstance()->buildUrl(self::$name, $_GET, false));
     }
 
-    public function forward()
+    public function forward():bool {
+        if ($forward = self::getForward()) {
+            $this->go($forward);
+            return true;
+        }
+        return false;
+    }
+
+    public function getForward():?string
     {
         $referer =  $_GET['redirect_uri']??Request::referer();
         if (Cookie::has('redirect_uri')) {
             $referer =Cookie::get('redirect_uri', $referer);
             Cookie::delete('redirect_uri');
         }
-        return is_null($referer)?false:$this->go($referer);
+        return $referer?:null;
+    }
+
+    public function setForward(string $url) {
+        Cookie::set('redirect_uri',$url);
     }
 
     public function go(string $url)
