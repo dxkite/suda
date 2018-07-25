@@ -95,7 +95,7 @@ class Compiler implements CompilerImpl
             Storage::mkdirs(dirname($output));
         }
         $classname=Manager::className($name);
-        preg_match('/^((?:[a-zA-Z0-9_-]+\/)?[a-zA-Z0-9_-]+)(?::([^:]+))?(?::(.+))?$/', $name, $match);
+        preg_match('/^((?:[a-zA-Z0-9_\-.]+\/)?[a-zA-Z0-9_\-.]+)(?::([^:]+))?(?::(.+))?$/', $name, $match);
         $module = isset($match[3])?$match[1].(isset($match[2])?':'.$match[2]:''):$match[1];
         $content='<?php if (!class_exists("'.$classname.'", false)) { class '.$classname.' extends '.self::$template.' { protected $name="'. addslashes($name) .'";protected $module="'.addslashes($module).'"; protected $source="'. addslashes($input).'";protected function _render_template() {  ?>'.$content.'<?php }} } return ["class"=>"'.$classname.'","name"=>"'.addslashes($name).'","source"=>"'.addslashes($input).'","module"=>"'.addslashes($module).'"]; ';
         Storage::put($output, $content);
@@ -163,7 +163,7 @@ class Compiler implements CompilerImpl
             $echo=self::$command[$name]['echo']?'echo':'';
             $command=self::$command[$name]['command'];
             if (is_string($command)) {
-                return '<?php '.$echo.' (new \suda\tool\Command("'.$command.'"))->args'. ($exp?:'()').' ?>';
+                return '<?php '.$echo.' (new \suda\tool\Command(\''.$command.'\'))->args'. ($exp?:'()').' ?>';
             } else {
                 if ($command instanceof Command) {
                     return $command->exec([$exp]);
