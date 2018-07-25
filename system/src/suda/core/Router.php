@@ -205,7 +205,7 @@ class Router
             $moduleDefault=Application::getInstance()->getInstance()->getActiveModule();
         }
         // [模块前缀名称/]模块名[:版本号]:(模板名|路由ID)
-        if (preg_match('/^((?:[a-zA-Z0-9_-]+\/)?[a-zA-Z0-9_-]+)(?::([^:]+))?(?::(.+))?$/', $name, $match)) {
+        if (preg_match('/^((?:[a-zA-Z0-9_\-.]+\/)?[a-zA-Z0-9_\-.]+)(?::([^:]+))?(?::(.+))?$/', $name, $match)) {
             if (isset($match[1]) && count($match)==2) {
                 // 单纯路由或者模板
                 $module=$moduleDefault;
