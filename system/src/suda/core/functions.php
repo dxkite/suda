@@ -98,7 +98,7 @@ function u($name=null, $values=null)
         }
         return suda\core\Router::getInstance()->buildUrl($name, $values);
     } elseif (is_array($name)) {
-        return suda\core\Router::getInstance()->buildUrl(suda\core\Response::$name, $name);
+        return suda\core\Router::getInstance()->buildUrl(suda\core\Response::$name, array_merge($_GET, $name));
     } else {
         return suda\core\Router::getInstance()->buildUrl(suda\core\Response::$name, $_GET, false);
     }
@@ -303,10 +303,11 @@ function module($var=0)
 
 /**
  * 获取邮件发送 **使用前请设置完成SMTP规则**
- * 
+ *
  * @param integer|null $type 发送类型。0 使用 sendmail 发送邮件， 1使用 SMTP发送邮件
  * @return void
  */
-function email_poster(?int $type=null){
+function email_poster(?int $type=null)
+{
     return suda\mail\Factory::sender(is_null($type)?Mailer::SMTP:$type);
 }

@@ -338,7 +338,15 @@ class Mapping
         return Request::getInstance()->baseUrl(). trim($url, '/');
     }
 
-    public function createUrl(array $args, bool $query=true, array $queryArr=[])
+    /**
+     * 创建URL
+     *
+     * @param array $args URL中的参数
+     * @param boolean $query 除URL中必要参数外是否添加 $args 参数中多参数到查询字符串
+     * @param array $queryArr 查询参数 ($args) 中的参数优先覆盖
+     * @return string 路由构建成功的URL
+     */
+    public function createUrl(array $args, bool $query=true, array $queryArr=[]):string
     {
         $url='/'.trim($this->url, '/');
         if (!$this->antiPrefix) {
@@ -382,7 +390,7 @@ class Mapping
             }
         }, $url);
         if (count($args) && $query) {
-            return $this->getBaseUrl(). trim($url, '/').'?'.http_build_query($args, 'v', '&', PHP_QUERY_RFC3986);
+            return $this->getBaseUrl(). trim($url, '/').'?'.http_build_query(array_merge($queryArr,$args), 'v', '&', PHP_QUERY_RFC3986);
         }
         return $this->getBaseUrl(). trim($url, '/'). (count($queryArr)?'?'.http_build_query($queryArr, 'v', '&', PHP_QUERY_RFC3986):'');
     }

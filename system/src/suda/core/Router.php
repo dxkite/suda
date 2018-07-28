@@ -49,7 +49,7 @@ class Router
     
     public static function getModulePrefix(string $module)
     {
-        $prefix= Application::getInstance()->getInstance()->getModulePrefix($module)??'';
+        $prefix= Application::getInstance()->getModulePrefix($module)??'';
         $admin_prefix='';
         if (is_array($prefix)) {
             if (in_array(key($prefix), ['admin','simple'], true)) {
@@ -67,7 +67,7 @@ class Router
     {
         $simple_routers=[];
         $admin_routers=[];
-        $module_path=Application::getInstance()->getInstance()->getModulePath($module);
+        $module_path=Application::getInstance()->getModulePath($module);
         debug()->trace(__('load module:%s path:%s', $module, $module_path));
         // 加载前台路由
         if (Storage::exist($file=$module_path.'/resource/config/router.json')) {
@@ -135,7 +135,7 @@ class Router
 
     public function prepareRouterInfo()
     {
-        $modules=Application::getInstance()->getInstance()->getReachableModules();
+        $modules=Application::getInstance()->getReachableModules();
         foreach ($modules as $module) {
             self::load($module);
         }
@@ -202,7 +202,7 @@ class Router
     public static function parseName(string $name, ?string $moduleDefault=null)
     {
         if (is_null($moduleDefault)) {
-            $moduleDefault=Application::getInstance()->getInstance()->getActiveModule();
+            $moduleDefault=Application::getInstance()->getActiveModule();
         }
         // [模块前缀名称/]模块名[:版本号]:(模板名|路由ID)
         if (preg_match('/^((?:[a-zA-Z0-9_\-.]+\/)?[a-zA-Z0-9_\-.]+)(?::([^:]+))?(?::(.+))?$/', $name, $match)) {
@@ -234,14 +234,14 @@ class Router
     public function getRouterFullName(string $name, ?string $moduleDefault=null)
     {
         list($module, $name)=self::parseName($name, $moduleDefault);
-        $module=Application::getInstance()->getInstance()->getModuleFullName($module);
+        $module=Application::getInstance()->getModuleFullName($module);
         return $module.':'.$name;
     }
     
     public function buildUrlArgs(string $name, array $args, ?string $moduleDefault =null)
     {
         list($module, $name)=self::parseName($name, $moduleDefault);
-        $module=Application::getInstance()->getInstance()->getModuleFullName($module);
+        $module=Application::getInstance()->getModuleFullName($module);
         $name=$module.':'.$name;
         if (isset($this->routers[$name])) {
             $types=$this->routers[$name]->getTypes();
@@ -261,6 +261,12 @@ class Router
         return [];
     }
 
+    /**
+     * 将 router:// 协议指定的URL转换为 URL
+     *
+     * @param string $uri
+     * @return string|null
+     */
     public function decode(string $uri):?string
     {
         $values=parse_url($uri);
@@ -274,6 +280,13 @@ class Router
         return null;
     }
 
+
+    /**
+     * 将URL转换为 router:// 协议形式
+     *
+     * @param string $url
+     * @return string|null
+     */
     public function encode(string $url):?string
     {
         $mapping = $this->parseUrl($url);
@@ -288,10 +301,20 @@ class Router
         return null;
     }
     
-    public function buildUrl(string $name, array $values=[], bool $query=true, array $queryArr=[], ?string $moduleDefault =null)
+    /**
+     * 根据路由名称创建URL
+     *
+     * @param string $name 路由名称
+     * @param array $values 路由中的参数
+     * @param boolean $query 是否使用多余路由参数作为查询参数
+     * @param array $queryArr 查询参数
+     * @param string|null $moduleDefault 路由未指定模块时的默认模块
+     * @return string
+     */
+    public function buildUrl(string $name, array $values=[], bool $query=true, array $queryArr=[], ?string $moduleDefault =null):string
     {
         list($module, $name)=self::parseName($name, $moduleDefault);
-        $module=Application::getInstance()->getInstance()->getModuleFullName($module);
+        $module=Application::getInstance()->getModuleFullName($module);
         $name=$module.':'.$name;
         if (isset($this->routers[$name])) {
             return $this->routers[$name]->createUrl($values, $query, $queryArr);
@@ -497,7 +520,7 @@ class Router
                 $view->render();
             }
         };
-        $render->code = $code ;
+        $render->code = $code;
         $render->onRequest(Request::getInstance());
         return true;
     }
@@ -510,10 +533,10 @@ class Router
     private function cacheFile(string $name):string
     {
         if (is_null(self::$cacheName)) {
-            $module_use=app()->getReachableModules();
-            sort($module_use);
-            self::$cacheModules=$module_use;
-            self::$cacheName=substr(md5(implode('-', $module_use)), 0, 8);
+            $reachable=app()->getReachableModules();
+            sort($reachable);
+            self::$cacheModules=$reachable;
+            self::$cacheName=substr(md5(implode('-', $reachable)), 0, 8);
         }
         $path=CACHE_DIR.'/router/'.self::$cacheName;
         Storage::path($path);

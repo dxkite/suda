@@ -199,7 +199,7 @@ class Compiler implements CompilerImpl
         $rawTransTag=sprintf('/(?<!!)%s\s*(.+?)\s*%s/', preg_quote(self::$rawTransTag[0]), preg_quote(self::$rawTransTag[1]));
         return self::echoValue(preg_replace(
             [$rawecho, $echo, $comment, $hook,$strTransTag,$rawTransTag],
-            ['<?php echo $1; ?>', '<?php echo htmlspecialchars(__($1)); ?>', '<?php /* $1 */ ?>', '<?php $this->execGloHook("$1"); ?>','<?php echo __("$1"); ?>','<?php echo htmlspecialchars($1); ?>'],
+            ['<?php echo $1; ?>', '<?php echo htmlspecialchars(__($1)); ?>', '<?php /* $1 */ ?>', '<?php $this->execGlobalHook("$1"); ?>','<?php echo __("$1"); ?>','<?php echo htmlspecialchars($1); ?>'],
             $str
         ));
     }
@@ -365,7 +365,7 @@ class Compiler implements CompilerImpl
     {
         preg_match('/\((.+)\)/', $exp, $v);
         $name=trim(str_replace('\'', '-', trim($v[1], '"\'')));
-        return '<?php $this->hook(\''.$name.'\',function () { ?>';
+        return '<?php $this->execHook(\''.$name.'\',function () { ?>';
     }
     
     protected function parseEndInsert()

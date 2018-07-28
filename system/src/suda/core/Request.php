@@ -216,20 +216,6 @@ class Request
     }
 
     /**
-     * 利用淘宝 ip.taobao.com 将IP转换成地址
-     *
-     * @param [type] $ip
-     * @return array ip地址详情
-     */
-    public static function ip2Address($ip)
-    {
-        $url="http://ip.taobao.com/service/getIpInfo.php?ip=".$ip;
-        $content=storage()->curl($url, 3);
-        $addr=json_decode($content, true);
-        return $addr;
-    }
-
-    /**
      * 判断是否是POST请求
      *
      * @return boolean
@@ -316,7 +302,7 @@ class Request
      * @param string $default
      * @return string 请求头的内容
      */
-    public static function getHeader(string $name, string $default=null)
+    public static function getHeader(string $name, string $default=null):?string
     {
         $name='HTTP_'.strtoupper(preg_replace('/[^\w]/', '_', $name));
         if (isset($_SERVER[$name])) {
@@ -324,7 +310,7 @@ class Request
         }
         return $default;
     }
-    
+
 
     /**
      * 判断请求头中是否包含某一字段
@@ -332,7 +318,7 @@ class Request
      * @param string $name 请求头名
      * @return boolean
      */
-    public static function hasHeader(string $name)
+    public static function hasHeader(string $name):bool
     {
         $name='HTTP_'.strtoupper(preg_replace('/[^\w]/', '_', $name));
         return isset($_SERVER[$name]);
@@ -499,4 +485,6 @@ class Request
     {
         return $this->mapping;
     }
+
+
 }

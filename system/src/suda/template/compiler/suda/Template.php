@@ -208,17 +208,17 @@ abstract class Template
         return (new Command($name))->exec([$this]);
     }
     
-    public function hook(string $name, $callback)
+    public function execHook(string $name, $callback)
     {
         // 存在父模板
         if ($this->parent) {
-            return $this->parent->hook($name, $callback);
+            return $this->parent->execHook($name, $callback);
         } else {
             $this->hooks[$name][]=(new Command($callback))->name($name);
         }
     }
 
-    public function execGloHook(string $name)
+    public function execGlobalHook(string $name)
     {
         try {
             Hook::exec($name, [$this]);
@@ -241,7 +241,7 @@ abstract class Template
             }
             return Router::getInstance()->buildUrl($name, $values, true, [], $this->module);
         } elseif (is_array($name)) {
-            return Router::getInstance()->buildUrl(Response::$name, $name, true, [], $this->module);
+            return Router::getInstance()->buildUrl(Response::$name, array_merge($_GET,$name), true, [], $this->module);
         } else {
             return Router::getInstance()->buildUrl(Response::$name, $_GET, false, [], $this->module);
         }

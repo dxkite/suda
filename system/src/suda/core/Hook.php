@@ -37,21 +37,49 @@ class Hook
         self::$hooks=array_merge_recursive(self::$hooks, $arrays);
     }
 
+    /**
+     * 注册一条命令
+     *
+     * @param string $name
+     * @param [type] $command
+     * @return void
+     */
     public static function listen(string $name, $command)
     {
         self::add($name, $command);
     }
 
+    /**
+     * 注册一条命令
+     *
+     * @param string $name
+     * @param [type] $command
+     * @return void
+     */
     public static function register(string $name, $command)
     {
         self::add($name, $command);
     }
 
+    /**
+     * 添加命令到底部
+     *
+     * @param string $name
+     * @param [type] $command
+     * @return void
+     */
     public static function add(string $name, $command)
     {
         self::$hooks[$name][]=$command;
     }
 
+    /**
+     * 添加命令到顶部
+     *
+     * @param string $name
+     * @param [type] $command
+     * @return void
+     */
     public static function addTop(string $name, $command)
     {
         if (isset(self::$hooks[$name]) && is_array(self::$hooks[$name])) {
@@ -59,7 +87,15 @@ class Hook
         } else {
             self::add($name, $command);
         }
-    }
+    }   
+
+    /**
+     * 移除一条命令
+     *
+     * @param string $name
+     * @param [type] $remove
+     * @return void
+     */
     public static function remove(string $name, $remove)
     {
         if (isset(self::$hooks[$name]) && is_array(self::$hooks[$name])) {
@@ -70,7 +106,17 @@ class Hook
             }
         }
     }
-    /* --- 运行区 ---*/
+
+    #===================================================================
+    #       命令运行
+    #===================================================================
+    /**
+     * 运行所有命令
+     *
+     * @param string $name
+     * @param array $args
+     * @return void
+     */
     public static function exec(string $name, array $args=[])
     {
         if (isset(self::$hooks[$name]) && is_array(self::$hooks[$name])) {
@@ -99,7 +145,14 @@ class Hook
         }
         return false;
     }
-
+    
+    /**
+     * 运行所有命令返回第一个非空值
+     *
+     * @param string $name
+     * @param array $args
+     * @return [type]
+     */
     public static function execNotNull(string $name, array $args=[])
     {
         if (isset(self::$hooks[$name]) && is_array(self::$hooks[$name])) {
@@ -112,6 +165,13 @@ class Hook
         return null;
     }
 
+    /**
+     * 运行最先注入的命令
+     *
+     * @param string $name
+     * @param array $args
+     * @return [type]
+     */
     public static function execTop(string $name, array $args=[])
     {
         if (isset(self::$hooks[$name]) && is_array(self::$hooks[$name])) {
@@ -119,6 +179,13 @@ class Hook
         }
     }
 
+    /**
+     * 运行最后一个注入的命令
+     *
+     * @param string $name
+     * @param array $args
+     * @return [type]
+     */
     public static function execTail(string $name, array $args=[])
     {
         if (isset(self::$hooks[$name]) && is_array(self::$hooks[$name])) {
