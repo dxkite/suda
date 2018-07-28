@@ -409,6 +409,17 @@ class RawQuery implements SQLStatement
         return $this->__dataTransfrom('input', $name, $inputData);
     }
 
+    private function __outputDataFilter($rowData)
+    {
+        $methodName='_outputDataFilter';
+        if ($this->object) {
+            if (method_exists($this->object, $methodName)) {
+                return Command::_absoluteCall([$this->object, $methodName], [$rowData]);
+            }
+        }
+        return $rowData;
+    }
+
     private function __outputFieldTransfrom(string $name, $inputData)
     {
         return $this->__dataTransfrom('output', $name, $inputData);
@@ -417,9 +428,7 @@ class RawQuery implements SQLStatement
     private function __outputRowsTransfrom(array $inputRows)
     {
         foreach ($inputRows as $id=>$inputData) {
-            foreach ($inputData as $fieldName => $fieldData) {
-                $inputRows[$id][$fieldName]=$this->__outputFieldTransfrom($fieldName, $fieldData);
-            }
+            $inputRows[$id]=self::__outputRowTransfrom($inputRows[$id]);
         }
         return $inputRows;
     }
@@ -429,7 +438,7 @@ class RawQuery implements SQLStatement
         foreach ($inputData as $fieldName => $fieldData) {
             $inputData[$fieldName]=$this->__outputFieldTransfrom($fieldName, $fieldData);
         }
-        return $inputData;
+        return self::__outputDataFilter($inputData);
     }
 
     private function __outputObjectTransfrom($object)
@@ -440,6 +449,6 @@ class RawQuery implements SQLStatement
             $prop->setAccessible(true);
             $prop->setValue($object, $this->__outputFieldTransfrom($prop->getName(), $prop->getValue()));
         }
-        return $object;
+        return self::__outputDataFilter($object);
     }
 }
