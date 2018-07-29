@@ -1,7 +1,5 @@
 {
     "debug": true,
-    "debug-passwd": "dxkite",
-    "debug-local": true,
     "timelimit": 0,
     "timezone": "PRC",
     "markVersion":true,
