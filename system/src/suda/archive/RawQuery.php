@@ -82,13 +82,14 @@ class RawQuery implements SQLStatement
         $this->connection = $connection;
         return $this;
     }
+
     /**
      * 获取查询结果的一列
      *
      * @param integer $fetch_style 结果集形式
-     * @return array|false 查询成功则返回一列查询结果，否则返回false
+     * @return array|null 查询成功则返回一列查询结果
      */
-    public function fetch(int $fetch_style = PDO::FETCH_ASSOC)
+    public function fetch(int $fetch_style = PDO::FETCH_ASSOC):?array
     {
         if ($this->stmt) {
             return $this->stmt->fetch($fetch_style);
@@ -99,16 +100,17 @@ class RawQuery implements SQLStatement
                 }
             }
         }
-        return false;
+        return null;
     }
+
 
     /**
      * 获取查询结果的一列，并作为类对象
      *
      * @param string $class 类名
-     * @return array|false 查询成功则返回一列查询结果，否则返回false
+     * @return array|null 查询成功则返回一列查询结果
      */
-    public function fetchObject(string $class='stdClass')
+    public function fetchObject(string $class='stdClass'):?array
     {
         if ($this->stmt) {
             return $this->stmt->fetchObject($class);
@@ -117,23 +119,23 @@ class RawQuery implements SQLStatement
                 return self::__outputObjectTransfrom($this->stmt->fetchObject($class));
             }
         }
-        return false;
+        return null;
     }
     
     /**
      * 获取全部的查询结果
      *
      * @param integer $fetch_style 结果集形式
-     * @return array|false 查询成功则返回查询结果，否则返回false
+     * @return array|null 查询成功则返回查询结果，否则返回false
      */
-    public function fetchAll(int $fetch_style = PDO::FETCH_ASSOC)
+    public function fetchAll(int $fetch_style = PDO::FETCH_ASSOC):?array
     {
         if (self::__query($this->query, $this->values)) {
             if ($data=$this->stmt->fetchAll($fetch_style)) {
                 return self::__outputRowsTransfrom($data);
             }
         }
-        return false;
+        return null;
     }
     
     /**
