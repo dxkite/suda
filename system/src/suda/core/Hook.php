@@ -25,9 +25,9 @@ class Hook
 {
     protected static $hooks=[];
 
-    public static function loadJson(string $path)
+    public static function loadConfig(string $path)
     {
-        $hooks=Json::loadFile($path);
+        $hooks=Config::loadConfig($path);
         debug()->trace($path);
         self::load($hooks?:[]);
     }

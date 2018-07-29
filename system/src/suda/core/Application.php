@@ -19,7 +19,7 @@ use suda\template\Manager;
 use suda\tool\Json;
 use suda\tool\ArrayHelper;
 use suda\exception\ApplicationException;
-use suda\exception\JSONException;
+
 
 /**
  * 应用处理类
@@ -81,22 +81,21 @@ class Application
         debug()->trace(__('application load %s', APP_DIR));
         // 框架依赖检测
         if (!static::versionCompire(Config::get('app.suda', SUDA_VERSION), SUDA_VERSION)) {
-            suda_panic('ApplicationException',__('application require suda version %s and now is %s',Config::get('app.suda'), SUDA_VERSION));
+            suda_panic('ApplicationException', __('application require suda version %s and now is %s', Config::get('app.suda'), SUDA_VERSION));
         }
         $this->path=APP_DIR;
         // 获取基本配置信息
-        if (Storage::exist($path=CONFIG_DIR.'/config.json')) {
+        if ($path=Config::exist(CONFIG_DIR.'/config.json')) {
             try {
                 Config::load($path);
-            } catch (JSONException $e) {
-                $message =__('Load application config: parse config.json error');
+            } catch (\Exception $e) {
+                $message =__('Load application config: parse config error');
                 debug()->error($message);
                 suda_panic('Kernal Panic', $message);
             }
             // 动态配置覆盖
-            if (Storage::exist($path=RUNTIME_DIR.'/global.config.php')) {
-                $config=include $path;
-                Config::assign($config);
+            if ($path=Config::exist(RUNTIME_DIR.'/global.config.php')) {
+                Config::load($path);
             }
             // 开发状态覆盖
             if (defined('DEBUG')) {
@@ -107,16 +106,18 @@ class Application
         // 加载外部数据库配置
         $this->configDBify();
         // 监听器
-        if (Storage::exist($path=CONFIG_DIR.'/listener.json')) {
-            Hook::loadJson($path);
+        if ($path=Config::exist(CONFIG_DIR.'/listener.json')) {
+            Hook::loadConfig($path);
         }
         
         // 设置PHP属性
         set_time_limit(Config::get('timelimit', 0));
         // 设置时区
-        date_default_timezone_set(Config::get('timezone', defined('DEFAULT_TIMEZONE')?DEFAULT_TIMEZONE:'RPC'));
+        date_default_timezone_set(Config::get('timezone', defined('DEFAULT_TIMEZONE')?DEFAULT_TIMEZONE:'PRC'));
         // 设置默认命名空间
-        Autoloader::setNamespace(Config::get('app.namespace'));
+        if ($namespace=Config::get('app.namespace')) {
+            Autoloader::setNamespace($namespace);
+        }
         // 系统共享库
         // Autoloader::addIncludePath(SHRAE_DIR);
         // 注册模块目录
@@ -166,7 +167,7 @@ class Application
             }
             // 框架依赖
             if (isset($config['suda']) && !static::versionCompire($config['suda'], SUDA_VERSION)) {
-                suda_panic('ApplicationException',__('module %s require suda version %s and now is %s', $moduleTemp, $config['suda'], SUDA_VERSION));
+                suda_panic('ApplicationException', __('module %s require suda version %s and now is %s', $moduleTemp, $config['suda'], SUDA_VERSION));
             }
             foreach ($config['import']['share'] as $namespace=>$path) {
                 if (Storage::isDir($dirPath=$root.DIRECTORY_SEPARATOR.$path)) {
@@ -176,8 +177,8 @@ class Application
                 }
             }
             // 加载监听器
-            if (Storage::exist($listener_path=$root.'/resource/config/listener.json')) {
-                Hook::loadJson($listener_path);
+            if ($listenerPath=Config::exist($root.'/resource/config/listener.json')) {
+                Hook::loadConfig($listenerPath);
                 Hook::exec('loadModule:'.self::getModuleName($moduleTemp));
             }
             // 自动安装
@@ -199,11 +200,11 @@ class Application
             if ($this->checkModuleExist($module) && isset($require['version'])) {
                 if (!empty($version)) {
                     if (!static::versionCompire($version, $require['version'])) {
-                        suda_panic('ApplicationException',__('%s require module %s %s and now is %s', $name, $module, $version, $require['version']));
+                        suda_panic('ApplicationException', __('%s require module %s %s and now is %s', $name, $module, $version, $require['version']));
                     }
                 }
             } else {
-                suda_panic('ApplicationException',__('%s require module %s', $name, $module));
+                suda_panic('ApplicationException', __('%s require module %s', $name, $module));
             }
         }
     }
@@ -266,9 +267,25 @@ class Application
         return $this->activeModule;
     }
 
-    public function getModuleConfig(string $module)
+    public function getModuleConfig(string $module, ?string $configName=null):array
     {
-        return $this->moduleConfigs[self::getModuleFullName($module)]??[];
+        if (is_null($configName)) {
+            return $this->moduleConfigs[self::getModuleFullName($module)]??[];
+        }
+        if ($path = Config::exist(self::getModuleConfigPath($module, $configName))) {
+            return Config::loadConfig($path);
+        }
+        return [];
+    }
+
+    public function getModuleResourcePath(string $module):string
+    {
+        return self::getModulePath($module).'/resource';
+    }
+    
+    public function getModuleConfigPath(string $module, string $name):?string
+    {
+        return  Config::exist(self::getModulePath($module).'/resource/config/'.$name)?:null;
     }
 
     public function getModulePrefix(string $module)
@@ -378,8 +395,8 @@ class Application
             }
         }
         // 加载模块配置到 module命名空间
-        if (Storage::exist($path=MODULE_CONFIG.'/config.json')) {
-            Config::set('module', Json::loadFile($path));
+        if ($path=Config::exist(MODULE_CONFIG.'/config.json')) {
+            Config::set('module', Config::loadConfig($path));
         }
         Config::set('module', Config::get('module', []), $module_config);
     }
@@ -495,26 +512,26 @@ class Application
     public function registerModule(string $path, ?string $config =null)
     {
         $config = is_null($config)?$path.'/module.json':$config;
-        if (Storage::exist($path) && Storage::exist($config)) {
+        if (Storage::exist($path) && $config = Config::exist($config)) {
             $dir=basename($path);
             debug()->trace(__('load module config %s', $config));
-            $json=Json::parseFile($config);
-            $name=$json['name'] ?? $dir;
-            $version =  $json['version'] ?? '';
-            $json['directory']=$dir;
-            $json['path']=$path;
+            $configData=Config::loadConfig($config);
+            $name=$configData['name'] ?? $dir;
+            $version =  $configData['version'] ?? '';
+            $configData['directory']=$dir;
+            $configData['path']=$path;
             // 注册默认自动加载
-            $json['import']=array_merge([
+            $configData['import']=array_merge([
                 'share'=>[''=>'share/'],
                 'src'=>[''=>'src/']
-            ], $json['import']??[]);
+            ], $configData['import']??[]);
             $runtime = RUNTIME_DIR .'/module/'. $name . '/' . $version;
-            if (Storage::exist($runtimeFile=$runtime.'/module.config.php')) {
-                $runtimeConfig = include $runtimeFile;
-                $json = array_merge($json, $runtimeConfig);
+            $runtimeConfig = Config::loadConfig($runtime.'/module.config.php');
+            if (is_array($runtimeConfig)) {
+                $configData = array_merge($configData, $runtimeConfig);
             }
             $name.=empty($version)?'':':'.$version;
-            $this->moduleConfigs[$name]=$json;
+            $this->moduleConfigs[$name]=$configData;
             $this->moduleDirName[$dir]=$name;
             // 注册资源
             Manager::registerTemplateSource($name);

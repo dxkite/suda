@@ -69,22 +69,23 @@ class Router
         $admin_routers=[];
         $module_path=Application::getInstance()->getModulePath($module);
         debug()->trace(__('load module:%s path:%s', $module, $module_path));
+        
         // 加载前台路由
-        if (Storage::exist($file=$module_path.'/resource/config/router.json')) {
-            $simple_routers= self::loadModuleJson(Mapping::ROLE_SIMPLE, $module, $file);
+        if ($file=Application::getInstance()->getModuleConfigPath($module,'router')) {
+            $simple_routers= self::loadModuleConfig(Mapping::ROLE_SIMPLE, $module, $file);
             debug()->trace(__('loading simple route from file %s', $file));
         }
         // 加载后台路由
-        if (Storage::exist($file=$module_path.'/resource/config/router_admin.json')) {
-            $admin_routers= self::loadModuleJson(Mapping::ROLE_ADMIN, $module, $file);
+        if ($file=Application::getInstance()->getModuleConfigPath($module,'router_admin')) {
+            $admin_routers= self::loadModuleConfig(Mapping::ROLE_ADMIN, $module, $file);
             debug()->trace(__('loading admin route from file  %s', $file));
         }
         $this->routers=array_merge($this->routers, $admin_routers, $simple_routers);
     }
 
-    protected function loadModuleJson(int $role, string $module, string $jsonfile)
+    protected function loadModuleConfig(int $role, string $module, string $configFile)
     {
-        $routers=Json::loadFile($jsonfile);
+        $routers=Config::loadConfig($configFile);
         $router=[];
         foreach ($routers as $name => $value) {
             $mapping=Mapping::createFromRouteArray($role, $module, $name, $value);

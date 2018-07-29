@@ -37,7 +37,7 @@ class ArrayHelper
     {
         $path = explode('.', $name);
         while ($key = array_shift($path)) {
-            if (array_key_exists($key, $array)) {
+            if (is_array($array) && array_key_exists($key, $array)) {
                 $array = $array[$key];
             } else {
                 return $def;
@@ -80,7 +80,7 @@ class ArrayHelper
             $array = &$array[$key];
         }
         $key = $path[0];
-        if (array_key_exists($key, $array) && is_array($array[$key]) && is_array($value)) {
+        if (is_array($array) && array_key_exists($key, $array) && is_array($array[$key]) && is_array($value)) {
             $array[$key] = array_merge($array[$key], is_array($def)?$def:[], $value);
         } else {
             $array[$key] = is_null($value) ? $def : $value;

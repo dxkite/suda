@@ -3,7 +3,7 @@
  * Suda FrameWork
  *
  * An open source application development framework for PHP 7.0.0 or newer
- * 
+ *
  * Copyright (c)  2017 DXkite
  *
  * @category   PHP FrameWork
@@ -44,9 +44,7 @@ class Locale
     {
         if (!in_array($path, self::$paths)) {
             self::$paths[]=$path;
-            if (file_exists($file=$path.'/'.self::$set.'.json')) {
-                self::loadFile($file);
-            }
+            self::loadFile($path.'/'.self::$set);
         }
     }
 
@@ -64,14 +62,8 @@ class Locale
     */
     public static function load(string $locale)
     {
-        // INFO: 不用清空
-        // self::$langs=[];
-        // debug()->trace(__('loaded paths %s',implode(';',self::$paths)));
-        // 重写
         foreach (self::$paths as $path) {
-            if (file_exists($file=$path.'/'.$locale.'.json')) {
-                self::loadFile($file);
-            }
+            self::loadFile($path.'/'.$locale);
         }
     }
     
@@ -80,14 +72,12 @@ class Locale
     */
     public static function loadFile(string $path)
     {
-        $jsonfile=file_get_contents($path);
-        $json=json_decode($jsonfile, true);
-        if (json_last_error()===JSON_ERROR_NONE) {
-            return self::include($json);
+        if ($file=Config::exist($path)) {
+            $localeArray = Config::loadConfig($file);
+            return self::include($localeArray);
         }
         return [];
     }
-
 
     public static function _(string $string)
     {

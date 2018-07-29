@@ -23,7 +23,6 @@ use suda\archive\SQLQuery;
 use suda\tool\Json;
 use suda\tool\Value;
 use suda\core\exception\ApplicationException;
-use suda\exception\JSONException;
 
 /**
  * 系统类，处理系统报错函数以及程序加载
@@ -90,42 +89,44 @@ class System
 
     public static function console()
     {
-        $app=Storage::path(APP_DIR);
-        self::readManifast(APP_DIR.'/manifast.json');
+        Storage::path(APP_DIR);
+        self::readManifast();
         $name=Autoloader::realName(self::$applicationClass);
-         // 加载共享库
-         foreach (Config::get('app.import', [''=>SHRAE_DIR]) as $namespace=>$path) {
-             if (Storage::isDir($srcPath=APP_DIR.DIRECTORY_SEPARATOR.$path)) {
-                 Autoloader::addIncludePath($srcPath, $namespace);
-             } elseif (Storage::isFile($importPath=APP_DIR.DIRECTORY_SEPARATOR.$path)) {
-                 Autoloader::import($importPath);
-             }
-         }
+        // 加载共享库
+        foreach (Config::get('app.import', [''=>SHRAE_DIR]) as $namespace=>$path) {
+            if (Storage::isDir($srcPath=APP_DIR.DIRECTORY_SEPARATOR.$path)) {
+                Autoloader::addIncludePath($srcPath, $namespace);
+            } elseif (Storage::isFile($importPath=APP_DIR.DIRECTORY_SEPARATOR.$path)) {
+                Autoloader::import($importPath);
+            }
+        }
         Config::set('app.application', $name);
-        debug()->trace(__('loading application %s from %s', $name, $app));
+        debug()->trace(__('loading application %s from %s', $name, APP_DIR));
         self::$appInstance= $name::getInstance();
         self::$appInstance->init();
     }
 
-    protected static function readManifast(string $manifast)
+    protected static function readManifast()
     {
         debug()->trace(__('reading manifast file'));
-        // App不存在
-        if (!Storage::exist($manifast)) {
+        $path = APP_DIR.DIRECTORY_SEPARATOR.'manifast.json';
+        $manifast  = [];
+        if (!Config::exist($path)) {
             debug()->trace(__('create base app'));
             Storage::copydir(SYSTEM_RESOURCE.'/app/', APP_DIR);
-            Storage::put(APP_DIR.'/modules/default/resource/config/config.json', '{"name":"default"}');
             Config::set('app.init', true);
         }
-        Autoloader::addIncludePath(APP_DIR.'/share');
+
         try {
-            // 加载配置
-            Config::set('app', Json::loadFile($manifast));
-        } catch (JSONException $e) {
-            $message =__('Load application mainifast: parse mainifast.json error: %s', $e->getMessage());
+            $manifast = Config::load($path);
+        } catch (\Exception $e) {
+            $message =__('Load application mainifast: parse mainifast error: %s', $e->getMessage());
             debug()->error($message);
-            suda_panic('Kernal Panic',$message);
+            suda_panic('Kernal Panic', $message);
         }
+        
+        Autoloader::addIncludePath(APP_DIR.'/share');
+        Config::set('app', $manifast);
         // 载入配置前设置配置
         Hook::exec('core:loadManifast');
         // 默认应用控制器
@@ -173,10 +174,16 @@ class System
         self::uncaughtException(new \ErrorException($errstr, 0, $errno, $errfile, $errline));
     }
 
-    public static function error(int $status,string $type,string $message,?int $code=null,array $params=[]) {
-        $render=new class($status,$type,$message,$code,$params) extends Response {
-            protected $status,$type,$message,$code,$params;
-            public function __construct(int $status,string $type,string $message,?int $code=null,array $params=[]) {
+    public static function error(int $status, string $type, string $message, ?int $code=null, array $params=[])
+    {
+        $render=new class($status, $type, $message, $code, $params) extends Response {
+            protected $status;
+            protected $type;
+            protected $message;
+            protected $code;
+            protected $params;
+            public function __construct(int $status, string $type, string $message, ?int $code=null, array $params=[])
+            {
                 $this->status =$status;
                 $this->type =$type;
                 $this->message = $message;
@@ -187,10 +194,10 @@ class System
             {
                 $this->state($this->status);
                 $page=$this->page('suda:error', ['error_type'=> $this->type ,'error_message'=> $this->message]);
-                if (!is_null($this->code)){
-                    $page->set('error_code',$this->code);
+                if (!is_null($this->code)) {
+                    $page->set('error_code', $this->code);
                 }
-                if (is_array($this->params)){
+                if (is_array($this->params)) {
                     $page->assign($this->params);
                 }
                 $page->render();
