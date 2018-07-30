@@ -69,6 +69,22 @@ cp -R ./suda/system/resource/project/* .
 - [自动文档](docs/README.md)    
 - [Release](RELEASE.md)
 
+##  PHP版本特性说明
+
+项目内已经使用的特性说明
+
+| 特性 |  版本 | 项目使用情况 | 备注 | 
+|-----|------|----|---|
+| 允许重写抽象方法 | 7.2 | × | 可能会使用 |
+| PDOStatement::debugDumpParams() | 7.2 | × | 可能会使用 |
+| 可为空（Nullable）类型 | 7.1  | √ | |
+| Symmetric array destructuring | 7.1 | √ | |
+| list() 支持键名 | 7.1 | √ |  |
+| 短数组声明 | 7.0 | √ |  |
+| 返回值类型声明 |7.0 | √ |  |
+| null合并运算符 |7.0 | √ |  |
+| 匿名类 | 7.0 | √ |  |
+
 ## Historys Or Demos
 
 - [DxSite](https://github.com/DXkite/DxSite)   
