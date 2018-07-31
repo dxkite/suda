@@ -267,15 +267,23 @@ class Application
         return $this->activeModule;
     }
 
-    public function getModuleConfig(string $module, ?string $configName=null):array
+    public function getModuleConfig(string $module, ?string $configName=null):?array
     {
         if (is_null($configName)) {
             return $this->moduleConfigs[self::getModuleFullName($module)]??[];
         }
-        if ($path = Config::exist(self::getModuleConfigPath($module, $configName))) {
+        if ($path = self::getModuleConfigPath($module, $configName)) {
             return Config::loadConfig($path);
         }
-        return [];
+        return null;
+    }
+
+    public function getConfig(string $configName):?array
+    {
+        if ($path = Config::exist(CONFIG_DIR .'/'.$configName)) {
+            return Config::loadConfig($path);
+        }
+        return null;
     }
 
     public function getModuleResourcePath(string $module):string
