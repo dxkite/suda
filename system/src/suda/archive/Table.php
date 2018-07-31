@@ -484,7 +484,14 @@ abstract class Table
             if (sha1($data)!=$sha1 || $time >time() || $name!=$this->tableName) {
                 return false;
             }
-            return (new SQLQuery(base64_decode($data)))->exec();
+            try {
+                static::begin();
+                $num = (new SQLQuery(base64_decode($data)))->exec();
+                static::commit();
+                return $num;
+            } catch (\Exception $e) {
+                static::rollBack();
+            }
         }
         return false;
     }
@@ -497,7 +504,7 @@ abstract class Table
             // 检查主键完整性
             foreach ($this->primaryKey as $key) {
                 if (!isset($value[$key])) {
-                    $message='primary key  is multipled,check '.$key.' in fields';
+                    $message='primary key  is multipled, check '.$key.' in fields';
                     $debug=debug_backtrace();
                     throw new TableException(__($message), 0, E_ERROR, $debug[1]['file'], $debug[1]['line']);
                 }
@@ -627,7 +634,7 @@ abstract class Table
                 foreach ($values as $val) {
                     if (is_null($val)) {
                         $columns.='NULL,';
-                    }else{
+                    } else {
                         $columns.='\''.addslashes($val).'\',';
                     }
                 }
