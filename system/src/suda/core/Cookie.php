@@ -55,7 +55,8 @@ class Cookie
 
     public static function has(string $name)
     {
-        return isset(self::$values[$name]) && self::$values[$name]->get() > time() || isset($_COOKIE[$name]);
+        $available = isset(self::$values[$name]) && self::$values[$name]->get() > time();
+        return $available || array_key_exists($name,$_COOKIE);
     }
 
     /**
