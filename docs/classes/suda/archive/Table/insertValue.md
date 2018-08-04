@@ -1,6 +1,6 @@
 # Table::insertValue
-插入一行记录
-> *文件信息* suda\archive\Table.php: 31~642
+按照表顺序插入一行记录
+> *文件信息* suda\archive\Table.php: 31~653
 ## 所属类 
 
 [Table](../Table.md)
@@ -16,11 +16,13 @@
 
 ## 参数
 
-无参数
+| 参数名 | 类型 | 默认值 | 说明 |
+|--------|-----|-------|-------|
+| values |  [type] | 无 |  待插入的值 |
 
 ## 返回值
-类型：void
-无
+类型：integer
+ 插入影响的行数
 
 ## 例子
 

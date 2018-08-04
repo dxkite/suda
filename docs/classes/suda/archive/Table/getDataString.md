@@ -1,6 +1,6 @@
 # Table::getDataString
 获取数据SQL字符串
-> *文件信息* suda\archive\Table.php: 31~642
+> *文件信息* suda\archive\Table.php: 31~653
 ## 所属类 
 
 [Table](../Table.md)

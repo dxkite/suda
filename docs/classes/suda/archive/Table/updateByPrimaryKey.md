@@ -1,6 +1,6 @@
 # Table::updateByPrimaryKey
 通过主键更新元素
-> *文件信息* suda\archive\Table.php: 31~642
+> *文件信息* suda\archive\Table.php: 31~653
 ## 所属类 
 
 [Table](../Table.md)
@@ -18,11 +18,12 @@
 
 | 参数名 | 类型 | 默认值 | 说明 |
 |--------|-----|-------|-------|
-| value |  [type] | 无 |  待更新的数据 |
+| value |  [type] | 无 |  主键 |
+| values |  [type] | 无 |  待更新的数据 |
 
 ## 返回值
-类型：counts
- 更新的行数
+类型：integer
+ 影响的行数
 
 ## 例子
 

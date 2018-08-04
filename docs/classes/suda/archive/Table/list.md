@@ -1,6 +1,6 @@
 # Table::list
 分页列出元素
-> *文件信息* suda\archive\Table.php: 31~642
+> *文件信息* suda\archive\Table.php: 31~653
 ## 所属类 
 
 [Table](../Table.md)
@@ -23,7 +23,7 @@
 | offset |  bool |  |  使用Offset |
 
 ## 返回值
-类型：array|false
+类型：array|null
 无
 
 ## 例子

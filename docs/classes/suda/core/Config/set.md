@@ -1,6 +1,6 @@
 # Config::set
 
-> *文件信息* suda\core\Config.php: 24~55
+> *文件信息* suda\core\Config.php: 25~113
 ## 所属类 
 
 [Config](../Config.md)
@@ -10,7 +10,7 @@
   public  static
 ## 说明
 
-该函数暂时无说明
+TODO 切换全部配置文件支持yml配置
 
 ## 参数
 
@@ -18,7 +18,7 @@
 |--------|-----|-------|-------|
 | name |  string | 无 | 无 |
 | combine |  # Error> htmlspecialchars() expects parameter 1 to be string, array given
-	Cause By D:\Server\Local\suda\script\docme\template\method.md.tpl:25
+	Cause By D:\Server\vhost\atd3.org\suda\script\docme\template\method.md.tpl:25
  | null | 无 |
 
 ## 返回值

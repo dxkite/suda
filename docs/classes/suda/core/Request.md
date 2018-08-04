@@ -1,6 +1,6 @@
 #  Request 
 
-> *文件信息* suda\core\Request.php: 24~502
+> *文件信息* suda\core\Request.php: 24~490
 
 
 请求描述类，客户端向框架发送请求时会生成此类
@@ -31,7 +31,6 @@
 |  public  static|[post](Request/post.md) | 获取POST请求的值 |
 |  public  static|[files](Request/files.md) | 获取请求的文件 |
 |  public  static|[ip](Request/ip.md) | 获取请求的 IP |
-|  public  static|[ip2Address](Request/ip2Address.md) | 利用淘宝 ip.taobao.com 将IP转换成地址 |
 |  public  static|[isPost](Request/isPost.md) | 判断是否是POST请求 |
 |  public  static|[isGet](Request/isGet.md) | 判断是否是GET请求 |
 |  public  static|[hasGet](Request/hasGet.md) | 判断是否有GET请求 |

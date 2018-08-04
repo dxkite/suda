@@ -1,22 +1,22 @@
-# Template::hook
+# Response::setForward
 
-> *文件信息* suda\template\compiler\suda\Template.php: 25~302
+> *文件信息* suda\core\Response.php: 30~294
 ## 所属类 
 
-[Template](../Template.md)
+[Response](../Response.md)
 
 ## 可见性
 
   public  
 ## 说明
 
-该函数暂时无说明
+
 
 ## 参数
 
 | 参数名 | 类型 | 默认值 | 说明 |
 |--------|-----|-------|-------|
-| name |  string | 无 | 无 |
+| url |  string | 无 | 无 |
 
 ## 返回值
 返回值类型不定

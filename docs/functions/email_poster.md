@@ -1,6 +1,6 @@
 # email_poster
 获取邮件发送 **使用前请设置完成SMTP规则**
-> *文件信息* suda\core\functions.php: 307~309
+> *文件信息* suda\core\functions.php: 310~313
 
 ## 参数
 

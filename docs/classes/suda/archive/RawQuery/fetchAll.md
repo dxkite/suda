@@ -1,6 +1,6 @@
 # RawQuery::fetchAll
 获取全部的查询结果
-> *文件信息* suda\archive\RawQuery.php: 31~445
+> *文件信息* suda\archive\RawQuery.php: 31~456
 ## 所属类 
 
 [RawQuery](../RawQuery.md)
@@ -19,7 +19,7 @@
 | fetch_style |  int | PDO::FETCH_ASSOC |  结果集形式 |
 
 ## 返回值
-类型：array|false
+类型：array|null
  查询成功则返回查询结果，否则返回false
 
 ## 例子

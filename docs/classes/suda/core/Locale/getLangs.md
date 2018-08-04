@@ -1,6 +1,6 @@
 # Locale::getLangs
 
-> *文件信息* suda\core\Locale.php: 23~114
+> *文件信息* suda\core\Locale.php: 23~104
 ## 所属类 
 
 [Locale](../Locale.md)

@@ -25,7 +25,7 @@
 | scroll |  bool |  |  滚动查询，一次取出一条记录 |
 
 ## 返回值
-类型：void
+类型：SQLQuery
 无
 
 ## 例子

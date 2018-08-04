@@ -1,6 +1,6 @@
 # request
 获取当运行的请求的单例对象
-> *文件信息* suda\core\functions.php: 168~171
+> *文件信息* suda\core\functions.php: 171~174
 
 ## 参数
 

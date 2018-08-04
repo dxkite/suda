@@ -1,6 +1,6 @@
 #  Application 
 
-> *文件信息* suda\core\Application.php: 29~588
+> *文件信息* suda\core\Application.php: 29~620
 
 
 应用处理类
@@ -23,6 +23,7 @@
 
 | 可见性 | 方法名 | 说明 |
 |--------|-------|------|
+|  protected  |[__construct](Application/__construct.md) |  |
 |  public  static|[getInstance](Application/getInstance.md) |  |
 |  public  |[addModulesPath](Application/addModulesPath.md) | 添加模块扫描目录 |
 |  protected  |[loadModules](Application/loadModules.md) | 载入模块 |
@@ -33,6 +34,9 @@
 |  public  |[getModuleDirs](Application/getModuleDirs.md) |  |
 |  public  |[getActiveModule](Application/getActiveModule.md) |  |
 |  public  |[getModuleConfig](Application/getModuleConfig.md) |  |
+|  public  |[getConfig](Application/getConfig.md) |  |
+|  public  |[getModuleResourcePath](Application/getModuleResourcePath.md) |  |
+|  public  |[getModuleConfigPath](Application/getModuleConfigPath.md) |  |
 |  public  |[getModulePrefix](Application/getModulePrefix.md) |  |
 |  public  |[checkModuleExist](Application/checkModuleExist.md) |  |
 |  public  |[getLiveModules](Application/getLiveModules.md) |  |

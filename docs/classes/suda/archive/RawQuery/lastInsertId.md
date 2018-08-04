@@ -1,6 +1,6 @@
 # RawQuery::lastInsertId
 获取最后一次插入的主键ID（用于自增值
-> *文件信息* suda\archive\RawQuery.php: 31~445
+> *文件信息* suda\archive\RawQuery.php: 31~456
 ## 所属类 
 
 [RawQuery](../RawQuery.md)

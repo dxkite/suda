@@ -1,6 +1,6 @@
 # RawQuery::getConnection
 
-> *文件信息* suda\archive\RawQuery.php: 31~445
+> *文件信息* suda\archive\RawQuery.php: 31~456
 ## 所属类 
 
 [RawQuery](../RawQuery.md)

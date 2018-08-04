@@ -1,6 +1,6 @@
 # Autoloader::realName
 将JAVA，路径分割转换为PHP分割符
-> *文件信息* suda\core\Autoloader.php: 22~145
+> *文件信息* suda\core\Autoloader.php: 22~146
 ## 所属类 
 
 [Autoloader](../Autoloader.md)

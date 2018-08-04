@@ -1,6 +1,6 @@
 #  Locale 
 
-> *文件信息* suda\core\Locale.php: 23~114
+> *文件信息* suda\core\Locale.php: 23~104
 
 
 I18N 国际化支持

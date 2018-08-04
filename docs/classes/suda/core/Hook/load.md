@@ -1,6 +1,6 @@
 # Hook::load
 
-> *文件信息* suda\core\Hook.php: 24~147
+> *文件信息* suda\core\Hook.php: 24~214
 ## 所属类 
 
 [Hook](../Hook.md)

@@ -1,6 +1,6 @@
 # conf
 获取配置信息
-> *文件信息* suda\core\functions.php: 62~65
+> *文件信息* suda\core\functions.php: 65~68
 
 ## 参数
 

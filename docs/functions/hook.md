@@ -1,6 +1,6 @@
 # hook
 获取当系统钩子对象
-> *文件信息* suda\core\functions.php: 178~181
+> *文件信息* suda\core\functions.php: 181~184
 
 ## 参数
 

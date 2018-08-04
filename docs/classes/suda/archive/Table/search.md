@@ -1,6 +1,6 @@
 # Table::search
-搜搜字段
-> *文件信息* suda\archive\Table.php: 31~642
+根据字段搜索
+> *文件信息* suda\archive\Table.php: 31~653
 ## 所属类 
 
 [Table](../Table.md)
@@ -24,7 +24,7 @@
 | rows |  int | 10 |  每页数 |
 
 ## 返回值
-类型：void
+类型：array|null
 无
 
 ## 例子

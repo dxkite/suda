@@ -1,6 +1,6 @@
 #  Table 
 
-> *文件信息* suda\archive\Table.php: 31~642
+> *文件信息* suda\archive\Table.php: 31~653
 
 
 数据表抽象对象
@@ -38,18 +38,18 @@
 |--------|-------|------|
 |  public  |[__construct](Table/__construct.md) |  |
 |  public  |[insert](Table/insert.md) | 插入一行记录 |
-|  public  |[insertValue](Table/insertValue.md) | 插入一行记录 |
+|  public  |[insertValue](Table/insertValue.md) | 按照表顺序插入一行记录 |
 |  public  |[getByPrimaryKey](Table/getByPrimaryKey.md) | 通过主键查找元素 |
 |  public  |[updateByPrimaryKey](Table/updateByPrimaryKey.md) | 通过主键更新元素 |
 |  public  |[deleteByPrimaryKey](Table/deleteByPrimaryKey.md) | 通过主键删除元素 |
-|  public  |[search](Table/search.md) | 搜搜字段 |
+|  public  |[search](Table/search.md) | 根据字段搜索 |
 |  public  |[searchWhere](Table/searchWhere.md) | 搜索指定字段 |
 |  public  |[list](Table/list.md) | 分页列出元素 |
 |  public  |[listWhere](Table/listWhere.md) | 条件列出元素 |
 |  public  |[update](Table/update.md) | 根据条件更新列 |
-|  public  |[select](Table/select.md) | 根据条件删除列 |
-|  public  |[query](Table/query.md) | 纯查询 |
-|  public  |[delete](Table/delete.md) | 根据条件获取列 |
+|  public  |[select](Table/select.md) | 选择列 |
+|  public  |[query](Table/query.md) | 原始查询查询 |
+|  public  |[delete](Table/delete.md) | 根据条件删除列 |
 |  public  |[getPrimaryKey](Table/getPrimaryKey.md) | 获取主键 |
 |  public  |[setPrimaryKey](Table/setPrimaryKey.md) | 设置主键 |
 |  public  |[setTableName](Table/setTableName.md) | 设置表名 |

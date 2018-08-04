@@ -1,4 +1,4 @@
-<?php  class Class1cc04be653d213d32f1a1ea1fc0abd6c extends suda\template\compiler\suda\Template { protected $name="fcd199f32b6dbf9e361108302c58ffd0";protected $module=""; protected function _render_template() {  ?># 文档清单
+<?php  class Class0a0e12ac4b46505b1d2021786133deae extends suda\template\compiler\suda\Template { protected $name="e2ea98f42e5f4edaab3e3ac104887c9c";protected $module=""; protected function _render_template() {  ?># 文档清单
 
 > **注：** 文档由程序自动生成
 

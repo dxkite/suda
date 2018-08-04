@@ -1,6 +1,6 @@
-# Router::loadModuleJson
+# Router::loadModuleConfig
 
-> *文件信息* suda\core\Router.php: 27~486
+> *文件信息* suda\core\Router.php: 27~548
 ## 所属类 
 
 [Router](../Router.md)
@@ -18,7 +18,7 @@
 |--------|-----|-------|-------|
 | role |  int | 无 | 无 |
 | module |  string | 无 | 无 |
-| jsonfile |  string | 无 | 无 |
+| configFile |  string | 无 | 无 |
 
 ## 返回值
 返回值类型不定

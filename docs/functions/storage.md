@@ -1,6 +1,6 @@
 # storage
 获取一个储存对象
-> *文件信息* suda\core\functions.php: 208~211
+> *文件信息* suda\core\functions.php: 211~214
 
 ## 参数
 

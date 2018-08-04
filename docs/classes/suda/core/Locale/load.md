@@ -1,6 +1,6 @@
 # Locale::load
 加载语言本地化文件
-> *文件信息* suda\core\Locale.php: 23~114
+> *文件信息* suda\core\Locale.php: 23~104
 ## 所属类 
 
 [Locale](../Locale.md)

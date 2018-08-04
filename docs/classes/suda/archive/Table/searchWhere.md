@@ -1,6 +1,6 @@
 # Table::searchWhere
 搜索指定字段
-> *文件信息* suda\archive\Table.php: 31~642
+> *文件信息* suda\archive\Table.php: 31~653
 ## 所属类 
 
 [Table](../Table.md)
@@ -27,7 +27,7 @@
 | offset |  bool |  |  是否是偏移 |
 
 ## 返回值
-类型：void
+类型：array|null
 无
 
 ## 例子

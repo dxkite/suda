@@ -1,6 +1,6 @@
 # Table::order
 排序
-> *文件信息* suda\archive\Table.php: 31~642
+> *文件信息* suda\archive\Table.php: 31~653
 ## 所属类 
 
 [Table](../Table.md)
@@ -22,7 +22,7 @@
 | order |  int | self::ORDER_ASC | 无 |
 
 ## 返回值
-类型：void
+类型：Table
 无
 
 ## 例子

@@ -1,6 +1,6 @@
 # Table::select
-根据条件删除列
-> *文件信息* suda\archive\Table.php: 31~642
+选择列
+> *文件信息* suda\archive\Table.php: 31~653
 ## 所属类 
 
 [Table](../Table.md)
@@ -26,7 +26,7 @@
 | offset |  bool |  | 无 |
 
 ## 返回值
-类型：Query|false
+类型：SQLQuery
 无
 
 ## 例子

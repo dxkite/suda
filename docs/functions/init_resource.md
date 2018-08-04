@@ -1,6 +1,6 @@
 # init_resource
 初始化资源
-> *文件信息* suda\core\functions.php: 138~141
+> *文件信息* suda\core\functions.php: 141~144
 
 ## 参数
 

@@ -1,6 +1,6 @@
 #  Template 
 
-> *文件信息* suda\template\compiler\suda\Template.php: 25~302
+> *文件信息* suda\template\compiler\suda\Template.php: 25~314
 
 
 
@@ -24,6 +24,7 @@
 | protected    | module | | 
 | protected    | source | | 
 | protected  static  | render | | 
+| protected    | extend | | 
 
 ## 方法
 
@@ -37,6 +38,7 @@
 |  protected  |[_render_end](Template/_render_end.md) |  |
 |  public  |[__toString](Template/__toString.md) | 获取当前模板的字符串 |
 |  public  |[echo](Template/echo.md) | 输出当前模板 |
+|  public  |[extend](Template/extend.md) |  |
 |  public  |[getRenderStack](Template/getRenderStack.md) |  |
 |  public  |[set](Template/set.md) | 单个设置值 |
 |  public  |[assign](Template/assign.md) | 直接压入值 |
@@ -45,8 +47,8 @@
 |  public  |[get](Template/get.md) | 创建模板获取值 |
 |  public  |[has](Template/has.md) | 检测值 |
 |  public  |[data](Template/data.md) |  |
-|  public  |[hook](Template/hook.md) |  |
-|  public  |[execGloHook](Template/execGloHook.md) |  |
+|  public  |[execHook](Template/execHook.md) |  |
+|  public  |[execGlobalHook](Template/execGlobalHook.md) |  |
 |  public  |[url](Template/url.md) |  |
 |  public  |[exec](Template/exec.md) |  |
 |  public  |[name](Template/name.md) |  |

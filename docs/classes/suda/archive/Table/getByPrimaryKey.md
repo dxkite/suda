@@ -1,6 +1,6 @@
 # Table::getByPrimaryKey
 通过主键查找元素
-> *文件信息* suda\archive\Table.php: 31~642
+> *文件信息* suda\archive\Table.php: 31~653
 ## 所属类 
 
 [Table](../Table.md)
@@ -21,7 +21,7 @@
 | value |  [type] | 无 |  主键的值 |
 
 ## 返回值
-类型：array|false
+类型：array|null
 无
 
 ## 例子

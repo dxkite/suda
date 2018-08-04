@@ -1,6 +1,6 @@
 # Cookie::parseFromString
 从字符串设置cookie
-> *文件信息* suda\core\Cookie.php: 24~95
+> *文件信息* suda\core\Cookie.php: 24~96
 ## 所属类 
 
 [Cookie](../Cookie.md)

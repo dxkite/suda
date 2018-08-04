@@ -1,6 +1,6 @@
 # Table::query
-纯查询
-> *文件信息* suda\archive\Table.php: 31~642
+原始查询查询
+> *文件信息* suda\archive\Table.php: 31~653
 ## 所属类 
 
 [Table](../Table.md)
@@ -23,7 +23,7 @@
 | scroll |  bool |  | 无 |
 
 ## 返回值
-类型：void
+类型：SQLQuery
 无
 
 ## 例子

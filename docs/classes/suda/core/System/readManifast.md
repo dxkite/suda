@@ -1,6 +1,6 @@
 # System::readManifast
 
-> *文件信息* suda\core\System.php: 31~201
+> *文件信息* suda\core\System.php: 30~208
 ## 所属类 
 
 [System](../System.md)
@@ -14,9 +14,7 @@
 
 ## 参数
 
-| 参数名 | 类型 | 默认值 | 说明 |
-|--------|-----|-------|-------|
-| manifast |  string | 无 | 无 |
+无参数
 
 ## 返回值
 返回值类型不定

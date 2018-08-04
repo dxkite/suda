@@ -1,6 +1,6 @@
 # Request::isPost
 判断是否是POST请求
-> *文件信息* suda\core\Request.php: 24~502
+> *文件信息* suda\core\Request.php: 24~490
 ## 所属类 
 
 [Request](../Request.md)

@@ -1,16 +1,16 @@
-# Hook::loadJson
+# Config::loadConfig
 
-> *文件信息* suda\core\Hook.php: 24~147
+> *文件信息* suda\core\Config.php: 25~113
 ## 所属类 
 
-[Hook](../Hook.md)
+[Config](../Config.md)
 
 ## 可见性
 
   public  static
 ## 说明
 
-该函数暂时无说明
+TODO 切换全部配置文件支持yml配置
 
 ## 参数
 

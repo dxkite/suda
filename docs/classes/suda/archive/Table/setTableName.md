@@ -1,6 +1,6 @@
 # Table::setTableName
 设置表名
-> *文件信息* suda\archive\Table.php: 31~642
+> *文件信息* suda\archive\Table.php: 31~653
 ## 所属类 
 
 [Table](../Table.md)

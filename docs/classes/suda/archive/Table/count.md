@@ -1,6 +1,6 @@
 # Table::count
 计数
-> *文件信息* suda\archive\Table.php: 31~642
+> *文件信息* suda\archive\Table.php: 31~653
 ## 所属类 
 
 [Table](../Table.md)
@@ -19,7 +19,7 @@
 | 参数名 | 类型 | 默认值 | 说明 |
 |--------|-----|-------|-------|
 | where |  # Error> htmlspecialchars() expects parameter 1 to be string, array given
-	Cause By D:\Server\Local\suda\script\docme\template\method.md.tpl:25
+	Cause By D:\Server\vhost\atd3.org\suda\script\docme\template\method.md.tpl:25
  | 1 | 无 |
 | binds |  array | Array | 无 |
 

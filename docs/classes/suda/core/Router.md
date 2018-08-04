@@ -1,6 +1,6 @@
 #  Router 
 
-> *文件信息* suda\core\Router.php: 27~486
+> *文件信息* suda\core\Router.php: 27~548
 
 
 路由处理类
@@ -32,7 +32,7 @@
 |  public  static|[getInstance](Router/getInstance.md) |  |
 |  public  static|[getModulePrefix](Router/getModulePrefix.md) |  |
 |  public  |[load](Router/load.md) |  |
-|  protected  |[loadModuleJson](Router/loadModuleJson.md) |  |
+|  protected  |[loadModuleConfig](Router/loadModuleConfig.md) |  |
 |  protected  |[loadFile](Router/loadFile.md) |  |
 |  protected  |[saveFile](Router/saveFile.md) |  |
 |  public  |[loadModulesRouter](Router/loadModulesRouter.md) |  |
@@ -43,7 +43,9 @@
 |  public  static|[parseName](Router/parseName.md) | 解析模板名 |
 |  public  |[getRouterFullName](Router/getRouterFullName.md) |  |
 |  public  |[buildUrlArgs](Router/buildUrlArgs.md) |  |
-|  public  |[buildUrl](Router/buildUrl.md) |  |
+|  public  |[decode](Router/decode.md) | 将 router:// 协议指定的URL转换为 URL |
+|  public  |[encode](Router/encode.md) | 将URL转换为 router:// 协议形式 |
+|  public  |[buildUrl](Router/buildUrl.md) | 根据路由名称创建URL |
 |  public  |[dispatch](Router/dispatch.md) |  |
 |  public  |[getRouter](Router/getRouter.md) | 获取路由 |
 |  public  |[setRouterAlias](Router/setRouterAlias.md) | 设置路由别名 |
@@ -55,7 +57,7 @@
 |  public  |[replaceMatch](Router/replaceMatch.md) | 替换匹配表达式 |
 |  public  |[replaceClass](Router/replaceClass.md) | 替换路由指定类 |
 |  protected  static|[runRouter](Router/runRouter.md) |  |
-|  public  static|[error404](Router/error404.md) |  |
+|  public  static|[error](Router/error.md) |  |
 |  public  |[getRouters](Router/getRouters.md) |  |
  
 

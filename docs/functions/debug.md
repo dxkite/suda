@@ -1,6 +1,6 @@
 # debug
 获取debug对象
-> *文件信息* suda\core\functions.php: 50~53
+> *文件信息* suda\core\functions.php: 53~56
 
 ## 参数
 

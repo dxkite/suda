@@ -1,4 +1,4 @@
-<?php  class Class34294da453628d22d8e73735c0371213 extends suda\template\compiler\suda\Template { protected $name="d85c842beb49d162241f3abc53db5e32";protected $module=""; protected function _render_template() {  ?># <?php echo htmlspecialchars(__($this->get("functionName"))); ?>
+<?php  class Class8d2f9e135df1b754ef9d67a6816261da extends suda\template\compiler\suda\Template { protected $name="179df155a5be35bc4b36eab42fffa987";protected $module=""; protected function _render_template() {  ?># <?php echo htmlspecialchars(__($this->get("functionName"))); ?>
 
 <?php echo $this->get("functionDoc",'该函数暂时无注释文档'); ?>
 

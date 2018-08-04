@@ -1,6 +1,6 @@
 # Request::cookie
 获取Cookie的值
-> *文件信息* suda\core\Request.php: 24~502
+> *文件信息* suda\core\Request.php: 24~490
 ## 所属类 
 
 [Request](../Request.md)

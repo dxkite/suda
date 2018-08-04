@@ -1,6 +1,6 @@
 # router
 获取当运行的路由单例对象
-> *文件信息* suda\core\functions.php: 158~161
+> *文件信息* suda\core\functions.php: 161~164
 
 ## 参数
 

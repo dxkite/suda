@@ -1,6 +1,6 @@
 #  Manager 
 
-> *文件信息* suda\template\Manager.php: 29~661
+> *文件信息* suda\template\Manager.php: 29~658
 
 
 模板管理类
@@ -31,7 +31,7 @@
 |  public  static|[theme](Manager/theme.md) | 获取/设置模板样式 |
 |  public  static|[compile](Manager/compile.md) | 编译文件 |
 |  public  static|[display](Manager/display.md) | 根据模板ID显示HTML模板 |
-|  public  static|[displayExt](Manager/displayExt.md) | 根据模板ID显示模板 |
+|  public  static|[displaySource](Manager/displaySource.md) | 根据名称显示源 |
 |  public  static|[displayFile](Manager/displayFile.md) | 根据路径显示模板 |
 |  public  static|[prepareResource](Manager/prepareResource.md) | 准备静态资源 |
 |  public  static|[shadowName](Manager/shadowName.md) |  |

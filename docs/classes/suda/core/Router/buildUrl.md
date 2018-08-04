@@ -1,6 +1,6 @@
 # Router::buildUrl
-
-> *文件信息* suda\core\Router.php: 27~486
+根据路由名称创建URL
+> *文件信息* suda\core\Router.php: 27~548
 ## 所属类 
 
 [Router](../Router.md)
@@ -16,14 +16,15 @@
 
 | 参数名 | 类型 | 默认值 | 说明 |
 |--------|-----|-------|-------|
-| name |  string | 无 | 无 |
-| values |  array | Array | 无 |
-| query |  bool | 1 | 无 |
-| queryArr |  array | Array | 无 |
-| moduleDefault |  string | null | 无 |
+| name |  string | 无 |  路由名称 |
+| values |  array | Array |  路由中的参数 |
+| query |  bool | 1 |  是否使用多余路由参数作为查询参数 |
+| queryArr |  array | Array |  查询参数 |
+| moduleDefault |  string | null |  路由未指定模块时的默认模块 |
 
 ## 返回值
-返回值类型不定
+类型：string
+无
 
 ## 例子
 

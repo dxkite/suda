@@ -1,6 +1,6 @@
 # app
 获取当运行的APP单例对象
-> *文件信息* suda\core\functions.php: 148~151
+> *文件信息* suda\core\functions.php: 151~154
 
 ## 参数
 

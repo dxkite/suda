@@ -1,6 +1,6 @@
 #  Compiler 
 
-> *文件信息* suda\template\compiler\suda\Compiler.php: 30~388
+> *文件信息* suda\template\compiler\suda\Compiler.php: 30~392
 
 
 Suda 模板编译器
@@ -58,6 +58,7 @@ Suda 模板编译器
 |  protected  |[parseWhile](Compiler/parseWhile.md) |  |
 |  protected  |[parseEndwhile](Compiler/parseEndwhile.md) |  |
 |  protected  |[parseInclude](Compiler/parseInclude.md) |  |
+|  protected  |[parseExtend](Compiler/parseExtend.md) |  |
 |  protected  |[parseU](Compiler/parseU.md) |  |
 |  protected  |[parseSelf](Compiler/parseSelf.md) |  |
 |  protected  |[parseSet](Compiler/parseSet.md) |  |

@@ -1,6 +1,6 @@
 # Hook::exec
-
-> *文件信息* suda\core\Hook.php: 24~147
+运行所有命令
+> *文件信息* suda\core\Hook.php: 24~214
 ## 所属类 
 
 [Hook](../Hook.md)
@@ -10,7 +10,7 @@
   public  static
 ## 说明
 
-该函数暂时无说明
+
 
 ## 参数
 
@@ -20,7 +20,8 @@
 | args |  array | Array | 无 |
 
 ## 返回值
-返回值类型不定
+类型：void
+无
 
 ## 例子
 

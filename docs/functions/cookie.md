@@ -1,6 +1,6 @@
 # cookie
 获取Cookie对象
-> *文件信息* suda\core\functions.php: 188~191
+> *文件信息* suda\core\functions.php: 191~194
 
 ## 参数
 

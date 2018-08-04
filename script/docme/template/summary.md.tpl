@@ -1,1 +1,1 @@
-<?php  class Class1a4cb0757f5259ceef363e5a5a4c8575 extends suda\template\compiler\suda\Template { protected $name="a599423370bb55453a91041d79994259";protected $module=""; protected function _render_template() {  ?><?php }}
+<?php  class Classf6f012ebe9831bee078ba4b2adf426d4 extends suda\template\compiler\suda\Template { protected $name="818f3b386952dd7bb41c7d81ffff3c61";protected $module=""; protected function _render_template() {  ?><?php }}

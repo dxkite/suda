@@ -1,6 +1,6 @@
 # Router::routerReplace
 路由替换
-> *文件信息* suda\core\Router.php: 27~486
+> *文件信息* suda\core\Router.php: 27~548
 ## 所属类 
 
 [Router](../Router.md)

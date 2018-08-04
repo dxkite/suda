@@ -2,8 +2,8 @@
 
 > **注：** 文档由程序自动生成
 
-- suda 1.2.15 
-- 2018-06-13 13:24:16
+- suda 1.12.16 
+- 2018-08-04 13:53:34
 
 
 ## 类列表
@@ -20,7 +20,6 @@
 |[suda\core\Storage](suda/core/Storage.md) | 文件存储系统包装类，封装了常用的文件系统函数 |
 |[suda\core\Hook](suda/core/Hook.md) | 系统钩子，监听系统内部一些操作并载入一些自定义行为 |
 |[suda\core\Locale](suda/core/Locale.md) | I18N 国际化支持 |
-|[suda\tool\Json](suda/tool/Json.md) |  |
 |[suda\core\Application](suda/core/Application.md) | 应用处理类 |
 |[suda\template\Manager](suda/template/Manager.md) | 模板管理类 |
 |[suda\template\compiler\suda\Compiler](suda/template/compiler/suda/Compiler.md) | Suda 模板编译器 |
@@ -59,5 +58,6 @@
 |[suda\tool\ArrayValue](suda/tool/ArrayValue.md) |  |
 |[suda\tool\CookieSetter](suda/tool/CookieSetter.md) |  |
 |[suda\tool\EchoValue](suda/tool/EchoValue.md) |  |
+|[suda\tool\Json](suda/tool/Json.md) |  |
 |[suda\tool\Pinyin](suda/tool/Pinyin.md) | 将中文转换成拼音 |
 |[suda\tool\ZipHelper](suda/tool/ZipHelper.md) |  |

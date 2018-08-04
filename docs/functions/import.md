@@ -1,6 +1,6 @@
 # import
 导入PHP文件
-> *文件信息* suda\core\functions.php: 127~130
+> *文件信息* suda\core\functions.php: 130~133
 
 ## 参数
 

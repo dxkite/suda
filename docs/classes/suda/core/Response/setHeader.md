@@ -1,6 +1,6 @@
 # Response::setHeader
 安全设置Header值
-> *文件信息* suda\core\Response.php: 30~278
+> *文件信息* suda\core\Response.php: 30~294
 ## 所属类 
 
 [Response](../Response.md)

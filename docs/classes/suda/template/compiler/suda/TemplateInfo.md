@@ -69,6 +69,7 @@
 |  protected  |[parseEndforeach](TemplateInfo/parseEndforeach.md) |  |
 |  protected  |[parseWhile](TemplateInfo/parseWhile.md) |  |
 |  protected  |[parseEndwhile](TemplateInfo/parseEndwhile.md) |  |
+|  protected  |[parseExtend](TemplateInfo/parseExtend.md) |  |
 |  protected  |[parseU](TemplateInfo/parseU.md) |  |
 |  protected  |[parseSelf](TemplateInfo/parseSelf.md) |  |
 |  protected  |[parseSet](TemplateInfo/parseSet.md) |  |

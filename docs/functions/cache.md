@@ -1,6 +1,6 @@
 # cache
 获取一个缓存对象
-> *文件信息* suda\core\functions.php: 198~201
+> *文件信息* suda\core\functions.php: 201~204
 
 ## 参数
 

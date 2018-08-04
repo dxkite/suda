@@ -1,6 +1,6 @@
 # Manager::include
 
-> *文件信息* suda\template\Manager.php: 29~661
+> *文件信息* suda\template\Manager.php: 29~658
 ## 所属类 
 
 [Manager](../Manager.md)

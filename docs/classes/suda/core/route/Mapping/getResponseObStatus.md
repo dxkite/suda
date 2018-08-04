@@ -1,6 +1,6 @@
 # Mapping::getResponseObStatus
 
-> *文件信息* suda\core\route\Mapping.php: 23~514
+> *文件信息* suda\core\route\Mapping.php: 23~538
 ## 所属类 
 
 [Mapping](../Mapping.md)
@@ -17,7 +17,7 @@
 | 参数名 | 类型 | 默认值 | 说明 |
 |--------|-----|-------|-------|
 | class |  # Error> htmlspecialchars() expects parameter 1 to be string, array given
-	Cause By D:\Server\Local\suda\script\docme\template\method.md.tpl:25
+	Cause By D:\Server\vhost\atd3.org\suda\script\docme\template\method.md.tpl:25
  |  | 无 |
 
 ## 返回值

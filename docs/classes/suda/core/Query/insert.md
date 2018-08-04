@@ -23,8 +23,8 @@
 | object |  [type] | null |  数据库回调对象 |
 
 ## 返回值
-类型：array|false
- 当ID&gt;0时返回ID，否者返回true/false
+类型：integer
+ 返回ID或获取ID失败时返回0
 
 ## 例子
 

@@ -1,6 +1,6 @@
 #  Debug 
 
-> *文件信息* suda\core\Debug.php: 26~537
+> *文件信息* suda\core\Debug.php: 26~542
 
 
 异常日志类

@@ -1,6 +1,6 @@
 #  Response 
 
-> *文件信息* suda\core\Response.php: 30~278
+> *文件信息* suda\core\Response.php: 30~294
 
 
 网页响应类，用于处理来自服务器的请求
@@ -41,13 +41,17 @@
 |  public  |[template](Response/template.md) | 输出模板 |
 |  public  |[refresh](Response/refresh.md) |  |
 |  public  |[forward](Response/forward.md) |  |
+|  public  |[getForward](Response/getForward.md) |  |
+|  public  |[setForward](Response/setForward.md) |  |
 |  public  |[go](Response/go.md) |  |
 |  public  |[redirect](Response/redirect.md) |  |
 |  public  static|[etag](Response/etag.md) | 使用Etag |
 |  public  static|[close](Response/close.md) |  |
 |  public  static|[mime](Response/mime.md) | 页面MIME类型 |
 |  public  static|[setHeader](Response/setHeader.md) | 安全设置Header值 |
+|  public  static|[addHeader](Response/addHeader.md) |  |
 |  protected  static|[_etag](Response/_etag.md) |  |
+|  public  static|[statusMessage](Response/statusMessage.md) |  |
  
 
 ## 例子

@@ -1,6 +1,6 @@
 # Debug::logException
 
-> *文件信息* suda\core\Debug.php: 26~537
+> *文件信息* suda\core\Debug.php: 26~542
 ## 所属类 
 
 [Debug](../Debug.md)

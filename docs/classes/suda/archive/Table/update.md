@@ -1,6 +1,6 @@
 # Table::update
 根据条件更新列
-> *文件信息* suda\archive\Table.php: 31~642
+> *文件信息* suda\archive\Table.php: 31~653
 ## 所属类 
 
 [Table](../Table.md)
@@ -23,7 +23,7 @@
 | bind |  array | Array |  扩展条件值 |
 
 ## 返回值
-类型：void
+类型：integer
 无
 
 ## 例子
