@@ -203,6 +203,11 @@ class Mapping
         return $this->module.':'.$this->name;
     }
     
+    public function getSortName()
+    {
+        return preg_replace('/:.+$/', '',$this->module).':'.$this->name;
+    }
+
     public function setParam($param)
     {
         $this->param=$param;

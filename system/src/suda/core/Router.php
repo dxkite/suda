@@ -293,8 +293,8 @@ class Router
     {
         $mapping = $this->parseUrl($url);
         if ($mapping) {
-            $module = $fullmodule?$mapping->getFullName():app()->getModuleName($mapping->getFullName());
-            $uri = 'router://'.$mapping->getHost().'/'. $module ;
+            $router = $fullmodule?$mapping->getFullName():$mapping->getSortName();
+            $uri = 'router://'.$mapping->getHost().'/'. $router ;
             $value = $mapping->getValue();
             if (is_array($value) && count($value)) {
                 $uri .='?'. http_build_query($value);
