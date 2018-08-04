@@ -205,7 +205,7 @@ class Mapping
     
     public function getSortName()
     {
-        return preg_replace('/:.+$/', '',$this->module).':'.$this->name;
+        return preg_replace('/:.+$/', '', $this->module).':'.$this->name;
     }
 
     public function setParam($param)
@@ -331,11 +331,21 @@ class Mapping
 
     public function getHost()
     {
-        $host = is_null($this->host) ?'localhost':$this->host;
+        $host = is_null($this->host)?'localhost':$this->host;
         $port = ($this->port == 80  || is_null($this->port))?'': ':'.$this->port;
         return $host.$port;
     }
 
+    public function setHost(string $host)
+    {
+        $this->host= $host;
+    }
+
+    public function setPort(int $port)
+    {
+        $this->port = $port;
+    }
+    
     public function getUrlTemplate()
     {
         $url='/'.trim($this->url, '/');
@@ -404,7 +414,7 @@ class Mapping
     
     public function getBaseUrl()
     {
-        if (is_null($this->host)) {
+        if (is_null($this->host) || $this->host == 'localhost') {
             return Request::getInstance()->baseUrl();
         }
         return $this->scheme.'://'. $this->getHost() .'/';

@@ -276,7 +276,14 @@ class Router
         $name = trim($values['path']??'', '/');
         parse_str($values['query'] ?? '', $params);
         if ($type == 'router') {
-            return $this->buildUrl($name, $params);
+            list($module, $name)=self::parseName($name);
+            $module=app()->getModuleFullName($module);
+            $name=$module.':'.$name;
+            if (isset($this->routers[$name])) {
+                $router=clone $this->routers[$name];
+                $router->setHost($host);
+                return $router->createUrl($params);
+            }
         }
         return null;
     }
