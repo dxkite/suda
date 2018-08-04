@@ -94,13 +94,15 @@ class Mapping
             if (count($match)>0) {
                 foreach ($this->types as $paramName =>$type) {
                     $value=array_shift($match);
-                    if ($type==='int') {
-                        $value=intval($value);
-                    } else {
-                        $value=urldecode($value);
+                    if (!empty($value)) {
+                        if ($type==='int') {
+                            $value=intval($value);
+                        } else {
+                            $value=urldecode($value);
+                        }
+                        // 填充$_GET
+                        $valueGet[$paramName]=$value;
                     }
-                    // 填充$_GET
-                    $valueGet[$paramName]=$value;
                 }
             }
             return true;
@@ -390,7 +392,7 @@ class Mapping
             }
         }, $url);
         if (count($args) && $query) {
-            return $this->getBaseUrl(). trim($url, '/').'?'.http_build_query(array_merge($queryArr,$args), 'v', '&', PHP_QUERY_RFC3986);
+            return $this->getBaseUrl(). trim($url, '/').'?'.http_build_query(array_merge($queryArr, $args), 'v', '&', PHP_QUERY_RFC3986);
         }
         return $this->getBaseUrl(). trim($url, '/'). (count($queryArr)?'?'.http_build_query($queryArr, 'v', '&', PHP_QUERY_RFC3986):'');
     }

@@ -48,6 +48,7 @@ class Autoloader
     public static function register()
     {
         spl_autoload_register(array('suda\\core\\Autoloader', 'classLoader'));
+        // 载入系统共享库
         self::addIncludePath(dirname(dirname(__DIR__)));
     }
 

@@ -286,13 +286,15 @@ class Router
      * 将URL转换为 router:// 协议形式
      *
      * @param string $url
+     * @param boolean $fullmodule
      * @return string|null
      */
-    public function encode(string $url):?string
+    public function encode(string $url,bool $fullmodule=false):?string
     {
         $mapping = $this->parseUrl($url);
         if ($mapping) {
-            $uri = 'router://'.$mapping->getHost().'/'.$mapping->getFullName();
+            $module = $fullmodule?$mapping->getFullName():app()->getModuleName($mapping->getFullName());
+            $uri = 'router://'.$mapping->getHost().'/'. $module ;
             $value = $mapping->getValue();
             if (is_array($value) && count($value)) {
                 $uri .='?'. http_build_query($value);

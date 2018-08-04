@@ -118,8 +118,10 @@ class Application
         if ($namespace=Config::get('app.namespace')) {
             Autoloader::setNamespace($namespace);
         }
-        // 系统共享库
-        // Autoloader::addIncludePath(SHRAE_DIR);
+        // 检测 Composer vendor
+        if (storage()->exist($vendor = APP_DIR.'/../vendor/autoload.php')){
+            Autoloader::import($vendor);
+        }
         // 注册模块目录
         $this->addModulesPath(SYSTEM_RESOURCE.'/modules');
         $this->addModulesPath(MODULES_DIR);
@@ -169,6 +171,11 @@ class Application
             if (isset($config['suda']) && !static::versionCompire($config['suda'], SUDA_VERSION)) {
                 suda_panic('ApplicationException', __('module %s require suda version %s and now is %s', $moduleTemp, $config['suda'], SUDA_VERSION));
             }
+            // 检测 Composer vendor
+            if (storage()->exist($vendor = $root.DIRECTORY_SEPARATOR.'vendor'.DIRECTORY_SEPARATOR.'autoload.php')){
+                Autoloader::import($vendor);
+            }
+            // 加载库路经
             foreach ($config['import']['share'] as $namespace=>$path) {
                 if (Storage::isDir($dirPath=$root.DIRECTORY_SEPARATOR.$path)) {
                     Autoloader::addIncludePath($dirPath, $namespace);

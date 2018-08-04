@@ -142,7 +142,7 @@ class Cache
             $main=$name;
             $sub=$name;
         }
-        $fname=self::$storage.$main.'_'.md5($sub).'.cache';
+        $fname=self::$storage.md5($main).'-'.md5($sub).'.cache';
         return $fname;
     }
 }
