@@ -57,7 +57,7 @@ abstract class Table
      * @param array $values 待插入的值
      * @return int 插入影响的行数
      */
-    public function insert(array $values)
+    public function insert(array $values):int
     {
         if (is_array($values)) {
             $this->checkFields(array_keys($values));
@@ -66,11 +66,12 @@ abstract class Table
     }
 
     /**
-     * 插入一行记录
-     * @param $values 待插入的值
-     * @return void
+     * 按照表顺序插入一行记录
+     *
+     * @param [type] $values 待插入的值
+     * @return integer 插入影响的行数
      */
-    public function insertValue($values)
+    public function insertValue($values):int 
     {
         $values=func_get_args();
         $insert=[];
@@ -86,25 +87,25 @@ abstract class Table
     /**
      * 通过主键查找元素
      * 主键的值可以为关联数组或单独的一个值
-     * 查询成功返回查询成功的列，失败返回false
+     * 查询成功返回查询成功的列，失败返回null
      *
      * @param [type] $value 主键的值
-     * @return array|false
+     * @return array|null
      */
-    public function getByPrimaryKey($value)
+    public function getByPrimaryKey($value):?array
     {
-        return Query::where($this->getTableName(), $this->getWants(), $this->checkPrimaryKey($value))->object($this)->fetch()?:false;
+        return Query::where($this->getTableName(), $this->getWants(), $this->checkPrimaryKey($value))->object($this)->fetch()?:null;
     }
 
 
     /**
      * 通过主键更新元素
-     *
-     * @param [type] $value 待更新的数据
-     * @param [type] $data 待更新的数据
-     * @return counts 更新的行数
+     * 
+     * @param [type] $value 主键
+     * @param [type] $values 待更新的数据
+     * @return integer 影响的行数
      */
-    public function updateByPrimaryKey($value, $values)
+    public function updateByPrimaryKey($value, $values):int 
     {
         if (is_array($values)) {
             $this->checkFields(array_keys($values));
@@ -115,8 +116,8 @@ abstract class Table
     /**
      * 通过主键删除元素
      *
-     * @param [type] $value 待更新的数据
-     * @return int
+     * @param [type] $value 主键
+     * @return integer 影响的行数
      */
     public function deleteByPrimaryKey($value):int
     {
@@ -124,15 +125,15 @@ abstract class Table
     }
 
     /**
-     * 搜搜字段
+     * 根据字段搜索
      *
      * @param [type] $field 搜索的字段
      * @param string $search 搜索列
-     * @param integer $page 页码
+     * @param integer|null $page 页码
      * @param integer $rows 每页数
-     * @return void
+     * @return array|null
      */
-    public function search($field, string $search, ?int $page=null, int $rows=10)
+    public function search($field, string $search, ?int $page=null, int $rows=10):?array
     {
         if (is_null($page)) {
             return Query::search($this->getTableName(), $this->getWants(), $field, $search)->object($this);
@@ -140,8 +141,7 @@ abstract class Table
             return Query::search($this->getTableName(), $this->getWants(), $field, $search, [$page, $rows])->object($this);
         }
     }
-
-
+    
     /**
      * 搜索指定字段
      *
@@ -149,16 +149,15 @@ abstract class Table
      * @param string $search 搜索值
      * @param [type] $where 限制搜索条件
      * @param array $bind 条件值绑定
-     * @param integer $page 条件页
+     * @param integer|null $page 条件页
      * @param integer $rows 页列
      * @param boolean $offset 是否是偏移
-     * @return void
+     * @return array|null
      */
-    public function searchWhere($field, string $search, $where, array $bind=[], ?int $page=null, int $rows=10, bool $offset=false)
+    public function searchWhere($field, string $search, $where, array $bind=[], ?int $page=null, int $rows=10, bool $offset=false):?array
     {
         list($searchStr, $searchBind)=Query::prepareSearch($field, $search);
         $whereStr=Query::prepareWhere($where, $bind);
-
         if (is_null($page)) {
             return Query::select($this->getTableName(), $this->getWants(), $whereStr . ' AND ('. $searchStr.') '. self::_order(), array_merge($searchBind, $bind))->object($this);
         }
@@ -168,12 +167,12 @@ abstract class Table
     /**
      * 分页列出元素
      *
-     * @param int $page  是否分页（页数）
+     * @param integer|null $page  是否分页（页数）
      * @param int $rows 分页的元素个数
      * @param boolean $offset 使用Offset
-     * @return array|false
+     * @return array|null
      */
-    public function list(?int $page=null, int $rows=10, bool $offset=false)
+    public function list(?int $page=null, int $rows=10, bool $offset=false):?array
     {
         if (is_null($page)) {
             return Query::where($this->getTableName(), $this->getWants(), '1 '. self::_order())->object($this)->fetchAll();
@@ -186,13 +185,13 @@ abstract class Table
      * 条件列出元素
      *
      * @param [type] $where 条件描述
-     * @param array $binds  条件附带参数
-     * @param int $page  是否分页（页数）
-     * @param int $rows 分页的元素个数
+     * @param array $binds 条件附带参数
+     * @param integer|null $page 是否分页（页数）
+     * @param integer $rows 分页的元素个数
      * @param boolean $offset 使用Offset
-     * @return array|false
+     * @return array|null
      */
-    public function listWhere($where, array $binds=[], ?int $page=null, int $rows=10, bool $offset=false)
+    public function listWhere($where, array $binds=[], ?int $page=null, int $rows=10, bool $offset=false):?array
     {
         $where_str=Query::prepareWhere($where, $binds);
         $where=preg_replace('/WHERE(.+)$/', '$1', $where_str).' '.self::_order();
@@ -209,9 +208,9 @@ abstract class Table
      * @param [type] $values 更新的列
      * @param [type] $where 条件区域
      * @param array $bind 扩展条件值
-     * @return void
+     * @return integer
      */
-    public function update($values, $where, array $bind=[])
+    public function update($values, $where, array $bind=[]) :int
     {
         if (is_array($where)) {
             $this->checkFields(array_keys($where));
@@ -223,7 +222,7 @@ abstract class Table
     }
 
     /**
-     * 根据条件删除列
+     * 选择列
      *
      * @param [type] $wants
      * @param [type] $where
@@ -231,9 +230,9 @@ abstract class Table
      * @param integer|null $page
      * @param integer $rowa
      * @param boolean $offset
-     * @return Query|false
+     * @return SQLQuery
      */
-    public function select($wants, $where, $whereBinder=[], ?int $page=null, int $rowa=10, bool $offset=false)
+    public function select($wants, $where, $whereBinder=[], ?int $page=null, int $rowa=10, bool $offset=false): SQLQuery
     {
         if (is_array($where)) {
             $this->checkFields(array_keys($where));
@@ -248,31 +247,32 @@ abstract class Table
     }
 
     /**
-     * 纯查询
+     * 原始查询查询
      *
      * @param string $query
      * @param array $binds
-     * @param bool $scroll
-     * @return void
+     * @param boolean $scroll
+     * @return SQLQuery
      */
-    public function query(string $query, array $binds=[], bool $scroll=false)
+    public function query(string $query, array $binds=[], bool $scroll=false):SQLQuery
     {
         $queryString=preg_replace('/@table@/i', $this->getTableName(), $query);
         return (new SQLQuery($queryString, $binds, $scroll))->object($this);
     }
 
     /**
-     * 根据条件获取列
+     * 根据条件删除列
      *
-     * @param [type] $where
-     * @return int
+     * @param [type] $where 删除条件
+     * @param array $binds 条件值绑定
+     * @return integer
      */
-    public function delete($where)
+    public function delete($where,array $binds=[]):int 
     {
         if (is_array($where)) {
             $this->checkFields(array_keys($where));
         }
-        return Query::delete($this->getTableName(), $where, [], $this);
+        return Query::delete($this->getTableName(), $where, $binds, $this);
     }
 
     /**
@@ -384,9 +384,9 @@ abstract class Table
      *
      * @param string $field
      * @param integer $order
-     * @return void
+     * @return Table
      */
-    public function order(string $field, int $order=self::ORDER_ASC)
+    public function order(string $field, int $order=self::ORDER_ASC):Table
     {
         $this->orderField=$field;
         $this->order=$order;

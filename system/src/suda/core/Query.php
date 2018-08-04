@@ -43,9 +43,9 @@ class Query extends SQLQuery
      * @param [type] $values  为插入的值，可以为字符串或者MAP数组。
      * @param array $binds 为values中出现的模板控制待绑定字符。
      * @param [type] $object 数据库回调对象
-     * @return array|false 当ID>0时返回ID，否者返回true/false
+     * @return integer 返回ID或获取ID失败时返回0
      */
-    public static function insert(string $table, $values, array $binds=[], $object=null)
+    public static function insert(string $table, $values, array $binds=[], $object=null):int
     {
         $table=self::table($table);
         if (is_string($values)) {
@@ -67,10 +67,10 @@ class Query extends SQLQuery
             if ($id>0) {
                 return $id;
             } else {
-                return true;
+                return 0;
             }
         }
-        return false;
+        return 0;
     }
 
     public static function that($object)
@@ -141,10 +141,10 @@ class Query extends SQLQuery
      * @param [type] $conditions 为查询的条件 ，可以为字符串 或者数组 ， 建议使用数组模式。
      * @param array $binds 查询字符串中绑定的数据
      * @param array $page 分页查询，接受数组 ，格式为： [为分页的页数,每页长度,是否为OFFSET]
-     * @param boolean $scroll 滚动查询，一次取出一条记录 
-     * @return void
+     * @param boolean $scroll 滚动查询，一次取出一条记录
+     * @return SQLQuery
      */
-    public static function select(string $table, $wants, $conditions, array $binds=[], array $page=null, bool $scroll=false)
+    public static function select(string $table, $wants, $conditions, array $binds=[], array $page=null, bool $scroll=false):SQLQuery
     {
         $table=self::table($table);
         if (is_string($wants)) {
