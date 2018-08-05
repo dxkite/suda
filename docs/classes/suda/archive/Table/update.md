@@ -1,6 +1,6 @@
 # Table::update
 根据条件更新列
-> *文件信息* suda\archive\Table.php: 31~653
+> *文件信息* suda\archive\Table.php: 31~869
 ## 所属类 
 
 [Table](../Table.md)
@@ -28,4 +28,21 @@
 
 ## 例子
 
-example
+
+条件可以为键值对也可以为特殊条件
+
+**键值对**
+
+更新 ID 为3 的name 为 $name 的值
+
+```php
+$table->update(['name'=>$name],['id'=>3]);
+```
+
+**条件**
+
+更新 ID>3 的name 为 $name 的值
+
+```php
+$table->update(['name'=>$name],'id > :id ',['id'=>3]);
+```

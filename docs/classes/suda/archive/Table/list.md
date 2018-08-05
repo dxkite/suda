@@ -1,6 +1,6 @@
 # Table::list
 分页列出元素
-> *文件信息* suda\archive\Table.php: 31~653
+> *文件信息* suda\archive\Table.php: 31~869
 ## 所属类 
 
 [Table](../Table.md)
@@ -28,4 +28,10 @@
 
 ## 例子
 
-example
+
+当不填页码的时候，默认列出所有数据
+填入页码时列出对应页
+
+```php
+$table->list(1,10);
+```

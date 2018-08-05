@@ -24,7 +24,8 @@ use suda\exception\ApplicationException;
 /**
  * 应用处理类
  *
- * 包含了应用的各种处理方式
+ * 包含了应用的各种处理方式，可以用快捷函数 app() 来使用本类
+ * 
  */
 class Application
 {
@@ -199,7 +200,14 @@ class Application
         }
         Hook::exec('loadModule');
     }
- 
+    
+    /**
+     * 检查模块依赖
+     *
+     * @param string $name
+     * @param array $requires
+     * @return void
+     */
     public function checkModuleRequire(string $name, array $requires)
     {
         foreach ($requires as $module => $version) {
@@ -236,6 +244,12 @@ class Application
         hook()->listen('system:uncaughtError', [$this, 'uncaughtError']);
     }
 
+    /**
+     * 安装有自动安装功能的模块
+     *
+     * @param string $module
+     * @return void
+     */
     public function installModule(string $module)
     {
         $install_lock = DATA_DIR.'/install/install_'.substr(md5($module), 0, 6).'.lock';
@@ -254,26 +268,56 @@ class Application
     }
 
     /**
-     * 获取所有模块
+     * 获取所有的模块
      *
-     * @return void
+     * @return array
      */
-    public function getModules()
+    public function getModules():array
     {
         return array_values($this->moduleDirName);
     }
 
-    public function getModuleDirs()
+    /**
+     * 获取所有模块的目录
+     *
+     * @return array
+     */
+    public function getModuleDirs():array
     {
         return array_keys($this->moduleDirName);
     }
 
-    
-    public function getActiveModule()
+    /**
+     * 获取当前激活的模块
+     *
+     * @return string
+     */
+    public function getActiveModule():string
     {
         return $this->activeModule;
     }
 
+    /**
+     * 获取模块的配置信息
+     * 
+     * @example
+     * 
+     * 获取模块信息 (`module.json` 文件的内容)
+     * 
+     * ```php
+     * app()->getModuleConfig(模块名);
+     * ```
+     * 
+     * 获取配置信息（`module/resource/config/文件名.json` 文件的内容）
+     * 
+     * ```php
+     * app()->getModuleConfig(模块名,文件名);
+     * ```
+     * 
+     * @param string $module
+     * @param string|null $configName
+     * @return array|null
+     */
     public function getModuleConfig(string $module, ?string $configName=null):?array
     {
         if (is_null($configName)) {
@@ -285,6 +329,16 @@ class Application
         return null;
     }
 
+    /**
+     * 获取app/resource/config下的配置
+     * 
+     * ```php
+     * app()->getConfig(文件名);
+     * ```
+     * 
+     * @param string $configName
+     * @return array|null
+     */
     public function getConfig(string $configName):?array
     {
         if ($path = Config::exist(CONFIG_DIR .'/'.$configName)) {
@@ -293,16 +347,35 @@ class Application
         return null;
     }
 
+    /**
+     * 获取模块 resouce 目录路径
+     *
+     * @param string $module
+     * @return string
+     */
     public function getModuleResourcePath(string $module):string
     {
         return self::getModulePath($module).'/resource';
     }
     
+    /**
+     * 获取模块 resource/config 路径
+     *
+     * @param string $module
+     * @param string $name
+     * @return string|null
+     */
     public function getModuleConfigPath(string $module, string $name):?string
     {
         return  Config::exist(self::getModulePath($module).'/resource/config/'.$name)?:null;
     }
 
+    /**
+     * 获取模块网页前缀
+     *
+     * @param string $module
+     * @return array
+     */
     public function getModulePrefix(string $module)
     {
         $prefix=conf('module-prefix.'.$module, null);
@@ -312,11 +385,23 @@ class Application
         return $prefix;
     }
 
-    public function checkModuleExist(string $name)
+ 
+    /**
+     * 检查模块是否存在
+     *
+     * @param string $name
+     * @return boolean
+     */
+    public function checkModuleExist(string $name):bool
     {
-        return $this->getModuleDir($name)!=false;
+        return $this->getModuleDir($name)!=null;
     }
 
+    /**
+     * 获取激活的模块
+     *
+     * @return array
+     */
     public function getLiveModules()
     {
         if ($this->moduleLive) {
@@ -345,6 +430,11 @@ class Application
         return $this->moduleLive=$modules;
     }
 
+    /**
+     * 获取网页端可达的模块
+     *
+     * @return array
+     */
     public function getReachableModules()
     {
         if ($this->routeReachable) {
@@ -416,16 +506,32 @@ class Application
         Config::set('module', Config::get('module', []), $module_config);
     }
 
+    /**
+     * 截获请求，请求发起的时候会调用
+     * 
+     * @param Request $request
+     * @return boolean true 表示请求可达,false将截获请求
+     */
     public function onRequest(Request $request)
     {
         return true;
     }
     
+    /**
+     * 请求关闭的时候会调用
+     *
+     * @return boolean
+     */
     public function onShutdown()
     {
         return true;
     }
 
+    /**
+     * 请求发生异常的时候会调用
+     *
+     * @return boolean
+     */
     public function uncaughtException($e)
     {
         return false;
@@ -435,7 +541,7 @@ class Application
      * 获取模块名，不包含版本号
      *
      * @param string $name 不完整模块名
-     * @return void
+     * @return string
      */
     public function getModuleName(string $name)
     {
@@ -449,7 +555,7 @@ class Application
      * 未指定版本则调整到最优先版本
      *
      * @param string $name 不完整模块名
-     * @return void
+     * @return string
      */
     public function getModuleFullName(string $name)
     {
@@ -487,22 +593,22 @@ class Application
      * 获取模块所在的文件夹名
      *
      * @param string $name
-     * @return void
+     * @return string|null
      */
-    public function getModuleDir(string $name)
+    public function getModuleDir(string $name):?string
     {
         $name=self::getModuleFullName($name);
         if (isset($this->moduleConfigs[$name])) {
             return $this->moduleConfigs[$name]['directory'];
         }
-        return false;
+        return null;
     }
 
     /**
      * 根据模块目录名转换成模块名
      *
      * @param string $dirname
-     * @return void
+     * @return string
      */
     public function moduleName(string $dirname)
     {
@@ -593,8 +699,13 @@ class Application
         return version_compare($compire, $version, '>=');
     }
 
-    
-    public static function getThisModule(int $deep=0)
+    /**
+     * 根据函数调用栈判断调用时所属模块
+     *
+     * @param integer $deep
+     * @return string|null
+     */
+    public static function getThisModule(int $deep=0):?string 
     {
         $debug=debug_backtrace();
         $info=$debug[$deep];
@@ -605,7 +716,13 @@ class Application
         return self::getFileModule($info['file']);
     }
 
-    public static function getFileModule(string $file)
+    /**
+     * 根据文件名判断所属模块
+     *
+     * @param string $file
+     * @return string|null
+     */
+    public static function getFileModule(string $file):?string
     {
         $modules=app()->getModules();
         foreach ($modules as $module) {
@@ -615,6 +732,6 @@ class Application
                 return $module;
             }
         }
-        return false;
+        return null;
     }
 }

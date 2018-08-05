@@ -1,6 +1,6 @@
 # Table::delete
 根据条件删除列
-> *文件信息* suda\archive\Table.php: 31~653
+> *文件信息* suda\archive\Table.php: 31~869
 ## 所属类 
 
 [Table](../Table.md)
@@ -27,4 +27,19 @@
 
 ## 例子
 
-example
+
+**键值对**
+
+删除 ID 为3的记录
+
+```php
+$table->update(['id'=>3]);
+```
+
+**条件**
+
+删除 ID>3  的记录
+
+```php
+$table->delete('id > :id ',['id'=>3]);
+```

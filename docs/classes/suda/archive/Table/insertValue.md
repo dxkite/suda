@@ -1,6 +1,6 @@
 # Table::insertValue
 按照表顺序插入一行记录
-> *文件信息* suda\archive\Table.php: 31~653
+> *文件信息* suda\archive\Table.php: 31~869
 ## 所属类 
 
 [Table](../Table.md)
@@ -26,4 +26,15 @@
 
 ## 例子
 
-example
+
+如果数据表中有name字段和value字段，且表结构如下
+
+| name | value |
+|------|--------|
+| dxkite| unlimit |
+
+则可以通过如下插入一条语句
+
+```php
+$table->insertValue($name,$value);
+```

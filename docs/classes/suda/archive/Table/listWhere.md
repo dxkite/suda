@@ -1,6 +1,6 @@
 # Table::listWhere
 条件列出元素
-> *文件信息* suda\archive\Table.php: 31~653
+> *文件信息* suda\archive\Table.php: 31~869
 ## 所属类 
 
 [Table](../Table.md)
@@ -30,4 +30,18 @@
 
 ## 例子
 
-example
+
+当不填页码的时候，默认列出所有数据
+填入页码时列出对应页
+使用条件列出：
+
+等值情况
+```php
+$table->list(['status'=>1],[],1,10);
+```
+
+特殊情况
+```php
+$table->list('status > :status ',['status'=>1],1,10);
+```
+**注意** :status 必须后面的键名对上

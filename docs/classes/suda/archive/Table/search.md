@@ -1,6 +1,6 @@
 # Table::search
 根据字段搜索
-> *文件信息* suda\archive\Table.php: 31~653
+> *文件信息* suda\archive\Table.php: 31~869
 ## 所属类 
 
 [Table](../Table.md)
@@ -29,4 +29,17 @@
 
 ## 例子
 
-example
+
+搜索的字段必须为字符串
+如：
+根据name字段搜索值为$name的可能值
+
+```php
+ $table->search('name',$name);
+```
+
+如果想要实现分页效果，可以用如下代码：搜索，取第一页，每页10条数据
+
+```php
+ $table->search('name',$name,1,10);
+```

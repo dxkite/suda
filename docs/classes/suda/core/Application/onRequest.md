@@ -1,6 +1,6 @@
 # Application::onRequest
-
-> *文件信息* suda\core\Application.php: 29~620
+截获请求，请求发起的时候会调用
+> *文件信息* suda\core\Application.php: 30~737
 ## 所属类 
 
 [Application](../Application.md)
@@ -11,7 +11,8 @@
 ## 说明
 
 
-包含了应用的各种处理方式
+包含了应用的各种处理方式，可以用快捷函数 app() 来使用本类
+
 
 ## 参数
 
@@ -20,7 +21,8 @@
 | request |  suda\core\Request | 无 | 无 |
 
 ## 返回值
-返回值类型不定
+类型：boolean
+ true 表示请求可达,false将截获请求
 
 ## 例子
 

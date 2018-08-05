@@ -1,6 +1,6 @@
 # System::uncaughtError
 
-> *文件信息* suda\core\System.php: 30~208
+> *文件信息* suda\core\System.php: 30~207
 ## 所属类 
 
 [System](../System.md)
