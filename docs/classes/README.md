@@ -3,7 +3,7 @@
 > **注：** 文档由程序自动生成
 
 - suda 2.0.0 
-- 2018-08-05 22:12:06
+- 2018-08-05 22:36:14
 
 
 ## 类列表
@@ -63,3 +63,8 @@
 |[suda\tool\Json](suda/tool/Json.md) |  |
 |[suda\tool\Pinyin](suda/tool/Pinyin.md) | 将中文转换成拼音 |
 |[suda\tool\ZipHelper](suda/tool/ZipHelper.md) |  |
+|[suda\core\storage\Storage](suda/core/storage/Storage.md) | 存储系统 |
+|[suda\template\Compiler](suda/template/Compiler.md) | 编译器接口 |
+|[suda\archive\SQLStatement](suda/archive/SQLStatement.md) | 数据库查询语句接口 |
+|[suda\core\cache\Cache](suda/core/cache/Cache.md) | 缓存接口 |
+|[suda\mail\sender\Sender](suda/mail/sender/Sender.md) |  |

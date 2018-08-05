@@ -1,13 +1,13 @@
 # FileStorage::copydir
 
-> *文件信息* suda\core\storage\FileStorage.php: 24~473
+> *文件信息* suda\core\storage\FileStorage.php: 25~473
 ## 所属类 
 
 [FileStorage](../FileStorage.md)
 
 ## 可见性
 
-  public  static
+  public  
 ## 说明
 
 封装了常用的文件系统函数

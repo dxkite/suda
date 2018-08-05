@@ -1,6 +1,6 @@
 # FileStorage::curl
 
-> *文件信息* suda\core\storage\FileStorage.php: 24~473
+> *文件信息* suda\core\storage\FileStorage.php: 25~473
 ## 所属类 
 
 [FileStorage](../FileStorage.md)
