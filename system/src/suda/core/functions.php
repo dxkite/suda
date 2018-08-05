@@ -196,21 +196,22 @@ function cookie()
 /**
  * 获取一个缓存对象
  *
- * @return suda\core\Cache 获取的缓存对象
+ * @param string $type
+ * @return voiCache 获取的缓存对象d
  */
-function cache()
+function cache(string $type='File')
 {
-    return new suda\core\Cache;
+    return suda\core\Cache::newInstance($type);
 }
 
 /**
  * 获取一个储存对象
  *
- * @return suda\core\Storage 获取的储存对象
+ * @return Storage 获取的储存对象
  */
-function storage()
+function storage(string $type='File')
 {
-    return new suda\core\Storage;
+    return suda\core\Storage::newInstance($type);
 }
 
 /**

@@ -30,7 +30,7 @@ $mark=<<<Mark
  *
  * An open source application development framework for PHP 7.0.0 or newer
  * 
- * Copyright (c)  2017 DXkite
+ * Copyright (c)  2018 DXkite
  *
  * @category   PHP FrameWork
  * @package    Suda

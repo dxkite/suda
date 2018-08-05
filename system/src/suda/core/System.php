@@ -147,7 +147,6 @@ class System
         if (function_exists('fastcgi_finish_request')) {
             fastcgi_finish_request();
         }
-        Cache::gc();
         Hook::exec('system:shutdown');
         debug()->trace('connection status '. ['normal','aborted','timeout'][connection_status()]);
         // debug()->trace('include paths '.json_encode(Autoloader::getIncludePath()));
