@@ -21,9 +21,9 @@ class ClassExport
     protected $reflect;
     protected $docme;
 
-    public function __construct(string $class,$docme)
+    public function __construct($class,$docme)
     {
-        $this->reflect=new \ReflectionClass($class);
+        $this->reflect=$class;
         $this->docme=$docme;
     }
 

@@ -91,7 +91,7 @@ interface Storage
      * @param string $dir
      * @return boolean
      */
-    public function emptyDir(string $dir):bool;
+    public function isEmpty(string $dir):bool;
     /**
      * 复制目录
      *

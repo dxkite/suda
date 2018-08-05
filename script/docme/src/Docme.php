@@ -62,20 +62,38 @@ class Docme
                 $functions[$function]=$functionInfo;
             }
         }
- 
-        foreach ($this->exportClass as $class) {
+        
+        $userDefinedInterfaces = [];
+
+        foreach ($this->exportClass as $className) {
+            $class = new \ReflectionClass($className);
+            $interfaces = $class->getInterfaces();
+            foreach ($interfaces as $name=>$interface) {
+                if ($interface->isUserDefined()) {
+                    array_push($userDefinedInterfaces,$interface);
+                }
+            }
             $classInfo=(new ClassExport($class, $this))->export($path.'/classes');
             if ($classInfo) {
-                $classes[$class]=$classInfo;
+                $classes[$className]=$classInfo;
             }
         }
-        $this->genIndexFunction($path,$functions);
-        $this->genIndexClass($path,$classes);
-        $this->genReadme($path,$classes,$functions);
-        $this->genSummary($path,$classes,$functions);
+        
+        foreach ($userDefinedInterfaces as $interfaceObj) {
+            $classInfo=(new ClassExport($interfaceObj, $this))->export($path.'/classes');
+            if ($classInfo) {
+                $classes[$interfaceObj->getName()]=$classInfo;
+            }
+        }
+
+        $this->genIndexFunction($path, $functions);
+        $this->genIndexClass($path, $classes);
+        $this->genReadme($path, $classes, $functions);
+        $this->genSummary($path, $classes, $functions);
     }
 
-    public function genIndexFunction($path,$functions) {
+    public function genIndexFunction($path, $functions)
+    {
         $template=new ExportTemplate;
         $template->setSrc(__DIR__.'/../template/functions-readme.md');
         $template->setValues([
@@ -86,7 +104,8 @@ class Docme
         print 'generate functions-readme  --> '.$destPath ."\r\n";
     }
 
-    public function genIndexClass($path,$classes) {
+    public function genIndexClass($path, $classes)
+    {
         $template=new ExportTemplate;
         $template->setSrc(__DIR__.'/../template/classes-readme.md');
         $template->setValues([
@@ -97,7 +116,8 @@ class Docme
         print 'generate classes-readme  --> '.$destPath ."\r\n";
     }
 
-    public function genReadme($path,$classes,$functions) {
+    public function genReadme($path, $classes, $functions)
+    {
         $template=new ExportTemplate;
         $template->setSrc(__DIR__.'/../template/readme.md');
         $template->setValues([
@@ -109,7 +129,8 @@ class Docme
         print 'generate readme  --> '.$destPath ."\r\n";
     }
 
-    public function genSummary($path,$classes,$functions) {
+    public function genSummary($path, $classes, $functions)
+    {
         $template=new ExportTemplate;
         $template->setSrc(__DIR__.'/../template/SUMMARY.md');
         $template->setValues([
