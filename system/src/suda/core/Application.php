@@ -292,7 +292,7 @@ class Application
      *
      * @return string
      */
-    public function getActiveModule():string
+    public function getActiveModule():?string
     {
         return $this->activeModule;
     }
