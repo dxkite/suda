@@ -1,6 +1,6 @@
 # Application::getFileModule
-
-> *文件信息* suda\core\Application.php: 29~620
+根据文件名判断所属模块
+> *文件信息* suda\core\Application.php: 30~737
 ## 所属类 
 
 [Application](../Application.md)
@@ -11,7 +11,8 @@
 ## 说明
 
 
-包含了应用的各种处理方式
+包含了应用的各种处理方式，可以用快捷函数 app() 来使用本类
+
 
 ## 参数
 
@@ -20,7 +21,8 @@
 | file |  string | 无 | 无 |
 
 ## 返回值
-返回值类型不定
+类型：string|null
+无
 
 ## 例子
 
