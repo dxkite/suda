@@ -1,6 +1,6 @@
 # config
 获取一个配置对象
-> *文件信息* suda\core\functions.php: 221~224
+> *文件信息* suda\core\functions.php: 222~225
 
 ## 参数
 

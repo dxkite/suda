@@ -1,6 +1,6 @@
 # session
 获取默认Session对象
-> *文件信息* suda\core\functions.php: 285~288
+> *文件信息* suda\core\functions.php: 286~289
 
 ## 参数
 

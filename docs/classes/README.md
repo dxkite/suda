@@ -2,8 +2,8 @@
 
 > **注：** 文档由程序自动生成
 
-- suda 1.12.16 
-- 2018-08-05 18:00:51
+- suda 2.0.0 
+- 2018-08-05 22:12:06
 
 
 ## 类列表
@@ -18,6 +18,7 @@
 |[suda\core\Config](suda/core/Config.md) | 文件配置类 |
 |[suda\tool\ArrayHelper](suda/tool/ArrayHelper.md) | 数组操纵 |
 |[suda\core\Storage](suda/core/Storage.md) | 文件存储系统包装类，封装了常用的文件系统函数 |
+|[suda\core\storage\FileStorage](suda/core/storage/FileStorage.md) | 文件存储系统包装类 |
 |[suda\core\Hook](suda/core/Hook.md) | 系统钩子，监听系统内部一些操作并载入一些自定义行为 |
 |[suda\core\Locale](suda/core/Locale.md) | I18N 国际化支持 |
 |[suda\core\Application](suda/core/Application.md) | 应用处理类 |
@@ -32,7 +33,8 @@
 |[suda\archive\SQLQuery](suda/archive/SQLQuery.md) | 数据库查询方案，简化数据库查 |
 |[suda\archive\Table](suda/archive/Table.md) | 数据表抽象对象 |
 |[suda\archive\TableInstance](suda/archive/TableInstance.md) |  |
-|[suda\core\Cache](suda/core/Cache.md) | 文件缓存 |
+|[suda\core\cache\FileCache](suda/core/cache/FileCache.md) | 文件缓存 |
+|[suda\core\Cache](suda/core/Cache.md) | 缓存系统 |
 |[suda\core\Cookie](suda/core/Cookie.md) | Cookie操作封装类 |
 |[suda\core\Exception](suda/core/Exception.md) | 通用系统异常 |
 |[suda\core\Query](suda/core/Query.md) | 数据库查询类 |

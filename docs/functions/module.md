@@ -1,6 +1,6 @@
 # module
 获取当前文件所在的模块
-> *文件信息* suda\core\functions.php: 296~302
+> *文件信息* suda\core\functions.php: 297~303
 
 ## 参数
 

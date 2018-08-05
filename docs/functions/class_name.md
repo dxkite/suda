@@ -1,6 +1,6 @@
 # class_name
 获取类名，将JAVA包式的类名转化为 PHP的标准类名
-> *文件信息* suda\core\functions.php: 256~259
+> *文件信息* suda\core\functions.php: 257~260
 
 ## 参数
 
