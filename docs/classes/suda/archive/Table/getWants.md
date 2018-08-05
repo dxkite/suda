@@ -1,6 +1,6 @@
 # Table::getWants
 获取设置了的列
-> *文件信息* suda\archive\Table.php: 31~653
+> *文件信息* suda\archive\Table.php: 31~869
 ## 所属类 
 
 [Table](../Table.md)

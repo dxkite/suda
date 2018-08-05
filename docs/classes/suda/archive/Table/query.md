@@ -1,6 +1,6 @@
 # Table::query
 原始查询查询
-> *文件信息* suda\archive\Table.php: 31~653
+> *文件信息* suda\archive\Table.php: 31~869
 ## 所属类 
 
 [Table](../Table.md)
@@ -28,4 +28,16 @@
 
 ## 例子
 
-example
+
+请尽量避免使用此函数
+其中 #{user} 表示user表，加上 #{} 框架会自动处理浅醉
+
+```php
+$table->query('select * from #{user} where id > :id',['id'=>2]);
+```
+
+可以使用 @table@ 代指本表
+
+```php
+$table->query('select * from #{@table@} where id > :id',['id'=>2]);
+```

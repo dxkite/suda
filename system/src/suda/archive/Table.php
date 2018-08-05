@@ -54,6 +54,14 @@ abstract class Table
 
     /**
      * 插入一行记录
+     * @example
+     * 
+     * 如果数据表中有name字段和value字段，那么可以通过如下方式插入一条记录
+     * 
+     * ```php
+     * $table->insert(['name'=>$name,'value'=>$value]);
+     * ```
+     * 
      * @param array $values 待插入的值
      * @return int 插入影响的行数
      */
@@ -67,7 +75,20 @@ abstract class Table
 
     /**
      * 按照表顺序插入一行记录
-     *
+     * 
+     * @example
+     * 
+     * 如果数据表中有name字段和value字段，且表结构如下
+     *  
+     * | name | value |
+     * |------|--------|
+     * | dxkite| unlimit |
+     * 
+     * 则可以通过如下插入一条语句
+     * 
+     * ```php
+     * $table->insertValue($name,$value);
+     * ```
      * @param [type] $values 待插入的值
      * @return integer 插入影响的行数
      */
@@ -89,6 +110,24 @@ abstract class Table
      * 主键的值可以为关联数组或单独的一个值
      * 查询成功返回查询成功的列，失败返回null
      *
+     * @example 
+     * 主键的值为不定量，有时候有多个主键
+     * 
+     * #### 单主键查询
+     * 当用户表中只定义了一个主键的时候
+     * 
+     * ```php
+     * $table->getByPrimaryKey($key);
+     * ```
+     * 
+     * #### 多主键查询
+     * 
+     * 当用户表中只定义了多个主键的时候
+     * 
+     * ```php
+     * $table->getByPrimaryKey(['key1'=>$key1,'key2'=>$key2]);
+     * ```
+     * 
      * @param [type] $value 主键的值
      * @return array|null
      */
@@ -100,6 +139,24 @@ abstract class Table
 
     /**
      * 通过主键更新元素
+     * 
+     * @example 
+     * 主键的值为不定量，有时候有多个主键
+     * 
+     * #### 单主键操作
+     * 当用户表中只定义了一个主键的时候
+     * 
+     * ```php
+     * $table->updateByPrimaryKey($key,['name'=>$name,'value'=>$value]);
+     * ```
+     * 
+     * #### 多主键操作
+     * 
+     * 当用户表中只定义了多个主键的时候
+     * 
+     * ```php
+     * $table->updateByPrimaryKey(['key1'=>$key1,'key2'=>$key2],['name'=>$name,'value'=>$value]);
+     * ```
      * 
      * @param [type] $value 主键
      * @param [type] $values 待更新的数据
@@ -116,6 +173,24 @@ abstract class Table
     /**
      * 通过主键删除元素
      *
+     * @example 
+     * 主键的值为不定量，有时候有多个主键
+     * 
+     * #### 单主键操作
+     * 当用户表中只定义了一个主键的时候
+     * 
+     * ```php
+     * $table->deleteByPrimaryKey($key);
+     * ```
+     * 
+     * #### 多主键操作
+     * 
+     * 当用户表中只定义了多个主键的时候
+     * 
+     * ```php
+     * $table->deleteByPrimaryKey(['key1'=>$key1,'key2'=>$key2]);
+     * ```
+     * 
      * @param [type] $value 主键
      * @return integer 影响的行数
      */
@@ -127,6 +202,22 @@ abstract class Table
     /**
      * 根据字段搜索
      *
+     * @example
+     * 
+     * 搜索的字段必须为字符串
+     * 如：
+     * 根据name字段搜索值为$name的可能值
+     * 
+     * ```php
+     *  $table->search('name',$name);
+     * ```
+     * 
+     * 如果想要实现分页效果，可以用如下代码：搜索，取第一页，每页10条数据
+     * 
+     * ```php
+     *  $table->search('name',$name,1,10);
+     * ```
+     * 
      * @param [type] $field 搜索的字段
      * @param string $search 搜索列
      * @param integer|null $page 页码
@@ -144,7 +235,31 @@ abstract class Table
     
     /**
      * 搜索指定字段
-     *
+     * 
+     * 
+     * @example
+     * 
+     * 搜索的字段必须为字符串
+     * 如：
+     * 根据name字段搜索值为$name的可能值，搜索 status=1 的所有记录
+     * 
+     * ```php
+     *  $table->search('name',$name,['status'=>1]);
+     * ```
+     * 
+     * 搜索 status=1 的所有记录,如果想要实现分页效果，可以用如下代码：搜索，取第一页，每页10条数据
+     * 
+     * ```php
+     *  $table->search('name',$name,['status'=>1],[], 1,10);
+     * ```
+     * 
+     * 如果条件不是等于，则可以用如下：
+     * **注意** 如下中第三个参数的 :status 必须与第四个参数的键名对上
+     * 
+     * ```php
+     *  $table->search('name',$name,' status > :status ',['status'=>1]);
+     * ```
+     * 
      * @param [type] $field 搜索字段
      * @param string $search 搜索值
      * @param [type] $where 限制搜索条件
@@ -167,6 +282,15 @@ abstract class Table
     /**
      * 分页列出元素
      *
+     * @example 
+     * 
+     * 当不填页码的时候，默认列出所有数据
+     * 填入页码时列出对应页
+     * 
+     * ```php
+     * $table->list(1,10);
+     * ```
+     * 
      * @param integer|null $page  是否分页（页数）
      * @param int $rows 分页的元素个数
      * @param boolean $offset 使用Offset
@@ -183,7 +307,24 @@ abstract class Table
 
     /**
      * 条件列出元素
-     *
+     * 
+     * @example 
+     * 
+     * 当不填页码的时候，默认列出所有数据
+     * 填入页码时列出对应页
+     * 使用条件列出：
+     * 
+     * 等值情况
+     * ```php
+     * $table->list(['status'=>1],[],1,10);
+     * ```
+     * 
+     * 特殊情况
+     * ```php
+     * $table->list('status > :status ',['status'=>1],1,10);
+     * ```
+     * **注意** :status 必须后面的键名对上
+     * 
      * @param [type] $where 条件描述
      * @param array $binds 条件附带参数
      * @param integer|null $page 是否分页（页数）
@@ -205,6 +346,26 @@ abstract class Table
     /**
      * 根据条件更新列
      *
+     * @example 
+     * 
+     * 条件可以为键值对也可以为特殊条件
+     *  
+     * **键值对**
+     * 
+     * 更新 ID 为3 的name 为 $name 的值
+     * 
+     * ```php
+     * $table->update(['name'=>$name],['id'=>3]);
+     * ```
+     * 
+     * **条件**
+     * 
+     * 更新 ID>3 的name 为 $name 的值
+     * 
+     * ```php
+     * $table->update(['name'=>$name],'id > :id ',['id'=>3]);
+     * ```
+     * 
      * @param [type] $values 更新的列
      * @param [type] $where 条件区域
      * @param array $bind 扩展条件值
@@ -223,16 +384,38 @@ abstract class Table
 
     /**
      * 选择列
-     *
-     * @param [type] $wants
-     * @param [type] $where
-     * @param array $whereBinder
-     * @param integer|null $page
-     * @param integer $rowa
-     * @param boolean $offset
+     * 
+     * @example 
+     * 
+     * 相当于 select 语句，返回一个 SQLQuery类
+     * 
+     * 查询：取一列name，当id为2的时候
+     * 
+     * ```php
+     * $table->select(['name'],['id'=>2])->fetch();
+     * ```
+     * 
+     * 查询：取所有列name，当 status = 2的时候
+     * 
+     * ```php
+     * $table->select(['name'],['status'=>2])->fetchAll();
+     * ```
+     * 
+     * 查询：取多列，当 id >2 的时候
+     * 
+     * ```php
+     * $table->select(['name'],'id > :id',['id'=>2])->fetchAll();
+     * ```
+     *  
+     * @param [type] $wants 想要查询的列
+     * @param [type] $where 查询条件
+     * @param array $whereBinder 查询条件的值
+     * @param integer|null $page 分页页码
+     * @param integer $row 分页行
+     * @param boolean $offset 直接偏移
      * @return SQLQuery
      */
-    public function select($wants, $where, $whereBinder=[], ?int $page=null, int $rowa=10, bool $offset=false): SQLQuery
+    public function select($wants, $where, $whereBinder=[], ?int $page=null, int $row=10, bool $offset=false): SQLQuery
     {
         if (is_array($where)) {
             $this->checkFields(array_keys($where));
@@ -243,12 +426,27 @@ abstract class Table
         if (is_null($page)) {
             return Query::where($this->getTableName(), $wants, $where, $whereBinder)->object($this);
         }
-        return Query::where($this->getTableName(), $wants, $where, $whereBinder, [$page,$rowa,$offset])->object($this);
+        return Query::where($this->getTableName(), $wants, $where, $whereBinder, [$page,$row,$offset])->object($this);
     }
 
     /**
      * 原始查询查询
      *
+     * @example
+     * 
+     * 请尽量避免使用此函数
+     * 其中 #{user} 表示user表，加上 #{} 框架会自动处理浅醉
+     * 
+     * ```php
+     * $table->query('select * from #{user} where id > :id',['id'=>2]);
+     * ```
+     * 
+     * 可以使用 @table@ 代指本表
+     * 
+     * ```php
+     * $table->query('select * from #{@table@} where id > :id',['id'=>2]);
+     * ```
+     * 
      * @param string $query
      * @param array $binds
      * @param boolean $scroll
@@ -263,6 +461,24 @@ abstract class Table
     /**
      * 根据条件删除列
      *
+     * @example
+     * 
+     * **键值对**
+     * 
+     * 删除 ID 为3的记录
+     * 
+     * ```php
+     * $table->update(['id'=>3]);
+     * ```
+     * 
+     * **条件**
+     * 
+     * 删除 ID>3  的记录
+     * 
+     * ```php
+     * $table->delete('id > :id ',['id'=>3]);
+     * ```
+     * 
      * @param [type] $where 删除条件
      * @param array $binds 条件值绑定
      * @return integer
