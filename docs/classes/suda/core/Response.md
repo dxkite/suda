@@ -1,6 +1,6 @@
 #  Response 
 
-> *文件信息* suda\core\Response.php: 30~294
+> *文件信息* suda\core\Response.php: 30~295
 
 
 网页响应类，用于处理来自服务器的请求

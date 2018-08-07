@@ -22,7 +22,7 @@ defined('SYSTEM_RESOURCE') or define('SYSTEM_RESOURCE', SYSTEM_DIR.'/resource');
 defined('DEBUG') or define('DEBUG', false);
 defined('IS_LINUX') or define('IS_LINUX', DIRECTORY_SEPARATOR ===  '/');
 defined('IS_CONSOLE') or define('IS_CONSOLE', PHP_SAPI==='cli');
-define('SUDA_VERSION', '2.0.0');
+define('SUDA_VERSION', '18.1.0');
 
 header('X-Powered-By: Suda/'.SUDA_VERSION);
 

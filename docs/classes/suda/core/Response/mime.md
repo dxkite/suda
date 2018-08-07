@@ -1,6 +1,6 @@
 # Response::mime
  页面MIME类型
-> *文件信息* suda\core\Response.php: 30~294
+> *文件信息* suda\core\Response.php: 30~295
 ## 所属类 
 
 [Response](../Response.md)

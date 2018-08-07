@@ -17,7 +17,7 @@
 | 参数名 | 类型 | 默认值 | 说明 |
 |--------|-----|-------|-------|
 | dest |  string | 无 | 无 |
-| content |  string | dxkite-suda@2.0.0 | 无 |
+| content |  string | dxkite-suda@18.1.0 | 无 |
 
 ## 返回值
 返回值类型不定

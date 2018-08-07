@@ -1,6 +1,6 @@
 # Router::routerMove
 路由移动
-> *文件信息* suda\core\Router.php: 27~548
+> *文件信息* suda\core\Router.php: 27~555
 ## 所属类 
 
 [Router](../Router.md)
