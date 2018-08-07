@@ -117,8 +117,9 @@ abstract class Response
         $size   = strlen($content);
         if (!$this->_etag($hash)) {
             $type   = $type ?? pathinfo($path, PATHINFO_EXTENSION);
+            $name = $filename ?? pathinfo($path, PATHINFO_FILENAME);
             $this->type($type);
-            self::setHeader('Content-Disposition: attachment;filename="'.$filename.'.'.$type.'"');
+            self::setHeader('Content-Disposition: attachment;filename="'.$name.'.'.$type.'"');
             self::setHeader('Content-Length:'.$size);
             self::setHeader('Cache-Control: max-age=0');
             self::setHeader('Expires: Mon, 26 Jul 1997 05:00:00 GMT'); // Date in the past
