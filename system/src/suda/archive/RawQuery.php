@@ -359,7 +359,7 @@ class RawQuery implements SQLStatement
         // self::$queryCount++;
         if ($return) {
             if (Config::get('debug')) {
-                debug()->debug($stmt->queryString, $this->values);
+                debug()->debug($stmt->queryString .' '. __('Effect %d rows', $stmt->rowCount()), $this->values);
             }
         } else {
             debug()->warning($stmt->errorInfo()[2].':'.$stmt->queryString, $this->values);
