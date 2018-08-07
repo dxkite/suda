@@ -37,6 +37,6 @@ class Cache
  
     public static function __callStatic(string $method, $args)
     {
-        return call_user_func_array([self::newInstance(),$method], $args);
+        return call_user_func_array([self::newInstance(conf('cache.type','File')),$method], $args);
     }
 }
