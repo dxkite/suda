@@ -244,20 +244,20 @@ abstract class Table
      * 根据name字段搜索值为$name的可能值，搜索 status=1 的所有记录
      * 
      * ```php
-     *  $table->search('name',$name,['status'=>1]);
+     *  $table->searchWhere('name',$name,['status'=>1]);
      * ```
      * 
      * 搜索 status=1 的所有记录,如果想要实现分页效果，可以用如下代码：搜索，取第一页，每页10条数据
      * 
      * ```php
-     *  $table->search('name',$name,['status'=>1],[], 1,10);
+     *  $table->searchWhere('name',$name,['status'=>1],[], 1,10);
      * ```
      * 
      * 如果条件不是等于，则可以用如下：
      * **注意** 如下中第三个参数的 :status 必须与第四个参数的键名对上
      * 
      * ```php
-     *  $table->search('name',$name,' status > :status ',['status'=>1]);
+     *  $table->searchWhere('name',$name,' status > :status ',['status'=>1]);
      * ```
      * 
      * @param [type] $field 搜索字段
@@ -277,6 +277,42 @@ abstract class Table
             return Query::select($this->getTableName(), $this->getWants(), $whereStr . ' AND ('. $searchStr.') '. self::_order(), array_merge($searchBind, $bind))->object($this);
         }
         return Query::select($this->getTableName(), $this->getWants(), $whereStr . ' AND ('. $searchStr.') '. self::_order(), array_merge($searchBind, $bind), [$page,$rows,$offset])->object($this);
+    }
+
+    /**
+     * 通知搜索指定字段的个数
+     * 
+     * @example
+     * 
+     * 搜索的字段必须为字符串
+     * 如：
+     * 根据name字段搜索值为$name的可能值，搜索 status=1 的所有记录
+     * 
+     * ```php
+     *  $table->searchWhereCount('name',$name,['status'=>1]);
+     * ```
+     * 
+     * 如果条件不是等于，则可以用如下：
+     * **注意** 如下中第三个参数的 :status 必须与第四个参数的键名对上
+     * 
+     * ```php
+     *  $table->searchWhereCount('name',$name,' status > :status ',['status'=>1]);
+     * ```
+     * 
+     * @param [type] $field
+     * @param string $search
+     * @param [type] $where
+     * @param array $bind
+     * @return integer
+     */
+    public function searchWhereCount($field, string $search , $where, array $bind=[]):int
+    {
+        list($searchStr, $searchBind)=Query::prepareSearch($field, $search);
+        $whereStr=Query::prepareWhere($where, $bind);
+        if (is_null($page)) {
+            return Query::count($this->getTableName(), $whereStr . ' AND ('. $searchStr.') ', array_merge($searchBind, $bind));
+        }
+        return Query::count($this->getTableName(), $whereStr . ' AND ('. $searchStr.') ', array_merge($searchBind, $bind), [$page,$rows,$offset]);
     }
 
     /**

@@ -176,19 +176,25 @@ class Mapping
     }
 
     /**
-     * 判断路由是否为指定模块的路由
+     * 判断路由是否为指定路由
      *
-     * @param string $that
+     * @param string|Mapping $that
      * @return boolean
      */
-    public function is(string $that)
+    public function is($that)
     {
-        list($module, $name)=router()->parseName($that);
-        return app()->getModuleFullName($module).':'.$name == $this->getFullName();
+        if (is_string($that)) {
+            list($module, $name)=router()->parseName($that);
+            return app()->getModuleFullName($module).':'.$name == $this->getFullName();
+        }
+        if ($that instanceof Mapping) {
+            return $that->getFullName() == $this->getFullName();
+        }
+        return false;
     }
     
     /**
-     * 判断路由似乎否是在指定模块中
+     * 判断路由是否为指定模块的路由
      *
      * @param string $that
      * @return void
@@ -206,6 +212,11 @@ class Mapping
     public function getSortName()
     {
         return preg_replace('/:.+$/', '', $this->module).':'.$this->name;
+    }
+    
+    public function getName()
+    {
+        return $this->name;
     }
 
     public function setParam($param)

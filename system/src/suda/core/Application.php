@@ -19,7 +19,7 @@ use suda\template\Manager;
 use suda\tool\Json;
 use suda\tool\ArrayHelper;
 use suda\exception\ApplicationException;
-
+use suda\tool\ZipHelper;
 
 /**
  * 应用处理类
@@ -626,6 +626,16 @@ class Application
             $dirs=Storage::readDirs($path);
             foreach ($dirs as $dir) {
                 self::registerModule($path.'/'.$dir);
+            }
+            $zips = Storage::readDirFiles($path,false,'/(\.zip|\.module|\.s?mod)$/');
+
+            foreach ($zips as $zip) {
+                $zipDir = RUNTIME_DIR.'/modules/'.basename($zip);
+                if (conf('debug') || !Storage::isDir($zipDir)) {
+                    ZipHelper::unzip($zip,$zipDir,true);
+                    debug()->info(__('extract %s to %s',$zip,$zipDir));
+                }
+                self::registerModule($zipDir);
             }
         }
     }

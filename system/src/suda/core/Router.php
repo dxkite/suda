@@ -148,7 +148,7 @@ class Router
     }
 
 
-    public function parseUrl(string $url)
+    public function parseUrl(string $url):?Mapping
     {
         $paramValue=[];
         $info=parse_url($url);
@@ -157,7 +157,7 @@ class Router
         }
         if (isset($info['host'])) {
             if ($info['host']!= Request::getHost() &&  $info['host']!='localhost') {
-                return false;
+                return null;
             }
         }
 
@@ -175,10 +175,7 @@ class Router
                 break;
             }
         }
-        if ($target) {
-            return $target;
-        }
-        return false;
+        return $target;
     }
 
     protected function matchRouterMap()
