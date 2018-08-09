@@ -1,4 +1,4 @@
-# Mapping::createFromRouteArray
+# Mapping::setPort
 
 > *文件信息* suda\core\route\Mapping.php: 23~548
 ## 所属类 
@@ -7,7 +7,7 @@
 
 ## 可见性
 
-  public  static
+  public  
 ## 说明
 
 该函数暂时无说明
@@ -16,10 +16,7 @@
 
 | 参数名 | 类型 | 默认值 | 说明 |
 |--------|-----|-------|-------|
-| role |  int | 无 | 无 |
-| module |  string | 无 | 无 |
-| name |  string | 无 | 无 |
-| json |  array | 无 | 无 |
+| port |  int | 无 | 无 |
 
 ## 返回值
 返回值类型不定

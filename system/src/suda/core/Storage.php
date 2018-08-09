@@ -11,7 +11,7 @@
  * @copyright  Copyright (c) DXkite
  * @license    MIT
  * @link       https://github.com/DXkite/suda
- * @version    since 2.0.0
+ * @version    since 18.1.0
  */
 
 namespace suda\core;

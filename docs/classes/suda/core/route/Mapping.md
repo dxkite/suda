@@ -1,6 +1,6 @@
 #  Mapping 
 
-> *文件信息* suda\core\route\Mapping.php: 23~538
+> *文件信息* suda\core\route\Mapping.php: 23~548
 
 
 
@@ -80,6 +80,8 @@
 |  public  |[getUrl](Mapping/getUrl.md) |  |
 |  public  |[getTemplate](Mapping/getTemplate.md) |  |
 |  public  |[getHost](Mapping/getHost.md) |  |
+|  public  |[setHost](Mapping/setHost.md) |  |
+|  public  |[setPort](Mapping/setPort.md) |  |
 |  public  |[getUrlTemplate](Mapping/getUrlTemplate.md) |  |
 |  public  |[createUrl](Mapping/createUrl.md) | 创建URL |
 |  public  |[getBaseUrl](Mapping/getBaseUrl.md) |  |

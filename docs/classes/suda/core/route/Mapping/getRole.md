@@ -1,6 +1,6 @@
 # Mapping::getRole
 
-> *文件信息* suda\core\route\Mapping.php: 23~538
+> *文件信息* suda\core\route\Mapping.php: 23~548
 ## 所属类 
 
 [Mapping](../Mapping.md)
