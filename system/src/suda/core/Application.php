@@ -490,7 +490,6 @@ class Application
             // 缩减命名空间
             Autoloader::setNamespace($module_config['namespace']);
         }
-
         // 自动加载私有库
         foreach ($module_config['import']['src'] as $namespace=>$path) {
             if (Storage::isDir($srcPath=$root.DIRECTORY_SEPARATOR.$path)) {
@@ -499,11 +498,7 @@ class Application
                 Autoloader::import($importPath);
             }
         }
-        // 加载模块配置到 module命名空间
-        if ($path=Config::exist(MODULE_CONFIG.'/config.json')) {
-            Config::set('module', Config::loadConfig($path));
-        }
-        Config::set('module', Config::get('module', []), $module_config);
+        Config::set('module',$module_config);
     }
 
     /**
