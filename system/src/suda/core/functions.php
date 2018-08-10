@@ -310,5 +310,5 @@ function module($var=0)
  */
 function email_poster(?int $type=null)
 {
-    return suda\mail\Factory::sender(is_null($type)?Mailer::SMTP:$type);
+    return suda\mail\Factory::sender(is_null($type)? suda\mail\Factory::SMTP : $type);
 }

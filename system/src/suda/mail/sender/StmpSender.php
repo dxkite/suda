@@ -73,8 +73,11 @@ class StmpSender implements Sender
     public function send(Message $message):bool
     {
         $this->message=$message;
+        // 覆盖
         if ($this->message->getFrom() == null) {
             $this->message->setFrom($this->userName);
+        } else {
+            $this->message->setFrom($this->userName, $this->message->getFrom()[1]);
         }
         $commands=$this->getCommand();
         if ($this->isSecurity) {

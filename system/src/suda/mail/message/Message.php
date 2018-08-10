@@ -51,7 +51,6 @@ class Message
      */
     public function setFrom(string $fromEmail, string $name='')
     {
-        $name=self::utf8($name);
         $this->from = [$fromEmail,$name];
         return $this;
     }
@@ -66,21 +65,18 @@ class Message
      */
     public function setTo(string $toEmail, string $name='')
     {
-        $name=self::utf8($name);
         $this->to[] =[$toEmail,$name];
         return $this;
     }
 
     public function setCc(string $ccEmail, string $name='')
     {
-        $name=self::utf8($name);
         $this->cc[] =[$ccEmail,$name];
         return $this;
     }
 
     public function setBcc(string $bccEmail, string $name='')
     {
-        $name=self::utf8($name);
         $this->bcc[] =[$bccEmail,$name];
         return $this;
     }
