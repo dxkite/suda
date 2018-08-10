@@ -43,7 +43,7 @@ class Query extends SQLQuery
      * @param [type] $values  为插入的值，可以为字符串或者MAP数组。
      * @param array $binds 为values中出现的模板控制待绑定字符。
      * @param [type] $object 数据库回调对象
-     * @return integer 返回ID或获取ID失败时返回0
+     * @return integer 成功时返回ID, 失败时返回0，无自动增ID时返回影响行数（负数表示）
      */
     public static function insert(string $table, $values, array $binds=[], $object=null):int
     {
@@ -67,7 +67,7 @@ class Query extends SQLQuery
             if ($id>0) {
                 return $id;
             } else {
-                return 0;
+                return -$count;
             }
         }
         return 0;
