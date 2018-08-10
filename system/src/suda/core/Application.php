@@ -733,8 +733,13 @@ class Application
         foreach ($modules as $module) {
             $config=app()->getModuleConfig($module);
             $modulePath=storage()->path($config['path']);
-            if ($modulePath == substr($file, 0, strlen($modulePath))) {
-                return $module;
+            $dir = substr($file, 0, strlen($modulePath));
+            if ($modulePath == $dir ) {
+                $next = substr($file,strlen($modulePath),1);
+                $nextIsSp = $next == '/' || $next == '\\';
+                if ($nextIsSp) {
+                    return $module;
+                }
             }
         }
         return null;
