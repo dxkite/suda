@@ -437,14 +437,33 @@ class Debug
                 $level=strtolower($method);
             }
         }
-        $backtrace=debug_backtrace();
+        $backtrace =null;
+        foreach ($args as $e) {
+            if ($e instanceof \Exception) {
+                $backtrace=$e->getTrace();
+            }
+        }
+        if (is_null($backtrace)) {
+            $backtrace=debug_backtrace();
+        }
+
         $name=(isset($backtrace[2]['class'])?$backtrace[2]['class'].'#':'').$backtrace[2]['function'];
+        $traceInfo = null;
+
+        // 获取第一个带位置的信息
+        foreach ($backtrace as $trace) {
+            if (array_key_exists('file',$trace) && $trace['file'] != __FILE__ ){
+                $traceInfo = $trace;
+                break;
+            }
+        }
+
         self::_loginfo(
             $level,
             self::strify(isset($args[1])?$args[0]:$name),
             self::strify($args[1]??$args[0]??null),
-            $backtrace[1]['file'],
-            $backtrace[1]['line'],
+            $traceInfo['file'],
+            $traceInfo['line'],
             $backtrace
         );
     }
