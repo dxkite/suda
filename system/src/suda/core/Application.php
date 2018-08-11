@@ -106,6 +106,15 @@ class Application
         }
         // 加载外部数据库配置
         $this->configDBify();
+        
+        // 自动创建数据库
+        if (conf('database.create',conf('debug')) && !storage()->exist($path = CACHE_DIR.'/database/auto-create')) {
+            $status = (new Query('CREATE DATABASE IF NOT EXISTS `'.conf('database.name').'` CHARACTER SET utf8mb4'))->exec();
+            storage()->path(dirname($path));
+            storage()->put($path,$status);
+            debug()->info(__('auto created database %s',conf('database.name')));
+        }
+
         // 监听器
         if ($path=Config::exist(CONFIG_DIR.'/listener.json')) {
             Hook::loadConfig($path);
