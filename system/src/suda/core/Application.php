@@ -108,10 +108,10 @@ class Application
         $this->configDBify();
         
         // 自动创建数据库
-        if (conf('database.create',conf('debug')) && !storage()->exist($path = CACHE_DIR.'/database/auto-create')) {
+        if (conf('database.create',conf('debug')) && !storage()->exist($path = CACHE_DIR.'/database/auto-create-database/'.conf('database.name'))) {
             $status = (new Query('CREATE DATABASE IF NOT EXISTS `'.conf('database.name').'` CHARACTER SET utf8mb4'))->exec();
             storage()->path(dirname($path));
-            storage()->put($path,$status);
+            storage()->put($path,conf('database.name').':'.$status);
             debug()->info(__('auto created database %s',conf('database.name')));
         }
 
