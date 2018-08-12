@@ -91,6 +91,8 @@ class StmpSender implements Sender
                     }
                 }
                 $this->closeSecutity();
+            } else {
+                return false;
             }
         } else {
             if ($this->openSocket()) {
@@ -103,6 +105,8 @@ class StmpSender implements Sender
                     }
                 }
                 $this->close();
+            } else {
+                return false;
             }
         }
         return true;
@@ -152,7 +156,10 @@ class StmpSender implements Sender
     protected function openSocket()
     {
         //创建socket资源
+        $this->socket =null;
+        set_error_handler([$this,'_errorHandler']);
         $this->socket = fsockopen($this->server, $this->port, $errno, $errstr, $this->timeout);
+        restore_error_handler();
         if (!$this->socket) {
             $this->setError($errstr);
             return false;
@@ -169,7 +176,10 @@ class StmpSender implements Sender
     protected function openSocketSecurity()
     {
         $remoteAddr = 'tcp://' . $this->server . ':' . $this->port;
+        $this->socket =null;
+        set_error_handler([$this,'_errorHandler']);
         $this->socket = stream_socket_client($remoteAddr, $errno, $errstr, $this->timeout);
+        restore_error_handler();
         if (!$this->socket) {
             $this->setError($errstr);
             return false;
@@ -266,6 +276,9 @@ class StmpSender implements Sender
         return $this->error;
     }
 
+    public function _errorHandler()
+    {
+    }
     protected function setError(string $error)
     {
         $this->error=$error;
