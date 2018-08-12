@@ -260,8 +260,8 @@ class Manager
      */
     public static function getAppThemePath(string $module):string
     {
-        $moduleName=Application::getInstance()->getModuleName($module);
-        return RESOURCE_DIR.'/template/{theme}/'.$moduleName;
+        $dirname=Application::getInstance()->getModuleDir($module);
+        return RESOURCE_DIR.'/template/{theme}/'.$dirname;
     }
 
     /**

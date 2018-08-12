@@ -634,7 +634,7 @@ class Application
             $zips = Storage::readDirFiles($path,false,'/(\.zip|\.module|\.s?mod)$/');
 
             foreach ($zips as $zip) {
-                $zipDir = RUNTIME_DIR.'/modules/'.basename($zip);
+                $zipDir = RUNTIME_DIR.'/modules/'. pathinfo($zip,PATHINFO_FILENAME);
                 if (conf('debug') || !Storage::isDir($zipDir)) {
                     ZipHelper::unzip($zip,$zipDir,true);
                     debug()->info(__('extract %s to %s',$zip,$zipDir));
