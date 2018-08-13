@@ -421,8 +421,8 @@ class Request
     {
         $scheme = self::getScheme();
         $host= self::getHost();
-        $port=self::getPort();
-        return $scheme.'://'.$host.($port!=80?':'.$port:'');
+        // $_SERVER['HTTP_HOST'] 包含端口
+        return $scheme.'://'.$host;
     }
 
     public static function getScheme()

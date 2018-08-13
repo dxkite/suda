@@ -496,7 +496,7 @@ class Mapping
         if (isset($json['host'])) {
             $mapping->host = $json['host'];
             $mapping->scheme = $json['scheme'] ?? $_SERVER['REQUEST_SCHEME'] ?? 'http';
-            $mapping->port = $json['port'] ??$_SERVER["SERVER_PORT"]?? 80;
+            $mapping->port = $json['port'] ?? $_SERVER["SERVER_PORT"] ?? 80;
         }
         $mapping->build();
         return $mapping;
