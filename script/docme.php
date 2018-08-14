@@ -14,6 +14,8 @@
  * @version    since 1.2.13
  */
 
+define('DATA_DIR', __DIR__.'/data');
+
 require_once __DIR__ .'/../system/suda-console.php';
 
 \suda\core\Autoloader::addIncludePath(__DIR__.'/docme/src','docme');
@@ -25,3 +27,5 @@ $summary->root(SYSTEM_DIR.'/src');
 $summary->setFunctions(docme\FunctionExport::getUserDefinedFunctions());
 $summary->setClasses(docme\ClassExport::getUserDefinedClasses());
 $summary->export(__DIR__.'/../docs');
+
+file_put_contents(DATA_DIR.'/export.json',json_encode($summary->mdIndex,JSON_PRETTY_PRINT));

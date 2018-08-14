@@ -56,6 +56,9 @@ class ClassExport
         
         $destPath=$methodPath.'.md';
         print 'doc  class '.$classData['className'].' --> '.$destPath ."\r\n";
+
+        $this->docme->mdIndex['classes'][$reflect->getName()]['path'] = $destPath;
+        
         $methodsInfo=[];
 
         foreach ($methods as $method) {
@@ -96,6 +99,7 @@ class ClassExport
         $template->setValues($value);
         $destPath=$path.'/'.$reflect->getName().'.md';
         print 'doc  method '.$classData['className'].' -> '.$value['functionName'] .' --> '.$destPath ."\r\n";
+        $this->docme->mdIndex['classes'][$classData['classFullName']]['methods'][$value['functionName']] = $destPath;
         $template->export($destPath);
         return $value;
     }

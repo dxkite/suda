@@ -26,10 +26,23 @@ class Docme
     protected $exportClass;
     protected $exportFunction;
     protected $rootPath;
+    protected $exportPath;
+
+    public $mdIndex;
 
     public function path(string $path)
     {
-        return Storage::cut(Storage::abspath($path), Storage::abspath($this->rootPath));
+        return self::cut($path,$this->rootPath);
+    }
+
+    public function exportPath(string $path)
+    {
+        return self::realPath(self::cut($path,$this->exportPath));
+    }
+
+    public function cut(string $path,string $parent)
+    {
+        return Storage::cut(Storage::abspath($path), Storage::abspath($parent));
     }
 
     public function isTarget(string $file)
@@ -52,6 +65,7 @@ class Docme
     {
         $classes=[];
         $functions=[];
+        $this->exportPath =$path;
 
         storage()->delete($path.'/functions');
         storage()->delete($path.'/classes');
@@ -129,13 +143,14 @@ class Docme
         print 'generate readme  --> '.$destPath ."\r\n";
     }
 
-    public function genSummary($path, $classes, $functions)
+    public function genSummary($path)
     {
         $template=new ExportTemplate;
         $template->setSrc(__DIR__.'/../template/SUMMARY.md');
         $template->setValues([
-            'classes'=>$classes,
-            'functions'=>$functions,
+            'classes'=> $this->mdIndex['classes'],
+            'functions'=> $this->mdIndex['functions'],
+            'docme' => $this,
         ]);
         $destPath=$path.'/SUMMARY.md';
         $template->export($destPath);

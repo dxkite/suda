@@ -38,6 +38,9 @@ class FunctionExport
         $template->setValues($value);
         $destPath=$path.'/'.$this->reflect->getName().'.md';
         print 'doc function '.$value['functionName'] .' --> '.$destPath ."\r\n";
+
+        $this->docme->mdIndex['functions'][$value['functionName']] =  $destPath;
+        
         $template->export($destPath);
         return $value;
     }
