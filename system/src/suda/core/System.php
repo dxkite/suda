@@ -43,7 +43,7 @@ class System
         if (!DEBUG) {
             ini_set('display_errors', 'Off');
         }
-        // 注册基本常量
+        
         defined('MODULES_DIR') or define('MODULES_DIR', Storage::path(APP_DIR.'/modules'));
         defined('RESOURCE_DIR') or define('RESOURCE_DIR', Storage::path(APP_DIR.'/resource'));
         defined('DATA_DIR') or define('DATA_DIR', Storage::path(APP_DIR.'/data'));
@@ -53,6 +53,7 @@ class System
         defined('CONFIG_DIR') or define('CONFIG_DIR', Storage::path(RESOURCE_DIR.'/config'));
         defined('TEMP_DIR') or define('TEMP_DIR', Storage::path(DATA_DIR.'/temp'));
         defined('SHRAE_DIR') or define('SHRAE_DIR', Storage::path(APP_DIR.'/share'));
+
         Debug::beforeSystemRun();
         Locale::path(SYSTEM_RESOURCE.'/locales');
         debug()->trace('system init');

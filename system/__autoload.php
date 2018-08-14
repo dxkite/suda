@@ -14,6 +14,10 @@
  * @version    since 1.2.9
  */
 
+ // 定义版本
+define('SUDA_VERSION', '2.0');
+
+// 注册基本常量
 defined('D_START') or define('D_START', microtime(true));
 defined('D_MEM') or define('D_MEM', memory_get_usage());
 defined('ROOT_PATH') or define('ROOT_PATH', dirname(__DIR__));
@@ -22,7 +26,6 @@ defined('SYSTEM_RESOURCE') or define('SYSTEM_RESOURCE', SYSTEM_DIR.'/resource');
 defined('DEBUG') or define('DEBUG', false);
 defined('IS_LINUX') or define('IS_LINUX', DIRECTORY_SEPARATOR ===  '/');
 defined('IS_CONSOLE') or define('IS_CONSOLE', PHP_SAPI==='cli');
-define('SUDA_VERSION', '18.1.0');
 
 header('X-Powered-By: Suda/'.SUDA_VERSION);
 

@@ -17,7 +17,7 @@ namespace suda\core;
 
 use ZipArchive;
 
-defined('APP_LOG') or define('APP_LOG', APP_DIR.'/data/logs');
+defined('APP_LOG') or define('APP_LOG', DATA_DIR.'/logs');
 
 /**
  * 异常日志类
