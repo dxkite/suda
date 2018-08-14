@@ -1,6 +1,6 @@
 #  Mapping 
 
-> *文件信息* suda\core\route\Mapping.php: 23~548
+> *文件信息* suda\core\route\Mapping.php: 23~559
 
 
 
@@ -53,10 +53,11 @@
 |  public  |[run](Mapping/run.md) |  |
 |  protected  |[getResponseObStatus](Mapping/getResponseObStatus.md) |  |
 |  public  |[build](Mapping/build.md) |  |
-|  public  |[is](Mapping/is.md) | 判断路由是否为指定模块的路由 |
-|  public  |[inModule](Mapping/inModule.md) | 判断路由似乎否是在指定模块中 |
+|  public  |[is](Mapping/is.md) | 判断路由是否为指定路由 |
+|  public  |[inModule](Mapping/inModule.md) | 判断路由是否为指定模块的路由 |
 |  public  |[getFullName](Mapping/getFullName.md) |  |
 |  public  |[getSortName](Mapping/getSortName.md) |  |
+|  public  |[getName](Mapping/getName.md) |  |
 |  public  |[setParam](Mapping/setParam.md) |  |
 |  public  |[getParam](Mapping/getParam.md) |  |
 |  public  |[setValue](Mapping/setValue.md) |  |

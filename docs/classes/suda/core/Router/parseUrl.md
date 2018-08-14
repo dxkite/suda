@@ -1,6 +1,6 @@
 # Router::parseUrl
 
-> *文件信息* suda\core\Router.php: 27~555
+> *文件信息* suda\core\Router.php: 27~552
 ## 所属类 
 
 [Router](../Router.md)

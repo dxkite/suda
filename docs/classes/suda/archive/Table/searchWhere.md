@@ -1,6 +1,6 @@
 # Table::searchWhere
 搜索指定字段
-> *文件信息* suda\archive\Table.php: 31~869
+> *文件信息* suda\archive\Table.php: 31~911
 ## 所属类 
 
 [Table](../Table.md)
@@ -38,18 +38,18 @@
 根据name字段搜索值为$name的可能值，搜索 status=1 的所有记录
 
 ```php
- $table->search('name',$name,['status'=>1]);
+ $table->searchWhere('name',$name,['status'=>1]);
 ```
 
 搜索 status=1 的所有记录,如果想要实现分页效果，可以用如下代码：搜索，取第一页，每页10条数据
 
 ```php
- $table->search('name',$name,['status'=>1],[], 1,10);
+ $table->searchWhere('name',$name,['status'=>1],[], 1,10);
 ```
 
 如果条件不是等于，则可以用如下：
 **注意** 如下中第三个参数的 :status 必须与第四个参数的键名对上
 
 ```php
- $table->search('name',$name,' status > :status ',['status'=>1]);
+ $table->searchWhere('name',$name,' status > :status ',['status'=>1]);
 ```

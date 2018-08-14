@@ -1,6 +1,6 @@
 # Debug::afterSystemRun
 
-> *文件信息* suda\core\Debug.php: 26~542
+> *文件信息* suda\core\Debug.php: 26~561
 ## 所属类 
 
 [Debug](../Debug.md)

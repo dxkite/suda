@@ -1,6 +1,6 @@
 # Message::__construct
 构造基本信息
-> *文件信息* suda\mail\message\Message.php: 23~273
+> *文件信息* suda\mail\message\Message.php: 23~269
 ## 所属类 
 
 [Message](../Message.md)

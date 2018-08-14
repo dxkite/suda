@@ -1,6 +1,6 @@
 #  System 
 
-> *文件信息* suda\core\System.php: 30~207
+> *文件信息* suda\core\System.php: 30~208
 
 
 系统类，处理系统报错函数以及程序加载

@@ -1,4 +1,4 @@
-# Mapping::getTemplate
+# Mapping::getName
 
 > *文件信息* suda\core\route\Mapping.php: 23~559
 ## 所属类 

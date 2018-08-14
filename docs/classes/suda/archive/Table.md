@@ -1,6 +1,6 @@
 #  Table 
 
-> *文件信息* suda\archive\Table.php: 31~869
+> *文件信息* suda\archive\Table.php: 31~911
 
 
 数据表抽象对象
@@ -31,6 +31,7 @@
 | protected    | creator | | 
 | protected    | orderField | | 
 | protected    | order | | 
+| protected    | allFields | | 
 
 ## 方法
 
@@ -44,6 +45,7 @@
 |  public  |[deleteByPrimaryKey](Table/deleteByPrimaryKey.md) | 通过主键删除元素 |
 |  public  |[search](Table/search.md) | 根据字段搜索 |
 |  public  |[searchWhere](Table/searchWhere.md) | 搜索指定字段 |
+|  public  |[searchWhereCount](Table/searchWhereCount.md) | 通知搜索指定字段的个数 |
 |  public  |[list](Table/list.md) | 分页列出元素 |
 |  public  |[listWhere](Table/listWhere.md) | 条件列出元素 |
 |  public  |[update](Table/update.md) | 根据条件更新列 |

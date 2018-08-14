@@ -1,6 +1,6 @@
 # Mapping::inModule
-判断路由似乎否是在指定模块中
-> *文件信息* suda\core\route\Mapping.php: 23~548
+判断路由是否为指定模块的路由
+> *文件信息* suda\core\route\Mapping.php: 23~559
 ## 所属类 
 
 [Mapping](../Mapping.md)

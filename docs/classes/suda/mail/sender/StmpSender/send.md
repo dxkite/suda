@@ -1,6 +1,6 @@
 # StmpSender::send
 发送信息
-> *文件信息* suda\mail\sender\StmpSender.php: 33~276
+> *文件信息* suda\mail\sender\StmpSender.php: 33~292
 ## 所属类 
 
 [StmpSender](../StmpSender.md)

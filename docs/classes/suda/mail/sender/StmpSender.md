@@ -1,6 +1,6 @@
 #  StmpSender 
 
-> *文件信息* suda\mail\sender\StmpSender.php: 33~276
+> *文件信息* suda\mail\sender\StmpSender.php: 33~292
 
 
 SMTP邮件发送器
@@ -41,6 +41,7 @@ SMTP邮件发送器
 |  protected  |[sendCommand](StmpSender/sendCommand.md) |  |
 |  protected  |[sendCommandSecurity](StmpSender/sendCommandSecurity.md) |  |
 |  public  |[getError](StmpSender/getError.md) |  |
+|  public  |[_errorHandler](StmpSender/_errorHandler.md) |  |
 |  protected  |[setError](StmpSender/setError.md) |  |
 |  protected  |[log](StmpSender/log.md) |  |
  
