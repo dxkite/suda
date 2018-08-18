@@ -39,7 +39,7 @@ class Manager
      *
      * @var string
      */
-    public static $extCpl='.tpl';
+    public static $extCpl='.tpl.php';
     /**
      * 默认样式
      *
@@ -51,8 +51,9 @@ class Manager
      * @var null
      */
     private static $compiler=null;
-    private static $staticPath='assets/static';
-    private static $dynamicPath='assets';
+    private static $staticPath='/static';
+    private static $dynamicPath='';
+    private static $assetsPath= APP_PUBLIC.'/assets';
 
     /**
      * 模板搜索目录
@@ -226,14 +227,14 @@ class Manager
                 }
             }
         }
-        storage()->touchIndex(APP_PUBLIC.'/assets');
+        storage()->touchIndex(self::$assetsPath);
         return $return;
     }
 
     private static function getPublicModulePath(string $module)
     {
         $module_dir=Application::getInstance()->getModuleDir($module);
-        return APP_PUBLIC.'/'.self::$staticPath.'/'.self::shadowName($module_dir);
+        return self::$assetsPath.'/'.self::$staticPath.'/'.self::shadowName($module_dir);
     }
 
     public static function shadowName(string $name)
@@ -374,7 +375,7 @@ class Manager
         // 获取输出
         $output=self::getOutputFile($name);
         // 动态文件导出
-        $outpath=APP_PUBLIC.'/'.self::$dynamicPath.'/'.self::shadowName($module_dir).'/'.$basename;
+        $outpath=$this->assetsPath.'/'.self::$dynamicPath.'/'.self::shadowName($module_dir).'/'.$basename;
         $path=Storage::path(dirname($outpath));
         // 编译检查
         if (Storage::exist($output)) {
@@ -401,9 +402,9 @@ class Manager
         $public=self::$compiler->render($output,$name)->parent($parent)->getRenderedString();
         Storage::put($outpath, $public);
         // 引用文件
-        $static_url=Storage::cut($outpath, APP_PUBLIC);
+        $static_url=Storage::cut($outpath, $this->assetsPath);
         $static_url=preg_replace('/[\\\\\/]+/', '/', $static_url);
-        return  Request::hostBase().'/'.trim($static_url, '/');
+        return  self::assetServer(trim($static_url, '/'));
     }
 
     public static function include(string $name, $parent)
@@ -531,7 +532,7 @@ class Manager
         $module=$module??Application::getInstance()->getActiveModule();
         $path=Manager::getPublicModulePath($module);
         self::prepareResource($module);
-        $static_url=Storage::cut($path, APP_PUBLIC);
+        $static_url=Storage::cut($path, self::$assetsPath );
         $static_url=preg_replace('/[\\\\\/]+/', '/', $static_url);
         return  '/'.$static_url;
     }
@@ -539,15 +540,15 @@ class Manager
     public static function getDynamicAssetPath(string $path, string $module=null)
     {
         $module=$module??Application::getInstance()->getActiveModule();
-        $path=APP_PUBLIC.'/'.self::$dynamicPath.'/'.self::shadowName(Application::getInstance()->getModuleDir($module)).'/'.$path;
-        $static_url=Storage::cut($path, APP_PUBLIC);
+        $path=self::$assetsPath.'/'.self::$dynamicPath.'/'.self::shadowName(Application::getInstance()->getModuleDir($module)).'/'.$path;
+        $static_url=Storage::cut($path, self::$assetsPath);
         $static_url=preg_replace('/[\\\\\/]+/', '/', $static_url);
         return  '/'.$static_url;
     }
 
     public static function assetServer(string $url)
     {
-        return conf('asset-server', Request::hostBase()).$url;
+        return conf('asset-server', Request::hostBase() .'/assets').$url;
     }
 
     /**
