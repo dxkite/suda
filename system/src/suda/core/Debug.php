@@ -452,7 +452,7 @@ class Debug
 
         // 获取第一个带位置的信息
         foreach ($backtrace as $trace) {
-            if (array_key_exists('file',$trace) && $trace['file'] != __FILE__ ){
+            if (array_key_exists('file', $trace) && $trace['file'] != __FILE__) {
                 $traceInfo = $trace;
                 break;
             }
@@ -492,29 +492,35 @@ class Debug
      */
     private static function checkSize()
     {
-        $file=self::$latest;
-        if (file_exists($file)  && filesize($file) > self::MAX_LOG_SIZE) {
-            $path=preg_replace('/[\\\\]+/', '/', Storage::path(APP_LOG.'/zip').'/'.date('Y-m-d').'.zip');
-            $zip = new ZipArchive;
-            $res = $zip->open($path, ZipArchive::CREATE);
-            $rm =[];
-            if ($res === true) {
-                if ($zip->addFile($file, date('Y-m-d'). '-'. $zip->numFiles .'.log')) {
-                    $rm[]=$file;
-                }
-                if ($files=storage()->readDirFiles(APP_LOG.'/dump')) {
-                    foreach ($files as $file) {
-                        if ($zip->addFile($file, 'dump/'.basename($file))) {
-                            $rm[]=$file;
+        $logFile=self::$latest;
+        if (file_exists($logFile)) {
+            if (filesize($logFile) > self::MAX_LOG_SIZE) {
+                $path=preg_replace('/[\\\\]+/', '/', Storage::path(APP_LOG.'/zip').'/'.date('Y-m-d').'.zip');
+                $zip = new ZipArchive;
+                $res = $zip->open($path, ZipArchive::CREATE);
+                $rm =[];
+                if ($res === true) {
+                    if ($zip->addFile($file, date('Y-m-d'). '-'. $zip->numFiles .'.log')) {
+                        $rm[]=$file;
+                    }
+                    if ($files=storage()->readDirFiles(APP_LOG.'/dump')) {
+                        foreach ($files as $file) {
+                            if ($zip->addFile($file, 'dump/'.basename($file))) {
+                                $rm[]=$file;
+                            }
                         }
                     }
+                    $zip->close();
+                    foreach ($rm as $rmFile) {
+                        if (file_exists($rmFile) && is_file($file)) {
+                            unlink($rmFile);
+                        }
+                    }
+                } else {
+                    if (is_file($logFile) && file_exists($logFile)) {
+                        rename($logFile, APP_LOG . '/' . date('Y-m-d'). '-'. substr(md5_file($logFile), 0, 8).'.log');
+                    }
                 }
-                $zip->close();
-            } else {
-                rename($file, APP_LOG . '/' . date('Y-m-d'). '-'. substr(md5_file($file), 0, 8).'.log');
-            }
-            foreach ($rm as $file) {
-                unlink($file);
             }
         }
     }
@@ -528,7 +534,7 @@ class Debug
     {
         $page->set('request_id', self::$hash);
         $page->set('memory_usage', self::memshow(memory_get_usage() - D_MEM, 4));
-        $page->set('memory_peak_usage', self::memshow(memory_get_peak_usage(),4));
+        $page->set('memory_peak_usage', self::memshow(memory_get_peak_usage(), 4));
         $page->set('time_spend', number_format(microtime(true) - D_START, 4));
     }
 
