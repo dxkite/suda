@@ -25,7 +25,7 @@ use suda\tool\ZipHelper;
  * 应用处理类
  *
  * 包含了应用的各种处理方式，可以用快捷函数 app() 来使用本类
- * 
+ *
  */
 class Application
 {
@@ -106,20 +106,10 @@ class Application
         }
         // 加载外部数据库配置
         $this->configDBify();
-        
-        // 自动创建数据库
-        if (conf('database.create',conf('debug')) && !storage()->exist($path = CACHE_DIR.'/database/auto-create-database/'.conf('database.name'))) {
-            $status = (new Query('CREATE DATABASE IF NOT EXISTS `'.conf('database.name').'` CHARACTER SET utf8mb4'))->exec();
-            storage()->path(dirname($path));
-            storage()->put($path,conf('database.name').':'.$status);
-            debug()->info(__('auto created database %s',conf('database.name')));
-        }
-
         // 监听器
         if ($path=Config::exist(CONFIG_DIR.'/listener.json')) {
             Hook::loadConfig($path);
         }
-        
         // 设置PHP属性
         set_time_limit(Config::get('timelimit', 0));
         // 设置时区
@@ -129,7 +119,7 @@ class Application
             Autoloader::setNamespace($namespace);
         }
         // 检测 Composer vendor
-        if (storage()->exist($vendor = APP_DIR.'/../vendor/autoload.php')){
+        if (storage()->exist($vendor = APP_DIR.'/../vendor/autoload.php')) {
             Autoloader::import($vendor);
         }
         // 注册模块目录
@@ -182,7 +172,7 @@ class Application
                 suda_panic('ApplicationException', __('module %s require suda version %s and now is %s', $moduleTemp, $config['suda'], SUDA_VERSION));
             }
             // 检测 Composer vendor
-            if (storage()->exist($vendor = $root.DIRECTORY_SEPARATOR.'vendor'.DIRECTORY_SEPARATOR.'autoload.php')){
+            if (storage()->exist($vendor = $root.DIRECTORY_SEPARATOR.'vendor'.DIRECTORY_SEPARATOR.'autoload.php')) {
                 Autoloader::import($vendor);
             }
             // 加载库路经
@@ -233,10 +223,23 @@ class Application
         }
     }
 
+    protected function initDatabase()
+    {
+        // 自动创建数据库
+        if (conf('database.create', conf('debug')) && !storage()->exist($path = CACHE_DIR.'/database/auto-create-database/'.conf('database.name'))) {
+            $status = (new Query('CREATE DATABASE IF NOT EXISTS `'.conf('database.name').'` CHARACTER SET utf8mb4'))->exec();
+            storage()->path(dirname($path));
+            storage()->put($path, conf('database.name').':'.$status);
+            debug()->info(__('auto created database %s', conf('database.name')));
+        }
+    }
+    
     public function init()
     {
         // 读取目录，注册所有模块
         $this->registerModules();
+        // 自动创建数据库
+        $this->initDatabase();
         // 加载模块
         $this->loadModules();
         // 调整模板
@@ -308,21 +311,21 @@ class Application
 
     /**
      * 获取模块的配置信息
-     * 
+     *
      * @example
-     * 
+     *
      * 获取模块信息 (`module.json` 文件的内容)
-     * 
+     *
      * ```php
      * app()->getModuleConfig(模块名);
      * ```
-     * 
+     *
      * 获取配置信息（`module/resource/config/文件名.json` 文件的内容）
-     * 
+     *
      * ```php
      * app()->getModuleConfig(模块名,文件名);
      * ```
-     * 
+     *
      * @param string $module
      * @param string|null $configName
      * @return array|null
@@ -340,11 +343,11 @@ class Application
 
     /**
      * 获取app/resource/config下的配置
-     * 
+     *
      * ```php
      * app()->getConfig(文件名);
      * ```
-     * 
+     *
      * @param string $configName
      * @return array|null
      */
@@ -507,12 +510,12 @@ class Application
                 Autoloader::import($importPath);
             }
         }
-        Config::set('module',$module_config);
+        Config::set('module', $module_config);
     }
 
     /**
      * 截获请求，请求发起的时候会调用
-     * 
+     *
      * @param Request $request
      * @return boolean true 表示请求可达,false将截获请求
      */
@@ -631,13 +634,13 @@ class Application
             foreach ($dirs as $dir) {
                 self::registerModule($path.'/'.$dir);
             }
-            $zips = Storage::readDirFiles($path,false,'/(\.zip|\.module|\.s?mod)$/');
+            $zips = Storage::readDirFiles($path, false, '/(\.zip|\.module|\.s?mod)$/');
 
             foreach ($zips as $zip) {
-                $zipDir = RUNTIME_DIR.'/modules/'. pathinfo($zip,PATHINFO_FILENAME);
+                $zipDir = RUNTIME_DIR.'/modules/'. pathinfo($zip, PATHINFO_FILENAME);
                 if (conf('debug') || !Storage::isDir($zipDir)) {
-                    ZipHelper::unzip($zip,$zipDir,true);
-                    debug()->info(__('extract %s to %s',$zip,$zipDir));
+                    ZipHelper::unzip($zip, $zipDir, true);
+                    debug()->info(__('extract %s to %s', $zip, $zipDir));
                 }
                 self::registerModule($zipDir);
             }
@@ -719,7 +722,7 @@ class Application
      * @param integer $deep
      * @return string|null
      */
-    public static function getThisModule(int $deep=0):?string 
+    public static function getThisModule(int $deep=0):?string
     {
         $debug=debug_backtrace();
         $info=$debug[$deep];
@@ -743,8 +746,8 @@ class Application
             $config=app()->getModuleConfig($module);
             $modulePath=storage()->path($config['path']);
             $dir = substr($file, 0, strlen($modulePath));
-            if ($modulePath == $dir ) {
-                $next = substr($file,strlen($modulePath),1);
+            if ($modulePath == $dir) {
+                $next = substr($file, strlen($modulePath), 1);
                 $nextIsSp = $next == '/' || $next == '\\';
                 if ($nextIsSp) {
                     return $module;
