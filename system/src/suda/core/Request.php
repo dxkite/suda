@@ -427,7 +427,13 @@ class Request
 
     public static function getScheme()
     {
-        return conf('app.router.scheme', $_SERVER['REQUEST_SCHEME'] ?? 'http');
+        if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS']!='off') {
+            return 'https';
+        }
+        if (isset($_SERVER['REQUEST_SCHEME'])) {
+            return conf('app.router.scheme', $_SERVER['REQUEST_SCHEME']);
+        }
+        return 'http';
     }
     
     public static function getHost()
@@ -485,6 +491,4 @@ class Request
     {
         return $this->mapping;
     }
-
-
 }
