@@ -500,13 +500,13 @@ class Debug
                 $res = $zip->open($path, ZipArchive::CREATE);
                 $rm =[];
                 if ($res === true) {
-                    if ($zip->addFile($file, date('Y-m-d'). '-'. $zip->numFiles .'.log')) {
-                        $rm[]=$file;
+                    if ($zip->addFile($logFile, date('Y-m-d'). '-'. $zip->numFiles .'.log')) {
+                        $rm[]=$logFile;
                     }
-                    if ($files=storage()->readDirFiles(APP_LOG.'/dump')) {
-                        foreach ($files as $file) {
-                            if ($zip->addFile($file, 'dump/'.basename($file))) {
-                                $rm[]=$file;
+                    if ($jsonLogs=storage()->readDirFiles(APP_LOG.'/dump')) {
+                        foreach ($jsonLogs as $json) {
+                            if ($zip->addFile($json, 'dump/'.basename($json))) {
+                                $rm[]=$json;
                             }
                         }
                     }

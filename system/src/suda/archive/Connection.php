@@ -36,9 +36,8 @@ class Connection
     public $password='';
     public $database ='';
     public $id =0;
-
+    public $name = 'default';
     protected $queryCount=0;
-    protected $times=0;
     protected $pdo=null;
     protected $transaction = 0;
     protected static $_id=0;
@@ -46,19 +45,28 @@ class Connection
 
     public function __toString()
     {
-        return 'DB Connection {'.$this->getDsn().'}';
+        return 'DB Connection ['.$this->name.'] {'.$this->getDsn().'}';
     }
 
     public static function getDefaultConnection()
     {
+        return self::getConnection();
+    }
+
+    public static function getConnection(?string $name=null)
+    {
+        $connection = is_null($name) ? 'database':'database.connections.'.$name;
         $conn = new self();
         $conn->type= 'mysql';
-        $conn->host= Config::get('database.host', 'localhost');
-        $conn->database= Config::get('database.name', 'suda_framework');
-        $conn->charset=Config::get('database.charset', 'utf8');
-        $conn->port=Config::get('database.port', 3306);
-        $conn->user = Config::get('database.user', 'root');
-        $conn->password = Config::get('database.passwd', '');
+        if (!is_null($name)) {
+            $conn->name = $name;
+        }
+        $conn->host= Config::get($connection.'.host', 'localhost');
+        $conn->database= Config::get($connection.'.name', 'suda_framework');
+        $conn->charset=Config::get($connection.'.charset', 'utf8');
+        $conn->port=Config::get($connection.'.port', 3306);
+        $conn->user = Config::get($connection.'.user', 'root');
+        $conn->password = Config::get($connection.'.passwd', '');
         return $conn;
     }
 
@@ -190,5 +198,10 @@ class Connection
     public function prefixStr(string $query)
     {
         return preg_replace('/#{(\S+?)}/', $this->prefix.'$1', $query);
+    }
+
+    public function countQuery()
+    {
+        $this->queryCount++;
     }
 }

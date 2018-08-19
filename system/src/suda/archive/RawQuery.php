@@ -355,8 +355,9 @@ class RawQuery implements SQLStatement
         $markstring='SQL Query '.$this->connection->id.' "'.$stmt->queryString.'"';
         debug()->time($markstring);
         $return=$stmt->execute();
+        $this->connection->countQuery();
         debug()->timeEnd($markstring);
-        // self::$queryCount++;
+        
         if ($return) {
             if (Config::get('debug')) {
                 debug()->debug($stmt->queryString .' '. __('Effect %d rows', $stmt->rowCount()), $this->values);
