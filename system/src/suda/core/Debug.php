@@ -512,7 +512,7 @@ class Debug
                     }
                     $zip->close();
                     foreach ($rm as $rmFile) {
-                        if (file_exists($rmFile) && is_file($file)) {
+                        if (file_exists($rmFile) && is_file($rmFile)) {
                             unlink($rmFile);
                         }
                     }
