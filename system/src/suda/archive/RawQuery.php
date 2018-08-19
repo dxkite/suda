@@ -287,7 +287,6 @@ class RawQuery implements SQLStatement
      */
     public function rollBack()
     {
-        self::connectPdo();
         $this->connection->rollBack();
     }
 
