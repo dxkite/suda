@@ -92,7 +92,9 @@ class RawQuery implements SQLStatement
     public function fetch(int $fetch_style = PDO::FETCH_ASSOC):?array
     {
         if ($this->stmt) {
-            return $this->stmt->fetch($fetch_style);
+            if ($data=$this->stmt->fetch($fetch_style)) {
+                return self::__outputRowTransfrom($data);
+            }
         } else {
             if (self::__query($this->query, $this->values)) {
                 if ($data=$this->stmt->fetch($fetch_style)) {
