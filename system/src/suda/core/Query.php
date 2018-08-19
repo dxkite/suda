@@ -192,9 +192,9 @@ class Query extends SQLQuery
                 $binds[$bname]=static::value($name, $value);
                 $sets[]="`{$name}`=:{$bname}";
             }
-            $sql='UPDATE `'.$table.'` SET '.implode(',', $sets).' '.self::prepareWhere($where, $binds).';';
+            $sql='UPDATE `'.$table.'` SET '.implode(',', $sets).' '.self::prepareWhere($where, $binds, $count).';';
         } else {
-            $sql='UPDATE `'.$table.'` SET '.$set_fields.' '.self::prepareWhere($where, $binds).';';
+            $sql='UPDATE `'.$table.'` SET '.$set_fields.' '.self::prepareWhere($where, $binds, $count).';';
         }
         return (new Query($sql, $binds))->object($object)->exec();
     }
@@ -215,12 +215,12 @@ class Query extends SQLQuery
         return (new SQLQuery($sql, $binds))->object($object)->exec();
     }
 
-    public static function prepareIn(string $name, array $invalues, string $prefix='in_')
+
+    public static function prepareIn(string $name, array $invalues, string $prefix='in_',int $count=0)
     {
         if (count($invalues)<=0) {
             throw new SQLException('on field '.$name.' value can\'t be empty array');
         }
-        $count=0;
         $names=[];
         $param=[];
         foreach ($invalues as $key=>$value) {
@@ -231,6 +231,7 @@ class Query extends SQLQuery
         $sql=$name.' IN ('.implode(',', $names).')';
         return [$sql,$param];
     }
+
 
     public static function prepareSearch($field, string $search)
     {
@@ -250,18 +251,16 @@ class Query extends SQLQuery
         return [$search_str,$bind];
     }
 
-    public static function prepareWhere($where, array &$bind)
+    public static function prepareWhere($where, array &$bind,string $prefix='where_', int $count=1)
     {
         $param=[];
-        $count=0;
         if (is_array($where)) {
-            $count=0;
             $and=[];
             foreach ($where as $name => $value) {
-                $bname= $name.($count++);
+                $bname= $prefix.$name.($count++);
                 // in cause
                 if (is_array($value)) {
-                    list($sql, $in_param)=self::prepareIn($name, $value);
+                    list($sql, $in_param)=self::prepareIn($name, $value,'where_in_',$count);
                     $and[]=$sql;
                     $param=array_merge($param, $in_param);
                 } else {
@@ -269,7 +268,6 @@ class Query extends SQLQuery
                     $param[$bname]=static::value($name, $value);
                 }
             }
-
             $where=implode(' AND ', $and);
         }
         $where=' WHERE '.rtrim($where, ';');
