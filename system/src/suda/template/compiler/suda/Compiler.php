@@ -115,7 +115,7 @@ class Compiler implements CompilerImpl
     public function render(string $viewfile, ?string $name =null)
     {
         if (storage()->exist($viewfile)) {
-            $templateInfo =  require_once $viewfile;
+            $templateInfo =  include $viewfile;
             $classname = $templateInfo['class'];
             return $template=new $classname;
         } else {
