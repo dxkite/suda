@@ -1,6 +1,6 @@
 # Query::prepareIn
 
-> *文件信息* suda\core\Query.php: 26~327
+> *文件信息* suda\core\Query.php: 26~325
 ## 所属类 
 
 [Query](../Query.md)
@@ -20,6 +20,7 @@
 | name |  string | 无 | 无 |
 | invalues |  array | 无 | 无 |
 | prefix |  string | in_ | 无 |
+| count |  int | 0 | 无 |
 
 ## 返回值
 返回值类型不定

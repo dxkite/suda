@@ -1,6 +1,6 @@
 # Manager::theme
 获取/设置模板样式
-> *文件信息* suda\template\Manager.php: 29~658
+> *文件信息* suda\template\Manager.php: 29~659
 ## 所属类 
 
 [Manager](../Manager.md)

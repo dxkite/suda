@@ -1,6 +1,6 @@
 # RawQuery::object
 添加列处理类
-> *文件信息* suda\archive\RawQuery.php: 31~456
+> *文件信息* suda\archive\RawQuery.php: 31~458
 ## 所属类 
 
 [RawQuery](../RawQuery.md)

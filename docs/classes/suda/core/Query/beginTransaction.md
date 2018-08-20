@@ -1,6 +1,6 @@
 # Query::beginTransaction
 事务系列，开启事务
-> *文件信息* suda\core\Query.php: 26~327
+> *文件信息* suda\core\Query.php: 26~325
 ## 所属类 
 
 [Query](../Query.md)

@@ -1,6 +1,6 @@
 #  Application 
 
-> *文件信息* suda\core\Application.php: 30~756
+> *文件信息* suda\core\Application.php: 30~759
 
 
 应用处理类
@@ -29,6 +29,7 @@
 |  public  |[addModulesPath](Application/addModulesPath.md) | 添加模块扫描目录 |
 |  protected  |[loadModules](Application/loadModules.md) | 载入模块 |
 |  public  |[checkModuleRequire](Application/checkModuleRequire.md) | 检查模块依赖 |
+|  protected  |[initDatabase](Application/initDatabase.md) |  |
 |  public  |[init](Application/init.md) |  |
 |  public  |[installModule](Application/installModule.md) | 安装有自动安装功能的模块 |
 |  public  |[getModules](Application/getModules.md) | 获取所有的模块 |

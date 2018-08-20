@@ -1,6 +1,6 @@
 #  Table 
 
-> *文件信息* suda\archive\Table.php: 31~911
+> *文件信息* suda\archive\Table.php: 31~944
 
 
 数据表抽象对象
@@ -32,6 +32,8 @@
 | protected    | orderField | | 
 | protected    | order | | 
 | protected    | allFields | | 
+| protected    | exportFields | 设置导出列大小| 
+| protected    | exportBlockSize | 设置导出数据分块大小| 
 
 ## 方法
 
@@ -81,7 +83,7 @@
 |  protected  |[cacheDbInfo](Table/cacheDbInfo.md) |  |
 |  protected  static|[strify](Table/strify.md) |  |
 |  protected  |[_order](Table/_order.md) |  |
-|  protected  |[getDataString](Table/getDataString.md) | 获取数据SQL字符串 |
+|  protected  |[getDataStringLimit](Table/getDataStringLimit.md) |  |
  
 
 ## 例子

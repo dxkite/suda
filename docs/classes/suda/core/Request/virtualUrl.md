@@ -1,6 +1,6 @@
 # Request::virtualUrl
 
-> *文件信息* suda\core\Request.php: 24~490
+> *文件信息* suda\core\Request.php: 24~494
 ## 所属类 
 
 [Request](../Request.md)

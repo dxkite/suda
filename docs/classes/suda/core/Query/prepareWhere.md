@@ -1,6 +1,6 @@
 # Query::prepareWhere
 
-> *文件信息* suda\core\Query.php: 26~327
+> *文件信息* suda\core\Query.php: 26~325
 ## 所属类 
 
 [Query](../Query.md)
@@ -18,6 +18,8 @@
 | 参数名 | 类型 | 默认值 | 说明 |
 |--------|-----|-------|-------|
 | bind |  array | 无 | 无 |
+| prefix |  string | where_ | 无 |
+| count |  int | 1 | 无 |
 
 ## 返回值
 返回值类型不定

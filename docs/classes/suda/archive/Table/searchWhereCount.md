@@ -1,6 +1,6 @@
 # Table::searchWhereCount
 通知搜索指定字段的个数
-> *文件信息* suda\archive\Table.php: 31~911
+> *文件信息* suda\archive\Table.php: 31~944
 ## 所属类 
 
 [Table](../Table.md)

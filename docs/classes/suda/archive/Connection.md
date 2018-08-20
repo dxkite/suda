@@ -1,6 +1,6 @@
 #  Connection 
 
-> *文件信息* suda\archive\Connection.php: 28~194
+> *文件信息* suda\archive\Connection.php: 28~207
 
 
 数据表链接对象
@@ -25,8 +25,8 @@
 | public    | password | | 
 | public    | database | | 
 | public    | id | | 
+| public    | name | | 
 | protected    | queryCount | | 
-| protected    | times | | 
 | protected    | pdo | | 
 | protected    | transaction | | 
 | protected  static  | _id | | 
@@ -37,6 +37,7 @@
 |--------|-------|------|
 |  public  |[__toString](Connection/__toString.md) |  |
 |  public  static|[getDefaultConnection](Connection/getDefaultConnection.md) |  |
+|  public  static|[getConnection](Connection/getConnection.md) |  |
 |  protected  |[getDsn](Connection/getDsn.md) |  |
 |  public  |[connect](Connection/connect.md) |  |
 |  public  |[getPdo](Connection/getPdo.md) |  |
@@ -50,6 +51,7 @@
 |  public  |[quote](Connection/quote.md) |  |
 |  public  |[arrayQuote](Connection/arrayQuote.md) |  |
 |  public  |[prefixStr](Connection/prefixStr.md) |  |
+|  public  |[countQuery](Connection/countQuery.md) |  |
  
 
 ## 例子

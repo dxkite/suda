@@ -1,6 +1,6 @@
 # Query::value
 生成一个数据输入值
-> *文件信息* suda\core\Query.php: 26~327
+> *文件信息* suda\core\Query.php: 26~325
 ## 所属类 
 
 [Query](../Query.md)

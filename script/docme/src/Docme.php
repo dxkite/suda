@@ -146,7 +146,7 @@ class Docme
     public function genSummary($path)
     {
         $template=new ExportTemplate;
-        $template->setSrc(__DIR__.'/../template/SUMMARY.md');
+        $template->setSrc(__DIR__.'/../template/summary.md');
         $template->setValues([
             'classes'=> $this->mdIndex['classes'],
             'functions'=> $this->mdIndex['functions'],

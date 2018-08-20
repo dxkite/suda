@@ -1,6 +1,6 @@
 # RawQuery::rollBack
 事务系列，撤销事务
-> *文件信息* suda\archive\RawQuery.php: 31~456
+> *文件信息* suda\archive\RawQuery.php: 31~458
 ## 所属类 
 
 [RawQuery](../RawQuery.md)
