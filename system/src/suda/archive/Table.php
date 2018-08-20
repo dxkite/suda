@@ -41,6 +41,20 @@ abstract class Table
     protected $order=null;
     protected $allFields = null;
 
+    /**
+     * 设置导出列大小
+     *
+     * @var array
+     */
+    protected $exportFields = null;
+
+    /**
+     * 设置导出数据分块大小
+     *
+     * @var integer
+     */
+    protected $exportBlockSize=2000;
+
     const ORDER_ASC=0;
     const ORDER_DESC=1;
 
@@ -714,13 +728,15 @@ abstract class Table
      */
     public function export(string $path)
     {
-        if ($data=$this->getDataString()) {
+        $offset=0;
+        storage()->path(dirname($path));
+        while ($data=$this->getDataStringLimit($this->exportBlockSize, $offset)) {
+            $offset+=$this->exportBlockSize;
             $base64=base64_encode($data);
             $sha1=sha1($base64);
-            storage()->path(dirname($path));
-            return storage()->put($path, $this->tableName.','.time().','.$sha1.',base64;'.$base64);
+            storage()->put($path, $this->tableName.','.time().','.$sha1.',base64;'.$base64."\r\n", FILE_APPEND);
         }
-        return false;
+        return true;
     }
 
     /**
@@ -732,18 +748,25 @@ abstract class Table
     public function import(string $path)
     {
         if (storage()->exist($path)) {
-            try {
-                list($head, $data)=explode(';', storage()->get($path));
-                list($name, $time, $sha1, $dataType)=explode(',', $head);
-            } catch (\Exception $e) {
-                return false;
-            }
-            if (sha1($data)!=$sha1 || $time >time() || $name!=$this->tableName) {
-                return false;
-            }
+            $dataFile=  storage()->get($path);
+            $dataBase64 = preg_split('/\r?\n/', $dataFile);
+            $num=0;
             try {
                 static::begin();
-                $num = (new SQLQuery(base64_decode($data)))->exec();
+                foreach ($dataBase64 as $dataCode) {
+                    if (!empty($dataCode)) {
+                        try {
+                            list($head, $data)=explode(';', $dataCode);
+                            list($name, $time, $sha1, $dataType)=explode(',', $head);
+                        } catch (\Exception $e) {
+                            return false;
+                        }
+                        if (sha1($data)!=$sha1 || $time >time() || $name!=$this->tableName) {
+                            return false;
+                        }
+                        $num+= (new SQLQuery(base64_decode($data)))->exec();
+                    }
+                }
                 static::commit();
                 return $num;
             } catch (\Exception $e) {
@@ -862,19 +885,29 @@ abstract class Table
         }
     }
 
-    /**
-     * 获取数据SQL字符串
-     *
-     * @return void
-     */
-    protected function getDataString()
+    protected function getDataStringLimit(?int $limit=null, ?int $offset=null):?string
     {
         $table=$this->tableName;
-        $q=new SQLQuery('SELECT * FROM `#{'.$table.'}` WHERE 1;', [], true);
-        $columns=(new SQLQuery('SHOW COLUMNS FROM `#{'.$table.'}`;'))->fetchAll();
-        $key='(';
-        foreach ($columns  as $column) {
-            $key.='`'.$column['Field'].'`,';
+        $limitCondition=';';
+        if (!is_null($limit)) {
+            $limitCondition='LIMIT ';
+            if (!is_null($offset)) {
+                $limitCondition.=$offset.',';
+            }
+            $limitCondition.=$limit.';';
+        }
+        $q=new SQLQuery('SELECT * FROM `#{'.$table.'}` WHERE 1 '. $limitCondition, [], true);
+        if (is_null($this->exportFields)) {
+            $columns=(new SQLQuery('SHOW COLUMNS FROM `#{'.$table.'}`;'))->fetchAll();
+            $key='(';
+            foreach ($columns  as $column) {
+                $key.='`'.$column['Field'].'`,';
+            }
+        } else {
+            $key='(';
+            foreach ($this->exportFields  as $field) {
+                $key.='`'.$field.'`,';
+            }
         }
         $key=rtrim($key, ',').')';
         if ($q) {
@@ -902,10 +935,10 @@ abstract class Table
                 $sqlout.=$sql;
             }
             if ($first) {
-                return false;
+                return null;
             }
             return $sqlout;
         }
-        return false;
+        return null;
     }
 }
