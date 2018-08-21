@@ -646,7 +646,7 @@ class Application
     public function registerModule(string $path, ?string $config =null)
     {
         $config = is_null($config)?$path.'/module.json':$config;
-        if (Storage::exist($path) && $config = Config::exist($config)) {
+        if (Storage::exist($path) && $config = Config::resolve($config)) {
             $dir=basename($path);
             debug()->trace(__('load module config %s', $config));
             $configData=Config::loadConfig($config);
