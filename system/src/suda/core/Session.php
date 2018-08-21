@@ -21,57 +21,20 @@ namespace suda\core;
  */
 class Session
 {
-    protected static $instance;
-    
-    public static function getInstance()
-    {
-        if (!self::$instance) {
-            self::$instance=new  self;
-        }
-        return self::$instance;
-    }
-    
-    protected function __construct()
-    {
-        if (session_status()==PHP_SESSION_NONE) {
-            $path=DATA_DIR.'/session';
-            Storage::mkdirs($path);
-            session_save_path($path);
-            session_name(conf('session.name', 'session'));
-            session_cache_limiter(conf('session.limiter', 'private'));
-            session_cache_expire(conf('session.expire', 0));
-            session_start();
-        }
-    }
+    protected static $session;
 
-    public static function set(string $name, $value)
+    public static function newInstance(string $type = 'PHP')
     {
-        $_SESSION[$name]=$value;
-        return isset($_SESSION[$name]);
-    }
-
-    public static function get(string $name='', $default=null)
-    {
-        if ($name) {
-            return isset($_SESSION[$name])?$_SESSION[$name]:$default;
+        if (class_exists($class=__NAMESPACE__.'\\session\\'.ucfirst($type).'Session')) {
+            static::$session[$type]=$class::newInstance();
+            return static::$session[$type];
         } else {
-            return $_SESSION;
+            throw new Exception(__('unsupport type of session:%s', $type));
         }
     }
-
-    public static function delete(string $name)
+ 
+    public static function __callStatic(string $method, $args)
     {
-        unset($_SESSION[$name]);
-    }
-
-    public static function has(string $name)
-    {
-        return isset($_SESSION[$name]);
-    }
-    public static function destroy()
-    {
-        session_unset();
+        return call_user_func_array([self::newInstance(conf('session.type','PHP')),$method], $args);
     }
 }
-// 初始化
-Session::getInstance();
