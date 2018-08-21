@@ -104,7 +104,7 @@ class Router
 
     protected function saveFile()
     {
-        storage()->put($this->cacheFile('.modules'), implode("\r\n", self::$cacheModules));
+        storage()->put($this->cacheFile('.modules'), implode(PHP_EOL, self::$cacheModules));
         storage()->put($this->cacheFile(self::CACHE_NAME), serialize($this->routers));
         storage()->put($this->cacheFile(self::CACHE_NAME.'.php'), '<?php '.var_export($this->routers, true));
     }

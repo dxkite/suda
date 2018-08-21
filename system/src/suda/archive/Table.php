@@ -734,7 +734,7 @@ abstract class Table
             $offset+=$this->exportBlockSize;
             $base64=base64_encode($data);
             $sha1=sha1($base64);
-            storage()->put($path, $this->tableName.','.time().','.$sha1.',base64;'.$base64."\r\n", FILE_APPEND);
+            storage()->put($path, $this->tableName.','.time().','.$sha1.',base64;'.$base64.PHP_EOL, FILE_APPEND);
         }
         return true;
     }

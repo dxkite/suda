@@ -271,7 +271,7 @@ class Application
             foreach ($installs as $cmd) {
                 cmd($cmd)->args($config);
             }
-            file_put_contents($install_lock, 'name='.$module."\r\n".'time='.microtime(true));
+            file_put_contents($install_lock, 'name='.$module.PHP_EOL.'time='.microtime(true));
         }
     }
 

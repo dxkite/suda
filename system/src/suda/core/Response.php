@@ -51,9 +51,9 @@ abstract class Response
                 $file=APP_PUBLIC.$script;
                 $content=file_get_contents($file);
                 if (preg_match('/\<\?php\s+#\d+\r\n/i', $content)) {
-                    $content=preg_replace('/\<\?php\s+#\d+\r\n/i', '<?php #'.time()."\r\n", $content);
+                    $content=preg_replace('/\<\?php\s+#\d+\r\n/i', '<?php #'.time().PHP_EOL, $content);
                 } else {
-                    $content=preg_replace('/\<\?php/i', '<?php #'.time()."\r\n", $content);
+                    $content=preg_replace('/\<\?php/i', '<?php #'.time().PHP_EOL, $content);
                 }
                 file_put_contents($file, $content);
             }

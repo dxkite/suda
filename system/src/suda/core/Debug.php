@@ -68,7 +68,7 @@ class Debug
         self::$file= $file;
         Config::set('request', self::$hash);
         fwrite(self::$file, '====='.self::$hash.'====='.$request->ip().'====='.(conf('debug', defined('DEBUG') && DEBUG)?'debug':'normal')."=====\r\n");
-        fwrite(self::$file, self::printHead()."\r\n");
+        fwrite(self::$file, self::printHead().PHP_EOL);
         if (defined('APP_LOG') && Storage::path(APP_LOG) && is_writable(APP_LOG)) {
             self::$latest =APP_LOG.'/latest.log';
         }
@@ -168,7 +168,7 @@ class Debug
         if ($str) {
             $str='';
             foreach ($traces_console as $trace_info) {
-                $str.=$perfix.preg_replace('/\n/', "\n".$perfix."\t", $trace_info)."\r\n";
+                $str.=$perfix.preg_replace('/\n/', "\n".$perfix."\t", $trace_info).PHP_EOL;
             }
             return $str;
         }
@@ -354,10 +354,10 @@ class Debug
         }
         
         $str="\t[".number_format($log['time'], 10).' s : '.self::memshow($log['mem'], 2)."]\t[".$log['level']."]\t[".$log['file'].':'.$log['line']."]\t\t".$log['name']."\t".$log['message'];
-        $str=preg_replace('/\n/', "\n\t\t", $str)."\r\n";
+        $str=preg_replace('/\n/', "\n\t\t", $str).PHP_EOL;
         // 添加调用栈 高级或者同级则记录
         if ((defined('LOG_FILE_APPEND') && LOG_FILE_APPEND) && self::compareLevel($log['level'], conf('debug-backtrace', Debug::ERROR)) >= 0) {
-            $str.=self::printTrace($log['backtrace'], true, "\t\t=> ")."\r\n";
+            $str.=self::printTrace($log['backtrace'], true, "\t\t=> ").PHP_EOL;
         }
         return fwrite(self::$file, $str);
     }
