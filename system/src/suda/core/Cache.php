@@ -25,10 +25,10 @@ class Cache
 {
     protected static $cache;
 
-    public static function newInstance(string $type = 'File')
+    public static function getInstance(string $type = 'File')
     {
         if (class_exists($class=__NAMESPACE__.'\\cache\\'.ucfirst($type).'Cache')) {
-            static::$cache[$type]=$class::newInstance();
+            static::$cache[$type]=$class::getInstance();
             return static::$cache[$type];
         } else {
             throw new Exception(__('unsupport type of cache:%s', $type));
@@ -37,6 +37,6 @@ class Cache
  
     public static function __callStatic(string $method, $args)
     {
-        return call_user_func_array([self::newInstance(conf('cache.type','File')),$method], $args);
+        return call_user_func_array([self::getInstance(conf('cache.type','File')),$method], $args);
     }
 }

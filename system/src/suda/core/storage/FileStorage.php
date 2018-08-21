@@ -26,7 +26,7 @@ class FileStorage implements Storage
 {
     protected static $intance;
 
-    public static function newInstance()
+    public static function getInstance()
     {
         if (is_null(self::$intance)) {
             return self::$intance = new self;

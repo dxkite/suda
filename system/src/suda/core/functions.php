@@ -201,7 +201,7 @@ function cookie()
  */
 function cache(string $type='File')
 {
-    return suda\core\Cache::newInstance($type);
+    return suda\core\Cache::getInstance($type);
 }
 
 /**
@@ -211,7 +211,7 @@ function cache(string $type='File')
  */
 function storage(string $type='File')
 {
-    return suda\core\Storage::newInstance($type);
+    return suda\core\Storage::getInstance($type);
 }
 
 /**

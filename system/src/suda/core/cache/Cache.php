@@ -76,5 +76,5 @@ interface Cache
      *
      * @return Cache
      */
-    public static function newInstance();
+    public static function getInstance();
 }

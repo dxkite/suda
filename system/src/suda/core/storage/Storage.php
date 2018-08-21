@@ -222,5 +222,5 @@ interface Storage
      */
     public function temp(string $prefix='dx_');
 
-    public static function newInstance();
+    public static function getInstance();
 }

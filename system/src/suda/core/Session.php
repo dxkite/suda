@@ -23,10 +23,10 @@ class Session
 {
     protected static $session;
 
-    public static function newInstance(string $type = 'PHP')
+    public static function getInstance(string $type = 'PHP')
     {
         if (class_exists($class=__NAMESPACE__.'\\session\\'.ucfirst($type).'Session')) {
-            static::$session[$type]=$class::newInstance();
+            static::$session[$type]=$class::getInstance();
             return static::$session[$type];
         } else {
             throw new Exception(__('unsupport type of session:%s', $type));
@@ -35,6 +35,6 @@ class Session
  
     public static function __callStatic(string $method, $args)
     {
-        return call_user_func_array([self::newInstance(conf('session.type','PHP')),$method], $args);
+        return call_user_func_array([self::getInstance(conf('session.type','PHP')),$method], $args);
     }
 }

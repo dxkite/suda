@@ -23,10 +23,10 @@ class Storage
 {
     protected static $storage;
 
-    public static function newInstance(string $type = 'File')
+    public static function getInstance(string $type = 'File')
     {
         if (class_exists($class=__NAMESPACE__.'\\storage\\'.ucfirst($type).'Storage')) {
-            static::$storage[$type]=$class::newInstance();
+            static::$storage[$type]=$class::getInstance();
             return static::$storage[$type];
         } else {
             throw new Exception(__('unsupport type of storage:%s', $type));
@@ -35,6 +35,6 @@ class Storage
  
     public static function __callStatic(string $method, $args)
     {
-        return call_user_func_array([self::newInstance(),$method], $args);
+        return call_user_func_array([self::getInstance(),$method], $args);
     }
 }
