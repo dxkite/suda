@@ -3,7 +3,7 @@
 > **注：** 文档由程序自动生成
 
 - suda 2.0 
-- 2018-08-21 12:57:07
+- 2018-08-22 06:49:00
 
 ## 函数列表 
 
@@ -70,6 +70,7 @@
 |[suda\core\Response](classes/suda/core/Response.md) | 网页响应类，用于处理来自服务器的请求 |
 |[suda\core\route\Mapping](classes/suda/core/route/Mapping.md) |  |
 |[suda\core\Router](classes/suda/core/Router.md) | 路由处理类 |
+|[suda\core\session\PHPSession](classes/suda/core/session/PHPSession.md) | 会话操纵类 |
 |[suda\core\Session](classes/suda/core/Session.md) | 会话操纵类 |
 |[suda\exception\ApplicationException](classes/suda/exception/ApplicationException.md) |  |
 |[suda\exception\ArchiveException](classes/suda/exception/ArchiveException.md) |  |
@@ -96,4 +97,5 @@
 |[suda\template\Compiler](classes/suda/template/Compiler.md) | 编译器接口 |
 |[suda\archive\SQLStatement](classes/suda/archive/SQLStatement.md) | 数据库查询语句接口 |
 |[suda\core\cache\Cache](classes/suda/core/cache/Cache.md) | 缓存接口 |
+|[suda\core\session\Session](classes/suda/core/session/Session.md) | Session 接口 |
 |[suda\mail\sender\Sender](classes/suda/mail/sender/Sender.md) |  |

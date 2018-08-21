@@ -1,9 +1,9 @@
-# Session::destroy
+# PHPSession::getInstance
 
-> *文件信息* suda\core\Session.php: 22~75
+> *文件信息* suda\core\session\PHPSession.php: 24~83
 ## 所属类 
 
-[Session](../Session.md)
+[PHPSession](../PHPSession.md)
 
 ## 可见性
 

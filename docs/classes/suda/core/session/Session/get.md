@@ -1,16 +1,16 @@
 # Session::get
 
-> *文件信息* suda\core\Session.php: 22~75
+> *文件信息* suda\core\session\Session.php: 22~30
 ## 所属类 
 
 [Session](../Session.md)
 
 ## 可见性
 
-  public  static
+abstract  public  
 ## 说明
 
-控制PHP全局会话，
+该函数暂时无说明
 
 ## 参数
 

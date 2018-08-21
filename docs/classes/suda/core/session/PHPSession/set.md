@@ -1,16 +1,16 @@
-# Debug::timeEnd
+# PHPSession::set
 
-> *文件信息* suda\core\Debug.php: 26~568
+> *文件信息* suda\core\session\PHPSession.php: 24~83
 ## 所属类 
 
-[Debug](../Debug.md)
+[PHPSession](../PHPSession.md)
 
 ## 可见性
 
-  public  static
+  public  
 ## 说明
 
-用于记录运行日志和运行信息以及提供错误显示
+控制PHP全局会话，
 
 ## 参数
 

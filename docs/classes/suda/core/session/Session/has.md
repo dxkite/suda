@@ -1,16 +1,16 @@
-# Debug::timeEnd
+# Session::has
 
-> *文件信息* suda\core\Debug.php: 26~568
+> *文件信息* suda\core\session\Session.php: 22~30
 ## 所属类 
 
-[Debug](../Debug.md)
+[Session](../Session.md)
 
 ## 可见性
 
-  public  static
+abstract  public  
 ## 说明
 
-用于记录运行日志和运行信息以及提供错误显示
+该函数暂时无说明
 
 ## 参数
 
