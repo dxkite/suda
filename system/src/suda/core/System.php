@@ -116,7 +116,7 @@ class System
         debug()->trace(__('reading manifast file'));
         $path = APP_DIR.DIRECTORY_SEPARATOR.'manifast.json';
         $manifast  = [];
-        if (!Config::exist($path)) {
+        if (!Config::resolve($path)) {
             debug()->trace(__('create base app'));
             Storage::copydir(SYSTEM_RESOURCE.'/app/', APP_DIR);
             Config::set('app.init', true);

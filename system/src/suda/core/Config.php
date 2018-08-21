@@ -37,7 +37,10 @@ class Config
     public static function loadConfig(string $path):?array
     {
         $data=null;
-        if (file_exists($path)) {
+        if (!file_exists($path)) {
+            $path = self::resolve($path);
+        }
+        if ($path) {
             $ext = strtolower(pathinfo($path, PATHINFO_EXTENSION));
             switch ($ext) {
                 case 'yml':
@@ -58,19 +61,11 @@ class Config
                 default:
                     $data = json_decode(file_get_contents($path), true);
             }
-        } elseif (function_exists('yaml_parse_file') && file_exists($config = $path.'.yml')) {
-            $data = yaml_parse_file($config);
-        } elseif (class_exists('Spyc') && file_exists($config = $path.'.yml')) {
-            $data = \Spyc::YAMLLoad($path);
-        } elseif (file_exists($config = $path.'.json')) {
-            $data = json_decode(file_get_contents($config), true);
-        } elseif (file_exists($config = $path.'.php')) {
-            $data = include $config;
         }
         return $data;
     }
 
-    public static function exist(string $path)
+    public static function resolve(string $path):?string
     {
         if (file_exists($path)) {
             return $path;
@@ -83,15 +78,20 @@ class Config
             }
             if (file_exists($conf = $basepath.'.yml') && function_exists('yaml_parse_file')) {
                 return $conf;
-            } elseif (class_exists('Spyc') && file_exists($conf = $basepath.'.yml') ) {
+            } elseif (class_exists('Spyc') && file_exists($conf = $basepath.'.yml')) {
                 return $conf;
-            } elseif (file_exists($conf =$basepath.'.json')) {
+            } elseif (file_exists($conf=$basepath.'.json')) {
                 return $conf;
-            } elseif (file_exists($conf =$basepath.'.php')) {
+            } elseif (file_exists($conf=$basepath.'.php')) {
                 return $conf;
             }
         }
-        return false;
+        return null;
+    }
+
+    public static function exist(string $path):bool
+    {
+        return self::resolve($path) != null;
     }
 
     public static function assign(array $config)

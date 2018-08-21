@@ -72,7 +72,7 @@ class Locale
     */
     public static function loadFile(string $path)
     {
-        if ($file=Config::exist($path)) {
+        if ($file=Config::resolve($path)) {
             $localeArray = Config::loadConfig($file);
             return self::include($localeArray);
         }

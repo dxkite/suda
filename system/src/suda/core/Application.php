@@ -86,7 +86,7 @@ class Application
         }
         $this->path=APP_DIR;
         // 获取基本配置信息
-        if ($path=Config::exist(CONFIG_DIR.'/config.json')) {
+        if ($path=Config::resolve(CONFIG_DIR.'/config.json')) {
             try {
                 Config::load($path);
             } catch (\Exception $e) {
@@ -95,7 +95,7 @@ class Application
                 suda_panic('Kernal Panic', $message);
             }
             // 动态配置覆盖
-            if ($path=Config::exist(RUNTIME_DIR.'/global.config.php')) {
+            if ($path=Config::resolve(RUNTIME_DIR.'/global.config.php')) {
                 Config::load($path);
             }
             // 开发状态覆盖
@@ -107,7 +107,7 @@ class Application
         // 加载外部数据库配置
         $this->configDBify();
         // 监听器
-        if ($path=Config::exist(CONFIG_DIR.'/listener.json')) {
+        if ($path=Config::resolve(CONFIG_DIR.'/listener.json')) {
             Hook::loadConfig($path);
         }
         // 设置PHP属性
@@ -180,7 +180,7 @@ class Application
                 }
             }
             // 加载监听器
-            if ($listenerPath=Config::exist($root.'/resource/config/listener.json')) {
+            if ($listenerPath=Config::resolve($root.'/resource/config/listener.json')) {
                 Hook::loadConfig($listenerPath);
                 Hook::exec('loadModule:'.self::getModuleName($moduleTemp));
             }
@@ -349,7 +349,7 @@ class Application
      */
     public function getConfig(string $configName):?array
     {
-        if ($path = Config::exist(CONFIG_DIR .'/'.$configName)) {
+        if ($path = Config::resolve(CONFIG_DIR .'/'.$configName)) {
             return Config::loadConfig($path);
         }
         return null;
@@ -375,7 +375,7 @@ class Application
      */
     public function getModuleConfigPath(string $module, string $name):?string
     {
-        return  Config::exist(self::getModulePath($module).'/resource/config/'.$name)?:null;
+        return  Config::resolve(self::getModulePath($module).'/resource/config/'.$name)?:null;
     }
 
     /**
