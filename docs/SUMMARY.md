@@ -126,6 +126,7 @@
     * [suda\core\Config](classes/suda/core/Config.md)
         * [load](classes/suda/core/Config/load.md)
         * [loadConfig](classes/suda/core/Config/loadConfig.md)
+        * [resolve](classes/suda/core/Config/resolve.md)
         * [exist](classes/suda/core/Config/exist.md)
         * [assign](classes/suda/core/Config/assign.md)
         * [get](classes/suda/core/Config/get.md)

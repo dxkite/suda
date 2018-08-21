@@ -1,6 +1,6 @@
 # Application::checkModuleExist
 检查模块是否存在
-> *文件信息* suda\core\Application.php: 30~759
+> *文件信息* suda\core\Application.php: 30~755
 ## 所属类 
 
 [Application](../Application.md)

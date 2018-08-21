@@ -1,6 +1,6 @@
 # Config::load
 
-> *文件信息* suda\core\Config.php: 25~113
+> *文件信息* suda\core\Config.php: 25~119
 ## 所属类 
 
 [Config](../Config.md)

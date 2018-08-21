@@ -1,6 +1,6 @@
 # Application::onRequest
 截获请求，请求发起的时候会调用
-> *文件信息* suda\core\Application.php: 30~759
+> *文件信息* suda\core\Application.php: 30~755
 ## 所属类 
 
 [Application](../Application.md)
