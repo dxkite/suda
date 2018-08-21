@@ -91,6 +91,10 @@ class System
     public static function console()
     {
         Storage::path(APP_DIR);
+        // 检测 app vendor
+        if (storage()->exist($vendor = APP_DIR.'/vendor/autoload.php')) {
+            Autoloader::import($vendor);
+        }
         self::readManifast();
         $name=Autoloader::realName(self::$applicationClass);
         // 加载共享库

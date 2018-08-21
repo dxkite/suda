@@ -118,10 +118,6 @@ class Application
         if ($namespace=Config::get('app.namespace')) {
             Autoloader::setNamespace($namespace);
         }
-        // 检测 Composer vendor
-        if (storage()->exist($vendor = APP_DIR.'/../vendor/autoload.php')) {
-            Autoloader::import($vendor);
-        }
         // 注册模块目录
         $this->addModulesPath(SYSTEM_RESOURCE.'/modules');
         $this->addModulesPath(MODULES_DIR);

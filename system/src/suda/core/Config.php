@@ -43,8 +43,10 @@ class Config
                 case 'yml':
                     if (function_exists('yaml_parse_file')) {
                         $data = yaml_parse_file($path);
+                    } elseif (class_exists('Spyc')) {
+                        $data =\Spyc::YAMLLoad($path);
                     } else {
-                        $message =__('parse yaml config error %s: missing yaml extension', $path);
+                        $message =__('parse yaml config error %s: missing yaml extension or spyc', $path);
                         debug()->error($message);
                         suda_panic('Kernal Panic', $message);
                     }
@@ -58,6 +60,8 @@ class Config
             }
         } elseif (function_exists('yaml_parse_file') && file_exists($config = $path.'.yml')) {
             $data = yaml_parse_file($config);
+        } elseif (class_exists('Spyc') && file_exists($config = $path.'.yml')) {
+            $data = \Spyc::YAMLLoad($path);
         } elseif (file_exists($config = $path.'.json')) {
             $data = json_decode(file_get_contents($config), true);
         } elseif (file_exists($config = $path.'.php')) {
@@ -75,9 +79,11 @@ class Config
             if (empty($ext)) {
                 $basepath = $path;
             } else {
-                $basepath = preg_replace('/\.'.$ext.'$/','',$path);
+                $basepath = preg_replace('/\.'.$ext.'$/', '', $path);
             }
             if (file_exists($conf = $basepath.'.yml') && function_exists('yaml_parse_file')) {
+                return $conf;
+            } elseif (class_exists('Spyc') && file_exists($conf = $basepath.'.yml') ) {
                 return $conf;
             } elseif (file_exists($conf =$basepath.'.json')) {
                 return $conf;
