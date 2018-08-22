@@ -233,13 +233,25 @@ class Manager
 
     private static function getPublicModulePath(string $module)
     {
-        $module_dir=Application::getInstance()->getModuleDir($module);
-        return self::$assetsPath.'/'.self::$staticPath.'/'.self::shadowName($module_dir);
+        return self::$assetsPath.'/'.self::$staticPath.'/'.self::moduleUniqueId($module);
     }
 
-    public static function shadowName(string $name)
+    /**
+     * 获取模块唯一标识符
+     *
+     * @param string $module
+     * @return string|null
+     */
+    public static function moduleUniqueId(string $module):?string
     {
-        return substr(md5($name), 0, 8);
+        $moduleConfig=Application::getInstance()->getModuleConfig($module);
+        if (array_key_exists('unique',$moduleConfig)){
+            return $moduleConfig['unique'];
+        }
+        if (array_key_exists('directory',$moduleConfig)){
+            return substr(md5($moduleConfig['directory']), 0, 8);
+        }
+        return null;
     }
 
     /**
@@ -375,7 +387,7 @@ class Manager
         // 获取输出
         $output=self::getOutputFile($name);
         // 动态文件导出
-        $outpath=$this->assetsPath.'/'.self::$dynamicPath.'/'.self::shadowName($module_dir).'/'.$basename;
+        $outpath=$this->assetsPath.'/'.self::$dynamicPath.'/'.self::moduleUniqueId($module).'/'.$basename;
         $path=Storage::path(dirname($outpath));
         // 编译检查
         if (Storage::exist($output)) {
@@ -540,7 +552,7 @@ class Manager
     public static function getDynamicAssetPath(string $path, string $module=null)
     {
         $module=$module??Application::getInstance()->getActiveModule();
-        $path=self::$assetsPath.'/'.self::$dynamicPath.'/'.self::shadowName(Application::getInstance()->getModuleDir($module)).'/'.$path;
+        $path=self::$assetsPath.'/'.self::$dynamicPath.'/'.self::moduleUniqueId($module).'/'.$path;
         $static_url=Storage::cut($path, self::$assetsPath);
         $static_url=preg_replace('/[\\\\\/]+/', '/', $static_url);
         return  '/'.$static_url;
@@ -614,8 +626,7 @@ class Manager
                     $modules= app()->getLiveModules();
                     $module=null;
                     foreach ($modules as $temp) {
-                        $dir=app()->getModuleDir($temp);
-                        if (Manager::shadowName($dir) == $moduleHash) {
+                        if (Manager::moduleUniqueId($temp) == $moduleHash) {
                             $module=$temp;
                             break;
                         }
