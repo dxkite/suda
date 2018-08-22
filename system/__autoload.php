@@ -15,7 +15,7 @@
  */
 
  // 定义版本
-define('SUDA_VERSION', '2.0');
+define('SUDA_VERSION', '2.0.1');
 
 // 注册基本常量
 defined('D_START') or define('D_START', microtime(true));
