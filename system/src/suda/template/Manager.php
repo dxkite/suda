@@ -262,7 +262,7 @@ class Manager
      */
     public static function getThemePath(string $module):string
     {
-        return Application::getInstance()->getModulePath($module).'/resource/template/{theme}';
+        return Application::getInstance()->getModulePath($module).'/resource/template/:theme:';
     }
 
     /**
@@ -274,7 +274,7 @@ class Manager
     public static function getAppThemePath(string $module):string
     {
         $dirname=Application::getInstance()->getModuleDir($module);
-        return RESOURCE_DIR.'/template/{theme}/'.$dirname;
+        return RESOURCE_DIR.'/template/:theme:/'.$dirname;
     }
 
     /**
@@ -310,12 +310,12 @@ class Manager
         $sources=[];
         if (isset(self::$templateSource[$moduleName])) {
             foreach (self::$templateSource[$moduleName] as $source) {
-                if ($path=Storage::abspath(preg_replace('/\{theme\}/', static::$theme, $source))) {
+                if ($path=Storage::abspath(preg_replace('/\:theme\:/', static::$theme, $source))) {
                     if (!in_array($path, $sources)) {
                         $sources[]=$path;
                     }
                 }
-                if ($path=Storage::abspath(preg_replace('/\{theme\}/', 'default', $source))) {
+                if ($path=Storage::abspath(preg_replace('/\:theme\:/', 'default', $source))) {
                     if (!in_array($path, $sources)) {
                         $sources[]=$path;
                     }
