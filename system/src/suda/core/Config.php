@@ -72,7 +72,7 @@ class Config
 
     protected static function parseValue(string $content,?string $module):string
     {
-        return preg_replace_callback('/\$\{(\w+)\}/', function ($matchs) use ($module) {
+        return preg_replace_callback('/\$\{(.+?)\}/', function ($matchs) use ($module) {
             $name = $matchs[1];
             if ($name === 'module' && $module) {
                 return $module;
