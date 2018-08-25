@@ -20,21 +20,20 @@ use suda\tool\ArrayHelper;
 
 /**
  * 文件配置类
- * TODO 切换全部配置文件支持yml配置
  */
 class Config
 {
     public static $config=[];
 
-    public static function load(string $path)
+    public static function load(string $path, ?string $module=null)
     {
-        $data = self::loadConfig($path);
+        $data = self::loadConfig($path, $module);
         if ($data) {
             return self::assign($data);
         }
     }
 
-    public static function loadConfig(string $path):?array
+    public static function loadConfig(string $path, ?string $module=null):?array
     {
         $data=null;
         if (!file_exists($path)) {
@@ -44,10 +43,14 @@ class Config
             $ext = strtolower(pathinfo($path, PATHINFO_EXTENSION));
             switch ($ext) {
                 case 'yml':
-                    if (function_exists('yaml_parse_file')) {
-                        $data = yaml_parse_file($path);
+                    if (function_exists('yaml_parse')) {
+                        $content = file_get_contents($path);
+                        $content = self::parseValue($content, $module);
+                        $data = yaml_parse($content);
                     } elseif (class_exists('Spyc')) {
-                        $data =\Spyc::YAMLLoad($path);
+                        $content = file_get_contents($path);
+                        $content = self::parseValue($content, $module);
+                        $data =\Spyc::YAMLLoadString($content);
                     } else {
                         $message =__('parse yaml config error %s: missing yaml extension or spyc', $path);
                         debug()->error($message);
@@ -59,10 +62,29 @@ class Config
                     break;
                 case 'json':
                 default:
-                    $data = json_decode(file_get_contents($path), true);
+                    $content = file_get_contents($path);
+                    $content = self::parseValue($content, $module);
+                    $data = json_decode($content, true);
             }
         }
         return $data;
+    }
+
+    protected static function parseValue(string $content,?string $module):string
+    {
+        return preg_replace_callback('/\$\{(\w+)\}/', function ($matchs) use ($module) {
+            $name = $matchs[1];
+            if ($name === 'module' && $module) {
+                return $module;
+            }
+            if ($value = constant($name)) {
+                return $value;
+            }
+            if ($value = conf($name,null)) {
+                return $value;
+            }
+            return $name;
+        }, $content);
     }
 
     public static function resolve(string $path):?string
@@ -76,7 +98,7 @@ class Config
             } else {
                 $basepath = preg_replace('/\.'.$ext.'$/', '', $path);
             }
-            if (file_exists($conf = $basepath.'.yml') && function_exists('yaml_parse_file')) {
+            if (file_exists($conf = $basepath.'.yml') && function_exists('yaml_parse')) {
                 return $conf;
             } elseif (class_exists('Spyc') && file_exists($conf = $basepath.'.yml')) {
                 return $conf;
