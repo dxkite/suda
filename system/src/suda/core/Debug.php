@@ -552,7 +552,7 @@ class Debug
                 '_FILES' => $_FILES,
                 '_SERVER' => $_SERVER,
                 '_COOKIE'=> $_COOKIE,
-                '_SESSION'=> $_SESSION,
+                '_SESSION'=> $_SESSION ?? null,
             ],
             '_CONST'=> get_defined_constants(true)['user'],
             '_LOG' => self::$log,

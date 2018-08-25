@@ -3,7 +3,7 @@
  * Suda FrameWork
  *
  * An open source application development framework for PHP 7.0.0 or newer
- * 
+ *
  * Copyright (c)  2017 DXkite
  *
  * @category   PHP FrameWork
@@ -16,6 +16,7 @@
 namespace suda\tool;
 
 use suda\exception\CommandException;
+use suda\core\Autoloader;
 
 class Command
 {
@@ -23,8 +24,10 @@ class Command
     public $file;
     public $static=false;
     public $params=[];
-    public $func_bind=[];
+    public $funcParam=[];
+    public $constructParam=[];
     public $name;
+    public $cmdstr;
 
     public function __construct($command, array $params=[])
     {
@@ -38,6 +41,7 @@ class Command
         $this->name=$name;
         return $this;
     }
+
     public function params(array $params)
     {
         $this->params=$params;
@@ -53,10 +57,10 @@ class Command
         }
 
         // 设置了参数绑定
-        if (count($this->func_bind)>0) {
+        if (count($this->funcParam)>0) {
             $args=[];
-            foreach ($this->func_bind as $index=>$bind) {
-                $args[$index]= $this->params[$bind] ?? null;
+            foreach ($this->funcParam as $index=>$bind) {
+                $args[$index]= $this->params[$index] ?? $this->funcParam[$index] ?? null;
             }
             $this->params=$args;
         }
@@ -71,7 +75,12 @@ class Command
                 if (!is_object($this->command[0])) {
                     if ($this->static) {
                     } else {
-                        $this->command[0]=new $this->command[0];
+                        if ($this->constructParam) {
+                            $class = new \ReflectionClass($this->command[0]);
+                            $this->command[0]= $class->newInstanceArgs($this->constructParam);
+                        } else {
+                            $this->command[0]=new $this->command[0];
+                        }
                     }
                 }
             }
@@ -91,36 +100,99 @@ class Command
         return self::exec(func_get_args());
     }
     
+    /**
+     * 解析表达式，参数只支持基本参数（数字，字符串）
+     *
+     * @param string $command
+     * @return mixed
+     */
     private function parseCommand(string $command)
     {
-        if (preg_match('/^(?:([\w\\\\\/.]+))?(?:(#|->|::)(\w+))?(?:\((.+?)\))?(?:@(.+))?$/', $command, $matchs)) {
-            debug()->trace(__('parse command %s', $command), $matchs);
-            // $this->name=$command;
-            // 添加参数绑定
-            if (isset($matchs[4])) {
-                $this->func_bind=explode(',', trim($matchs[4], ','));
+        
+        // 支持表达式：
+        // 1. [name.space.|name\space\|name/space/]Class[(param)]->method[(params)]
+        // 2. [name.space.|name\space\|name/space/]Class#method[(params)]
+        // 3. [name.space.|name\space\|name/space/]Class::method[(params)]
+        // 4. [name.space.|name\space\|name/space/]function[(param)][@filepath]
+        // 5. @filepath
+
+        if (preg_match('/^([\w\\\\\/.]+)(?:\((.+?)\))?(#|->|::)(\w+)(?:\((.+?)\))?/', $command, $matchs)) {
+            if (count($matchs) === 6) {
+                list($cmdstr, $className, $constructParams, $type, $method, $methodParam) = $matchs;
+            } else {
+                list($cmdstr, $className, $constructParams, $type, $method) = $matchs;
+                $methodParam = null;
             }
-            // 指定文件
-            if (isset($matchs[5]) && $matchs[5]) {
-                $this->file=$matchs[5];
+            $className = Autoloader::realName($className);
+            debug()->trace(__('parse command %s as rule 1,2,3', $command), $matchs);
+            $this->name = $className.'->'.$method;
+            if ($constructParams) {
+                $this->constructParam = self::parseParam($constructParams);
             }
-            // 调用方式
-            if (isset($matchs[2])) {
-                $this->static=(strcmp($matchs[2], '#')===0 || strcmp($matchs[2], '::')===0);
+            if ($methodParam) {
+                $this->funcParam = self::parseParam($methodParam);
             }
-            $matchs[1]=preg_replace('/[.\/]+/', '\\', $matchs[1]);
-            // 方法名
-            if (isset($matchs[3]) && $matchs[3]) {
-                return [$matchs[1],$matchs[3]];
-                // 函数名
-            } elseif (isset($matchs[1]) && $matchs[1]) {
-                return $matchs[1];
+            $this->static = $type === '#' || $type === '::';
+            return [$className,$method];
+        } elseif (preg_match('/^([\w\\\\\/.]+)(?:\((.+?)\))?(?:\@(.+))?$/', $command, $matchs)) {
+            $matchCount = count($matchs);
+            if ($matchCount == 2) {
+                list($cmdstr, $functionName) = $matchs;
+                $functionParam = null;
+                $functionFile = null;
+            } elseif ($matchCount == 3) {
+                list($cmdstr, $functionName, $functionParam) = $matchs;
+                $functionFile = null;
+            } else {
+                list($cmdstr, $functionName, $functionParam, $functionFile) = $matchs;
             }
+            $functionName = Autoloader::realName($functionName);
+            if ($functionFile) {
+                $this->file=$functionFile;
+            }
+            return $functionName;
+        } elseif (preg_match('/\@(.+)$/', $command, $matchs)) {
+            list($cmdstr, $functionFile) = $matchs;
+            $this->file=$functionFile;
         } else {
             throw (new CommandException('unknown:'.$command))->setCmd($command);
         }
+        $this->cmdStr= $command;
     }
 
+    protected function parseParam(string $param)
+    {
+        $param = trim($param);
+        if (preg_match('/^\=j(son)?\:(\:)?(.+)$/', $param, $matchs)) {
+            if (isset($matchs[2]) && $matchs[2]) {
+                $params = json_decode(base64_decode($matchs[3]));
+            } else {
+                $params = json_decode($matchs[3]);
+            }
+            if (json_last_error() === JSON_ERROR_NONE) {
+                return $params;
+            }else{
+                throw (new CommandException('can not pase param:'.$param))->setCmd($this->cmdStr);
+            }
+        } elseif (preg_match('/^\=s(erialize)?\:(\:)?(.+)$/', $param, $matchs)) {
+            if (isset($matchs[2]) && $matchs[2] ) {
+                $params = unserialize(base64_decode($matchs[3]));
+            } else {
+                $params = unserialize($matchs[3]);
+            }
+            if (is_object($params)) {
+                return [$params];
+            }
+            return $params;
+        } else {
+            $params = explode(',', trim($param, ','));
+            foreach ($params as $index=>$value) {
+                $params[$index]=trim($value);
+            }
+            return $params;
+        }
+    }
+    
     /**
      * 绝对调用函数，可调用类私有和保护函数
      *
@@ -143,5 +215,8 @@ class Command
         } else {
             return forward_static_call_array($command, $params);
         }
+    }
+    public function __toString() {
+        return $this->cmdStr ?? $this->name ?? __CLASS__;
     }
 }
