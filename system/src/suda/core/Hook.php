@@ -25,9 +25,9 @@ class Hook
 {
     protected static $hooks=[];
 
-    public static function loadConfig(string $path)
+    public static function loadConfig(string $path, ?string $module=null)
     {
-        $hooks=Config::loadConfig($path);
+        $hooks=Config::loadConfig($path, $module);
         debug()->trace($path);
         self::load($hooks?:[]);
     }
@@ -87,7 +87,7 @@ class Hook
         } else {
             self::add($name, $command);
         }
-    }   
+    }
 
     /**
      * 移除一条命令
@@ -195,20 +195,30 @@ class Hook
 
     protected static function call($command, array &$args)
     {
-        // TODO isModuleReachable
         if (is_string($command)) {
             if (preg_match('/^(debug)|d\=/', $command)) {
                 if (conf('debug')) {
-                    return (new Command(preg_replace('/^debug\=/', '', $command)))->exec($args);
+                    return (new Command(preg_replace('/^.+?\=/', '', $command)))->exec($args);
                 }
             } elseif (preg_match('/^(normal)|n\=/', $command)) {
                 if (conf('debug') == false) {
-                    return (new Command(preg_replace('/^normal\=/', '', $command)))->exec($args);
+                    return (new Command(preg_replace('/^.+?\=/', '', $command)))->exec($args);
+                }
+            } elseif (preg_match('/^is?\:(.+?)\=/', $command, $matchs)) {
+                $module = $matchs[1];
+                if (app()->getActiveModule() == app()->getModuleFullName($module)) {
+                    return (new Command(preg_replace('/^.+?\=/', '', $command)))->exec($args);
+                }
+            } elseif (preg_match('/^(?:reachable)|r\:(.+?)\=/', $command, $matchs)) {
+                $module = $matchs[1];
+                if (app()->isModuleReachable($module)) {
+                    return (new Command(preg_replace('/^.+?\=/', '', $command)))->exec($args);
                 }
             } else {
                 return (new Command($command))->exec($args);
             }
+        } else {
+            return (new Command($command))->exec($args);
         }
-        return (new Command($command))->exec($args);
     }
 }

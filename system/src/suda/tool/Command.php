@@ -160,7 +160,7 @@ class Command
         $this->cmdStr= $command;
     }
 
-    protected function parseParam(string $param)
+    protected static function parseParam(string $param)
     {
         $param = trim($param);
         if (preg_match('/^\=j(son)?\:(\:)?(.+)$/', $param, $matchs)) {
@@ -171,11 +171,11 @@ class Command
             }
             if (json_last_error() === JSON_ERROR_NONE) {
                 return $params;
-            }else{
+            } else {
                 throw (new CommandException('can not pase param:'.$param))->setCmd($this->cmdStr);
             }
         } elseif (preg_match('/^\=s(erialize)?\:(\:)?(.+)$/', $param, $matchs)) {
-            if (isset($matchs[2]) && $matchs[2] ) {
+            if (isset($matchs[2]) && $matchs[2]) {
                 $params = unserialize(base64_decode($matchs[3]));
             } else {
                 $params = unserialize($matchs[3]);
@@ -193,6 +193,19 @@ class Command
         }
     }
     
+    public static function newClassInstance(string $class)
+    {
+        if (preg_match('/^([\w\\\\\/.]+)\((.+?)\)/', $class, $matchs)) {
+            list($str, $className, $constructParam) = $matchs;
+            $params=self::parseParam($constructParam);
+            $className = Autoloader::realName($className);
+            $classRef= new \ReflectionClass($className);
+            return $classRef->newInstanceArgs($params);
+        }
+        $className = Autoloader::realName($class);
+        return new $className;
+    }
+
     /**
      * 绝对调用函数，可调用类私有和保护函数
      *
@@ -216,7 +229,8 @@ class Command
             return forward_static_call_array($command, $params);
         }
     }
-    public function __toString() {
+    public function __toString()
+    {
         return $this->cmdStr ?? $this->name ?? __CLASS__;
     }
 }

@@ -181,7 +181,7 @@ class Application
             }
             // 加载监听器
             if ($listenerPath=Config::resolve($root.'/resource/config/listener.json')) {
-                Hook::loadConfig($listenerPath);
+                Hook::loadConfig($listenerPath,$moduleTemp);
                 Hook::exec('loadModule:'.self::getModuleName($moduleTemp));
             }
             // 自动安装
