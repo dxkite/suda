@@ -219,7 +219,7 @@ class Debug
         self::$hash = $ex.'-'.self::$hash;
         $dump = ['Exception'=>$e,'Dump'=>self::dumpArray()];
         storage()->path(APP_LOG.'/dump');
-        storage()->put(APP_LOG.'/dump/'.self::$hash.'.json', json_encode($dump, JSON_UNESCAPED_UNICODE));
+        storage()->put(APP_LOG.'/dump/'.self::$hash.'.json', json_encode($dump, JSON_PRETTY_PRINT|JSON_UNESCAPED_UNICODE));
         return self::displayLog(['line'=>$line,'file'=>$file,'backtrace'=>$backtrace,'name'=>$e->getName(),'level'=>$e->getLevel(),'message'=>$e->getMessage()]);
     }
     
@@ -544,7 +544,9 @@ class Debug
             '_ENV' => [
                 'PHP' =>  PHP_VERSION,
                 'SERVER' => $_SERVER['SERVER_SOFTWARE'],
-                'SUDA' => SUDA_VERSION
+                'SUDA' => SUDA_VERSION,
+                'ROUTER' => \suda\core\route\Mapping::current(),
+                'ROUTERS'=> router()->getRouters(),
             ],
             '_PHP' => [
                 '_GET' => $_GET,

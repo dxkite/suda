@@ -69,14 +69,13 @@ class Router
         $admin_routers=[];
         $module_path=Application::getInstance()->getModulePath($module);
         debug()->trace(__('load module:%s path:%s', $module, $module_path));
-        
         // 加载前台路由
-        if ($file=Application::getInstance()->getModuleConfigPath($module,'router')) {
+        if ($file=Application::getInstance()->getModuleConfigPath($module, 'router')) {
             $simple_routers= self::loadModuleConfig(Mapping::ROLE_SIMPLE, $module, $file);
             debug()->trace(__('loading simple route from file %s', $file));
         }
         // 加载后台路由
-        if ($file=Application::getInstance()->getModuleConfigPath($module,'router_admin')) {
+        if ($file=Application::getInstance()->getModuleConfigPath($module, 'router_admin')) {
             $admin_routers= self::loadModuleConfig(Mapping::ROLE_ADMIN, $module, $file);
             debug()->trace(__('loading admin route from file  %s', $file));
         }
@@ -106,7 +105,7 @@ class Router
     {
         storage()->put($this->cacheFile('.modules'), implode(PHP_EOL, self::$cacheModules));
         storage()->put($this->cacheFile(self::CACHE_NAME), serialize($this->routers));
-        storage()->put($this->cacheFile(self::CACHE_NAME.'.php'), '<?php '.var_export($this->routers, true));
+        storage()->put($this->cacheFile(self::CACHE_NAME.'.json'), json_encode($this->routers, JSON_PRETTY_PRINT|JSON_UNESCAPED_UNICODE));
     }
 
     public function loadModulesRouter()
@@ -293,7 +292,7 @@ class Router
      * @param boolean $fullmodule
      * @return string|null
      */
-    public function encode(string $url,bool $fullmodule=false):?string
+    public function encode(string $url, bool $fullmodule=false):?string
     {
         $mapping = $this->parseUrl($url);
         if ($mapping) {

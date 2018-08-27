@@ -20,7 +20,7 @@ use suda\tool\Command;
 use suda\core\Request;
 use suda\core\Response;
 
-class Mapping
+class Mapping implements \JsonSerializable
 {
     protected $method=[];
     protected $url;
@@ -555,5 +555,30 @@ class Mapping
         };
         $render->onRequest(Request::getInstance());
         return true;
+    }
+
+    public function jsonSerialize()
+    {
+        return [
+            'method' => $this->method,
+            'url' => $this->url,
+            'mapping' => $this->mapping,
+            'callback' => $this->callback,
+            'template' => $this->template,
+            'source' => $this->source,
+            'module' => $this->module,
+            'name' => $this->name,
+            'role' => $this->role,
+            'types' => $this->types,
+            'param' => $this->param,
+            'value' => $this->value,
+            'buffer' => $this->buffer,
+            'host' => $this->host,
+            'port' => $this->port,
+            'scheme' => $this->scheme,
+            'antiPrefix' => $this->antiPrefix,
+            'hidden' => $this->hidden,
+            'dynamic' => $this->dynamic,
+        ];
     }
 }
