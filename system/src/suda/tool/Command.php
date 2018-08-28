@@ -116,11 +116,20 @@ class Command
         // 4. [name.space.|name\space\|name/space/]function[(param)][@filepath]
         // 5. @filepath
 
-        if (preg_match('/^([\w\\\\\/.]+)(?:\((.+?)\))?(#|->|::)(\w+)(?:\((.+?)\))?/', $command, $matchs)) {
+        if (preg_match('/^ ([\w\\\\\/.]+) (\( (?: (?>[^()]+) | (?2) )* \))? (\-\>|\:\:|\#) (\w+) (\( (?: (?>[^()]+) | (?5) )* \))? $/ux', $command, $matchs)) {
             if (count($matchs) === 6) {
                 list($cmdstr, $className, $constructParams, $type, $method, $methodParam) = $matchs;
+                if (preg_match('/\((.+)\)/', $constructParams, $tmp)) {
+                    $constructParams=$tmp[1];
+                }
+                if (preg_match('/\((.+)\)/', $methodParam, $tmp)) {
+                    $methodParam=$tmp[1];
+                }
             } else {
                 list($cmdstr, $className, $constructParams, $type, $method) = $matchs;
+                if (preg_match('/\((.+)\)/', $constructParams, $tmp)) {
+                    $constructParams=$tmp[1];
+                }
                 $methodParam = null;
             }
             $className = Autoloader::realName($className);
@@ -134,7 +143,7 @@ class Command
             }
             $this->static = $type === '#' || $type === '::';
             return [$className,$method];
-        } elseif (preg_match('/^([\w\\\\\/.]+)(?:\((.+?)\))?(?:\@(.+))?$/', $command, $matchs)) {
+        } elseif (preg_match('/^ ([\w\\\\\/.]+) (\( ( (?>[^()]+) | (?2) )* \))? (?:\@(.+))? $/ux', $command, $matchs)) {
             $matchCount = count($matchs);
             if ($matchCount == 2) {
                 list($cmdstr, $functionName) = $matchs;
@@ -195,9 +204,12 @@ class Command
     
     public static function newClassInstance(string $class)
     {
-        if (preg_match('/^([\w\\\\\/.]+)\((.+?)\)/', $class, $matchs)) {
-            list($str, $className, $constructParam) = $matchs;
-            $params=self::parseParam($constructParam);
+        if (preg_match('/^([\w\\\\\/.]+) (\( ( (?>[^()]+) | (?2) )* \)) /ux', $class, $matchs)) {
+            list($str, $className, $constructParams) = $matchs;
+            if (preg_match('/\((.+)\)/', $constructParams, $tmp)) {
+                $constructParams=$tmp[1];
+            }
+            $params=self::parseParam($constructParams);
             $className = Autoloader::realName($className);
             $classRef= new \ReflectionClass($className);
             return $classRef->newInstanceArgs($params);
