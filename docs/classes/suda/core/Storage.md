@@ -22,7 +22,7 @@
 
 | 可见性 | 方法名 | 说明 |
 |--------|-------|------|
-|  public  static|[newInstance](Storage/newInstance.md) |  |
+|  public  static|[getInstance](Storage/getInstance.md) |  |
 |  public  static|[__callStatic](Storage/__callStatic.md) |  |
  
 

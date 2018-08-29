@@ -1,4 +1,4 @@
-# Storage::newInstance
+# Storage::getInstance
 
 > *文件信息* suda\core\Storage.php: 22~40
 ## 所属类 

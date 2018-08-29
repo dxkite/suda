@@ -1,9 +1,9 @@
-# FileCache::newInstance
+# Cache::getInstance
 
-> *文件信息* suda\core\cache\FileCache.php: 28~168
+> *文件信息* suda\core\Cache.php: 24~42
 ## 所属类 
 
-[FileCache](../FileCache.md)
+[Cache](../Cache.md)
 
 ## 可见性
 
@@ -16,7 +16,9 @@
 
 ## 参数
 
-无参数
+| 参数名 | 类型 | 默认值 | 说明 |
+|--------|-----|-------|-------|
+| type |  string | File | 无 |
 
 ## 返回值
 返回值类型不定

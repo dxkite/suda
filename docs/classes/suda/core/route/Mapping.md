@@ -1,6 +1,6 @@
 #  Mapping 
 
-> *文件信息* suda\core\route\Mapping.php: 23~559
+> *文件信息* suda\core\route\Mapping.php: 23~584
 
 
 
@@ -92,6 +92,7 @@
 |  public  static|[current](Mapping/current.md) |  |
 |  protected  static|[emptyResponse](Mapping/emptyResponse.md) |  |
 |  protected  static|[sourceResponse](Mapping/sourceResponse.md) |  |
+|  public  |[jsonSerialize](Mapping/jsonSerialize.md) |  |
  
 
 ## 例子

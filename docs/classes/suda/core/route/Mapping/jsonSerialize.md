@@ -1,4 +1,4 @@
-# Mapping::setDynamic
+# Mapping::jsonSerialize
 
 > *文件信息* suda\core\route\Mapping.php: 23~584
 ## 所属类 
@@ -14,9 +14,7 @@
 
 ## 参数
 
-| 参数名 | 类型 | 默认值 | 说明 |
-|--------|-----|-------|-------|
-| set |  bool | 1 | 无 |
+无参数
 
 ## 返回值
 返回值类型不定

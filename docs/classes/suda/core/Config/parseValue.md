@@ -1,13 +1,13 @@
-# Mapping::setDynamic
+# Config::parseValue
 
-> *文件信息* suda\core\route\Mapping.php: 23~584
+> *文件信息* suda\core\Config.php: 24~141
 ## 所属类 
 
-[Mapping](../Mapping.md)
+[Config](../Config.md)
 
 ## 可见性
 
-  public  
+  protected  static
 ## 说明
 
 该函数暂时无说明
@@ -16,7 +16,8 @@
 
 | 参数名 | 类型 | 默认值 | 说明 |
 |--------|-----|-------|-------|
-| set |  bool | 1 | 无 |
+| content |  string | 无 | 无 |
+| module |  string | 无 | 无 |
 
 ## 返回值
 返回值类型不定

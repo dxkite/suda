@@ -1,4 +1,4 @@
-# FileStorage::newInstance
+# FileStorage::getInstance
 
 > *文件信息* suda\core\storage\FileStorage.php: 25~473
 ## 所属类 

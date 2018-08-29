@@ -44,7 +44,7 @@
 |abstract  public  |[type](Storage/type.md) | 取得文件类型 |
 |abstract  public  |[exist](Storage/exist.md) | 判断文件是否存在 |
 |abstract  public  |[temp](Storage/temp.md) | 创建一个临时文件 |
-|abstract  public  static|[newInstance](Storage/newInstance.md) |  |
+|abstract  public  static|[getInstance](Storage/getInstance.md) |  |
  
 
 ## 例子

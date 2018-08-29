@@ -1,6 +1,6 @@
 # Config::exist
 
-> *文件信息* suda\core\Config.php: 25~119
+> *文件信息* suda\core\Config.php: 24~141
 ## 所属类 
 
 [Config](../Config.md)
@@ -10,7 +10,7 @@
   public  static
 ## 说明
 
-TODO 切换全部配置文件支持yml配置
+该函数暂时无说明
 
 ## 参数
 

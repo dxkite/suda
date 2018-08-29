@@ -1,4 +1,4 @@
-# Session::newInstance
+# Session::getInstance
 
 > *文件信息* suda\core\Session.php: 22~40
 ## 所属类 

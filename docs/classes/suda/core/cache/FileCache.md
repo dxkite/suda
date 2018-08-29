@@ -31,7 +31,7 @@
 | 可见性 | 方法名 | 说明 |
 |--------|-------|------|
 |  public  |[__construct](FileCache/__construct.md) |  |
-|  public  static|[newInstance](FileCache/newInstance.md) |  |
+|  public  static|[getInstance](FileCache/getInstance.md) |  |
 |  public  |[set](FileCache/set.md) | 设置 |
 |  public  |[get](FileCache/get.md) | 获取值 |
 |  public  |[delete](FileCache/delete.md) | 删除值 |

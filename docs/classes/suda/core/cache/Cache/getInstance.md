@@ -1,4 +1,4 @@
-# Cache::newInstance
+# Cache::getInstance
 实例化一个对象
 > *文件信息* suda\core\cache\Cache.php: 22~80
 ## 所属类 

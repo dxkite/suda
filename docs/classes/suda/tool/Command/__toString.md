@@ -1,16 +1,16 @@
-# Router::dispatch
+# Command::__toString
 
-> *文件信息* suda\core\Router.php: 27~551
+> *文件信息* suda\tool\Command.php: 21~248
 ## 所属类 
 
-[Router](../Router.md)
+[Command](../Command.md)
 
 ## 可见性
 
   public  
 ## 说明
 
-用于处理访问的路由信息
+该函数暂时无说明
 
 ## 参数
 

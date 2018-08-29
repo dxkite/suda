@@ -1,6 +1,6 @@
 # Debug::phpShutdown
 
-> *文件信息* suda\core\Debug.php: 26~568
+> *文件信息* suda\core\Debug.php: 26~570
 ## 所属类 
 
 [Debug](../Debug.md)

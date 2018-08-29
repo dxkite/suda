@@ -1,6 +1,6 @@
 #  Config 
 
-> *文件信息* suda\core\Config.php: 25~119
+> *文件信息* suda\core\Config.php: 24~141
 
 
 文件配置类
@@ -10,7 +10,7 @@
 
 
 
-TODO 切换全部配置文件支持yml配置
+该类暂时无说明
 
 
 ## 变量列表
@@ -24,6 +24,7 @@ TODO 切换全部配置文件支持yml配置
 |--------|-------|------|
 |  public  static|[load](Config/load.md) |  |
 |  public  static|[loadConfig](Config/loadConfig.md) |  |
+|  protected  static|[parseValue](Config/parseValue.md) |  |
 |  public  static|[resolve](Config/resolve.md) |  |
 |  public  static|[exist](Config/exist.md) |  |
 |  public  static|[assign](Config/assign.md) |  |

@@ -22,7 +22,7 @@
 
 | 可见性 | 方法名 | 说明 |
 |--------|-------|------|
-|  public  static|[newInstance](Session/newInstance.md) |  |
+|  public  static|[getInstance](Session/getInstance.md) |  |
 |  public  static|[__callStatic](Session/__callStatic.md) |  |
  
 

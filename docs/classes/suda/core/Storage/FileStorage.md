@@ -23,7 +23,7 @@
 
 | 可见性 | 方法名 | 说明 |
 |--------|-------|------|
-|  public  static|[newInstance](FileStorage/newInstance.md) |  |
+|  public  static|[getInstance](FileStorage/getInstance.md) |  |
 |  public  |[mkdirs](FileStorage/mkdirs.md) |  |
 |  public  |[path](FileStorage/path.md) |  |
 |  public  |[abspath](FileStorage/abspath.md) |  |

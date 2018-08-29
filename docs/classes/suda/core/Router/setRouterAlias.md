@@ -1,6 +1,6 @@
 # Router::setRouterAlias
 设置路由别名
-> *文件信息* suda\core\Router.php: 27~552
+> *文件信息* suda\core\Router.php: 27~551
 ## 所属类 
 
 [Router](../Router.md)

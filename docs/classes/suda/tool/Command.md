@@ -1,6 +1,6 @@
 #  Command 
 
-> *文件信息* suda\tool\Command.php: 20~147
+> *文件信息* suda\tool\Command.php: 21~248
 
 
 
@@ -20,8 +20,10 @@
 | public    | file | | 
 | public    | static | | 
 | public    | params | | 
-| public    | func_bind | | 
+| public    | funcParam | | 
+| public    | constructParam | | 
 | public    | name | | 
+| public    | cmdstr | | 
 
 ## 方法
 
@@ -32,7 +34,10 @@
 |  public  |[params](Command/params.md) |  |
 |  public  |[exec](Command/exec.md) |  |
 |  public  |[args](Command/args.md) |  |
+|  protected  static|[parseParam](Command/parseParam.md) |  |
+|  public  static|[newClassInstance](Command/newClassInstance.md) |  |
 |  public  static|[_absoluteCall](Command/_absoluteCall.md) | 绝对调用函数，可调用类私有和保护函数 |
+|  public  |[__toString](Command/__toString.md) |  |
  
 
 ## 例子

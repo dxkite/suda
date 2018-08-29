@@ -1,6 +1,6 @@
 # Manager::getAppThemePath
 模块模板文件目录
-> *文件信息* suda\template\Manager.php: 29~659
+> *文件信息* suda\template\Manager.php: 29~670
 ## 所属类 
 
 [Manager](../Manager.md)

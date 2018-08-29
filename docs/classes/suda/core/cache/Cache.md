@@ -25,7 +25,7 @@
 |abstract  public  |[clear](Cache/clear.md) | 清空缓存 |
 |abstract  public  |[enable](Cache/enable.md) | 检测缓存是否可用 |
 |abstract  public  |[disable](Cache/disable.md) |  |
-|abstract  public  static|[newInstance](Cache/newInstance.md) | 实例化一个对象 |
+|abstract  public  static|[getInstance](Cache/getInstance.md) | 实例化一个对象 |
  
 
 ## 例子

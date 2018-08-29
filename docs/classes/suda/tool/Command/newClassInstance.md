@@ -1,13 +1,13 @@
-# Mapping::setDynamic
+# Command::newClassInstance
 
-> *文件信息* suda\core\route\Mapping.php: 23~584
+> *文件信息* suda\tool\Command.php: 21~248
 ## 所属类 
 
-[Mapping](../Mapping.md)
+[Command](../Command.md)
 
 ## 可见性
 
-  public  
+  public  static
 ## 说明
 
 该函数暂时无说明
@@ -16,7 +16,7 @@
 
 | 参数名 | 类型 | 默认值 | 说明 |
 |--------|-----|-------|-------|
-| set |  bool | 1 | 无 |
+| class |  string | 无 | 无 |
 
 ## 返回值
 返回值类型不定

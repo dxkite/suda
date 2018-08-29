@@ -24,7 +24,7 @@
 
 | 可见性 | 方法名 | 说明 |
 |--------|-------|------|
-|  public  static|[newInstance](Cache/newInstance.md) |  |
+|  public  static|[getInstance](Cache/getInstance.md) |  |
 |  public  static|[__callStatic](Cache/__callStatic.md) |  |
  
 
