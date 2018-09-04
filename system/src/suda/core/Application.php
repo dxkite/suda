@@ -181,7 +181,7 @@ class Application
             }
             // 加载监听器
             if ($listenerPath=Config::resolve($root.'/resource/config/listener.json')) {
-                Hook::loadConfig($listenerPath,$moduleTemp);
+                Hook::loadConfig($listenerPath, $moduleTemp);
                 Hook::exec('loadModule:'.self::getModuleName($moduleTemp));
             }
             // 自动安装
@@ -448,10 +448,11 @@ class Application
         if ($this->routeReachable) {
             return $this->routeReachable;
         }
+        $liveModules = self::getLiveModules();
         if (file_exists($path=RUNTIME_DIR.'/reachable.config.php')) {
             $modules=include $path;
         } else {
-            $modules=conf('app.reachable', self::getLiveModules());
+            $modules=conf('app.reachable', $liveModules);
         }
         $exclude=defined('UNREACHABLE_MODULES')?explode(',', trim(UNREACHABLE_MODULES, ',')):[];
         foreach ($exclude as $index=>$name) {
@@ -462,7 +463,7 @@ class Application
             // 剔除模块名
             if (!self::checkModuleExist($name) || in_array($fullname, $exclude)) {
                 unset($modules[$index]);
-            } else {
+            } elseif (in_array($fullname, $liveModules)) {
                 $modules[$index]=$fullname;
             }
         }
