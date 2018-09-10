@@ -3,7 +3,7 @@
 > **注：** 文档由程序自动生成
 
 - suda 2.0.1 
-- 2018-08-29 09:15:35
+- 2018-09-10 16:35:25
 
 
 ## 类列表
@@ -24,6 +24,7 @@
 |[suda\core\Application](suda/core/Application.md) | 应用处理类 |
 |[suda\template\Manager](suda/template/Manager.md) | 模板管理类 |
 |[suda\template\compiler\suda\Compiler](suda/template/compiler/suda/Compiler.md) | Suda 模板编译器 |
+|[suda\tool\ZipHelper](suda/tool/ZipHelper.md) |  |
 |[suda\tool\Command](suda/tool/Command.md) |  |
 |[suda\archive\Connection](suda/archive/Connection.md) | 数据表链接对象 |
 |[suda\archive\creator\Field](suda/archive/creator/Field.md) |  |
@@ -63,7 +64,6 @@
 |[suda\tool\EchoValue](suda/tool/EchoValue.md) |  |
 |[suda\tool\Json](suda/tool/Json.md) |  |
 |[suda\tool\Pinyin](suda/tool/Pinyin.md) | 将中文转换成拼音 |
-|[suda\tool\ZipHelper](suda/tool/ZipHelper.md) |  |
 |[suda\core\storage\Storage](suda/core/storage/Storage.md) | 存储系统 |
 |[suda\template\Compiler](suda/template/Compiler.md) | 编译器接口 |
 |[suda\archive\SQLStatement](suda/archive/SQLStatement.md) | 数据库查询语句接口 |

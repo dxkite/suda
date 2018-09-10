@@ -1,6 +1,6 @@
 # Application::getModuleFullName
 获取模块全名（包括版本）
-> *文件信息* suda\core\Application.php: 30~755
+> *文件信息* suda\core\Application.php: 30~756
 ## 所属类 
 
 [Application](../Application.md)

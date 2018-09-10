@@ -1,6 +1,6 @@
 # Application::getModuleResourcePath
 获取模块 resouce 目录路径
-> *文件信息* suda\core\Application.php: 30~755
+> *文件信息* suda\core\Application.php: 30~756
 ## 所属类 
 
 [Application](../Application.md)

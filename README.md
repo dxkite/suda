@@ -67,6 +67,7 @@ cp -R ./suda/system/resource/project/* .
 ## 文档说明
 
 - [自动文档](docs/README.md)    
+- [性能测试](docs/test.md)
 - [Release](RELEASE.md)
 
 ##  PHP版本特性说明

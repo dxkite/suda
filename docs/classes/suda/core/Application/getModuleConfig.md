@@ -1,6 +1,6 @@
 # Application::getModuleConfig
 获取模块的配置信息
-> *文件信息* suda\core\Application.php: 30~755
+> *文件信息* suda\core\Application.php: 30~756
 ## 所属类 
 
 [Application](../Application.md)
