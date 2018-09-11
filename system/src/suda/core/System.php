@@ -112,6 +112,11 @@ class System
         self::$appInstance->init();
     }
 
+    public static function createApplication(string $path)
+    {
+        Storage::copydir(SYSTEM_RESOURCE.'/app/', $path);
+    }
+
     protected static function readManifast()
     {
         debug()->trace(__('reading manifast file'));
@@ -119,7 +124,7 @@ class System
         $manifast  = [];
         if (!Config::resolve($path)) {
             debug()->trace(__('create base app'));
-            Storage::copydir(SYSTEM_RESOURCE.'/app/', APP_DIR);
+            static::createApplication(APP_DIR);
             Config::set('app.init', true);
         }
 
