@@ -125,7 +125,8 @@ class Application
 
     public static function getInstance()
     {
-        $name=Config::get('app.application');
+        $name=Config::get('app.application',Application::class);
+        // var_dump($name);
         if (is_null(self::$instance)) {
             self::$instance=new $name();
         }

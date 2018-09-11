@@ -17,6 +17,7 @@
 namespace suda\core\storage;
 
 use suda\core\Config;
+use suda\core\Autoloader;
 
 /**
  * 文件存储系统包装类
@@ -54,7 +55,7 @@ class FileStorage implements Storage
     {
         $path=self::osPath($path);
         self::mkdirs($path);
-        return realpath($path);
+        return Autoloader::absolutePath($path);
     }
     
     public function abspath(string $path)
@@ -63,7 +64,7 @@ class FileStorage implements Storage
             return false;
         }
         $path=self::osPath($path);
-        return realpath($path);
+        return Autoloader::absolutePath($path);
     }
 
     public function readDirFiles(string $dirs, bool $repeat=false, string $preg='/^.+$/', bool $cut=false):array
@@ -402,7 +403,7 @@ class FileStorage implements Storage
     private function existCase($name):bool
     {
         $name=self::osPath($name);
-        if (file_exists($name) && $real=realpath($name)) {
+        if (file_exists($name) && $real=Autoloader::absolutePath($name)) {
             if (basename($real) === basename($name)) {
                 return true;
             }
@@ -418,7 +419,7 @@ class FileStorage implements Storage
      */
     private function osPath(string $path)
     {
-        return preg_replace('/[\\\\\/]+/', DIRECTORY_SEPARATOR, $path);
+        return Autoloader::parsePath($path);
     }
 
     public function temp(string $prefix='dx_')

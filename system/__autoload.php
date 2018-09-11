@@ -27,7 +27,6 @@ defined('DEBUG') or define('DEBUG', false);
 defined('IS_LINUX') or define('IS_LINUX', DIRECTORY_SEPARATOR ===  '/');
 defined('IS_CONSOLE') or define('IS_CONSOLE', PHP_SAPI==='cli');
 
-header('X-Powered-By: Suda/'.SUDA_VERSION);
 
 if (DEBUG) {
     error_reporting(E_ALL);
@@ -43,6 +42,7 @@ if (IS_CONSOLE) {
         die($error_type.':'.$error_message);
     }
 } else {
+    header('X-Powered-By: Suda/'.SUDA_VERSION);
     require_once __DIR__.'/resource/suda_panic.php';
 }
 
@@ -50,5 +50,6 @@ if (IS_CONSOLE) {
 if (version_compare(PHP_VERSION, '7.2.0', '<')) {
     suda_panic('Kernal Panic', 'your current  php vesion is '.PHP_VERSION.', please use 7.2.0 + to run this program!');
 }
+
 require_once __DIR__.'/src/suda/core/Autoloader.php';
 suda\core\Autoloader::register();

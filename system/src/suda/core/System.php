@@ -43,16 +43,11 @@ class System
         if (!DEBUG) {
             ini_set('display_errors', 'Off');
         }
-        
-        defined('MODULES_DIR') or define('MODULES_DIR', Storage::path(APP_DIR.'/modules'));
-        defined('RESOURCE_DIR') or define('RESOURCE_DIR', Storage::path(APP_DIR.'/resource'));
-        defined('DATA_DIR') or define('DATA_DIR', Storage::path(APP_DIR.'/data'));
+
         defined('RUNTIME_DIR') or define('RUNTIME_DIR', Storage::path(DATA_DIR.'/runtime'));
         defined('VIEWS_DIR') or define('VIEWS_DIR', Storage::path(DATA_DIR.'/views'));
         defined('CACHE_DIR') or define('CACHE_DIR', Storage::path(DATA_DIR.'/cache'));
-        defined('CONFIG_DIR') or define('CONFIG_DIR', Storage::path(RESOURCE_DIR.'/config'));
         defined('TEMP_DIR') or define('TEMP_DIR', Storage::path(DATA_DIR.'/temp'));
-        defined('SHRAE_DIR') or define('SHRAE_DIR', Storage::path(APP_DIR.'/share'));
 
         Debug::beforeSystemRun();
         Locale::path(SYSTEM_RESOURCE.'/locales');
@@ -77,7 +72,7 @@ class System
     {
         debug()->time('init application');
         $router=Router::getInstance();
-        self::console();
+        static::initApplication();
         debug()->timeEnd('init application');
         debug()->time('init router');
         $router->loadModulesRouter();
@@ -88,8 +83,14 @@ class System
         debug()->time('before shutdown');
     }
 
-    public static function console()
+    public static function initApplication()
     {
+        defined('MODULES_DIR') or define('MODULES_DIR', Storage::path(APP_DIR.'/modules'));
+        defined('RESOURCE_DIR') or define('RESOURCE_DIR', Storage::path(APP_DIR.'/resource'));
+        defined('DATA_DIR') or define('DATA_DIR', Storage::path(APP_DIR.'/data'));
+        defined('SHRAE_DIR') or define('SHRAE_DIR', Storage::path(APP_DIR.'/share'));
+        defined('CONFIG_DIR') or define('CONFIG_DIR', Storage::path(RESOURCE_DIR.'/config'));
+
         Storage::path(APP_DIR);
         // 检测 app vendor
         if (storage()->exist($vendor = APP_DIR.'/vendor/autoload.php')) {
