@@ -1,5 +1,6 @@
 <?php
 namespace suda\cli;
+
 use suda\core\Autoloader;
 
 class CommandRunner
@@ -14,7 +15,10 @@ class CommandRunner
 
     public static function run(int $argc, array $argv)
     {
-        define('SUDA_PHAR',Autoloader::absolutePath($argv[0]));
+        $phar = Autoloader::absolutePath($argv[0]);
+        if (preg_match('/\.phar$/', $phar)) {
+            define('SUDA_PHAR', Autoloader::absolutePath($argv[0]));
+        }
 
         if ($argc <= 1) {
             self::printBanner();
@@ -35,7 +39,8 @@ class CommandRunner
         }
     }
 
-    protected static function printBanner() {
+    protected static function printBanner()
+    {
         $version = SUDA_VERSION;
         $banner=<<<BANNER
      ______     __  __     _____     ______    
