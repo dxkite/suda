@@ -6,6 +6,7 @@ class CommandRunner
 {
     protected static $commands = [
         'pack-suda' => [ 'command' => command\PackSudaCommand::class , 'message' => 'pack suda as phar package' ],
+        'release' => [ 'command' => command\ReleaseCommand::class , 'message' => 'release suda version' ],
         'new' => [ 'command' => command\NewCommand::class , 'message' => 'create a suda application' ]
     ];
     
