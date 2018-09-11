@@ -1,16 +1,16 @@
-# FileStorage::path
+# System::createApplication
 
-> *文件信息* suda\core\storage\FileStorage.php: 26~474
+> *文件信息* suda\core\System.php: 30~218
 ## 所属类 
 
-[FileStorage](../FileStorage.md)
+[System](../System.md)
 
 ## 可见性
 
-  public  
+  public  static
 ## 说明
 
-封装了常用的文件系统函数
+该函数暂时无说明
 
 ## 参数
 

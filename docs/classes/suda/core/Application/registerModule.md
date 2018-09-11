@@ -1,6 +1,6 @@
 # Application::registerModule
 
-> *文件信息* suda\core\Application.php: 30~756
+> *文件信息* suda\core\Application.php: 30~757
 ## 所属类 
 
 [Application](../Application.md)

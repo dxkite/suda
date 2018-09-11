@@ -1,6 +1,6 @@
 # Application::getModuleDirs
 获取所有模块的目录
-> *文件信息* suda\core\Application.php: 30~756
+> *文件信息* suda\core\Application.php: 30~757
 ## 所属类 
 
 [Application](../Application.md)

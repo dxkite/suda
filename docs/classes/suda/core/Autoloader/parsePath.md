@@ -1,16 +1,16 @@
-# FileStorage::path
+# Autoloader::parsePath
 
-> *文件信息* suda\core\storage\FileStorage.php: 26~474
+> *文件信息* suda\core\Autoloader.php: 22~198
 ## 所属类 
 
-[FileStorage](../FileStorage.md)
+[Autoloader](../Autoloader.md)
 
 ## 可见性
 
-  public  
+  public  static
 ## 说明
 
-封装了常用的文件系统函数
+控制按照一定的规则自动加载文件或者类
 
 ## 参数
 

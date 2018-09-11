@@ -3,7 +3,7 @@
 > **注：** 文档由程序自动生成
 
 - suda 2.0.1 
-- 2018-09-10 16:35:25
+- 2018-09-11 13:00:44
 
 
 ## 类列表
@@ -19,13 +19,9 @@
 |[suda\tool\ArrayHelper](suda/tool/ArrayHelper.md) | 数组操纵 |
 |[suda\core\Storage](suda/core/Storage.md) | 文件存储系统包装类，封装了常用的文件系统函数 |
 |[suda\core\storage\FileStorage](suda/core/storage/FileStorage.md) | 文件存储系统包装类 |
+|[system](system.md) | 系统类，处理系统报错函数以及程序加载 |
 |[suda\core\Hook](suda/core/Hook.md) | 系统钩子，监听系统内部一些操作并载入一些自定义行为 |
 |[suda\core\Locale](suda/core/Locale.md) | I18N 国际化支持 |
-|[suda\core\Application](suda/core/Application.md) | 应用处理类 |
-|[suda\template\Manager](suda/template/Manager.md) | 模板管理类 |
-|[suda\template\compiler\suda\Compiler](suda/template/compiler/suda/Compiler.md) | Suda 模板编译器 |
-|[suda\tool\ZipHelper](suda/tool/ZipHelper.md) |  |
-|[suda\tool\Command](suda/tool/Command.md) |  |
 |[suda\archive\Connection](suda/archive/Connection.md) | 数据表链接对象 |
 |[suda\archive\creator\Field](suda/archive/creator/Field.md) |  |
 |[suda\archive\creator\InputValue](suda/archive/creator/InputValue.md) |  |
@@ -34,6 +30,7 @@
 |[suda\archive\SQLQuery](suda/archive/SQLQuery.md) | 数据库查询方案，简化数据库查 |
 |[suda\archive\Table](suda/archive/Table.md) | 数据表抽象对象 |
 |[suda\archive\TableInstance](suda/archive/TableInstance.md) |  |
+|[suda\core\Application](suda/core/Application.md) | 应用处理类 |
 |[suda\core\cache\FileCache](suda/core/cache/FileCache.md) | 文件缓存 |
 |[suda\core\Cache](suda/core/Cache.md) | 缓存系统 |
 |[suda\core\Cookie](suda/core/Cookie.md) | Cookie操作封装类 |
@@ -57,16 +54,20 @@
 |[suda\mail\message\HTMLMessage](suda/mail/message/HTMLMessage.md) | HTML邮件信息 |
 |[suda\mail\sender\MailSender](suda/mail/sender/MailSender.md) | sendmail 邮件发送 |
 |[suda\mail\sender\StmpSender](suda/mail/sender/StmpSender.md) | SMTP邮件发送器 |
+|[suda\template\compiler\suda\Compiler](suda/template/compiler/suda/Compiler.md) | Suda 模板编译器 |
 |[suda\template\compiler\suda\Template](suda/template/compiler/suda/Template.md) |  |
 |[suda\template\compiler\suda\TemplateInfo](suda/template/compiler/suda/TemplateInfo.md) |  |
+|[suda\template\Manager](suda/template/Manager.md) | 模板管理类 |
 |[suda\tool\ArrayValue](suda/tool/ArrayValue.md) |  |
+|[suda\tool\Command](suda/tool/Command.md) |  |
 |[suda\tool\CookieSetter](suda/tool/CookieSetter.md) |  |
 |[suda\tool\EchoValue](suda/tool/EchoValue.md) |  |
 |[suda\tool\Json](suda/tool/Json.md) |  |
 |[suda\tool\Pinyin](suda/tool/Pinyin.md) | 将中文转换成拼音 |
+|[suda\tool\ZipHelper](suda/tool/ZipHelper.md) |  |
 |[suda\core\storage\Storage](suda/core/storage/Storage.md) | 存储系统 |
-|[suda\template\Compiler](suda/template/Compiler.md) | 编译器接口 |
 |[suda\archive\SQLStatement](suda/archive/SQLStatement.md) | 数据库查询语句接口 |
 |[suda\core\cache\Cache](suda/core/cache/Cache.md) | 缓存接口 |
 |[suda\core\session\Session](suda/core/session/Session.md) | Session 接口 |
 |[suda\mail\sender\Sender](suda/mail/sender/Sender.md) |  |
+|[suda\template\Compiler](suda/template/Compiler.md) | 编译器接口 |

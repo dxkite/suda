@@ -1,6 +1,6 @@
 # System::readManifast
 
-> *文件信息* suda\core\System.php: 30~212
+> *文件信息* suda\core\System.php: 30~218
 ## 所属类 
 
 [System](../System.md)

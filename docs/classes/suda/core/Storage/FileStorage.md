@@ -1,6 +1,6 @@
 #  FileStorage 
 
-> *文件信息* suda\core\storage\FileStorage.php: 25~473
+> *文件信息* suda\core\storage\FileStorage.php: 26~474
 
 
 文件存储系统包装类

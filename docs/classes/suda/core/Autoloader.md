@@ -1,6 +1,6 @@
 #  Autoloader 
 
-> *文件信息* suda\core\Autoloader.php: 22~146
+> *文件信息* suda\core\Autoloader.php: 22~198
 
 
 自动加载控制器
@@ -33,6 +33,8 @@
 |  public  static|[getIncludePath](Autoloader/getIncludePath.md) |  |
 |  public  static|[getNamespace](Autoloader/getNamespace.md) |  |
 |  public  static|[setNamespace](Autoloader/setNamespace.md) |  |
+|  public  static|[absolutePath](Autoloader/absolutePath.md) |  |
+|  public  static|[parsePath](Autoloader/parsePath.md) |  |
  
 
 ## 例子

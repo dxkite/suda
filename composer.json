@@ -14,7 +14,9 @@
             "": "system/src/"
         }
     },
-    "require": {},
+    "require": {
+        "php": "^7.2.0"
+    },
     "bin": [
         "system/suda-cli"
     ]
