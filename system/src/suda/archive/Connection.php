@@ -177,7 +177,7 @@ class Connection
     protected function onBeforeSystemShutdown()
     {
         if ($this->transaction > 0 || $this->pdo->inTransaction()) {
-            debug()->error('SQL transaction is open (' . $transaction.') in connection '.$this->__toString());
+            debug()->error('SQL transaction is open (' . $this->transaction.') in connection '.$this->__toString());
         }
     }
 
