@@ -14,5 +14,8 @@
             "": "system/src/"
         }
     },
-    "require": {}
+    "require": {},
+    "bin": [
+        "system/suda-cli"
+    ]
 }
