@@ -88,12 +88,14 @@ class Debug
             $pass=microtime(true)-self::$time[$name]['time'];
             self::$time[$name]['pass'] = $pass;
             $backtrace=debug_backtrace();
-            $offset=1;
-            if (!isset($backtrace[$offset]['file'])) {
-                $offset--;
+            foreach ($backtrace as $trace) {
+                if (array_key_exists('file', $trace) && $trace['file'] != __FILE__) {
+                    $traceInfo = $trace;
+                    break;
+                }
             }
-            $call=(isset($backtrace[$offset]['class'])?$backtrace[$offset]['class'].'#':'').$backtrace[$offset]['function'];
-            self::_loginfo(self::$time[$name]['type'], $call, __('process %s %fs', $name, $pass), $backtrace[$offset]['file'] ??'unknown', $backtrace[$offset]['line'] ?? 0, $backtrace);
+            $call=(isset($traceInfo['class'])?$traceInfo['class'].'#':'').$traceInfo['function'];
+            self::_loginfo(self::$time[$name]['type'], $call, __('process %s %fs', $name, $pass), $traceInfo['file'] ??'unknown', $traceInfo['line'] ?? 0, $backtrace);
             return $pass;
         }
         return 0;
@@ -131,7 +133,7 @@ class Debug
     public static function displayException(Exception $e)
     {
         self::logException($e);
-        if (Config::get('console', false)) {
+        if (IS_CONSOLE) {
             return self::printConsole($e);
         } else {
             return self::printHTML($e);
@@ -181,21 +183,21 @@ class Debug
         $file=$e->getFile();
         $error=$e->getMessage();
         $backtrace=$e->getBacktrace();
-        $traces_console=self::printTrace($backtrace, true, "\t\t=> ");
+        $traces_console=self::printTrace($backtrace, false);
         if (IS_LINUX) {
             print "\033[31m# Error>\033[33m $error\033[0m\r\n";
-            print "\t\033[34mCause By $file:$line\033[0m\r\n";
+            print "  \033[34mCause By $file:$line\033[0m\r\n";
             if (is_array($traces_console)) {
                 foreach ($traces_console as $trace_info) {
-                    print "\033[36m$trace_info\033[0m\r\n";
+                    print "\033[36m    => $trace_info\033[0m\r\n";
                 }
             }
         } else {
             print "# Error> $error\r\n";
-            print "\tCause By $file:$line\r\n";
+            print "  Cause By $file:$line\r\n";
             if (is_array($traces_console)) {
                 foreach ($traces_console as $trace_info) {
-                    print "$trace_info\r\n";
+                    print "    => $trace_info\r\n";
                 }
             }
         }
@@ -425,7 +427,7 @@ class Debug
         self::aliasMethod($method, $args);
     }
     
-    private static function aliasMethod($method, $args)
+    private static function aliasMethod(string $method,array $args)
     {
         static $mpk=['d','t','i','n','w','e','u'];
         static $map=['d'=>'debug','t'=>'trace','i'=>'info','n'=>'notice','w'=>'warning','e'=>'error','u'=>'user'];
