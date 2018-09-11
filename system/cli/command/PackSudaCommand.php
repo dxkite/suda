@@ -11,7 +11,7 @@ class PackSudaCommand extends Command
         $path = $argv[1] ?? './suda-cli.phar';
         $phar = new Phar($path,0,'suda.phar');
         $phar->buildFromDirectory(SYSTEM_DIR);
-        $phar->setStub(Phar::createDefaultStub('suda-cli.php','suda.php'));
+        $phar->setStub(Phar::createDefaultStub('suda-phar.php'));
         $phar->compressFiles(Phar::GZ);
     }
 }

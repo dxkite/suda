@@ -143,7 +143,7 @@ class Autoloader
     public static function parsePath(string $path):string
     {
         // TODO parse ~ as home
-        preg_match('/^(.+?:\/+)?(.+)$/', $path, $match);
+        preg_match('/^(.+?:\/\/)?(.+)$/', $path, $match);
         list($path, $scheme, $subpath) = $match;
         $root = null;
         if (DIRECTORY_SEPARATOR ==='/') {
@@ -154,7 +154,7 @@ class Autoloader
             } */else {
                 $subpath = getcwd().DIRECTORY_SEPARATOR.$subpath;
             }
-            $subpath = substr(1, $subpath);
+            $subpath = substr($subpath,1);
         } else {
             $subpath = str_replace(['/', '\\'], DIRECTORY_SEPARATOR, $subpath);
             if (preg_match('/^(.+?:'.preg_quote(DIRECTORY_SEPARATOR, '/').')(.+)$/', $subpath, $match)) {
@@ -183,6 +183,7 @@ class Autoloader
             }
         }
         $absulotePath = $scheme.$root.implode(DIRECTORY_SEPARATOR, $absulotePaths);
+        // var_dump($root.implode(DIRECTORY_SEPARATOR, $absulotePaths),$absulotePath);
         return $absulotePath;
     }
 
