@@ -88,7 +88,6 @@ class Autoloader
         $classname=self::realName($className);
         // 搜索路径
         foreach (self::$include_path as $include_namespace => $include_path) {
-
             if (is_numeric($include_namespace)) {
                 $path= $include_path.DIRECTORY_SEPARATOR.$namepath.'.php';
             } else {
@@ -156,7 +155,10 @@ class Autoloader
     public static function parsePath(string $path):string
     {
         // TODO parse ~ as home
-        if (strpos($path, '://')) {
+        if (IS_CONSOLE && $path[0] === '~') {
+            $scheme ='';
+            $subpath = USER_HOME.DIRECTORY_SEPARATOR.$path;
+        } elseif (strpos($path, '://')) {
             list($scheme, $subpath) = explode('://', $path, 2);
             $scheme.='://';
         } else {
