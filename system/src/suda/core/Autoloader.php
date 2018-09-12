@@ -26,7 +26,13 @@ class Autoloader
      *
      * @var array
      */
-    protected static $namespace=['suda\\core'];
+    protected static $namespace=[ __NAMESPACE__ ];
+
+    /**
+     * 包含路径
+     *
+     * @var array
+     */
     protected static $include_path=[];
 
     /**
@@ -37,12 +43,12 @@ class Autoloader
      */
     public static function realName(string $name)
     {
-        return preg_replace('/[.\/\\\\]+/', '\\', $name);
+        return str_replace(['.','/'], '\\', $name);
     }
     
     public static function realPath(string $name)
     {
-        return preg_replace('/[\\\\\/]+/', DIRECTORY_SEPARATOR, $name);
+        return str_replace(['\\','/'], DIRECTORY_SEPARATOR, $name);
     }
 
     public static function register()
@@ -54,12 +60,12 @@ class Autoloader
 
     public static function import(string $filename)
     {
-        if (self::file_exists($filename)) {
+        if (self::filePath($filename)) {
             require_once $filename;
             return $filename;
         } else {
             foreach (self::$include_path as $include_path) {
-                if (self::file_exists($path=$include_path.DIRECTORY_SEPARATOR.$filename)) {
+                if (self::filePath($path=$include_path.DIRECTORY_SEPARATOR.$filename)) {
                     require_once $path;
                     return $path;
                 }
@@ -82,18 +88,25 @@ class Autoloader
         $classname=self::realName($className);
         // 搜索路径
         foreach (self::$include_path as $include_namespace => $include_path) {
-            if (!is_numeric($include_namespace) && preg_match('/^'.preg_quote(static::realName($include_namespace), '/').'(.+)$/', $classname, $match)) {
-                $path=static::absolutePath($include_path.DIRECTORY_SEPARATOR.static::realPath($match[1]).'.php');
+
+            if (is_numeric($include_namespace)) {
+                $path= $include_path.DIRECTORY_SEPARATOR.$namepath.'.php';
             } else {
-                $path=static::absolutePath($include_path.DIRECTORY_SEPARATOR.$namepath.'.php');
+                $nl=strlen($include_namespace);
+                if (substr($classname, 0, $nl) == $include_namespace) {
+                    $path= $include_path.DIRECTORY_SEPARATOR.static::realPath(substr($classname, $nl)).'.php';
+                } else {
+                    $path= $include_path.DIRECTORY_SEPARATOR.$namepath.'.php';
+                }
             }
-            if (self::file_exists($path)) {
+
+            if ($path = self::filePath($path)) {
                 return $path;
             } else {
                 // 添加命名空间
                 foreach (self::$namespace as $namespace) {
-                    $path=preg_replace('/[\\\\]+/', DIRECTORY_SEPARATOR, $include_path.DIRECTORY_SEPARATOR.$namespace.DIRECTORY_SEPARATOR.$namepath.'.php');
-                    if (self::file_exists($path)) {
+                    $path = $include_path.DIRECTORY_SEPARATOR.$namespace.DIRECTORY_SEPARATOR.$namepath.'.php';
+                    if ($path = self::filePath($path)) {
                         // 精简类名
                         if (!class_exists($classname, false)) {
                             class_alias($namespace.'\\'.$classname, $classname);
@@ -143,55 +156,52 @@ class Autoloader
     public static function parsePath(string $path):string
     {
         // TODO parse ~ as home
-        preg_match('/^(.+?:\/\/)?(.+)$/', $path, $match);
-        list($path, $scheme, $subpath) = $match;
+        if (strpos($path, '://')) {
+            list($scheme, $subpath) = explode('://', $path, 2);
+            $scheme.='://';
+        } else {
+            $scheme ='';
+            $subpath = $path;
+        }
+        $subpath = str_replace(['/', '\\'], '/', $subpath);
         $root = null;
         if (DIRECTORY_SEPARATOR ==='/') {
             if ($subpath[0] === '/') {
                 $root = '/';
-            } /*elseif ($subpath[0] ==='~') {
-                $subpath = realpath('~').DIRECTORY_SEPARATOR.$subpath;
-            } */else {
+            } else {
                 $subpath = getcwd().DIRECTORY_SEPARATOR.$subpath;
             }
-            $subpath = substr($subpath,1);
+            $subpath = substr($subpath, 1);
         } else {
-            $subpath = str_replace(['/', '\\'], DIRECTORY_SEPARATOR, $subpath);
-            if (preg_match('/^(.+?:'.preg_quote(DIRECTORY_SEPARATOR, '/').')(.+)$/', $subpath, $match)) {
-                $root = $match[1];
-                $subpath = $match[2];
-            } else {
-                preg_match('/^(.+?:'.preg_quote(DIRECTORY_SEPARATOR, '/').')(.+)$/', getcwd(), $match);
-                // preg_match('/^(.+:\\\\)(.+)$/', $subpath[0] === '~' ? realpath('~/') :getcwd(), $match);
-                $root = $match[1];
-                $subpath = $match[2].DIRECTORY_SEPARATOR.$subpath;
+            if (strpos($subpath, ':/') == 0) {
+                $subpath=str_replace(['/', '\\'], '/', getcwd()).'/'.$subpath;
             }
+            list($root, $subpath) = explode(':/', $subpath, 2);
+            $root .= ':'.DIRECTORY_SEPARATOR;
         }
-        $subpath = str_replace(['/', '\\'], DIRECTORY_SEPARATOR, $subpath);
-        $subpathArr = preg_split('/'.preg_quote(DIRECTORY_SEPARATOR, '/').'+/', $subpath);
+        $subpathArr = explode('/', $subpath);
         $absulotePaths = [];
         foreach ($subpathArr as $name) {
             $name = trim($name);
-            if (preg_match('/^\.+$/', $name)) {
-                if ($name === '..') {
-                    array_pop($absulotePaths);
-                } else {
-                    continue;
-                }
-            } else {
-                array_push($absulotePaths, $name);
+            if ($name === '..') {
+                array_pop($absulotePaths);
+            } elseif ($name === '.') {
+                continue;
+            } elseif (strlen($name)) {
+                $absulotePaths[]=$name;
             }
         }
         $absulotePath = $scheme.$root.implode(DIRECTORY_SEPARATOR, $absulotePaths);
-        // var_dump($root.implode(DIRECTORY_SEPARATOR, $absulotePaths),$absulotePath);
         return $absulotePath;
     }
 
-    private static function file_exists($name):bool
+
+    private static function filePath($name)
     {
-        if (file_exists($name) && is_file($name) && $real=static::absolutePath($name)) {
-            if (basename($real) === basename($name)) {
-                return true;
+        $path = self::realPath($name);
+        if (file_exists($path) && is_file($path) && $real=static::absolutePath($name)) {
+            if (basename($real) === basename($path)) {
+                return $real;
             }
         }
         return false;

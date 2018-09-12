@@ -15,7 +15,7 @@
  */
 namespace suda\template\compiler\suda;
 
-use Storage;
+use suda\core\Storage;
 use suda\core\Application;
 use suda\core\Hook;
 use suda\tool\Value;
