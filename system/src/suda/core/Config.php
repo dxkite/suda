@@ -77,13 +77,13 @@ class Config
             if ($name === 'module' && $module) {
                 return $module;
             }
-            if ($value = constant($name)) {
+            if (defined($name) && $value = constant($name)) {
                 return $value;
             }
             if ($value = conf($name,null)) {
                 return $value;
             }
-            return $name;
+            return $matchs[0];
         }, $content);
     }
 
