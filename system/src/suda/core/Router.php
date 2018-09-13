@@ -84,7 +84,7 @@ class Router
 
     protected function loadModuleConfig(int $role, string $module, string $configFile)
     {
-        $routers=Config::loadConfig($configFile);
+        $routers=Config::loadConfig($configFile, $module);
         $router=[];
         foreach ($routers as $name => $value) {
             $mapping=Mapping::createFromRouteArray($role, $module, $name, $value);
@@ -354,14 +354,16 @@ class Router
      * 获取路由
      *
      * @param string $name
-     * @return void
+     * @param string|null $moduleDefault
+     * @return Mapping|null
      */
-    public function getRouter(string $name)
+    public function getRouter(string $name, ?string $moduleDefault=null):?Mapping
     {
-        $name=self::getRouterFullName($name);
+        $name=self::getRouterFullName($name, $moduleDefault);
         if (isset($this->routers[$name])) {
             return $this->routers[$name];
         }
+        return null;
     }
     
     /**

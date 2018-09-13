@@ -125,7 +125,7 @@ class Application
 
     public static function getInstance()
     {
-        $name=Config::get('app.application',Application::class);
+        $name=Config::get('app.application', Application::class);
         // var_dump($name);
         if (is_null(self::$instance)) {
             self::$instance=new $name();
@@ -333,7 +333,7 @@ class Application
             return $this->moduleConfigs[self::getModuleFullName($module)]??[];
         }
         if ($path = self::getModuleConfigPath($module, $configName)) {
-            return Config::loadConfig($path);
+            return Config::loadConfig($path, $module);
         }
         return null;
     }
