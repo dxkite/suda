@@ -1,6 +1,7 @@
 {
     "icon": "icon.png",
     "name": "dxkite/suda",
+    "unique":"suda-${SUDA_VERSION}",
     "version": "1.0.6",
     "namespace": "dxkite\\suda",
     "homepage": "http://atd3.cn",

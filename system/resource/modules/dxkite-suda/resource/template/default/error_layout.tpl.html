@@ -7,21 +7,21 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>{{ $:error_type('Error') }} @if ($?:error_code) - {{$:error_code('500')}} @endif | Powered By Suda System </title>
-  <link rel="stylesheet" href="@static/error.css"> @insert('error-head')
+  <link rel="stylesheet" href="@static/style.css"> @insert('error-head')
 </head>
 
 <body>
-  <div class="error-wrapper">
+  <div class="content-wrapper">
     <div class="error-panel">
       <div class="error-info">
         <div class="error-type">{{ $:error_type('Error') }}</div>
         @if ($?:error_code)
         <div class="error-number">{{ $:error_code('500') }}</div> @endif
         <div class="error-items">
-          @if (DEBUG)
-          <a class="error-item" href="@u('debug_json_download',$:request_id)" target="_black">{{ __('Request Id:%s', $:request_id ) }}</a>
+          @if (DEBUG && router()->getRouter('debug_json_download',$this->module) )
+          <a class="error-item" href="@u('debug_json_download',$:request_id)" target="_black">@{ __('Request Id:%s', $:request_id ) }</a>
           @else
-          <div class="error-item">{{ __('Request Id:%s', $:request_id ) }}</div>
+          <div class="error-item">@{ __('Request Id:%s', $:request_id ) }</div>
           @endif
           <div class="error-item">{{ date('Y-m-d H:i:s e') }}</div>
         </div>
@@ -30,12 +30,12 @@
     </div>
     @insert('error-content')
     <div class="footer">
-      <div class="footer-item">{{ __('Memory Cost: %s', $:memory_usage ) }}</div>
-      <div class="footer-item">{{ __('Memory Peak: %s', $:memory_peak_usage ) }}</div>
-      <div class="footer-item">{{ __('Time Cost：%s s', $:time_spend ) }}</div>
-      <div class="footer-item">{{ __('Requst Ip: %s', request()->ip() ) }}</div>
+      <div class="footer-item">@{ __('Memory Cost: %s', $:memory_usage ) }</div>
+      <div class="footer-item">@{ __('Memory Peak: %s', $:memory_peak_usage ) }</div>
+      <div class="footer-item">@{ __('Time Cost：%s s', $:time_spend ) }</div>
+      <div class="footer-item">@{ __('Requst Ip: %s', request()->ip() ) }</div>
       <div class="footer-item">
-        <a href="https://github.com/DXkite/suda" target="_black"> {{ __('Performance By Suda v%s',SUDA_VERSION) }}</a>
+        <a href="https://github.com/DXkite/suda" target="_black"> @{ __('Performance By Suda v%s',SUDA_VERSION) }</a>
       </div>
     </div>
   </div>

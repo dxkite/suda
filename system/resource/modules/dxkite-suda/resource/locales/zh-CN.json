@@ -4,5 +4,8 @@
     "Time Cost：%s s": "时间消耗：%s秒",
     "Requst Ip: %s": "请求地址：%s",
     "Performance By Suda v%s": "由 Suda v%s 驱动",
-    "page \"%s\"  is not found":"当前页面 \"%s\" 不存在，请确认后继续"
+    "page \"%s\"  is not found": "当前页面 \"%s\" 不存在，请确认后继续",
+    "redirect": "跳转中",
+    "page is redirecting to":"正在跳转到：",
+    "%s seconds" : "%s秒"
 }

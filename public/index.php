@@ -21,5 +21,5 @@
     define('DEBUG_DUMP_LOG',true);
     // 设置默认时区
     define('DEFAULT_TIMEZONE','PRC');
-    // require_once SYSTEM.'/suda.php';
-    require_once 'phar://'.__DIR__.'/../.suda/suda-cli.phar/suda.php';
+    require_once SYSTEM.'/suda.php';
+    // require_once 'phar://'.__DIR__.'/../.suda/suda-cli.phar/suda.php';

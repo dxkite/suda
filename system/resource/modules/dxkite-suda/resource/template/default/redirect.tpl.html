@@ -1,45 +1,60 @@
-@extend ('bootstrap')
-@set('title', $:title('跳转中。。。')  )
-@set('lang','Zh-cn')
-@startInsert('bs-head')
-  <style>
-    body {
-      padding-top: 40px;
-      padding-bottom: 40px;
-      background-color: #eee;
-    }
-  </style>
-@endInsert
-@startInsert('bs-content')
-  <div class="container">
+<!DOCTYPE html>
+<html lang="{{ $:lang('en') }}">
 
-    <div class="jumbotron">
-      <h1 class="display-3"> {{ $:message('跳转中。。。') }} </h1>
-      <p class="lead"> 页面跳转至 <a id="href" href="{{ $:url }}">{{ $:url }}</a> 中。</p>
-          <hr class="my-4">
-      <p class="lead">
-        <a class="btn btn-primary btn-lg" href="{{ $:url }}" role="button">立即跳转 (<span id="time">{{$:time(1)}}</span>)</a>
-      </p>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title> {{ $:title('redirect')}} | Powered By Suda System </title>
+  <link rel="stylesheet" href="@static/style.css">
+</head>
+
+<body>
+  <div class="content-wrapper">
+    <div class="redirect">
+      <div class="redirect-title">
+        <div class="redirect-title-text">{= redirect }</div>
+        <div class="loading">
+          <div class="dot"></div>
+          <div class="dot"></div>
+          <div class="dot"></div>
+          <div class="dot"></div>
+        </div>
+      </div>
+      @if ($?:message)
+      <div class="redirect-message">{{ $:message }}</div>
+      @endif
+      <div class="redirect-text">
+        <span id="time">@{ __('%s seconds',$:time(5)) }</span>
+        <span>@{ __('page is redirecting to') } <a href="@{ $:url }"> @{$:url} </a></span>
+      </div>
+      <div class="footer">
+        <div class="footer-item">
+          <a href="https://github.com/DXkite/suda" target="_black"> @{ __('Performance By Suda v%s',SUDA_VERSION) }</a>
+        </div>
+      </div>
     </div>
+
   </div>
-@endInsert
-@startInsert('bs-footer')
-<script type="text/javascript">
-(function(){
-href = document.getElementById('href').href;
-var time_counter= document.getElementById('time');
-var time = time_counter.innerText || 0;
-var interval = setInterval(function(){
-    if (time<=0){
+</body>
+<script>
+  window.addEventListener('load', function () {
+    const href = "@{$:url}";
+    const template = "@{ __('%s seconds','%time%') }";
+    var time_counter = document.getElementById('time');
+    var time = '@{$:time(5)}' || 0;
+    var interval = setInterval(function () {
+      if (time <= 0) {
         clearInterval(interval);
-        time_counter.innerText='0';
+        time_counter.innerText = template.replace('%time%', 0);
         location.href = href;
-    }
-	else{
-        time_counter.innerText=time-1;
+      }
+      else {
+        time_counter.innerText = template.replace('%time%', time);
         time--;
-    }
-}, 1000);
-})();
+      }
+    }, 1000);
+  });
 </script>
-@endInsert
+
+</html>
