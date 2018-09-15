@@ -1,0 +1,17 @@
+@extend ('layout')
+
+@startInsert('content')
+<div class="wrapper">
+    <div class="content">
+        <div class="text-panel">
+            <div class="text-suda">Suda</div>
+            <div class="text-version">v@{ SUDA_VERSION }</div>
+        </div>
+        <div class="links">
+            <a href="https://github.com/DXkite/suda" class="link">Github</a>
+            <a href="@u('hello')" class="link">Hello World</a>
+            <a href="@u('simple')" class="link">Simple</a>
+        </div>
+    </div>
+</div>
+@endInsert
