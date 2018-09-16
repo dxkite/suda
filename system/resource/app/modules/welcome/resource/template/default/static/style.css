@@ -63,3 +63,41 @@ body {
     font-weight: 400;
     color: rgba(20, 20, 245, 0.685);
 }
+
+@keyframes top-fly-in {
+    0% {
+        transform: translateY(-100%) scale(.8);
+        opacity: 0.3;
+    }
+    70% {
+        transform: scale(1.2);
+    }
+    100% {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes bottom-fly-in {
+    0% {
+        transform: translateY(100%) scale(.8);
+        opacity: 0.3;
+    }
+    70% {
+        transform: scale(1.2);
+    }
+    100% {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+    }
+}
+
+.hello-world,
+.text-panel {
+    animation: top-fly-in .3s ease-out;
+}
+
+.link,
+.text-ip {
+    animation: bottom-fly-in .4s ease-out;
+}
