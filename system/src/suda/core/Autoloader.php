@@ -158,7 +158,7 @@ class Autoloader
         if (IS_CONSOLE && $path[0] === '~') {
             $scheme ='';
             $subpath = USER_HOME.DIRECTORY_SEPARATOR.$path;
-        } elseif (strpos($path, '://')) {
+        } elseif (strpos($path, '://') !== false ) {
             list($scheme, $subpath) = explode('://', $path, 2);
             $scheme.='://';
         } else {
@@ -167,7 +167,7 @@ class Autoloader
         }
         $subpath = str_replace(['/', '\\'], '/', $subpath);
         $root = null;
-        if (DIRECTORY_SEPARATOR ==='/') {
+        if (DIRECTORY_SEPARATOR === '/') {
             if ($subpath[0] === '/') {
                 $root = '/';
             } else {
@@ -175,7 +175,7 @@ class Autoloader
             }
             $subpath = substr($subpath, 1);
         } else {
-            if (strpos($subpath, ':/') == 0) {
+            if (strpos($subpath, ':/') === false) {
                 $subpath=str_replace(['/', '\\'], '/', getcwd()).'/'.$subpath;
             }
             list($root, $subpath) = explode(':/', $subpath, 2);
