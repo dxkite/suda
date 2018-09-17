@@ -480,7 +480,7 @@ class Mapping implements \JsonSerializable
         if (isset($json['class'])) {
             $callback =  $json['class'].'->onRequest';
         } elseif (isset($json['template'])) {
-            $callback = __CLASS__.'::emptyResponse';
+            $callback = __CLASS__.'::templateResponse';
         } elseif (isset($json['source'])) {
             $callback =   __CLASS__.'::sourceResponse';
         } else {
@@ -507,7 +507,7 @@ class Mapping implements \JsonSerializable
         return  self::$current;
     }
 
-    protected static function emptyResponse()
+    protected static function templateResponse()
     {
         $render=new class extends Response {
             public function onRequest(Request $request)
@@ -517,6 +517,8 @@ class Mapping implements \JsonSerializable
                     if ($template=$mapping->getTemplate()) {
                         if ($view=$this->view($template, $mapping->getParam()??[])) {
                             return $view->render();
+                        } else {
+                            echo $template;
                         }
                     }
                 }
