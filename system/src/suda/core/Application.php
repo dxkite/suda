@@ -155,46 +155,57 @@ class Application
     protected function loadModules()
     {
         // 激活模块
-        $moduleUse=self::getLiveModules();
+        $moduleLive=self::getLiveModules();
         // 安装、启用使用的模块
-        foreach ($moduleUse as $moduleTemp) {
-            $root=self::getModulePath($moduleTemp);
-            $config=self::getModuleConfig($moduleTemp);
-            // 检查依赖
-            if (isset($config['require'])) {
-                $this->checkModuleRequire(__('module %s', $config['name']), $config['require']);
-            }
-            // 框架依赖
-            if (isset($config['suda']) && !static::versionCompire($config['suda'], SUDA_VERSION)) {
-                suda_panic('ApplicationException', __('module %s require suda version %s and now is %s', $moduleTemp, $config['suda'], SUDA_VERSION));
-            }
-            // 检测 Composer vendor
-            if (storage()->exist($vendor = $root.DIRECTORY_SEPARATOR.'vendor'.DIRECTORY_SEPARATOR.'autoload.php')) {
-                Autoloader::import($vendor);
-            }
-            // 加载库路经
-            foreach ($config['import']['share'] as $namespace=>$path) {
-                if (Storage::isDir($dirPath=$root.DIRECTORY_SEPARATOR.$path)) {
-                    Autoloader::addIncludePath($dirPath, $namespace);
-                } elseif (Storage::isFile($importPath=$root.DIRECTORY_SEPARATOR.$path)) {
-                    Autoloader::import($importPath);
-                }
-            }
-            // 加载监听器
-            if ($listenerPath=Config::resolve($root.'/resource/config/listener.json')) {
-                Hook::loadConfig($listenerPath, $moduleTemp);
-                Hook::exec('loadModule:'.self::getModuleName($moduleTemp));
-            }
-            // 自动安装
-            if (conf('auto-install', true)) {
-                Hook::listen('Application:init', function () use ($moduleTemp) {
-                    self::installModule($moduleTemp);
-                });
-            }
-            // 设置语言包库
-            Locale::path($root.'/resource/locales/');
+        foreach ($moduleLive as $module) {
+            $this->loadModule($module);
         }
         Hook::exec('loadModule');
+    }
+    
+    /**
+     * 加载模块
+     *
+     * @param string $module
+     * @return void
+     */
+    public function loadModule(string $module)
+    {
+        $root = $this->getModulePath($module);
+        $config = $this->getModuleConfig($module);
+        // 检查依赖
+        if (isset($config['require'])) {
+            $this->checkModuleRequire(__('module %s', $config['name']), $config['require']);
+        }
+        // 框架依赖
+        if (isset($config['suda']) && !static::versionCompire($config['suda'], SUDA_VERSION)) {
+            suda_panic('ApplicationException', __('module %s require suda version %s and now is %s', $module, $config['suda'], SUDA_VERSION));
+        }
+        // 检测 Composer vendor
+        if (storage()->exist($vendor = $root.DIRECTORY_SEPARATOR.'vendor'.DIRECTORY_SEPARATOR.'autoload.php')) {
+            Autoloader::import($vendor);
+        }
+        // 加载库路经
+        foreach ($config['import']['share'] as $namespace=>$path) {
+            if (Storage::isDir($dirPath=$root.DIRECTORY_SEPARATOR.$path)) {
+                Autoloader::addIncludePath($dirPath, $namespace);
+            } elseif (Storage::isFile($importPath=$root.DIRECTORY_SEPARATOR.$path)) {
+                Autoloader::import($importPath);
+            }
+        }
+        // 加载监听器
+        if ($listenerPath=Config::resolve($root.'/resource/config/listener.json')) {
+            Hook::loadConfig($listenerPath, $module);
+            Hook::exec('loadModule:'.self::getModuleName($module));
+        }
+        // 自动安装
+        if (conf('auto-install', true)) {
+            Hook::listen('Application:init', function () use ($module) {
+                self::installModule($module);
+            });
+        }
+        // 设置语言包库
+        Locale::path($root.'/resource/locales/');
     }
     
     /**
@@ -473,7 +484,13 @@ class Application
         return $this->routeReachable=$modules;
     }
     
-    public function isModuleReachable(string $name)
+    /**
+     * 判断模块是否可达
+     *
+     * @param string $name
+     * @return boolean
+     */
+    public function isModuleReachable(string $name):bool
     {
         return in_array($this->getModuleFullName($name), $this->getReachableModules());
     }
@@ -625,7 +642,7 @@ class Application
      *
      * @return void
      */
-    private function registerModules()
+    protected function registerModules()
     {
         foreach ($this->modulesPath as $path) {
             $dirs=Storage::readDirs($path);
@@ -645,7 +662,14 @@ class Application
         }
     }
 
-    public function registerModule(string $path, ?string $config =null)
+    /**
+     * 注册模块
+     *
+     * @param string $path
+     * @param string|null $config
+     * @return boolean
+     */
+    public function registerModule(string $path, ?string $config =null):bool
     {
         $config = is_null($config)?$path.'/module.json':$config;
         if (Storage::exist($path) && $config = Config::resolve($config)) {
@@ -671,7 +695,9 @@ class Application
             $this->moduleDirName[$dir]=$name;
             // 注册资源
             Manager::registerTemplateSource($name);
+            return true;
         }
+        return false;
     }
 
     public function getModulesInfo()
