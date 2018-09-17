@@ -33,7 +33,7 @@ class Command
     {
         $this->command= is_string($command)?self::parseCommand($command):$command;
         $this->params=$params;
-        $this->name=is_string($command)?$command:'{closure command}';
+        $this->name=is_string($command)? $command : 'Closure';
     }
     
     public function name(string $name)

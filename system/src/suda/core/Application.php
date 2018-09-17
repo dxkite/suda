@@ -479,7 +479,7 @@ class Application
                 $modules[$index]=$fullname;
             }
         }
-        sort($modules);
+        // sort($modules);
         debug()->trace('reachable modules', json_encode($modules));
         return $this->routeReachable=$modules;
     }
@@ -493,6 +493,19 @@ class Application
     public function isModuleReachable(string $name):bool
     {
         return in_array($this->getModuleFullName($name), $this->getReachableModules());
+    }
+
+    /**
+     * 添加可达模块
+     *
+     * @param string $name
+     * @return void
+     */
+    public function addReachableModule(string $name) {
+        if (is_null($this->routeReachable)) {
+            $this->getReachableModules(); 
+        }
+        $this->routeReachable [] = $this->getModuleFullName($name);
     }
 
     /**
@@ -586,7 +599,7 @@ class Application
             return $this->moduleNameCache[$name];
         }
         preg_match('/^(?:([a-zA-Z0-9_\-.]+)\/)?([a-zA-Z0-9_\-.]+)(?::(.+))?$/', $name, $matchname);
-        $preg='/^'.(isset($matchname[1])&&$matchname[1]? preg_quote($matchname[1]).'\/':'(\w+\/)?') // 限制域
+        $preg='/^'.(isset($matchname[1])&&$matchname[1]? preg_quote($matchname[1]).'\/':'([a-zA-Z0-9_\-.]+\/)?') // 限制域
             .preg_quote($matchname[2]) // 名称
             .(isset($matchname[3])&&$matchname[3]?':'.preg_quote($matchname[3]):'(:.+)?').'$/'; // 版本号
         $targets=[];
@@ -596,7 +609,7 @@ class Application
             foreach ($this->moduleConfigs as $module_name=>$module_config) {
                 // 匹配到模块名
                 if (preg_match($preg, $module_name)) {
-                    preg_match('/^(?:(\w+)\/)?(\w+)(?::(.+))?$/', $module_name, $matchname);
+                    preg_match('/^(?:([a-zA-Z0-9_\-.]+)\/)?([a-zA-Z0-9_\-.]+)(?::(.+))?$/', $module_name, $matchname);
                     // 获取版本号
                     if (isset($matchname[3])&&$matchname[3]) {
                         $targets[$matchname[3]]=$module_name;

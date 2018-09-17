@@ -26,6 +26,7 @@ use suda\core\Autoloader;
 class FileStorage implements Storage
 {
     protected static $intance;
+    public static $charset=['GBK','GB2312','BIG5'];
 
     public static function getInstance()
     {
@@ -35,7 +36,6 @@ class FileStorage implements Storage
         return self::$intance;
     }
 
-    public static $charset=['GBK','GB2312','BIG5'];
     // 递归创建文件夹
     public function mkdirs(string $dir, int $mode=0777):bool
     {
@@ -132,10 +132,11 @@ class FileStorage implements Storage
             return false;
         }
         if (self::isFile($path)) {
-            return self::remove($path);
+            self::remove($path);
         } elseif (self::isDir($path)) {
-            return self::rmdirs($path);
+            self::rmdirs($path);
         }
+        return self::exist($path) === false;
     }
 
     // 递归删除文件夹
