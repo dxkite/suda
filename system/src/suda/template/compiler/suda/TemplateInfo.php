@@ -18,6 +18,11 @@ namespace suda\template\compiler\suda;
 
 use suda\template\Manager;
 
+/**
+ * 获取模板信息类
+ * @var 获取模板的包含库
+ * @var 获取模板需要的值
+ */
 class TemplateInfo extends Compiler
 {
     protected $values=[];
@@ -49,6 +54,17 @@ class TemplateInfo extends Compiler
     // include
     protected function parseInclude($exp)
     {
+        preg_match('/\((.+)\)/', $exp, $v);
+        $name=str_replace('\'', '-', trim($v[1], '"\''));
+        ($tpl=new self($name, $this->module));
+        $this->includes[]=$tpl->name;
+        $this->includes_info[$name]=$tpl;
+        $this->values=array_merge($this->values, $tpl->values);
+        $this->includes=array_merge($this->includes, $tpl->includes);
+    }
+
+    // extend
+    protected function parseExtend($exp) {
         preg_match('/\((.+)\)/', $exp, $v);
         $name=str_replace('\'', '-', trim($v[1], '"\''));
         ($tpl=new self($name, $this->module));

@@ -308,6 +308,7 @@ class Compiler implements CompilerImpl
         return "<?php suda\\template\\Manager::include('{$name}',\$this)->echo(); ?>";
     }
 
+    // extend
     protected function parseExtend($exp) {
         return '<?php $this->extend'.$exp.'; ?>';
     }
