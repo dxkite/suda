@@ -666,30 +666,45 @@ class Application
      * 注册模块
      *
      * @param string $path
-     * @param string|null $config
+     * @param string|null|array $config
      * @return boolean
      */
-    public function registerModule(string $path, ?string $config =null):bool
+    public function registerModule(string $path, $config =null):bool
     {
-        $config = is_null($config)?$path.'/module.json':$config;
-        if (Storage::exist($path) && $config = Config::resolve($config)) {
+        $config = is_null($config)?$path.'/module.json': $config;
+        if (is_string($config)) {
+            if ($config = Config::resolve($config)) {
+                $configData = Config::loadConfig($config);
+            } else {
+                return false;
+            }
+        } elseif (is_array($config)) {
+            $configData=$config;
+        }
+        
+        if (Storage::exist($path)) {
             $dir=basename($path);
-            debug()->trace(__('load module config %s', $config));
-            $configData=Config::loadConfig($config);
+
             $name=$configData['name'] ?? $dir;
             $version =  $configData['version'] ?? '';
             $configData['directory']=$dir;
             $configData['path']=$path;
+
+            debug()->trace(__('load module config %s', $name));
+            
             // 注册默认自动加载
             $configData['import']=array_merge([
                 'share'=>[''=>'share/'],
                 'src'=>[''=>'src/']
             ], $configData['import']??[]);
+
             $runtime = RUNTIME_DIR .'/module/'. $name . '/' . $version;
             $runtimeConfig = Config::loadConfig($runtime.'/module.config.php');
+
             if (is_array($runtimeConfig)) {
                 $configData = array_merge($configData, $runtimeConfig);
             }
+
             $name.=empty($version)?'':':'.$version;
             $this->moduleConfigs[$name]=$configData;
             $this->moduleDirName[$dir]=$name;
