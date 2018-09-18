@@ -85,7 +85,7 @@ class Config
             } else {
                 $value = conf($name, $value);
             }
-            return trim(json_encode($value), '"');
+            return is_string($value)?trim(json_encode($value), '"'):$value;
         }, $content);
     }
 

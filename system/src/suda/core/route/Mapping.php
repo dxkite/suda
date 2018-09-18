@@ -549,7 +549,7 @@ class Mapping implements \JsonSerializable
                             }
                         } else {
                             $this->state(404);
-                            echo 'source not find:'.$mapping->getModule().'?'.$path;
+                            echo 'source not find in module ['.$mapping->getModule().'] : path '.$path;
                         }
                     }
                 }

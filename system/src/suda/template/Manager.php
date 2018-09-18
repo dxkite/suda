@@ -645,8 +645,13 @@ class Manager
                         }
                     }
                     $this->state(404);
-                    echo 'assets not find ：'.$module.'?'.$path;
+                    if ($module) {
+                        echo 'assets not find in '.$module.', path '.$path;
+                    } else {
+                        echo 'assets not find with path '.$path;
+                    }
                 }
+                
                 public function getFile(string $path)
                 {
                     $content=file_get_contents($path);
