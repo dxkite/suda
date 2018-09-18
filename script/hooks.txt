@@ -7,7 +7,7 @@ suda:route:dispatch::before
 suda:route:dispatch::error
 suda:route:dispatch::extra
 suda:route:dispatch::filter
-suda:route:perpare
+suda:route:prepare
 suda:route:run::after
 suda:route:run::before
 suda:system:debug::start
@@ -23,4 +23,4 @@ suda:template:change-theme
 suda:template:compiler:init
 suda:template:load-compile::before
 suda:template:render::before
-suda:template:resource-perpare::before
+suda:template:resource-prepare::before

@@ -5,12 +5,12 @@ display:output suda:template::display
 loadModule suda:module:load
 loadModule: suda:module:load:on::
 Manager:loadCompile::before suda:template:load-compile::before
-Manager:prepareResource::before suda:template:resource-perpare::before
+Manager:prepareResource::before suda:template:resource-prepare::before
 Router:dispatch::before suda:route:dispatch::before
 Router:dispatch::error suda:route:dispatch::error
 Router:extra suda:route:dispatch::extra
 Router:filter suda:route:dispatch::filter
-Router:prepareRouterInfo suda:route:perpare
+Router:prepareRouterInfo suda:route:prepare
 Router:runRouter::after suda:route:run::after
 Router:runRouter::before suda:route:run::before
 SQL:connectPdo::before suda:database:connect::before

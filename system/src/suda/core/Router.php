@@ -138,7 +138,7 @@ class Router
         foreach ($modules as $module) {
             self::load($module);
         }
-        Hook::exec('suda:route:perpare', [$this]);
+        Hook::exec('suda:route:prepare', [$this]);
         // 缓存路由信息
         if (storage()->isWritable(CACHE_DIR)) {
             self::saveFile();

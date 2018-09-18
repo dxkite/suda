@@ -207,7 +207,7 @@ class Manager
      */
     public static function prepareResource(string $module, bool $force=false):bool
     {
-        Hook::exec('suda:template:resource-perpare::before', [$module]);
+        Hook::exec('suda:template:resource-prepare::before', [$module]);
         // 非Debug不更新资源
         if (!conf('debug', false) && !$force) {
             return false;

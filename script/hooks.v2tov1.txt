@@ -7,7 +7,7 @@ suda:route:dispatch::before Router:dispatch::before
 suda:route:dispatch::error Router:dispatch::error
 suda:route:dispatch::extra Router:extra
 suda:route:dispatch::filter Router:filter
-suda:route:perpare Router:prepareRouterInfo
+suda:route:prepare Router:prepareRouterInfo
 suda:route:run::after Router:runRouter::after
 suda:route:run::before Router:runRouter::before
 suda:system:debug::start system:debug::start
@@ -23,4 +23,4 @@ suda:template:change-theme template:theme::change
 suda:template:compiler:init template:SudaCompiler:init
 suda:template:load-compile::before Manager:loadCompile::before
 suda:template:render::before Template:render::before
-suda:template:resource-perpare::before Manager:prepareResource::before
+suda:template:resource-prepare::before Manager:prepareResource::before
