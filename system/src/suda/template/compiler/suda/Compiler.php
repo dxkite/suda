@@ -52,7 +52,6 @@ class Compiler implements CompilerImpl
     // 编译文本
     public function compileText(string $text)
     {
-        Hook::exec('suda:template:compiler:init', [$this]);
         $result='';
         foreach (token_get_all($text) as $token) {
             if (is_array($token)) {

@@ -74,6 +74,7 @@ class Manager
             // 初始化编译器
             if ($instance instanceof Compiler) {
                 self::$compiler = $instance;
+                Hook::exec('suda:template:compiler:init', [ self::$compiler ]);
             } else {
                 throw new KernelException(__('app template compiler must be instance of suda\template\Compier '));
             }
