@@ -49,8 +49,13 @@ class Compiler implements CompilerImpl
         self::$template=$tpl;
     }
 
-    // 编译文本
-    public function compileText(string $text)
+    /**
+     * 编译文本
+     *
+     * @param string $text
+     * @return string
+     */
+    public function compileText(string $text):string
     {
         $result='';
         foreach (token_get_all($text) as $token) {
@@ -79,10 +84,13 @@ class Compiler implements CompilerImpl
 
     /**
      * 编译文件
-     * @param $input
-     * @return mixed
+     *
+     * @param string $name
+     * @param string $input
+     * @param string $output
+     * @return boolean
      */
-    public function compile(string $name, string $input, string $output)
+    public function compile(string $name, string $input, string $output):bool
     {
         debug()->time('compile '.$name);
         if (!Storage::exist($input)) {

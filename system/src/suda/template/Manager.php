@@ -63,6 +63,13 @@ class Manager
     protected static $templateSource=[];
 
     /**
+     * 编译器懒初始化状态
+     *
+     * @var boolean
+     */
+    private static $init = false;
+    
+    /**
      * 载入模板编译器
      */
     public static function loadCompile()
@@ -98,7 +105,7 @@ class Manager
     /**
      * 获取编译器
      *
-     * @return void
+     * @return Compiler
      */
     public static function getCompiler()
     {
@@ -107,13 +114,15 @@ class Manager
 
     /**
      * 获取/设置模板样式
-     * @param string|null $theme
-     * @return mixed
+     *
+     * @param string $theme
+     * @return string
      */
-    public static function theme(string $theme=null)
+    public static function theme(string $theme=null):string 
     {
         if (!is_null($theme)) {
-            self::$theme=$theme;
+            self::$theme = $theme;
+            self::$init = false;
             Hook::exec('suda:template:change-theme', [$theme]);
             debug()->info('change themes:'.$theme);
         }
@@ -122,12 +131,21 @@ class Manager
 
     /**
      * 编译文件
-     * @param $input
-     * @return mixed
+     *
+     * @param string $name
+     * @param string $ext
+     * @param string $outpath
+     * @return boolean
      */
-    public static function compile(string $name, string $ext='html', string $outpath=null)
+    public static function compile(string $name, string $ext='html', string $outpath=null):bool
     {
-        if ($path=self::getInputFile($name, true, $ext)) {
+        // 初始化一次
+        if (!self::$init) {
+            Hook::exec('suda:template:compile::init', [ self::$compiler ]);
+            self::$init = true;
+        }
+        // 编译文件
+        if ($path = self::getInputFile($name, true, $ext)) {
             if (is_null($outpath)) {
                 $outpath=self::getOutputFile($name);
             }
