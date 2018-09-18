@@ -34,9 +34,9 @@ class Router
 
     private function __construct()
     {
-        Hook::listen('system:404', 'Router::error');
+        Hook::listen('suda:system:error::404', 'Router::error');
         Hook::listen('system:http_error', 'Router::error');
-        Hook::listen('Router:dispatch::error', 'Router::error');
+        Hook::listen('suda:route:dispatch::error', 'Router::error');
     }
 
     public static function getInstance()
@@ -139,7 +139,7 @@ class Router
         foreach ($modules as $module) {
             self::load($module);
         }
-        Hook::exec('Router:prepareRouterInfo', [$this]);
+        Hook::exec('suda:route:perpare', [$this]);
         // 缓存路由信息
         if (storage()->isWritable(CACHE_DIR)) {
             self::saveFile();
@@ -333,7 +333,7 @@ class Router
     public function dispatch()
     {
         debug()->time('dispatch');
-        if (Hook::execIf('Router:dispatch::before', [Request::getInstance()], true)) {
+        if (Hook::execIf('suda:route:dispatch::before', [Request::getInstance()], true)) {
             if (($mapping=self::matchRouterMap())!==false) {
                 debug()->timeEnd('dispatch');
                 Response::setName($mapping->getFullName());
@@ -341,12 +341,12 @@ class Router
                 $this->runRouter($mapping);
                 debug()->timeEnd('run router');
             } else {
-                if (!Hook::execIf('Router:extra', [Request::getInstance()], true)) {
-                    Hook::execTail('system:404');
+                if (!Hook::execIf('suda:route:dispatch::extra', [Request::getInstance()], true)) {
+                    Hook::execTail('suda:system:error::404');
                 }
             }
         } else {
-            Hook::execTail('Router:dispatch::error');
+            Hook::execTail('suda:route:dispatch::error');
         }
     }
 
@@ -497,7 +497,7 @@ class Router
     protected static function runRouter(Mapping $mapping)
     {
         // 全局钩子:重置Hook指向
-        Hook::exec('Router:runRouter::before', [&$mapping]);
+        Hook::exec('suda:route:run::before', [&$mapping]);
         // debug()->time('active Module');
         // 激活模块
         System::getAppInstance()->activeModule($mapping->getModule());
@@ -507,7 +507,7 @@ class Router
         $mapping->run();
         debug()->timeEnd('request');
         // 请求结束
-        Hook::exec('Router:runRouter::after', [&$mapping]);
+        Hook::exec('suda:route:run::after', [&$mapping]);
     }
 
 

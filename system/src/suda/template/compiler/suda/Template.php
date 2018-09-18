@@ -55,7 +55,7 @@ abstract class Template
     public function render()
     {
         $content=self::getRenderedString();
-        hook()->exec('Template:render::before', [&$content]);
+        hook()->exec('suda:template:render::before', [&$content]);
         debug()->trace('echo '.$this->name);
         // 计算输出页面长度
         if (conf('app.calcContentLength', !conf('debug'))) {

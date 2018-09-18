@@ -99,7 +99,7 @@ abstract class Response
             throw new JSONException(json_last_error());
         }
         self::type('json');
-        Hook::exec('display:output', [&$jsonstr, $this->type]);
+        Hook::exec('suda:template::display', [&$jsonstr, $this->type]);
         if (conf('app.calcContentLength', !conf('debug'))) {
             self::setHeader('Content-Length:'.strlen($jsonstr));
         }

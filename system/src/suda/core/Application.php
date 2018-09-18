@@ -160,7 +160,7 @@ class Application
         foreach ($moduleLive as $module) {
             $this->loadModule($module);
         }
-        Hook::exec('loadModule');
+        Hook::exec('suda:module:load');
     }
     
     /**
@@ -196,11 +196,11 @@ class Application
         // 加载监听器
         if ($listenerPath=Config::resolve($root.'/resource/config/listener.json')) {
             Hook::loadConfig($listenerPath, $module);
-            Hook::exec('loadModule:'.self::getModuleName($module));
+            Hook::exec('suda:module:load:on::'.self::getModuleName($module));
         }
         // 自动安装
         if (conf('auto-install', true)) {
-            Hook::listen('Application:init', function () use ($module) {
+            Hook::listen('suda:application:init', function () use ($module) {
                 self::installModule($module);
             });
         }
@@ -256,10 +256,10 @@ class Application
         if (conf('app.init')) {
             init_resource();
         }
-        Hook::exec('Application:init');
+        Hook::exec('suda:application:init');
         Locale::path($this->path.'/resource/locales/');
-        hook()->listen('Router:dispatch::before', [$this, 'onRequest']);
-        hook()->listen('system:shutdown', [$this, 'onShutdown']);
+        hook()->listen('suda:route:dispatch::before', [$this, 'onRequest']);
+        hook()->listen('suda:system:shutdown', [$this, 'onShutdown']);
         hook()->listen('system:uncaughtException', [$this,'uncaughtException']);
         hook()->listen('system:uncaughtError', [$this, 'uncaughtError']);
     }
@@ -517,7 +517,7 @@ class Application
      */
     public function activeModule(string $module)
     {
-        Hook::exec('Application:active', [$module]);
+        Hook::exec('suda:application:active', [$module]);
         debug()->trace(__('active module %s', $module));
         $this->activeModule=$module;
         $root=self::getModulePath($module);

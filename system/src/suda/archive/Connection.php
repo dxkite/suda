@@ -82,12 +82,12 @@ class Connection
             $this->prefix=Config::get('database.prefix', '');
             try {
                 debug()->time('connect database');
-                hook()->exec('SQL:connectPdo::before');
+                hook()->exec('suda:database:connect::before');
                 $this->pdo = new PDO($this->getDsn(), $this->user, $this->password);
                 debug()->timeEnd('connect database');
                 $this->id =static::$_id;
                 static::$_id ++;
-                hook()->listen('system:shutdown::before', [$this,'onBeforeSystemShutdown']);
+                hook()->listen('suda:system:shutdown::before', [$this,'onBeforeSystemShutdown']);
                 debug()->info('connected ('.$this->id.') '.$this->__toString());
             } catch (PDOException $e) {
                 throw new SQLException($this->__toString().' connect database error:'.$e->getMessage(), $e->getCode(), E_ERROR, __FILE__, __LINE__, $e);

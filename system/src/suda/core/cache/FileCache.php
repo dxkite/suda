@@ -34,7 +34,7 @@ class FileCache implements Cache
 
     public function __construct()
     {
-        hook()->register('system:shutdown', [__CLASS__,'gc']);
+        hook()->register('suda:system:shutdown', [__CLASS__,'gc']);
     }
 
     public static function getInstance()

@@ -378,7 +378,7 @@ class Debug
     public static function beforeSystemRun()
     {
         self::time('system');
-        Hook::exec('system:debug::start');
+        Hook::exec('suda:system:debug::start');
         self::$run_info['start_time']=D_START;
         self::$run_info['start_memory']=D_MEM;
     }
@@ -398,7 +398,7 @@ class Debug
     public static function afterSystemRun()
     {
         $info=self::getInfo();
-        Hook::exec('system:debug::end', $info);
+        Hook::exec('suda:system:debug::stop', $info);
         self::timeEnd('system');
     }
 

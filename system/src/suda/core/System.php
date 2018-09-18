@@ -52,7 +52,7 @@ class System
         Debug::beforeSystemRun();
         Locale::path(SYSTEM_RESOURCE.'/locales');
         debug()->trace('system init');
-        Hook::exec('system:init');
+        Hook::exec('suda:system:init');
     }
  
     public static function getAppInstance()
@@ -139,7 +139,7 @@ class System
         Autoloader::addIncludePath(APP_DIR.'/share');
         Config::set('app', $manifast);
         // 载入配置前设置配置
-        Hook::exec('core:loadManifast');
+        Hook::exec('suda:system:load-manifast');
         // 默认应用控制器
         self::$applicationClass=self::getAppClassName();
     }
@@ -152,13 +152,13 @@ class System
         debug()->time('shutdown');
         // 发送Cookie
         if (connection_status() == CONNECTION_NORMAL) {
-            Hook::exec('system:shutdown::before');
+            Hook::exec('suda:system:shutdown::before');
         }
         // 停止响应输出
         if (function_exists('fastcgi_finish_request')) {
             fastcgi_finish_request();
         }
-        Hook::exec('system:shutdown');
+        Hook::exec('suda:system:shutdown');
         debug()->trace('connection status '. ['normal','aborted','timeout'][connection_status()]);
         // debug()->trace('include paths '.json_encode(Autoloader::getIncludePath()));
         // debug()->trace('runinfo', self::getRunInfo());
@@ -170,7 +170,7 @@ class System
     public static function uncaughtException($exception)
     {
         Config::set('exception', true);
-        if (!Hook::execIf('system:displayException', [$exception], true)) {
+        if (!Hook::execIf('suda:system:exception::display', [$exception], true)) {
             if (!$exception instanceof Exception) {
                 $exception=new Exception($exception);
             }

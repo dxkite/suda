@@ -68,7 +68,7 @@ class Manager
     public static function loadCompile()
     {
         if (is_null(self::$compiler)) {
-            Hook::exec('Manager:loadCompile::before');
+            Hook::exec('suda:template:load-compile::before');
             $class=class_name(conf('app.compiler', 'suda.template.compiler.suda.Compiler'));
             $instance=new $class;
             // 初始化编译器
@@ -77,7 +77,7 @@ class Manager
             } else {
                 throw new KernelException(__('app template compiler must be instance of suda\template\Compier '));
             }
-            Hook::listen('Router:extra', [__CLASS__,'assetsResponse']);
+            Hook::listen('suda:route:dispatch::extra', [__CLASS__,'assetsResponse']);
         }
     }
 
@@ -114,7 +114,7 @@ class Manager
     {
         if (!is_null($theme)) {
             self::$theme=$theme;
-            Hook::exec('template:theme::change', [$theme]);
+            Hook::exec('suda:template:change-theme', [$theme]);
             debug()->info('change themes:'.$theme);
         }
         return self::$theme;
@@ -206,7 +206,7 @@ class Manager
      */
     public static function prepareResource(string $module, bool $force=false):bool
     {
-        Hook::exec('Manager:prepareResource::before', [$module]);
+        Hook::exec('suda:template:resource-perpare::before', [$module]);
         // 非Debug不更新资源
         if (!conf('debug', false) && !$force) {
             return false;
