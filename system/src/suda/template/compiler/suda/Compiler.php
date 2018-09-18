@@ -207,7 +207,7 @@ class Compiler implements CompilerImpl
     protected function echoValue($var)
     {
         // 任意变量名: 中文点下划线英文数字
-        return preg_replace_callback('/\B[$](\?)?[:]([.\w\x{4e00}-\x{9aff}]+)(\s*)(\( ( (?>[^()]+) | (?3) )* \) )?/ux', [$this,'echoValueCallback'], $var);
+        return preg_replace_callback('/\B[$](\?)?[:]([.\w\x{4e00}-\x{9aff}]+)(\s*)(\( ( (?>[^()]+) | (?4) )* \) )?/ux', [$this,'echoValueCallback'], $var);
     }
     
     protected function echoValueCallback($matchs)
