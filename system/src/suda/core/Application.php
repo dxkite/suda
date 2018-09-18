@@ -260,8 +260,7 @@ class Application
         Locale::path($this->path.'/resource/locales/');
         hook()->listen('suda:route:dispatch::before', [$this, 'onRequest']);
         hook()->listen('suda:system:shutdown', [$this, 'onShutdown']);
-        hook()->listen('system:uncaughtException', [$this,'uncaughtException']);
-        hook()->listen('system:uncaughtError', [$this, 'uncaughtError']);
+        hook()->listen('suda:system:exception::display', [$this,'uncaughtException']);
     }
 
     /**
