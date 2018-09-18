@@ -3,7 +3,7 @@
  * Suda FrameWork
  *
  * An open source application development framework for PHP 7.0.0 or newer
- * 
+ *
  * Copyright (c)  2017 DXkite
  *
  * @category   PHP FrameWork
@@ -31,7 +31,7 @@ class MailSender implements Sender
     {
         $this->message=$message;
         set_error_handler(array($this, 'errorHander'));
-        $return=mail('','=?UTF-8?B?'.base64_encode($message->getSubject()).'?=', $message->getMessage(), $message->getHeader());
+        $return=mail('', '=?UTF-8?B?'.base64_encode($message->getSubject()).'?=', $message->getMessage(), $message->getHeader());
         restore_error_handler();
         return $return;
     }

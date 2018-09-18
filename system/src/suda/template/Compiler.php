@@ -3,7 +3,7 @@
  * Suda FrameWork
  *
  * An open source application development framework for PHP 7.0.0 or newer
- * 
+ *
  * Copyright (c)  2017 DXkite
  *
  * @category   PHP FrameWork
@@ -26,5 +26,5 @@ interface Compiler
      */
     public function compileText(string $text);
     public function compile(string $name, string $input, string $output);
-    public function render(string $viewfile,?string $name = null);
+    public function render(string $viewfile, ?string $name = null);
 }

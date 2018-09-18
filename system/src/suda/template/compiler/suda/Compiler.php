@@ -106,7 +106,7 @@ class Compiler implements CompilerImpl
                 storage()->delete($output);
             }
             if ($syntax instanceof \Exception || $syntax instanceof \Error) {
-                throw new \suda\core\Exception(new \ErrorException(__('compile error: %s near line %d', $syntax->getMessage(), $syntax->getLine()), $syntax->getCode(), conf('exception.compileError', true)?E_ERROR:E_WARNING , $input, $syntax->getLine()), 'TemplateError');
+                throw new \suda\core\Exception(new \ErrorException(__('compile error: %s near line %d', $syntax->getMessage(), $syntax->getLine()), $syntax->getCode(), conf('exception.compileError', true)?E_ERROR:E_WARNING, $input, $syntax->getLine()), 'TemplateError');
             }
         }
         return $syntax===true?:$syntax;
@@ -309,7 +309,8 @@ class Compiler implements CompilerImpl
     }
 
     // extend
-    protected function parseExtend($exp) {
+    protected function parseExtend($exp)
+    {
         return '<?php $this->extend'.$exp.'; ?>';
     }
 

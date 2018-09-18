@@ -16,7 +16,7 @@
 namespace suda\core;
 
 use suda\tool\Value;
-use suda\tool\Json;
+use suda\exception\JSONException;
 
 /**
  * 请求描述类，客户端向框架发送请求时会生成此类
@@ -70,7 +70,11 @@ class Request
             return null;
         }
         $datastr=self::input();
-        return Json::decode($datastr, true);
+        $data =json_decode($datastr, true);
+        if (json_last_error()!==JSON_ERROR_NONE) {
+            throw new JSONException(json_last_error());
+        }
+        return $data;
     }
 
     /**

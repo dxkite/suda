@@ -158,7 +158,7 @@ class Autoloader
         if (IS_CONSOLE && $path[0] === '~') {
             $scheme ='';
             $subpath = USER_HOME.DIRECTORY_SEPARATOR.$path;
-        } elseif (strpos($path, '://') !== false ) {
+        } elseif (strpos($path, '://') !== false) {
             list($scheme, $subpath) = explode('://', $path, 2);
             $scheme.='://';
         } else {

@@ -3,7 +3,7 @@
  * Suda FrameWork
  *
  * An open source application development framework for PHP 7.0.0 or newer
- * 
+ *
  * Copyright (c)  2017 DXkite
  *
  * @category   PHP FrameWork
@@ -17,13 +17,13 @@ namespace suda\tool;
 
 /**
  * 普通通用值
- * 
+ *
  * 通用指可以使用迭代器和JSON化成字符串
  * 并且包含魔术变量用于处理其值
- * 
+ *
  * @package suda\tool
  */
-class Value implements \Iterator,\JsonSerializable
+class Value implements \Iterator, \JsonSerializable
 {
     /**
      * @var

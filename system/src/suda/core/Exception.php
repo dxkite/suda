@@ -3,7 +3,7 @@
  * Suda FrameWork
  *
  * An open source application development framework for PHP 7.0.0 or newer
- * 
+ *
  * Copyright (c)  2017 DXkite
  *
  * @category   PHP FrameWork
@@ -22,7 +22,7 @@ use JsonSerializable;
 /**
  * 通用系统异常
  */
-class Exception extends ErrorException implements JsonSerializable 
+class Exception extends ErrorException implements JsonSerializable
 {
     protected $name;
     protected $backtrace;
@@ -37,7 +37,7 @@ class Exception extends ErrorException implements JsonSerializable
         E_CORE_WARNING => DEBUG::WARNING,
         E_DEPRECATED => DEBUG::WARNING,
     ];
-    public function __construct(Throwable $e,?string $name = null)
+    public function __construct(Throwable $e, ?string $name = null)
     {
         $this->severity =$e instanceof ErrorException?$e->getSeverity():E_ERROR;
         parent::__construct($e->getMessage(), $e->getCode(), $this->severity, $e->getFile(), $e->getLine(), $e->getPrevious());
@@ -45,7 +45,8 @@ class Exception extends ErrorException implements JsonSerializable
         $this->backtrace=$e->getTrace();
     }
 
-    public function setName(string $name) {
+    public function setName(string $name)
+    {
         $this->name =$name;
         return $this;
     }
@@ -57,7 +58,8 @@ class Exception extends ErrorException implements JsonSerializable
         return $this;
     }
     
-    public function getLevel() {
+    public function getLevel()
+    {
         if (isset(self::$levelTable[$this->getSeverity()])) {
             return self::$levelTable[$this->getSeverity()];
         }
@@ -82,7 +84,8 @@ class Exception extends ErrorException implements JsonSerializable
     {
         return $this->name;
     }
-    public function jsonSerialize() {
+    public function jsonSerialize()
+    {
         return  [
             'name' => $this->getName(),
             'message' => $this->getMessage(),

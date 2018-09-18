@@ -25,7 +25,7 @@ use suda\exception\JSONException;
 
 /**
  * 网页响应类，用于处理来自服务器的请求
- * 
+ *
  */
 abstract class Response
 {
@@ -151,7 +151,7 @@ abstract class Response
     */
     public function view(string $template, array $values=[])
     {
-        $tpl=Manager::displaySource($template,'html');
+        $tpl=Manager::displaySource($template, 'html');
         if ($tpl) {
             return $tpl->response($this)->assign($values);
         }
@@ -181,7 +181,8 @@ abstract class Response
         return $this->go(Router::getInstance()->buildUrl(self::$name, $_GET, false));
     }
 
-    public function forward():bool {
+    public function forward():bool
+    {
         if ($forward = self::getForward()) {
             $this->go($forward);
             return true;
@@ -199,8 +200,9 @@ abstract class Response
         return $referer?:null;
     }
 
-    public function setForward(string $url) {
-        Cookie::set('redirect_uri',$url);
+    public function setForward(string $url)
+    {
+        Cookie::set('redirect_uri', $url);
     }
 
     public function go(string $url)
@@ -273,7 +275,8 @@ abstract class Response
         }
     }
 
-    public static function addHeader(string $name,string $value) {
+    public static function addHeader(string $name, string $value)
+    {
         return self::setHeader(trim($name).':'.$value);
     }
 

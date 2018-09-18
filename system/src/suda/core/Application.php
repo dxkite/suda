@@ -501,9 +501,10 @@ class Application
      * @param string $name
      * @return void
      */
-    public function addReachableModule(string $name) {
+    public function addReachableModule(string $name)
+    {
         if (is_null($this->routeReachable)) {
-            $this->getReachableModules(); 
+            $this->getReachableModules();
         }
         $this->routeReachable [] = $this->getModuleFullName($name);
     }

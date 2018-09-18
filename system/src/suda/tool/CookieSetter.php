@@ -111,10 +111,12 @@ final class CookieSetter implements \JsonSerializable
         return $this;
     }
 
-    public function __toString(){
+    public function __toString()
+    {
         return $this->value;
     }
-    public function jsonSerialize() {
+    public function jsonSerialize()
+    {
         return [
             'name' => $this->name,
             'value' => $this->value,

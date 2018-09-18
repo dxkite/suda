@@ -3,7 +3,7 @@
  * Suda FrameWork
  *
  * An open source application development framework for PHP 7.0.0 or newer
- * 
+ *
  * Copyright (c)  2017 DXkite
  *
  * @category   PHP FrameWork
@@ -15,13 +15,15 @@
  */
 
 namespace suda\mail\message;
+
 use suda\template\Manager;
 
 /**
  * HTML邮件信息
- * 
+ *
  */
-class HTMLMessage extends Message {
+class HTMLMessage extends Message
+{
     /**
      * HTML邮件信息
      *
@@ -29,9 +31,10 @@ class HTMLMessage extends Message {
      * @param string $template 邮件模板
      * @param array $values 模板压值
      */
-    public function __construct(string $subject,string $template,array $values){
+    public function __construct(string $subject, string $template, array $values)
+    {
         $message=Manager::display($template);
-        $message->assign($values);     
-        parent::__construct($subject,$message);
+        $message->assign($values);
+        parent::__construct($subject, $message);
     }
 }

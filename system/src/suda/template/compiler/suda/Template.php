@@ -241,7 +241,7 @@ abstract class Template
             }
             return Router::getInstance()->buildUrl($name, $values, true, [], $this->module);
         } elseif (is_array($name)) {
-            return Router::getInstance()->buildUrl(Response::$name, array_merge($_GET,$name), true, [], $this->module);
+            return Router::getInstance()->buildUrl(Response::$name, array_merge($_GET, $name), true, [], $this->module);
         } else {
             return Router::getInstance()->buildUrl(Response::$name, $_GET, false, [], $this->module);
         }

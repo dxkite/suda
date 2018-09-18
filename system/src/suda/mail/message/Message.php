@@ -3,7 +3,7 @@
  * Suda FrameWork
  *
  * An open source application development framework for PHP 7.0.0 or newer
- * 
+ *
  * Copyright (c)  2017 DXkite
  *
  * @category   PHP FrameWork
@@ -18,7 +18,7 @@ namespace suda\mail\message;
 
 /**
  * 文本邮件信息
- * 
+ *
  */
 class Message
 {
@@ -95,14 +95,14 @@ class Message
 
     /**
      * 添加附件
-     * 
-     * @example 
+     *
+     * @example
      * ···php
      * $sender=new StmpSender('smtp.163.com', 465, 500, 'dxkite@163.com', 'password', true);
      * $this->json($sender->send((new Message('我的邮件', '测试发送邮件'))
      * ->setTo('dxkite@qq.com')
      * ->addAttachment(__FILE__)));
-     * 
+     *
      * @param string $file 附件文件路径
      * @return void
      */
@@ -144,7 +144,8 @@ class Message
         return $this->bcc;
     }
     
-    public function getHeader() {
+    public function getHeader()
+    {
         $header ="MIME-Version: 1.0\r\n";
         $header.='X-Mailer: Suda-App/'.conf("app.name", 'suda').'-'.conf("app.verison", 'dev')." (https://github.com/DXkite/suda)\r\n";
         $header.= 'FROM: '.$this->utf8($this->from[1]).'<' . $this->from[0] . ">\r\n";

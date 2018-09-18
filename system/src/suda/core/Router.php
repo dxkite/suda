@@ -71,18 +71,18 @@ class Router
         debug()->trace(__('load module:%s path:%s', $module, $module_path));
         // 加载前台路由
         if ($file=Application::getInstance()->getModuleConfigPath($module, 'router')) {
-            $simple_routers= self::loadModuleConfig(Mapping::ROLE_SIMPLE, $module, $file);
+            $simple_routers= self::loadModuleRouteConfig(Mapping::ROLE_SIMPLE, $module, $file);
             debug()->trace(__('loading simple route from file %s', $file));
         }
         // 加载后台路由
         if ($file=Application::getInstance()->getModuleConfigPath($module, 'router_admin')) {
-            $admin_routers= self::loadModuleConfig(Mapping::ROLE_ADMIN, $module, $file);
+            $admin_routers= self::loadModuleRouteConfig(Mapping::ROLE_ADMIN, $module, $file);
             debug()->trace(__('loading admin route from file  %s', $file));
         }
         $this->routers=array_merge($this->routers, $admin_routers, $simple_routers);
     }
 
-    protected function loadModuleConfig(int $role, string $module, string $configFile)
+    protected function loadModuleRouteConfig(int $role, string $module, string $configFile)
     {
         $routers=Config::loadConfig($configFile, $module);
         $router=[];

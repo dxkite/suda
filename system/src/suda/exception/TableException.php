@@ -3,7 +3,7 @@
  * Suda FrameWork
  *
  * An open source application development framework for PHP 7.0.0 or newer
- * 
+ *
  * Copyright (c)  2017 DXkite
  *
  * @category   PHP FrameWork
@@ -15,4 +15,7 @@
  */
 
 namespace suda\exception;
-class TableException extends \ErrorException {}
+
+class TableException extends \ErrorException
+{
+}

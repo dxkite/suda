@@ -15,8 +15,8 @@
  */
 namespace suda\core;
 
-use suda\tool\Json;
 use suda\tool\ArrayHelper;
+use suda\exception\JSONException;
 
 /**
  * 文件配置类
@@ -65,25 +65,27 @@ class Config
                     $content = file_get_contents($path);
                     $content = self::parseValue($content, $module);
                     $data = json_decode($content, true);
+                    if (json_last_error()!==JSON_ERROR_NONE) {
+                        throw new JSONException(json_last_error());
+                    }
             }
         }
         return $data;
     }
 
-    protected static function parseValue(string $content,?string $module):string
+    protected static function parseValue(string $content, ?string $module):string
     {
         return preg_replace_callback('/\$\{(.+?)\}/', function ($matchs) use ($module) {
             $name = $matchs[1];
+            $value = $matchs[0];
             if ($name === 'module' && $module) {
-                return $module;
+                $value = $module;
+            } elseif (defined($name)) {
+                $value = constant($name);
+            } else {
+                $value = conf($name, $value);
             }
-            if (defined($name) && $value = constant($name)) {
-                return $value;
-            }
-            if ($value = conf($name,null)) {
-                return $value;
-            }
-            return $matchs[0];
+            return trim(json_encode($value), '"');
         }, $content);
     }
 

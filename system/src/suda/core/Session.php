@@ -35,6 +35,6 @@ class Session
  
     public static function __callStatic(string $method, $args)
     {
-        return call_user_func_array([self::getInstance(conf('session.type','PHP')),$method], $args);
+        return call_user_func_array([self::getInstance(conf('session.type', 'PHP')),$method], $args);
     }
 }

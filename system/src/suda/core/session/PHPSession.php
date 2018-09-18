@@ -3,7 +3,7 @@
  * Suda FrameWork
  *
  * An open source application development framework for PHP 7.0.0 or newer
- * 
+ *
  * Copyright (c)  2018 DXkite
  *
  * @category   PHP FrameWork
@@ -17,6 +17,7 @@
 namespace suda\core\session;
 
 use suda\core\Storage;
+
 /**
  * 会话操纵类
  * 控制PHP全局会话，

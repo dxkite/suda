@@ -427,7 +427,7 @@ class Debug
         self::aliasMethod($method, $args);
     }
     
-    private static function aliasMethod(string $method,array $args)
+    private static function aliasMethod(string $method, array $args)
     {
         static $mpk=['d','t','i','n','w','e','u'];
         static $map=['d'=>'debug','t'=>'trace','i'=>'info','n'=>'notice','w'=>'warning','e'=>'error','u'=>'user'];

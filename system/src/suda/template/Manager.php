@@ -147,7 +147,7 @@ class Manager
     {
         $template = static::displaySource($name, 'html', $viewpath??'');
         if (is_null($template)) {
-            throw new KernelException(__('missing template %s:%s',self::$theme,$name));
+            throw new KernelException(__('missing template %s:%s', self::$theme, $name));
         }
         return $template;
     }
@@ -245,10 +245,10 @@ class Manager
     public static function moduleUniqueId(string $module):?string
     {
         $moduleConfig=Application::getInstance()->getModuleConfig($module);
-        if (array_key_exists('unique',$moduleConfig)){
+        if (array_key_exists('unique', $moduleConfig)) {
             return $moduleConfig['unique'];
         }
-        if (array_key_exists('directory',$moduleConfig)){
+        if (array_key_exists('directory', $moduleConfig)) {
             return substr(md5($moduleConfig['directory']), 0, 8);
         }
         return null;
@@ -378,7 +378,7 @@ class Manager
         $name=$module.':'.$basename;
         $input=self::getInputFile($name, false);
         if (!Storage::exist($input)) {
-            throw new KernelException(__('missing file %s:%s',self::$theme,$input));
+            throw new KernelException(__('missing file %s:%s', self::$theme, $input));
             // echo '<b>compile theme &lt;<span style="color:red;">'.self::$theme.'</span>&gt; file '.$input. ' missing file</b>';
             return;
         }
@@ -393,7 +393,7 @@ class Manager
         if (Storage::exist($output)) {
             if (Config::get('debug', true) || Config::get('exception', false)) {
                 if (!self::$compiler->compile($name, $input, $output)) {
-                    throw new KernelException(__('missing file %s:%s',self::$theme,$input));
+                    throw new KernelException(__('missing file %s:%s', self::$theme, $input));
                     // echo '<b>compile theme &lt;<span style="color:red;">'.self::$theme.'</span>&gt; file '.$input. ' missing file</b>';
                     return;
                 }
@@ -405,13 +405,13 @@ class Manager
                 $output=storage()->temp('tpl_');
             }
             if (!self::$compiler->compile($name, $input, $output)) {
-                throw new KernelException(__('missing file %s:%s',self::$theme,$input));
+                throw new KernelException(__('missing file %s:%s', self::$theme, $input));
                 // echo '<b>missing theme &lt;<span style="color:red;">'.self::$theme.'</span>&gt; file '.$input. ' missing file</b>';
                 return;
             }
         }
         // 输出内容
-        $public=self::$compiler->render($output,$name)->parent($parent)->getRenderedString();
+        $public=self::$compiler->render($output, $name)->parent($parent)->getRenderedString();
         Storage::put($outpath, $public);
         // 引用文件
         $static_url=Storage::cut($outpath, $this->assetsPath);
@@ -544,7 +544,7 @@ class Manager
         $module=$module??Application::getInstance()->getActiveModule();
         $path=Manager::getPublicModulePath($module);
         self::prepareResource($module);
-        $static_url=Storage::cut($path, self::$assetsPath );
+        $static_url=Storage::cut($path, self::$assetsPath);
         $static_url=preg_replace('/[\\\\\/]+/', '/', $static_url);
         return  '/'.$static_url;
     }

@@ -1,4 +1,4 @@
-<?php  
+<?php 
      // 应用所在目录
     define('APP_DIR', __DIR__.'/../app');
     // 日志所在目录
@@ -14,11 +14,11 @@
     // 错误等级
     define('LOG_LEVEL', 'error');
     // 输出日志详细信息到json文档
-    define('LOG_JSON',false);
+    define('LOG_JSON', false);
     // 输出详细信息添加到日志末尾
-    define('LOG_FILE_APPEND',true);
+    define('LOG_FILE_APPEND', true);
     //输出日志
-    define('DEBUG_DUMP_LOG',true);
+    define('DEBUG_DUMP_LOG', true);
     // 设置默认时区
-    define('DEFAULT_TIMEZONE','PRC');
+    define('DEFAULT_TIMEZONE', 'PRC');
     require_once SYSTEM.'/suda.php';

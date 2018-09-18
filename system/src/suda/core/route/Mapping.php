@@ -536,7 +536,7 @@ class Mapping implements \JsonSerializable
                 $mapping = Mapping::current();
                 if ($mapping) {
                     if ($source=$mapping->getSource()) {
-                        $path = storage()->dynstr($source);
+                        $path = $source;
                         if (storage()->exist($path)) {
                             $content=file_get_contents($path);
                             $hash   = md5($content);

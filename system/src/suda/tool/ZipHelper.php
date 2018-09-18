@@ -3,7 +3,7 @@
  * Suda FrameWork
  *
  * An open source application development framework for PHP 7.0.0 or newer
- * 
+ *
  * Copyright (c)  2017 DXkite
  *
  * @category   PHP FrameWork
@@ -66,19 +66,19 @@ class ZipHelper
         return false;
     }
 
-    protected static function zipFolder(ZipArchive & $zip, string $folder,string $root)
+    protected static function zipFolder(ZipArchive & $zip, string $folder, string $root)
     {
         if (is_dir($folder)) {
             if ($dh = opendir($folder)) {
                 while (($file = readdir($dh)) !== false) {
-                    if ($file!='.' &&  $file!='..'){
+                    if ($file!='.' &&  $file!='..') {
                         $path=$folder.'/'.$file;
                         if (is_dir($path)) {
-                            self::zipFolder($zip, $path,$root);
+                            self::zipFolder($zip, $path, $root);
                         } else {
-                            $cutPath=storage()->cut($path,$root);
-                            $localPath=preg_replace('/[\\\\\\/]+/','/',$cutPath);
-                            $zip->addFile($path,$localPath);
+                            $cutPath=storage()->cut($path, $root);
+                            $localPath=preg_replace('/[\\\\\\/]+/', '/', $cutPath);
+                            $zip->addFile($path, $localPath);
                         }
                     }
                 }

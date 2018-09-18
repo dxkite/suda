@@ -119,7 +119,7 @@ class Hook
      */
     public static function exec(string $name, array $args=[])
     {
-        debug()->trace(__METHOD__.' -> '.$name,$args);
+        debug()->trace(__METHOD__.' -> '.$name, $args);
         if (isset(self::$hooks[$name]) && is_array(self::$hooks[$name])) {
             foreach (self::$hooks[$name] as $command) {
                 self::call($command, $args);
@@ -137,7 +137,7 @@ class Hook
      */
     public static function execIf(string $name, array $args=[], $condition = true)
     {
-        debug()->trace(__METHOD__.' -> '.$name,$args);
+        debug()->trace(__METHOD__.' -> '.$name, $args);
         if (isset(self::$hooks[$name]) && is_array(self::$hooks[$name])) {
             foreach (self::$hooks[$name] as $command) {
                 if (self::call($command, $args)===$condition) {
@@ -157,7 +157,7 @@ class Hook
      */
     public static function execNotNull(string $name, array $args=[])
     {
-        debug()->trace(__METHOD__.' -> '.$name,$args);
+        debug()->trace(__METHOD__.' -> '.$name, $args);
         if (isset(self::$hooks[$name]) && is_array(self::$hooks[$name])) {
             foreach (self::$hooks[$name] as $command) {
                 if (!is_null($value=self::call($command, $args))) {
@@ -177,7 +177,7 @@ class Hook
      */
     public static function execTop(string $name, array $args=[])
     {
-        debug()->trace(__METHOD__.' -> '.$name,$args);
+        debug()->trace(__METHOD__.' -> '.$name, $args);
         if (isset(self::$hooks[$name]) && is_array(self::$hooks[$name])) {
             return  self::call(array_shift(self::$hooks[$name]), $args);
         }
@@ -192,7 +192,7 @@ class Hook
      */
     public static function execTail(string $name, array $args=[])
     {
-        debug()->trace(__METHOD__.' -> '.$name,$args);
+        debug()->trace(__METHOD__.' -> '.$name, $args);
         if (isset(self::$hooks[$name]) && is_array(self::$hooks[$name])) {
             return  self::call(array_pop(self::$hooks[$name]), $args);
         }

@@ -17,7 +17,7 @@ namespace suda\tool;
 
 /**
  * 数组操纵
- * 
+ *
  * 设置值， 获取值，导出成文件
  */
 class ArrayHelper
@@ -28,7 +28,7 @@ class ArrayHelper
     * @example
     * array_get_value('a.b.c.d',$arr);
     * 返回 $arr['a']['b']['c']['d'];
-    *  
+    *
     * @param  $name 查询列
     * @param  $array 查询的数组
     * @return mixed 查询的值

@@ -3,7 +3,7 @@
  * Suda FrameWork
  *
  * An open source application development framework for PHP 7.0.0 or newer
- * 
+ *
  * Copyright (c)  2017 DXkite
  *
  * @category   PHP FrameWork
@@ -15,7 +15,9 @@
  */
 
 namespace suda\exception;
-class JSONException extends \RuntimeException {
+
+class JSONException extends \RuntimeException
+{
     protected static $error=[
         JSON_ERROR_NONE=>'No errors',
         JSON_ERROR_DEPTH=>'Maximum stack depth exceeded',
@@ -25,7 +27,8 @@ class JSONException extends \RuntimeException {
         JSON_ERROR_UTF8=>'Malformed UTF-8 characters, possibly incorrectly encoded',
      ];
 
-     public function __construct(int $error) {
+    public function __construct(int $error)
+    {
         parent::__construct(self::$error[$error] ?? 'Unknown error');
-     }
+    }
 }

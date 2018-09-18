@@ -27,8 +27,8 @@ class Query extends SQLQuery
 {
     /**
      * 向数据表中插入一行
-     * 
-     * @example 
+     *
+     * @example
      * ```php
      * // 建议使用
      * $id = Query::insert('user',['name'=>$name,'password'=>  $password ,'group'=>$group, 'available'=>false,'email'=>$email,'ip'=>$ip,]);
@@ -37,7 +37,7 @@ class Query extends SQLQuery
      * ```
      * 以上调用会编译成类似如下模板
      * ```sql
-     * INSERT INTO `mc_user` (`name`,`password`,`group`,`available`,`email`,`ip`) VALUES (:name,:password,:group,:available,:email,:ip); 
+     * INSERT INTO `mc_user` (`name`,`password`,`group`,`available`,`email`,`ip`) VALUES (:name,:password,:group,:available,:email,:ip);
      * ```
      * @param string $table 为数据表名，会自动添加数据表前缀。
      * @param [type] $values  为插入的值，可以为字符串或者MAP数组。
@@ -80,17 +80,17 @@ class Query extends SQLQuery
     
     /**
      * 在数据表总搜索
-     * 
+     *
      * 查询后会返回一个 `archive\Query ` 的实例对象，通过 fetch 或者 fetchAll 获取查询结果。
-     * 
-     * @example 
+     *
+     * @example
      * 如下语句
      * ```php
      * $fetch=Query::where('user', ['id', 'name', 'email', 'available', 'avatar', 'ip'], '1', [], [$page, $count])->fetchAll();
      * ```
      * 与如下SQL语句等价
      * ```sql
-     * SELECT `id`, `name`,`email`,`available`, `avatar`, `ip` FROM mc_user WHERE 1; 
+     * SELECT `id`, `name`,`email`,`available`, `avatar`, `ip` FROM mc_user WHERE 1;
      * ```
      * @param string $table 表名
      * @param string|array $wants 提取的列
@@ -128,13 +128,13 @@ class Query extends SQLQuery
      * 选择列
      * 查询后会返回一个 `archive\Query ` 的实例对象，通过 fetch 或者 fetchAll 获取查询结果。
      * @example
-     * 
+     *
      * ```php
      * $fetch=Query::select('user_group', 'auths', ' JOIN `#{user}` ON `#{user}`.`id` = :id  WHERE `user` = :id  or `#{user_group}`.`id` =`#{user}`.`group` LIMIT 1;', ['id'=>$uid])->fetch()
      * ```
      * 等价于
      * ```sql
-     * SELECT auths FROM `mc_user_group`  JOIN `mc_user` ON `mc_user`.`id` = :id  WHERE `user` = :id  or `mc_user_group`.`id` =`mc_user`.`group` LIMIT 1; 
+     * SELECT auths FROM `mc_user_group`  JOIN `mc_user` ON `mc_user`.`id` = :id  WHERE `user` = :id  or `mc_user_group`.`id` =`mc_user`.`group` LIMIT 1;
      * ```
      * @param string $table 数据表名
      * @param [type] $wants 为查询的字段，可以为字符串如`"field1,field2"` 或者数组 `[ "field1","field2" ]`； 建议使用数组模式。
@@ -162,17 +162,17 @@ class Query extends SQLQuery
 
     /**
      * 更新列
-     * 
+     *
      * 返回影响的记录数
-     * 
+     *
      * @example
-     * 
+     *
      * ```php
      * Query::update('user_token', 'expire = :time , token=:new_token,value=:refresh', 'id=:id AND UNIX_TIMESTAMP() < `time` + :alive AND value = :value ', ['id'=>$id, 'value'=>$value, 'new_token'=>$new, 'refresh'=>$refresh, 'time'=>time() + $get['beat'], 'alive'=>$get['alive']]);
      * ```
      * 等价于
      * ```sql
-     * UPDATE `mc_user_token` SET expire = :time , token=:new_token,value=:refresh  WHERE id=:id AND UNIX_TIMESTAMP() < `time` + :alive AND value = :value ; 
+     * UPDATE `mc_user_token` SET expire = :time , token=:new_token,value=:refresh  WHERE id=:id AND UNIX_TIMESTAMP() < `time` + :alive AND value = :value ;
      * ```
      * @param string $table 数据表名
      * @param [type] $set_fields 为设置的字段，使用键值数组式设置值。
@@ -216,7 +216,7 @@ class Query extends SQLQuery
     }
 
 
-    public static function prepareIn(string $name, array $invalues, string $prefix='in_',int $count=0)
+    public static function prepareIn(string $name, array $invalues, string $prefix='in_', int $count=0)
     {
         if (count($invalues)<=0) {
             throw new SQLException('on field '.$name.' value can\'t be empty array');
@@ -251,7 +251,7 @@ class Query extends SQLQuery
         return [$search_str,$bind];
     }
 
-    public static function prepareWhere($where, array &$bind,string $prefix='where_', int $count=1)
+    public static function prepareWhere($where, array &$bind, string $prefix='where_', int $count=1)
     {
         $param=[];
         if (is_array($where)) {
@@ -260,7 +260,7 @@ class Query extends SQLQuery
                 $bname= $prefix.$name.($count++);
                 // in cause
                 if (is_array($value)) {
-                    list($sql, $in_param)=self::prepareIn($name, $value,'where_in_',$count);
+                    list($sql, $in_param)=self::prepareIn($name, $value, 'where_in_', $count);
                     $and[]=$sql;
                     $param=array_merge($param, $in_param);
                 } else {

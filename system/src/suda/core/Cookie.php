@@ -3,7 +3,7 @@
  * Suda FrameWork
  *
  * An open source application development framework for PHP 7.0.0 or newer
- * 
+ *
  * Copyright (c)  2017 DXkite
  *
  * @category   PHP FrameWork
@@ -49,14 +49,15 @@ class Cookie
         }
     }
     
-    public static function delete(string $name){
+    public static function delete(string $name)
+    {
         self::unset($name);
     }
 
     public static function has(string $name)
     {
         $available = isset(self::$values[$name]) && self::$values[$name]->get() > time();
-        return $available || array_key_exists($name,$_COOKIE);
+        return $available || array_key_exists($name, $_COOKIE);
     }
 
     /**
@@ -66,7 +67,7 @@ class Cookie
      */
     public static function get(string $name, $default='') : string
     {
-        if (isset(self::$values[$name]) && self::$values[$name]->get() > time()){
+        if (isset(self::$values[$name]) && self::$values[$name]->get() > time()) {
             return self::$values[$name]->get();
         }
         return isset($_COOKIE[$name])?$_COOKIE[$name]:$default;

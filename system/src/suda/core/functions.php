@@ -314,10 +314,12 @@ function email_poster(?int $type=null)
 }
 
 
-function real_absolute_path(string $path) {
+function real_absolute_path(string $path)
+{
     return \suda\core\Autoloader::absolutePath($path);
 }
 
-function parse_absolute_path(string $path) {
+function parse_absolute_path(string $path)
+{
     return \suda\core\Autoloader::parsePath($path);
 }
