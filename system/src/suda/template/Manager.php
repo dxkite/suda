@@ -74,7 +74,6 @@ class Manager
             // 初始化编译器
             if ($instance instanceof Compiler) {
                 self::$compiler = $instance;
-                Hook::exec('suda:template:compiler:init', [ self::$compiler ]);
             } else {
                 throw new KernelException(__('app template compiler must be instance of suda\template\Compier '));
             }
@@ -132,6 +131,7 @@ class Manager
             if (is_null($outpath)) {
                 $outpath=self::getOutputFile($name);
             }
+            Hook::exec('suda:template:compile::before', [ self::$compiler ]);
             return self::$compiler->compile($name, $path, $outpath);
         }
         return false;

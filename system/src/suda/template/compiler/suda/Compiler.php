@@ -43,7 +43,7 @@ class Compiler implements CompilerImpl
      * @var array
      */
     protected static $command=[];
-    
+
     public static function setBase(string $tpl=self::Template)
     {
         self::$template=$tpl;

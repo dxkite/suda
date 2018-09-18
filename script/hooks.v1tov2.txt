@@ -22,5 +22,5 @@ system:init suda:system:init
 system:shutdown suda:system:shutdown
 system:shutdown::before suda:system:shutdown::before
 Template:render::before suda:template:render::before
-template:SudaCompiler:init suda:template:compiler:init
+template:SudaCompiler:init suda:template:compile::before
 template:theme::change suda:template:change-theme
