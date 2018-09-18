@@ -35,7 +35,6 @@ class Router
     private function __construct()
     {
         Hook::listen('suda:system:error::404', 'Router::error');
-        Hook::listen('system:http_error', 'Router::error');
         Hook::listen('suda:route:dispatch::error', 'Router::error');
     }
 
