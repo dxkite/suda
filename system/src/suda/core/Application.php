@@ -659,12 +659,13 @@ class Application
     protected function registerModules()
     {
         foreach ($this->modulesPath as $path) {
+            // 加载文件夹
             $dirs=Storage::readDirs($path);
             foreach ($dirs as $dir) {
                 self::registerModule($path.'/'.$dir);
             }
-            $zips = Storage::readDirFiles($path, false, '/(\.zip|\.module|\.s?mod)$/');
-
+            // 加载模块包
+            $zips = Storage::readDirFiles($path, false, '/\.mod(ule)?$/');
             foreach ($zips as $zip) {
                 $zipDir = RUNTIME_DIR.'/modules/'. pathinfo($zip, PATHINFO_FILENAME);
                 if (conf('debug') || !Storage::isDir($zipDir)) {
