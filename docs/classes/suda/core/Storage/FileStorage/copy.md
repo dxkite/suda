@@ -1,6 +1,6 @@
 # FileStorage::copy
 
-> *文件信息* suda\core\storage\FileStorage.php: 26~474
+> *文件信息* suda\core\storage\FileStorage.php: 26~458
 ## 所属类 
 
 [FileStorage](../FileStorage.md)

@@ -1,6 +1,6 @@
 # Router::buildUrl
 根据路由名称创建URL
-> *文件信息* suda\core\Router.php: 27~551
+> *文件信息* suda\core\Router.php: 27~552
 ## 所属类 
 
 [Router](../Router.md)

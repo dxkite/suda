@@ -1,6 +1,6 @@
 #  KernelException 
 
-> *文件信息* suda\exception\KernelException.php: 17~17
+> *文件信息* suda\exception\KernelException.php: 18~20
 
 
 

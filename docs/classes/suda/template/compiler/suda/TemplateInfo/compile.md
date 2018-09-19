@@ -1,6 +1,6 @@
 # TemplateInfo::compile
 编译文件
-> *文件信息* suda\template\compiler\suda\TemplateInfo.php: 21~100
+> *文件信息* suda\template\compiler\suda\TemplateInfo.php: 26~117
 ## 所属类 
 
 [TemplateInfo](../TemplateInfo.md)
@@ -10,7 +10,8 @@
   public  
 ## 说明
 
-@param $input
+@var 获取模板的包含库
+@var 获取模板需要的值
 
 ## 参数
 
@@ -21,7 +22,7 @@
 | output |  string | 无 | 无 |
 
 ## 返回值
-类型：mixed
+类型：boolean
 无
 
 ## 例子

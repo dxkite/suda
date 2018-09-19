@@ -1,6 +1,6 @@
 # Application::registerModule
-
-> *文件信息* suda\core\Application.php: 30~757
+注册模块
+> *文件信息* suda\core\Application.php: 30~812
 ## 所属类 
 
 [Application](../Application.md)
@@ -19,10 +19,11 @@
 | 参数名 | 类型 | 默认值 | 说明 |
 |--------|-----|-------|-------|
 | path |  string | 无 | 无 |
-| config |  string | null | 无 |
+| config |  string|null|array | null | 无 |
 
 ## 返回值
-返回值类型不定
+类型：boolean
+无
 
 ## 例子
 

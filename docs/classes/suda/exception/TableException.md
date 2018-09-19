@@ -1,6 +1,6 @@
 #  TableException 
 
-> *文件信息* suda\exception\TableException.php: 18~18
+> *文件信息* suda\exception\TableException.php: 19~21
 
 
 

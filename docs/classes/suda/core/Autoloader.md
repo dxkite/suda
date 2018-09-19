@@ -1,6 +1,6 @@
 #  Autoloader 
 
-> *文件信息* suda\core\Autoloader.php: 22~198
+> *文件信息* suda\core\Autoloader.php: 22~211
 
 
 自动加载控制器
@@ -17,7 +17,7 @@
 | 可见性 |  变量名   | 说明 |
 |--------|----|------|
 | protected  static  | namespace | 默认命名空间| 
-| protected  static  | include_path | | 
+| protected  static  | include_path | 包含路径| 
 
 ## 方法
 

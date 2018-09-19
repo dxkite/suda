@@ -1,6 +1,6 @@
 # Application::moduleName
 根据模块目录名转换成模块名
-> *文件信息* suda\core\Application.php: 30~757
+> *文件信息* suda\core\Application.php: 30~812
 ## 所属类 
 
 [Application](../Application.md)

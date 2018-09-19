@@ -1,6 +1,6 @@
 # Cookie::sendCookies
 发送Cookie至浏览器
-> *文件信息* suda\core\Cookie.php: 24~96
+> *文件信息* suda\core\Cookie.php: 24~97
 ## 所属类 
 
 [Cookie](../Cookie.md)

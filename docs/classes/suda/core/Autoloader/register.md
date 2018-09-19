@@ -1,6 +1,6 @@
 # Autoloader::register
 
-> *文件信息* suda\core\Autoloader.php: 22~198
+> *文件信息* suda\core\Autoloader.php: 22~211
 ## 所属类 
 
 [Autoloader](../Autoloader.md)

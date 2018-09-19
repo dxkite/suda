@@ -1,6 +1,6 @@
 # Manager::display
 根据模板ID显示HTML模板
-> *文件信息* suda\template\Manager.php: 29~670
+> *文件信息* suda\template\Manager.php: 29~694
 ## 所属类 
 
 [Manager](../Manager.md)

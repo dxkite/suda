@@ -1,6 +1,6 @@
 # Mapping::is
 判断路由是否为指定路由
-> *文件信息* suda\core\route\Mapping.php: 23~584
+> *文件信息* suda\core\route\Mapping.php: 23~586
 ## 所属类 
 
 [Mapping](../Mapping.md)

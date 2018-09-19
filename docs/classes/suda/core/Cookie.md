@@ -1,6 +1,6 @@
 #  Cookie 
 
-> *文件信息* suda\core\Cookie.php: 24~96
+> *文件信息* suda\core\Cookie.php: 24~97
 
 
 Cookie操作封装类

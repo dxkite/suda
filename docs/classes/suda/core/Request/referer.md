@@ -1,6 +1,6 @@
 # Request::referer
 
-> *文件信息* suda\core\Request.php: 24~494
+> *文件信息* suda\core\Request.php: 24~498
 ## 所属类 
 
 [Request](../Request.md)

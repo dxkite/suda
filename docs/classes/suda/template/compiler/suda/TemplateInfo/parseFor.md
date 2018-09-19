@@ -1,6 +1,6 @@
 # TemplateInfo::parseFor
 
-> *文件信息* suda\template\compiler\suda\TemplateInfo.php: 21~100
+> *文件信息* suda\template\compiler\suda\TemplateInfo.php: 26~117
 ## 所属类 
 
 [TemplateInfo](../TemplateInfo.md)
@@ -10,7 +10,8 @@
   protected  
 ## 说明
 
-该函数暂时无说明
+@var 获取模板的包含库
+@var 获取模板需要的值
 
 ## 参数
 

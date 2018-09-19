@@ -1,6 +1,6 @@
 #  Manager 
 
-> *文件信息* suda\template\Manager.php: 29~670
+> *文件信息* suda\template\Manager.php: 29~694
 
 
 模板管理类

@@ -2,8 +2,8 @@
 
 > **注：** 文档由程序自动生成
 
-- suda 2.0.1 
-- 2018-09-11 13:00:44
+- suda 2.0.2 
+- 2018-09-19 08:14:08
 
 
 ## 类列表
@@ -56,14 +56,11 @@
 |[suda\mail\sender\StmpSender](suda/mail/sender/StmpSender.md) | SMTP邮件发送器 |
 |[suda\template\compiler\suda\Compiler](suda/template/compiler/suda/Compiler.md) | Suda 模板编译器 |
 |[suda\template\compiler\suda\Template](suda/template/compiler/suda/Template.md) |  |
-|[suda\template\compiler\suda\TemplateInfo](suda/template/compiler/suda/TemplateInfo.md) |  |
+|[suda\template\compiler\suda\TemplateInfo](suda/template/compiler/suda/TemplateInfo.md) | 获取模板信息类 |
 |[suda\template\Manager](suda/template/Manager.md) | 模板管理类 |
 |[suda\tool\ArrayValue](suda/tool/ArrayValue.md) |  |
 |[suda\tool\Command](suda/tool/Command.md) |  |
 |[suda\tool\CookieSetter](suda/tool/CookieSetter.md) |  |
-|[suda\tool\EchoValue](suda/tool/EchoValue.md) |  |
-|[suda\tool\Json](suda/tool/Json.md) |  |
-|[suda\tool\Pinyin](suda/tool/Pinyin.md) | 将中文转换成拼音 |
 |[suda\tool\ZipHelper](suda/tool/ZipHelper.md) |  |
 |[suda\core\storage\Storage](suda/core/storage/Storage.md) | 存储系统 |
 |[suda\archive\SQLStatement](suda/archive/SQLStatement.md) | 数据库查询语句接口 |

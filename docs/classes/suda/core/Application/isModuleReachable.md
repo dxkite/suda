@@ -1,6 +1,6 @@
 # Application::isModuleReachable
-
-> *文件信息* suda\core\Application.php: 30~757
+判断模块是否可达
+> *文件信息* suda\core\Application.php: 30~812
 ## 所属类 
 
 [Application](../Application.md)
@@ -21,7 +21,8 @@
 | name |  string | 无 | 无 |
 
 ## 返回值
-返回值类型不定
+类型：boolean
+无
 
 ## 例子
 

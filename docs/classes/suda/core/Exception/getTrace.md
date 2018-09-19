@@ -1,6 +1,6 @@
 # Exception::getTrace
 
-> *文件信息* suda\core\Exception.php: 25~96
+> *文件信息* suda\core\Exception.php: 25~99
 ## 所属类 
 
 [Exception](../Exception.md)

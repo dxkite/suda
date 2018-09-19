@@ -1,7 +1,7 @@
 # parse_absolute_path
+将地址解析成绝对地址
+> *文件信息* suda\core\functions.php: 333~336
 
-> *文件信息* suda\core\functions.php: 321~323
-该函数暂时无说明
 ## 参数
 
 | 参数名 | 类型 | 默认值 | 说明 |
@@ -9,7 +9,8 @@
 | path |  string | 无 | 无 |
 
 ## 返回值
-返回值类型不定
+类型：string
+无
 
 ## 例子
 

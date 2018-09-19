@@ -2,8 +2,8 @@
 
 > **注：** 文档由程序自动生成
 
-- suda 2.0.1 
-- 2018-09-11 13:00:44
+- suda 2.0.2 
+- 2018-09-19 08:14:08
 
 ## 函数列表 
 | 函数名 | 说明 |
@@ -31,5 +31,6 @@
 | [session](session.md) |  获取默认Session对象  |
 | [module](module.md) |  获取当前文件所在的模块  |
 | [email_poster](email_poster.md) |  获取邮件发送 **使用前请设置完成SMTP规则**  |
-| [real_absolute_path](real_absolute_path.md) |    |
-| [parse_absolute_path](parse_absolute_path.md) |    |
+| [real_absolute_path](real_absolute_path.md) |  获取绝对地址  |
+| [parse_absolute_path](parse_absolute_path.md) |  将地址解析成绝对地址  |
+| [query](query.md) |  生成SQLQuery对象  |

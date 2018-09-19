@@ -1,6 +1,6 @@
 #  Application 
 
-> *文件信息* suda\core\Application.php: 30~757
+> *文件信息* suda\core\Application.php: 30~812
 
 
 应用处理类
@@ -28,6 +28,7 @@
 |  public  static|[getInstance](Application/getInstance.md) |  |
 |  public  |[addModulesPath](Application/addModulesPath.md) | 添加模块扫描目录 |
 |  protected  |[loadModules](Application/loadModules.md) | 载入模块 |
+|  public  |[loadModule](Application/loadModule.md) | 加载模块 |
 |  public  |[checkModuleRequire](Application/checkModuleRequire.md) | 检查模块依赖 |
 |  protected  |[initDatabase](Application/initDatabase.md) |  |
 |  public  |[init](Application/init.md) |  |
@@ -43,7 +44,8 @@
 |  public  |[checkModuleExist](Application/checkModuleExist.md) | 检查模块是否存在 |
 |  public  |[getLiveModules](Application/getLiveModules.md) | 获取激活的模块 |
 |  public  |[getReachableModules](Application/getReachableModules.md) | 获取网页端可达的模块 |
-|  public  |[isModuleReachable](Application/isModuleReachable.md) |  |
+|  public  |[isModuleReachable](Application/isModuleReachable.md) | 判断模块是否可达 |
+|  public  |[addReachableModule](Application/addReachableModule.md) | 添加可达模块 |
 |  public  |[activeModule](Application/activeModule.md) | 激活运行的模块 |
 |  public  |[onRequest](Application/onRequest.md) | 截获请求，请求发起的时候会调用 |
 |  public  |[onShutdown](Application/onShutdown.md) | 请求关闭的时候会调用 |
@@ -52,7 +54,8 @@
 |  public  |[getModuleFullName](Application/getModuleFullName.md) | 获取模块全名（包括版本） |
 |  public  |[getModuleDir](Application/getModuleDir.md) | 获取模块所在的文件夹名 |
 |  public  |[moduleName](Application/moduleName.md) | 根据模块目录名转换成模块名 |
-|  public  |[registerModule](Application/registerModule.md) |  |
+|  protected  |[registerModules](Application/registerModules.md) | 注册所有模块信息 |
+|  public  |[registerModule](Application/registerModule.md) | 注册模块 |
 |  public  |[getModulesInfo](Application/getModulesInfo.md) |  |
 |  public  |[getModulePath](Application/getModulePath.md) |  |
 |  protected  static|[versionCompire](Application/versionCompire.md) | 比较版本 |

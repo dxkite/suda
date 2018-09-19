@@ -1,6 +1,6 @@
 # Hook::execNotNull
 运行所有命令返回第一个非空值
-> *文件信息* suda\core\Hook.php: 24~224
+> *文件信息* suda\core\Hook.php: 24~229
 ## 所属类 
 
 [Hook](../Hook.md)

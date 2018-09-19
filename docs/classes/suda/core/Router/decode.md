@@ -1,6 +1,6 @@
 # Router::decode
 将 router:// 协议指定的URL转换为 URL
-> *文件信息* suda\core\Router.php: 27~551
+> *文件信息* suda\core\Router.php: 27~552
 ## 所属类 
 
 [Router](../Router.md)

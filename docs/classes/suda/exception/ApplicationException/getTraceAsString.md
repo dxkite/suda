@@ -1,6 +1,6 @@
 # ApplicationException::getTraceAsString
 
-> *文件信息* suda\exception\ApplicationException.php: 17~17
+> *文件信息* suda\exception\ApplicationException.php: 18~20
 ## 所属类 
 
 [ApplicationException](../ApplicationException.md)

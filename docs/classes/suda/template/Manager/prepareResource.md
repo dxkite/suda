@@ -1,6 +1,6 @@
 # Manager::prepareResource
 准备静态资源
-> *文件信息* suda\template\Manager.php: 29~670
+> *文件信息* suda\template\Manager.php: 29~694
 ## 所属类 
 
 [Manager](../Manager.md)

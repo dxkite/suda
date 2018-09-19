@@ -1,6 +1,6 @@
 # Mapping::isHidden
 
-> *文件信息* suda\core\route\Mapping.php: 23~584
+> *文件信息* suda\core\route\Mapping.php: 23~586
 ## 所属类 
 
 [Mapping](../Mapping.md)

@@ -1,6 +1,6 @@
 # PHPSession::destroy
 
-> *文件信息* suda\core\session\PHPSession.php: 24~83
+> *文件信息* suda\core\session\PHPSession.php: 25~84
 ## 所属类 
 
 [PHPSession](../PHPSession.md)

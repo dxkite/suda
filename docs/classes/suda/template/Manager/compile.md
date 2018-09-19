@@ -1,6 +1,6 @@
 # Manager::compile
 编译文件
-> *文件信息* suda\template\Manager.php: 29~670
+> *文件信息* suda\template\Manager.php: 29~694
 ## 所属类 
 
 [Manager](../Manager.md)
@@ -10,7 +10,7 @@
   public  static
 ## 说明
 
-@param $input
+
 
 ## 参数
 
@@ -21,7 +21,7 @@
 | outpath |  string | null | 无 |
 
 ## 返回值
-类型：mixed
+类型：boolean
 无
 
 ## 例子

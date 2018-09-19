@@ -1,6 +1,6 @@
 # JSONException::getLine
 
-> *文件信息* suda\exception\JSONException.php: 18~31
+> *文件信息* suda\exception\JSONException.php: 19~34
 ## 所属类 
 
 [JSONException](../JSONException.md)

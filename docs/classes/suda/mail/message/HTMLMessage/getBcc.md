@@ -1,6 +1,6 @@
 # HTMLMessage::getBcc
 
-> *文件信息* suda\mail\message\HTMLMessage.php: 24~37
+> *文件信息* suda\mail\message\HTMLMessage.php: 25~40
 ## 所属类 
 
 [HTMLMessage](../HTMLMessage.md)

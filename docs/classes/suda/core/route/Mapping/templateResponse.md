@@ -1,13 +1,13 @@
-# EchoValue::__toString
+# Mapping::templateResponse
 
-> *文件信息* suda\tool\EchoValue.php: 18~38
+> *文件信息* suda\core\route\Mapping.php: 23~586
 ## 所属类 
 
-[EchoValue](../EchoValue.md)
+[Mapping](../Mapping.md)
 
 ## 可见性
 
-  public  
+  protected  static
 ## 说明
 
 该函数暂时无说明

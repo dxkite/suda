@@ -1,6 +1,6 @@
 # Message::setTo
 设置对象
-> *文件信息* suda\mail\message\Message.php: 23~269
+> *文件信息* suda\mail\message\Message.php: 23~270
 ## 所属类 
 
 [Message](../Message.md)

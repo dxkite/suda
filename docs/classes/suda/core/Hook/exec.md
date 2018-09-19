@@ -1,6 +1,6 @@
 # Hook::exec
 运行所有命令
-> *文件信息* suda\core\Hook.php: 24~224
+> *文件信息* suda\core\Hook.php: 24~229
 ## 所属类 
 
 [Hook](../Hook.md)

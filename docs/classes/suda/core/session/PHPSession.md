@@ -1,6 +1,6 @@
 #  PHPSession 
 
-> *文件信息* suda\core\session\PHPSession.php: 24~83
+> *文件信息* suda\core\session\PHPSession.php: 25~84
 
 
 会话操纵类

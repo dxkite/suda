@@ -1,13 +1,26 @@
 v2.0.2
 -----------------
 - 添加
-    - getModuleConfig 支持 ${module} 变量
+    - `getModuleConfig` 支持 ${module} 变量
+    - 日志格式
+    - `query` 函数
+    - `loadModule` 函数
+    - `addReachableModule` 函数
+    - welcome模块
+- 修改
+    - 系统Hook统一命名标准 ( `1.x -> 2.x` )
+    - 模块后缀支持 `.mod` 和 `.module`
+    - 定向页面
+- 修复
+    - 模板 `$:` 输出 
 - 优化
     - 提高运行速度 1x
     - 减少项目体积
 - 删除
-    - 内置bootstrap
-    - 内置jquery
+    - 内置 bootstrap
+    - 内置 jquery
+    - 内置 Pinyin
+    - 内置 EchoValue
 
 v2.0.1
 ------------------

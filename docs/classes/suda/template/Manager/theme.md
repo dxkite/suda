@@ -1,6 +1,6 @@
 # Manager::theme
 获取/设置模板样式
-> *文件信息* suda\template\Manager.php: 29~670
+> *文件信息* suda\template\Manager.php: 29~694
 ## 所属类 
 
 [Manager](../Manager.md)
@@ -10,7 +10,7 @@
   public  static
 ## 说明
 
-该函数暂时无说明
+
 
 ## 参数
 
@@ -19,7 +19,7 @@
 | theme |  string | null | 无 |
 
 ## 返回值
-类型：mixed
+类型：string
 无
 
 ## 例子

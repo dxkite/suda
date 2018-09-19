@@ -1,6 +1,6 @@
 #  Config 
 
-> *文件信息* suda\core\Config.php: 24~141
+> *文件信息* suda\core\Config.php: 24~143
 
 
 文件配置类

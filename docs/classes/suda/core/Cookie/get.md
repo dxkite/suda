@@ -1,6 +1,6 @@
 # Cookie::get
 获取Cookie的值
-> *文件信息* suda\core\Cookie.php: 24~96
+> *文件信息* suda\core\Cookie.php: 24~97
 ## 所属类 
 
 [Cookie](../Cookie.md)
@@ -25,7 +25,7 @@
     => D:\Server\vhost\atd3.org\suda\system\src\suda\template\compiler\suda\Template.php:91 suda\template\compiler\suda\Template->echo()
     => D:\Server\vhost\atd3.org\suda\script\docme\src\ExportTemplate.php:45 suda\template\compiler\suda\Template->getRenderedString()
     => D:\Server\vhost\atd3.org\suda\script\docme\src\ClassExport.php:103 docme\ExportTemplate->export(D:\Server\vhost\atd3.org\suda\script/../docs/classes/suda\core\Cookie/get.md)
-    => D:\Server\vhost\atd3.org\suda\script\docme\src\ClassExport.php:65 docme\ClassExport->exportMethod(class ReflectionMethod,{"description":"Cookie\u64cd\u4f5c\u5c01\u88c5\u7c7b","document":"\u7528\u4e8e\u64cd\u4f5cCookie","className":"Cookie","classFullName":"suda\\core\\Cookie","classDoc":"Cookie\u64cd\u4f5c\u5c01\u88c5\u7c7b","constants":[],"fileName":"suda\\core\\Cookie.php","lineStart":24,"lineEnd":96,"properties":{"values":{"visibility":"public","static":"static","docs":false}}},D:\Server\vhost\atd3.org\suda\script/../docs/classes/suda\core\Cookie)
+    => D:\Server\vhost\atd3.org\suda\script\docme\src\ClassExport.php:65 docme\ClassExport->exportMethod(class ReflectionMethod,{"description":"Cookie\u64cd\u4f5c\u5c01\u88c5\u7c7b","document":"\u7528\u4e8e\u64cd\u4f5cCookie","className":"Cookie","classFullName":"suda\\core\\Cookie","classDoc":"Cookie\u64cd\u4f5c\u5c01\u88c5\u7c7b","constants":[],"fileName":"suda\\core\\Cookie.php","lineStart":24,"lineEnd":97,"properties":{"values":{"visibility":"public","static":"static","docs":false}}},D:\Server\vhost\atd3.org\suda\script/../docs/classes/suda\core\Cookie)
     => D:\Server\vhost\atd3.org\suda\script\docme\src\Docme.php:90 docme\ClassExport->export(D:\Server\vhost\atd3.org\suda\script/../docs/classes)
     => D:\Server\vhost\atd3.org\suda\script\docme.php:30 docme\Docme->export(D:\Server\vhost\atd3.org\suda\script/../docs)
  |  | 无 |

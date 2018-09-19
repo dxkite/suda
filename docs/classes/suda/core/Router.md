@@ -1,6 +1,6 @@
 #  Router 
 
-> *文件信息* suda\core\Router.php: 27~551
+> *文件信息* suda\core\Router.php: 27~552
 
 
 路由处理类
@@ -32,7 +32,7 @@
 |  public  static|[getInstance](Router/getInstance.md) |  |
 |  public  static|[getModulePrefix](Router/getModulePrefix.md) |  |
 |  public  |[load](Router/load.md) |  |
-|  protected  |[loadModuleConfig](Router/loadModuleConfig.md) |  |
+|  protected  |[loadModuleRouteConfig](Router/loadModuleRouteConfig.md) |  |
 |  protected  |[loadFile](Router/loadFile.md) |  |
 |  protected  |[saveFile](Router/saveFile.md) |  |
 |  public  |[loadModulesRouter](Router/loadModulesRouter.md) |  |

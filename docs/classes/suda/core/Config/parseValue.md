@@ -1,6 +1,6 @@
 # Config::parseValue
 
-> *文件信息* suda\core\Config.php: 24~141
+> *文件信息* suda\core\Config.php: 24~143
 ## 所属类 
 
 [Config](../Config.md)

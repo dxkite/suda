@@ -1,6 +1,6 @@
 # Response::forward
 
-> *文件信息* suda\core\Response.php: 30~295
+> *文件信息* suda\core\Response.php: 30~298
 ## 所属类 
 
 [Response](../Response.md)

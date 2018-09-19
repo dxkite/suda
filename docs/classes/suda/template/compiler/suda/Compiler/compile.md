@@ -1,6 +1,6 @@
 # Compiler::compile
 编译文件
-> *文件信息* suda\template\compiler\suda\Compiler.php: 30~392
+> *文件信息* suda\template\compiler\suda\Compiler.php: 30~401
 ## 所属类 
 
 [Compiler](../Compiler.md)
@@ -10,7 +10,7 @@
   public  
 ## 说明
 
-@param $input
+
 
 ## 参数
 
@@ -21,7 +21,7 @@
 | output |  string | 无 | 无 |
 
 ## 返回值
-类型：mixed
+类型：boolean
 无
 
 ## 例子

@@ -1,6 +1,6 @@
 # ArchiveException::getLine
 
-> *文件信息* suda\exception\ArchiveException.php: 17~21
+> *文件信息* suda\exception\ArchiveException.php: 18~23
 ## 所属类 
 
 [ArchiveException](../ArchiveException.md)

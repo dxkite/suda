@@ -1,6 +1,6 @@
 # Manager::getCompiler
 获取编译器
-> *文件信息* suda\template\Manager.php: 29~670
+> *文件信息* suda\template\Manager.php: 29~694
 ## 所属类 
 
 [Manager](../Manager.md)
@@ -17,7 +17,7 @@
 无参数
 
 ## 返回值
-类型：void
+类型：Compiler
 无
 
 ## 例子

@@ -1,6 +1,6 @@
 # Compiler::render
 
-> *文件信息* suda\template\compiler\suda\Compiler.php: 30~392
+> *文件信息* suda\template\compiler\suda\Compiler.php: 30~401
 ## 所属类 
 
 [Compiler](../Compiler.md)

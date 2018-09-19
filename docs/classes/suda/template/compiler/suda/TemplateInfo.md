@@ -1,16 +1,17 @@
 #  TemplateInfo 
 
-> *文件信息* suda\template\compiler\suda\TemplateInfo.php: 21~100
+> *文件信息* suda\template\compiler\suda\TemplateInfo.php: 26~117
 
 
-
+获取模板信息类
 
 
 ## 描述
 
 
 
-该类暂时无说明
+@var 获取模板的包含库
+@var 获取模板需要的值
 ## 常量列表
 | 常量名  |  值|
 |--------|----|
@@ -43,11 +44,12 @@
 |  public  |[__construct](TemplateInfo/__construct.md) |  |
 |  protected  |[echoValueCallback](TemplateInfo/echoValueCallback.md) |  |
 |  protected  |[parseInclude](TemplateInfo/parseInclude.md) |  |
+|  protected  |[parseExtend](TemplateInfo/parseExtend.md) |  |
 |  public  |[getValuesName](TemplateInfo/getValuesName.md) |  |
 |  public  static|[getTemplates](TemplateInfo/getTemplates.md) |  |
 |  protected  static|[getModuleTemplate](TemplateInfo/getModuleTemplate.md) |  |
 |  public  static|[setBase](TemplateInfo/setBase.md) |  |
-|  public  |[compileText](TemplateInfo/compileText.md) |  |
+|  public  |[compileText](TemplateInfo/compileText.md) | 编译文本 |
 |  public  |[compile](TemplateInfo/compile.md) | 编译文件 |
 |  public  |[render](TemplateInfo/render.md) |  |
 |  public  static|[addCommand](TemplateInfo/addCommand.md) | 扩展模板命令 |
@@ -69,7 +71,6 @@
 |  protected  |[parseEndforeach](TemplateInfo/parseEndforeach.md) |  |
 |  protected  |[parseWhile](TemplateInfo/parseWhile.md) |  |
 |  protected  |[parseEndwhile](TemplateInfo/parseEndwhile.md) |  |
-|  protected  |[parseExtend](TemplateInfo/parseExtend.md) |  |
 |  protected  |[parseU](TemplateInfo/parseU.md) |  |
 |  protected  |[parseSelf](TemplateInfo/parseSelf.md) |  |
 |  protected  |[parseSet](TemplateInfo/parseSet.md) |  |

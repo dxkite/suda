@@ -1,6 +1,6 @@
 # PHPSession::get
 
-> *文件信息* suda\core\session\PHPSession.php: 24~83
+> *文件信息* suda\core\session\PHPSession.php: 25~84
 ## 所属类 
 
 [PHPSession](../PHPSession.md)
@@ -25,7 +25,7 @@
     => D:\Server\vhost\atd3.org\suda\system\src\suda\template\compiler\suda\Template.php:91 suda\template\compiler\suda\Template->echo()
     => D:\Server\vhost\atd3.org\suda\script\docme\src\ExportTemplate.php:45 suda\template\compiler\suda\Template->getRenderedString()
     => D:\Server\vhost\atd3.org\suda\script\docme\src\ClassExport.php:103 docme\ExportTemplate->export(D:\Server\vhost\atd3.org\suda\script/../docs/classes/suda\core\session\PHPSession/get.md)
-    => D:\Server\vhost\atd3.org\suda\script\docme\src\ClassExport.php:65 docme\ClassExport->exportMethod(class ReflectionMethod,{"description":"\u4f1a\u8bdd\u64cd\u7eb5\u7c7b","document":"\u63a7\u5236PHP\u5168\u5c40\u4f1a\u8bdd\uff0c","className":"PHPSession","classFullName":"suda\\core\\session\\PHPSession","classDoc":"\u4f1a\u8bdd\u64cd\u7eb5\u7c7b","constants":[],"fileName":"suda\\core\\session\\PHPSession.php","lineStart":24,"lineEnd":83,"properties":{"instance":{"visibility":"protected","static":"static","docs":false}}},D:\Server\vhost\atd3.org\suda\script/../docs/classes/suda\core\session\PHPSession)
+    => D:\Server\vhost\atd3.org\suda\script\docme\src\ClassExport.php:65 docme\ClassExport->exportMethod(class ReflectionMethod,{"description":"\u4f1a\u8bdd\u64cd\u7eb5\u7c7b","document":"\u63a7\u5236PHP\u5168\u5c40\u4f1a\u8bdd\uff0c","className":"PHPSession","classFullName":"suda\\core\\session\\PHPSession","classDoc":"\u4f1a\u8bdd\u64cd\u7eb5\u7c7b","constants":[],"fileName":"suda\\core\\session\\PHPSession.php","lineStart":25,"lineEnd":84,"properties":{"instance":{"visibility":"protected","static":"static","docs":false}}},D:\Server\vhost\atd3.org\suda\script/../docs/classes/suda\core\session\PHPSession)
     => D:\Server\vhost\atd3.org\suda\script\docme\src\Docme.php:90 docme\ClassExport->export(D:\Server\vhost\atd3.org\suda\script/../docs/classes)
     => D:\Server\vhost\atd3.org\suda\script\docme.php:30 docme\Docme->export(D:\Server\vhost\atd3.org\suda\script/../docs)
  | null | 无 |

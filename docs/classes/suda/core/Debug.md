@@ -1,6 +1,6 @@
 #  Debug 
 
-> *文件信息* suda\core\Debug.php: 26~572
+> *文件信息* suda\core\Debug.php: 29~591
 
 
 异常日志类
@@ -21,6 +21,16 @@
 |NOTICE | notice | 
 |WARNING | warning | 
 |ERROR | error | 
+|LOG_PACK | # Error> Array to string conversion
+  Cause By D:\Server\vhost\atd3.org\suda\script\docme\template\class.md.tpl:21
+    => D:\Server\vhost\atd3.org\suda\script\docme\template\class.md.tpl:21 suda\core\System::uncaughtError(8,Array to string conversion,D:\Server\vhost\atd3.org\suda\script\docme\template\class.md.tpl,21,{"value":["{%","%}"],"name":"LOG_PACK"})
+    => D:\Server\vhost\atd3.org\suda\system\src\suda\template\compiler\suda\Template.php:127 Class4b5188a17937cc30ff0ad7f5b03ace4d->_render_template()
+    => D:\Server\vhost\atd3.org\suda\system\src\suda\template\compiler\suda\Template.php:91 suda\template\compiler\suda\Template->echo()
+    => D:\Server\vhost\atd3.org\suda\script\docme\src\ExportTemplate.php:45 suda\template\compiler\suda\Template->getRenderedString()
+    => D:\Server\vhost\atd3.org\suda\script\docme\src\ClassExport.php:72 docme\ExportTemplate->export(D:\Server\vhost\atd3.org\suda\script/../docs/classes/suda\core\Debug.md)
+    => D:\Server\vhost\atd3.org\suda\script\docme\src\Docme.php:90 docme\ClassExport->export(D:\Server\vhost\atd3.org\suda\script/../docs/classes)
+    => D:\Server\vhost\atd3.org\suda\script\docme.php:30 docme\Docme->export(D:\Server\vhost\atd3.org\suda\script/../docs)
+Array | 
 
 
 ## 变量列表

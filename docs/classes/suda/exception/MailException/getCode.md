@@ -1,6 +1,6 @@
 # MailException::getCode
 
-> *文件信息* suda\exception\MailException.php: 17~17
+> *文件信息* suda\exception\MailException.php: 18~20
 ## 所属类 
 
 [MailException](../MailException.md)
