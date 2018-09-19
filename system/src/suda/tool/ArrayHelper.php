@@ -35,28 +35,30 @@ class ArrayHelper
     */
     public static function get(array $array, string $name, $def = null)
     {
-        $path = explode('.', $name);
-        while ($key = array_shift($path)) {
-            if (is_array($array) && array_key_exists($key, $array)) {
-                $array = $array[$key];
-            } else {
-                return $def;
+        if (array_key_exists($name, $array)) {
+            return $array[$name];
+        }
+        if (strpos($name, '.')) {
+            list($key, $sub) = explode('.', $name, 2);
+            if (array_key_exists($key, $array)) {
+                return self::get($array[$key], $sub, $def);
             }
         }
-        return $array;
+        return $def;
     }
 
     public static function exist(array $array, string $name)
     {
-        $path = explode('.', $name);
-        while ($key = array_shift($path)) {
+        if (array_key_exists($name, $array)) {
+            return true;
+        }
+        if (strpos($name, '.')) {
+            list($key, $sub) = explode('.', $name, 2);
             if (array_key_exists($key, $array)) {
-                $array = $array[$key];
-            } else {
-                return false;
+                return self::exist($array[$key], $sub);
             }
         }
-        return true;
+        return false;
     }
 
     /**
@@ -99,7 +101,7 @@ class ArrayHelper
     {
         if ($beautify) {
             $name = '$'.ltrim($name, '$');
-            $exstr = "<?php\r\n".$name."=array();\r\n";
+            $exstr = '<?php'.PHP_EOL.$name.'=array();'.PHP_EOL;
             //@notice# 排序数组时可能会导致数据丢失
             if ($sort) {
                 ksort($array);
@@ -107,7 +109,7 @@ class ArrayHelper
             $exstr .= self::arr2string($name, $array);
             $exstr .= 'return '.$name.';';
         } else {
-            $exstr = "<?php\r\nreturn ". var_export($array, true).";\r\n";
+            $exstr = '<?php'.PHP_EOL.'return '. var_export($array, true).';'.PHP_EOL;
         }
         return file_put_contents($path, $exstr) ? true : false;
     }
@@ -133,13 +135,13 @@ class ArrayHelper
             } else {
                 $line =  $current;
                 if (is_string($value)) {
-                    $line .= "='".addslashes($value)."';\r\n";
+                    $line .= "='".addslashes($value).'\';'.PHP_EOL;
                 } elseif (is_bool($value)) {
-                    $line .= '='.($value ? 'true' : 'false').";\r\n";
+                    $line .= '='.($value ? 'true' : 'false').';'.PHP_EOL;
                 } elseif (is_null($value)) {
-                    $line .= "=null;\r\n";
+                    $line .= '=null;'.PHP_EOL;
                 } else {
-                    $line .= "=$value;\r\n";
+                    $line .= '='.$value.';'.PHP_EOL;
                 }
             }
             $exstr .= $line;
@@ -157,13 +159,13 @@ class ArrayHelper
             } else {
                 $line .= $parent."['".$key."']";
                 if (is_string($value)) {
-                    $line .= "='".addslashes($value)."';\r\n";
+                    $line .= "='".addslashes($value).'\';'.PHP_EOL;
                 } elseif (is_bool($value)) {
-                    $line .= '='.($value ? 'true' : 'false').";\r\n";
+                    $line .= '='.($value ? 'true' : 'false').';'.PHP_EOL;
                 } elseif (is_null($value)) {
-                    $line .= "=null;\r\n";
+                    $line .= '=null;'.PHP_EOL;
                 } else {
-                    $line .= "=$value;\r\n";
+                    $line .= '='.$value.';'.PHP_EOL;
                 }
             }
         }

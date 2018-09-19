@@ -129,7 +129,7 @@ class System
         }
 
         try {
-            $manifast = Config::load($path);
+            $manifast = Config::loadConfig($path);
         } catch (\Exception $e) {
             $message =__('load application mainifast: parse mainifast error: $0', $e->getMessage());
             debug()->error($message);

@@ -523,9 +523,9 @@ class Application
         $module_config=self::getModuleConfig($module);
         define('MODULE_RESOURCE', Storage::path($root.'/resource'));
         define('MODULE_CONFIG', Storage::path(MODULE_RESOURCE.'/config'));
-        debug()->trace(__('set locale $0', Config::get('app.locale', 'zh-CN')));
+        debug()->trace(__('set locale $0', Config::get('app.language', 'zh-CN')));
         Locale::path(MODULE_RESOURCE.'/locales');
-        Locale::set(Config::get('app.locale', 'zh-CN'));
+        Locale::set(Config::get('app.language', 'zh-CN'));
         if (isset($module_config['namespace'])) {
             // 缩减命名空间
             Autoloader::setNamespace($module_config['namespace']);

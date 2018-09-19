@@ -164,7 +164,7 @@ class Router
         if ($queryString) {
             parse_str($queryString, $paramValue);
         }
-        $ignoreCase=conf('app.url.ignoreCase', true);
+        $ignoreCase=conf('app.url.ignore-case', true);
         $target=null;
         foreach ($this->routers as $name => $mapping) {
             if ($mapping->matchUrlValue($url, $ignoreCase, $paramValue)) {
@@ -179,7 +179,7 @@ class Router
     protected function matchRouterMap()
     {
         $request=Request::getInstance();
-        $ignoreCase=conf('app.url.ignoreCase', true);
+        $ignoreCase=conf('app.url.ignore-case', true);
         foreach ($this->routers as $name => $mapping) {
             if ($mapping->match($request, $ignoreCase)) {
                 return $mapping;
