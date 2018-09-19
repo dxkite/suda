@@ -85,7 +85,7 @@ class TableInstance
         if (isset(self::$tableClass[$tableName])) {
             return self::$tableClass[$tableName];
         } else {
-            throw new TableException(__('table %s class not exist', $tableName));
+            throw new TableException(__('table $0 class not exist', $tableName));
         }
     }
 }

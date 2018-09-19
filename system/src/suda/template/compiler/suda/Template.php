@@ -217,7 +217,7 @@ abstract class Template
         try {
             Hook::exec($name, [$this]);
         } catch (CommandException $e) {
-            echo '<div style="color:red" title="'.__('can\'t run global hook %s', $e->getCmd()).'">{:'.$name.'}</div>';
+            echo '<div style="color:red" title="'.__('can\'t run global hook $0', $e->getCmd()).'">{:'.$name.'}</div>';
             return;
         }
         if (conf('app.show-page-global-hook', false)) {
@@ -253,7 +253,7 @@ abstract class Template
                 }
             }
         } catch (CommandException $e) {
-            echo '<div style="color:red" title="'.__('can\'t run page hook %s %s', $e->getCmd(), $e->getMessage()).'">{:'.$e->getCmd().'}</div>';
+            echo '<div style="color:red" title="'.__('can\'t run page hook $0 $1', $e->getCmd(), $e->getMessage()).'">{:'.$e->getCmd().'}</div>';
             return;
         }
         if (is_null($this->parent) && conf('app.show-page-hook', false)) {

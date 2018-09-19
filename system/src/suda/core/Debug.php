@@ -100,7 +100,7 @@ class Debug
                 }
             }
             $call=(isset($traceInfo['class'])?$traceInfo['class'].'#':'').$traceInfo['function'];
-            self::_loginfo(self::$time[$name]['type'], $call, __('process %s %fs', $name, $pass), $traceInfo['file'] ??'unknown', $traceInfo['line'] ?? 0, $backtrace);
+            self::_loginfo(self::$time[$name]['type'], $call, __('process $0 $1s', $name,  number_format($pass,5)), $traceInfo['file'] ??'unknown', $traceInfo['line'] ?? 0, $backtrace);
             return $pass;
         }
         return 0;

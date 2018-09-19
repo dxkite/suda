@@ -29,7 +29,7 @@ class Storage
             static::$storage[$type]=$class::getInstance();
             return static::$storage[$type];
         } else {
-            throw new Exception(__('unsupport type of storage:%s', $type));
+            throw new Exception(__('unsupport type of storage:$0', $type));
         }
     }
  

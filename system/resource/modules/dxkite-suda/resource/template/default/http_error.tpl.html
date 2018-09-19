@@ -3,7 +3,7 @@
 @startInsert('error-content')
 <section class="message">
   @if ($:error_code == 404)
-  @if ($?:path) {{ __('page "%s"  is not found',$:path('文档')) }} @else {= 当前页面文档信息在服务器上找不到，请重试 } @endif
+  @if ($?:path) {{ __('page "$0"  is not found',$:path('文档')) }} @else {= 当前页面文档信息在服务器上找不到，请重试 } @endif
   @endif
 </section>
 @endInsert

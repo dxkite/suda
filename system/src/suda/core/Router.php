@@ -67,16 +67,16 @@ class Router
         $simple_routers=[];
         $admin_routers=[];
         $module_path=Application::getInstance()->getModulePath($module);
-        debug()->trace(__('load module:%s path:%s', $module, $module_path));
+        debug()->trace(__('load module:$0 path:$1', $module, $module_path));
         // 加载前台路由
         if ($file=Application::getInstance()->getModuleConfigPath($module, 'router')) {
             $simple_routers= self::loadModuleRouteConfig(Mapping::ROLE_SIMPLE, $module, $file);
-            debug()->trace(__('loading simple route from file %s', $file));
+            debug()->trace(__('loading simple route from file $0', $file));
         }
         // 加载后台路由
         if ($file=Application::getInstance()->getModuleConfigPath($module, 'router_admin')) {
             $admin_routers= self::loadModuleRouteConfig(Mapping::ROLE_ADMIN, $module, $file);
-            debug()->trace(__('loading admin route from file  %s', $file));
+            debug()->trace(__('loading admin route from file  $0', $file));
         }
         $this->routers=array_merge($this->routers, $admin_routers, $simple_routers);
     }
@@ -324,7 +324,7 @@ class Router
         if (isset($this->routers[$name])) {
             return $this->routers[$name]->createUrl($values, $query, $queryArr);
         } else {
-            debug()->warning(__('get url for %s failed,module:%s args:%s', $name, $module, json_encode($values)));
+            debug()->warning(__('get url for $0 failed,module:$1 args:$2', $name, $module, json_encode($values)));
             return '#the-router-['.$name.']-is-undefined--please-check-out-router-list';
         }
     }

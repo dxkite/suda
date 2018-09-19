@@ -802,7 +802,7 @@ abstract class Table
     {
         foreach ($values as $key) {
             if (!in_array($key, $this->fields)) {
-                throw new TableException(__('field %s is not exsits in table', $key));
+                throw new TableException(__('field $0 is not exsits in table', $key));
             }
         }
     }

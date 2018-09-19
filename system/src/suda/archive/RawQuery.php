@@ -322,7 +322,7 @@ class RawQuery implements SQLStatement
                 $this->dbchange=false;
                 $this->database=null;
             } else {
-                throw new SQLException(__('could not select database:%s, please check the table if exist.', $this->database), 0, E_ERROR, $debug[1]['file'], $debug[1]['line']);
+                throw new SQLException(__('could not select database:$0, please check the table if exist.', $this->database), 0, E_ERROR, $debug[1]['file'], $debug[1]['line']);
             }
         } elseif (is_null($this->database)) {
             $database=$this->connection->database;
@@ -330,7 +330,7 @@ class RawQuery implements SQLStatement
                 if ($this->connection->getPdo()->query('USE '.$database)) {
                     $this->database=$database;
                 } else {
-                    debug()->warning(__('could not select database:%s, maybe you should create database.', $database), 0, E_ERROR, $debug[1]['file'], $debug[1]['line']);
+                    debug()->warning(__('could not select database:$0, maybe you should create database.', $database), 0, E_ERROR, $debug[1]['file'], $debug[1]['line']);
                 }
             } else {
                 throw new SQLException(__('make sure you have set database info'), 0, E_ERROR, $debug[1]['file'], $debug[1]['line']);
@@ -361,7 +361,7 @@ class RawQuery implements SQLStatement
         
         if ($return) {
             if (Config::get('debug')) {
-                debug()->debug($stmt->queryString .' '. __('Effect %d rows', $stmt->rowCount()), $this->values);
+                debug()->debug($stmt->queryString .' '. __('effect $0 rows', $stmt->rowCount()), $this->values);
             }
         } else {
             debug()->warning($stmt->errorInfo()[2].':'.$stmt->queryString, $this->values);

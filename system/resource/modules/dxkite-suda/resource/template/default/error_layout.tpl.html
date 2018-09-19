@@ -19,9 +19,9 @@
         <div class="error-number">{{ $:error_code('500') }}</div> @endif
         <div class="error-items">
           @if (DEBUG && router()->getRouter('debug_json_download',$this->module) )
-          <a class="error-item" href="@u('debug_json_download',$:request_id)" target="_black">@{ __('Request Id:%s', $:request_id ) }</a>
+          <a class="error-item" href="@u('debug_json_download',$:request_id)" target="_black">@{ __('Request Id:$0', $:request_id ) }</a>
           @else
-          <div class="error-item">@{ __('Request Id:%s', $:request_id ) }</div>
+          <div class="error-item">@{ __('Request Id:$0', $:request_id ) }</div>
           @endif
           <div class="error-item">{{ date('Y-m-d H:i:s e') }}</div>
         </div>
@@ -30,12 +30,12 @@
     </div>
     @insert('error-content')
     <div class="footer">
-      <div class="footer-item">@{ __('Memory Cost: %s', $:memory_usage ) }</div>
-      <div class="footer-item">@{ __('Memory Peak: %s', $:memory_peak_usage ) }</div>
-      <div class="footer-item">@{ __('Time Cost：%s s', $:time_spend ) }</div>
-      <div class="footer-item">@{ __('Requst Ip: %s', request()->ip() ) }</div>
+      <div class="footer-item">@{ __('Memory Cost: $0', $:memory_usage ) }</div>
+      <div class="footer-item">@{ __('Memory Peak: $0', $:memory_peak_usage ) }</div>
+      <div class="footer-item">@{ __('Time Cost：$0s', $:time_spend ) }</div>
+      <div class="footer-item">@{ __('Requst Ip: $0', request()->ip() ) }</div>
       <div class="footer-item">
-        <a href="https://github.com/DXkite/suda" target="_black"> @{ __('Performance By Suda v%s',SUDA_VERSION) }</a>
+        <a href="https://github.com/DXkite/suda" target="_black"> @{ __('Performance By Suda v$0',SUDA_VERSION) }</a>
       </div>
     </div>
   </div>

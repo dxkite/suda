@@ -141,7 +141,7 @@ abstract class Response
         if ($view) {
             return $view;
         }
-        throw new ApplicationException(__('template[%s] file not exist: %s', $template, $template));
+        throw new ApplicationException(__('template[$0] file not exist: $1', $template, $template));
     }
 
     /**

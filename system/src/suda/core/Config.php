@@ -52,7 +52,7 @@ class Config
                         $content = self::parseValue($content, $module);
                         $data =\Spyc::YAMLLoadString($content);
                     } else {
-                        $message =__('parse yaml config error %s: missing yaml extension or spyc', $path);
+                        $message =__('parse yaml config error $0: missing yaml extension or spyc', $path);
                         debug()->error($message);
                         suda_panic('Kernal Panic', $message);
                     }

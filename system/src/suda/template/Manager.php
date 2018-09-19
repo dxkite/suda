@@ -166,7 +166,7 @@ class Manager
     {
         $template = static::displaySource($name, 'html', $viewpath??'');
         if (is_null($template)) {
-            throw new KernelException(__('missing template %s:%s', self::$theme, $name));
+            throw new KernelException(__('missing template $0:$1', self::$theme, $name));
         }
         return $template;
     }
@@ -397,7 +397,7 @@ class Manager
         $name=$module.':'.$basename;
         $input=self::getInputFile($name, false);
         if (!Storage::exist($input)) {
-            throw new KernelException(__('missing file %s:%s', self::$theme, $input));
+            throw new KernelException(__('missing file $0:$1', self::$theme, $input));
             // echo '<b>compile theme &lt;<span style="color:red;">'.self::$theme.'</span>&gt; file '.$input. ' missing file</b>';
             return;
         }
@@ -412,7 +412,7 @@ class Manager
         if (Storage::exist($output)) {
             if (Config::get('debug', true) || Config::get('exception', false)) {
                 if (!self::$compiler->compile($name, $input, $output)) {
-                    throw new KernelException(__('missing file %s:%s', self::$theme, $input));
+                    throw new KernelException(__('missing file $0:$1', self::$theme, $input));
                     // echo '<b>compile theme &lt;<span style="color:red;">'.self::$theme.'</span>&gt; file '.$input. ' missing file</b>';
                     return;
                 }
@@ -424,7 +424,7 @@ class Manager
                 $output=storage()->temp('tpl_');
             }
             if (!self::$compiler->compile($name, $input, $output)) {
-                throw new KernelException(__('missing file %s:%s', self::$theme, $input));
+                throw new KernelException(__('missing file $0:$1', self::$theme, $input));
                 // echo '<b>missing theme &lt;<span style="color:red;">'.self::$theme.'</span>&gt; file '.$input. ' missing file</b>';
                 return;
             }
@@ -447,7 +447,7 @@ class Manager
             $class= new class {
                 public function echo()
                 {
-                    echo '<div style="color:red" title="'.__('can\'t include %s', $this->moduleName.':'.$this->basename).'">{include:{'.$this->name.'}}</div>';
+                    echo '<div style="color:red" title="'.__('can\'t include $0', $this->moduleName.':'.$this->basename).'">{include:{'.$this->name.'}}</div>';
                 }
             };
             $class->moduleName=$moduleName;

@@ -50,7 +50,7 @@ class Command
 
     public function exec(array $params=[])
     {
-        debug()->trace(__('exec command %s with args %s', $this->name, json_encode($params)));
+        debug()->trace(__('exec command $0 with args $1', $this->name, json_encode($params)));
         // 集合所有参数
         if (count($params)) {
             $this->params=$params;
@@ -133,7 +133,7 @@ class Command
                 $methodParam = null;
             }
             $className = Autoloader::realName($className);
-            debug()->trace(__('parse command %s as rule 1,2,3', $command), $matchs);
+            debug()->trace(__('parse command $0 as rule 1,2,3', $command), $matchs);
             $this->name = $className.'->'.$method;
             if ($constructParams) {
                 $this->constructParam = self::parseParam($constructParams);

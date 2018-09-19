@@ -94,7 +94,7 @@ class Compiler implements CompilerImpl
     {
         debug()->time('compile '.$name);
         if (!Storage::exist($input)) {
-            debug()->warning(__('compile error:no sorce file => %s %s', $name, $input));
+            debug()->warning(__('compile error:no sorce file => $0 $1', $name, $input));
             return false;
         }
         $content= $this->compileText(Storage::get($input));
@@ -113,7 +113,7 @@ class Compiler implements CompilerImpl
                 storage()->delete($output);
             }
             if ($syntax instanceof \Exception || $syntax instanceof \Error) {
-                throw new \suda\core\Exception(new \ErrorException(__('compile error: %s near line %d', $syntax->getMessage(), $syntax->getLine()), $syntax->getCode(), conf('exception.compile-error', true)?E_ERROR:E_WARNING, $input, $syntax->getLine()), 'TemplateError');
+                throw new \suda\core\Exception(new \ErrorException(__('compile error: $0 near line $1', $syntax->getMessage(), $syntax->getLine()), $syntax->getCode(), conf('exception.compile-error', true)?E_ERROR:E_WARNING, $input, $syntax->getLine()), 'TemplateError');
             }
         }
         return $syntax===true?:$syntax;
@@ -126,7 +126,7 @@ class Compiler implements CompilerImpl
             $classname = $templateInfo['class'];
             return $template=new $classname;
         } else {
-            throw new \suda\exception\KernelException(__('template %s is not ready!', $name ?? $viewfile));
+            throw new \suda\exception\KernelException(__('template $0 is not ready!', $name ?? $viewfile));
         }
     }
     

@@ -25,12 +25,12 @@
       <div class="redirect-message">{{ $:message }}</div>
       @endif
       <div class="redirect-text">
-        <span id="time">@{ __('%s seconds',$:time(5)) }</span>
+        <span id="time">@{ __('$0 seconds',$:time(5)) }</span>
         <span>@{ __('page is redirecting to') } <a href="@{ $:url }"> @{$:url} </a></span>
       </div>
       <div class="footer">
         <div class="footer-item">
-          <a href="https://github.com/DXkite/suda" target="_black"> @{ __('Performance By Suda v%s',SUDA_VERSION) }</a>
+          <a href="https://github.com/DXkite/suda" target="_black"> @{ __('Performance By Suda v$0',SUDA_VERSION) }</a>
         </div>
       </div>
     </div>
@@ -40,7 +40,7 @@
 <script>
   window.addEventListener('load', function () {
     const href = "@{$:url}";
-    const template = "@{ __('%s seconds','%time%') }";
+    const template = "@{ __('$0 seconds','%time%') }";
     var time_counter = document.getElementById('time');
     var time = '@{$:time(5)}' || 0;
     var interval = setInterval(function () {

@@ -79,10 +79,10 @@ class Application
 
     protected function __construct()
     {
-        debug()->trace(__('application load %s', APP_DIR));
+        debug()->trace(__('application load $0', APP_DIR));
         // 框架依赖检测
         if (!static::versionCompire(Config::get('app.suda', SUDA_VERSION), SUDA_VERSION)) {
-            suda_panic('ApplicationException', __('application require suda version %s and now is %s', Config::get('app.suda'), SUDA_VERSION));
+            suda_panic('ApplicationException', __('application require suda version $0 and now is $1', Config::get('app.suda'), SUDA_VERSION));
         }
         $this->path=APP_DIR;
         // 获取基本配置信息
@@ -90,7 +90,7 @@ class Application
             try {
                 Config::load($path);
             } catch (\Exception $e) {
-                $message =__('Load application config: parse config error');
+                $message =__('load application config: parse config error');
                 debug()->error($message);
                 suda_panic('Kernal Panic', $message);
             }
@@ -175,11 +175,11 @@ class Application
         $config = $this->getModuleConfig($module);
         // 检查依赖
         if (isset($config['require'])) {
-            $this->checkModuleRequire(__('module %s', $config['name']), $config['require']);
+            $this->checkModuleRequire(__('module $0', $config['name']), $config['require']);
         }
         // 框架依赖
         if (isset($config['suda']) && !static::versionCompire($config['suda'], SUDA_VERSION)) {
-            suda_panic('ApplicationException', __('module %s require suda version %s and now is %s', $module, $config['suda'], SUDA_VERSION));
+            suda_panic('ApplicationException', __('module $0 require suda version $1 and now is $2', $module, $config['suda'], SUDA_VERSION));
         }
         // 检测 Composer vendor
         if (storage()->exist($vendor = $root.DIRECTORY_SEPARATOR.'vendor'.DIRECTORY_SEPARATOR.'autoload.php')) {
@@ -222,11 +222,11 @@ class Application
             if ($this->checkModuleExist($module) && isset($require['version'])) {
                 if (!empty($version)) {
                     if (!static::versionCompire($version, $require['version'])) {
-                        suda_panic('ApplicationException', __('%s require module %s %s and now is %s', $name, $module, $version, $require['version']));
+                        suda_panic('ApplicationException', __('$0 require module $1 $2 and now is $3', $name, $module, $version, $require['version']));
                     }
                 }
             } else {
-                suda_panic('ApplicationException', __('%s require module %s', $name, $module));
+                suda_panic('ApplicationException', __('$0 require module $1', $name, $module));
             }
         }
     }
@@ -238,7 +238,7 @@ class Application
             $status = (new Query('CREATE DATABASE IF NOT EXISTS `'.conf('database.name').'` CHARACTER SET utf8mb4'))->exec();
             storage()->path(dirname($path));
             storage()->put($path, conf('database.name').':'.$status);
-            debug()->info(__('auto created database %s', conf('database.name')));
+            debug()->info(__('auto created database $0', conf('database.name')));
         }
     }
     
@@ -517,13 +517,13 @@ class Application
     public function activeModule(string $module)
     {
         Hook::exec('suda:application:active', [$module]);
-        debug()->trace(__('active module %s', $module));
+        debug()->trace(__('active module $0', $module));
         $this->activeModule=$module;
         $root=self::getModulePath($module);
         $module_config=self::getModuleConfig($module);
         define('MODULE_RESOURCE', Storage::path($root.'/resource'));
         define('MODULE_CONFIG', Storage::path(MODULE_RESOURCE.'/config'));
-        debug()->trace(__('set locale %s', Config::get('app.locale', 'zh-CN')));
+        debug()->trace(__('set locale $0', Config::get('app.locale', 'zh-CN')));
         Locale::path(MODULE_RESOURCE.'/locales');
         Locale::set(Config::get('app.locale', 'zh-CN'));
         if (isset($module_config['namespace'])) {
@@ -669,7 +669,7 @@ class Application
                 $zipDir = RUNTIME_DIR.'/modules/'. pathinfo($zip, PATHINFO_FILENAME);
                 if (conf('debug') || !Storage::isDir($zipDir)) {
                     ZipHelper::unzip($zip, $zipDir, true);
-                    debug()->info(__('extract %s to %s', $zip, $zipDir));
+                    debug()->info(__('extract $0 to $1', $zip, $zipDir));
                 }
                 self::registerModule($zipDir);
             }
@@ -704,7 +704,7 @@ class Application
             $configData['directory']=$dir;
             $configData['path']=$path;
 
-            debug()->trace(__('load module config %s', $name));
+            debug()->trace(__('load module config $0', $name));
             
             // 注册默认自动加载
             $configData['import']=array_merge([

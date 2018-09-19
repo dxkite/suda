@@ -484,7 +484,7 @@ class Mapping implements \JsonSerializable
         } elseif (isset($json['source'])) {
             $callback =   __CLASS__.'::sourceResponse';
         } else {
-            throw new \suda\core\Exception(new \Exception(__('%s router %s require infomation: class or template or source', $module, $name)), 'RouterError');
+            throw new \suda\core\Exception(new \Exception(__('$0 router $1 require infomation: class or template or source', $module, $name)), 'RouterError');
         }
         $mapping= new self($name, $json['url']??$json['visit'], $callback, $module, $json['method']??[], $role);
         $mapping->antiPrefix=isset($json['anti-prefix'])?$json['anti-prefix']:false;

@@ -32,7 +32,7 @@ function mime(string $type)
  * @example
  *
  * ```php
- *  echo __('text is %d',1);
+ *  echo __('text is $0',1);
  * ```
  * @param string $message 输入的信息，支持不定参数，类似printf
  * @return string 翻译过的字符串，如果没有既定翻译，则原样输出

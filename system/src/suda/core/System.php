@@ -107,7 +107,7 @@ class System
             }
         }
         Config::set('app.application', $name);
-        debug()->trace(__('loading application %s from %s', $name, APP_DIR));
+        debug()->trace(__('loading application $0 from $1', $name, APP_DIR));
         self::$appInstance= $name::getInstance();
         self::$appInstance->init();
     }
@@ -131,7 +131,7 @@ class System
         try {
             $manifast = Config::load($path);
         } catch (\Exception $e) {
-            $message =__('Load application mainifast: parse mainifast error: %s', $e->getMessage());
+            $message =__('load application mainifast: parse mainifast error: $0', $e->getMessage());
             debug()->error($message);
             suda_panic('Kernal Panic', $message);
         }

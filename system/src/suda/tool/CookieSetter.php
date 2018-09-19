@@ -101,7 +101,7 @@ final class CookieSetter implements \JsonSerializable
         // 检测请求头发送情况
         $send=headers_sent($file, $line);
         if ($send) {
-            debug()->warning(__('set cookie %s=%s faild cookie is already send at %s#%d', $this->name, $this->value, $file, $line));
+            debug()->warning(__('set cookie $0=$1 faild cookie is already send at $2#$3', $this->name, $this->value, $file, $line));
         } else {
             $this->set=true;
             $time= $this->fulltime ? $this->expire : time()+$this->expire;
