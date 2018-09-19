@@ -433,7 +433,7 @@ class FileStorage implements Storage
         $dest=self::osPath($dest);
         if (is_writable($dest)) {
             $dest=self::path($dest);
-            $index = $dest.'/'.conf('defaultIndex', 'index.html');
+            $index = $dest.'/'.conf('default-index', 'index.html');
             if (!self::exist($index)) {
                 file_put_contents($index, $content);
             }
@@ -444,7 +444,7 @@ class FileStorage implements Storage
         while ($read=readdir($hd)) {
             if (strcmp($read, '.') !== 0 && strcmp($read, '..') !==0) {
                 if (self::isDir($dest.'/'.$read)) {
-                    $index = $dest.'/'.$read.'/'.conf('defaultIndex', 'index.html');
+                    $index = $dest.'/'.$read.'/'.conf('default-index', 'index.html');
                     if (!self::exist($index)) {
                         file_put_contents($index, $content);
                     }

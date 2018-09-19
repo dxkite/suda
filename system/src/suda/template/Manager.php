@@ -595,14 +595,14 @@ class Manager
                 return true;
             }
             $fileContent=storage()->get($file);
-            if (conf('template.checkSyntax', 'eval') == 'eval') {
+            if (conf('template.check-syntax', 'eval') == 'eval') {
                 try {
                     eval('return true; ?>'.$fileContent);
                 } catch (\ParseError $e) {
                     return $e;
                 }
             } else {
-                $fileTemp=RUNTIME_DIR.'/checkSyntax-'.md5($fileContent);
+                $fileTemp=RUNTIME_DIR.'/check-syntax-'.md5($fileContent);
                 storage()->put($fileTemp, '<?php return true ?>'."\n" .$fileContent);
                 try {
                     include $fileTemp;

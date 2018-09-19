@@ -220,7 +220,7 @@ abstract class Template
             echo '<div style="color:red" title="'.__('can\'t run global hook %s', $e->getCmd()).'">{:'.$name.'}</div>';
             return;
         }
-        if (conf('app.showPageGlobalHook', false)) {
+        if (conf('app.show-page-global-hook', false)) {
             echo '<div style="color:green" title="'.__('global hook point').'">{:'.$name.'}</div>';
         }
     }

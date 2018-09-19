@@ -78,7 +78,7 @@ class Connection
     public function connect()
     {
         // 链接数据库
-        if (is_null($this->pdo) && conf('enableQuery', true)) {
+        if (is_null($this->pdo) && conf('database.enable', true)) {
             $this->prefix=Config::get('database.prefix', '');
             try {
                 debug()->time('connect database');

@@ -311,7 +311,7 @@ class RawQuery implements SQLStatement
 
     private function __query(string $query, array $array=[])
     {
-        if (!conf('enableQuery', true)) {
+        if (!conf('database.enable', true)) {
             return false;
         }
         $query=self::__SqlPrefix($query);
@@ -365,7 +365,7 @@ class RawQuery implements SQLStatement
             }
         } else {
             debug()->warning($stmt->errorInfo()[2].':'.$stmt->queryString, $this->values);
-            if (!conf('database.ignoreError', false)) {
+            if (!conf('database.ignore-error', false)) {
                 throw (new SQLException($stmt->errorInfo()[2], intval($stmt->errorCode()), E_ERROR, $debug[1]['file'], $debug[1]['line']))->setSql($stmt->queryString)->setBinds($this->values);
             }
         }
