@@ -20,7 +20,8 @@ suda:system:shutdown
 suda:system:shutdown::before
 suda:template::display
 suda:template:change-theme
-suda:template:compiler:init
+suda:template:compile::before
+suda:template:compile::init
 suda:template:load-compile::before
 suda:template:render::before
 suda:template:resource-prepare::before
