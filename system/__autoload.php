@@ -18,8 +18,8 @@
 define('SUDA_VERSION', '2.0.2');
 
 // 注册基本常量
-defined('D_START') or define('D_START', microtime(true));
-defined('D_MEM') or define('D_MEM', memory_get_usage());
+defined('SUDA_START_TIME') or define('SUDA_START_TIME', microtime(true));
+defined('SUDA_START_MEMORY') or define('SUDA_START_MEMORY', memory_get_usage());
 defined('ROOT_PATH') or define('ROOT_PATH', dirname(__DIR__));
 defined('SYSTEM_DIR') or define('SYSTEM_DIR', __DIR__);
 defined('SYSTEM_RESOURCE') or define('SYSTEM_RESOURCE', SYSTEM_DIR.'/resource');

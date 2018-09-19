@@ -18,6 +18,9 @@ namespace suda\core;
 use ZipArchive;
 
 defined('APP_LOG') or define('APP_LOG', DATA_DIR.'/logs');
+defined('LOG_FORMAT') or define('LOG_FORMAT', '  $time_format - $memoery_format [$level] $file:$line $name $message');
+defined('LOG_FORMAT_HEADER') or define('LOG_FORMAT_HEADER', '  $addr $time_format $method $url');
+defined('LOG_TAG') or define('LOG_TAG', ['{%','%}']);
 
 /**
  * 异常日志类
@@ -32,6 +35,7 @@ class Debug
     const NOTICE = 'notice'; // 注意的消息
     const WARNING = 'warning'; // 警告消息
     const ERROR = 'error'; // 错误消息
+    const LOG_PACK = LOG_TAG;
     protected static $level=[
         Debug::TRACE=>1,
         Debug::DEBUG=>2,
@@ -61,19 +65,20 @@ class Debug
         self::$hash=$hash=substr(md5(microtime().''.$request->ip()), 0, 6);
         $file = tmpfile();
         if ($file === false) {
-            self::$tempname =  APP_LOG .'/.tmp.log';
+            self::$tempname =  APP_LOG .'/.suda.tmp';
             storage()->path(dirname(static::$tempname));
             $file = fopen(static::$tempname, 'w+');
         }
         self::$file= $file;
         Config::set('request', self::$hash);
-        fwrite(self::$file, '====='.self::$hash.'====='.$request->ip().'====='.(conf('debug', defined('DEBUG') && DEBUG)?'debug':'normal')."=====\r\n");
+        $mode = conf('debug', defined('DEBUG') && DEBUG)?'debug':'normal';
+        fwrite(self::$file, self::LOG_PACK[0].PHP_EOL.'request-'.self::$hash.'-begin from '.$request->ip().' at '.microtime(true).' with mode '. $mode .PHP_EOL);
         fwrite(self::$file, self::printHead().PHP_EOL);
         if (defined('APP_LOG') && Storage::path(APP_LOG) && is_writable(APP_LOG)) {
             self::$latest =APP_LOG.'/latest.log';
         }
         if (DEBUG) {
-            cookie()->set(conf('debugCookie', '__debug'), conf('debugSecret', base64_encode('dxkite')))->set();
+            cookie()->set(conf('log.cookie', '__debug'), conf('log.secret', base64_encode('dxkite')))->set();
         }
     }
 
@@ -121,8 +126,8 @@ class Debug
         $loginfo['name']=$name;
         $loginfo['level']=$level;
         $loginfo['backtrace']=$backtrace;
-        $loginfo['time']=microtime(true)-D_START;
-        $loginfo['mem']=memory_get_usage() - D_MEM;
+        $loginfo['time']=microtime(true)-SUDA_START_TIME;
+        $loginfo['mem']=memory_get_usage() - SUDA_START_MEMORY;
         self::writeLine($loginfo);
         $dump_log = defined('DEBUG_DUMP_LOG') && DEBUG_DUMP_LOG;
         if ($dump_log) {
@@ -212,7 +217,6 @@ class Debug
             }
             return;
         }
-        // echo "<div class=\"suda-error\"><b>{$e->getName()}</b>: {$e->getMessage()} at {$e->getFile()}#{$e->getLine()}</div>";
         $line=$e->getLine();
         $file=$e->getFile();
         $backtrace=$e->getBacktrace();
@@ -315,22 +319,29 @@ class Debug
     private static function printHead()
     {
         $request=Request::getInstance();
-        return  $request->ip() . "\t" . date('Y-m-d H:i:s') . "\t" .$request->method()."\t".$request->virtualUrl();
+        return  str_replace([
+            '$addr','$time_format','$time','$method','$url'
+        ], [
+            $request->ip(),
+            date('Y-m-d H:i:s'),
+            time(),
+            $request->method(),
+            $request->virtualUrl()
+        ], conf('log.header-format', LOG_FORMAT_HEADER));
     }
 
     protected static function save()
     {
         self::checkSize();
         // 获取日志信息
-        $time=number_format(microtime(true) - D_START, 10);
+        $time=number_format(microtime(true) - SUDA_START_TIME, 10);
         $hash=self::$hash;
         $info=self::getInfo();
         $mem=self::memshow($info['memory'], 4);
-        $peo=ceil(1/$time);
-        $all=self::memshow($info['memory']*$peo, 4);
+        $requests=ceil(1/$time);
         $peak=self::memshow(memory_get_peak_usage(), 4);
         // 写入最终日志
-        fwrite(self::$file, "====={$hash}====={$time}====={$mem}:{$peak}====={$peo}:{$all}=====\r\n\r\n");
+        fwrite(self::$file, "request-{$hash}-end finished in {$time}s with memory {$mem} and max {$peak} - {$requests} req/s".PHP_EOL.self::LOG_PACK[1].PHP_EOL);
         $size=ftell(self::$file);
         fseek(self::$file, 0);
         $body=fread(self::$file, $size);
@@ -354,11 +365,19 @@ class Debug
             }
             return self::displayLog($log);
         }
-        
-        $str="\t[".number_format($log['time'], 10).' s : '.self::memshow($log['mem'], 2)."]\t[".$log['level']."]\t[".$log['file'].':'.$log['line']."]\t\t".$log['name']."\t".$log['message'];
-        $str=preg_replace('/\n/', "\n\t\t", $str).PHP_EOL;
+        $str=str_replace(['$time_format','$time','$memoery_format','$memoery','$level','$file','$line','$name','$message'], [
+            number_format($log['time'], 10),
+            $log['time'],
+            self::memshow($log['mem'], 2),
+            $log['mem'],
+            $log['level'],
+            $log['file'],
+            $log['line'],
+            $log['name'],
+            $log['message'],
+        ], conf('log.format', LOG_FORMAT)) .PHP_EOL;
         // 添加调用栈 高级或者同级则记录
-        if ((defined('LOG_FILE_APPEND') && LOG_FILE_APPEND) && self::compareLevel($log['level'], conf('debug-backtrace', Debug::ERROR)) >= 0) {
+        if ((defined('LOG_FILE_APPEND') && LOG_FILE_APPEND) && self::compareLevel($log['level'], conf('log.backtrace', Debug::ERROR)) >= 0) {
             $str.=self::printTrace($log['backtrace'], true, "\t\t=> ").PHP_EOL;
         }
         return fwrite(self::$file, $str);
@@ -372,23 +391,23 @@ class Debug
             $mem /= 1024;
             $pos++;
         }
-        return round($mem, $dec) .' '. $human[$pos];
+        return round($mem, $dec).' '.$human[$pos];
     }
 
     public static function beforeSystemRun()
     {
         self::time('system');
         Hook::exec('suda:system:debug::start');
-        self::$run_info['start_time']=D_START;
-        self::$run_info['start_memory']=D_MEM;
+        self::$run_info['start_time']=SUDA_START_TIME;
+        self::$run_info['start_memory']=SUDA_START_MEMORY;
     }
 
     public static function getInfo()
     {
         self::$run_info['end_time']=microtime(true);
-        self::$run_info['time']=microtime(true) - D_START;
-        self::$run_info['memory']=memory_get_usage() - D_MEM;
-        self::$run_info['end_memory']=memory_get_usage();
+        self::$run_info['time']=microtime(true) - SUDA_START_TIME;
+        self::$run_info['memory']=memory_get_usage() - SUDA_START_MEMORY;
+        self::$run_info['enSUDA_START_MEMORYory']=memory_get_usage();
         self::$run_info['peak_memory']=memory_get_peak_usage();
         self::$run_info['included_files']=get_included_files();
         return self::$run_info;
@@ -535,9 +554,9 @@ class Debug
     protected static function assginDebugInfo($page)
     {
         $page->set('request_id', self::$hash);
-        $page->set('memory_usage', self::memshow(memory_get_usage() - D_MEM, 4));
+        $page->set('memory_usage', self::memshow(memory_get_usage() - SUDA_START_MEMORY, 4));
         $page->set('memory_peak_usage', self::memshow(memory_get_peak_usage(), 4));
-        $page->set('time_spend', number_format(microtime(true) - D_START, 4));
+        $page->set('time_spend', number_format(microtime(true) - SUDA_START_TIME, 4));
     }
 
     protected static function dumpArray()

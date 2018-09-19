@@ -23,9 +23,9 @@
       <div class="error-message"><?php echo $error_message; ?></div>
     
     <div class="footer">
-      <?php if (defined('D_START') &&  defined('D_MEM')): ?>
+      <?php if (defined('SUDA_START_TIME') &&  defined('SUDA_START_MEMORY')): ?>
       <?php
-      $mem =memory_get_usage() - D_MEM ;
+      $mem =memory_get_usage() - SUDA_START_MEMORY ;
     $human= array('B', 'KB', 'MB', 'GB', 'TB');
     $pos= 0;
     while ($mem >= 1024) {
@@ -35,7 +35,7 @@
     $memory_usage  = round($mem, 5) .' '. $human[$pos]; ?>
 
       <div class="footer-item">Memory Cost: <?php echo $memory_usage; ?></div>
-      <div class="footer-item">Time Cost: <?php echo number_format(microtime(true) - D_START, 5); ?>s</div>
+      <div class="footer-item">Time Cost: <?php echo number_format(microtime(true) - SUDA_START_TIME, 5); ?>s</div>
 
       <?php endif; ?>
       <div class="footer-item">
