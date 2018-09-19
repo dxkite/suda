@@ -43,12 +43,6 @@ abstract class Template
     protected static $render=[];
     protected $extend=null;
 
-    
-    public function __construct()
-    {
-        // preg_match('/^((?:[a-zA-Z0-9_-]+\/)?[a-zA-Z0-9_-]+)(?::([^:]+))?(?::(.+))?$/', $this->name, $match);
-        // $this->module= isset($match[3])?$match[1].(isset($match[2])?':'.$match[2]:''):$match[1];
-    }
     /**
     * 渲染页面
     */
@@ -58,7 +52,7 @@ abstract class Template
         hook()->exec('suda:template:render::before', [&$content]);
         debug()->trace('echo '.$this->name);
         // 计算输出页面长度
-        if (conf('app.calcContentLength', !conf('debug'))) {
+        if (conf('app.calc-content-length', !conf('debug'))) {
             $length=strlen($content);
             // 输出页面长度
             if ($this->response) {
@@ -262,7 +256,7 @@ abstract class Template
             echo '<div style="color:red" title="'.__('can\'t run page hook %s %s', $e->getCmd(), $e->getMessage()).'">{:'.$e->getCmd().'}</div>';
             return;
         }
-        if (is_null($this->parent) && conf('app.showPageHook', false)) {
+        if (is_null($this->parent) && conf('app.show-page-hook', false)) {
             echo '<div style="color:green" title="'.__('page hook point').'">{#'.$name.'}</div>';
         }
     }

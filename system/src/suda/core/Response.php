@@ -98,9 +98,9 @@ abstract class Response
         if ($jsonstr === false && json_last_error()!==JSON_ERROR_NONE) {
             throw new JSONException(json_last_error());
         }
+        Hook::exec('suda:system:display:json', [&$jsonstr]);
         self::type('json');
-        Hook::exec('suda:template::display', [&$jsonstr, $this->type]);
-        if (conf('app.calcContentLength', !conf('debug'))) {
+        if (conf('app.calc-content-length', !conf('debug'))) {
             self::setHeader('Content-Length:'.strlen($jsonstr));
         }
         self::_etag(md5($jsonstr));

@@ -18,7 +18,7 @@ suda:system:init system:init
 suda:system:load-manifast core:loadManifast
 suda:system:shutdown system:shutdown
 suda:system:shutdown::before system:shutdown::before
-suda:template::display display:output
+suda:system:display:json display:output
 suda:template:change-theme template:theme::change
 suda:template:compile::init template:SudaCompiler:init
 suda:template:load-compile::before Manager:loadCompile::before

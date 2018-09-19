@@ -1,7 +1,7 @@
 Application:active suda:application:active
 Application:init suda:application:init
 core:loadManifast suda:system:load-manifast
-display:output suda:template::display
+display:output suda:system:display:json
 loadModule suda:module:load
 loadModule: suda:module:load:on::
 Manager:loadCompile::before suda:template:load-compile::before
