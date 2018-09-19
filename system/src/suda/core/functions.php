@@ -313,13 +313,37 @@ function email_poster(?int $type=null)
     return suda\mail\Factory::sender(is_null($type)? suda\mail\Factory::SMTP : $type);
 }
 
-
+/**
+ * 获取绝对地址
+ *
+ * @param string $path
+ * @return string
+ */
 function real_absolute_path(string $path)
 {
     return \suda\core\Autoloader::absolutePath($path);
 }
 
+/**
+ * 将地址解析成绝对地址
+ *
+ * @param string $path
+ * @return string
+ */
 function parse_absolute_path(string $path)
 {
     return \suda\core\Autoloader::parsePath($path);
+}
+
+/**
+ * 生成SQLQuery对象
+ *
+ * @param string $sql
+ * @param array $bind
+ * @param boolean $scroll
+ * @return suda\archive\SQLQuery
+ */
+function query(string $sql, array $bind=[], bool $scroll=false): suda\archive\SQLQuery
+{
+    return new suda\archive\SQLQuery($sql,$bind,$scroll);
 }

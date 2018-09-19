@@ -51,7 +51,7 @@ class Manager
      * @var null
      */
     private static $compiler=null;
-    private static $staticPath='/static';
+    private static $staticPath='static';
     private static $dynamicPath='';
     private static $assetsPath= APP_PUBLIC.'/assets';
 
@@ -372,7 +372,7 @@ class Manager
     protected static function copyStatic(string $static_path, string $path)
     {
         // 默认不删除模板更新
-        if (conf('template.refreshAll', false)) {
+        if (conf('template.refresh-all', false)) {
             Storage::rmdirs($path);
         }
         // 复制静态资源
