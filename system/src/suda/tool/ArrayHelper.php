@@ -3,7 +3,7 @@
  * Suda FrameWork
  *
  * An open source application development framework for PHP 7.2.0 or newer
- * 
+ *
  * Copyright (c)  2017-2018 DXkite
  *
  * @category   PHP FrameWork
@@ -35,30 +35,28 @@ class ArrayHelper
     */
     public static function get(array $array, string $name, $def = null)
     {
-        if (array_key_exists($name, $array)) {
-            return $array[$name];
-        }
-        if (strpos($name, '.')) {
-            list($key, $sub) = explode('.', $name, 2);
-            if (array_key_exists($key, $array)) {
-                return self::get($array[$key], $sub, $def);
+        $path = explode('.', $name);
+        while ($key = array_shift($path)) {
+            if (is_array($array) && array_key_exists($key, $array)) {
+                $array = $array[$key];
+            } else {
+                return $def;
             }
         }
-        return $def;
+        return $array;
     }
 
     public static function exist(array $array, string $name)
     {
-        if (array_key_exists($name, $array)) {
-            return true;
-        }
-        if (strpos($name, '.')) {
-            list($key, $sub) = explode('.', $name, 2);
+        $path = explode('.', $name);
+        while ($key = array_shift($path)) {
             if (array_key_exists($key, $array)) {
-                return self::exist($array[$key], $sub);
+                $array = $array[$key];
+            } else {
+                return false;
             }
         }
-        return false;
+        return true;
     }
 
     /**
@@ -73,21 +71,25 @@ class ArrayHelper
     public static function set(array &$array, string $name, $value, $def=null)
     {
         $path = explode('.', $name);
-        $ptr = &$array;
+        $root = &$array;
         while (count($path) > 1) {
             $key = array_shift($path);
-            if (!array_key_exists($key, $array)) {
-                $array[$key] = [];
+            if (is_array($array)) {
+                if (!array_key_exists($key, $array)) {
+                    $array[$key] = [];
+                }
+            } else {
+                $array=[];
             }
             $array = &$array[$key];
         }
-        $key = $path[0];
+        $key = array_shift($path);
         if (is_array($array) && array_key_exists($key, $array) && is_array($array[$key]) && is_array($value)) {
-            $array[$key] = array_merge($array[$key], is_array($def)?$def:[], $value);
+            $array[$key] = array_merge($array[$key], is_array($def) ? $def : [], $value);
         } else {
             $array[$key] = is_null($value) ? $def : $value;
         }
-        return $ptr;
+        return $root;
     }
 
     /**
@@ -112,16 +114,6 @@ class ArrayHelper
             $exstr = '<?php'.PHP_EOL.'return '. var_export($array, true).';'.PHP_EOL;
         }
         return file_put_contents($path, $exstr) ? true : false;
-    }
-
-
-    // 数目不同
-    protected static function combine(array $key, array $value)
-    {
-        if (count($name)!==count($preg)) {
-            $value=array_slice($value, 0, count($name));
-        }
-        return array_combine($key, $value);
     }
 
     protected static function arr2string($arrname, $array)
