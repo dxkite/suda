@@ -36,7 +36,7 @@ class PHPSession implements Session
     
     protected function __construct()
     {
-        if (session_status()==PHP_SESSION_NONE) {
+        if (session_status() === PHP_SESSION_NONE && !IS_CONSOLE) {
             $path=DATA_DIR.'/session';
             Storage::mkdirs($path);
             session_save_path($path);

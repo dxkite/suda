@@ -155,9 +155,9 @@ class Autoloader
     public static function parsePath(string $path):string
     {
         // TODO parse ~ as home
-        if (IS_CONSOLE && $path[0] === '~') {
+        if (IS_CONSOLE && defined('USER_HOME') && $path[0] === '~') {
             $scheme ='';
-            $subpath = USER_HOME.DIRECTORY_SEPARATOR.$path;
+            $subpath = USER_HOME.DIRECTORY_SEPARATOR.substr($path,1);
         } elseif (strpos($path, '://') !== false) {
             list($scheme, $subpath) = explode('://', $path, 2);
             $scheme.='://';

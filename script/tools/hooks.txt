@@ -12,13 +12,13 @@ suda:route:run::after
 suda:route:run::before
 suda:system:debug::start
 suda:system:debug::stop
+suda:system:display:json
 suda:system:error::404
 suda:system:exception::display
 suda:system:init
 suda:system:load-manifast
 suda:system:shutdown
 suda:system:shutdown::before
-suda:template::display
 suda:template:change-theme
 suda:template:compile::before
 suda:template:compile::init

@@ -14,9 +14,6 @@
  * @version    since 1.2.13
  */
 
-define('DATA_DIR', __DIR__.'/data');
-define('APP_PUBLIC', __DIR__.'/data/public');
-
 require_once __DIR__ .'/../system/suda-console.php';
 
 \suda\core\Autoloader::addIncludePath(__DIR__.'/docme/src','docme');
