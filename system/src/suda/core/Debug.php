@@ -2,9 +2,9 @@
 /**
  * Suda FrameWork
  *
- * An open source application development framework for PHP 7.0.0 or newer
- *
- * Copyright (c)  2017 DXkite
+ * An open source application development framework for PHP 7.2.0 or newer
+ * 
+ * Copyright (c)  2017-2018 DXkite
  *
  * @category   PHP FrameWork
  * @package    Suda
