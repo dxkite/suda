@@ -3,7 +3,7 @@
  * Suda FrameWork
  *
  * An open source application development framework for PHP 7.2.0 or newer
- * 
+ *
  * Copyright (c)  2017-2018 DXkite
  *
  * @category   PHP FrameWork
@@ -47,8 +47,8 @@ abstract class Response
             self::noCache();
             // for windows debug touch file to avoid 304 by server
             if (!IS_LINUX) {
-                $script=$_SERVER['SCRIPT_NAME'];
-                $file=APP_PUBLIC.$script;
+                $script = $_SERVER['SCRIPT_NAME'];
+                $file   = $_SERVER['DOCUMENT_ROOT'].$script;
                 $content=file_get_contents($file);
                 if (preg_match('/\<\?php\s+#\d+\r\n/i', $content)) {
                     $content=preg_replace('/\<\?php\s+#\d+\r\n/i', '<?php #'.time().PHP_EOL, $content);

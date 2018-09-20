@@ -4,6 +4,7 @@
 /public/assets
 /public/phpinfo.php
 /vendor/
+/public/project
 /.vscode
 /script/source.txt
 /docs/_book

@@ -3,7 +3,7 @@
  * Suda FrameWork
  *
  * An open source application development framework for PHP 7.2.0 or newer
- * 
+ *
  * Copyright (c)  2017-2018 DXkite
  *
  * @category   PHP FrameWork
@@ -32,6 +32,7 @@ class Request
     private static $instance=null;
     private static $query='';
     private static $crawlers=null;
+
     private $mapping=null;
 
     private function __construct()
@@ -425,7 +426,6 @@ class Request
     {
         $scheme = self::getScheme();
         $host= self::getHost();
-        // $_SERVER['HTTP_HOST'] 包含端口
         return $scheme.'://'.$host;
     }
 
@@ -450,19 +450,25 @@ class Request
         return conf('app.router.port', $_SERVER["SERVER_PORT"]??80);
     }
 
-    public static function baseUrl()
+    public static function baseUrl(bool $static=false)
     {
         // 0 auto
         // 1 windows = /?/, linux = /
         // 2 index.php/
         // 3 index.php?/
+
         $base=self::hostBase();
         $script=$_SERVER['SCRIPT_NAME'];
         $module=conf('app.url.mode', 0);
         $beautify=conf('app.url.beautify', false);
+        $index=conf('app.index', 'index.php');
+        // 静态目录
+        if ($static) {
+            return $base.dirname($script).'/';
+        }
         if ($module==0 || $module==1) {
             // 如果当前脚本为AutoIndex索引
-            if (ltrim($script, '/')===conf('app.index', 'index.php')) {
+            if (ltrim($script, '/') === $index) {
                 // 开启重写
                 if (conf('app.url.rewrite', false)) {
                     return $base. ((IS_LINUX || $beautify)? '/':'/?/');
