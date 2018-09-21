@@ -39,7 +39,7 @@ class FileStorage implements Storage
     // 递归创建文件夹
     public function mkdirs(string $dir, int $mode=0777):bool
     {
-        $path=self::osPath($dir);
+        $path=Autoloader::parsePath($dir);
         if (!self::isDir($path)) {
             if (!self::mkdirs(dirname($path), $mode)) {
                 return false;
@@ -53,9 +53,9 @@ class FileStorage implements Storage
     
     public function path(string $path)
     {
-        $path=self::osPath($path);
+        $path=Autoloader::parsePath($path);
         self::mkdirs($path);
-        return Autoloader::absolutePath($path);
+        return Autoloader::realPath($path);
     }
     
     public function abspath(string $path)
@@ -63,8 +63,8 @@ class FileStorage implements Storage
         if (empty($path)) {
             return false;
         }
-        $path=self::osPath($path);
-        return Autoloader::absolutePath($path);
+        $path=Autoloader::parsePath($path);
+        return Autoloader::realPath($path);
     }
 
     public function readDirFiles(string $dirs, bool $repeat=false, string $preg='/^.+$/', bool $cut=false):array
@@ -104,7 +104,7 @@ class FileStorage implements Storage
 
     public function readDirs(string $dirs, bool $repeat=false, string $preg='/^.+$/'):array
     {
-        $dirs=self::osPath($dirs);
+        $dirs=Autoloader::parsePath($dirs);
         $reads=[];
         if (self::isDir($dirs)) {
             $hd=opendir($dirs);
@@ -182,8 +182,8 @@ class FileStorage implements Storage
 
     public function copydir(string $src, string $dest, string $preg='/^.+$/'):bool
     {
-        $src=self::osPath($src);
-        $dest=self::osPath($dest);
+        $src=Autoloader::parsePath($src);
+        $dest=Autoloader::parsePath($dest);
         self::mkdirs($dest);
         if (is_writable($dest)) {
             $dest=self::path($dest);
@@ -206,8 +206,8 @@ class FileStorage implements Storage
     
     public function movedir(string $src, string $dest, string $preg='/^.+$/'):bool
     {
-        $src=self::osPath($src);
-        $dest=self::osPath($dest);
+        $src=Autoloader::parsePath($src);
+        $dest=Autoloader::parsePath($dest);
         self::mkdirs($dest);
         if (is_writable($dest)) {
             $dest=self::path($dest);
@@ -230,8 +230,8 @@ class FileStorage implements Storage
     
     public function copy(string $source, string $dest):bool
     {
-        $source=self::osPath($source);
-        $dest=self::osPath($dest);
+        $source=Autoloader::parsePath($source);
+        $dest=Autoloader::parsePath($dest);
         if (!is_writable(dirname($dest))) {
             return false;
         }
@@ -243,8 +243,8 @@ class FileStorage implements Storage
 
     public function move(string $src, string $dest):bool
     {
-        $src=self::osPath($src);
-        $dest=self::osPath($dest);
+        $src=Autoloader::parsePath($src);
+        $dest=Autoloader::parsePath($dest);
         if (!is_writable(dirname($dest))) {
             return false;
         }
@@ -257,7 +257,7 @@ class FileStorage implements Storage
     // 创建文件夹
     public function mkdir(string $path, int $mode=0777):bool
     {
-        $path=self::osPath($path);
+        $path=Autoloader::parsePath($path);
         if (!self::isDir($path) && is_writable(dirname($path))) {
             return mkdir($path, $mode);
         }
@@ -267,7 +267,7 @@ class FileStorage implements Storage
     // 删除文件夹
     public function rmdir(string $path):bool
     {
-        $path=self::osPath($path);
+        $path=Autoloader::parsePath($path);
         if (!is_writable($path)) {
             return false;
         }
@@ -276,7 +276,7 @@ class FileStorage implements Storage
 
     public function put(string $name, $content, int $flags = 0):bool
     {
-        $name=self::osPath($name);
+        $name=Autoloader::parsePath($name);
         $dirname=dirname($name);
         if (self::isDir($dirname) && is_writable($dirname)) {
             return file_put_contents($name, $content, $flags);
@@ -286,7 +286,7 @@ class FileStorage implements Storage
 
     public function get(string $name):string
     {
-        $name=self::osPath($name);
+        $name=Autoloader::parsePath($name);
         if ($file=self::exist($name)) {
             if (is_string($file)) {
                 $name=$file;
@@ -304,7 +304,7 @@ class FileStorage implements Storage
      */
     public function remove(string $name) : bool
     {
-        $name=self::osPath($name);
+        $name=Autoloader::parsePath($name);
         if ($file=self::exist($name)) {
             if (is_string($file)) {
                 $name=$file;
@@ -319,31 +319,31 @@ class FileStorage implements Storage
     
     public function isFile(string $name):bool
     {
-        $name=self::osPath($name);
+        $name=Autoloader::parsePath($name);
         return is_file($name);
     }
 
     public function isDir(string $name):bool
     {
-        $name=self::osPath($name);
+        $name=Autoloader::parsePath($name);
         return is_dir($name);
     }
 
     public function isReadable(string $name):bool
     {
-        $name=self::osPath($name);
+        $name=Autoloader::parsePath($name);
         return is_readable($name);
     }
 
     public function isWritable(string $name):bool
     {
-        $name=self::osPath($name);
+        $name=Autoloader::parsePath($name);
         return is_writable($name);
     }
     
     public function size(string $name):int
     {
-        $name=self::osPath($name);
+        $name=Autoloader::parsePath($name);
         if ($file=self::exist($name)) {
             if (is_string($file)) {
                 $name=$file;
@@ -355,7 +355,7 @@ class FileStorage implements Storage
 
     public static function download(string $url, string $save):int
     {
-        $save=self::osPath($save);
+        $save=Autoloader::parsePath($save);
         return self::put($save, self::curl($url));
     }
     
@@ -372,7 +372,7 @@ class FileStorage implements Storage
 
     public function type(string $name):string
     {
-        $name=self::osPath($name);
+        $name=Autoloader::parsePath($name);
         if ($file=self::exist($name)) {
             if (is_string($file)) {
                 $name=$file;
@@ -384,7 +384,7 @@ class FileStorage implements Storage
 
     public function exist(string $name, array $charset=[])
     {
-        $path=self::osPath($name);
+        $path=Autoloader::parsePath($name);
         // UTF-8 格式文件路径
         if (self::existCase($path)) {
             return true;
@@ -403,24 +403,13 @@ class FileStorage implements Storage
     // 判断文件或者目录存在
     private function existCase($name):bool
     {
-        $name=self::osPath($name);
-        if (file_exists($name) && $real=Autoloader::absolutePath($name)) {
+        $name=Autoloader::parsePath($name);
+        if (file_exists($name) && $real=Autoloader::realPath($name)) {
             if (basename($real) === basename($name)) {
                 return true;
             }
         }
         return false;
-    }
-
-    /**
-     * 修正路径分割符
-     *
-     * @param string $path
-     * @return void
-     */
-    private function osPath(string $path)
-    {
-        return Autoloader::parsePath($path);
     }
 
     public function temp(string $prefix='dx_')
@@ -430,7 +419,7 @@ class FileStorage implements Storage
     
     public function touchIndex(string $dest, string $content = 'dxkite-suda@'.SUDA_VERSION)
     {
-        $dest=self::osPath($dest);
+        $dest=Autoloader::parsePath($dest);
         if (is_writable($dest)) {
             $dest=self::path($dest);
             $index = $dest.'/'.conf('default-index', 'index.html');

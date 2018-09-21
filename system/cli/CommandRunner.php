@@ -15,9 +15,9 @@ class CommandRunner
 
     public static function run(int $argc, array $argv)
     {
-        $phar = Autoloader::absolutePath($argv[0]);
+        $phar = Autoloader::realPath($argv[0]);
         if (preg_match('/\.phar$/', $phar)) {
-            define('SUDA_PHAR', Autoloader::absolutePath($argv[0]));
+            define('SUDA_PHAR', Autoloader::realPath($argv[0]));
         }
 
         if ($argc <= 1) {

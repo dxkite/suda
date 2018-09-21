@@ -319,9 +319,9 @@ function email_poster(?int $type=null)
  * @param string $path
  * @return string
  */
-function real_absolute_path(string $path)
+function real_absolute_path(string $path):?string
 {
-    return \suda\core\Autoloader::absolutePath($path);
+    return \suda\core\Autoloader::realPath($path);
 }
 
 /**
@@ -330,7 +330,7 @@ function real_absolute_path(string $path)
  * @param string $path
  * @return string
  */
-function parse_absolute_path(string $path)
+function parse_absolute_path(string $path):string
 {
     return \suda\core\Autoloader::parsePath($path);
 }
