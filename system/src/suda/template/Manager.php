@@ -398,7 +398,6 @@ class Manager
         $input=self::getInputFile($name, false);
         if (!Storage::exist($input)) {
             throw new KernelException(__('missing file $0:$1', self::$theme, $input));
-            // echo '<b>compile theme &lt;<span style="color:red;">'.self::$theme.'</span>&gt; file '.$input. ' missing file</b>';
             return;
         }
         // 获取文件夹
@@ -413,7 +412,6 @@ class Manager
             if (Config::get('debug', true) || Config::get('exception', false)) {
                 if (!self::$compiler->compile($name, $input, $output)) {
                     throw new KernelException(__('missing file $0:$1', self::$theme, $input));
-                    // echo '<b>compile theme &lt;<span style="color:red;">'.self::$theme.'</span>&gt; file '.$input. ' missing file</b>';
                     return;
                 }
             }
@@ -425,7 +423,6 @@ class Manager
             }
             if (!self::$compiler->compile($name, $input, $output)) {
                 throw new KernelException(__('missing file $0:$1', self::$theme, $input));
-                // echo '<b>missing theme &lt;<span style="color:red;">'.self::$theme.'</span>&gt; file '.$input. ' missing file</b>';
                 return;
             }
         }

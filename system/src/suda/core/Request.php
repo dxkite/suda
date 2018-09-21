@@ -462,10 +462,16 @@ class Request
         $module=conf('app.url.mode', 0);
         $beautify=conf('app.url.beautify', false);
         $index=conf('app.index', 'index.php');
+        
         // 静态目录
         if ($static) {
-            return $base.dirname($script).'/';
+            if (strlen(dirname($script)) === 1) {
+                return $base.'/';
+            } else {
+                return $base.str_replace('\\','/',dirname($script)).'/';
+            }
         }
+
         if ($module==0 || $module==1) {
             // 如果当前脚本为AutoIndex索引
             if (ltrim($script, '/') === $index) {
