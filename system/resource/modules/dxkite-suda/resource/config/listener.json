@@ -1,0 +1,3 @@
+{
+    "suda:template:render::before" : [ "dxkite.suda.hook.SafeCheckHook::exec"]
+}
