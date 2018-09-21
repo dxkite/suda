@@ -179,11 +179,10 @@ class Autoloader
         $subpath = str_replace(['/', '\\'], '/', $subpath);
         $root = null;
         if (DIRECTORY_SEPARATOR === '/') {
-            if ($subpath[0] === '/') {
-                $root = '/';
-            } else {
+            if ($subpath[0] !== '/') {
                 $subpath = getcwd().DIRECTORY_SEPARATOR.$subpath;
             }
+            $root = '/';
             $subpath = substr($subpath, 1);
         } else {
             if (strpos($subpath, ':/') === false) {

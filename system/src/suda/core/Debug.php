@@ -77,7 +77,7 @@ class Debug
         if (defined('APP_LOG') && Storage::path(APP_LOG) && is_writable(APP_LOG)) {
             self::$latest =APP_LOG.'/latest.log';
         }
-        if (DEBUG) {
+        if (DEBUG && !IS_CONSOLE) {
             cookie()->set(conf('log.cookie', '__debug'), conf('log.secret', base64_encode('dxkite')))->set();
         }
     }
