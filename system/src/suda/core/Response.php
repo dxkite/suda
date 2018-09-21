@@ -39,7 +39,7 @@ abstract class Response
     public function __construct()
     {
         // Mark Version
-        if (conf('markVersion', true)) {
+        if (conf('mark-version', true)) {
             self::setHeader('X-Application:'.conf('app.name', 'suda-app').'/'.conf('app.version').' '.self::$name .' request/' .conf('request'));
         }
         

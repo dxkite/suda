@@ -2,14 +2,15 @@
     "debug": true,
     "timelimit": 0,
     "timezone": "PRC",
-    "markVersion":true,
+    "mark-version": true,
     "database": {
-        "prefix": "dx_", 
-        "host": "127.0.0.1", 
+        "enable": false,
+        "prefix": "dx_",
+        "host": "127.0.0.1",
         "port": 3306,
-        "name": "suda_system", 
+        "name": "suda_system",
         "user": "root",
-        "passwd": "root", 
+        "passwd": "root",
         "charset": "utf8"
     },
     "non-static": "php"
