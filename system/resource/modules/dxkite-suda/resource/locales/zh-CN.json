@@ -1,7 +1,7 @@
 {
     "Memory Cost: $0": "内存消耗：$0",
     "Memory Peak: $0": "内存峰值：$0",
-    "Time Cost：$0 s": "时间消耗：$0秒",
+    "Time Cost：$0s": "时间消耗：$0秒",
     "Requst Ip: $0": "请求地址：$0",
     "Performance By Suda v$0": "由 Suda v$0 驱动",
     "page \"$0\"  is not found": "当前页面 \"$0\" 不存在，请确认后继续",
