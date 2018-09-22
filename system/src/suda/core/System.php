@@ -23,6 +23,7 @@ use suda\archive\SQLQuery;
 use suda\tool\Json;
 use suda\tool\Value;
 use suda\core\exception\ApplicationException;
+use suda\core\Autoloader;
 
 /**
  * 系统类，处理系统报错函数以及程序加载
@@ -40,14 +41,20 @@ class System
         register_shutdown_function('suda\\core\\System::onShutdown');
         set_error_handler('suda\\core\\System::uncaughtError');
         set_exception_handler('suda\\core\\System::uncaughtException');
+
         if (!DEBUG) {
             ini_set('display_errors', 'Off');
         }
 
-        defined('RUNTIME_DIR') or define('RUNTIME_DIR', Storage::path(DATA_DIR.'/runtime'));
-        defined('VIEWS_DIR') or define('VIEWS_DIR', Storage::path(DATA_DIR.'/views'));
-        defined('CACHE_DIR') or define('CACHE_DIR', Storage::path(DATA_DIR.'/cache'));
-        defined('TEMP_DIR') or define('TEMP_DIR', Storage::path(DATA_DIR.'/temp'));
+        defined('RUNTIME_DIR') or define('RUNTIME_DIR', Autoloader::parsePath(DATA_DIR.'/runtime'));
+        defined('VIEWS_DIR') or define('VIEWS_DIR', Autoloader::parsePath(DATA_DIR.'/views'));
+        defined('CACHE_DIR') or define('CACHE_DIR', Autoloader::parsePath(DATA_DIR.'/cache'));
+        defined('TEMP_DIR') or define('TEMP_DIR', Autoloader::parsePath(DATA_DIR.'/temp'));
+
+        Storage::mkdirs(RUNTIME_DIR);
+        Storage::mkdirs(VIEWS_DIR);
+        Storage::mkdirs(CACHE_DIR);
+        Storage::mkdirs(TEMP_DIR);
 
         Debug::beforeSystemRun();
         Locale::path(SYSTEM_RESOURCE.'/locales');
@@ -85,17 +92,24 @@ class System
 
     public static function initApplication()
     {
-        defined('MODULES_DIR') or define('MODULES_DIR', Storage::path(APP_DIR.'/modules'));
-        defined('RESOURCE_DIR') or define('RESOURCE_DIR', Storage::path(APP_DIR.'/resource'));
-        defined('DATA_DIR') or define('DATA_DIR', Storage::path(APP_DIR.'/data'));
-        defined('SHRAE_DIR') or define('SHRAE_DIR', Storage::path(APP_DIR.'/share'));
-        defined('CONFIG_DIR') or define('CONFIG_DIR', Storage::path(RESOURCE_DIR.'/config'));
+        // 定义常量
+        defined('MODULES_DIR') or define('MODULES_DIR', Autoloader::parsePath(APP_DIR.'/modules'));
+        defined('RESOURCE_DIR') or define('RESOURCE_DIR', Autoloader::parsePath(APP_DIR.'/resource'));
+        defined('DATA_DIR') or define('DATA_DIR', Autoloader::parsePath(APP_DIR.'/data'));
+        defined('SHRAE_DIR') or define('SHRAE_DIR', Autoloader::parsePath(APP_DIR.'/share'));
+        defined('CONFIG_DIR') or define('CONFIG_DIR', Autoloader::parsePath(RESOURCE_DIR.'/config'));
+        // 生成路径
+        Storage::mkdirs(APP_DIR);
+        Storage::mkdirs(MODULES_DIR);
+        Storage::mkdirs(RESOURCE_DIR);
+        Storage::mkdirs(SHRAE_DIR);
+        Storage::mkdirs(CONFIG_DIR);
 
-        Storage::path(APP_DIR);
         // 检测 app vendor
         if (storage()->exist($vendor = APP_DIR.'/vendor/autoload.php')) {
             Autoloader::import($vendor);
         }
+
         self::readManifast();
         $name=Autoloader::realName(self::$applicationClass);
         // 加载共享库

@@ -576,7 +576,7 @@ class Manager
 
     public static function assetServer(string $url)
     {
-        return conf('asset-server', Request::baseUrl(true) .'assets').$url;
+        return conf('asset-server', Request::baseUrl(is_dir(self::$assetsPath)) .'assets').$url;
     }
 
     /**
