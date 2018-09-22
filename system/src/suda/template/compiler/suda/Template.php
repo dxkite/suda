@@ -130,6 +130,10 @@ abstract class Template
         $this->extend = $name;
     }
 
+    public function include(string $name) {
+        \suda\template\Manager::include($name, $this)->echo();
+    }
+    
     public function getRenderStack()
     {
         return self::$render;

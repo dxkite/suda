@@ -3,7 +3,7 @@
  * Suda FrameWork
  *
  * An open source application development framework for PHP 7.2.0 or newer
- * 
+ *
  * Copyright (c)  2017-2018 DXkite
  *
  * @category   PHP FrameWork
@@ -224,8 +224,7 @@ class Compiler implements CompilerImpl
             return '$this->has("'.$name.'")';
         }
         if (isset($matchs[4])) {
-            preg_match('/\((.+)\)/', $matchs[4], $v);
-            if (isset($v[1])) {
+            if (preg_match('/\((.+)\)/', $matchs[4], $v)) {
                 $args = trim($v[1]);
                 $args= strlen($args) ?','.$args:'';
                 return '$this->get("'.$name.'"'.$args.')';
@@ -251,9 +250,11 @@ class Compiler implements CompilerImpl
 
     protected function parseFile($exp)
     {
-        preg_match('/\((.+)\)/', $exp, $v);
-        $name=trim($v[1], '"\'');
-        return "<?php echo suda\\template\\Manager::file('{$name}',\$this) ?>";
+        if (preg_match('/\((.+)\)/', $exp, $v)) {
+            $name=trim($v[1], '"\'');
+            return "<?php echo suda\\template\\Manager::file('{$name}',\$this) ?>";
+        }
+        return '@file';
     }
 
     protected function parse_($exp)
@@ -261,11 +262,11 @@ class Compiler implements CompilerImpl
         return "<?php echo __$exp; ?>";
     }
 
-    // IF 语句
     protected function parseIf($exp)
     {
-        return "<?php if{$exp}: ?>";
+        return "<?php if {$exp}: ?>";
     }
+
     protected function parseEndif()
     {
         return '<?php endif; ?>';
@@ -310,9 +311,7 @@ class Compiler implements CompilerImpl
     // include
     protected function parseInclude($exp)
     {
-        preg_match('/\((.+)\)/', $exp, $v);
-        $name=str_replace('\'', '-', trim($v[1], '"\''));
-        return "<?php suda\\template\\Manager::include('{$name}',\$this)->echo(); ?>";
+        return '<?php $this->include'.$exp.'; ?>';
     }
 
     // extend
@@ -349,10 +348,11 @@ class Compiler implements CompilerImpl
 
     protected function parseStatic($exp)
     {
-        preg_match('/^\((.+?)\)$/', $exp, $match);
-        if (isset($match[1])&&$match[1]) {
-            $match[1]=trim($match[1], '"\'');
-            return '<?php echo suda\\template\\Manager::assetServer(\''.Manager::getStaticAssetPath(trim($match[1])).'\');?>';
+        if (preg_match('/^\((.+)\)$/', $exp, $match)) {
+            if (isset($match[1])&&$match[1]) {
+                $module=trim(trim($match[1], '"\''));
+                return '<?php echo suda\\template\\Manager::assetServer(\''.Manager::getStaticAssetPath($module).'\');?>';
+            }
         }
         return '<?php echo suda\\template\\Manager::assetServer(suda\\template\\Manager::getStaticAssetPath($this->getModule())); ?>';
     }
