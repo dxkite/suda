@@ -3,7 +3,7 @@
  * Suda FrameWork
  *
  * An open source application development framework for PHP 7.2.0 or newer
- * 
+ *
  * Copyright (c)  2017-2018 DXkite
  *
  * @category   PHP FrameWork
@@ -36,6 +36,7 @@ class Debug
     const WARNING = 'warning'; // 警告消息
     const ERROR = 'error'; // 错误消息
     const LOG_PACK = LOG_TAG;
+    
     protected static $level=[
         Debug::TRACE=>1,
         Debug::DEBUG=>2,
@@ -45,7 +46,7 @@ class Debug
         Debug::ERROR=>6,
     ];
 
-    protected static $run_info;
+    protected static $runInfo;
     protected static $log=[];
     protected static $time=[];
     protected static $hash;
@@ -61,6 +62,11 @@ class Debug
         if (defined('DEFAULT_TIMEZONE')) {
             date_default_timezone_set(DEFAULT_TIMEZONE);
         }
+
+        if (defined('APP_LOG') && Storage::path(APP_LOG) && is_writable(APP_LOG)) {
+            self::$latest =APP_LOG.'/latest.log';
+        }
+
         $request=Request::getInstance();
         self::$hash=$hash=substr(md5(microtime().''.$request->ip()), 0, 6);
         $file = tmpfile();
@@ -73,12 +79,13 @@ class Debug
         Config::set('request', self::$hash);
         $mode = conf('debug', defined('DEBUG') && DEBUG)?'debug':'normal';
         fwrite(self::$file, self::LOG_PACK[0].PHP_EOL.'request-'.self::$hash.'-begin from '.$request->ip().' at '.microtime(true).' with mode '. $mode .PHP_EOL);
-        fwrite(self::$file, self::printHead().PHP_EOL);
-        if (defined('APP_LOG') && Storage::path(APP_LOG) && is_writable(APP_LOG)) {
-            self::$latest =APP_LOG.'/latest.log';
-        }
-        if (DEBUG && !IS_CONSOLE) {
-            cookie()->set(conf('log.cookie', '__debug'), conf('log.secret', base64_encode('dxkite')))->set();
+        if (IS_CONSOLE) {
+            fwrite(self::$file,'  '.implode(' ',$_SERVER['argv']).PHP_EOL);
+        } else {
+            if (DEBUG) {
+                fwrite(self::$file, self::printHead().PHP_EOL);
+                cookie()->set(conf('log.cookie', '__debug'), conf('log.secret', base64_encode('dxkite')))->set();
+            }
         }
     }
 
@@ -100,7 +107,7 @@ class Debug
                 }
             }
             $call=(isset($traceInfo['class'])?$traceInfo['class'].'#':'').$traceInfo['function'];
-            self::_loginfo(self::$time[$name]['type'], $call, __('process $0 $1s', $name,  number_format($pass,5)), $traceInfo['file'] ??'unknown', $traceInfo['line'] ?? 0, $backtrace);
+            self::_loginfo(self::$time[$name]['type'], $call, __('process $0 $1s', $name, number_format($pass, 5)), $traceInfo['file'] ??'unknown', $traceInfo['line'] ?? 0, $backtrace);
             return $pass;
         }
         return 0;
@@ -108,8 +115,8 @@ class Debug
 
     protected static function compareLevel($levela, $levelb)
     {
-        $levela_num=is_numeric($levela)?$levela:self::$level[strtolower($levela)]??100;
-        $levelb_num=is_numeric($levelb)?$levelb:self::$level[strtolower($levelb)]??100;
+        $levela_num=is_numeric($levela)?$levela:(self::$level[strtolower($levela)]??100);
+        $levelb_num=is_numeric($levelb)?$levelb:(self::$level[strtolower($levelb)]??100);
         return $levela_num - $levelb_num;
     }
 
@@ -126,7 +133,7 @@ class Debug
         $loginfo['name']=$name;
         $loginfo['level']=$level;
         $loginfo['backtrace']=$backtrace;
-        $loginfo['time']=microtime(true)-SUDA_START_TIME;
+        $loginfo['time']=microtime(true) - SUDA_START_TIME;
         $loginfo['mem']=memory_get_usage() - SUDA_START_MEMORY;
         self::writeLine($loginfo);
         $dump_log = defined('DEBUG_DUMP_LOG') && DEBUG_DUMP_LOG;
@@ -337,9 +344,9 @@ class Debug
         $time=number_format(microtime(true) - SUDA_START_TIME, 10);
         $hash=self::$hash;
         $info=self::getInfo();
-        $mem=self::memshow($info['memory'], 4);
+        $mem=self::formatBytes($info['memory'], 4);
         $requests=ceil(1/$time);
-        $peak=self::memshow(memory_get_peak_usage(), 4);
+        $peak=self::formatBytes(memory_get_peak_usage(), 4);
         // 写入最终日志
         fwrite(self::$file, "request-{$hash}-end finished in {$time}s with memory {$mem} and max {$peak} - {$requests} req/s".PHP_EOL.self::LOG_PACK[1].PHP_EOL);
         $size=ftell(self::$file);
@@ -368,7 +375,7 @@ class Debug
         $str=str_replace(['$time_format','$time','$memoery_format','$memoery','$level','$file','$line','$name','$message'], [
             number_format($log['time'], 10),
             $log['time'],
-            self::memshow($log['mem'], 2),
+            self::formatBytes($log['mem'], 2),
             $log['mem'],
             $log['level'],
             $log['file'],
@@ -383,34 +390,33 @@ class Debug
         return fwrite(self::$file, $str);
     }
 
-    public static function memshow(int $mem, int $dec)
+    protected static function formatBytes(int $bytes, int $precision=0)
     {
         $human= ['B', 'KB', 'MB', 'GB', 'TB'];
-        $pos= 0;
-        while ($mem >= 1024) {
-            $mem /= 1024;
-            $pos++;
-        }
-        return round($mem, $dec).' '.$human[$pos];
+        $bytes = max($bytes, 0);
+        $pow = floor(($bytes?log($bytes):0)/log(1024));
+        $pos = min($pow, count($human)-1);
+        $bytes /= (1 << (10* $pos));
+        return round($bytes, $precision).' '.$human[$pos];
     }
 
     public static function beforeSystemRun()
     {
         self::time('system');
         Hook::exec('suda:system:debug::start');
-        self::$run_info['start_time']=SUDA_START_TIME;
-        self::$run_info['start_memory']=SUDA_START_MEMORY;
+        self::$runInfo['start_time']=SUDA_START_TIME;
+        self::$runInfo['start_memory']=SUDA_START_MEMORY;
     }
 
     public static function getInfo()
     {
-        self::$run_info['end_time']=microtime(true);
-        self::$run_info['time']=microtime(true) - SUDA_START_TIME;
-        self::$run_info['memory']=memory_get_usage() - SUDA_START_MEMORY;
-        self::$run_info['enSUDA_START_MEMORYory']=memory_get_usage();
-        self::$run_info['peak_memory']=memory_get_peak_usage();
-        self::$run_info['included_files']=get_included_files();
-        return self::$run_info;
+        self::$runInfo['end_time']=microtime(true);
+        self::$runInfo['time']=microtime(true) - SUDA_START_TIME;
+        self::$runInfo['memory']=memory_get_usage() - SUDA_START_MEMORY;
+        self::$runInfo['end_memory']=memory_get_usage();
+        self::$runInfo['peak_memory']=memory_get_peak_usage();
+        self::$runInfo['included_files']=get_included_files();
+        return self::$runInfo;
     }
 
 
@@ -554,8 +560,8 @@ class Debug
     protected static function assginDebugInfo($page)
     {
         $page->set('request_id', self::$hash);
-        $page->set('memory_usage', self::memshow(memory_get_usage() - SUDA_START_MEMORY, 4));
-        $page->set('memory_peak_usage', self::memshow(memory_get_peak_usage(), 4));
+        $page->set('memory_usage', self::formatBytes(memory_get_usage() - SUDA_START_MEMORY, 4));
+        $page->set('memory_peak_usage', self::formatBytes(memory_get_peak_usage(), 4));
         $page->set('time_spend', number_format(microtime(true) - SUDA_START_TIME, 4));
     }
 
