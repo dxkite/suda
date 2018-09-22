@@ -68,7 +68,7 @@ class FileStorage implements Storage
 
     public function readDirFiles(string $parent, bool $repeat=false, ?string $preg=null, bool $full=true) : \Iterator
     {
-        $path=Autoloader::parsePath($parent);
+        $parent=Autoloader::parsePath($parent);
         foreach (self::readPath($parent, $repeat, $preg, $full) as $file) {
             $path = $full?$file:$parent.DIRECTORY_SEPARATOR.$file;
             if (self::isFile($path)) {
@@ -77,18 +77,20 @@ class FileStorage implements Storage
         }
     }
 
-    public function readDirs(string $parent, bool $repeat=false, ?string $preg=null): \Iterator
+    public function readDirs(string $parent, bool $repeat=false, ?string $preg=null, bool $full=false): \Iterator
     {
-        foreach (self::readPath($parent, $repeat, $preg) as $path) {
+        $parent=Autoloader::parsePath($parent);
+        foreach (self::readPath($parent, $repeat, $preg, $full) as $dir) {
+            $path = $full?$dir:$parent.DIRECTORY_SEPARATOR.$dir;
             if (self::isDir($path)) {
-                yield $path;
+                yield $dir;
             }
         }
     }
 
     public function readPath(string $parent, bool $repeat=false, ?string $preg=null, bool $full=true): \Iterator
     {
-        $path=Autoloader::parsePath($parent);
+        $parent=Autoloader::parsePath($parent);
         if (self::isDir($parent)) {
             $hd=opendir($parent);
             while ($read=readdir($hd)) {
@@ -184,10 +186,10 @@ class FileStorage implements Storage
     {
         if ($path = self::path($dest)) {
             foreach (self::readPath($src, false, $preg, false) as $read) {
-                if (self::isDir($src.'/'.$read)) {
-                    self::copydir($src.'/'.$read, $dest.'/'.$read, $preg);
+                if (self::isDir($src.DIRECTORY_SEPARATOR.$read)) {
+                    self::copydir($src.DIRECTORY_SEPARATOR.$read, $dest.DIRECTORY_SEPARATOR.$read, $preg);
                 } else {
-                    self::copy($src.'/'.$read, $dest.'/'.$read);
+                    self::copy($src.DIRECTORY_SEPARATOR.$read, $dest.DIRECTORY_SEPARATOR.$read);
                 }
             }
             return true;
@@ -200,11 +202,11 @@ class FileStorage implements Storage
     {
         if ($path = self::path($dest)) {
             foreach (self::readPath($src, false, $preg, false) as $read) {
-                if (self::isDir($src.'/'.$read)) {
-                    self::movedir($src.'/'.$read, $dest.'/'.$read, $preg);
-                    self::rmdir($src.'/'.$read);
+                if (self::isDir($src.DIRECTORY_SEPARATOR.$read)) {
+                    self::movedir($src.DIRECTORY_SEPARATOR.$read, $dest.DIRECTORY_SEPARATOR.$read, $preg);
+                    self::rmdir($src.DIRECTORY_SEPARATOR.$read);
                 } else {
-                    self::move($src.'/'.$read, $dest.'/'.$read);
+                    self::move($src.DIRECTORY_SEPARATOR.$read, $dest.DIRECTORY_SEPARATOR.$read);
                 }
             }
             self::rmdir($src);
@@ -214,15 +216,15 @@ class FileStorage implements Storage
         }
     }
     
-    public function copy(string $source, string $dest):bool
+    public function copy(string $src, string $dest):bool
     {
-        $source=Autoloader::parsePath($source);
+        $src=Autoloader::parsePath($src);
         $dest=Autoloader::parsePath($dest);
         if (!is_writable(dirname($dest))) {
             return false;
         }
-        if (self::exist($source)) {
-            return copy($source, $dest);
+        if (self::exist($src)) {
+            return copy($src, $dest);
         }
         return false;
     }
@@ -412,7 +414,7 @@ class FileStorage implements Storage
             if (!self::exist($index)) {
                 file_put_contents($index, $content);
             }
-            $dirs = self::readDirs($dest, true);
+            $dirs = self::readDirs($dest, true, null, true);
             foreach ($dirs as $path) {
                 $index = $path.'/'.conf('default-index', 'index.html');
                 if (!self::exist($index)) {

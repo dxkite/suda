@@ -683,7 +683,7 @@ class Application
      * @param string|null|array $config
      * @return boolean
      */
-    public function registerModule(string $path, $config =null):bool
+    public function registerModule(string $path, $config = null):bool
     {
         $config = is_null($config)?$path.'/module.json': $config;
         if (is_string($config)) {
