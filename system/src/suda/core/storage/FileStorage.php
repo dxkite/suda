@@ -3,7 +3,7 @@
  * Suda FrameWork
  *
  * An open source application development framework for PHP 7.2.0 or newer
- * 
+ *
  * Copyright (c)  2017-2018 DXkite
  *
  * @category   PHP FrameWork
@@ -51,11 +51,10 @@ class FileStorage implements Storage
         return true;
     }
     
-    public function path(string $path)
+    public function path(string $path):?string
     {
         $path=Autoloader::parsePath($path);
-        self::mkdirs($path);
-        return Autoloader::realPath($path);
+        return self::mkdirs($path)?$path:null;
     }
     
     public function abspath(string $path)
@@ -67,55 +66,55 @@ class FileStorage implements Storage
         return Autoloader::realPath($path);
     }
 
-    public function readDirFiles(string $dirs, bool $repeat=false, string $preg='/^.+$/', bool $cut=false):array
+    public function readDirFiles(string $parent, bool $repeat=false, ?string $preg=null, bool $full=true) : \Iterator
     {
-        $dirs=self::abspath($dirs);
-        $file_totu=[];
-        if ($dirs && self::isDir($dirs)) {
-            $hd=opendir($dirs);
-            while ($file=readdir($hd)) {
-                if (strcmp($file, '.') !== 0 && strcmp($file, '..') !==0) {
-                    $path=$dirs.'/'.$file;
-                    if (self::exist($path) && preg_match($preg, $file)) {
-                        $file_totu[]=$path;
-                    } elseif ($repeat && self::isDir($path)) {
-                        foreach (self::readDirFiles($path, $repeat, $preg) as $files) {
-                            $file_totu[]=$files;
-                        }
-                    }
-                }
+        $path=Autoloader::parsePath($parent);
+        foreach (self::readPath($parent, $repeat, $preg, $full) as $file) {
+            $path = $full?$file:$parent.DIRECTORY_SEPARATOR.$file;
+            if (self::isFile($path)) {
+                yield $file;
             }
-            closedir($hd);
         }
-        if ($cut) {
-            $cutfile=[];
-            foreach ($file_totu as $file) {
-                $cutfile[]=self::cut($file, $dirs);
-            }
-            return $cutfile;
-        }
-        return $file_totu;
     }
 
-    public function cut(string $path, string $basepath=ROOT_PATH)
+    public function readDirs(string $parent, bool $repeat=false, ?string $preg=null): \Iterator
     {
-        return trim(preg_replace('/[\\\\\\/]+/', DIRECTORY_SEPARATOR, preg_replace('/^'.preg_quote($basepath, '/').'/', '', $path)), '\\/');
+        foreach (self::readPath($parent, $repeat, $preg) as $path) {
+            if (self::isDir($path)) {
+                yield $path;
+            }
+        }
     }
 
-    public function readDirs(string $dirs, bool $repeat=false, string $preg='/^.+$/'):array
+    public function readPath(string $parent, bool $repeat=false, ?string $preg=null, bool $full=true): \Iterator
     {
-        $dirs=Autoloader::parsePath($dirs);
-        $reads=[];
-        if (self::isDir($dirs)) {
-            $hd=opendir($dirs);
+        $path=Autoloader::parsePath($parent);
+        if (self::isDir($parent)) {
+            $hd=opendir($parent);
             while ($read=readdir($hd)) {
                 if (strcmp($read, '.') !== 0 && strcmp($read, '..') !==0) {
-                    $path=$dirs.'/'.$read;
-                    if (self::isDir($path) && preg_match($preg, $read)) {
-                        $reads[]=$read;
-                        if ($repeat) {
-                            foreach (self::readDirs($path, $repeat, $preg) as $read) {
-                                $reads[]=$read;
+                    $path = $parent.DIRECTORY_SEPARATOR.$read;
+                    if ($preg) {
+                        if (preg_match($preg, $read)) {
+                            if ($full) {
+                                yield $path;
+                            } else {
+                                yield self::cut($path, $parent);
+                            }
+                        }
+                    } else {
+                        if ($full) {
+                            yield $path;
+                        } else {
+                            yield self::cut($path, $parent);
+                        }
+                    }
+                    if ($repeat && self::isDir($path)) {
+                        foreach (self::readPath($path, $repeat, $preg) as $read) {
+                            if ($full) {
+                                yield $read;
+                            } else {
+                                yield self::cut($read, $parent);
                             }
                         }
                     }
@@ -123,7 +122,11 @@ class FileStorage implements Storage
             }
             closedir($hd);
         }
-        return $reads;
+    }
+
+    public function cut(string $path, string $basepath=ROOT_PATH)
+    {
+        return trim(preg_replace('/[\\\\\\/]+/', DIRECTORY_SEPARATOR, preg_replace('/^'.preg_quote($basepath, '/').'/', '', $path)), '\\/');
     }
 
     public function delete(string $path):bool
@@ -139,93 +142,76 @@ class FileStorage implements Storage
         return self::exist($path) === false;
     }
 
-    // 递归删除文件夹
-    public function rmdirs(string $dir):bool
+    /**
+     * 递归删除文件夹
+     *
+     * @param string $parent
+     * @return boolean
+     */
+    public function rmdirs(string $parent):bool
     {
-        $dir=self::abspath($dir);
-        if ($dir  && $handle=opendir($dir)) {
-            while (false!== ($item=readdir($handle))) {
-                if ($item!= '.' && $item != '..') {
-                    if (self::isDir($next= $dir.'/'.$item)) {
-                        self::rmdirs($next);
-                    } elseif (file_exists($file=$dir.'/'.$item)) { // Non-Thread-Safe
-                        $errorhandler=function ($erron, $error, $file, $line) {
-                            Debug::warning($error);
-                        };
-                        set_error_handler($errorhandler);
-                        unlink($file);
-                        restore_error_handler();
-                    }
+        if (self::isDir($parent)) {
+            foreach (self::readPath($parent) as $path) {
+                if (self::isFile($path)) {
+                    $errorhandler = function ($erron, $error, $file, $line) {
+                        Debug::warning($error);
+                    };
+                    set_error_handler($errorhandler);
+                    unlink($path);
+                    restore_error_handler();
+                }
+                if (self::isEmpty($path)) {
+                    rmdir($path);
+                } else {
+                    self::rmdirs($path);
                 }
             }
-            if (self::isEmpty($dir)) {
-                rmdir($dir);
-            }
-            closedir($handle);
+            rmdir($parent);
+            return true;
         }
-        return true;
+        return false;
     }
 
     public function isEmpty(string $dirOpen):bool
     {
-        if ($dirOpen && self::abspath($dirOpen)) {
-            $handle=opendir($dirOpen);
-            while (false!== ($item=readdir($handle))) {
-                if ($item!= '.' && $item != '..') {
-                    return false;
-                }
-            }
-            closedir($handle);
+        while (self::readDirs($dirOpen)) {
+            return false;
         }
         return true;
     }
 
-    public function copydir(string $src, string $dest, string $preg='/^.+$/'):bool
+    public function copydir(string $src, string $dest, ?string $preg=null):bool
     {
-        $src=Autoloader::parsePath($src);
-        $dest=Autoloader::parsePath($dest);
-        self::mkdirs($dest);
-        if (is_writable($dest)) {
-            $dest=self::path($dest);
-        } else {
-            return false;
-        }
-        $hd=opendir($src);
-        while ($read=readdir($hd)) {
-            if (strcmp($read, '.') !== 0 && strcmp($read, '..') !==0 && preg_match($preg, $read)) {
+        if ($path = self::path($dest)) {
+            foreach (self::readPath($src, false, $preg, false) as $read) {
                 if (self::isDir($src.'/'.$read)) {
                     self::copydir($src.'/'.$read, $dest.'/'.$read, $preg);
                 } else {
                     self::copy($src.'/'.$read, $dest.'/'.$read);
                 }
             }
-        }
-        closedir($hd);
-        return true;
-    }
-    
-    public function movedir(string $src, string $dest, string $preg='/^.+$/'):bool
-    {
-        $src=Autoloader::parsePath($src);
-        $dest=Autoloader::parsePath($dest);
-        self::mkdirs($dest);
-        if (is_writable($dest)) {
-            $dest=self::path($dest);
+            return true;
         } else {
             return false;
         }
-        $hd=opendir($src);
-        while ($read=readdir($hd)) {
-            if (strcmp($read, '.') !== 0 && strcmp($read, '..') !==0 && preg_match($preg, $read)) {
+    }
+    
+    public function movedir(string $src, string $dest, ?string $preg=null):bool
+    {
+        if ($path = self::path($dest)) {
+            foreach (self::readPath($src, false, $preg, false) as $read) {
                 if (self::isDir($src.'/'.$read)) {
-                    self::movedir($src.'/'.$read, $dest.'/'.$read);
+                    self::movedir($src.'/'.$read, $dest.'/'.$read, $preg);
+                    self::rmdir($src.'/'.$read);
                 } else {
                     self::move($src.'/'.$read, $dest.'/'.$read);
                 }
             }
+            self::rmdir($src);
+            return true;
+        } else {
+            return false;
         }
-        closedir($hd);
-        return true;
     }
     
     public function copy(string $source, string $dest):bool
@@ -420,28 +406,21 @@ class FileStorage implements Storage
     public function touchIndex(string $dest, string $content = 'dxkite-suda@'.SUDA_VERSION)
     {
         $dest=Autoloader::parsePath($dest);
-        if (is_writable($dest)) {
-            $dest=self::path($dest);
+        $dest=self::path($dest);
+        if ($dest) {
             $index = $dest.'/'.conf('default-index', 'index.html');
             if (!self::exist($index)) {
                 file_put_contents($index, $content);
             }
-        } else {
-            return false;
-        }
-        $hd=opendir($dest);
-        while ($read=readdir($hd)) {
-            if (strcmp($read, '.') !== 0 && strcmp($read, '..') !==0) {
-                if (self::isDir($dest.'/'.$read)) {
-                    $index = $dest.'/'.$read.'/'.conf('default-index', 'index.html');
-                    if (!self::exist($index)) {
-                        file_put_contents($index, $content);
-                    }
-                    self::touchIndex($dest.'/'.$read, $content);
+            $dirs = self::readDirs($dest, true);
+            foreach ($dirs as $path) {
+                $index = $path.'/'.conf('default-index', 'index.html');
+                if (!self::exist($index)) {
+                    file_put_contents($index, $content);
                 }
             }
+            return true;
         }
-        closedir($hd);
-        return true;
+        return false;
     }
 }

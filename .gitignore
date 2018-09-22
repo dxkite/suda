@@ -9,6 +9,7 @@
 /script/source.txt
 /docs/_book
 /script/data
+/tests
 _olds
 .suda
 *.phar

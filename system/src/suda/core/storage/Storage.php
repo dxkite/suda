@@ -30,13 +30,15 @@ interface Storage
      * @return boolean
      */
     public function mkdirs(string $dir, int $mode=0777):bool;
+
     /**
-     * 判断路径是否存在，不存在则创建，返回路径绝对地址
+     * 判断路径是否存在，不存在则创建，创建成功返回路径绝对地址
      *
      * @param string $path
      * @return string
      */
-    public function path(string $path);
+    public function path(string $path):?string;
+    
     /**
      * 返回路径绝对地址
      *
@@ -44,6 +46,7 @@ interface Storage
      * @return string
      */
     public function abspath(string $path);
+    
     /**
      * 读取路径下面所有的文件
      *
@@ -51,9 +54,30 @@ interface Storage
      * @param boolean $repeat
      * @param string $preg
      * @param boolean $cut
-     * @return array
+     * @return Iterator
      */
-    public function readDirFiles(string $dirs, bool $repeat=false, string $preg='/^.+$/', bool $cut=false):array;
+    public function readDirFiles(string $dirs, bool $repeat=false,?string $preg=null, bool $cut=false):\Iterator;
+   
+    /**
+     * 读取路径下面的所有文件或者目录
+     *
+     * @param string $dirs
+     * @param boolean $repeat
+     * @param string $preg
+     * @return Iterator
+     */
+    public function readDirs(string $dirs, bool $repeat=false,?string $preg=null): \Iterator;
+
+    /**
+     * 读取路径
+     *
+     * @param string $path
+     * @param boolean $repeat
+     * @param string $preg
+     * @return \Iterator
+     */
+    public function readPath(string $path, bool $repeat=false,?string $preg=null): \Iterator;
+    
     /**
      * 截断路径的前部分
      *
@@ -62,15 +86,7 @@ interface Storage
      * @return string
      */
     public function cut(string $path, string $basepath=ROOT_PATH);
-    /**
-     * 读取路径下面的所有文件或者目录
-     *
-     * @param string $dirs
-     * @param boolean $repeat
-     * @param string $preg
-     * @return array
-     */
-    public function readDirs(string $dirs, bool $repeat=false, string $preg='/^.+$/'):array;
+
     /**
      * 删除文件或者目录
      *
@@ -78,6 +94,7 @@ interface Storage
      * @return boolean
      */
     public function delete(string $path):bool;
+
     /**
      * 递归删除文件夹
      *
@@ -85,6 +102,7 @@ interface Storage
      * @return boolean
      */
     public function rmdirs(string $dir):bool;
+
     /**
      * 判断文件夹是否为空
      *
@@ -100,7 +118,7 @@ interface Storage
      * @param string $preg
      * @return boolean
      */
-    public function copydir(string $src, string $dest, string $preg='/^.+$/'):bool;
+    public function copydir(string $src, string $dest,?string $preg=null):bool;
     /**
      * 移动目录
      *
@@ -109,7 +127,7 @@ interface Storage
      * @param string $preg
      * @return boolean
      */
-    public function movedir(string $src, string $dest, string $preg='/^.+$/'):bool;
+    public function movedir(string $src, string $dest,?string $preg=null):bool;
     /**
      * 复制文件
      *
