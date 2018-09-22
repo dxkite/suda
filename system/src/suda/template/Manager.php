@@ -3,7 +3,7 @@
  * Suda FrameWork
  *
  * An open source application development framework for PHP 7.2.0 or newer
- * 
+ *
  * Copyright (c)  2017-2018 DXkite
  *
  * @category   PHP FrameWork
@@ -54,6 +54,7 @@ class Manager
     private static $staticPath='static';
     private static $dynamicPath='';
     private static $assetsPath= APP_PUBLIC.'/assets';
+    protected static $baseUrl=null;
 
     /**
      * 模板搜索目录
@@ -118,7 +119,7 @@ class Manager
      * @param string $theme
      * @return string
      */
-    public static function theme(string $theme=null):string 
+    public static function theme(string $theme=null):string
     {
         if (!is_null($theme)) {
             self::$theme = $theme;
@@ -576,7 +577,19 @@ class Manager
 
     public static function assetServer(string $url)
     {
-        return conf('asset-server', Request::baseUrl(is_dir(self::$assetsPath)) .'assets').$url;
+        if (is_null(self::$baseUrl)) {
+            if (is_dir(self::$assetsPath)) {
+                $base    = Request::hostBase();
+                $script  = $_SERVER['SCRIPT_NAME'];
+                $baseUrl = $base.rtrim(str_replace('\\', '/', dirname($script)), '/').'/assets';
+            } else {
+                $base    = Request::hostBase();
+                $script  = $_SERVER['SCRIPT_NAME'];
+                $baseUrl = $base.$script.'/assets';
+            }
+            self::$baseUrl = $baseUrl;
+        }
+        return conf('asset-server', self::$baseUrl).$url;
     }
 
     /**

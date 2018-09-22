@@ -27,13 +27,17 @@ class Request
     private static $post=null;
     private static $json=null;
     private static $files=null;
-    private static $url;
-    private static $type=0;
-    private static $instance=null;
-    private static $query='';
     private static $crawlers=null;
 
-    private $mapping=null;
+    protected static $instance=null;
+    protected static $type=0;
+    protected static $query='';
+    protected static $url;
+    protected static $baseUrl =null;
+    protected static $host =null;
+    protected static $port =null;
+    protected static $scheme =null;
+    protected $mapping=null;
 
     private function __construct()
     {
@@ -211,7 +215,7 @@ class Request
             if (array_key_exists($key, $_SERVER)) {
                 foreach (explode(',', $_SERVER[$key]) as $ip) {
                     $ip = trim($ip);
-                    if ((bool) filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4 |FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE)) {
+                    if ((bool) filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4 | FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE)) {
                         return $ip;
                     }
                 }
@@ -287,7 +291,7 @@ class Request
      */
     public static function isJson()
     {
-        return isset($_SERVER['CONTENT_TYPE']) && preg_match('/json/i', $_SERVER['CONTENT_TYPE']);
+        return array_key_exists('CONTENT_TYPE', $_SERVER) && preg_match('/json/i', $_SERVER['CONTENT_TYPE']);
     }
     
     /**
@@ -310,7 +314,7 @@ class Request
     public static function getHeader(string $name, string $default=null):?string
     {
         $name='HTTP_'.strtoupper(preg_replace('/[^\w]/', '_', $name));
-        if (isset($_SERVER[$name])) {
+        if (array_key_exists($name, $_SERVER)) {
             return $_SERVER[$name];
         }
         return $default;
@@ -326,7 +330,7 @@ class Request
     public static function hasHeader(string $name):bool
     {
         $name='HTTP_'.strtoupper(preg_replace('/[^\w]/', '_', $name));
-        return isset($_SERVER[$name]);
+        return array_key_exists($name, $_SERVER);
     }
 
 
@@ -431,47 +435,53 @@ class Request
 
     public static function getScheme()
     {
-        if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS']!='off') {
-            return 'https';
+        if (is_null(self::$scheme)) {
+            if (array_key_exists('HTTPS',$_SERVER) && strcasecmp($_SERVER['HTTPS'], 'off') != 0) {
+                self::$scheme = 'https';
+            } elseif (array_key_exists('REQUEST_SCHEME',$_SERVER)) {
+                self::$scheme = conf('app.router.scheme', $_SERVER['REQUEST_SCHEME']);
+            } else {
+                self::$scheme = 'http';
+            }
         }
-        if (isset($_SERVER['REQUEST_SCHEME'])) {
-            return conf('app.router.scheme', $_SERVER['REQUEST_SCHEME']);
-        }
-        return 'http';
+        return self::$scheme;
     }
     
     public static function getHost()
     {
-        return  conf('app.router.host', $_SERVER['HTTP_HOST'] ?? 'localhost');
+        if (is_null(self::$host)) {
+            self::$host = conf('app.router.host', $_SERVER['HTTP_HOST'] ?? 'localhost');
+        }
+        return self::$host;
     }
 
     public static function getPort()
     {
-        return conf('app.router.port', $_SERVER["SERVER_PORT"]??80);
+        if (is_null(self::$port)) {
+            self::$port = conf('app.router.port', $_SERVER["SERVER_PORT"] ?? 80);
+        }
+        return self::$port;
     }
 
-    public static function baseUrl(bool $static=false)
+    public static function baseUrl()
+    {
+        if (is_null(self::$baseUrl)) {
+            self::$baseUrl = self::getBaseUrl();
+        }
+        return self::$baseUrl;
+    }
+
+    protected static function getBaseUrl():string
     {
         // 0 auto
         // 1 windows = /?/, linux = /
         // 2 index.php/
         // 3 index.php?/
-
         $base=self::hostBase();
         $script=$_SERVER['SCRIPT_NAME'];
         $module=conf('app.url.mode', 0);
         $beautify=conf('app.url.beautify', false);
         $index=conf('app.index', 'index.php');
-        
-        // 静态目录
-        if ($static) {
-            if (strlen(dirname($script)) === 1) {
-                return $base.'/';
-            } else {
-                return $base.str_replace('\\','/',dirname($script)).'/';
-            }
-        }
-
         if ($module==0 || $module==1) {
             // 如果当前脚本为AutoIndex索引
             if (ltrim($script, '/') === $index) {
@@ -488,7 +498,7 @@ class Request
         }
         return $base.$script.(self::$type==2?'?':'').'/';
     }
-
+    
     public function isCrawler()
     {
         $agent= $_SERVER['HTTP_USER_AGENT'] ?? '';
