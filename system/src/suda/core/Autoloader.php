@@ -73,12 +73,12 @@ class Autoloader
 
     public static function import(string $filename)
     {
-        if (self::caseFilePath($filename)) {
+        if ($filename = self::realPath($filename)) {
             require_once $filename;
             return $filename;
         } else {
             foreach (self::$include_path as $include_path) {
-                if (self::caseFilePath($path=$include_path.DIRECTORY_SEPARATOR.$filename)) {
+                if ($path = self::realPath($include_path.DIRECTORY_SEPARATOR.$filename)) {
                     require_once $path;
                     return $path;
                 }
@@ -88,7 +88,7 @@ class Autoloader
 
     public static function classLoader(string $classname)
     {
-        if ($path=static::getClassPath($classname)) {
+        if ($path = static::getClassPath($classname)) {
             if (!class_exists($classname, false)) {
                 require_once $path;
             }
@@ -102,22 +102,22 @@ class Autoloader
         // 搜索路径
         foreach (self::$include_path as $include_namespace => $include_path) {
             if (is_numeric($include_namespace)) {
-                $path= $include_path.DIRECTORY_SEPARATOR.$namepath.'.php';
+                $path = $include_path.DIRECTORY_SEPARATOR.$namepath.'.php';
             } else {
-                $nl=strlen($include_namespace);
+                $nl = strlen($include_namespace);
                 if (substr($classname, 0, $nl) == $include_namespace) {
-                    $path= $include_path.DIRECTORY_SEPARATOR.static::formatSeparator(substr($classname, $nl)).'.php';
+                    $path = $include_path.DIRECTORY_SEPARATOR.static::formatSeparator(substr($classname, $nl)).'.php';
                 } else {
-                    $path= $include_path.DIRECTORY_SEPARATOR.$namepath.'.php';
+                    $path = $include_path.DIRECTORY_SEPARATOR.$namepath.'.php';
                 }
             }
-            if ($path = self::caseFilePath($path)) {
+            if ($path = self::realPath($path)) {
                 return $path;
             } else {
                 // 添加命名空间
                 foreach (self::$namespace as $namespace) {
                     $path = $include_path.DIRECTORY_SEPARATOR.$namespace.DIRECTORY_SEPARATOR.$namepath.'.php';
-                    if ($path = self::caseFilePath($path)) {
+                    if ($path = self::realPath($path)) {
                         // 精简类名
                         if (!class_exists($classname, false)) {
                             class_alias($namespace.'\\'.$classname, $classname);
@@ -205,21 +205,5 @@ class Autoloader
         }
         $absulotePath = $scheme.$root.implode(DIRECTORY_SEPARATOR, $absulotePaths);
         return $absulotePath;
-    }
-
-    /**
-     * 检擦文件打小写是否一致
-     *
-     * @param string $name
-     * @return string|null
-     */
-    private static function caseFilePath(string $path):?string
-    {
-        if (file_exists($path) && is_file($path) && $real=static::realPath($path)) {
-            if (basename($real) === basename($path)) {
-                return $real;
-            }
-        }
-        return null;
     }
 }

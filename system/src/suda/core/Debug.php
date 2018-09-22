@@ -80,7 +80,7 @@ class Debug
         $mode = conf('debug', defined('DEBUG') && DEBUG)?'debug':'normal';
         fwrite(self::$file, self::LOG_PACK[0].PHP_EOL.'request-'.self::$hash.'-begin from '.$request->ip().' at '.microtime(true).' with mode '. $mode .PHP_EOL);
         if (IS_CONSOLE) {
-            fwrite(self::$file,'  '.implode(' ',$_SERVER['argv']).PHP_EOL);
+            fwrite(self::$file, '  '.implode(' ', $_SERVER['argv']).PHP_EOL);
         } else {
             if (DEBUG) {
                 fwrite(self::$file, self::printHead().PHP_EOL);
@@ -521,7 +521,7 @@ class Debug
     {
         $logFile=self::$latest;
         if (file_exists($logFile)) {
-            if (filesize($logFile) > self::MAX_LOG_SIZE) {
+            if (filesize($logFile) > conf('log.size', self::MAX_LOG_SIZE)) {
                 $path=preg_replace('/[\\\\]+/', '/', Storage::path(APP_LOG.'/zip').'/'.date('Y-m-d').'.zip');
                 $zip = new ZipArchive;
                 $res = $zip->open($path, ZipArchive::CREATE);
