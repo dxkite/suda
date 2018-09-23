@@ -3,7 +3,7 @@
  * Suda FrameWork
  *
  * An open source application development framework for PHP 7.2.0 or newer
- * 
+ *
  * Copyright (c)  2017-2018 DXkite
  *
  * @category   PHP FrameWork
@@ -36,12 +36,13 @@ class System
 
     public static function init()
     {
-        class_alias('suda\\core\\System', 'System');
+        class_alias(__CLASS__, 'System');
         // 错误处理
-        register_shutdown_function('suda\\core\\System::onShutdown');
-        set_error_handler('suda\\core\\System::uncaughtError');
-        set_exception_handler('suda\\core\\System::uncaughtException');
-
+        register_shutdown_function([__CLASS__,'uncaughtFatalError']);
+        set_error_handler([__CLASS__,'uncaughtError']);
+        set_exception_handler([__CLASS__,'uncaughtException']);
+        // 系统关闭
+        register_shutdown_function([__CLASS__,'onShutdown']);
         if (!DEBUG) {
             ini_set('display_errors', 'Off');
         }
@@ -179,6 +180,16 @@ class System
         debug()->trace('system shutdown');
         debug()->timeEnd('shutdown');
         Debug::phpShutdown();
+    }
+    
+    public static function uncaughtFatalError()
+    {
+        if ($e = error_get_last()) {
+            $isFatalError = E_ERROR | E_PARSE | E_CORE_ERROR | E_CORE_WARNING | E_COMPILE_ERROR | E_COMPILE_WARNING;
+            if ($e['type'] === ($e['type'] & $isFatalError)) {
+                self::uncaughtError($e['type'], $e['message'], $e['file'], $e['line']);
+            }
+        }
     }
 
     public static function uncaughtException($exception)

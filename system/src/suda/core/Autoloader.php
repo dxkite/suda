@@ -74,12 +74,12 @@ class Autoloader
     public static function import(string $filename)
     {
         if ($filename = self::realPath($filename)) {
-            require_once $filename;
+            @require_once $filename;
             return $filename;
         } else {
             foreach (self::$include_path as $include_path) {
                 if ($path = self::realPath($include_path.DIRECTORY_SEPARATOR.$filename)) {
-                    require_once $path;
+                    @require_once $path;
                     return $path;
                 }
             }
@@ -90,7 +90,7 @@ class Autoloader
     {
         if ($path = static::getClassPath($classname)) {
             if (!class_exists($classname, false)) {
-                require_once $path;
+                @require_once $path;
             }
         }
     }

@@ -3,7 +3,7 @@
  * Suda FrameWork
  *
  * An open source application development framework for PHP 7.2.0 or newer
- * 
+ *
  * Copyright (c)  2017-2018 DXkite
  *
  * @category   PHP FrameWork
@@ -29,19 +29,42 @@ class Exception extends ErrorException implements JsonSerializable
     protected $show_start=0;
     protected $show_end=0;
     protected $level = null;
+
     protected static $levelTable = [
-        E_NOTICE => DEBUG::NOTICE,
-        E_USER_NOTICE => DEBUG::NOTICE,
-        E_USER_WARNING => DEBUG::WARNING,
-        E_COMPILE_WARNING => DEBUG::WARNING,
-        E_CORE_WARNING => DEBUG::WARNING,
-        E_DEPRECATED => DEBUG::WARNING,
+        E_NOTICE => Debug::NOTICE,
+        E_USER_NOTICE => Debug::NOTICE,
+        E_USER_WARNING => Debug::WARNING,
+        E_COMPILE_WARNING => Debug::WARNING,
+        E_CORE_WARNING => Debug::WARNING,
+        E_DEPRECATED => Debug::WARNING,
+        E_ERROR => Debug::ERROR,
+        E_PARSE => Debug::ERROR,
+        E_CORE_ERROR => Debug::ERROR,
+        E_COMPILE_ERROR => Debug::ERROR,
     ];
+
+    protected static $phpErrorName = [
+        E_NOTICE => 'NoticeException',
+        E_USER_NOTICE =>  'NoticeException',
+        E_USER_WARNING => 'NoticeException',
+        E_DEPRECATED => 'EeprecatedException',
+        E_ERROR => 'ErrorException',
+        E_PARSE => 'ParseException',
+        E_CORE_ERROR => 'CodeErrorException',
+        E_CORE_WARNING => 'CodeWarningException',
+        E_COMPILE_ERROR => 'CompileErrorException',
+        E_COMPILE_WARNING => 'CompileWarningException',
+    ];
+
     public function __construct(Throwable $e, ?string $name = null)
     {
         $this->severity =$e instanceof ErrorException?$e->getSeverity():E_ERROR;
         parent::__construct($e->getMessage(), $e->getCode(), $this->severity, $e->getFile(), $e->getLine(), $e->getPrevious());
-        $this->name=is_null($name)?get_class($e):$name;
+        if (array_key_exists($e->getCode(), self::$phpErrorName)) {
+            $this->name= self::$phpErrorName[$e->getCode()];
+        } else {
+            $this->name=is_null($name)?get_class($e):$name;
+        }
         $this->backtrace=$e->getTrace();
     }
 
@@ -84,6 +107,8 @@ class Exception extends ErrorException implements JsonSerializable
     {
         return $this->name;
     }
+
+    
     public function jsonSerialize()
     {
         return  [
