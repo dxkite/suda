@@ -157,7 +157,7 @@ class Query extends SQLQuery
             $fields=implode(',', $field);
         }
         $limit=is_null($page)?'': ' LIMIT '.self::page($page);
-        return new SQLQuery('SELECT '.$fields.' FROM `'.$table.'` '.trim($conditions, ';').$limit.';', $binds, $scroll);
+        return new SQLQuery('SELECT '.$fields.' FROM `'.$table.'` WHERE '.trim($conditions, ';').$limit.';', $binds, $scroll);
     }
 
     /**
@@ -192,9 +192,9 @@ class Query extends SQLQuery
                 $binds[$bname]=static::value($name, $value);
                 $sets[]="`{$name}`=:{$bname}";
             }
-            $sql='UPDATE `'.$table.'` SET '.implode(',', $sets).' '.self::prepareWhere($where, $binds, $count).';';
+            $sql='UPDATE `'.$table.'` SET '.implode(',', $sets).' WHERE '.self::prepareWhere($where, $binds, $count).';';
         } else {
-            $sql='UPDATE `'.$table.'` SET '.$set_fields.' '.self::prepareWhere($where, $binds, $count).';';
+            $sql='UPDATE `'.$table.'` SET '.$set_fields.' WHERE '.self::prepareWhere($where, $binds, $count).';';
         }
         return (new Query($sql, $binds))->object($object)->exec();
     }
@@ -211,7 +211,7 @@ class Query extends SQLQuery
     public static function delete(string $table, $where='1', array $binds=[], $object=null):int
     {
         $table=self::table($table);
-        $sql='DELETE FROM `'.$table.'` '.self::prepareWhere($where, $binds).';';
+        $sql='DELETE FROM `'.$table.'` WHERE '.self::prepareWhere($where, $binds).';';
         return (new SQLQuery($sql, $binds))->object($object)->exec();
     }
 
@@ -270,7 +270,7 @@ class Query extends SQLQuery
             }
             $where=implode(' AND ', $and);
         }
-        $where=' WHERE '.rtrim($where, ';');
+        $where= rtrim($where, ';');
         $bind=array_merge($bind, $param);
         return $where;
     }
@@ -280,7 +280,7 @@ class Query extends SQLQuery
     {
         $table=self::table($table);
         $where=self::prepareWhere($where, $binds);
-        $sql='SELECT count(*) as `count` FROM `'.$table.'` '.$where.';';
+        $sql='SELECT count(*) as `count` FROM `'.$table.'` WHERE '.$where.';';
         if ($query=(new SQLQuery($sql, $binds))->object($object)->fetch()) {
             return intval($query['count']);
         }
