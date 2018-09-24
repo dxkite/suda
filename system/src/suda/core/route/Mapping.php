@@ -3,7 +3,7 @@
  * Suda FrameWork
  *
  * An open source application development framework for PHP 7.2.0 or newer
- * 
+ *
  * Copyright (c)  2017-2018 DXkite
  *
  * @category   PHP FrameWork
@@ -94,13 +94,11 @@ class Mapping implements \JsonSerializable
             if (count($match)>0) {
                 foreach ($this->types as $paramName =>$type) {
                     $value=array_shift($match);
-                    if (!empty($value)) {
-                        if ($type==='int') {
-                            $value=intval($value);
-                        } else {
-                            $value=urldecode($value);
-                        }
-                        // 填充$_GET
+                    if ($type === 'int' && is_numeric($value)) {
+                        $value=intval($value);
+                        $valueGet[$paramName]=$value;
+                    } elseif (strlen($value)) {
+                        $value=urldecode($value);
                         $valueGet[$paramName]=$value;
                     }
                 }
