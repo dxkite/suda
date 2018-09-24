@@ -82,8 +82,8 @@ class Debug
         if (IS_CONSOLE) {
             fwrite(self::$file, '  '.implode(' ', $_SERVER['argv']).PHP_EOL);
         } else {
+            fwrite(self::$file, self::printHead().PHP_EOL);
             if (DEBUG) {
-                fwrite(self::$file, self::printHead().PHP_EOL);
                 cookie()->set(conf('log.cookie', '__debug'), conf('log.secret', base64_encode('dxkite')))->set();
             }
         }
