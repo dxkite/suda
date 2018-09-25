@@ -142,11 +142,15 @@ class Request
      * @param [type] $default GET值
      * @return [type] 获取的值
      */
-    public static function get(string $name='', $default=null)
+    public static function get(?string $name=null, $default=null)
     {
         if ($name) {
             if (isset(self::$get->$name)) {
-                return self::$get->$name;
+                if (strlen(self::$get->$name)) {
+                    return self::$get->$name;
+                } else {
+                    return null;
+                }
             } else {
                 return $default;
             }
@@ -175,11 +179,15 @@ class Request
      * @param [type] $default
      * @return [type] 获取的值
      */
-    public static function post(string $name='', $default=null)
+    public static function post(?string $name=null, $default=null)
     {
         if ($name) {
             if (isset(self::$post->$name)) {
-                return self::$post->$name;
+                if (strlen(self::$post->$name)) {
+                    return self::$post->$name;
+                } else {
+                    return null;
+                }
             } else {
                 return $default;
             }
@@ -194,7 +202,7 @@ class Request
      * @param string $name 如果指定了文件则是所有的文件
      * @return array 文件属性
      */
-    public static function files(string $name='')
+    public static function files(?string $name=null)
     {
         if ($name) {
             return self::$files->$name;
@@ -436,9 +444,9 @@ class Request
     public static function getScheme()
     {
         if (is_null(self::$scheme)) {
-            if (array_key_exists('HTTPS',$_SERVER) && strcasecmp($_SERVER['HTTPS'], 'off') != 0) {
+            if (array_key_exists('HTTPS', $_SERVER) && strcasecmp($_SERVER['HTTPS'], 'off') != 0) {
                 self::$scheme = 'https';
-            } elseif (array_key_exists('REQUEST_SCHEME',$_SERVER)) {
+            } elseif (array_key_exists('REQUEST_SCHEME', $_SERVER)) {
                 self::$scheme = conf('app.router.scheme', $_SERVER['REQUEST_SCHEME']);
             } else {
                 self::$scheme = 'http';
