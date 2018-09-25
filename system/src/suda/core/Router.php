@@ -104,7 +104,9 @@ class Router
     {
         storage()->put($this->cacheFile('.modules'), implode(PHP_EOL, self::$cacheModules));
         storage()->put($this->cacheFile(self::CACHE_NAME), serialize($this->routers));
-        storage()->put($this->cacheFile(self::CACHE_NAME.'.json'), json_encode($this->routers, JSON_PRETTY_PRINT|JSON_UNESCAPED_UNICODE));
+        if (DEBUG) {
+            storage()->put($this->cacheFile(self::CACHE_NAME.'.json'), json_encode($this->routers, JSON_PRETTY_PRINT|JSON_UNESCAPED_UNICODE));
+        }
     }
 
     public function loadModulesRouter()
@@ -119,6 +121,7 @@ class Router
                 self::prepareRouterInfo();
             }
         }
+        Hook::exec('suda:route:load', [$this]);
     }
 
     public function routerCached()
