@@ -151,9 +151,9 @@ class Field
         // default设置
         if ($this->isDefault) {
             if (is_null($this->default)) {
-                $default='DEFAULT NULL';
+                $default= 'DEFAULT NULL';
             } else {
-                $default=$this->default?'DEFAULT \''.addcslashes($this->default, '\'').'\'':'';
+                $default= 'DEFAULT \''.addcslashes($this->default, '\'').'\'';
             }
         } else {
             $default='';
