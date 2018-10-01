@@ -37,7 +37,7 @@ class FileStorage implements Storage
     }
 
     // 递归创建文件夹
-    public function mkdirs(string $dir, int $mode=0777):bool
+    public function mkdirs(string $dir, int $mode=0755):bool
     {
         $path=Autoloader::parsePath($dir);
         if (!self::isDir($path)) {
@@ -243,11 +243,15 @@ class FileStorage implements Storage
     }
 
     // 创建文件夹
-    public function mkdir(string $path, int $mode=0777):bool
+    public function mkdir(string $path, int $mode=0755):bool
     {
         $path=Autoloader::parsePath($path);
         if (!self::isDir($path) && is_writable(dirname($path))) {
-            return mkdir($path, $mode);
+            $mk = mkdir($path, $mode);
+            if ($mk) {
+                chmod($path, $mode);
+            }
+            return $mk;
         }
         return false;
     }

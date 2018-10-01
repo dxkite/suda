@@ -1,7 +1,22 @@
 <?php
 
 defined('DEBUG') or define('DEBUG', true);
-defined('USER_HOME') or define('USER_HOME', DIRECTORY_SEPARATOR ===  '/' ?$_SERVER["HOME"]:$_SERVER["HOMEDRIVE"].$_SERVER["HOMEPATH"]);
+
+// get user home
+if (!defined('USER_HOME')) {
+    // for linux
+    if (array_key_exists('HOME', $_SERVER)) {
+        define('USER_HOME', $_SERVER["HOME"]);
+    } 
+    // for windows
+    elseif (array_key_exists('HOMEDRIVE', $_SERVER) && array_key_exists('HOMEPATH', $_SERVER)) {
+        define('USER_HOME', $_SERVER["HOMEDRIVE"].$_SERVER["HOMEPATH"]);
+    } 
+    // for unkown
+    else {
+        define('USER_HOME', getcwd());
+    }
+}
 
 require_once __DIR__.'/__autoload.php';
 

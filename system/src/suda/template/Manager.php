@@ -578,7 +578,7 @@ class Manager
     public static function assetServer(string $url)
     {
         if (is_null(self::$baseUrl)) {
-            if (is_dir(self::$assetsPath)) {
+            if (is_dir(self::$assetsPath.DIRECTORY_SEPARATOR.self::$staticPath)) {
                 $base    = Request::hostBase();
                 $script  = $_SERVER['SCRIPT_NAME'];
                 $baseUrl = $base.rtrim(str_replace('\\', '/', dirname($script)), '/').'/assets';
