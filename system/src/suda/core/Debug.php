@@ -82,7 +82,7 @@ class Debug
         if (IS_CONSOLE) {
             fwrite(self::$file, '  '.implode(' ', $_SERVER['argv']).PHP_EOL);
         } else {
-            fwrite(self::$file, self::printHead().PHP_EOL);
+            fwrite(self::$file, self::getlogHeader().PHP_EOL);
             if (DEBUG) {
                 cookie()->set(conf('log.cookie', '__debug'), conf('log.secret', base64_encode('dxkite')))->set();
             }
@@ -107,7 +107,7 @@ class Debug
                 }
             }
             $call=(isset($traceInfo['class'])?$traceInfo['class'].'#':'').$traceInfo['function'];
-            self::_loginfo(self::$time[$name]['type'], $call, __('process $0 $1s', $name, number_format($pass, 5)), $traceInfo['file'] ??'unknown', $traceInfo['line'] ?? 0, $backtrace);
+            self::writeLogLevel(self::$time[$name]['type'], $call, __('process $0 $1s', $name, number_format($pass, 5)), $traceInfo['file'] ??'unknown', $traceInfo['line'] ?? 0, $backtrace);
             return $pass;
         }
         return 0;
@@ -120,13 +120,18 @@ class Debug
         return $levela_num - $levelb_num;
     }
 
-    protected static function _loginfo(string $level, string $name, string $message, string $file, int $line, array $backtrace=null)
+    protected static function writeLogLevel(string $level, string $name, string $message, string $file, int $line, ?array $backtrace=null)
     {
         if (defined('LOG_LEVEL')) {
             if (self::compareLevel(LOG_LEVEL, $level)>0) {
                 return;
             }
         }
+        self::writeLog($level, $name, $message, $file, $line, $backtrace);
+    }
+
+    protected static function writeLog(string $level, string $name, string $message, string $file, int $line, ?array $backtrace=null)
+    {
         $loginfo['file']=$file;
         $loginfo['line']=$line;
         $loginfo['message']=$message;
@@ -144,7 +149,7 @@ class Debug
 
     public static function displayException(Exception $e)
     {
-        self::logException($e);
+        self::writeException($e);
         if (IS_CONSOLE) {
             return self::printConsole($e);
         } else {
@@ -218,24 +223,29 @@ class Debug
     protected static function printHTML(Exception $e)
     {
         // // 非致命错误
-        if ($e->getSeverity()!==E_ERROR) {
+        if ($e->getSeverity() !== E_ERROR) {
             if (cookie()->get(conf('log.cookie', '__debug')) == conf('debugSecret', base64_encode('dxkite'))) {
-                echo "<div class=\"suda-error\" style=\"color:red\"><b>{$e->getName()}[{$e->getLevel()}]</b>: {$e->getMessage()} at {$e->getFile()}#{$e->getLine()}</div>";
+                echo '<div class="suda-error" style="color:red"><b>'.$e->getName().'['.$e->getLevel().']</b>: '.$e->getMessage().' at '.$e->getFile().'#'.$e->getLine().'</div>';
             }
             return;
         }
         $line=$e->getLine();
         $file=$e->getFile();
         $backtrace=$e->getBacktrace();
+        Config::set('request', self::$hash);
+        return self::displayLog(['line'=>$line,'file'=>$file,'backtrace'=>$backtrace,'name'=>$e->getName(),'level'=>$e->getLevel(),'message'=>$e->getMessage()]);
+    }
+
+    protected static function dumpException(Exception $e):string
+    {
         $ex= substr(md5($e->getName().'#'.$e->getMessage().'#'.$e->getFile().'#'.$e->getLine()), 0, 8);
-        Config::set('request', $ex.'_'.self::$hash);
         self::$hash = $ex.'-'.self::$hash;
         $dump = ['Exception'=>$e,'Dump'=>self::dumpArray()];
         storage()->path(APP_LOG.'/dump');
         storage()->put(APP_LOG.'/dump/'.self::$hash.'.json', json_encode($dump, JSON_PRETTY_PRINT|JSON_UNESCAPED_UNICODE));
-        return self::displayLog(['line'=>$line,'file'=>$file,'backtrace'=>$backtrace,'name'=>$e->getName(),'level'=>$e->getLevel(),'message'=>$e->getMessage()]);
+        return  self::$hash;
     }
-    
+
     protected static function displayLog(array $logarray)
     {
         /* ---- 外部变量 ----- */
@@ -315,15 +325,16 @@ class Debug
         exit;
     }
 
-    public static function logException(\Exception $e)
+    public static function writeException(\Exception $e)
     {
         if (!$e instanceof Exception) {
             $e=new Exception($e);
         }
-        self::_loginfo($e->getLevel(), $e->getName(), $e->getMessage(), $e->getFile(), $e->getLine(), $e->getBacktrace());
+        self::writeLog($e->getLevel(), $e->getName(), $e->getMessage(), $e->getFile(), $e->getLine(), $e->getBacktrace());
+        self::dumpException($e);
     }
 
-    private static function printHead()
+    private static function getlogHeader()
     {
         $request=Request::getInstance();
         return  str_replace([
@@ -443,7 +454,7 @@ class Debug
             $offset--;
         }
         $call=(isset($backtrace[$offset]['class'])?$backtrace[$offset]['class'].'#':'').$backtrace[$offset]['function'];
-        self::_loginfo('die', $call, $message, $backtrace[$offset]['file'] ??'unknown', $backtrace[$offset]['line'] ?? 0, $backtrace);
+        self::writeLogLevel('die', $call, $message, $backtrace[$offset]['file'] ??'unknown', $backtrace[$offset]['line'] ?? 0, $backtrace);
         die($message);
     }
     
@@ -485,7 +496,7 @@ class Debug
             }
         }
 
-        self::_loginfo(
+        self::writeLogLevel(
             $level,
             self::strify(isset($args[1])?$args[0]:$name),
             self::strify($args[1]??$args[0]??null),

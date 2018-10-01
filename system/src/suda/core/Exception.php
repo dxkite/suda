@@ -45,8 +45,8 @@ class Exception extends ErrorException implements JsonSerializable
 
     protected static $phpErrorName = [
         E_NOTICE => 'NoticeException',
-        E_USER_NOTICE =>  'NoticeException',
-        E_USER_WARNING => 'NoticeException',
+        E_USER_NOTICE =>  'UserNoticeException',
+        E_USER_WARNING => 'UserWarningException',
         E_DEPRECATED => 'EeprecatedException',
         E_ERROR => 'ErrorException',
         E_PARSE => 'ParseException',
