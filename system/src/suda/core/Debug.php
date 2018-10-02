@@ -68,7 +68,9 @@ class Debug
         }
 
         $request=Request::getInstance();
-        self::$hash=$hash=substr(md5(microtime().''.$request->ip()), 0, 6);
+        
+        self::$hash= $hash = substr(md5(microtime().''.$request->ip()), 0, 6);
+
         $file = tmpfile();
         if ($file === false) {
             self::$tempname =  APP_LOG .'/.suda.tmp';
@@ -239,11 +241,11 @@ class Debug
     protected static function dumpException(Exception $e):string
     {
         $ex= substr(md5($e->getName().'#'.$e->getMessage().'#'.$e->getFile().'#'.$e->getLine()), 0, 8);
-        self::$hash = $ex.'-'.self::$hash;
+        $hash = $ex.'-'.self::$hash;
         $dump = ['Exception'=>$e,'Dump'=>self::dumpArray()];
         storage()->path(APP_LOG.'/dump');
-        storage()->put(APP_LOG.'/dump/'.self::$hash.'.json', json_encode($dump, JSON_PRETTY_PRINT|JSON_UNESCAPED_UNICODE));
-        return  self::$hash;
+        storage()->put(APP_LOG.'/dump/'. $hash.'.json', json_encode($dump, JSON_PRETTY_PRINT|JSON_UNESCAPED_UNICODE));
+        return $hash;
     }
 
     protected static function displayLog(array $logarray)
