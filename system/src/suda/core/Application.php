@@ -218,9 +218,8 @@ class Application
     public function checkModuleRequire(string $name, array $requires)
     {
         foreach ($requires as $module => $version) {
-            $require=$this->getModuleConfig($module);
-            if ($this->checkModuleExist($module) && isset($require['version'])) {
-                if (!empty($version)) {
+            if ($require = $this->getModuleConfig($module)) {
+                if (!empty($version) && array_key_exists('version', $require)) {
                     if (!static::versionCompire($version, $require['version'])) {
                         suda_panic('ApplicationException', __('$0 require module $1 $2 and now is $3', $name, $module, $version, $require['version']));
                     }
@@ -658,20 +657,18 @@ class Application
     protected function registerModules()
     {
         foreach ($this->modulesPath as $path) {
-            // 加载文件夹
-            $dirs=Storage::readDirs($path);
-            foreach ($dirs as $dir) {
-                self::registerModule($path.'/'.$dir);
-            }
-            // 加载模块包
-            $zips = Storage::readDirFiles($path, false, '/\.mod(ule)?$/');
-            foreach ($zips as $zip) {
-                $zipDir = RUNTIME_DIR.'/modules/'. pathinfo($zip, PATHINFO_FILENAME);
-                if (conf('debug') || !Storage::isDir($zipDir)) {
-                    ZipHelper::unzip($zip, $zipDir, true);
-                    debug()->info(__('extract $0 to $1', $zip, $zipDir));
+            $modulePaths = Storage::readPath($path);
+            foreach ($modulePaths as $modulePath) {
+                if (Storage::isFile($modulePath)) {
+                    $extension = pathinfo($modulePath, PATHINFO_EXTENSION);
+                    if (
+                        $extension !== 'mod' &&
+                        $extension !== 'module' &&
+                        $extension !== 'suda-module') {
+                        continue;
+                    }
                 }
-                self::registerModule($zipDir);
+                self::registerModule($modulePath);
             }
         }
     }
@@ -683,9 +680,21 @@ class Application
      * @param string|null|array $config
      * @return boolean
      */
-    public function registerModule(string $path, $config = null):bool
+    public function registerModule(string $modulePath, $config = null):bool
     {
+        // mod 文件或者 文件夹
+        if (Storage::isDir($modulePath)) {
+            $path = $modulePath;
+        } else {
+            $path = RUNTIME_DIR.'/modules/'. pathinfo($modulePath, PATHINFO_FILENAME);
+            if (conf('debug') || !Storage::isDir($modulePath)) {
+                ZipHelper::unzip($modulePath, $path, true);
+                debug()->info(__('extract $0 to $1', $modulePath, $path));
+            }
+        }
+
         $config = is_null($config)?$path.'/module.json': $config;
+
         if (is_string($config)) {
             if ($config = Config::resolve($config)) {
                 $configData = Config::loadConfig($config);
@@ -760,11 +769,9 @@ class Application
      */
     protected static function versionCompire(string $version, string $compire)
     {
-        $oparetor=['lt','<=','le','gt','>=','ge','==','=','eq','!=','<>','ne','<','>'];
-        $preg=implode('|', $oparetor);
-        if (preg_match('/^('.$preg.')(.+)$/i', $version, $match)) {
+        if (preg_match('/^(<=?|>=?|<>|!=)(.+)$/i', $version, $match)) {
             list($s, $op, $ver)=$match;
-            return  version_compare($compire, $ver, strtolower($op));
+            return  version_compare($compire, $ver, $op);
         }
         return version_compare($compire, $version, '>=');
     }
@@ -779,7 +786,7 @@ class Application
     {
         $debug=debug_backtrace();
         $info=$debug[$deep];
-        while (!isset($info['file'])) {
+        while (array_key_exists('file',$info)) {
             $deep++;
             $info=$debug[$deep];
         }
@@ -799,9 +806,9 @@ class Application
             $config=app()->getModuleConfig($module);
             $modulePath=storage()->path($config['path']);
             $dir = substr($file, 0, strlen($modulePath));
-            if ($modulePath == $dir) {
+            if ($modulePath === $dir) {
                 $next = substr($file, strlen($modulePath), 1);
-                $nextIsSp = $next == '/' || $next == '\\';
+                $nextIsSp = $next === '/' || $next === '\\';
                 if ($nextIsSp) {
                     return $module;
                 }

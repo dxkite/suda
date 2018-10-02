@@ -3,7 +3,7 @@
  * Suda FrameWork
  *
  * An open source application development framework for PHP 7.2.0 or newer
- * 
+ *
  * Copyright (c)  2017-2018 DXkite
  *
  * @category   PHP FrameWork
@@ -14,6 +14,9 @@
  * @version    since 1.2.4
  */
 namespace suda\core;
+
+use suda\core\Config;
+use suda\core\Storage;
 
 /**
 * I18N 国际化支持
@@ -44,7 +47,7 @@ class Locale
     {
         if (!in_array($path, self::$paths)) {
             self::$paths[]=$path;
-            self::loadFile($path.'/'.self::$set);
+            self::loadPath($path.'/'.self::$set);
         }
     }
 
@@ -63,16 +66,34 @@ class Locale
     public static function load(string $locale)
     {
         foreach (self::$paths as $path) {
-            self::loadFile($path.'/'.$locale);
+            self::loadPath($path);
         }
     }
-    
+
+    /**
+     * 加载路径下的语言文件
+     *
+     * @param string $path
+     * @return void
+     */
+    public static function loadPath(string $path)
+    {
+        if (Storage::isFile($path)) {
+            self::loadFile($path.'/'.$locale);
+        } elseif (Storage::isDir($path)) {
+            $langFiles = Storage::readDirFiles($path);
+            foreach ($langFiles as $langFile) {
+                self::loadFile($langFile);
+            }
+        }
+    }
+
     /**
     * 加载语言本地化文件
     */
     public static function loadFile(string $path)
     {
-        if ($file=Config::resolve($path)) {
+        if ($file = Config::resolve($path)) {
             $localeArray = Config::loadConfig($file);
             return self::include($localeArray);
         }
