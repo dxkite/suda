@@ -7,12 +7,14 @@ v2.0.2
     - `loadModule` 函数
     - `addReachableModule` 函数
     - welcome模块
+    - 循环载入模板检测
 - 修改
     - 系统Hook统一命名标准 ( `1.x -> 2.x` )
     - 模块后缀支持 `.mod` 和 `.module`
     - 定向页面
     - 格式化输出函数调整
     - 记录所有PHP错误
+    - 语言包加载方式
     - 对于GET,POST长度为0的值设置为NULL
 - 修复
     - 模板 `$:` 输出 
