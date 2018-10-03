@@ -392,21 +392,25 @@ class Application
      * 获取模块URL前缀
      *
      * @param string $module
-     * @return array
+     * @return array|string|null
      */
     public function getModulePrefix(string $module, string $group=null)
     {
-        $prefix=conf('module-prefix.'.$module, null);
-        if (is_null($prefix)) {
+        $prefixs=conf('router-prefix.'.$module, null);
+        if (is_null($prefixs)) {
             $config = self::getModuleConfig($module);
             if (array_key_exists('prefix', $config)) {
-                $prefix = $config['prefix'];
-                if (!is_null($group)) {
-                    return $prefix[$group] ?? '';
-                }
+                $prefixs = $config['prefix'];
             }
         }
-        return $prefix;
+        if (is_array($prefixs)) {
+            if (is_null($group)) {
+                return $prefixs;
+            } else {
+                return $prefixs[$group] ?? '';
+            }
+        }
+        return null;
     }
 
  
