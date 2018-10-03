@@ -3,7 +3,7 @@
  * Suda FrameWork
  *
  * An open source application development framework for PHP 7.2.0 or newer
- * 
+ *
  * Copyright (c)  2017-2018 DXkite
  *
  * @category   PHP FrameWork
@@ -31,11 +31,12 @@ class Router
     const CACHE_NAME='route.mapping';
     protected static $cacheName=null;
     protected static $cacheModules=null;
+    protected static $groups=null;
 
     private function __construct()
     {
-        Hook::listen('suda:system:error::404', 'Router::error');
-        Hook::listen('suda:route:dispatch::error', 'Router::error');
+        Hook::listen('suda:system:error::404', [$this,'error']);
+        Hook::listen('suda:route:dispatch::error', [$this,'error']);
     }
 
     public static function getInstance()
@@ -46,47 +47,44 @@ class Router
         return self::$router;
     }
     
-    public static function getModulePrefix(string $module)
+    public static function getModulePrefix(string $module,string $group)
     {
-        $prefix= Application::getInstance()->getModulePrefix($module)??'';
-        $admin_prefix='';
-        if (is_array($prefix)) {
-            if (in_array(key($prefix), ['admin','simple'], true)) {
-                $admin_prefix=$prefix['admin'] ?? '';
-                $prefix=$prefix['simple'] ?? '';
-            } else {
-                $admin_prefix=count($prefix)?array_shift($prefix):'';
-                $prefix=count($prefix)?array_shift($prefix):'';
-            }
-        }
-        return [$admin_prefix,$prefix];
+        return Application::getInstance()->getModulePrefix($module,$group);
     }
 
     public function load(string $module)
     {
-        $simple_routers=[];
-        $admin_routers=[];
-        $module_path=Application::getInstance()->getModulePath($module);
-        debug()->trace(__('load module:$0 path:$1', $module, $module_path));
-        // 加载前台路由
-        if ($file=Application::getInstance()->getModuleConfigPath($module, 'router')) {
-            $simple_routers= self::loadModuleRouteConfig(Mapping::ROLE_SIMPLE, $module, $file);
-            debug()->trace(__('loading simple route from file $0', $file));
+        debug()->trace(__('load module router: $0', $module));
+        $groups = $this->getRouterGroups();
+        foreach ($groups as $index => $name) {
+            $group = trim(is_numeric($index)?$name:$index);
+            $config = $group === Mapping::DEFAULT_GROUP ? 'router': 'router-'.$name;
+            if ($file=Application::getInstance()->getModuleConfigPath($module, $config)) {
+                $loadedRouters= self::loadModuleRouteConfig($group, $module, $file);
+                debug()->trace(__('loading $1 route from file $0', $file, $group));
+            }
+            $this->routers=array_merge($this->routers, $loadedRouters);
         }
-        // 加载后台路由
-        if ($file=Application::getInstance()->getModuleConfigPath($module, 'router_admin')) {
-            $admin_routers= self::loadModuleRouteConfig(Mapping::ROLE_ADMIN, $module, $file);
-            debug()->trace(__('loading admin route from file  $0', $file));
+    }
+    
+    public function getRouterGroups():array
+    {
+        if (is_null(self::$groups)) {
+            $groups = conf('app.router.groups', [Mapping::DEFAULT_GROUP]);
+            if (defined('ROUTER_GROUPS')) {
+                $groups = explode(',', ROUTER_GROUPS);
+            }
+            self::$groups = $groups;
         }
-        $this->routers=array_merge($this->routers, $admin_routers, $simple_routers);
+        return self::$groups;
     }
 
-    protected function loadModuleRouteConfig(int $role, string $module, string $configFile)
+    protected function loadModuleRouteConfig(string $group, string $module, string $configFile)
     {
         $routers=Config::loadConfig($configFile, $module);
         $router=[];
         foreach ($routers as $name => $value) {
-            $mapping=Mapping::createFromRouteArray($role, $module, $name, $value);
+            $mapping=Mapping::createFromRouteArray($group, $module, $name, $value);
             if (!$mapping->isHidden()) {
                 $router[$mapping->getFullName()]=$mapping;
             }
@@ -543,13 +541,16 @@ class Router
     private function cacheFile(string $name):string
     {
         if (is_null(self::$cacheName)) {
-            $reachable=app()->getReachableModules();
+            $reachable = app()->getReachableModules();
+            $groups = $this->getRouterGroups();
+            sort($groups);
             sort($reachable);
-            self::$cacheModules=$reachable;
-            self::$cacheName=substr(md5(implode('-', $reachable)), 0, 8);
+            self::$cacheModules = $reachable;
+            self::$cacheName = implode('-',$groups).'/'.substr(md5(implode('-', $reachable)), 0, 8);
         }
-        $path=CACHE_DIR.'/router/'.self::$cacheName;
-        Storage::path($path);
-        return $path.'/'.$name;
+
+        $path = CACHE_DIR.'/router/'.self::$cacheName;
+        $path = Storage::path($path);
+        return $path.DIRECTORY_SEPARATOR.$name;
     }
 }

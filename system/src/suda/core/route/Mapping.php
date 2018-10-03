@@ -30,7 +30,7 @@ class Mapping implements \JsonSerializable
     protected $source;
     protected $module;
     protected $name;
-    protected $role;
+    protected $group;
     protected $types;
     protected $param;
     protected $value;
@@ -43,12 +43,13 @@ class Mapping implements \JsonSerializable
     protected $hidden=false;
     protected $dynamic=false;
     
-    const ROLE_ADMIN=0;
-    const ROLE_SIMPLE=1;
-    protected static $urlType=['int'=>'\d+', 'string'=>'[^\/]+','url'=>'.+'];
+    const DEFAULT_GROUP = 'default';
+ 
+    protected static $urlType= [ 'int'=>'\d+', 'string'=>'[^\/]+', 'url'=>'.+' ];
+    
     public static $current;
 
-    public function __construct(string $name, string $url, string $callback, string $module, array $method=[], int $role=self::ROLE_SIMPLE)
+    public function __construct(string $name, string $url, string $callback, string $module, array $method=[], string $group=Mapping::DEFAULT_GROUP)
     {
         $this->module=app()->getModuleFullName($module);
         $this->name=$name;
@@ -57,7 +58,7 @@ class Mapping implements \JsonSerializable
         });
         $this->method= $method;
         $this->callback=$callback;
-        $this->role=$role;
+        $this->group=$group;
         $this->url=$url;
     }
 
@@ -267,9 +268,9 @@ class Mapping implements \JsonSerializable
         return $this->hidden;
     }
 
-    public function getRole()
+    public function getGroup()
     {
-        return $this->role;
+        return $this->group;
     }
 
     public function getModule()
@@ -431,22 +432,7 @@ class Mapping implements \JsonSerializable
 
     public function getPrefix()
     {
-        $prefix=app()->getModulePrefix($this->module)??'';
-        $admin_prefix='';
-        if (is_array($prefix)) {
-            if (in_array(key($prefix), ['admin','simple'], true)) {
-                $admin_prefix=$prefix['admin'] ?? '';
-                $prefix=$prefix['simple'] ?? '';
-            } else {
-                $admin_prefix=count($prefix)?array_shift($prefix):'';
-                $prefix=count($prefix)?array_shift($prefix):'';
-            }
-        }
-        if ($this->role == self::ROLE_ADMIN) {
-            return conf('app.admin', '/admin').$admin_prefix;
-        } else {
-            return $prefix;
-        }
+        return app()->getModulePrefix($this->module, $this->group);
     }
 
     protected function buildMatch(string $url)
@@ -473,7 +459,7 @@ class Mapping implements \JsonSerializable
         return $url;
     }
 
-    public static function createFromRouteArray(int $role, string $module, string $name, array $json)
+    public static function createFromRouteArray(string $group, string $module, string $name, array $json)
     {
         if (isset($json['class'])) {
             $callback =  $json['class'].'->onRequest';
@@ -484,7 +470,7 @@ class Mapping implements \JsonSerializable
         } else {
             throw new \suda\core\Exception(new \Exception(__('$0 router $1 require infomation: class or template or source', $module, $name)), 'RouterError');
         }
-        $mapping= new self($name, $json['url']??$json['visit'], $callback, $module, $json['method']??[], $role);
+        $mapping= new self($name, $json['url']??$json['visit'], $callback, $module, $json['method']??[], $group);
         $mapping->antiPrefix=isset($json['anti-prefix'])?$json['anti-prefix']:false;
         $mapping->hidden= $json['disable'] ?? $json['hidden'] ?? false;
         $mapping->param= $json['param'] ?? null;
@@ -568,7 +554,7 @@ class Mapping implements \JsonSerializable
             'source' => $this->source,
             'module' => $this->module,
             'name' => $this->name,
-            'role' => $this->role,
+            'group' => $this->group,
             'types' => $this->types,
             'param' => $this->param,
             'value' => $this->value,

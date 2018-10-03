@@ -17,7 +17,8 @@
     define('DEBUG_DUMP_LOG', true);
     // 设置默认时区
     define('DEFAULT_TIMEZONE', 'PRC');
-
+    // 设置路由组
+    define('ROUTER_GROUPS','default,dev');
     // 系统所在目录
     define('SYSTEM', __DIR__.'/../suda/system');
     // 载入框架

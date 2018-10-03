@@ -389,16 +389,22 @@ class Application
     }
 
     /**
-     * 获取模块网页前缀
+     * 获取模块URL前缀
      *
      * @param string $module
      * @return array
      */
-    public function getModulePrefix(string $module)
+    public function getModulePrefix(string $module, string $group=null)
     {
         $prefix=conf('module-prefix.'.$module, null);
         if (is_null($prefix)) {
-            $prefix=$this->moduleConfigs[self::getModuleFullName($module)]['prefix']??null;
+            $config = self::getModuleConfig($module);
+            if (array_key_exists('prefix', $config)) {
+                $prefix = $config['prefix'];
+                if (!is_null($group)) {
+                    return $prefix[$group] ?? '';
+                }
+            }
         }
         return $prefix;
     }
@@ -786,7 +792,7 @@ class Application
     {
         $debug=debug_backtrace();
         $info=$debug[$deep];
-        while (array_key_exists('file',$info)) {
+        while (array_key_exists('file', $info)) {
             $deep++;
             $info=$debug[$deep];
         }
