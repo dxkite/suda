@@ -83,7 +83,7 @@ class Manager
             if ($instance instanceof Compiler) {
                 self::$compiler = $instance;
             } else {
-                throw new KernelException(__('app template compiler must be instance of suda\template\Compier '));
+                throw new KernelException(__('app template compiler must be instance of suda\template\Compier'));
             }
             Hook::listen('suda:route:dispatch::extra', [__CLASS__,'assetsResponse']);
         }

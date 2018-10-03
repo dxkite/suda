@@ -3,7 +3,7 @@
  * Suda FrameWork
  *
  * An open source application development framework for PHP 7.2.0 or newer
- * 
+ *
  * Copyright (c)  2017-2018 DXkite
  *
  * @category   PHP FrameWork
@@ -21,6 +21,7 @@ use suda\core\Response;
 use suda\core\Router;
 use suda\core\Hook;
 use suda\exception\CommandException;
+use suda\exception\KernelException;
 
 abstract class Template
 {
@@ -120,7 +121,7 @@ abstract class Template
         debug()->time('render '.$this->name);
         $this->_render_template();
         if ($this->extend) {
-            \suda\template\Manager::include($this->extend, $this)->echo();
+            $this->include($this->extend);
         }
         debug()->timeEnd('render '.$this->name);
     }
@@ -130,8 +131,15 @@ abstract class Template
         $this->extend = $name;
     }
 
-    public function include(string $name) {
-        \suda\template\Manager::include($name, $this)->echo();
+    public function include(string $name)
+    {
+        $template = \suda\template\Manager::include($name, $this);
+        for ($parent = $this->parent; $parent ; $parent = $parent->parent) {
+            if ($parent->name === $template->name) {
+                throw new KernelException(__('use parent template failed: $0', $template->name));
+            }
+        }
+        $template->echo();
     }
     
     public function getRenderStack()
@@ -165,8 +173,9 @@ abstract class Template
         $this->response=$this->parent->response;
         return $this;
     }
+
     /**
-    * 创建模板
+    * 创建响应
     */
     public function response(Response $response)
     {
