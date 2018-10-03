@@ -62,8 +62,8 @@ class Router
             if ($file=Application::getInstance()->getModuleConfigPath($module, $config)) {
                 $loadedRouters= self::loadModuleRouteConfig($group, $module, $file);
                 debug()->trace(__('loading $1 route from file $0', $file, $group));
+                $this->routers=array_merge($this->routers, $loadedRouters);
             }
-            $this->routers=array_merge($this->routers, $loadedRouters);
         }
     }
     
