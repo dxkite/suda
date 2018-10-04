@@ -606,7 +606,7 @@ class Application
     public function getModuleFullName(string $name)
     {
         // 存在缓存则返回缓存
-        if (isset($this->moduleNameCache[$name])) {
+        if (array_key_exists($name, $this->moduleNameCache)) {
             return $this->moduleNameCache[$name];
         }
         preg_match('/^(?:([a-zA-Z0-9_\-.]+)\/)?([a-zA-Z0-9_\-.]+)(?::(.+))?$/', $name, $matchname);
@@ -632,7 +632,10 @@ class Application
         // 排序版本
         uksort($targets, 'version_compare');
         // 选取版本号高的版本
-        return count($targets)?array_pop($targets):$name;
+        $fullname = count($targets)?array_pop($targets):$name;
+        // 缓存
+        $this->moduleNameCache[$name] = $fullname;
+        return $fullname;
     }
 
     /**
@@ -698,11 +701,11 @@ class Application
         if (Storage::isDir($modulePath)) {
             $path = $modulePath;
         } else {
-            $path = RUNTIME_DIR.'/modules/'. pathinfo($modulePath,PATHINFO_FILENAME) .'-'.substr(md5_file($modulePath), 0, 8);
+            $path = RUNTIME_DIR.'/modules/'. pathinfo($modulePath, PATHINFO_FILENAME) .'-'.substr(md5_file($modulePath), 0, 8);
             if (conf('debug') || !Storage::isDir($path)) {
                 ZipHelper::unzip($modulePath, $path);
                 debug()->info(__('unzip $0 to $1', $modulePath, $path));
-            }  
+            }
         }
         // 自定义配置或使用标准配置
         $config = is_null($config) ? 'module.json': $config;
