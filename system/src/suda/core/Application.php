@@ -698,11 +698,11 @@ class Application
         if (Storage::isDir($modulePath)) {
             $path = $modulePath;
         } else {
-            $path = RUNTIME_DIR.'/modules/'. basename($modulePath).'-'.substr(md5_file($path), 0, 8);
-            if (conf('debug') || !Storage::isDir($modulePath)) {
-                ZipHelper::unzip($modulePath, $path, true);
-                debug()->info(__('extract $0 to $1', $modulePath, $path));
-            }
+            $path = RUNTIME_DIR.'/modules/'. pathinfo($modulePath,PATHINFO_FILENAME) .'-'.substr(md5_file($modulePath), 0, 8);
+            if (conf('debug') || !Storage::isDir($path)) {
+                ZipHelper::unzip($modulePath, $path);
+                debug()->info(__('unzip $0 to $1', $modulePath, $path));
+            }  
         }
         // 自定义配置或使用标准配置
         $config = is_null($config) ? 'module.json': $config;

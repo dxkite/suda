@@ -3,7 +3,7 @@
  * Suda FrameWork
  *
  * An open source application development framework for PHP 7.2.0 or newer
- * 
+ *
  * Copyright (c)  2017-2018 DXkite
  *
  * @category   PHP FrameWork
@@ -28,23 +28,16 @@ class ZipHelper
      * @param string $output
      * @return boolean 解压结果
      */
-    public static function unzip(string $inputFile, string $output, bool $cutself=false)
+    public static function unzip(string $inputFile, string $output):bool
     {
         $zip=new ZipArchive;
         if ($zip->open($inputFile, ZipArchive::CHECKCONS)) {
-            $name=basename($output);
-            if (preg_match('/^'. preg_quote($name, '/').'/', $zip->getNameIndex(0))) {
-                if ($cutself) {
-                    $output=dirname($output);
-                }
-            }
             $zip->extractTo($output);
             $zip->close();
             return true;
         }
         return false;
     }
- 
 
     /**
      * 压缩目录到文件

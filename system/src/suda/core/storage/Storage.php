@@ -3,7 +3,7 @@
  * Suda FrameWork
  *
  * An open source application development framework for PHP 7.2.0 or newer
- * 
+ *
  * Copyright (c)  2017-2018 DXkite
  *
  * @category   PHP FrameWork
@@ -56,7 +56,7 @@ interface Storage
      * @param boolean $cut
      * @return Iterator
      */
-    public function readDirFiles(string $dirs, bool $repeat=false,?string $preg=null, bool $cut=false):\Iterator;
+    public function readDirFiles(string $dirs, bool $repeat=false, ?string $preg=null, bool $cut=false):\Iterator;
    
     /**
      * 读取路径下面的所有文件或者目录
@@ -66,7 +66,7 @@ interface Storage
      * @param string $preg
      * @return Iterator
      */
-    public function readDirs(string $dirs, bool $repeat=false,?string $preg=null): \Iterator;
+    public function readDirs(string $dirs, bool $repeat=false, ?string $preg=null): \Iterator;
 
     /**
      * 读取路径
@@ -76,7 +76,7 @@ interface Storage
      * @param string $preg
      * @return \Iterator
      */
-    public function readPath(string $path, bool $repeat=false,?string $preg=null): \Iterator;
+    public function readPath(string $path, bool $repeat=false, ?string $preg=null): \Iterator;
     
     /**
      * 截断路径的前部分
@@ -118,7 +118,7 @@ interface Storage
      * @param string $preg
      * @return boolean
      */
-    public function copydir(string $src, string $dest,?string $preg=null):bool;
+    public function copydir(string $src, string $dest, ?string $preg=null):bool;
     /**
      * 移动目录
      *
@@ -127,7 +127,7 @@ interface Storage
      * @param string $preg
      * @return boolean
      */
-    public function movedir(string $src, string $dest,?string $preg=null):bool;
+    public function movedir(string $src, string $dest, ?string $preg=null):bool;
     /**
      * 复制文件
      *
