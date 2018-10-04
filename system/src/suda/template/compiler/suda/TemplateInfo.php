@@ -3,7 +3,7 @@
  * Suda FrameWork
  *
  * An open source application development framework for PHP 7.2.0 or newer
- * 
+ *
  * Copyright (c)  2017-2018 DXkite
  *
  * @category   PHP FrameWork
@@ -17,6 +17,7 @@
 namespace suda\template\compiler\suda;
 
 use suda\template\Manager;
+use suda\template\iterator\RecursiveTemplateIterator;
 
 /**
  * 获取模板信息类
@@ -80,7 +81,7 @@ class TemplateInfo extends Compiler
         return array_keys($this->values);
     }
 
-    public static function getTemplates(string $module=null, string $ex='.+')
+    public static function getTemplates(string $module=null, ?string $extension= null)
     {
         $modules=empty($module) || is_null($module) ? app()->getLiveModules():[$module];
         foreach ($modules as $module) {
@@ -90,28 +91,17 @@ class TemplateInfo extends Compiler
             $sources=Manager::getTemplateSource($module);
             // 覆盖顺序：栈顶优先级高，覆盖栈底元素
             while ($path=array_pop($sources)) {
-                self::getModuleTemplate($module, $ex, $path, $path);
+                self::getModuleTemplate($module, $extension, $path);
             }
         }
         return self::$templates;
     }
 
-    protected static function getModuleTemplate(string $module, string $ex, string $root, string $dirs)
+    protected static function getModuleTemplate(string $module, ?string $extension=null, string $root)
     {
-        $hd=opendir($dirs);
-        while ($read=readdir($hd)) {
-            if (strcmp($read, '.') !== 0 && strcmp($read, '..') !==0) {
-                $path=$dirs.'/'.$read;
-                if (preg_match('/'.preg_quote($root.'/static', '/').'/', $path)) {
-                    continue;
-                }
-                if (is_file($path) && preg_match('/\.tpl\.'.$ex.'$/', $path)) {
-                    $name=preg_replace('/^'.preg_quote($root, '/').'\/(.+)\.tpl\..+$/', '$1', $path);
-                    self::$templates[$module][$name]=$path;
-                } elseif (is_dir($path)) {
-                    self::getModuleTemplate($module, $ex, $root, $path);
-                }
-            }
+        $it = new RecursiveTemplateIterator($root, $extension);
+        foreach ($it as $name => $path) {
+            self::$templates[$module][$name]=$path;
         }
     }
 }

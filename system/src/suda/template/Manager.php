@@ -22,6 +22,8 @@ use suda\core\Hook;
 use suda\core\Router;
 use suda\core\Request;
 use suda\exception\KernelException;
+use suda\template\iterator\RecursiveTemplateIterator;
+use Iterator;
 
 /**
  * 模板管理类
@@ -521,41 +523,21 @@ class Manager
         return $init;
     }
 
-    public static function findModuleTemplates(string $module)
+    public static function findModuleTemplates(string $module):Iterator
     {
-        $templates=[];
         if (!app()->checkModuleExist($module)) {
             return false;
         }
         if ($sources=Manager::getTemplateSource($module)) {
             foreach ($sources as $source) {
-                $templates=array_merge($templates, self::_findModuleTemplate($module, $source, $source));
+                $it = new RecursiveTemplateIterator($source);
+                foreach ($it as $name => $path) {
+                    yield $name;
+                }
             }
         }
-        return $templates;
     }
 
-    protected static function _findModuleTemplate(string $module, string $root, string $dirs)
-    {
-        $templates=[];
-        $hd=opendir($dirs);
-        while ($read=readdir($hd)) {
-            if (strcmp($read, '.') !== 0 && strcmp($read, '..') !==0) {
-                $path=$dirs.'/'.$read;
-                if (preg_match('/'.preg_quote($root.'/static', '/').'/', $path)) {
-                    continue;
-                }
-                if (is_file($path) && preg_match('/\.tpl\..+$/', $path)) {
-                    $name=preg_replace('/^'.preg_quote($root, '/').'\/(.+)\.tpl\..+$/', '$1', $path);
-                    $templates[]=$name;
-                } elseif (is_dir($path)) {
-                    $templates=array_merge($templates, self::_findModuleTemplate($module, $root, $path));
-                }
-            }
-        }
-        return $templates;
-    }
-    
     public static function getStaticAssetPath(string $module=null)
     {
         $module=$module??Application::getInstance()->getActiveModule();
