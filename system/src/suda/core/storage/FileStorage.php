@@ -18,6 +18,7 @@ namespace suda\core\storage;
 
 use suda\core\Config;
 use suda\core\Autoloader;
+use suda\core\storage\iterator\PathPregFilterIterator;
 
 /**
  * 文件存储系统包装类
@@ -90,39 +91,21 @@ class FileStorage implements Storage
 
     public function readPath(string $parent, bool $repeat=false, ?string $preg=null, bool $full=true): \Iterator
     {
-        $parent=Autoloader::parsePath($parent);
-        if (self::isDir($parent)) {
-            $hd=opendir($parent);
-            while ($read=readdir($hd)) {
-                if (strcmp($read, '.') !== 0 && strcmp($read, '..') !==0) {
-                    $path = $parent.DIRECTORY_SEPARATOR.$read;
-                    if ($preg) {
-                        if (preg_match($preg, $read)) {
-                            if ($full) {
-                                yield $path;
-                            } else {
-                                yield self::cut($path, $parent);
-                            }
-                        }
-                    } else {
-                        if ($full) {
-                            yield $path;
-                        } else {
-                            yield self::cut($path, $parent);
-                        }
-                    }
-                    if ($repeat && self::isDir($path)) {
-                        foreach (self::readPath($path, $repeat, $preg) as $read) {
-                            if ($full) {
-                                yield $read;
-                            } else {
-                                yield self::cut($read, $parent);
-                            }
-                        }
-                    }
+        $directory=Autoloader::parsePath($parent);
+        if (self::isDir($directory)) {
+            if ($repeat) {
+                $it = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($directory));
+            } else {
+                $it = new \RecursiveDirectoryIterator($directory);
+            }
+            $it = new PathPregFilterIterator($it, $preg);
+            foreach ($it as $key => $item) {
+                if ($full) {
+                    yield $key;
+                } else {
+                    yield self::cut($key, $directory);
                 }
             }
-            closedir($hd);
         }
     }
 
