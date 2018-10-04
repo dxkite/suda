@@ -28,6 +28,7 @@ v2.0.2
     - 内置 jquery
     - 内置 Pinyin
     - 内置 EchoValue
+    - 路由 visit 属性
 
 v2.0.1
 ------------------

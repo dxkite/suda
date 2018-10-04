@@ -470,7 +470,7 @@ class Mapping implements \JsonSerializable
         } else {
             throw new \suda\core\Exception(new \Exception(__('$0 router $1 require infomation: class or template or source', $module, $name)), 'RouterError');
         }
-        $mapping= new self($name, $json['url']??$json['visit'], $callback, $module, $json['method']??[], $group);
+        $mapping= new self($name, $json['url'] , $callback, $module, $json['method']??[], $group);
         $mapping->antiPrefix=isset($json['anti-prefix'])?$json['anti-prefix']:false;
         $mapping->hidden= $json['disable'] ?? $json['hidden'] ?? false;
         $mapping->param= $json['param'] ?? null;

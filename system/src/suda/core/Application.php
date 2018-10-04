@@ -16,7 +16,6 @@
 namespace suda\core;
 
 use suda\template\Manager;
-use suda\tool\Json;
 use suda\tool\ArrayHelper;
 use suda\exception\ApplicationException;
 use suda\tool\ZipHelper;
@@ -270,10 +269,10 @@ class Application
      */
     public function installModule(string $module)
     {
-        $install_lock = DATA_DIR.'/install/install_'.substr(md5($module), 0, 6).'.lock';
-        storage()->path(dirname($install_lock));
         $config=self::getModuleConfig($module);
-        if (isset($config['install']) && !file_exists($install_lock)) {
+        $installLock = DATA_DIR.'/install/install_'.substr(md5($config['name']), 0, 6).'.lock';
+        storage()->path(dirname($installLock));
+        if (array_key_exists('install', $config) && !file_exists($installLock)) {
             $installs=$config['install'];
             if (is_string($installs)) {
                 $installs=[$installs];
@@ -281,7 +280,7 @@ class Application
             foreach ($installs as $cmd) {
                 cmd($cmd)->args($config);
             }
-            file_put_contents($install_lock, 'name='.$module.PHP_EOL.'time='.microtime(true));
+            file_put_contents($installLock, 'name='.$module.PHP_EOL.'time='.microtime(true));
         }
     }
 
@@ -699,17 +698,17 @@ class Application
         if (Storage::isDir($modulePath)) {
             $path = $modulePath;
         } else {
-            $path = RUNTIME_DIR.'/modules/'. pathinfo($modulePath, PATHINFO_FILENAME).'-'.substr(md5_file($path),0,8);
+            $path = RUNTIME_DIR.'/modules/'. basename($modulePath).'-'.substr(md5_file($path), 0, 8);
             if (conf('debug') || !Storage::isDir($modulePath)) {
                 ZipHelper::unzip($modulePath, $path, true);
                 debug()->info(__('extract $0 to $1', $modulePath, $path));
             }
         }
         // 自定义配置或使用标准配置
-        $config = is_null($config)?$path.'/module.json': $config;
-        
+        $config = is_null($config) ? 'module.json': $config;
+
         if (is_string($config)) {
-            if ($config = Config::resolve($config)) {
+            if ($config = Config::resolve($path.'/'.$config)) {
                 $configData = Config::loadConfig($config);
             } else {
                 return false;

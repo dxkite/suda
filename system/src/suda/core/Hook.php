@@ -16,7 +16,6 @@
 namespace suda\core;
 
 use suda\tool\Command;
-use suda\tool\Json;
 
 /**
  * 系统钩子，监听系统内部一些操作并载入一些自定义行为
