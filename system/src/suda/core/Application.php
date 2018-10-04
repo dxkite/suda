@@ -409,6 +409,8 @@ class Application
             } else {
                 return $prefixs[$group] ?? '';
             }
+        } elseif (is_string($prefixs)) {
+            return $prefixs;
         }
         return null;
     }
@@ -422,7 +424,8 @@ class Application
      */
     public function checkModuleExist(string $name):bool
     {
-        return $this->getModuleDir($name)!=null;
+        $name=self::getModuleFullName($name);
+        return array_key_exists($name, $this->moduleConfigs);
     }
 
     /**
@@ -612,7 +615,6 @@ class Application
             .preg_quote($matchname[2]) // 名称
             .(isset($matchname[3])&&$matchname[3]?':'.preg_quote($matchname[3]):'(:.+)?').'$/'; // 版本号
         $targets=[];
-        // debug()->debug($matchname, $preg);
         // 匹配模块名，查找符合格式的模块
         if (is_array($this->moduleConfigs)) {
             foreach ($this->moduleConfigs as $module_name=>$module_config) {
@@ -630,7 +632,8 @@ class Application
         }
         // 排序版本
         uksort($targets, 'version_compare');
-        return count($targets)>0?array_pop($targets):$name;
+        // 选取版本号高的版本
+        return count($targets)?array_pop($targets):$name;
     }
 
     /**
@@ -642,7 +645,7 @@ class Application
     public function getModuleDir(string $name):?string
     {
         $name=self::getModuleFullName($name);
-        if (isset($this->moduleConfigs[$name])) {
+        if (array_key_exists($name, $this->moduleConfigs)) {
             return $this->moduleConfigs[$name]['directory'];
         }
         return null;
@@ -692,7 +695,7 @@ class Application
      */
     public function registerModule(string $modulePath, $config = null):bool
     {
-        // mod 文件或者 文件夹
+        // 文件或者文件夹
         if (Storage::isDir($modulePath)) {
             $path = $modulePath;
         } else {
@@ -702,7 +705,7 @@ class Application
                 debug()->info(__('extract $0 to $1', $modulePath, $path));
             }
         }
-
+        // 自定义配置或使用标准配置
         $config = is_null($config)?$path.'/module.json': $config;
 
         if (is_string($config)) {
@@ -714,35 +717,30 @@ class Application
         } elseif (is_array($config)) {
             $configData=$config;
         }
-        
+
         if (Storage::exist($path)) {
             $dir=basename($path);
-
             $name=$configData['name'] ?? $dir;
             $version =  $configData['version'] ?? '';
             $configData['directory']=$dir;
             $configData['path']=$path;
-
-            debug()->trace(__('load module config $0', $name));
-            
             // 注册默认自动加载
             $configData['import']=array_merge([
                 'share'=>[''=>'share/'],
                 'src'=>[''=>'src/']
             ], $configData['import']??[]);
-
+            // 运行时配置覆盖
             $runtime = RUNTIME_DIR .'/module/'. $name . '/' . $version;
             $runtimeConfig = Config::loadConfig($runtime.'/module.config.php');
-
             if (is_array($runtimeConfig)) {
                 $configData = array_merge($configData, $runtimeConfig);
             }
-
             $name.=empty($version)?'':':'.$version;
             $this->moduleConfigs[$name]=$configData;
             $this->moduleDirName[$dir]=$name;
             // 注册资源
             Manager::registerTemplateSource($name);
+            debug()->trace(__('register module $0 from $1', $name, $modulePath));
             return true;
         }
         return false;

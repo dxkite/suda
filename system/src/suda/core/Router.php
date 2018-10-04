@@ -54,14 +54,14 @@ class Router
 
     public function load(string $module)
     {
-        debug()->trace(__('load module router: $0', $module));
+        debug()->trace(__('loading router from $0', $module));
         $groups = $this->getRouterGroups();
         foreach ($groups as $index => $name) {
             $group = trim(is_numeric($index)?$name:$index);
             $config = $group === Mapping::DEFAULT_GROUP ? 'router': 'router-'.$name;
             if ($file=Application::getInstance()->getModuleConfigPath($module, $config)) {
                 $loadedRouters= self::loadModuleRouteConfig($group, $module, $file);
-                debug()->trace(__('loading $1 route from file $0', $file, $group));
+                debug()->trace(__('loaded $1 router from file $0', $file, $group));
                 $this->routers=array_merge($this->routers, $loadedRouters);
             }
         }
@@ -98,7 +98,7 @@ class Router
         $this->routers=unserialize($routers);
     }
 
-    protected function saveFile()
+    protected function saveCacheFile()
     {
         storage()->put($this->cacheFile('.modules'), implode(PHP_EOL, self::$cacheModules));
         storage()->put($this->cacheFile(self::CACHE_NAME), serialize($this->routers));
@@ -142,7 +142,7 @@ class Router
         Hook::exec('suda:route:prepare', [$this]);
         // 缓存路由信息
         if (storage()->isWritable(CACHE_DIR)) {
-            self::saveFile();
+            self::saveCacheFile();
         }
     }
 

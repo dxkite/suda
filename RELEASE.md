@@ -8,7 +8,7 @@ v2.0.2
     - `addReachableModule` 函数
     - welcome模块
     - 循环载入模板检测
-    - 路由分组
+    - 路由分组以及前缀
 - 修改
     - 系统Hook统一命名标准 ( `1.x -> 2.x` )
     - 模块后缀支持 `.mod` 和 `.module`
