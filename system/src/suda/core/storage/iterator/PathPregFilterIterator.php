@@ -4,7 +4,8 @@ namespace suda\core\storage\iterator;
 class PathPregFilterIterator extends \FilterIterator
 {
     protected $preg;
-    public function __construct(\Iterator $it, $preg)
+    
+    public function __construct(\Iterator $it, ?string $preg =null)
     {
         parent::__construct($it);
         $this->preg =$preg;
