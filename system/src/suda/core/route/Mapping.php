@@ -78,8 +78,8 @@ class Mapping implements \JsonSerializable
                 return false;
             }
             foreach ($paramGet as $paramName=>$value) {
-                $request->set($paramName, $value);
-                $_GET[$paramName]=$value;
+                $_GET[$paramName] = $value;
+                $this->value[$paramName] = $value;
             }
             return true;
         }
@@ -93,7 +93,7 @@ class Mapping implements \JsonSerializable
             // 检验接口参数
             array_shift($match);
             if (count($match)>0) {
-                foreach ($this->types as $paramName =>$type) {
+                foreach ($this->types as $paramName => $type) {
                     $value=array_shift($match);
                     if ($type === 'int' && is_numeric($value)) {
                         $value=intval($value);

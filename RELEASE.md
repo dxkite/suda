@@ -1,7 +1,7 @@
 v2.0.2
 -----------------
 - 添加
-    - `getModuleConfig` 支持 ${module} 变量
+    - `getModuleConfig` 支持 `${module}` 变量
     - 日志格式
     - `query` 函数
     - `loadModule` 函数
@@ -9,27 +9,35 @@ v2.0.2
     - welcome模块
     - 循环载入模板检测
     - 路由分组以及前缀
+    - 单表支持连接器
 - 修改
-    - 系统Hook统一命名标准 ( `1.x -> 2.x` )
-    - 模块后缀支持 `.mod` 和 `.module`
+    - 系统Hook统一命名标准 (`1.x -> 2.x`)
+    - 模块后缀支持 `.mod` 、`.module`、`.suda-module`
     - 定向页面
     - 格式化输出函数调整
     - 记录所有PHP错误
     - 语言包加载方式
-    - 对于GET,POST长度为0的值设置为NULL
-    - 所有文件操作采用SPL递归
+    - 对于`GET`,`POST`长度为 `0` 的值设置为`NULL`
+    - `POST`,`GET`,`FILES` 默认值懒加载与优化
+    - Query只支持静态方法
 - 修复
     - 模板 `$:` 输出 
     - SQL默认值语句生成问题
 - 优化
     - 提高运行速度 1x
     - 减少项目体积
+    - `Value` 迭代器
+    - 使用 `SPL` 压缩文件
+    - 所有文件操作采用SPL递归
+    - 请求参数处理
 - 删除
-    - 内置 bootstrap
-    - 内置 jquery
-    - 内置 Pinyin
-    - 内置 EchoValue
-    - 路由 visit 属性
+    - 内置 `bootstrap`
+    - 内置 `jquery`
+    - 内置 `Pinyin`
+    - 内置 `EchoValue`
+    - 路由 `visit` 属性
+    - `Query` 类支持，改为 `query` 函数或 `SQLQuery`
+    - `Ziphelper::unzip` 允许删除父文件夹
 
 v2.0.1
 ------------------

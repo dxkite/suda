@@ -15,125 +15,60 @@
  */
 namespace suda\tool;
 
+use ArrayIterator;
+use IteratorAggregate;
+use JsonSerializable;
+
 /**
- * 普通通用值
- *
- * 通用指可以使用迭代器和JSON化成字符串
- * 并且包含魔术变量用于处理其值
- *
- * @package suda\tool
+ * 值迭代器
  */
-class Value implements \Iterator, \JsonSerializable
+class Value implements IteratorAggregate, JsonSerializable
 {
-    /**
-     * @var
-     */
     protected $var;
-    /**
-     * Value constructor.
-     * @param $var
-     */
+
     public function __construct($var=[])
     {
         $this->var=$var;
     }
 
-    /**
-     * @param string $name
-     * @return string
-     */
     public function __get(string $name)
     {
         return  $this->var[$name] ?? null;
     }
 
-    /**
-     * @param string $name
-     * @param $value
-     * @return mixed
-     */
     public function __set(string $name, $value)
     {
         return $this->var[$name]=$value;
     }
 
-    /**
-     * @param string $name
-     * @return bool
-     */
     public function __isset(string $name)
     {
         return array_key_exists($name, $this->var);
     }
 
-    /**
-     * @param string $name
-     * @param $args
-     * @return mixed|string
-     */
     public function __call(string $name, $args)
     {
         return $this->var[$name] ?? $args[0] ?? null;
     }
 
-
-    // 迭代器扩展
-    public function rewind($default=null)
+    public function getIterator()
     {
-        $name = __FUNCTION__;
-        if (!is_null($default)) {
-            return $this->var[$name] ?? $default ?? null;
+        if (func_num_args() === 1) {
+            return $this->var[__FUNCTION__] ?? func_get_arg(0);
         }
-        reset($this->var);
+        return new ArrayIterator($this->var);
     }
 
-    public function current($default=null)
+    public function jsonSerialize()
     {
-        $name = __FUNCTION__;
-        if (!is_null($default)) {
-            return $this->var[$name] ?? $default ?? null;
-        }
-        return current($this->var);
-    }
-
-    public function key($default=null)
-    {
-        $name = __FUNCTION__;
-        if (!is_null($default)) {
-            return $this->var[$name] ?? $default ?? null;
-        }
-        return key($this->var);
-    }
-
-    public function next($default=null)
-    {
-        $name = __FUNCTION__;
-        if (!is_null($default)) {
-            return $this->var[$name] ?? $default ?? null;
-        }
-        return next($this->var);
-    }
-
-    public function valid($default=null)
-    {
-        $name = __FUNCTION__;
-        if (!is_null($default)) {
-            return $this->var[$name] ?? $default ?? null;
-        }
-        return $this->current() !== false;
-    }
-
-    public function jsonSerialize($default=null)
-    {
-        $name = __FUNCTION__;
-        if (!is_null($default)) {
-            return $this->var[$name] ?? $default ?? null;
+        if (func_num_args() === 1) {
+            return $this->var[__FUNCTION__] ?? func_get_arg(0);
         }
         return $this->var;
     }
 
     public function __toString()
     {
-        return json_encode($this);
+        return json_encode($this->var);
     }
 }

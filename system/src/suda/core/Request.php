@@ -23,12 +23,9 @@ use suda\exception\JSONException;
  */
 class Request
 {
-    private static $get=null;
-    private static $post=null;
     private static $json=null;
-    private static $files=null;
-    private static $crawlers=null;
 
+    private static $crawlers=null;
     protected static $instance=null;
     protected static $type=0;
     protected static $query='';
@@ -41,10 +38,8 @@ class Request
 
     private function __construct()
     {
-        if (!isset($_SERVER['REQUEST_URI'])) {
-            self::parseCommand();
-        }
-        self::parseServer();
+        // TODO parse command line to request
+        self::parseRequest();
     }
 
     public static function getInstance()
@@ -74,8 +69,8 @@ class Request
         if (!self::isJson() || self::isGet()) {
             return null;
         }
-        $datastr=self::input();
-        $data =json_decode($datastr, true);
+        $inputData=self::input();
+        $data =json_decode($inputData, true);
         if (json_last_error()!==JSON_ERROR_NONE) {
             throw new JSONException(json_last_error());
         }
@@ -131,9 +126,8 @@ class Request
      */
     public static function set(string $name, $value)
     {
-        self::$get->$name=$value;
+        $_GET[$name]=$value;
     }
-
 
     /**
      * 获取请求的GET数据
@@ -144,33 +138,14 @@ class Request
      */
     public static function get(?string $name=null, $default=null)
     {
-        if ($name) {
-            if (isset(self::$get->$name)) {
-                if (strlen(self::$get->$name)) {
-                    return self::$get->$name;
-                } else {
-                    return null;
-                }
-            } else {
-                return $default;
-            }
-        } else {
-            return self::$get;
+        if (is_null($name)) {
+            return new Value($_GET);
         }
+        if (array_key_exists($name, $_GET)) {
+            return $_GET[$name];
+        }
+        return $default;
     }
-    
-    /**
-     * 获取Cookie的值
-     *
-     * @param string $name cookie名
-     * @param [type] $default cookie的默认值
-     * @return [type] 获取的值，如果没有，则是default设置的值
-     */
-    public static function cookie(string $name, $default ='')
-    {
-        return Cookie::get($name, $default);
-    }
-
 
     /**
      * 获取POST请求的值
@@ -181,19 +156,13 @@ class Request
      */
     public static function post(?string $name=null, $default=null)
     {
-        if ($name) {
-            if (isset(self::$post->$name)) {
-                if (strlen(self::$post->$name)) {
-                    return self::$post->$name;
-                } else {
-                    return null;
-                }
-            } else {
-                return $default;
-            }
-        } else {
-            return self::$post;
+        if (is_null($name)) {
+            return new Value($_POST);
         }
+        if (array_key_exists($name, $_POST)) {
+            return $_POST[$name];
+        }
+        return $default;
     }
 
     /**
@@ -204,11 +173,25 @@ class Request
      */
     public static function files(?string $name=null)
     {
-        if ($name) {
-            return self::$files->$name;
-        } else {
-            return self::$files;
+        if (is_null($name)) {
+            return new Value($_FILES);
         }
+        if (array_key_exists($name, $_FILES)) {
+            return $_FILES[$name];
+        }
+        return null;
+    }
+
+    /**
+     * 获取Cookie的值
+     *
+     * @param string $name cookie名
+     * @param [type] $default cookie的默认值
+     * @return [type] 获取的值，如果没有，则是default设置的值
+     */
+    public static function cookie(string $name, $default ='')
+    {
+        return Cookie::get($name, $default);
     }
 
     /**
@@ -223,7 +206,7 @@ class Request
             if (array_key_exists($key, $_SERVER)) {
                 foreach (explode(',', $_SERVER[$key]) as $ip) {
                     $ip = trim($ip);
-                    if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4 | FILTER_FLAG_IPV6 | FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE) !== false ) {
+                    if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4 | FILTER_FLAG_IPV6 | FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE) !== false) {
                         return $ip;
                     }
                 }
@@ -380,16 +363,8 @@ class Request
         return [$path,$queryString,$phpSelf];
     }
 
-    // TODO:for shell
-    protected static function parseCommand()
-    {
-        $command=getopt('r:');
-        if (isset($command['r'])) {
-            $_SERVER['REQUEST_URI']=$command['r'];
-        }
-    }
-
-    protected static function parseServer()
+    
+    protected static function parseRequest()
     {
         list(self::$url, $queryString, $phpSelf) = static::parseUrl($_SERVER['REQUEST_URI']??'/');
 
@@ -411,16 +386,6 @@ class Request
 
         if (!isset($_SERVER['PATH_INFO'])) {
             $_SERVER['PATH_INFO']=self::$url;
-        }
-       
-        if (is_null(self::$post)) {
-            self::$post=new Value($_POST);
-        }
-        if (is_null(self::$get)) {
-            self::$get=new Value($_GET);
-        }
-        if (is_null(self::$files)) {
-            self::$files=new Value($_FILES);
         }
     }
 
