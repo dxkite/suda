@@ -3,7 +3,7 @@
  * Suda FrameWork
  *
  * An open source application development framework for PHP 7.2.0 or newer
- * 
+ *
  * Copyright (c)  2017-2018 DXkite
  *
  * @category   PHP FrameWork
@@ -39,22 +39,6 @@ class Value implements \Iterator, \JsonSerializable
     }
 
     /**
-     * @return mixed
-     */
-    public function _getVar()
-    {
-        return $this->var;
-    }
-
-    /**
-     * @param mixed $var
-     */
-    public function _setVar($var)
-    {
-        $this->var = $var;
-    }
-
-    /**
      * @param string $name
      * @return string
      */
@@ -79,7 +63,7 @@ class Value implements \Iterator, \JsonSerializable
      */
     public function __isset(string $name)
     {
-        return isset($this->var[$name]);
+        return array_key_exists($name, $this->var);
     }
 
     /**
@@ -89,42 +73,62 @@ class Value implements \Iterator, \JsonSerializable
      */
     public function __call(string $name, $args)
     {
-        // NOTICE
-        $fmt= $this->var[$name] ?? $args[0] ?? null;
-        if (count($args)>1) {
-            $args[0]=$fmt;
-            return call_user_func_array('sprintf', $args);
-        }
-        return $fmt;
+        return $this->var[$name] ?? $args[0] ?? null;
     }
-    /// 迭代器扩展
-    public function rewind()
+
+
+    // 迭代器扩展
+    public function rewind($default=null)
     {
+        $name = __FUNCTION__;
+        if (!is_null($default)) {
+            return $this->var[$name] ?? $default ?? null;
+        }
         reset($this->var);
     }
 
-    public function current()
+    public function current($default=null)
     {
-        return  current($this->var);
+        $name = __FUNCTION__;
+        if (!is_null($default)) {
+            return $this->var[$name] ?? $default ?? null;
+        }
+        return current($this->var);
     }
 
-    public function key()
+    public function key($default=null)
     {
+        $name = __FUNCTION__;
+        if (!is_null($default)) {
+            return $this->var[$name] ?? $default ?? null;
+        }
         return key($this->var);
     }
 
-    public function next()
+    public function next($default=null)
     {
+        $name = __FUNCTION__;
+        if (!is_null($default)) {
+            return $this->var[$name] ?? $default ?? null;
+        }
         return next($this->var);
     }
 
-    public function valid()
+    public function valid($default=null)
     {
+        $name = __FUNCTION__;
+        if (!is_null($default)) {
+            return $this->var[$name] ?? $default ?? null;
+        }
         return $this->current() !== false;
     }
 
-    public function jsonSerialize()
+    public function jsonSerialize($default=null)
     {
+        $name = __FUNCTION__;
+        if (!is_null($default)) {
+            return $this->var[$name] ?? $default ?? null;
+        }
         return $this->var;
     }
 

@@ -107,21 +107,25 @@ class Locale
         }
         $args=func_get_args();
         if (count($args) > 1) {
-            $args[0]=$string;
             if (is_array($args[1])) {
                 $param = $args[1];
             } else {
                 $param = array_slice($args, 1);
             }
-            $string = preg_replace_callback('/(?<!\$)\$(\d+|\w+?\b)/', function ($match) use ($param) {
-                $key = $match[1];
-                if (array_key_exists($key, $param)) {
-                    return $param[$key];
-                }
-                return $match[0];
-            }, $string);
+            return self::format($string, $param);
         }
         return $string;
+    }
+
+    public static function format(string $string, array $param)
+    {
+        return preg_replace_callback('/(?<!\$)\$(\d+|\w+?\b)/', function ($match) use ($param) {
+            $key = $match[1];
+            if (array_key_exists($key, $param)) {
+                return $param[$key];
+            }
+            return $match[0];
+        }, $string);
     }
 
     public static function getLocalePaths()

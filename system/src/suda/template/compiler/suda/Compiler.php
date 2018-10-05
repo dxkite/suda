@@ -17,12 +17,9 @@ namespace suda\template\compiler\suda;
 
 use suda\core\Storage;
 use suda\core\Application;
-use suda\core\Hook;
-use suda\tool\Value;
 use suda\tool\Command;
 use suda\template\Compiler as CompilerImpl;
 use suda\template\Manager;
-use suda\core\Request;
 
 /**
  * Suda 模板编译器
