@@ -17,9 +17,7 @@
 namespace suda\archive;
 
 use PDO;
-use PDOException;
 use suda\core\Config;
-use suda\core\Storage;
 use suda\exception\SQLException;
 use suda\archive\creator\InputValue;
 use suda\tool\Command;
@@ -377,10 +375,10 @@ class RawQuery implements SQLStatement
     /**
      * 添加列处理类
      *
-     * @param [type] $object
+     * @param object $object
      * @return void
      */
-    public function object($object)
+    public function object(object $object)
     {
         $this->object=$object;
         return $this;

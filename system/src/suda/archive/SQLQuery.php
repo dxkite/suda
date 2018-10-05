@@ -3,7 +3,7 @@
  * Suda FrameWork
  *
  * An open source application development framework for PHP 7.2.0 or newer
- * 
+ *
  * Copyright (c)  2017-2018 DXkite
  *
  * @category   PHP FrameWork
@@ -16,12 +16,7 @@
 namespace suda\archive;
 
 use PDO;
-use PDOException;
-use suda\core\Config;
-use suda\core\Storage;
-use suda\exception\SQLException;
 use suda\archive\creator\InputValue;
-use suda\tool\Command;
 
 /**
  * 数据库查询方案，简化数据库查
@@ -30,11 +25,10 @@ use suda\tool\Command;
  * @example
  *
  */
-class SQLQuery implements SQLStatement
+class SQLQuery extends SQLStatementPrepare implements SQLStatement
 {
     protected static $defaultQuery = null;
-    protected static $query = null;
-    protected $rawQuery;
+    protected static $currentQuery = null;
 
     /**
      * 构造查询
@@ -45,15 +39,11 @@ class SQLQuery implements SQLStatement
      */
     public function __construct(string $query='', array $binds=[], bool $scroll=false)
     {
-        self::_connect();
-        $this->rawQuery=clone self::$query->query($query, $binds, $scroll);
+        self::prepareQuery();
+        $this->query = clone self::$currentQuery->query($query, $binds, $scroll);
+        $this->connecton = $this->query->getConnection();
     }
 
-    public function getConnection()
-    {
-        return $this->rawQuery->getConnection();
-    }
-    
     public function setConnection(Connection $connection)
     {
         $this->connection = $connection;
@@ -68,12 +58,12 @@ class SQLQuery implements SQLStatement
      */
     public function fetch(int $fetchStyle = PDO::FETCH_ASSOC)
     {
-        return $this->rawQuery->fetch($fetchStyle);
+        return $this->query->fetch($fetchStyle);
     }
 
     public static function useQuery(RawQuery $query)
     {
-        self::$query = $query;
+        self::$currentQuery = $query;
     }
 
     public static function resetQuery()
@@ -82,7 +72,7 @@ class SQLQuery implements SQLStatement
             $connection=Connection::getDefaultConnection()->connect();
             self::$defaultQuery->setConnection($connection);
         }
-        self::$query = self::$defaultQuery;
+        self::$currentQuery = self::$defaultQuery;
     }
 
     /**
@@ -93,7 +83,7 @@ class SQLQuery implements SQLStatement
      */
     public function fetchObject(string $class='stdClass')
     {
-        return $this->rawQuery->fetchObject($class);
+        return $this->query->fetchObject($class);
     }
     
     /**
@@ -104,7 +94,7 @@ class SQLQuery implements SQLStatement
      */
     public function fetchAll(int $fetchStyle = PDO::FETCH_ASSOC)
     {
-        return $this->rawQuery->fetchAll($fetchStyle);
+        return $this->query->fetchAll($fetchStyle);
     }
     
     /**
@@ -114,7 +104,7 @@ class SQLQuery implements SQLStatement
      */
     public function exec():int
     {
-        return $this->rawQuery->exec();
+        return $this->query->exec();
     }
 
     /**
@@ -138,7 +128,7 @@ class SQLQuery implements SQLStatement
      */
     public function values(array $values)
     {
-        $this->rawQuery->values($values);
+        $this->query->values($values);
         return $this;
     }
 
@@ -151,7 +141,7 @@ class SQLQuery implements SQLStatement
      */
     public function query(string $query, array $array=[], bool $scroll=false)
     {
-        $this->rawQuery->query($query, $array, $scroll);
+        $this->query->query($query, $array, $scroll);
         return $this;
     }
     
@@ -163,7 +153,7 @@ class SQLQuery implements SQLStatement
      */
     public function use(string $name=null)
     {
-        $this->rawQuery->use($name);
+        $this->query->use($name);
         return $this;
     }
     
@@ -175,7 +165,7 @@ class SQLQuery implements SQLStatement
      */
     public function error()
     {
-        return $this->rawQuery->error();
+        return $this->query->error();
     }
 
     /**
@@ -185,7 +175,7 @@ class SQLQuery implements SQLStatement
      */
     public function erron()
     {
-        return $this->rawQuery->erron();
+        return $this->query->erron();
     }
 
     /**
@@ -197,9 +187,9 @@ class SQLQuery implements SQLStatement
     public function lastInsertId(string $name=null)
     {
         if (is_null($name)) {
-            return $this->rawQuery->lastInsertId();
+            return $this->query->lastInsertId();
         } else {
-            return $this->rawQuery->lastInsertId($name);
+            return $this->query->lastInsertId($name);
         }
         return false;
     }
@@ -221,7 +211,7 @@ class SQLQuery implements SQLStatement
      */
     public static function beginTransaction()
     {
-        self::$query->beginTransaction();
+        self::$currentQuery->beginTransaction();
     }
 
     /**
@@ -231,7 +221,7 @@ class SQLQuery implements SQLStatement
      */
     public static function commit()
     {
-        self::$query->commit();
+        self::$currentQuery->commit();
     }
 
     /**
@@ -241,37 +231,25 @@ class SQLQuery implements SQLStatement
      */
     public static function rollBack()
     {
-        self::$query->rollBack();
+        self::$currentQuery->rollBack();
     }
 
     public function quote($string)
     {
-        return self::$query->quote($string);
+        return self::$currentQuery->quote($string);
     }
 
     public function arrayQuote(array $array)
     {
-        return self::$query->arrayQuote($array);
+        return self::$currentQuery->arrayQuote($array);
     }
 
-    protected static function _connect(Connection $connection=null)
+    protected static function prepareQuery()
     {
-        // 链接默认数据库
-        if (is_null($connection)) {
-            if (is_null(self::$defaultQuery)) {
-                if (is_null(self::$query)) {
-                    self::$defaultQuery = new RawQuery(Connection::getDefaultConnection()->connect());
-                    self::$query = self::$defaultQuery;
-                } else {
-                    self::$defaultQuery = self::$query;
-                }
-            }
-        } else {
-            if (!$connection->isConnected()) {
-                $connection->connect();
-            }
-            self::$query =new RawQuery($connection);
+        if (is_null(self::$defaultQuery)) {
+            self::$defaultQuery = new RawQuery(Connection::getDefaultConnection()->connect());
         }
+        self::$currentQuery = self::$defaultQuery;
     }
     
     /**
@@ -282,7 +260,7 @@ class SQLQuery implements SQLStatement
      */
     public function object($object)
     {
-        $this->rawQuery->object($object);
+        $this->query->object($object);
         return $this;
     }
 }

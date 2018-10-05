@@ -3,7 +3,7 @@
  * Suda FrameWork
  *
  * An open source application development framework for PHP 7.2.0 or newer
- * 
+ *
  * Copyright (c)  2017-2018 DXkite
  *
  * @category   PHP FrameWork
@@ -15,6 +15,7 @@
  */
 namespace suda\archive;
 
+use PDO;
 use suda\archive\creator\InputValue;
 
 /**
@@ -103,11 +104,12 @@ interface SQLStatement
      * @return bool|array 语句编号结错误结果,false获取失败果
      */
     public function erron();
+    
     /**
      * 添加列处理类
      *
-     * @param [type] $object
+     * @param object $object
      * @return void
      */
-    public function object($object);
+    public function object(object $object);
 }

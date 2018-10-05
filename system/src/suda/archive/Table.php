@@ -30,6 +30,8 @@ use suda\exception\TableException;
  */
 abstract class Table
 {
+    // 数据库语句
+    protected $statement;
     // 数据库连接
     protected $connection;
 
@@ -65,9 +67,10 @@ abstract class Table
     {
         // 默认ID为表主键
         $this->primaryKey[]='id';
-        $this->tableName=$tableName;
-        $this->cachePath=CACHE_DIR.'/database/fields/'.$this->tableName.'.php';
+        $this->tableName  = $tableName;
+        $this->cachePath  = CACHE_DIR.'/database/fields/'.$this->tableName.'.php';
         $this->connection = $connection ?? Connection::getDefaultConnection()->connect();
+        $this->statement  = new SQLStatementPrepare($this->connection, $this);
         // 读取类名作为表名
         self::initTableFields();
     }
@@ -90,7 +93,7 @@ abstract class Table
         if (is_array($values)) {
             $this->checkFields(array_keys($values));
         }
-        return $this->newStatement()->insert($this->getTableName(), $values, [], $this);
+        return $this->statement->insert($this->getTableName(), $values, [], $this);
     }
 
     /**
@@ -122,7 +125,7 @@ abstract class Table
                 $insert[$field]=$value;
             }
         }
-        return $this->newStatement()->insert($this->getTableName(), $insert, [], $this);
+        return $this->statement->insert($this->getTableName(), $insert, [], $this);
     }
 
     /**
@@ -153,7 +156,7 @@ abstract class Table
      */
     public function getByPrimaryKey($value):?array
     {
-        return $this->newStatement()->where($this->getTableName(), $this->getWants(), $this->checkPrimaryKey($value))->object($this)->fetch()?:null;
+        return $this->statement->where($this->getTableName(), $this->getWants(), $this->checkPrimaryKey($value))->object($this)->fetch()?:null;
     }
 
 
@@ -187,7 +190,7 @@ abstract class Table
         if (is_array($values)) {
             $this->checkFields(array_keys($values));
         }
-        return $this->newStatement()->update($this->getTableName(), $values, $this->checkPrimaryKey($value), [], $this);
+        return $this->statement->update($this->getTableName(), $values, $this->checkPrimaryKey($value), [], $this);
     }
     
     /**
@@ -215,8 +218,8 @@ abstract class Table
      * @return integer 影响的行数
      */
     public function deleteByPrimaryKey($value):int
-    {
-        return $this->newStatement()->delete($this->getTableName(), $this->checkPrimaryKey($value), [], $this);
+    {   
+        return $this->statement->delete($this->getTableName(), $this->checkPrimaryKey($value), [], $this);
     }
 
     /**
@@ -246,7 +249,7 @@ abstract class Table
      */
     public function search($field, string $search, ?int $page=null, int $rows=10):?array
     {
-        return $this->newStatement()->search($this->getTableName(), $this->getWants(), $field, $search, [$page, $rows])->object($this)->fetchAll();
+        return $this->statement->search($this->getTableName(), $this->getWants(), $field, $search, [$page, $rows])->object($this)->fetchAll();
     }
     
     /**
@@ -287,7 +290,7 @@ abstract class Table
      */
     public function searchWhere($field, string $search, $where, array $bind=[], ?int $page=null, int $rows=10, bool $offset=false):?array
     {
-        $statment = $this->newStatement();
+        $statment = $this->statement;
         list($searchStr, $searchBind)=$statment->prepareSearch($field, $search);
         $whereStr=$statment->prepareWhere($where, $bind);
         return $statment->select($this->getTableName(), $this->getWants(), $whereStr . ' AND ('. $searchStr.') '. self::_order(), array_merge($searchBind, $bind), [$page,$rows,$offset])->fetchAll();
@@ -321,7 +324,7 @@ abstract class Table
      */
     public function searchWhereCount($field, string $search, $where = null, array $bind= []):int
     {
-        $statment = $this->newStatement();
+        $statment = $this->statement;
         list($searchStr, $searchBind)=$statment->prepareSearch($field, $search);
         $whereStr=$statment->prepareWhere($where, $bind);
         return $statment->count($this->getTableName(), $whereStr . ' AND ('. $searchStr.') ', array_merge($searchBind, $bind));
@@ -346,7 +349,7 @@ abstract class Table
      */
     public function list(?int $page=null, int $rows=10, bool $offset=false):?array
     {
-        return $this->newStatement()->where($this->getTableName(), $this->getWants(), '1 '.  self::_order(), [], [$page, $rows,$offset])->fetchAll();
+        return $this->statement->where($this->getTableName(), $this->getWants(), '1 '.  self::_order(), [], [$page, $rows,$offset])->fetchAll();
     }
 
     /**
@@ -378,7 +381,7 @@ abstract class Table
      */
     public function listWhere($where, array $binds=[], ?int $page=null, int $rows=10, bool $offset=false):?array
     {
-        $statment = $this->newStatement();
+        $statment = $this->statement;
         $where_str = $statment->prepareWhere($where, $binds);
         $where= $where_str.' '.self::_order();
         return $statment->where($this->getTableName(), $this->getWants(), $where, $binds, [$page, $rows,$offset])->fetchAll();
@@ -420,7 +423,7 @@ abstract class Table
         if (is_array($values)) {
             $this->checkFields(array_keys($values));
         }
-        return $this->newStatement()->update($this->getTableName(), $values, $where, $bind);
+        return $this->statement->update($this->getTableName(), $values, $where, $bind);
     }
 
     /**
@@ -464,7 +467,7 @@ abstract class Table
         if (is_array($wants)) {
             $this->checkFields($wants);
         }
-        return $this->newStatement()->where($this->getTableName(), $wants, $where, $whereBinder, [$page,$row,$offset]);
+        return $this->statement->where($this->getTableName(), $wants, $where, $whereBinder, [$page,$row,$offset]);
     }
 
     /**
@@ -526,7 +529,7 @@ abstract class Table
         if (is_array($where)) {
             $this->checkFields(array_keys($where));
         }
-        return $this->newStatement()->delete($this->getTableName(), $where, $binds, $this);
+        return $this->statement->delete($this->getTableName(), $where, $binds, $this);
     }
 
     /**
@@ -632,7 +635,7 @@ abstract class Table
      */
     public function count($where='1', array $binds=[]):int
     {
-        return $this->newStatement()->count($this->getTableName(), $where, $binds);
+        return $this->statement->count($this->getTableName(), $where, $binds);
     }
 
 
@@ -816,11 +819,6 @@ abstract class Table
             }
             $this->cacheDbInfo();
         }
-    }
-
-    protected function newStatement()
-    {
-        return new SQLStatementPrepare($this->connection, $this);
     }
 
     protected function initFromDatabase()

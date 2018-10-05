@@ -24,12 +24,18 @@ use suda\exception\SQLException;
 class SQLStatementPrepare
 {
     protected $connection;
-    protected $object;
+    protected $query;
 
-    public function __construct(Connection $connection, $object)
+    public function getConnection()
+    {
+        return $this->connection;
+    }
+
+    public function __construct(Connection $connection, object $object)
     {
         $this->connection = $connection;
-        $this->object = $object;
+        $this->query = new RawQuery($connection);
+        $this->query->object($object);
     }
 
     public function insert(string $table, $values, array $binds=[]):int
@@ -48,9 +54,9 @@ class SQLStatementPrepare
             }
             $sql='INSERT INTO `'.$table.'` ('.trim($names, ',').') VALUES ('.trim($bind, ',').');';
         }
-        $count=($q=new RawQuery($this->connection, $sql, $binds))->object($this->object)->exec();
+        $count= $this->query->query($sql, $binds)->exec();
         if ($count) {
-            $id=$q->lastInsertId();
+            $id=$this->query->lastInsertId();
             if ($id>0) {
                 return $id;
             } else {
@@ -80,9 +86,9 @@ class SQLStatementPrepare
      * @param array $binds 模板绑定的值
      * @param array $page 分页获取
      * @param boolean $scroll 滚动获取
-     * @return SQLQuery
+     * @return RawQuery
      */
-    public function where(string $table, $wants='*', $condithon='1', array $binds=[], array $page=null, bool $scroll=false):SQLQuery
+    public function where(string $table, $wants='*', $condithon='1', array $binds=[], array $page=null, bool $scroll=false):RawQuery
     {
         $where=self::prepareWhere($condithon, $binds);
         return self::select($table, $wants, $where, $binds, $page, $scroll);
@@ -98,9 +104,9 @@ class SQLStatementPrepare
      * @param string $search 搜索的值
      * @param array $page 分页获取
      * @param boolean $scroll 滚动获取
-     * @return SQLQuery
+     * @return RawQuery
      */
-    public function search(string $table, $wants='*', $field, string $search, array $page=null, bool $scroll=false):SQLQuery
+    public function search(string $table, $wants='*', $field, string $search, array $page=null, bool $scroll=false):RawQuery
     {
         list($search_str, $bind)=self::prepareSearch($field, $search);
         return self::where($table, $wants, $search_str, $bind, $page, $scroll);
@@ -124,9 +130,9 @@ class SQLStatementPrepare
      * @param array $binds 查询字符串中绑定的数据
      * @param array $page 分页查询，接受数组 ，格式为： [为分页的页数,每页长度,是否为OFFSET]
      * @param boolean $scroll 滚动查询，一次取出一条记录
-     * @return SQLQuery
+     * @return RawQuery
      */
-    public function select(string $table, $wants, $conditions, array $binds=[], array $page=null, bool $scroll=false):SQLQuery
+    public function select(string $table, $wants, $conditions, array $binds=[], array $page=null, bool $scroll=false): RawQuery
     {
         $table=self::table($table);
         if (is_string($wants)) {
@@ -139,7 +145,7 @@ class SQLStatementPrepare
             $fields=implode(',', $field);
         }
         $limit= self::prepareLimit($page);
-        return new SQLQuery('SELECT '.$fields.' FROM `'.$table.'` WHERE '.trim($conditions, ';').$limit.';', $binds, $scroll);
+        return clone $this->query->query('SELECT '.$fields.' FROM `'.$table.'` WHERE '.trim($conditions, ';').' '.$limit.';', $binds, $scroll);
     }
 
     /**
@@ -178,7 +184,7 @@ class SQLStatementPrepare
         } else {
             $sql='UPDATE `'.$table.'` SET '.$set_fields.' WHERE '.self::prepareWhere($where, $binds, $count).';';
         }
-        return (new RawQuery($this->connection, $sql, $binds))->object($this->object)->exec();
+        return $this->query->query($sql, $binds)->exec();
     }
 
     /**
@@ -194,11 +200,10 @@ class SQLStatementPrepare
     {
         $table=self::table($table);
         $sql='DELETE FROM `'.$table.'` WHERE '.self::prepareWhere($where, $binds).';';
-        return (new RawQuery($this->connection, $sql, $binds))->object($this->object)->exec();
+        return $this->query->query($sql, $binds)->exec();
     }
 
-
-    public function prepareIn(string $name, array $invalues, string $prefix='in_', int $count=0)
+    public static function prepareIn(string $name, array $invalues, string $prefix='in_', int $count=0)
     {
         if (count($invalues)<=0) {
             throw new SQLException('on field '.$name.' value can\'t be empty array');
@@ -214,8 +219,7 @@ class SQLStatementPrepare
         return [$sql,$param];
     }
 
-
-    public function prepareSearch($field, string $search)
+    public static function prepareSearch($field, string $search)
     {
         $search=preg_replace('/([%_])/', '\\\\$1', $search);
         $search=preg_replace('/\s+/', '%', $search);
@@ -233,7 +237,7 @@ class SQLStatementPrepare
         return [$search_str,$bind];
     }
 
-    public function prepareWhere($where, array &$bind, string $prefix='where_', int $count=1)
+    public static function prepareWhere($where, array &$bind, string $prefix='where_', int $count=1)
     {
         $param=[];
         if (is_array($where)) {
@@ -263,7 +267,7 @@ class SQLStatementPrepare
         $table=self::table($table);
         $where=self::prepareWhere($where, $binds);
         $sql='SELECT count(*) as `count` FROM `'.$table.'` WHERE '.$where.';';
-        if ($query=(new RawQuery($this->connection, $sql, $binds))->object($this->object)->fetch()) {
+        if ($query=(new RawQuery($this->connection, $sql, $binds))->fetch()) {
             return intval($query['count']);
         }
         return 0;
@@ -279,12 +283,12 @@ class SQLStatementPrepare
         return 0;
     }
 
-    protected function table(string $name)
+    protected static function table(string $name)
     {
         return conf('database.prefix', '').$name;
     }
 
-    protected function prepareLimit(?array $page =null)
+    protected static function prepareLimit(?array $page =null)
     {
         if (is_null($page)) {
             return '';
@@ -294,7 +298,7 @@ class SQLStatementPrepare
         }
     }
 
-    protected function page(array $page)
+    protected static function page(array $page)
     {
         if (count($page)>2) {
             list($page, $row, $offset)=$page;
