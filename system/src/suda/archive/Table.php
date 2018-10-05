@@ -3,7 +3,7 @@
  * Suda FrameWork
  *
  * An open source application development framework for PHP 7.2.0 or newer
- * 
+ *
  * Copyright (c)  2017-2018 DXkite
  *
  * @category   PHP FrameWork
@@ -30,6 +30,9 @@ use suda\exception\TableException;
  */
 abstract class Table
 {
+    // 数据库连接
+    protected $connection;
+
     protected $fields=[];
     protected $wants;
     protected $primaryKey;
@@ -58,12 +61,13 @@ abstract class Table
     const ORDER_ASC=0;
     const ORDER_DESC=1;
 
-    public function __construct(string $tableName)
+    public function __construct(string $tableName, Connection $connection =null)
     {
         // 默认ID为表主键
         $this->primaryKey[]='id';
         $this->tableName=$tableName;
         $this->cachePath=CACHE_DIR.'/database/fields/'.$this->tableName.'.php';
+        $this->connection = $connection ?? Connection::getDefaultConnection()->connect();
         // 读取类名作为表名
         self::initTableFields();
     }
@@ -86,7 +90,7 @@ abstract class Table
         if (is_array($values)) {
             $this->checkFields(array_keys($values));
         }
-        return Query::insert($this->getTableName(), $values, [], $this);
+        return $this->newStatement()->insert($this->getTableName(), $values, [], $this);
     }
 
     /**
@@ -118,7 +122,7 @@ abstract class Table
                 $insert[$field]=$value;
             }
         }
-        return Query::insert($this->getTableName(), $insert, [], $this);
+        return $this->newStatement()->insert($this->getTableName(), $insert, [], $this);
     }
 
     /**
@@ -149,7 +153,7 @@ abstract class Table
      */
     public function getByPrimaryKey($value):?array
     {
-        return Query::where($this->getTableName(), $this->getWants(), $this->checkPrimaryKey($value))->object($this)->fetch()?:null;
+        return $this->newStatement()->where($this->getTableName(), $this->getWants(), $this->checkPrimaryKey($value))->object($this)->fetch()?:null;
     }
 
 
@@ -183,7 +187,7 @@ abstract class Table
         if (is_array($values)) {
             $this->checkFields(array_keys($values));
         }
-        return Query::update($this->getTableName(), $values, $this->checkPrimaryKey($value), [], $this);
+        return $this->newStatement()->update($this->getTableName(), $values, $this->checkPrimaryKey($value), [], $this);
     }
     
     /**
@@ -212,7 +216,7 @@ abstract class Table
      */
     public function deleteByPrimaryKey($value):int
     {
-        return Query::delete($this->getTableName(), $this->checkPrimaryKey($value), [], $this);
+        return $this->newStatement()->delete($this->getTableName(), $this->checkPrimaryKey($value), [], $this);
     }
 
     /**
@@ -242,11 +246,7 @@ abstract class Table
      */
     public function search($field, string $search, ?int $page=null, int $rows=10):?array
     {
-        if (is_null($page)) {
-            return Query::search($this->getTableName(), $this->getWants(), $field, $search)->object($this)->fetchAll();
-        } else {
-            return Query::search($this->getTableName(), $this->getWants(), $field, $search, [$page, $rows])->object($this)->fetchAll();
-        }
+        return $this->newStatement()->search($this->getTableName(), $this->getWants(), $field, $search, [$page, $rows])->object($this)->fetchAll();
     }
     
     /**
@@ -287,12 +287,10 @@ abstract class Table
      */
     public function searchWhere($field, string $search, $where, array $bind=[], ?int $page=null, int $rows=10, bool $offset=false):?array
     {
-        list($searchStr, $searchBind)=Query::prepareSearch($field, $search);
-        $whereStr=Query::prepareWhere($where, $bind);
-        if (is_null($page)) {
-            return Query::select($this->getTableName(), $this->getWants(), $whereStr . ' AND ('. $searchStr.') '. self::_order(), array_merge($searchBind, $bind))->object($this)->fetchAll();
-        }
-        return Query::select($this->getTableName(), $this->getWants(), $whereStr . ' AND ('. $searchStr.') '. self::_order(), array_merge($searchBind, $bind), [$page,$rows,$offset])->object($this)->fetchAll();
+        $statment = $this->newStatement();
+        list($searchStr, $searchBind)=$statment->prepareSearch($field, $search);
+        $whereStr=$statment->prepareWhere($where, $bind);
+        return $statment->select($this->getTableName(), $this->getWants(), $whereStr . ' AND ('. $searchStr.') '. self::_order(), array_merge($searchBind, $bind), [$page,$rows,$offset])->fetchAll();
     }
 
     /**
@@ -323,9 +321,10 @@ abstract class Table
      */
     public function searchWhereCount($field, string $search, $where = null, array $bind= []):int
     {
-        list($searchStr, $searchBind)=Query::prepareSearch($field, $search);
-        $whereStr=Query::prepareWhere($where, $bind);
-        return Query::count($this->getTableName(), $whereStr . ' AND ('. $searchStr.') ', array_merge($searchBind, $bind));
+        $statment = $this->newStatement();
+        list($searchStr, $searchBind)=$statment->prepareSearch($field, $search);
+        $whereStr=$statment->prepareWhere($where, $bind);
+        return $statment->count($this->getTableName(), $whereStr . ' AND ('. $searchStr.') ', array_merge($searchBind, $bind));
     }
 
     /**
@@ -347,11 +346,7 @@ abstract class Table
      */
     public function list(?int $page=null, int $rows=10, bool $offset=false):?array
     {
-        if (is_null($page)) {
-            return Query::where($this->getTableName(), $this->getWants(), '1 '. self::_order())->object($this)->fetchAll();
-        } else {
-            return Query::where($this->getTableName(), $this->getWants(), '1 '.  self::_order(), [], [$page, $rows,$offset])->object($this)->fetchAll();
-        }
+        return $this->newStatement()->where($this->getTableName(), $this->getWants(), '1 '.  self::_order(), [], [$page, $rows,$offset])->fetchAll();
     }
 
     /**
@@ -383,13 +378,10 @@ abstract class Table
      */
     public function listWhere($where, array $binds=[], ?int $page=null, int $rows=10, bool $offset=false):?array
     {
-        $where_str=Query::prepareWhere($where, $binds);
+        $statment = $this->newStatement();
+        $where_str = $statment->prepareWhere($where, $binds);
         $where= $where_str.' '.self::_order();
-        if (is_null($page)) {
-            return Query::where($this->getTableName(), $this->getWants(), $where, $binds)->object($this)->fetchAll();
-        } else {
-            return Query::where($this->getTableName(), $this->getWants(), $where, $binds, [$page, $rows,$offset])->object($this)->fetchAll();
-        }
+        return $statment->where($this->getTableName(), $this->getWants(), $where, $binds, [$page, $rows,$offset])->fetchAll();
     }
 
     /**
@@ -428,7 +420,7 @@ abstract class Table
         if (is_array($values)) {
             $this->checkFields(array_keys($values));
         }
-        return Query::update($this->getTableName(), $values, $where, $bind, $this);
+        return $this->newStatement()->update($this->getTableName(), $values, $where, $bind);
     }
 
     /**
@@ -462,9 +454,9 @@ abstract class Table
      * @param integer|null $page 分页页码
      * @param integer $row 分页行
      * @param boolean $offset 直接偏移
-     * @return SQLQuery
+     * @return RawQuery
      */
-    public function select($wants, $where, $whereBinder=[], ?int $page=null, int $row=10, bool $offset=false): SQLQuery
+    public function select($wants, $where, $whereBinder=[], ?int $page=null, int $row=10, bool $offset=false): RawQuery
     {
         if (is_array($where)) {
             $this->checkFields(array_keys($where));
@@ -472,10 +464,7 @@ abstract class Table
         if (is_array($wants)) {
             $this->checkFields($wants);
         }
-        if (is_null($page)) {
-            return Query::where($this->getTableName(), $wants, $where, $whereBinder)->object($this);
-        }
-        return Query::where($this->getTableName(), $wants, $where, $whereBinder, [$page,$row,$offset])->object($this);
+        return $this->newStatement()->where($this->getTableName(), $wants, $where, $whereBinder, [$page,$row,$offset]);
     }
 
     /**
@@ -499,12 +488,12 @@ abstract class Table
      * @param string $query
      * @param array $binds
      * @param boolean $scroll
-     * @return SQLQuery
+     * @return RawQuery
      */
-    public function query(string $query, array $binds=[], bool $scroll=false):SQLQuery
+    public function query(string $query, array $binds=[], bool $scroll=false):RawQuery
     {
         $queryString=preg_replace('/@table@/i', $this->getTableName(), $query);
-        return (new SQLQuery($queryString, $binds, $scroll))->object($this);
+        return (new RawQuery($this->connection, $queryString, $binds, $scroll))->object($this);
     }
 
     /**
@@ -537,7 +526,7 @@ abstract class Table
         if (is_array($where)) {
             $this->checkFields(array_keys($where));
         }
-        return Query::delete($this->getTableName(), $where, $binds, $this);
+        return $this->newStatement()->delete($this->getTableName(), $where, $binds, $this);
     }
 
     /**
@@ -643,7 +632,7 @@ abstract class Table
      */
     public function count($where='1', array $binds=[]):int
     {
-        return Query::count($this->getTableName(), $where, $binds, $this);
+        return $this->newStatement()->count($this->getTableName(), $where, $binds);
     }
 
 
@@ -681,19 +670,19 @@ abstract class Table
         return $this->creator;
     }
 
-    public static function begin()
+    public function begin()
     {
-        return SQLQuery::begin();
+        return $this->connection->beginTransaction();
     }
 
-    public static function commit()
+    public function commit()
     {
-        return SQLQuery::commit();
+        return $this->connection->commit();
     }
 
-    public static function rollBack()
+    public function rollBack()
     {
-        return SQLQuery::rollBack();
+        return $this->connection->rollBack();
     }
 
     
@@ -704,7 +693,7 @@ abstract class Table
      */
     public function truncate():int
     {
-        return (new SQLQuery('TRUNCATE TABLE `#{'.$this->tableName.'}`;'))->exec();
+        return (new RawQuery($this->connection, 'TRUNCATE TABLE `#{'.$this->tableName.'}`;'))->exec();
     }
   
     /**
@@ -714,7 +703,7 @@ abstract class Table
      */
     public function drop():int
     {
-        return (new SQLQuery('DROP TABLE IF EXISTS `#{'.$this->tableName.'}`;'))->exec();
+        return (new RawQuery($this->connection, 'DROP TABLE IF EXISTS `#{'.$this->tableName.'}`;'))->exec();
     }
 
     /**
@@ -761,7 +750,7 @@ abstract class Table
                         if (sha1($data)!=$sha1 || $time >time() || $name!=$this->tableName) {
                             return false;
                         }
-                        $num+= (new SQLQuery(base64_decode($data)))->exec();
+                        $num+= (new RawQuery($this->connection, base64_decode($data)))->exec();
                     }
                 }
                 static::commit();
@@ -808,7 +797,7 @@ abstract class Table
     
     protected function initFromTable(TableCreator $table)
     {
-        (new SQLQuery($table))->exec();
+        (new RawQuery($this->connection, $table))->exec();
         $this->primaryKey=$table->getPrimaryKeyName();
         $this->fields=$table->getFieldsName();
         return true;
@@ -829,12 +818,17 @@ abstract class Table
         }
     }
 
+    protected function newStatement()
+    {
+        return new SQLStatement($this->connection, $this);
+    }
+
     protected function initFromDatabase()
     {
         $fields=[];
         $this->primaryKey=[];
         try {
-            $columns=(new SQLQuery('show columns from #{'.$this->getTableName().'};'))->fetchAll();
+            $columns=(new RawQuery($this->connection, 'show columns from #{'.$this->getTableName().'};'))->fetchAll();
         } catch (\suda\exception\SQLException  $e) {
             return false;
         }
@@ -893,9 +887,9 @@ abstract class Table
             }
             $limitCondition.=$limit.';';
         }
-        $q=new SQLQuery('SELECT * FROM `#{'.$table.'}` WHERE 1 '. $limitCondition, [], true);
+        $q=new RawQuery($this->connection, 'SELECT * FROM `#{'.$table.'}` WHERE 1 '. $limitCondition, [], true);
         if (is_null($this->exportFields)) {
-            $columns=(new SQLQuery('SHOW COLUMNS FROM `#{'.$table.'}`;'))->fetchAll();
+            $columns=(new RawQuery($this->connection, 'SHOW COLUMNS FROM `#{'.$table.'}`;'))->fetchAll();
             $key='(';
             foreach ($columns  as $column) {
                 $key.='`'.$column['Field'].'`,';

@@ -77,6 +77,7 @@ class RawQuery implements SQLStatement
     {
         return $this->connection;
     }
+    
     public function setConnection(Connection $connection)
     {
         $this->connection = $connection;

@@ -543,18 +543,18 @@ class Manager
         $module=$module??Application::getInstance()->getActiveModule();
         $path=Manager::getPublicModulePath($module);
         self::prepareResource($module);
-        $static_url=Storage::cut($path, self::$assetsPath);
-        $static_url=preg_replace('/[\\\\\/]+/', '/', $static_url);
-        return  '/'.$static_url;
+        $staticUrl=Storage::cut($path, self::$assetsPath);
+        $staticUrl=str_replace('\\', '/', $staticUrl);
+        return  '/'.$staticUrl;
     }
 
     public static function getDynamicAssetPath(string $path, string $module=null)
     {
         $module=$module??Application::getInstance()->getActiveModule();
         $path=self::$assetsPath.'/'.self::$dynamicPath.'/'.self::moduleUniqueId($module).'/'.$path;
-        $static_url=Storage::cut($path, self::$assetsPath);
-        $static_url=preg_replace('/[\\\\\/]+/', '/', $static_url);
-        return  '/'.$static_url;
+        $staticUrl=Storage::cut($path, self::$assetsPath);
+        $staticUrl=str_replace('\\', '/', $staticUrl);
+        return  '/'.$staticUrl;
     }
 
     public static function assetServer(string $url)
