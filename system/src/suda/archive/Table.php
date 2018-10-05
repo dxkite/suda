@@ -820,7 +820,7 @@ abstract class Table
 
     protected function newStatement()
     {
-        return new SQLStatement($this->connection, $this);
+        return new SQLStatementPrepare($this->connection, $this);
     }
 
     protected function initFromDatabase()

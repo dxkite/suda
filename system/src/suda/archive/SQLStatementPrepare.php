@@ -138,7 +138,7 @@ class SQLStatementPrepare
             }
             $fields=implode(',', $field);
         }
-        $limit=is_null($page)?'': ' LIMIT '.self::page($page);
+        $limit= self::prepareLimit($page);
         return new SQLQuery('SELECT '.$fields.' FROM `'.$table.'` WHERE '.trim($conditions, ';').$limit.';', $binds, $scroll);
     }
 
@@ -273,7 +273,7 @@ class SQLStatementPrepare
     {
         $sql='SELECT `AUTO_INCREMENT` FROM `information_schema`.`TABLES` WHERE `TABLE_SCHEMA`=:database AND `TABLE_NAME`=:table LIMIT 1;';
         $table=self::table($table);
-        if ($query=(new RawQuery($this->connection, $sql, ['database'=>is_null($database)?Config::get('database.name'):$database,'table'=>$table]))->fetch()) {
+        if ($query=(new RawQuery($this->connection, $sql, ['database'=>is_null($database)? conf('database.name'):$database,'table'=>$table]))->fetch()) {
             return intval($query['AUTO_INCREMENT']);
         }
         return 0;
@@ -281,7 +281,17 @@ class SQLStatementPrepare
 
     protected function table(string $name)
     {
-        return Config::get('database.prefix', '').$name;
+        return conf('database.prefix', '').$name;
+    }
+
+    protected function prepareLimit(?array $page =null)
+    {
+        if (is_null($page)) {
+            return '';
+        }
+        if ($limit = self::page($page)) {
+            return 'LIMIT '.$limit;
+        }
     }
 
     protected function page(array $page)
