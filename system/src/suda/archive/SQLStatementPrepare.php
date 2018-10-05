@@ -169,7 +169,7 @@ class SQLStatementPrepare
      * @param [type] $object 数据库回调对象
      * @return integer
      */
-    public function update(string $table, $set_fields, $where='1', array $binds=[], $object=null):int
+    public function update(string $table, $set_fields, $where='1', array $binds=[]):int
     {
         $table=self::table($table);
         $count=0;
@@ -196,7 +196,7 @@ class SQLStatementPrepare
      * @param [type] $object
      * @return integer
      */
-    public function delete(string $table, $where='1', array $binds=[], $object=null):int
+    public function delete(string $table, $where='1', array $binds=[]):int
     {
         $table=self::table($table);
         $sql='DELETE FROM `'.$table.'` WHERE '.self::prepareWhere($where, $binds).';';
@@ -262,7 +262,7 @@ class SQLStatementPrepare
     }
 
     
-    public function count(string $table, $where='1', array $binds=[], $object=null):int
+    public function count(string $table, $where='1', array $binds=[]):int
     {
         $table=self::table($table);
         $where=self::prepareWhere($where, $binds);
