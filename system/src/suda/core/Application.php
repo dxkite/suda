@@ -270,7 +270,8 @@ class Application
     public function installModule(string $module)
     {
         $config=self::getModuleConfig($module);
-        $installLock = DATA_DIR.'/install/install_'.substr(md5($config['name']), 0, 6).'.lock';
+        $installName = self::getModuleFullName($module);
+        $installLock = DATA_DIR.'/install/install_'.substr(md5($installName), 0, 6).'.lock';
         storage()->path(dirname($installLock));
         if (array_key_exists('install', $config) && !file_exists($installLock)) {
             $installs=$config['install'];
