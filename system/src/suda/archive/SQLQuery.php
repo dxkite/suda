@@ -39,8 +39,7 @@ class SQLQuery extends SQLStatementPrepare implements SQLStatement
      */
     public function __construct(string $query='', array $binds=[], bool $scroll=false)
     {
-        self::prepareQuery();
-        $this->query = clone self::$currentQuery->query($query, $binds, $scroll);
+        $this->query = clone self::currentQuery()->query($query, $binds, $scroll);
         $this->connecton = $this->query->getConnection();
     }
 
@@ -73,6 +72,14 @@ class SQLQuery extends SQLStatementPrepare implements SQLStatement
             self::$defaultQuery->setConnection($connection);
         }
         self::$currentQuery = self::$defaultQuery;
+    }
+
+    public static function currentQuery()
+    {
+        if (is_null(self::$currentQuery)) {
+            self::prepareQuery();
+        }
+        return self::$currentQuery;
     }
 
     /**
@@ -211,7 +218,7 @@ class SQLQuery extends SQLStatementPrepare implements SQLStatement
      */
     public static function beginTransaction()
     {
-        self::$currentQuery->beginTransaction();
+        self::currentQuery()->beginTransaction();
     }
 
     /**
@@ -221,7 +228,7 @@ class SQLQuery extends SQLStatementPrepare implements SQLStatement
      */
     public static function commit()
     {
-        self::$currentQuery->commit();
+        self::currentQuery()->commit();
     }
 
     /**
@@ -231,17 +238,17 @@ class SQLQuery extends SQLStatementPrepare implements SQLStatement
      */
     public static function rollBack()
     {
-        self::$currentQuery->rollBack();
+        self::currentQuery()->rollBack();
     }
 
     public function quote($string)
     {
-        return self::$currentQuery->quote($string);
+        return self::currentQuery()->quote($string);
     }
 
     public function arrayQuote(array $array)
     {
-        return self::$currentQuery->arrayQuote($array);
+        return self::currentQuery()->arrayQuote($array);
     }
 
     protected static function prepareQuery()

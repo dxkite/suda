@@ -16,19 +16,22 @@
 namespace suda\core;
 
 use suda\archive\SQLQuery;
+use suda\archive\RawQuery;
 use suda\exception\SQLException;
 
 /**
  * 数据库查询类
  * 提供了数据库的查询的静态封装
  */
-class Query extends SQLQuery
+class Query
 {
     public static function __callStatic(string $method, $args)
     {
-        if (method_exists(SQLQuery::class, $method)) {
-            return forward_static_call_array([SQLQuery::class,$method], $args);
+        $method = new \ReflectionMethod(SQLQuery::class, $method);
+        if ($method->isStatic()) {
+            return $method->invokeArgs(null, $args);
+        } else {
+            return $method->invokeArgs(new SQLQuery, $args);
         }
-        return call_user_func_array([new SQLQuery,$method], $args);
     }
 }
