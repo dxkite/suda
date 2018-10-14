@@ -31,29 +31,27 @@ class Exception extends ErrorException implements JsonSerializable
     protected $level = null;
 
     protected static $levelTable = [
-        E_NOTICE => Debug::NOTICE,
-        E_USER_NOTICE => Debug::NOTICE,
-        E_USER_WARNING => Debug::WARNING,
-        E_COMPILE_WARNING => Debug::WARNING,
-        E_CORE_WARNING => Debug::WARNING,
-        E_DEPRECATED => Debug::WARNING,
         E_ERROR => Debug::ERROR,
+        E_WARNING => Debug::WARNING,
         E_PARSE => Debug::ERROR,
+        E_NOTICE => Debug::NOTICE,
         E_CORE_ERROR => Debug::ERROR,
+        E_CORE_WARNING => Debug::WARNING,
         E_COMPILE_ERROR => Debug::ERROR,
+        E_COMPILE_WARNING => Debug::WARNING,
+        E_USER_ERROR => Debug::ERROR,
+        E_USER_WARNING => Debug::WARNING,
+        E_USER_NOTICE => Debug::NOTICE,
+        E_STRICT => Debug::NOTICE,
+        E_DEPRECATED => Debug::WARNING,
     ];
 
     protected static $phpErrorName = [
-        E_NOTICE => 'NoticeException',
-        E_USER_NOTICE =>  'UserNoticeException',
-        E_USER_WARNING => 'UserWarningException',
-        E_DEPRECATED => 'EeprecatedException',
         E_ERROR => 'ErrorException',
         E_PARSE => 'ParseException',
         E_CORE_ERROR => 'CodeErrorException',
-        E_CORE_WARNING => 'CodeWarningException',
         E_COMPILE_ERROR => 'CompileErrorException',
-        E_COMPILE_WARNING => 'CompileWarningException',
+        E_USER_ERROR => 'UserErrorException',
     ];
 
     public function __construct(Throwable $e, ?string $name = null)

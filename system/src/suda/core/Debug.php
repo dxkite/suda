@@ -584,6 +584,7 @@ class Debug
             '_ENV' => [
                 'PHP' =>  PHP_VERSION,
                 'SERVER' => $_SERVER['SERVER_SOFTWARE'],
+                'OS' => PHP_OS,
                 'SUDA' => SUDA_VERSION,
                 'ROUTER' => \suda\core\route\Mapping::current(),
                 'ROUTERS'=> router()->getRouters(),
