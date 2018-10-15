@@ -119,8 +119,8 @@ class Locale
 
     public static function format(string $string, array $param)
     {
-        return preg_replace_callback('/(?<!\$)\$(\d+|\w+?\b)/', function ($match) use ($param) {
-            $key = $match[1];
+        return preg_replace_callback('/(?<!\$)\$(\{)?(\d+|\w+?\b)(?(1)\})/', function ($match) use ($param) {
+            $key = $match[2];
             if (array_key_exists($key, $param)) {
                 return $param[$key];
             }
