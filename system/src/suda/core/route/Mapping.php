@@ -42,7 +42,8 @@ class Mapping implements \JsonSerializable
     protected $antiPrefix=false;
     protected $hidden=false;
     protected $dynamic=false;
-    
+    protected $regexpr = null;
+
     const DEFAULT_GROUP = 'default';
  
     protected static $urlType= [ 'int'=>'\d+', 'string'=>'[^\/]+', 'url'=>'.+' ];
@@ -64,6 +65,7 @@ class Mapping implements \JsonSerializable
 
     public function match(Request $request, bool $ignoreCase=true)
     {
+        // 隐藏
         if ($this->hidden) {
             return false;
         }
@@ -71,9 +73,19 @@ class Mapping implements \JsonSerializable
         if (count($this->method)>0 && !in_array(strtoupper($request->method()), $this->method)) {
             return false;
         }
+        // 匹配URL
+        $match = false;
         $paramGet=[];
-        if ($this->matchUrlValue($request->url(), $ignoreCase, $paramGet)) {
-            // 自定义过滤
+        if (is_string($this->regexpr)) {
+            if (preg_match($this->regexpr, $request->url(), $paramGet)) {
+                $match = true;
+            }
+        } else {
+            if ($this->matchUrlValue($request->url(), $ignoreCase, $paramGet)) {
+                $match = true;
+            }
+        }
+        if ($match) {
             if (hook()->execIf('suda:route:dispatch::filter', [$this->getFullName(),$this], true)) {
                 return false;
             }
@@ -461,22 +473,31 @@ class Mapping implements \JsonSerializable
 
     public static function createFromRouteArray(string $group, string $module, string $name, array $json)
     {
-        if (isset($json['class'])) {
+        if (array_key_exists('class', $json)) {
             $callback =  $json['class'].'->onRequest';
-        } elseif (isset($json['template'])) {
+        } elseif (array_key_exists('template', $json)) {
             $callback = __CLASS__.'::templateResponse';
-        } elseif (isset($json['source'])) {
+        } elseif (array_key_exists('source', $json)) {
             $callback =   __CLASS__.'::sourceResponse';
         } else {
             throw new \suda\core\Exception(new \Exception(__('$0 router $1 require infomation: class or template or source', $module, $name)), 'RouterError');
         }
-        $mapping= new self($name, $json['url'] , $callback, $module, $json['method']??[], $group);
+        
+        if (array_key_exists('url', $json) || array_key_exists('regexpr', $json)) {
+        } else {
+            throw new \suda\core\Exception(new \Exception(__('$0 router $1 require infomation: url or regexpr to match url', $module, $name)), 'RouterError');
+        }
+        
+        $mapping= new self($name, $json['url'] ?? '', $callback, $module, $json['method']??[], $group);
+
         $mapping->antiPrefix=isset($json['anti-prefix'])?$json['anti-prefix']:false;
         $mapping->hidden= $json['disable'] ?? $json['hidden'] ?? false;
         $mapping->param= $json['param'] ?? null;
         $mapping->template = $json['template'] ?? null;
         $mapping->source = $json['source'] ?? null;
         $mapping->buffer = $json['buffer'] ?? true;
+        $mapping->regexpr = $json['regexpr'] ?? null;
+
         if (isset($json['host'])) {
             $mapping->host = $json['host'];
             $mapping->scheme = $json['scheme'] ?? $_SERVER['REQUEST_SCHEME'] ?? 'http';
@@ -565,6 +586,7 @@ class Mapping implements \JsonSerializable
             'antiPrefix' => $this->antiPrefix,
             'hidden' => $this->hidden,
             'dynamic' => $this->dynamic,
+            'regexpr' => $this->regexpr,
         ];
     }
 }
