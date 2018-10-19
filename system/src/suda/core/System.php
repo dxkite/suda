@@ -132,11 +132,11 @@ class System
 
     protected static function readManifast()
     {
-        debug()->trace(__('reading manifast file'));
         $path = APP_DIR.DIRECTORY_SEPARATOR.'manifast.json';
+        debug()->trace(__('reading manifast file $0', $path));
         $manifast  = [];
         if (!Config::resolve($path)) {
-            debug()->trace(__('create base app'));
+            debug()->trace(__('create base app on $0', APP_DIR));
             static::createApplication(APP_DIR);
             Config::set('app.init', true);
         }
@@ -164,7 +164,7 @@ class System
         debug()->timeEnd('before shutdown');
         debug()->time('shutdown');
         // 发送Cookie
-        if (connection_status() == CONNECTION_NORMAL) {
+        if (connection_status() === CONNECTION_NORMAL) {
             Hook::exec('suda:system:shutdown::before');
         }
         // 停止响应输出

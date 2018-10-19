@@ -259,7 +259,7 @@ class Message
         if (file_exists($file)) {
             return base64_encode(file_get_contents($file));
         } else {
-            throw new \suda\exception\KernelException('file ' . $file . ' dose not exist');
+            throw new \suda\exception\KernelException(__('file $0 dose not exist', $file));
         }
     }
 

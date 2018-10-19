@@ -3,7 +3,7 @@
  * Suda FrameWork
  *
  * An open source application development framework for PHP 7.2.0 or newer
- * 
+ *
  * Copyright (c)  2017-2018 DXkite
  *
  * @category   PHP FrameWork
@@ -42,7 +42,7 @@ function __(?string $message)
     if (is_null($message)) {
         return null;
     }
-    return call_user_func_array('suda\core\Locale::_', func_get_args());
+    return call_user_func_array([suda\core\Locale::class,'_'], func_get_args());
 }
 
 /**
@@ -345,5 +345,5 @@ function parse_absolute_path(string $path):string
  */
 function query(string $sql, array $bind=[], bool $scroll=false): suda\archive\SQLQuery
 {
-    return new suda\archive\SQLQuery($sql,$bind,$scroll);
+    return new suda\archive\SQLQuery($sql, $bind, $scroll);
 }

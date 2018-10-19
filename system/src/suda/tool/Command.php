@@ -133,7 +133,7 @@ class Command
                 $methodParam = null;
             }
             $className = Autoloader::realName($className);
-            debug()->trace(__('parse command $0 as rule 1,2,3', $command), $matchs);
+            // debug()->trace(__('parse command $0 as rule 1,2,3', $command), $matchs);
             $this->name = $className.'->'.$method;
             if ($constructParams) {
                 $this->constructParam = self::parseParam($constructParams);
@@ -164,7 +164,7 @@ class Command
             list($cmdstr, $functionFile) = $matchs;
             $this->file=$functionFile;
         } else {
-            throw (new CommandException('unknown:'.$command))->setCmd($command);
+            throw (new CommandException(__('unknown command: $0',$command)))->setCmd($command);
         }
         $this->cmdStr= $command;
     }
@@ -181,7 +181,7 @@ class Command
             if (json_last_error() === JSON_ERROR_NONE) {
                 return $params;
             } else {
-                throw (new CommandException('can not pase param:'.$param))->setCmd($this->cmdStr);
+                throw (new CommandException(__('can not parse param $0',$param)))->setCmd($this->cmdStr);
             }
         } elseif (preg_match('/^\=s(erialize)?\:(\:)?(.+)$/', $param, $matchs)) {
             if (isset($matchs[2]) && $matchs[2]) {

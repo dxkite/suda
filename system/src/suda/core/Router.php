@@ -46,9 +46,9 @@ class Router
         return self::$router;
     }
     
-    public static function getModulePrefix(string $module,string $group)
+    public static function getModulePrefix(string $module, string $group)
     {
-        return Application::getInstance()->getModulePrefix($module,$group);
+        return Application::getInstance()->getModulePrefix($module, $group);
     }
 
     public function load(string $module)
@@ -324,7 +324,7 @@ class Router
         if (isset($this->routers[$name])) {
             return $this->routers[$name]->createUrl($values, $query, $queryArr);
         } else {
-            debug()->warning(__('get url for $0 failed,module:$1 args:$2', $name, $module, json_encode($values)));
+            debug()->warning(__('get url for $0 failed, module:$1 args:$2', $name, $module, json_encode($values)));
             return '#the-router-['.$name.']-is-undefined--please-check-out-router-list';
         }
     }
@@ -545,7 +545,7 @@ class Router
             sort($groups);
             sort($reachable);
             self::$cacheModules = $reachable;
-            self::$cacheName = implode('-',$groups).'/'.substr(md5(implode('-', $reachable)), 0, 8);
+            self::$cacheName = implode('-', $groups).'/'.substr(md5(implode('-', $reachable)), 0, 8);
         }
 
         $path = CACHE_DIR.'/router/'.self::$cacheName;

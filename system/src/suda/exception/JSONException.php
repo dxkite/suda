@@ -19,16 +19,16 @@ namespace suda\exception;
 class JSONException extends \RuntimeException
 {
     protected static $error=[
-        JSON_ERROR_NONE=>'No errors',
-        JSON_ERROR_DEPTH=>'Maximum stack depth exceeded',
-        JSON_ERROR_STATE_MISMATCH=>'Underflow or the modes mismatch',
-        JSON_ERROR_CTRL_CHAR=>'Unexpected control character found',
-        JSON_ERROR_SYNTAX=>'Syntax error, malformed JSON',
-        JSON_ERROR_UTF8=>'Malformed UTF-8 characters, possibly incorrectly encoded',
+        JSON_ERROR_NONE=>'no errors',
+        JSON_ERROR_DEPTH=>'maximum stack depth exceeded',
+        JSON_ERROR_STATE_MISMATCH=>'underflow or the modes mismatch',
+        JSON_ERROR_CTRL_CHAR=>'unexpected control character found',
+        JSON_ERROR_SYNTAX=>'syntax error, malformed JSON',
+        JSON_ERROR_UTF8=>'malformed UTF-8 characters, possibly incorrectly encoded',
      ];
 
     public function __construct(int $error)
     {
-        parent::__construct(self::$error[$error] ?? 'Unknown error');
+        parent::__construct(__(self::$error[$error] ?? 'unknown error'));
     }
 }
