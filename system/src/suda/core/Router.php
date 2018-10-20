@@ -145,7 +145,12 @@ class Router
         }
     }
 
-
+    /**
+     * 解析URL到路由
+     *
+     * @param string $url
+     * @return Mapping|null
+     */
     public function parseUrl(string $url):?Mapping
     {
         $paramValue=[];
@@ -227,18 +232,31 @@ class Router
         return [$module,$info];
     }
 
-    public function getRouterFullName(string $name, ?string $moduleDefault=null)
+    /**
+     * 解析名称到完整名称
+     *
+     * @param string $name
+     * @param string|null $moduleDefault
+     * @return string
+     */
+    public function getRouterFullName(string $name, ?string $moduleDefault=null):string
     {
         list($module, $name)=self::parseName($name, $moduleDefault);
         $module=Application::getInstance()->getModuleFullName($module);
         return $module.':'.$name;
     }
     
-    public function buildUrlArgs(string $name, array $args, ?string $moduleDefault =null)
+    /**
+     * 构建路由的必须参数
+     *
+     * @param string $name
+     * @param array $args
+     * @param string|null $moduleDefault
+     * @return array
+     */
+    public function buildUrlArgs(string $name, array $args, ?string $moduleDefault =null):array
     {
-        list($module, $name)=self::parseName($name, $moduleDefault);
-        $module=Application::getInstance()->getModuleFullName($module);
-        $name=$module.':'.$name;
+        $name = self::getRouterFullName($name, $moduleDefault);
         if (isset($this->routers[$name])) {
             $types=$this->routers[$name]->getTypes();
             if ($types) {
@@ -271,9 +289,7 @@ class Router
         $name = trim($values['path']??'', '/');
         parse_str($values['query'] ?? '', $params);
         if ($type == 'router') {
-            list($module, $name)=self::parseName($name);
-            $module=app()->getModuleFullName($module);
-            $name=$module.':'.$name;
+            $name = self::getRouterFullName($name);
             if (isset($this->routers[$name])) {
                 $router=clone $this->routers[$name];
                 $router->setHost($host);
@@ -318,14 +334,32 @@ class Router
      */
     public function buildUrl(string $name, array $values=[], bool $query=true, array $queryArr=[], ?string $moduleDefault =null):string
     {
-        list($module, $name)=self::parseName($name, $moduleDefault);
-        $module=Application::getInstance()->getModuleFullName($module);
-        $name=$module.':'.$name;
-        if (isset($this->routers[$name])) {
-            return $this->routers[$name]->createUrl($values, $query, $queryArr);
+        $url = self::createUrl($name, $values, $query, $queryArr, $moduleDefault);
+        if ($url) {
+            return $url;
         } else {
             debug()->warning(__('get url for $0 failed, module:$1 args:$2', $name, $module, json_encode($values)));
             return '#the-router-['.$name.']-is-undefined--please-check-out-router-list';
+        }
+    }
+    
+    /**
+     * 根据路由名称创建URL
+     *
+     * @param string $name 路由名称
+     * @param array $values 路由中的参数
+     * @param boolean $query 是否使用多余路由参数作为查询参数
+     * @param array $queryArr 查询参数
+     * @param string|null $moduleDefault 路由未指定模块时的默认模块
+     * @return string|null 创建成功为字符串，失败为 null
+     */
+    public function createUrl(string $name, array $values=[], bool $query=true, array $queryArr=[], ?string $moduleDefault =null):?string
+    {
+        $name = self::getRouterFullName($name, $moduleDefault);
+        if (isset($this->routers[$name])) {
+            return $this->routers[$name]->createUrl($values, $query, $queryArr);
+        } else {
+            return null;
         }
     }
 
