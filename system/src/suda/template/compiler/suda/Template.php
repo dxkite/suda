@@ -52,22 +52,14 @@ abstract class Template
         $content=self::getRenderedString();
         hook()->exec('suda:template:render::before', [&$content]);
         debug()->trace('echo '.$this->name);
-        // 计算输出页面长度
-        if (conf('app.calc-content-length', !conf('debug'))) {
-            $length=strlen($content);
-            // 输出页面长度
-            if ($this->response) {
-                $this->response->setHeader('Content-Length:'.$length);
-            }
-        }
         if ($this->response) {
             $this->response->type('html');
             if (conf('app.etag', !conf('debug'))  && $this->response->etag(md5($content))) {
             } else {
-                echo $content;
+                $this->response->send($content);
             }
         } else {
-            echo $content;
+            $this->response->send($content);
         }
         return $this;
     }

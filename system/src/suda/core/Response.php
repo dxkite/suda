@@ -86,7 +86,7 @@ abstract class Response
 
     public function noCache()
     {
-        self::setHeader('Cache-Control: no-cache');
+        self::setHeader('Cache-Control: no-cache, must-revalidate');
     }
 
     /**
@@ -100,11 +100,8 @@ abstract class Response
         }
         Hook::exec('suda:system:display:json', [&$jsonstr]);
         self::type('json');
-        if (conf('app.calc-content-length', !conf('debug'))) {
-            self::setHeader('Content-Length:'.strlen($jsonstr));
-        }
         self::_etag(md5($jsonstr));
-        echo $jsonstr;
+        self::send($jsonstr);
     }
 
     /**
@@ -114,20 +111,34 @@ abstract class Response
     {
         $content=file_get_contents($path);
         $hash   = md5($content);
-        $size   = strlen($content);
         if (!$this->_etag($hash)) {
             $type   = $type ?? pathinfo($path, PATHINFO_EXTENSION);
             $name = $filename ?? pathinfo($path, PATHINFO_FILENAME);
             $this->type($type);
             self::setHeader('Content-Disposition: attachment;filename="'.$name.'.'.$type.'"');
-            self::setHeader('Content-Length:'.$size);
             self::setHeader('Cache-Control: max-age=0');
-            self::setHeader('Expires: Mon, 26 Jul 1997 05:00:00 GMT'); // Date in the past
-            self::setHeader('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT'); // always modified
-            self::setHeader('Cache-Control: cache, must-revalidate'); // HTTP/1.1
-            self::setHeader('Pragma: public'); // HTTP/1.0
-            echo $content;
+            self::setHeader('Expires: ' . gmdate('D, d M Y H:i:s') . ' GMT');
+            self::setHeader('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT');
+            self::setHeader('Cache-Control: cache, must-revalidate');
+            self::setHeader('Pragma: public');
+            self::send($content);
         }
+    }
+
+    /**
+     * 发送内容
+     *
+     * @param string $content
+     * @return void
+     */
+    public static function send(string $content)
+    {
+        hook()->exec('suda:response:send::before', [&$content]);
+        if (conf('app.calc-content-length', !conf('debug'))) {
+            $length = strlen($content);
+            self::setHeader('Content-Length:'.$length);
+        }
+        echo $content;
     }
 
     /**
