@@ -42,6 +42,9 @@ abstract class Template
     protected $source=null;
     // 渲染堆栈
     protected static $render=[];
+    // 安全Nonce
+    protected static $scriptNonce = null;
+
     protected $extend=null;
 
     /**
@@ -53,6 +56,11 @@ abstract class Template
         hook()->exec('suda:template:render::before', [&$content]);
         debug()->trace('echo '.$this->name);
         if ($this->response) {
+            $csp = conf('header.Content-Security-Policy', 'default-src \'self\'; script-src \'self\' \'unsafe-eval\' \'nonce-$RANDOM\';');
+            $xfo = conf('header.X-Frame-Options', 'sameorigin');
+            $csp = str_replace('\'nonce-$RANDOM\'', is_null(self::$scriptNonce)?'\'unsafe-inline\'':'\'nonce-'.self::$scriptNonce.'\'', $csp);
+            $this->response->addHeader('Content-Security-Policy', $csp);
+            $this->response->addHeader('X-Frame-Options', $xfo);
             $this->response->type('html');
             if (conf('app.etag', !conf('debug'))  && $this->response->etag(md5($content))) {
             } else {
@@ -138,6 +146,15 @@ abstract class Template
     {
         return self::$render;
     }
+
+    protected function getScriptNonce()
+    {
+        if (is_null(self::$scriptNonce)) {
+            self::$scriptNonce = base64_encode(md5($this->name.time(), true));
+        }
+        return self::$scriptNonce;
+    }
+
     /**
     * 单个设置值
     */

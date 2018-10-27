@@ -378,6 +378,11 @@ class Compiler implements CompilerImpl
     {
         return '<?php });?>';
     }
+
+    protected function parseNonce() {
+        return 'nonce="<?php echo $this->getScriptNonce() ?>"';
+    }
+
     protected function parseInsert($exp)
     {
         preg_match('/\((.+)\)/', $exp, $v);

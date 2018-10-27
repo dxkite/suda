@@ -14,7 +14,7 @@
  * @version    since 1.2.9
  */
 
- // 定义版本
+// 定义版本
 define('SUDA_VERSION', '2.0.2');
 
 // 注册基本常量
