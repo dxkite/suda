@@ -5,7 +5,8 @@
     define('DATA_DIR', APP_DIR.'/data');
     // 网站根目录位置
     define('APP_PUBLIC', __DIR__);
-
+    // 当前入口文件
+    define('SUDA_ENTRANCE', __FILE__);
     // 不可访问的模块
     define('UNREACHABLE_MODULES', 'suda');
     // 开发者关闭模式

@@ -34,6 +34,8 @@ class Request
     protected static $host =null;
     protected static $port =null;
     protected static $scheme =null;
+    protected static $script = null;
+
     protected $mapping=null;
 
     private function __construct()
@@ -336,7 +338,8 @@ class Request
         $path= '';
         $queryString='';
         $phpSelf='';
-        $index=pathinfo(get_included_files()[0], PATHINFO_BASENAME);
+        
+        $index=pathinfo(self::$script, PATHINFO_BASENAME);
         //  匹配 [1] /?/xxxxx
         if (preg_match('/^\/\?\//', $url)) {
             $preg='/^(\/\?(\/[^?]*))(?:[?](.+)?)?$/';
@@ -363,17 +366,17 @@ class Request
         return [$path,$queryString,$phpSelf];
     }
 
-    
     protected static function parseRequest()
     {
+        // 获取主入口文件
+        self::$script = str_replace('\\', '/', IN_PHAR?substr(SUDA_ENTRANCE, strlen('phar://'.$_SERVER['DOCUMENT_ROOT'])):substr(SUDA_ENTRANCE, strlen($_SERVER['DOCUMENT_ROOT'])));
         list(self::$url, $queryString, $phpSelf) = static::parseUrl($_SERVER['REQUEST_URI']??'/');
+        $_SERVER['PATH_INFO'] = self::$url;
+        $_SERVER['SCRIPT_NAME'] = self::$script;
 
-        if ($queryString) {
-            if (isset($queryString)) {
-                // 重定义GET
-                $_GET=[];
-                parse_str($queryString, $_GET);
-            }
+        if ($queryString && strlen($queryString)) {
+            parse_str($queryString, $queryGET);
+            $_GET = array_merge($_GET, $queryGET);
         }
 
         if ($phpSelf) {
@@ -382,10 +385,6 @@ class Request
         
         if (isset($_GET[self::$url])) {
             unset($_GET[self::$url]);
-        }
-
-        if (!isset($_SERVER['PATH_INFO'])) {
-            $_SERVER['PATH_INFO']=self::$url;
         }
     }
 
@@ -451,13 +450,13 @@ class Request
         // 2 index.php/
         // 3 index.php?/
         $base=self::hostBase();
-        $script=$_SERVER['SCRIPT_NAME'];
+        $script= self::$script;
         $module=conf('app.url.mode', 0);
         $beautify=conf('app.url.beautify', false);
         $index=conf('app.index', 'index.php');
         if ($module==0 || $module==1) {
             // 如果当前脚本为AutoIndex索引
-            if (ltrim($script, '/') === $index) {
+            if (ltrim($script, '/\\') === $index) {
                 // 开启重写
                 if (conf('app.url.rewrite', false)) {
                     return $base. ((IS_LINUX || $beautify)? '/':'/?/');

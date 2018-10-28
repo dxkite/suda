@@ -46,16 +46,14 @@ abstract class Response
         if (conf('debug')) {
             self::noCache();
             // for windows debug touch file to avoid 304 by server
-            if (!IS_LINUX) {
-                $script = $_SERVER['SCRIPT_NAME'];
-                $file   = $_SERVER['DOCUMENT_ROOT'].$script;
-                $content=file_get_contents($file);
+            if (!IS_LINUX && !IN_PHAR) {
+                $content=file_get_contents(SUDA_ENTRANCE);
                 if (preg_match('/\<\?php\s+#\d+\r\n/i', $content)) {
                     $content=preg_replace('/\<\?php\s+#\d+\r\n/i', '<?php #'.time().PHP_EOL, $content);
                 } else {
                     $content=preg_replace('/\<\?php/i', '<?php #'.time().PHP_EOL, $content);
                 }
-                file_put_contents($file, $content);
+                file_put_contents(SUDA_ENTRANCE, $content);
             }
         }
     }

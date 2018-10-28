@@ -1,4 +1,4 @@
-<?php #1539767122
+<?php #1540709763
 
     // 应用所在目录
     define('APP_DIR', __DIR__.'/../app');
@@ -6,8 +6,8 @@
     define('DATA_DIR', APP_DIR.'/data');
     // 网站根目录位置
     define('APP_PUBLIC', __DIR__);
- 
-
+    // 当前入口文件
+    define('SUDA_ENTRANCE', __FILE__);
     // 开发者关闭模式
     define('DEBUG', true);
     // 错误等级

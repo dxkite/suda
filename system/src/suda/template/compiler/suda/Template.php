@@ -56,9 +56,17 @@ abstract class Template
         hook()->exec('suda:template:render::before', [&$content]);
         debug()->trace('echo '.$this->name);
         if ($this->response) {
-            $csp = conf('header.Content-Security-Policy', 'default-src \'self\'; script-src \'self\' \'unsafe-eval\' \'nonce-$RANDOM\';');
+            $cspDefault = 'default-src \'self\';';
+            if (self::$scriptNonce) {
+                $cspDefault .= 'script-src \'self\' \'unsafe-eval\' \'nonce-$RANDOM\';';
+                $cspDefault .= 'style-src \'self\' \'nonce-$RANDOM\' \'unsafe-inline\';';
+            } else {
+                $cspDefault .= 'script-src \'self\' \'unsafe-eval\' \'unsafe-inline\';';
+                $cspDefault .= 'style-src \'self\' \'unsafe-inline\';';
+            }
+            $csp = conf('header.Content-Security-Policy', $cspDefault);
             $xfo = conf('header.X-Frame-Options', 'sameorigin');
-            $csp = str_replace('\'nonce-$RANDOM\'', is_null(self::$scriptNonce)?'\'unsafe-inline\'':'\'nonce-'.self::$scriptNonce.'\'', $csp);
+            $csp = str_replace('\'nonce-$RANDOM\'', is_null(self::$scriptNonce)?'':'\'nonce-'.self::$scriptNonce.'\'', $csp);
             $this->response->addHeader('Content-Security-Policy', $csp);
             $this->response->addHeader('X-Frame-Options', $xfo);
             $this->response->type('html');

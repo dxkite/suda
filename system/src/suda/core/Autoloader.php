@@ -162,9 +162,10 @@ class Autoloader
      * 将路径转换成绝对路径
      *
      * @param string $path
+     * @param string $separator
      * @return string
      */
-    public static function parsePath(string $path):string
+    public static function parsePath(string $path,string $separator = DIRECTORY_SEPARATOR):string
     {
         if (defined('USER_HOME') && $path[0] === '~') {
             $scheme ='';
@@ -203,7 +204,7 @@ class Autoloader
                 $absulotePaths[]=$name;
             }
         }
-        $absulotePath = $scheme.$root.implode(DIRECTORY_SEPARATOR, $absulotePaths);
+        $absulotePath = $scheme.$root.implode($separator, $absulotePaths);
         return $absulotePath;
     }
 }
