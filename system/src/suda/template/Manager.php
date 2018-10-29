@@ -578,7 +578,7 @@ class Manager
      * 检查语法
      *
      * @param string $file
-     * @return void
+     * @return bool|ParseError 语法错误报错
      */
     public static function checkSyntax(string $file, string $className='')
     {

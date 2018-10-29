@@ -104,7 +104,7 @@ class Message
      * ->addAttachment(__FILE__)));
      *
      * @param string $file 附件文件路径
-     * @return void
+     * @return Message
      */
     public function addAttachment(string $file)
     {

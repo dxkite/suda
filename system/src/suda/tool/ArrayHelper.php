@@ -23,16 +23,15 @@ namespace suda\tool;
 class ArrayHelper
 {
     /**
-    * 获取数组元素
-    *
-    * @example
-    * array_get_value('a.b.c.d',$arr);
-    * 返回 $arr['a']['b']['c']['d'];
-    *
-    * @param  $name 查询列
-    * @param  $array 查询的数组
-    * @return mixed 查询的值
-    */
+     * 获取数组元素
+     * @example
+     * array_get_value('a.b.c.d',$arr);
+     * 返回 $arr['a']['b']['c']['d'];
+     * @param array $array
+     * @param string $name 查询列
+     * @param mixed $def 查询的默认值
+     * @return mixed 查询的值
+     */
     public static function get(array $array, string $name, $def = null)
     {
         $path = explode('.', $name);
@@ -66,9 +65,9 @@ class ArrayHelper
      * @param string $name
      * @param [type] $value
      * @param [type] $def
-     * @return void
+     * @return array 设置后的数组
      */
-    public static function set(array &$array, string $name, $value, $def=null)
+    public static function set(array &$array, string $name, $value, $def=null):array 
     {
         $path = explode('.', $name);
         $root = &$array;
