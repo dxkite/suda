@@ -7,12 +7,11 @@ class CommandRunner
 {
     protected static $commands = [
         'pack-suda' => [ 'command' => command\PackSudaCommand::class , 'message' => 'pack suda as phar package' ],
+        'pack' => [ 'command' => command\PackCommand::class , 'message' => 'pack app as phar package' ],
         'release' => [ 'command' => command\ReleaseCommand::class , 'message' => 'release suda version' ],
         'new' => [ 'command' => command\NewCommand::class , 'message' => 'create a suda application' ]
     ];
     
-
-
     public static function run(int $argc, array $argv)
     {
         $phar = Autoloader::realPath($argv[0]);
