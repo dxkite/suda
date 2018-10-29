@@ -583,7 +583,7 @@ class Debug
         $dump=  [
             '_ENV' => [
                 'PHP' =>  PHP_VERSION,
-                'SERVER' => $_SERVER['SERVER_SOFTWARE'],
+                'SERVER' => $_SERVER['SERVER_SOFTWARE'] ?? '',
                 'OS' => PHP_OS,
                 'SUDA' => SUDA_VERSION,
                 'ROUTER' => \suda\core\route\Mapping::current(),

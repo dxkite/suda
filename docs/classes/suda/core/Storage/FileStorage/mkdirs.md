@@ -1,6 +1,6 @@
 # FileStorage::mkdirs
 
-> *文件信息* suda\core\storage\FileStorage.php: 26~458
+> *文件信息* suda\core\storage\FileStorage.php: 27~415
 ## 所属类 
 
 [FileStorage](../FileStorage.md)
@@ -17,7 +17,7 @@
 | 参数名 | 类型 | 默认值 | 说明 |
 |--------|-----|-------|-------|
 | dir |  string | 无 | 无 |
-| mode |  int | 511 | 无 |
+| mode |  int | 493 | 无 |
 
 ## 返回值
 返回值类型不定

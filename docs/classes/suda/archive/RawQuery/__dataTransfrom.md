@@ -1,6 +1,6 @@
 # RawQuery::__dataTransfrom
 转换函数；统一处理数据库输入输出
-> *文件信息* suda\archive\RawQuery.php: 31~458
+> *文件信息* suda\archive\RawQuery.php: 29~457
 ## 所属类 
 
 [RawQuery](../RawQuery.md)

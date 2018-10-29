@@ -29,7 +29,7 @@ class ExportTemplate
     public function setSrc(string $src)
     {
         $this->source=$src;
-        $this->template=$this->source.'.tpl';
+        $this->template=$this->source.'.tpl.php';
         $this->name=md5($src);
     }
 

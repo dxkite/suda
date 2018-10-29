@@ -1,6 +1,6 @@
 # ArrayHelper::set
 设置数组的值
-> *文件信息* suda\tool\ArrayHelper.php: 23~172
+> *文件信息* suda\tool\ArrayHelper.php: 23~165
 ## 所属类 
 
 [ArrayHelper](../ArrayHelper.md)
@@ -23,8 +23,8 @@
 | def |  [type] | null | 无 |
 
 ## 返回值
-类型：void
-无
+类型：array
+ 设置后的数组
 
 ## 例子
 

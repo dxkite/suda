@@ -1,6 +1,6 @@
 #  Compiler 
 
-> *文件信息* suda\template\compiler\suda\Compiler.php: 30~401
+> *文件信息* suda\template\compiler\suda\Compiler.php: 27~403
 
 
 Suda 模板编译器
@@ -68,6 +68,7 @@ Suda 模板编译器
 |  public  static|[echo](Compiler/echo.md) |  |
 |  protected  |[parseStartInsert](Compiler/parseStartInsert.md) |  |
 |  protected  |[parseEndInsert](Compiler/parseEndInsert.md) |  |
+|  protected  |[parseNonce](Compiler/parseNonce.md) |  |
 |  protected  |[parseInsert](Compiler/parseInsert.md) |  |
 |  public  |[error](Compiler/error.md) |  |
 |  public  |[erron](Compiler/erron.md) |  |

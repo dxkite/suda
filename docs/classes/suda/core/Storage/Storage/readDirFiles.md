@@ -1,6 +1,6 @@
 # Storage::readDirFiles
 读取路径下面所有的文件
-> *文件信息* suda\core\storage\Storage.php: 22~226
+> *文件信息* suda\core\storage\Storage.php: 22~244
 ## 所属类 
 
 [Storage](../Storage.md)
@@ -18,11 +18,11 @@ abstract  public
 |--------|-----|-------|-------|
 | dirs |  string | 无 | 无 |
 | repeat |  bool |  | 无 |
-| preg |  string | /^.+$/ | 无 |
+| preg |  string | null | 无 |
 | cut |  bool |  | 无 |
 
 ## 返回值
-类型：array
+类型：Iterator
 无
 
 ## 例子

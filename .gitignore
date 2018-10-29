@@ -13,3 +13,4 @@
 _olds
 .suda
 *.phar
+script/docme/template/*.tpl.php

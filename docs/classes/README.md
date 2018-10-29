@@ -2,8 +2,8 @@
 
 > **注：** 文档由程序自动生成
 
-- suda 2.0.2 
-- 2018-09-19 08:14:08
+- suda 2.0.3 
+- 2018-10-29 08:16:29
 
 
 ## 类列表
@@ -13,20 +13,21 @@
 |[suda\core\Autoloader](suda/core/Autoloader.md) | 自动加载控制器 |
 |[suda\core\System](suda/core/System.md) | 系统类，处理系统报错函数以及程序加载 |
 |[suda\core\Debug](suda/core/Debug.md) | 异常日志类 |
-|[suda\core\Request](suda/core/Request.md) | 请求描述类，客户端向框架发送请求时会生成此类 |
-|[suda\tool\Value](suda/tool/Value.md) | 普通通用值 |
-|[suda\core\Config](suda/core/Config.md) | 文件配置类 |
-|[suda\tool\ArrayHelper](suda/tool/ArrayHelper.md) | 数组操纵 |
 |[suda\core\Storage](suda/core/Storage.md) | 文件存储系统包装类，封装了常用的文件系统函数 |
 |[suda\core\storage\FileStorage](suda/core/storage/FileStorage.md) | 文件存储系统包装类 |
+|[suda\core\Request](suda/core/Request.md) | 请求描述类，客户端向框架发送请求时会生成此类 |
+|[suda\core\Config](suda/core/Config.md) | 文件配置类 |
+|[suda\tool\ArrayHelper](suda/tool/ArrayHelper.md) | 数组操纵 |
 |[system](system.md) | 系统类，处理系统报错函数以及程序加载 |
 |[suda\core\Hook](suda/core/Hook.md) | 系统钩子，监听系统内部一些操作并载入一些自定义行为 |
 |[suda\core\Locale](suda/core/Locale.md) | I18N 国际化支持 |
+|[suda\core\storage\iterator\PathPregFilterIterator](suda/core/storage/iterator/PathPregFilterIterator.md) |  |
 |[suda\archive\Connection](suda/archive/Connection.md) | 数据表链接对象 |
 |[suda\archive\creator\Field](suda/archive/creator/Field.md) |  |
 |[suda\archive\creator\InputValue](suda/archive/creator/InputValue.md) |  |
 |[suda\archive\creator\Table](suda/archive/creator/Table.md) |  |
 |[suda\archive\RawQuery](suda/archive/RawQuery.md) | 数据库查询方案，提供原始查询方案 |
+|[suda\archive\SQLStatementPrepare](suda/archive/SQLStatementPrepare.md) | 数据库查询语句接口 |
 |[suda\archive\SQLQuery](suda/archive/SQLQuery.md) | 数据库查询方案，简化数据库查 |
 |[suda\archive\Table](suda/archive/Table.md) | 数据表抽象对象 |
 |[suda\archive\TableInstance](suda/archive/TableInstance.md) |  |
@@ -57,10 +58,11 @@
 |[suda\template\compiler\suda\Compiler](suda/template/compiler/suda/Compiler.md) | Suda 模板编译器 |
 |[suda\template\compiler\suda\Template](suda/template/compiler/suda/Template.md) |  |
 |[suda\template\compiler\suda\TemplateInfo](suda/template/compiler/suda/TemplateInfo.md) | 获取模板信息类 |
+|[suda\template\iterator\RecursiveTemplateIterator](suda/template/iterator/RecursiveTemplateIterator.md) |  |
 |[suda\template\Manager](suda/template/Manager.md) | 模板管理类 |
-|[suda\tool\ArrayValue](suda/tool/ArrayValue.md) |  |
 |[suda\tool\Command](suda/tool/Command.md) |  |
 |[suda\tool\CookieSetter](suda/tool/CookieSetter.md) |  |
+|[suda\tool\Value](suda/tool/Value.md) | 值迭代器 |
 |[suda\tool\ZipHelper](suda/tool/ZipHelper.md) |  |
 |[suda\core\storage\Storage](suda/core/storage/Storage.md) | 存储系统 |
 |[suda\archive\SQLStatement](suda/archive/SQLStatement.md) | 数据库查询语句接口 |

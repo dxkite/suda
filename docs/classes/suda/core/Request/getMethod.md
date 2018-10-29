@@ -1,6 +1,6 @@
 # Request::getMethod
 获取请求的方法
-> *文件信息* suda\core\Request.php: 24~498
+> *文件信息* suda\core\Request.php: 24~492
 ## 所属类 
 
 [Request](../Request.md)

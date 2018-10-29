@@ -1,6 +1,6 @@
 #  FileStorage 
 
-> *文件信息* suda\core\storage\FileStorage.php: 26~458
+> *文件信息* suda\core\storage\FileStorage.php: 27~415
 
 
 文件存储系统包装类
@@ -28,10 +28,11 @@
 |  public  |[path](FileStorage/path.md) |  |
 |  public  |[abspath](FileStorage/abspath.md) |  |
 |  public  |[readDirFiles](FileStorage/readDirFiles.md) |  |
-|  public  |[cut](FileStorage/cut.md) |  |
 |  public  |[readDirs](FileStorage/readDirs.md) |  |
+|  public  |[readPath](FileStorage/readPath.md) |  |
+|  public  |[cut](FileStorage/cut.md) |  |
 |  public  |[delete](FileStorage/delete.md) |  |
-|  public  |[rmdirs](FileStorage/rmdirs.md) |  |
+|  public  |[rmdirs](FileStorage/rmdirs.md) | 递归删除文件夹 |
 |  public  |[isEmpty](FileStorage/isEmpty.md) |  |
 |  public  |[copydir](FileStorage/copydir.md) |  |
 |  public  |[movedir](FileStorage/movedir.md) |  |

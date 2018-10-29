@@ -1,6 +1,6 @@
 # FileStorage::move
 
-> *文件信息* suda\core\storage\FileStorage.php: 26~458
+> *文件信息* suda\core\storage\FileStorage.php: 27~415
 ## 所属类 
 
 [FileStorage](../FileStorage.md)

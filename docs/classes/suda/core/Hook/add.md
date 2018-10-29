@@ -1,6 +1,6 @@
 # Hook::add
 添加命令到底部
-> *文件信息* suda\core\Hook.php: 24~229
+> *文件信息* suda\core\Hook.php: 23~228
 ## 所属类 
 
 [Hook](../Hook.md)

@@ -19,7 +19,7 @@
 | file |  string | 无 |  附件文件路径 |
 
 ## 返回值
-类型：void
+类型：Message
 无
 
 ## 例子

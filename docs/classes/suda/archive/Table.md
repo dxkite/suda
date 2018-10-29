@@ -1,6 +1,6 @@
 #  Table 
 
-> *文件信息* suda\archive\Table.php: 31~944
+> *文件信息* suda\archive\Table.php: 31~933
 
 
 数据表抽象对象
@@ -23,6 +23,8 @@
 ## 变量列表
 | 可见性 |  变量名   | 说明 |
 |--------|----|------|
+| protected    | statement | | 
+| protected    | connection | | 
 | protected    | fields | | 
 | protected    | wants | | 
 | protected    | primaryKey | | 
@@ -67,9 +69,9 @@
 |  public  |[createTable](Table/createTable.md) |  |
 |  public  |[getCreateSql](Table/getCreateSql.md) |  |
 |  public  |[getCreator](Table/getCreator.md) |  |
-|  public  static|[begin](Table/begin.md) |  |
-|  public  static|[commit](Table/commit.md) |  |
-|  public  static|[rollBack](Table/rollBack.md) |  |
+|  public  |[begin](Table/begin.md) |  |
+|  public  |[commit](Table/commit.md) |  |
+|  public  |[rollBack](Table/rollBack.md) |  |
 |  public  |[truncate](Table/truncate.md) | 清空数据表 |
 |  public  |[drop](Table/drop.md) | 删除数据表 |
 |  public  |[export](Table/export.md) | 导出数据到文件 |

@@ -1,6 +1,6 @@
 # Value::__toString
 
-> *文件信息* suda\tool\Value.php: 26~135
+> *文件信息* suda\tool\Value.php: 25~74
 ## 所属类 
 
 [Value](../Value.md)
@@ -10,11 +10,7 @@
   public  
 ## 说明
 
-
-通用指可以使用迭代器和JSON化成字符串
-并且包含魔术变量用于处理其值
-
-@package suda\tool
+该函数暂时无说明
 
 ## 参数
 

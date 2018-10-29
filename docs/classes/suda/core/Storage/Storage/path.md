@@ -1,6 +1,6 @@
 # Storage::path
-判断路径是否存在，不存在则创建，返回路径绝对地址
-> *文件信息* suda\core\storage\Storage.php: 22~226
+判断路径是否存在，不存在则创建，创建成功返回路径绝对地址
+> *文件信息* suda\core\storage\Storage.php: 22~244
 ## 所属类 
 
 [Storage](../Storage.md)

@@ -1,6 +1,6 @@
 # Manager::moduleUniqueId
 获取模块唯一标识符
-> *文件信息* suda\template\Manager.php: 29~694
+> *文件信息* suda\template\Manager.php: 31~686
 ## 所属类 
 
 [Manager](../Manager.md)

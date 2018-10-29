@@ -1,6 +1,6 @@
 #  Locale 
 
-> *文件信息* suda\core\Locale.php: 23~104
+> *文件信息* suda\core\Locale.php: 26~140
 
 
 I18N 国际化支持
@@ -26,8 +26,10 @@ I18N 国际化支持
 |  public  static|[path](Locale/path.md) | 设置语言化文件夹路径 |
 |  public  static|[set](Locale/set.md) | 设置本地化语言类型 |
 |  public  static|[load](Locale/load.md) | 加载语言本地化文件 |
+|  public  static|[loadPath](Locale/loadPath.md) | 加载路径下的语言文件 |
 |  public  static|[loadFile](Locale/loadFile.md) | 加载语言本地化文件 |
 |  public  static|[_](Locale/_.md) |  |
+|  public  static|[format](Locale/format.md) |  |
 |  public  static|[getLocalePaths](Locale/getLocalePaths.md) |  |
 |  public  static|[getLangs](Locale/getLangs.md) |  |
  

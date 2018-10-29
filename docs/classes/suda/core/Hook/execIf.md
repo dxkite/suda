@@ -1,6 +1,6 @@
 # Hook::execIf
 运行，遇到返回指定条件则停止并返回true
-> *文件信息* suda\core\Hook.php: 24~229
+> *文件信息* suda\core\Hook.php: 23~228
 ## 所属类 
 
 [Hook](../Hook.md)

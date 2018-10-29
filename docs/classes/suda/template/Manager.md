@@ -1,6 +1,6 @@
 #  Manager 
 
-> *文件信息* suda\template\Manager.php: 29~694
+> *文件信息* suda\template\Manager.php: 31~686
 
 
 模板管理类
@@ -19,6 +19,7 @@
 | public  static  | extRaw | 模板输入扩展| 
 | public  static  | extCpl | 模板输出扩展| 
 | protected  static  | theme | 默认样式| 
+| protected  static  | baseUrl | | 
 | protected  static  | templateSource | 模板搜索目录| 
 
 ## 方法
@@ -48,7 +49,6 @@
 |  public  static|[className](Manager/className.md) |  |
 |  public  static|[initResource](Manager/initResource.md) |  |
 |  public  static|[findModuleTemplates](Manager/findModuleTemplates.md) |  |
-|  protected  static|[_findModuleTemplate](Manager/_findModuleTemplate.md) |  |
 |  public  static|[getStaticAssetPath](Manager/getStaticAssetPath.md) |  |
 |  public  static|[getDynamicAssetPath](Manager/getDynamicAssetPath.md) |  |
 |  public  static|[assetServer](Manager/assetServer.md) |  |

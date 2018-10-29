@@ -1,6 +1,6 @@
 # Template::_render_template
 渲染语句
-> *文件信息* suda\template\compiler\suda\Template.php: 25~314
+> *文件信息* suda\template\compiler\suda\Template.php: 26~338
 ## 所属类 
 
 [Template](../Template.md)

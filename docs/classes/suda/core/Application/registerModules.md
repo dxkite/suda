@@ -1,6 +1,6 @@
 # Application::registerModules
 注册所有模块信息
-> *文件信息* suda\core\Application.php: 30~812
+> *文件信息* suda\core\Application.php: 29~830
 ## 所属类 
 
 [Application](../Application.md)

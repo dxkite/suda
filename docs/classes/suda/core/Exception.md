@@ -1,6 +1,6 @@
 #  Exception 
 
-> *文件信息* suda\core\Exception.php: 25~99
+> *文件信息* suda\core\Exception.php: 25~122
 
 
 通用系统异常
@@ -22,6 +22,7 @@
 | protected    | show_end | | 
 | protected    | level | | 
 | protected  static  | levelTable | | 
+| protected  static  | phpErrorName | | 
 | protected    | message | | 
 | protected    | code | | 
 | protected    | file | | 

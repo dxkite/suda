@@ -1,6 +1,6 @@
 # SQLStatement::value
 生成一个数据输入值
-> *文件信息* suda\archive\SQLStatement.php: 24~113
+> *文件信息* suda\archive\SQLStatement.php: 25~115
 ## 所属类 
 
 [SQLStatement](../SQLStatement.md)
@@ -18,7 +18,7 @@ abstract  public  static
 |--------|-----|-------|-------|
 | name |  string | 无 |  列名 |
 | value |  [type] | 无 |  值 |
-| type |  int | suda\archive\PDO::PARAM_STR |  类型 |
+| type |  int | PDO::PARAM_STR |  类型 |
 
 ## 返回值
 类型：InputValue

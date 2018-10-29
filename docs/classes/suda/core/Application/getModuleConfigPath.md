@@ -1,6 +1,6 @@
 # Application::getModuleConfigPath
 获取模块 resource/config 路径
-> *文件信息* suda\core\Application.php: 30~812
+> *文件信息* suda\core\Application.php: 29~830
 ## 所属类 
 
 [Application](../Application.md)

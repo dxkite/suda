@@ -1,6 +1,6 @@
 #  SQLStatement 
 
-> *文件信息* suda\archive\SQLStatement.php: 24~113
+> *文件信息* suda\archive\SQLStatement.php: 25~115
 
 
 数据库查询语句接口

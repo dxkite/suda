@@ -1,6 +1,6 @@
 # ArrayHelper::exist
 
-> *文件信息* suda\tool\ArrayHelper.php: 23~172
+> *文件信息* suda\tool\ArrayHelper.php: 23~165
 ## 所属类 
 
 [ArrayHelper](../ArrayHelper.md)

@@ -1,6 +1,6 @@
 # Table::searchWhereCount
 通知搜索指定字段的个数
-> *文件信息* suda\archive\Table.php: 31~944
+> *文件信息* suda\archive\Table.php: 31~933
 ## 所属类 
 
 [Table](../Table.md)
@@ -20,7 +20,7 @@
 |--------|-----|-------|-------|
 | field |  [type] | 无 | 无 |
 | search |  string | 无 | 无 |
-| where |  [type] | 无 | 无 |
+| where |  [type] | null | 无 |
 | bind |  array | Array | 无 |
 
 ## 返回值

@@ -1,6 +1,6 @@
 #  Debug 
 
-> *文件信息* suda\core\Debug.php: 29~591
+> *文件信息* suda\core\Debug.php: 29~611
 
 
 异常日志类
@@ -22,14 +22,14 @@
 |WARNING | warning | 
 |ERROR | error | 
 |LOG_PACK | # Error> Array to string conversion
-  Cause By D:\Server\vhost\atd3.org\suda\script\docme\template\class.md.tpl:21
-    => D:\Server\vhost\atd3.org\suda\script\docme\template\class.md.tpl:21 suda\core\System::uncaughtError(8,Array to string conversion,D:\Server\vhost\atd3.org\suda\script\docme\template\class.md.tpl,21,{"value":["{%","%}"],"name":"LOG_PACK"})
-    => D:\Server\vhost\atd3.org\suda\system\src\suda\template\compiler\suda\Template.php:127 Class4b5188a17937cc30ff0ad7f5b03ace4d->_render_template()
-    => D:\Server\vhost\atd3.org\suda\system\src\suda\template\compiler\suda\Template.php:91 suda\template\compiler\suda\Template->echo()
+  Cause By D:\Server\vhost\atd3.org\suda\script\docme\template\class.md.tpl.php:21
+    => D:\Server\vhost\atd3.org\suda\script\docme\template\class.md.tpl.php:21 suda\core\System::uncaughtError(8,Array to string conversion,D:\Server\vhost\atd3.org\suda\script\docme\template\class.md.tpl.php,21,{"value":["{%","%}"],"name":"LOG_PACK"})
+    => D:\Server\vhost\atd3.org\suda\system\src\suda\template\compiler\suda\Template.php:130 Class4b5188a17937cc30ff0ad7f5b03ace4d->_render_template()
+    => D:\Server\vhost\atd3.org\suda\system\src\suda\template\compiler\suda\Template.php:94 suda\template\compiler\suda\Template->echo()
     => D:\Server\vhost\atd3.org\suda\script\docme\src\ExportTemplate.php:45 suda\template\compiler\suda\Template->getRenderedString()
     => D:\Server\vhost\atd3.org\suda\script\docme\src\ClassExport.php:72 docme\ExportTemplate->export(D:\Server\vhost\atd3.org\suda\script/../docs/classes/suda\core\Debug.md)
     => D:\Server\vhost\atd3.org\suda\script\docme\src\Docme.php:90 docme\ClassExport->export(D:\Server\vhost\atd3.org\suda\script/../docs/classes)
-    => D:\Server\vhost\atd3.org\suda\script\docme.php:30 docme\Docme->export(D:\Server\vhost\atd3.org\suda\script/../docs)
+    => D:\Server\vhost\atd3.org\suda\script\docme.php:27 docme\Docme->export(D:\Server\vhost\atd3.org\suda\script/../docs)
 Array | 
 
 
@@ -37,7 +37,7 @@ Array |
 | 可见性 |  变量名   | 说明 |
 |--------|----|------|
 | protected  static  | level | | 
-| protected  static  | run_info | | 
+| protected  static  | runInfo | | 
 | protected  static  | log | | 
 | protected  static  | time | | 
 | protected  static  | hash | | 
@@ -51,15 +51,17 @@ Array |
 |  public  static|[time](Debug/time.md) |  |
 |  public  static|[timeEnd](Debug/timeEnd.md) |  |
 |  protected  static|[compareLevel](Debug/compareLevel.md) |  |
-|  protected  static|[_loginfo](Debug/_loginfo.md) |  |
+|  protected  static|[writeLogLevel](Debug/writeLogLevel.md) |  |
+|  protected  static|[writeLog](Debug/writeLog.md) |  |
 |  public  static|[displayException](Debug/displayException.md) |  |
 |  protected  static|[printTrace](Debug/printTrace.md) |  |
 |  protected  static|[printConsole](Debug/printConsole.md) |  |
 |  protected  static|[printHTML](Debug/printHTML.md) |  |
+|  protected  static|[dumpException](Debug/dumpException.md) |  |
 |  protected  static|[displayLog](Debug/displayLog.md) |  |
-|  public  static|[logException](Debug/logException.md) |  |
+|  public  static|[writeException](Debug/writeException.md) |  |
 |  protected  static|[save](Debug/save.md) |  |
-|  public  static|[memshow](Debug/memshow.md) |  |
+|  protected  static|[formatBytes](Debug/formatBytes.md) |  |
 |  public  static|[beforeSystemRun](Debug/beforeSystemRun.md) |  |
 |  public  static|[getInfo](Debug/getInfo.md) |  |
 |  public  static|[afterSystemRun](Debug/afterSystemRun.md) |  |

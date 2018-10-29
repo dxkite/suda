@@ -1,6 +1,6 @@
 # Autoloader::realPath
-
-> *文件信息* suda\core\Autoloader.php: 22~211
+获取真实或者虚拟存在的地址
+> *文件信息* suda\core\Autoloader.php: 22~210
 ## 所属类 
 
 [Autoloader](../Autoloader.md)
@@ -19,7 +19,8 @@
 | name |  string | 无 | 无 |
 
 ## 返回值
-返回值类型不定
+类型：string|null
+无
 
 ## 例子
 

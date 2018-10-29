@@ -1,6 +1,6 @@
 #  System 
 
-> *文件信息* suda\core\System.php: 30~218
+> *文件信息* suda\core\System.php: 29~241
 
 
 系统类，处理系统报错函数以及程序加载
@@ -35,6 +35,7 @@
 |  public  static|[createApplication](System/createApplication.md) |  |
 |  protected  static|[readManifast](System/readManifast.md) |  |
 |  public  static|[onShutdown](System/onShutdown.md) |  |
+|  public  static|[uncaughtFatalError](System/uncaughtFatalError.md) |  |
 |  public  static|[uncaughtException](System/uncaughtException.md) |  |
 |  public  static|[uncaughtError](System/uncaughtError.md) |  |
 |  public  static|[error](System/error.md) |  |

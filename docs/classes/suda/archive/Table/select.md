@@ -1,6 +1,6 @@
 # Table::select
 选择列
-> *文件信息* suda\archive\Table.php: 31~944
+> *文件信息* suda\archive\Table.php: 31~933
 ## 所属类 
 
 [Table](../Table.md)
@@ -26,7 +26,7 @@
 | offset |  bool |  |  直接偏移 |
 
 ## 返回值
-类型：SQLQuery
+类型：RawQuery
 无
 
 ## 例子

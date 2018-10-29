@@ -1,6 +1,6 @@
 # TemplateInfo::getTemplates
 
-> *文件信息* suda\template\compiler\suda\TemplateInfo.php: 26~117
+> *文件信息* suda\template\compiler\suda\TemplateInfo.php: 27~107
 ## 所属类 
 
 [TemplateInfo](../TemplateInfo.md)
@@ -18,7 +18,7 @@
 | 参数名 | 类型 | 默认值 | 说明 |
 |--------|-----|-------|-------|
 | module |  string | null | 无 |
-| ex |  string | .+ | 无 |
+| extension |  string | null | 无 |
 
 ## 返回值
 返回值类型不定

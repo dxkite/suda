@@ -1,6 +1,6 @@
 # RawQuery::fetchObject
 获取查询结果的一列，并作为类对象
-> *文件信息* suda\archive\RawQuery.php: 31~458
+> *文件信息* suda\archive\RawQuery.php: 29~457
 ## 所属类 
 
 [RawQuery](../RawQuery.md)

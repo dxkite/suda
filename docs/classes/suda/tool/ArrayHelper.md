@@ -1,6 +1,6 @@
 #  ArrayHelper 
 
-> *文件信息* suda\tool\ArrayHelper.php: 23~172
+> *文件信息* suda\tool\ArrayHelper.php: 23~165
 
 
 数组操纵
@@ -23,7 +23,6 @@
 |  public  static|[exist](ArrayHelper/exist.md) |  |
 |  public  static|[set](ArrayHelper/set.md) | 设置数组的值 |
 |  public  static|[export](ArrayHelper/export.md) | 将数组导出 |
-|  protected  static|[combine](ArrayHelper/combine.md) |  |
 |  protected  static|[arr2string](ArrayHelper/arr2string.md) |  |
 |  protected  static|[parserArraySub](ArrayHelper/parserArraySub.md) |  |
  

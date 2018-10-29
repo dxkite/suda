@@ -1,6 +1,6 @@
 # Debug::time
 
-> *文件信息* suda\core\Debug.php: 29~591
+> *文件信息* suda\core\Debug.php: 29~611
 ## 所属类 
 
 [Debug](../Debug.md)

@@ -1,6 +1,6 @@
 # Exception::getPrevious
 
-> *文件信息* suda\core\Exception.php: 25~99
+> *文件信息* suda\core\Exception.php: 25~122
 ## 所属类 
 
 [Exception](../Exception.md)

@@ -1,6 +1,6 @@
 # ZipHelper::unzip
 解压文件到目录
-> *文件信息* suda\tool\ZipHelper.php: 21~89
+> *文件信息* suda\tool\ZipHelper.php: 21~68
 ## 所属类 
 
 [ZipHelper](../ZipHelper.md)
@@ -18,7 +18,6 @@
 |--------|-----|-------|-------|
 | inputFile |  string | 无 | 无 |
 | output |  string | 无 | 无 |
-| cutself |  bool |  | 无 |
 
 ## 返回值
 类型：boolean

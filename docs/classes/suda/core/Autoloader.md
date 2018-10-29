@@ -1,6 +1,6 @@
 #  Autoloader 
 
-> *文件信息* suda\core\Autoloader.php: 22~211
+> *文件信息* suda\core\Autoloader.php: 22~210
 
 
 自动加载控制器
@@ -24,7 +24,8 @@
 | 可见性 | 方法名 | 说明 |
 |--------|-------|------|
 |  public  static|[realName](Autoloader/realName.md) | 将JAVA，路径分割转换为PHP分割符 |
-|  public  static|[realPath](Autoloader/realPath.md) |  |
+|  public  static|[realPath](Autoloader/realPath.md) | 获取真实或者虚拟存在的地址 |
+|  public  static|[formatSeparator](Autoloader/formatSeparator.md) |  |
 |  public  static|[register](Autoloader/register.md) |  |
 |  public  static|[import](Autoloader/import.md) |  |
 |  public  static|[classLoader](Autoloader/classLoader.md) |  |
@@ -33,8 +34,7 @@
 |  public  static|[getIncludePath](Autoloader/getIncludePath.md) |  |
 |  public  static|[getNamespace](Autoloader/getNamespace.md) |  |
 |  public  static|[setNamespace](Autoloader/setNamespace.md) |  |
-|  public  static|[absolutePath](Autoloader/absolutePath.md) |  |
-|  public  static|[parsePath](Autoloader/parsePath.md) |  |
+|  public  static|[parsePath](Autoloader/parsePath.md) | 将路径转换成绝对路径 |
  
 
 ## 例子

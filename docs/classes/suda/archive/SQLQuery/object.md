@@ -1,6 +1,6 @@
 # SQLQuery::object
 添加列处理类
-> *文件信息* suda\archive\SQLQuery.php: 33~288
+> *文件信息* suda\archive\SQLQuery.php: 28~273
 ## 所属类 
 
 [SQLQuery](../SQLQuery.md)

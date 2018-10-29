@@ -1,6 +1,6 @@
 #  Storage 
 
-> *文件信息* suda\core\storage\Storage.php: 22~226
+> *文件信息* suda\core\storage\Storage.php: 22~244
 
 
 存储系统
@@ -19,11 +19,12 @@
 | 可见性 | 方法名 | 说明 |
 |--------|-------|------|
 |abstract  public  |[mkdirs](Storage/mkdirs.md) | 递归创建文件夹 |
-|abstract  public  |[path](Storage/path.md) | 判断路径是否存在，不存在则创建，返回路径绝对地址 |
+|abstract  public  |[path](Storage/path.md) | 判断路径是否存在，不存在则创建，创建成功返回路径绝对地址 |
 |abstract  public  |[abspath](Storage/abspath.md) | 返回路径绝对地址 |
 |abstract  public  |[readDirFiles](Storage/readDirFiles.md) | 读取路径下面所有的文件 |
-|abstract  public  |[cut](Storage/cut.md) | 截断路径的前部分 |
 |abstract  public  |[readDirs](Storage/readDirs.md) | 读取路径下面的所有文件或者目录 |
+|abstract  public  |[readPath](Storage/readPath.md) | 读取路径 |
+|abstract  public  |[cut](Storage/cut.md) | 截断路径的前部分 |
 |abstract  public  |[delete](Storage/delete.md) | 删除文件或者目录 |
 |abstract  public  |[rmdirs](Storage/rmdirs.md) | 递归删除文件夹 |
 |abstract  public  |[isEmpty](Storage/isEmpty.md) | 判断文件夹是否为空 |

@@ -1,6 +1,6 @@
 # Response::go
 
-> *文件信息* suda\core\Response.php: 30~298
+> *文件信息* suda\core\Response.php: 30~307
 ## 所属类 
 
 [Response](../Response.md)

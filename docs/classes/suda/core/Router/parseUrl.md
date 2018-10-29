@@ -1,6 +1,6 @@
 # Router::parseUrl
-
-> *文件信息* suda\core\Router.php: 27~552
+解析URL到路由
+> *文件信息* suda\core\Router.php: 26~589
 ## 所属类 
 
 [Router](../Router.md)
@@ -19,7 +19,8 @@
 | url |  string | 无 | 无 |
 
 ## 返回值
-返回值类型不定
+类型：Mapping|null
+无
 
 ## 例子
 

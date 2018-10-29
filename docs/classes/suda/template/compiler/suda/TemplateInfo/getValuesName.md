@@ -1,6 +1,6 @@
 # TemplateInfo::getValuesName
 
-> *文件信息* suda\template\compiler\suda\TemplateInfo.php: 26~117
+> *文件信息* suda\template\compiler\suda\TemplateInfo.php: 27~107
 ## 所属类 
 
 [TemplateInfo](../TemplateInfo.md)

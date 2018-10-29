@@ -1,6 +1,6 @@
 # Request::hasHeader
 判断请求头中是否包含某一字段
-> *文件信息* suda\core\Request.php: 24~498
+> *文件信息* suda\core\Request.php: 24~492
 ## 所属类 
 
 [Request](../Request.md)

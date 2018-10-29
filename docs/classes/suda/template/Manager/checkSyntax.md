@@ -1,6 +1,6 @@
 # Manager::checkSyntax
 检查语法
-> *文件信息* suda\template\Manager.php: 29~694
+> *文件信息* suda\template\Manager.php: 31~686
 ## 所属类 
 
 [Manager](../Manager.md)
@@ -20,8 +20,8 @@
 | className |  string |  | 无 |
 
 ## 返回值
-类型：void
-无
+类型：bool|ParseError
+ 语法错误报错
 
 ## 例子
 

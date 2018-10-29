@@ -1,6 +1,6 @@
 #  Router 
 
-> *文件信息* suda\core\Router.php: 27~552
+> *文件信息* suda\core\Router.php: 26~589
 
 
 路由处理类
@@ -24,6 +24,7 @@
 | protected    | routers | | 
 | protected  static  | cacheName | | 
 | protected  static  | cacheModules | | 
+| protected  static  | groups | | 
 
 ## 方法
 
@@ -32,20 +33,22 @@
 |  public  static|[getInstance](Router/getInstance.md) |  |
 |  public  static|[getModulePrefix](Router/getModulePrefix.md) |  |
 |  public  |[load](Router/load.md) |  |
+|  public  |[getRouterGroups](Router/getRouterGroups.md) |  |
 |  protected  |[loadModuleRouteConfig](Router/loadModuleRouteConfig.md) |  |
 |  protected  |[loadFile](Router/loadFile.md) |  |
-|  protected  |[saveFile](Router/saveFile.md) |  |
+|  protected  |[saveCacheFile](Router/saveCacheFile.md) |  |
 |  public  |[loadModulesRouter](Router/loadModulesRouter.md) |  |
 |  public  |[routerCached](Router/routerCached.md) |  |
 |  public  |[prepareRouterInfo](Router/prepareRouterInfo.md) |  |
-|  public  |[parseUrl](Router/parseUrl.md) |  |
+|  public  |[parseUrl](Router/parseUrl.md) | 解析URL到路由 |
 |  protected  |[matchRouterMap](Router/matchRouterMap.md) |  |
 |  public  static|[parseName](Router/parseName.md) | 解析模板名 |
-|  public  |[getRouterFullName](Router/getRouterFullName.md) |  |
-|  public  |[buildUrlArgs](Router/buildUrlArgs.md) |  |
+|  public  |[getRouterFullName](Router/getRouterFullName.md) | 解析名称到完整名称 |
+|  public  |[buildUrlArgs](Router/buildUrlArgs.md) | 构建路由的必须参数 |
 |  public  |[decode](Router/decode.md) | 将 router:// 协议指定的URL转换为 URL |
 |  public  |[encode](Router/encode.md) | 将URL转换为 router:// 协议形式 |
 |  public  |[buildUrl](Router/buildUrl.md) | 根据路由名称创建URL |
+|  public  |[createUrl](Router/createUrl.md) | 根据路由名称创建URL |
 |  public  |[dispatch](Router/dispatch.md) |  |
 |  public  |[getRouter](Router/getRouter.md) | 获取路由 |
 |  public  |[setRouterAlias](Router/setRouterAlias.md) | 设置路由别名 |

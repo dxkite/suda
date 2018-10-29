@@ -1,6 +1,6 @@
 # SQLStatement::exec
 运行SQL语句
-> *文件信息* suda\archive\SQLStatement.php: 24~113
+> *文件信息* suda\archive\SQLStatement.php: 25~115
 ## 所属类 
 
 [SQLStatement](../SQLStatement.md)

@@ -1,6 +1,6 @@
 # FileStorage::copydir
 
-> *文件信息* suda\core\storage\FileStorage.php: 26~458
+> *文件信息* suda\core\storage\FileStorage.php: 27~415
 ## 所属类 
 
 [FileStorage](../FileStorage.md)
@@ -18,7 +18,7 @@
 |--------|-----|-------|-------|
 | src |  string | 无 | 无 |
 | dest |  string | 无 | 无 |
-| preg |  string | /^.+$/ | 无 |
+| preg |  string | null | 无 |
 
 ## 返回值
 返回值类型不定

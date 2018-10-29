@@ -1,6 +1,6 @@
 # Mapping::__construct
 
-> *文件信息* suda\core\route\Mapping.php: 23~586
+> *文件信息* suda\core\route\Mapping.php: 23~592
 ## 所属类 
 
 [Mapping](../Mapping.md)
@@ -21,7 +21,7 @@
 | callback |  string | 无 | 无 |
 | module |  string | 无 | 无 |
 | method |  array | Array | 无 |
-| role |  int | self::ROLE_SIMPLE | 无 |
+| group |  string | suda\core\route\Mapping::DEFAULT_GROUP | 无 |
 
 ## 返回值
 返回值类型不定

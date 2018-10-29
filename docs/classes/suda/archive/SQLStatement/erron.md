@@ -1,6 +1,6 @@
 # SQLStatement::erron
 获取语句查询错误编号
-> *文件信息* suda\archive\SQLStatement.php: 24~113
+> *文件信息* suda\archive\SQLStatement.php: 25~115
 ## 所属类 
 
 [SQLStatement](../SQLStatement.md)

@@ -1,6 +1,6 @@
 # Table::delete
 根据条件删除列
-> *文件信息* suda\archive\Table.php: 31~944
+> *文件信息* suda\archive\Table.php: 31~933
 ## 所属类 
 
 [Table](../Table.md)

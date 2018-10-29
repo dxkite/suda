@@ -1,6 +1,6 @@
 # Router::loadModuleRouteConfig
 
-> *文件信息* suda\core\Router.php: 27~552
+> *文件信息* suda\core\Router.php: 26~589
 ## 所属类 
 
 [Router](../Router.md)
@@ -16,7 +16,7 @@
 
 | 参数名 | 类型 | 默认值 | 说明 |
 |--------|-----|-------|-------|
-| role |  int | 无 | 无 |
+| group |  string | 无 | 无 |
 | module |  string | 无 | 无 |
 | configFile |  string | 无 | 无 |
 

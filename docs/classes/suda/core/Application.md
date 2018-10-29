@@ -1,6 +1,6 @@
 #  Application 
 
-> *文件信息* suda\core\Application.php: 30~812
+> *文件信息* suda\core\Application.php: 29~830
 
 
 应用处理类
@@ -40,7 +40,7 @@
 |  public  |[getConfig](Application/getConfig.md) | 获取app/resource/config下的配置 |
 |  public  |[getModuleResourcePath](Application/getModuleResourcePath.md) | 获取模块 resouce 目录路径 |
 |  public  |[getModuleConfigPath](Application/getModuleConfigPath.md) | 获取模块 resource/config 路径 |
-|  public  |[getModulePrefix](Application/getModulePrefix.md) | 获取模块网页前缀 |
+|  public  |[getModulePrefix](Application/getModulePrefix.md) | 获取模块URL前缀 |
 |  public  |[checkModuleExist](Application/checkModuleExist.md) | 检查模块是否存在 |
 |  public  |[getLiveModules](Application/getLiveModules.md) | 获取激活的模块 |
 |  public  |[getReachableModules](Application/getReachableModules.md) | 获取网页端可达的模块 |

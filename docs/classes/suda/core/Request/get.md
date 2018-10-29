@@ -1,6 +1,6 @@
 # Request::get
 获取请求的GET数据
-> *文件信息* suda\core\Request.php: 24~498
+> *文件信息* suda\core\Request.php: 24~492
 ## 所属类 
 
 [Request](../Request.md)
@@ -16,7 +16,7 @@
 
 | 参数名 | 类型 | 默认值 | 说明 |
 |--------|-----|-------|-------|
-| name |  string |  |  GET名 |
+| name |  string | null |  GET名 |
 | default |  [type] | null |  GET值 |
 
 ## 返回值

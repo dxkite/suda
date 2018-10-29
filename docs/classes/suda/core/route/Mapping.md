@@ -1,6 +1,6 @@
 #  Mapping 
 
-> *文件信息* suda\core\route\Mapping.php: 23~586
+> *文件信息* suda\core\route\Mapping.php: 23~592
 
 
 
@@ -14,8 +14,7 @@
 ## 常量列表
 | 常量名  |  值|
 |--------|----|
-|ROLE_ADMIN | 0 | 
-|ROLE_SIMPLE | 1 | 
+|DEFAULT_GROUP | default | 
 
 
 ## 变量列表
@@ -29,7 +28,7 @@
 | protected    | source | | 
 | protected    | module | | 
 | protected    | name | | 
-| protected    | role | | 
+| protected    | group | | 
 | protected    | types | | 
 | protected    | param | | 
 | protected    | value | | 
@@ -40,6 +39,7 @@
 | protected    | antiPrefix | | 
 | protected    | hidden | | 
 | protected    | dynamic | | 
+| protected    | regexpr | | 
 | protected  static  | urlType | | 
 | public  static  | current | | 
 
@@ -67,7 +67,7 @@
 |  public  |[setMethod](Mapping/setMethod.md) |  |
 |  public  |[isDynamic](Mapping/isDynamic.md) |  |
 |  public  |[isHidden](Mapping/isHidden.md) |  |
-|  public  |[getRole](Mapping/getRole.md) |  |
+|  public  |[getGroup](Mapping/getGroup.md) |  |
 |  public  |[getModule](Mapping/getModule.md) |  |
 |  public  |[getTypes](Mapping/getTypes.md) |  |
 |  public  |[setAntiPrefix](Mapping/setAntiPrefix.md) |  |

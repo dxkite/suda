@@ -1,6 +1,6 @@
 # Storage::isWritable
 判断是否可写
-> *文件信息* suda\core\storage\Storage.php: 22~226
+> *文件信息* suda\core\storage\Storage.php: 22~244
 ## 所属类 
 
 [Storage](../Storage.md)

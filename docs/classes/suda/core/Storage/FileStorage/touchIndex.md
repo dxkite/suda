@@ -1,6 +1,6 @@
 # FileStorage::touchIndex
 
-> *文件信息* suda\core\storage\FileStorage.php: 26~458
+> *文件信息* suda\core\storage\FileStorage.php: 27~415
 ## 所属类 
 
 [FileStorage](../FileStorage.md)
@@ -17,7 +17,7 @@
 | 参数名 | 类型 | 默认值 | 说明 |
 |--------|-----|-------|-------|
 | dest |  string | 无 | 无 |
-| content |  string | dxkite-suda@2.0.2 | 无 |
+| content |  string | dxkite-suda@2.0.3 | 无 |
 
 ## 返回值
 返回值类型不定

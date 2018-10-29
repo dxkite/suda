@@ -1,6 +1,6 @@
 # Template::response
-创建模板
-> *文件信息* suda\template\compiler\suda\Template.php: 25~314
+创建响应
+> *文件信息* suda\template\compiler\suda\Template.php: 26~338
 ## 所属类 
 
 [Template](../Template.md)

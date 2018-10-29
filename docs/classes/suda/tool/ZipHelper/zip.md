@@ -1,6 +1,6 @@
 # ZipHelper::zip
 压缩目录到文件
-> *文件信息* suda\tool\ZipHelper.php: 21~89
+> *文件信息* suda\tool\ZipHelper.php: 21~68
 ## 所属类 
 
 [ZipHelper](../ZipHelper.md)

@@ -1,6 +1,6 @@
 # FileStorage::rmdirs
-
-> *文件信息* suda\core\storage\FileStorage.php: 26~458
+递归删除文件夹
+> *文件信息* suda\core\storage\FileStorage.php: 27~415
 ## 所属类 
 
 [FileStorage](../FileStorage.md)
@@ -16,10 +16,11 @@
 
 | 参数名 | 类型 | 默认值 | 说明 |
 |--------|-----|-------|-------|
-| dir |  string | 无 | 无 |
+| parent |  string | 无 | 无 |
 
 ## 返回值
-返回值类型不定
+类型：boolean
+无
 
 ## 例子
 

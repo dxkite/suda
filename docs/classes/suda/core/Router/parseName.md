@@ -1,6 +1,6 @@
 # Router::parseName
 解析模板名
-> *文件信息* suda\core\Router.php: 27~552
+> *文件信息* suda\core\Router.php: 26~589
 ## 所属类 
 
 [Router](../Router.md)

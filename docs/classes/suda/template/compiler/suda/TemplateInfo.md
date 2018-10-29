@@ -1,6 +1,6 @@
 #  TemplateInfo 
 
-> *文件信息* suda\template\compiler\suda\TemplateInfo.php: 26~117
+> *文件信息* suda\template\compiler\suda\TemplateInfo.php: 27~107
 
 
 获取模板信息类
@@ -80,6 +80,7 @@
 |  public  static|[echo](TemplateInfo/echo.md) |  |
 |  protected  |[parseStartInsert](TemplateInfo/parseStartInsert.md) |  |
 |  protected  |[parseEndInsert](TemplateInfo/parseEndInsert.md) |  |
+|  protected  |[parseNonce](TemplateInfo/parseNonce.md) |  |
 |  protected  |[parseInsert](TemplateInfo/parseInsert.md) |  |
 |  public  |[error](TemplateInfo/error.md) |  |
 |  public  |[erron](TemplateInfo/erron.md) |  |

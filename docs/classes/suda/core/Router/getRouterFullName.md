@@ -1,6 +1,6 @@
 # Router::getRouterFullName
-
-> *文件信息* suda\core\Router.php: 27~552
+解析名称到完整名称
+> *文件信息* suda\core\Router.php: 26~589
 ## 所属类 
 
 [Router](../Router.md)
@@ -20,7 +20,8 @@
 | moduleDefault |  string | null | 无 |
 
 ## 返回值
-返回值类型不定
+类型：string
+无
 
 ## 例子
 
