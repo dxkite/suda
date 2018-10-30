@@ -17,13 +17,21 @@ class PackCommand extends Command
             $to = $argv[2] ?? basename($path);
             $name = $to.'.phar';
             $pharPath = $name;
-            storage()->copydir(SYSTEM_DIR.'/', storage()->path($base.'/suda/system'));
-            storage()->copydir(SYSTEM_RESOURCE. '/project/public', storage()->path($base.'/public'));
+            storage()->copydir(SYSTEM_DIR.'/', storage()->path($base.'/system'));
+            storage()->copydir(SYSTEM_RESOURCE. '/phar', storage()->path($base));
             storage()->copydir($path, storage()->path($base.'/app'));
+            // 删除运行时
+            storage()->delete($base.'/app/data/cache');
+            storage()->delete($base.'/app/data/install');
+            storage()->delete($base.'/app/data/logs');
+            storage()->delete($base.'/app/data/temp');
+            storage()->delete($base.'/app/data/views');
+            storage()->delete($base.'/app/data/runtime');
             $phar = new Phar($pharPath, 0, $name);
             $phar->buildFromDirectory($base);
-            $phar->setStub(Phar::createDefaultStub('suda/system/suda-phar.php', 'public/index.php'));
+            $phar->setStub(Phar::createDefaultStub('system/suda-phar.php', 'index.php'));
             $phar->compressFiles(Phar::GZ);
+            storage()->delete($base);
         }
     }
 }
