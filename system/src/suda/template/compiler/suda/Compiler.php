@@ -190,7 +190,12 @@ class Compiler implements CompilerImpl
             return isset($match[3]) ? $match[0] : $match[0].$match[2];
         };
         // \x{4e00}-\x{9aff} 为中文字符集范围
-        return preg_replace_callback('/\B@([\w\x{4e00}-\x{9aff}]+)(\s*)(\( ( (?>[^()]+) | (?3) )* \) )? /ux', $callback, $str);
+        $code = preg_replace_callback('/\B@([\w\x{4e00}-\x{9aff}]+)(\s*)(\( ( (?>[^()]+) | (?3) )* \) )? /ux', $callback, $str);
+        $error = preg_last_error();
+        if ($error !== PREG_NO_ERROR) {
+            throw new \suda\exception\PregException($error);
+        }
+        return $code;
     }
 
     private function compileCommand(string $str)
@@ -211,7 +216,12 @@ class Compiler implements CompilerImpl
     protected function echoValue($var)
     {
         // 任意变量名: 中文点下划线英文数字
-        return preg_replace_callback('/\B[$](\?)?[:]([.\w\x{4e00}-\x{9aff}]+)(\s*)(\( ( (?>[^()]+) | (?4) )* \) )?/ux', [$this,'echoValueCallback'], $var);
+        $code = preg_replace_callback('/\B[$](\?)?[:]([.\w\x{4e00}-\x{9aff}]+)(\s*)(\( ( (?>[^()]+) | (?4) )* \) )?/ux', [$this,'echoValueCallback'], $var);
+        $error = preg_last_error();
+        if ($error !== PREG_NO_ERROR) {
+            throw new \suda\exception\PregException($error);
+        }
+        return $code;
     }
     
     protected function echoValueCallback($matchs)
@@ -379,7 +389,8 @@ class Compiler implements CompilerImpl
         return '<?php });?>';
     }
 
-    protected function parseNonce() {
+    protected function parseNonce()
+    {
         return 'nonce="<?php echo $this->getScriptNonce() ?>"';
     }
 
