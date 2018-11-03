@@ -244,7 +244,12 @@ class Debug
         $hash = $ex.'-'.self::$hash;
         $dump = ['Exception'=>$e,'Dump'=>self::dumpArray()];
         storage()->path(APP_LOG.'/dump');
-        storage()->put(APP_LOG.'/dump/'. $hash.'.json', json_encode($dump, JSON_PRETTY_PRINT|JSON_UNESCAPED_UNICODE));
+        $codeDump = json_encode($dump, JSON_PRETTY_PRINT|JSON_UNESCAPED_UNICODE);
+        if ($codeDump) {
+            storage()->put(APP_LOG.'/dump/'. $hash.'.json', $codeDump);
+        } else {
+            storage()->put(APP_LOG.'/dump/'. $hash.'.php', var_export($dump, true));
+        }
         return $hash;
     }
 
@@ -283,7 +288,7 @@ class Debug
                     if (is_object($arg)) {
                         $args .= 'class '.get_class($arg).',';
                     } else {
-                        $args .=   print_r($arg, true).',';
+                        $args .= htmlspecialchars(print_r($arg, true)).',';
                     }
                 }
                 $args = rtrim($args, ',');
