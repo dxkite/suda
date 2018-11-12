@@ -9,7 +9,8 @@ class CommandRunner
         'pack-suda' => [ 'command' => command\PackSudaCommand::class , 'message' => 'pack suda as phar package' ],
         'pack' => [ 'command' => command\PackCommand::class , 'message' => 'pack app as phar package' ],
         'release' => [ 'command' => command\ReleaseCommand::class , 'message' => 'release suda version' ],
-        'new' => [ 'command' => command\NewCommand::class , 'message' => 'create a suda application' ]
+        'new' => [ 'command' => command\NewCommand::class , 'message' => 'create a suda application' ],
+        'replace' => [ 'command' => command\ReplaceCommand::class , 'message' => 'use inner suda replace exist suda' ]
     ];
     
     public static function run(int $argc, array $argv)

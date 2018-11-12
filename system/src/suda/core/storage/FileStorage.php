@@ -55,7 +55,7 @@ class FileStorage implements Storage
     public function path(string $path):?string
     {
         $path=Autoloader::parsePath($path);
-        return self::mkdirs($path)?$path:null;
+        return self::exist($path)?$path:self::mkdirs($path)?$path:null;
     }
     
     public function abspath(string $path)
