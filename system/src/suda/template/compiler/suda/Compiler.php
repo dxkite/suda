@@ -208,7 +208,7 @@ class Compiler implements CompilerImpl
         $rawTransTag=sprintf('/(?<!!)%s\s*(.+?)\s*%s/', preg_quote(self::$rawTransTag[0]), preg_quote(self::$rawTransTag[1]));
         return self::echoValue(preg_replace(
             [$rawecho, $echo, $comment, $hook,$strTransTag,$rawTransTag],
-            ['<?php echo $1; ?>', '<?php echo htmlspecialchars(__($1)); ?>', '<?php /* $1 */ ?>', '<?php $this->execGlobalHook("$1"); ?>','<?php echo htmlspecialchars(__("$1")); ?>','<?php echo htmlspecialchars($1); ?>'],
+            ['<?php echo $1; ?>', '<?php echo htmlspecialchars(__($1), ENT_SUBSTITUTE | ENT_QUOTES | ENT_HTML5); ?>', '<?php /* $1 */ ?>', '<?php $this->execGlobalHook("$1"); ?>','<?php echo htmlspecialchars(__("$1"), ENT_SUBSTITUTE | ENT_QUOTES | ENT_HTML5); ?>','<?php echo htmlspecialchars($1, ENT_SUBSTITUTE | ENT_QUOTES | ENT_HTML5); ?>'],
             $str
         ));
     }
