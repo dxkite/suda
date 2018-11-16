@@ -338,7 +338,7 @@ class Router
         if ($url) {
             return $url;
         } else {
-            debug()->warning(__('get url for $0 failed, module:$1 args:$2', $name, $module, json_encode($values)));
+            debug()->warning(__('get url for $0 failed, args:$1', $name, json_encode($values)));
             return '#the-router-['.$name.']-is-undefined--please-check-out-router-list';
         }
     }
