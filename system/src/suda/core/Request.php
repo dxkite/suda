@@ -15,7 +15,6 @@
  */
 namespace suda\core;
 
-use suda\tool\Value;
 use suda\exception\JSONException;
 
 /**
@@ -141,7 +140,7 @@ class Request
     public static function get(?string $name=null, $default=null)
     {
         if (is_null($name)) {
-            return new Value($_GET);
+            return $_GET;
         }
         if (array_key_exists($name, $_GET)) {
             return $_GET[$name];
@@ -159,7 +158,7 @@ class Request
     public static function post(?string $name=null, $default=null)
     {
         if (is_null($name)) {
-            return new Value($_POST);
+            return $_POST;
         }
         if (array_key_exists($name, $_POST)) {
             return $_POST[$name];
@@ -176,7 +175,7 @@ class Request
     public static function files(?string $name=null)
     {
         if (is_null($name)) {
-            return new Value($_FILES);
+            return $_FILES;
         }
         if (array_key_exists($name, $_FILES)) {
             return $_FILES[$name];
