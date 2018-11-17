@@ -56,6 +56,7 @@ class Debug
     private static $saved=false;
     private static $shutdown=false;
     protected static $dump=[];
+    protected static $removeFiles=[];
 
     public static function init()
     {
@@ -63,7 +64,7 @@ class Debug
             date_default_timezone_set(DEFAULT_TIMEZONE);
         }
 
-        if (defined('APP_LOG') && Storage::path(APP_LOG) && is_writable(APP_LOG)) {
+        if (defined('APP_LOG') && storage()->path(APP_LOG) && is_writable(APP_LOG)) {
             self::$latest =APP_LOG.'/latest.log';
         }
 
@@ -275,7 +276,7 @@ class Debug
                 } else {
                     $print = '<a class="trace-user-file" title="';
                 }
-                $print .= Storage::cut($trace['file']).'">'.basename($trace['file']).'#'.$trace['line'].'</a>';
+                $print .= storage()->cut($trace['file']).'">'.basename($trace['file']).'#'.$trace['line'].'</a>';
             }
             if (isset($trace['class'])) {
                 $function = $trace['class'].$trace['type'].$trace['function'];
@@ -357,7 +358,9 @@ class Debug
 
     protected static function save()
     {
-        self::checkSize();
+        if (self::checkSize()) {
+            self::packLogFile();
+        }
         // 获取日志信息
         $time=number_format(microtime(true) - SUDA_START_TIME, 10);
         $hash=self::$hash;
@@ -372,12 +375,17 @@ class Debug
         $body=fread(self::$file, $size);
         fclose(self::$file);
         if (self::$tempname) {
-            Storage::delete(self::$tempname);
+            storage()->delete(self::$tempname);
         }
         // 是否可以写入
         if (self::$latest) {
             file_put_contents(self::$latest, $body, FILE_APPEND);
             self::$saved=true;
+        }
+        foreach (static::$removeFiles as $file) {
+            if (\is_file($file) && \file_exists($file)) {
+                storage()->delete($file);
+            }
         }
     }
 
@@ -533,39 +541,45 @@ class Debug
     /**
      * 检查日志文件大小
      *
-     * @return void
+     * @return boolean
      */
-    private static function checkSize()
+    protected static function checkSize():bool
     {
         $logFile=self::$latest;
         if (file_exists($logFile)) {
             if (filesize($logFile) > conf('log.size', self::MAX_LOG_SIZE)) {
-                $path=preg_replace('/[\\\\]+/', '/', Storage::path(APP_LOG.'/zip').'/'.date('Y-m-d').'.zip');
-                $zip = new ZipArchive;
-                $res = $zip->open($path, ZipArchive::CREATE);
-                $rm =[];
-                if ($res === true) {
-                    if ($zip->addFile($logFile, date('Y-m-d'). '-'. $zip->numFiles .'.log')) {
-                        $rm[]=$logFile;
-                    }
-                    if ($jsonLogs=storage()->readDirFiles(APP_LOG.'/dump')) {
-                        foreach ($jsonLogs as $json) {
-                            if ($zip->addFile($json, 'dump/'.basename($json))) {
-                                $rm[]=$json;
-                            }
-                        }
-                    }
-                    $zip->close();
-                    foreach ($rm as $rmFile) {
-                        if (file_exists($rmFile) && is_file($rmFile)) {
-                            unlink($rmFile);
-                        }
-                    }
-                } else {
-                    if (is_file($logFile) && file_exists($logFile)) {
-                        rename($logFile, APP_LOG . '/' . date('Y-m-d'). '-'. substr(md5_file($logFile), 0, 8).'.log');
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 打包日志文件
+     *
+     * @return void
+     */
+    protected static function packLogFile()
+    {
+        $logFile=self::$latest;
+        $path=preg_replace('/[\\\\]+/', '/', storage()->path(APP_LOG.'/zip').'/'.date('Y-m-d').'.zip');
+        $zip = new ZipArchive;
+        $res = $zip->open($path, ZipArchive::CREATE);
+        if ($res === true) {
+            if ($zip->addFile($logFile, date('Y-m-d'). '-'. $zip->numFiles .'.log')) {
+                array_push(self::$removeFiles, $logFile);
+            }
+            if ($dumpFiles=storage()->readDirFiles(APP_LOG.'/dump')) {
+                foreach ($dumpFiles as $dumpLog) {
+                    if ($zip->addFile($dumpLog, 'dump/'.basename($dumpLog))) {
+                        array_push(self::$removeFiles, $dumpLog);
                     }
                 }
+            }
+            $zip->close();
+        } else {
+            if (is_file($logFile) && file_exists($logFile)) {
+                rename($logFile, APP_LOG . '/' . date('Y-m-d'). '-'. substr(md5_file($logFile), 0, 8).'.log');
             }
         }
     }

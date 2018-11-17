@@ -15,10 +15,14 @@
  */
 namespace suda\core;
 
+use suda\core\Hook;
+use suda\core\Config;
+use suda\core\Storage;
+use suda\tool\ZipHelper;
+use suda\core\Autoloader;
 use suda\template\Manager;
 use suda\tool\ArrayHelper;
 use suda\exception\ApplicationException;
-use suda\tool\ZipHelper;
 
 /**
  * 应用处理类

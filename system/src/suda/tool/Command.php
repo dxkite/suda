@@ -169,7 +169,7 @@ class Command
         $this->cmdStr= $command;
     }
 
-    protected static function parseParam(string $param)
+    protected function parseParam(string $param)
     {
         $param = trim($param);
         if (preg_match('/^\=j(son)?\:(\:)?(.+)$/', $param, $matchs)) {

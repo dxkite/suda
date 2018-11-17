@@ -55,6 +55,11 @@ class Manager
     private static $compiler=null;
     private static $staticPath='static';
     private static $dynamicPath='';
+    /**
+     * 外部资源目录
+     *
+     * @var [type]
+     */
     private static $assetsPath= APP_PUBLIC.'/assets';
     protected static $baseUrl=null;
 
@@ -408,7 +413,7 @@ class Manager
         // 获取输出
         $output=self::getOutputFile($name);
         // 动态文件导出
-        $outpath=$this->assetsPath.'/'.self::$dynamicPath.'/'.self::moduleUniqueId($module).'/'.$basename;
+        $outpath=self::$assetsPath.'/'.self::$dynamicPath.'/'.self::moduleUniqueId($module).'/'.$basename;
         $path=Storage::path(dirname($outpath));
         // 编译检查
         if (Storage::exist($output)) {
@@ -433,7 +438,7 @@ class Manager
         $public=self::$compiler->render($output, $name)->parent($parent)->getRenderedString();
         Storage::put($outpath, $public);
         // 引用文件
-        $static_url=Storage::cut($outpath, $this->assetsPath);
+        $static_url=Storage::cut($outpath, self::$assetsPath);
         $static_url=preg_replace('/[\\\\\/]+/', '/', $static_url);
         return  self::assetServer(trim($static_url, '/'));
     }
