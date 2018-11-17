@@ -8,7 +8,7 @@
 
 [中文](README.zh.md)
 
-This is a ligth fast web framework based on php7
+a ligth and fast web framework based on php7
 
 ## Features
 
