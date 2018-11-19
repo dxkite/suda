@@ -16,6 +16,7 @@
 
 namespace suda\core\route;
 
+use \Exception;
 use suda\core\Request;
 use suda\tool\Command;
 use suda\core\Response;
@@ -153,17 +154,22 @@ class Mapping implements \JsonSerializable
             }
             if ($ob) {
                 ob_start();
-                $response = $callback->exec([Request::getInstance()->setMapping($this)]);
-                $content= ob_get_clean();
+                $response = $callback->exec([request()->setMapping($this)]);
+                $content = ob_get_clean();
+            } else {
+                $response = $callback->exec([request()->setMapping($this)]);
             }
+        } else {
+            $response = $callback->exec([request()->setMapping($this)]);
         }
         cookie()->sendCookies();
-        $response = $callback->exec([Request::getInstance()->setMapping($this)]);
         if ($response) {
             if ($response instanceof Template) {
                 $response->render();
-            } else {
+            } elseif (is_string($response)) {
                 echo $content.$response;
+            } elseif (hook()->execIf('suda:template:render::object', [$response,$this], true) !== true) {
+                throw new Exception(__('response return type must be one of Template,array or null, maybe you can attach suda:template:render::object to encoding object'));
             }
             return true;
         }

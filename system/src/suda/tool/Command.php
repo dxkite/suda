@@ -169,7 +169,7 @@ class Command
         $this->cmdStr= $command;
     }
 
-    protected function parseParam(string $param)
+    protected static function parseParam(string $param)
     {
         $param = trim($param);
         if (preg_match('/^\=j(son)?\:(\:)?(.+)$/', $param, $matchs)) {
@@ -181,7 +181,7 @@ class Command
             if (json_last_error() === JSON_ERROR_NONE) {
                 return $params;
             } else {
-                throw (new CommandException(__('can not parse param $0',$param)))->setCmd($this->cmdStr);
+                throw (new CommandException(__('can not parse param $0',$param)));
             }
         } elseif (preg_match('/^\=s(erialize)?\:(\:)?(.+)$/', $param, $matchs)) {
             if (isset($matchs[2]) && $matchs[2]) {
