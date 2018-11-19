@@ -15,15 +15,16 @@
  */
 namespace suda\template;
 
-use suda\core\Config;
-use suda\core\Application;
-use suda\core\Storage;
+use Iterator;
 use suda\core\Hook;
+use suda\core\Config;
 use suda\core\Router;
 use suda\core\Request;
+use suda\core\Storage;
+use suda\core\Application;
+use suda\template\Template;
 use suda\exception\KernelException;
 use suda\template\iterator\RecursiveTemplateIterator;
-use Iterator;
 
 /**
  * 模板管理类
@@ -449,7 +450,11 @@ class Manager
         if ($include=self::display($moduleName.':'.$basename)) {
             return $include->parent($parent)->assign($parent->getValue());
         } else {
-            $class= new class {
+            $class= new class implements Template {
+                public function render()
+                {
+                    $this->echo();
+                }
                 public function echo()
                 {
                     echo '<div style="color:red" title="'.__('can\'t include $0', $this->moduleName.':'.$this->basename).'">{include:{'.$this->name.'}}</div>';

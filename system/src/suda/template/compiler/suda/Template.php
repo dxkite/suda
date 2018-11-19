@@ -15,15 +15,16 @@
  */
 namespace suda\template\compiler\suda;
 
-use suda\tool\ArrayHelper;
+use suda\core\Hook;
+use suda\core\Router;
 use suda\tool\Command;
 use suda\core\Response;
-use suda\core\Router;
-use suda\core\Hook;
-use suda\exception\CommandException;
+use suda\tool\ArrayHelper;
+use suda\template\Template as TemplateInterface;
 use suda\exception\KernelException;
+use suda\exception\CommandException;
 
-abstract class Template
+abstract class Template implements TemplateInterface
 {
     /**
     * 模板的值

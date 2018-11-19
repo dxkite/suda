@@ -16,9 +16,10 @@
 
 namespace suda\core\route;
 
-use suda\tool\Command;
 use suda\core\Request;
+use suda\tool\Command;
 use suda\core\Response;
+use suda\template\Template;
 
 class Mapping implements \JsonSerializable
 {
@@ -121,10 +122,18 @@ class Mapping implements \JsonSerializable
         return false;
     }
 
-    public function run()
+    /**
+     * 运行响应
+     *
+     * @return boolean 是否输出了字符
+     */
+    public function run():bool
     {
         self::$current=$this;
         $callback = new Command($this->callback);
+        $response = null;
+        $content = null;
+
         if ($command  = $callback->command) {
             $method = null;
             $ob =$this->buffer;
@@ -144,14 +153,25 @@ class Mapping implements \JsonSerializable
             }
             if ($ob) {
                 ob_start();
-                $callback->exec([Request::getInstance()->setMapping($this)]);
-                $content=ob_get_clean();
-                cookie()->sendCookies();
-                echo $content;
-                return true;
+                $response = $callback->exec([Request::getInstance()->setMapping($this)]);
+                $content= ob_get_clean();
             }
         }
-        return $callback->exec([Request::getInstance()->setMapping($this)]);
+        cookie()->sendCookies();
+        $response = $callback->exec([Request::getInstance()->setMapping($this)]);
+        if ($response) {
+            if ($response instanceof Template) {
+                $response->render();
+            } else {
+                echo $content.$response;
+            }
+            return true;
+        }
+        if ($content) {
+            echo $content;
+            return true;
+        }
+        return false;
     }
 
     protected function getResponseObStatus($method, $class=false)
