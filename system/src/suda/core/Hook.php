@@ -109,6 +109,7 @@ class Hook
     #===================================================================
     #       命令运行
     #===================================================================
+
     /**
      * 运行所有命令
      *
@@ -128,13 +129,14 @@ class Hook
 
     /**
      * 运行，遇到返回指定条件则停止并返回true
-     *
+     * 如果无监控也返回true
+     * 
      * @param string $name
      * @param array $args
      * @param boolean $condition
-     * @return void
+     * @return boolean
      */
-    public static function execIf(string $name, array $args=[], $condition = true)
+    public static function execIf(string $name, array $args=[], $condition = true):bool
     {
         debug()->trace($name);
         if (\array_key_exists($name, self::$hooks) && is_array(self::$hooks[$name])) {
@@ -143,8 +145,9 @@ class Hook
                     return true;
                 }
             }
+            return false;
         }
-        return false;
+        return true;
     }
     
     /**
