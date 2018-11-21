@@ -241,7 +241,7 @@ abstract class Response
      */
     public static function etag(string $etag)
     {
-        self::setHeader('Etag:'.$etag);
+        self::setHeader('Etag: "'.$etag.'"');
         $request=Request::getInstance();
         if ($str=$request->getHeader('If-None-Match')) {
             if (strcasecmp($etag, $str)===0) {

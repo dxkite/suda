@@ -65,6 +65,7 @@ abstract class Template implements TemplateInterface
                 $cspDefault .= 'script-src \'self\' \'unsafe-eval\' \'unsafe-inline\';';
                 $cspDefault .= 'style-src \'self\' \'unsafe-inline\';';
             }
+            $cspDefault .= 'img-src \'self\' data:;';
             $csp = conf('header.Content-Security-Policy', $cspDefault);
             $xfo = conf('header.X-Frame-Options', 'sameorigin');
             $csp = str_replace('\'nonce-$RANDOM\'', is_null(self::$scriptNonce)?'':'\'nonce-'.self::$scriptNonce.'\'', $csp);
