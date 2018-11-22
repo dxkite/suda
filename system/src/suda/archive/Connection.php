@@ -41,7 +41,7 @@ class Connection
     protected $pdo=null;
     protected $transaction = 0;
     protected static $_id=0;
- 
+    protected static $defaultConnection = null;
 
     public function __toString()
     {
@@ -50,7 +50,10 @@ class Connection
 
     public static function getDefaultConnection()
     {
-        return self::getConnection();
+        if (is_null(self::$defaultConnection)) {
+            self::$defaultConnection = self::getConnection();
+        }
+        return self::$defaultConnection;
     }
 
     public static function getConnection(?string $name=null)

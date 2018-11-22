@@ -237,14 +237,20 @@ class Request
     }
 
 
+    
     /**
      * 判断是否有GET请求
      *
+     * @param string|null $name
      * @return boolean
      */
-    public static function hasGet()
+    public static function hasGet(?string $name=null)
     {
-        return count($_GET);
+        $get = self::get();
+        if ($name) {
+            return \array_key_exists($name,$get);
+        }
+        return count($get);
     }
 
     /**
@@ -252,11 +258,14 @@ class Request
      *
      * @return boolean
      */
-    public static function hasPost()
+    public static function hasPost(?string $name=null)
     {
-        return count($_POST);
+        $post = self::post();
+        if ($name) {
+            return \array_key_exists($name,$post);
+        }
+        return count($post);
     }
-
 
     /**
      * 判断是否有JSON数据请求
