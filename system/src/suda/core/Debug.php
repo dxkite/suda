@@ -49,7 +49,10 @@ class Debug
     protected static $runInfo;
     protected static $log=[];
     protected static $time=[];
+    
     protected static $hash;
+    protected static $ip;
+
     private static $file;
     private static $tempname;
     private static $latest=false;
@@ -67,11 +70,8 @@ class Debug
         if (defined('APP_LOG') && storage()->path(APP_LOG) && is_writable(APP_LOG)) {
             self::$latest =APP_LOG.'/latest.log';
         }
-
-        $request=Request::getInstance();
-        
-        self::$hash= $hash = substr(md5(microtime().''.$request->ip()), 0, 6);
-
+        self::$hash= $hash = substr(md5(microtime().''.self::$ip), 0, 6);
+        self::$ip = request()->ip();
         $file = tmpfile();
         if ($file === false) {
             self::$tempname =  APP_LOG .'/.suda.tmp';
@@ -81,7 +81,7 @@ class Debug
         self::$file= $file;
         Config::set('request', self::$hash);
         $mode = conf('debug', defined('DEBUG') && DEBUG)?'debug':'normal';
-        fwrite(self::$file, self::LOG_PACK[0].PHP_EOL.'request-'.self::$hash.'-begin from '.$request->ip().' at '.microtime(true).' with mode '. $mode .PHP_EOL);
+        fwrite(self::$file, self::LOG_PACK[0].PHP_EOL.'request-'.self::$hash.'-begin from '.self::$ip.' at '.microtime(true).' with mode '. $mode .PHP_EOL);
         if (IS_CONSOLE) {
             fwrite(self::$file, '  '.implode(' ', $_SERVER['argv']).PHP_EOL);
         } else {
@@ -398,7 +398,10 @@ class Debug
             }
             return self::displayLog($log);
         }
-        $str=str_replace(['$time_format','$time','$memoery_format','$memoery','$level','$file','$line','$name','$message'], [
+        $str=str_replace(['$request_id','$request_address','$current_time','$time_format','$time','$memoery_format','$memoery','$level','$file','$line','$name','$message'], [
+            self::$hash,
+            self::$ip,
+            microtime(true),
             number_format($log['time'], 10),
             $log['time'],
             self::formatBytes($log['mem'], 2),
