@@ -317,7 +317,7 @@ class Manager
         if (empty($path) ||  !Application::getInstance()->checkModuleExist($module)) {
             return;
         }
-        $moduleName=Application::getInstance()->getModuleName($module);
+        $moduleName=Application::getInstance()->getModuleFullName($module);
         if (!isset(self::$templateSource[$moduleName])) {
             self::$templateSource[$moduleName]=[];
         }
@@ -334,7 +334,7 @@ class Manager
      */
     public static function getTemplateSource(string $module)
     {
-        $moduleName=Application::getInstance()->getModuleName($module);
+        $moduleName=Application::getInstance()->getModuleFullName($module);
         $sources=[];
         if (isset(self::$templateSource[$moduleName])) {
             foreach (self::$templateSource[$moduleName] as $source) {

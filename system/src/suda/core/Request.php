@@ -143,7 +143,11 @@ class Request
             return $_GET;
         }
         if (array_key_exists($name, $_GET)) {
-            return $_GET[$name];
+            if (\is_string($_GET[$name]) && strlen($_GET[$name])) {
+                return $_GET[$name];
+            } else {
+                return $_GET[$name];
+            }
         }
         return $default;
     }
@@ -161,7 +165,11 @@ class Request
             return $_POST;
         }
         if (array_key_exists($name, $_POST)) {
-            return $_POST[$name];
+            if (\is_string($_POST[$name]) && strlen($_POST[$name])) {
+                return $_POST[$name];
+            } else {
+                return $_POST[$name];
+            }
         }
         return $default;
     }
@@ -248,7 +256,7 @@ class Request
     {
         $get = self::get();
         if ($name) {
-            return \array_key_exists($name,$get);
+            return \array_key_exists($name, $get);
         }
         return count($get);
     }
@@ -262,7 +270,7 @@ class Request
     {
         $post = self::post();
         if ($name) {
-            return \array_key_exists($name,$post);
+            return \array_key_exists($name, $post);
         }
         return count($post);
     }

@@ -198,8 +198,9 @@ class Application
         }
         // 加载监听器
         if ($listenerPath=Config::resolve($root.'/resource/config/listener.json')) {
-            Hook::loadConfig($listenerPath, $module);
-            Hook::exec('suda:module:load:on::'.self::getModuleName($module));
+            $fullname = self::getModuleFullName($module);
+            Hook::loadConfig($listenerPath, $fullname);
+            Hook::exec('suda:module:load:on::'.$fullname);
         }
         // 自动安装
         if (conf('auto-install', true)) {
