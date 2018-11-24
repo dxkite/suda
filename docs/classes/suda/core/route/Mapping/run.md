@@ -1,6 +1,6 @@
 # Mapping::run
-
-> *文件信息* suda\core\route\Mapping.php: 23~592
+运行响应
+> *文件信息* suda\core\route\Mapping.php: 25~619
 ## 所属类 
 
 [Mapping](../Mapping.md)
@@ -10,14 +10,15 @@
   public  
 ## 说明
 
-该函数暂时无说明
+
 
 ## 参数
 
 无参数
 
 ## 返回值
-返回值类型不定
+类型：boolean
+ 是否输出了字符
 
 ## 例子
 

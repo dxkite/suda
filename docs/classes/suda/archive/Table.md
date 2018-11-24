@@ -1,6 +1,6 @@
 #  Table 
 
-> *文件信息* suda\archive\Table.php: 31~933
+> *文件信息* suda\archive\Table.php: 25~567
 
 
 数据表抽象对象
@@ -12,7 +12,6 @@
 
 
 用于提供对数据表的操作
-
 ## 常量列表
 | 常量名  |  值|
 |--------|----|
@@ -24,15 +23,15 @@
 | 可见性 |  变量名   | 说明 |
 |--------|----|------|
 | protected    | statement | | 
+| protected    | wants | | 
+| protected    | orderField | | 
+| protected    | order | | 
 | protected    | connection | | 
 | protected    | fields | | 
-| protected    | wants | | 
 | protected    | primaryKey | | 
 | protected    | tableName | | 
 | protected    | cachePath | | 
 | protected    | creator | | 
-| protected    | orderField | | 
-| protected    | order | | 
 | protected    | allFields | | 
 | protected    | exportFields | 设置导出列大小| 
 | protected    | exportBlockSize | 设置导出数据分块大小| 
@@ -56,19 +55,16 @@
 |  public  |[select](Table/select.md) | 选择列 |
 |  public  |[query](Table/query.md) | 原始查询查询 |
 |  public  |[delete](Table/delete.md) | 根据条件删除列 |
-|  public  |[getPrimaryKey](Table/getPrimaryKey.md) | 获取主键 |
-|  public  |[setPrimaryKey](Table/setPrimaryKey.md) | 设置主键 |
-|  public  |[setTableName](Table/setTableName.md) | 设置表名 |
-|  public  |[getTableName](Table/getTableName.md) | 获取表名 |
-|  public  |[setFields](Table/setFields.md) | 设置表列 |
-|  public  |[getFields](Table/getFields.md) | 获取全部的列 |
 |  public  |[setWants](Table/setWants.md) | 设置想要的列 |
 |  public  |[getWants](Table/getWants.md) | 获取设置了的列 |
 |  public  |[count](Table/count.md) | 计数 |
 |  public  |[order](Table/order.md) | 排序 |
-|  public  |[createTable](Table/createTable.md) |  |
+|  protected  static|[strify](Table/strify.md) |  |
+|  protected  |[genOrderBy](Table/genOrderBy.md) |  |
+|  public  |[createTable](Table/createTable.md) | 创建数据表 |
 |  public  |[getCreateSql](Table/getCreateSql.md) |  |
 |  public  |[getCreator](Table/getCreator.md) |  |
+|abstract  protected  |[onBuildCreator](Table/onBuildCreator.md) |  |
 |  public  |[begin](Table/begin.md) |  |
 |  public  |[commit](Table/commit.md) |  |
 |  public  |[rollBack](Table/rollBack.md) |  |
@@ -78,14 +74,17 @@
 |  public  |[import](Table/import.md) | 从导出文件中恢复数据 |
 |  protected  |[checkPrimaryKey](Table/checkPrimaryKey.md) |  |
 |  protected  |[checkFields](Table/checkFields.md) | 检查参数列 |
-|abstract  protected  |[onBuildCreator](Table/onBuildCreator.md) |  |
-|  protected  |[initFromTable](Table/initFromTable.md) |  |
-|  protected  |[initTableFields](Table/initTableFields.md) |  |
-|  protected  |[initFromDatabase](Table/initFromDatabase.md) |  |
+|  public  |[getPrimaryKey](Table/getPrimaryKey.md) | 获取主键 |
+|  public  |[setPrimaryKey](Table/setPrimaryKey.md) | 设置主键 |
+|  public  |[setTableName](Table/setTableName.md) | 设置表名 |
+|  public  |[getTableName](Table/getTableName.md) | 获取表名 |
+|  public  |[setFields](Table/setFields.md) | 设置表列 |
+|  public  |[getFields](Table/getFields.md) | 获取全部的列 |
+|  protected  |[initFromTable](Table/initFromTable.md) | 从数据表创建器创建数据表 |
+|  protected  |[initTableFields](Table/initTableFields.md) | 初始化数据表字段 |
+|  protected  |[initFromDatabase](Table/initFromDatabase.md) | 从数据表创建字段 |
 |  protected  |[cacheDbInfo](Table/cacheDbInfo.md) |  |
-|  protected  static|[strify](Table/strify.md) |  |
-|  protected  |[_order](Table/_order.md) |  |
-|  protected  |[getDataStringLimit](Table/getDataStringLimit.md) |  |
+|  protected  |[getDataStringLimit](Table/getDataStringLimit.md) | 获取导出数据 |
  
 
 ## 例子

@@ -1,6 +1,6 @@
 # Application::addModulesPath
 添加模块扫描目录
-> *文件信息* suda\core\Application.php: 29~830
+> *文件信息* suda\core\Application.php: 33~835
 ## 所属类 
 
 [Application](../Application.md)

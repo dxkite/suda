@@ -1,6 +1,6 @@
 # Request::hasGet
 判断是否有GET请求
-> *文件信息* suda\core\Request.php: 24~492
+> *文件信息* suda\core\Request.php: 23~508
 ## 所属类 
 
 [Request](../Request.md)
@@ -14,7 +14,9 @@
 
 ## 参数
 
-无参数
+| 参数名 | 类型 | 默认值 | 说明 |
+|--------|-----|-------|-------|
+| name |  string | null | 无 |
 
 ## 返回值
 类型：boolean

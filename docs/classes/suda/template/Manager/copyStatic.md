@@ -1,6 +1,6 @@
 # Manager::copyStatic
 复制模板目录下静态文件
-> *文件信息* suda\template\Manager.php: 31~686
+> *文件信息* suda\template\Manager.php: 32~696
 ## 所属类 
 
 [Manager](../Manager.md)

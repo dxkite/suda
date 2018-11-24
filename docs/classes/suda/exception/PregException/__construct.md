@@ -1,9 +1,9 @@
-# Value::__get
+# PregException::__construct
 
-> *文件信息* suda\tool\Value.php: 25~74
+> *文件信息* suda\exception\PregException.php: 4~19
 ## 所属类 
 
-[Value](../Value.md)
+[PregException](../PregException.md)
 
 ## 可见性
 
@@ -16,7 +16,7 @@
 
 | 参数名 | 类型 | 默认值 | 说明 |
 |--------|-----|-------|-------|
-| name |  string | 无 | 无 |
+| error |  int | 无 | 无 |
 
 ## 返回值
 返回值类型不定

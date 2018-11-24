@@ -1,6 +1,6 @@
 # Template::getScriptNonce
 
-> *文件信息* suda\template\compiler\suda\Template.php: 26~338
+> *文件信息* suda\template\compiler\suda\Template.php: 27~340
 ## 所属类 
 
 [Template](../Template.md)

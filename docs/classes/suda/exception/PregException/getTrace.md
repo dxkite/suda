@@ -1,9 +1,9 @@
-# Value::jsonSerialize
+# PregException::getTrace
 
-> *文件信息* suda\tool\Value.php: 25~74
+> *文件信息* suda\exception\PregException.php: 4~19
 ## 所属类 
 
-[Value](../Value.md)
+[PregException](../PregException.md)
 
 ## 可见性
 

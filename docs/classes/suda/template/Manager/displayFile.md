@@ -1,6 +1,6 @@
 # Manager::displayFile
 根据路径显示模板
-> *文件信息* suda\template\Manager.php: 31~686
+> *文件信息* suda\template\Manager.php: 32~696
 ## 所属类 
 
 [Manager](../Manager.md)

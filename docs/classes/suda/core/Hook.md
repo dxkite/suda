@@ -1,6 +1,6 @@
 #  Hook 
 
-> *文件信息* suda\core\Hook.php: 23~228
+> *文件信息* suda\core\Hook.php: 23~229
 
 
 系统钩子，监听系统内部一些操作并载入一些自定义行为

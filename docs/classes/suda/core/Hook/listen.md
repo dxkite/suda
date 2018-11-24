@@ -1,6 +1,6 @@
 # Hook::listen
 注册一条命令
-> *文件信息* suda\core\Hook.php: 23~228
+> *文件信息* suda\core\Hook.php: 23~229
 ## 所属类 
 
 [Hook](../Hook.md)

@@ -1,6 +1,6 @@
 # Application::uncaughtException
 请求发生异常的时候会调用
-> *文件信息* suda\core\Application.php: 29~830
+> *文件信息* suda\core\Application.php: 33~835
 ## 所属类 
 
 [Application](../Application.md)

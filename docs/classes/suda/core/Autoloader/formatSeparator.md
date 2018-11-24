@@ -1,6 +1,6 @@
 # Autoloader::formatSeparator
 
-> *文件信息* suda\core\Autoloader.php: 22~210
+> *文件信息* suda\core\Autoloader.php: 22~215
 ## 所属类 
 
 [Autoloader](../Autoloader.md)

@@ -1,6 +1,6 @@
 # Request::getPort
 
-> *文件信息* suda\core\Request.php: 24~492
+> *文件信息* suda\core\Request.php: 23~508
 ## 所属类 
 
 [Request](../Request.md)

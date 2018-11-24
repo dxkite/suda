@@ -1,4 +1,4 @@
-# assets
+# assets_url
 根据模块名称获取资源URL
 > *文件信息* suda\core\functions.php: 115~122
 

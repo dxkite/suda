@@ -1,6 +1,6 @@
 #  Request 
 
-> *文件信息* suda\core\Request.php: 24~492
+> *文件信息* suda\core\Request.php: 23~508
 
 
 请求描述类，客户端向框架发送请求时会生成此类

@@ -1,6 +1,6 @@
 # Mapping::getName
 
-> *文件信息* suda\core\route\Mapping.php: 23~592
+> *文件信息* suda\core\route\Mapping.php: 25~619
 ## 所属类 
 
 [Mapping](../Mapping.md)

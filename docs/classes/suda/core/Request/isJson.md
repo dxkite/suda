@@ -1,6 +1,6 @@
 # Request::isJson
 判断请求的数据是否为 json
-> *文件信息* suda\core\Request.php: 24~492
+> *文件信息* suda\core\Request.php: 23~508
 ## 所属类 
 
 [Request](../Request.md)

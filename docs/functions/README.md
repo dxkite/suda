@@ -3,7 +3,7 @@
 > **注：** 文档由程序自动生成
 
 - suda 2.0.3 
-- 2018-10-29 08:16:29
+- 2018-11-24 03:19:44
 
 ## 函数列表 
 | 函数名 | 说明 |
@@ -14,7 +14,7 @@
 | [conf](conf.md) |  获取配置信息  |
 | [use_namespace](use_namespace.md) |  使用命名空间  |
 | [u](u.md) |  根据路由名获取URL  |
-| [assets](assets.md) |  根据模块名称获取资源URL  |
+| [assets_url](assets_url.md) |  根据模块名称获取资源URL  |
 | [import](import.md) |  导入PHP文件  |
 | [init_resource](init_resource.md) |  初始化资源  |
 | [app](app.md) |  获取当运行的APP单例对象  |

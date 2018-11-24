@@ -3,7 +3,7 @@
 > **注：** 文档由程序自动生成
 
 - suda 2.0.3 
-- 2018-10-29 08:16:29
+- 2018-11-24 03:19:44
 
 
 ## 类列表
@@ -29,6 +29,7 @@
 |[suda\archive\RawQuery](suda/archive/RawQuery.md) | 数据库查询方案，提供原始查询方案 |
 |[suda\archive\SQLStatementPrepare](suda/archive/SQLStatementPrepare.md) | 数据库查询语句接口 |
 |[suda\archive\SQLQuery](suda/archive/SQLQuery.md) | 数据库查询方案，简化数据库查 |
+|[suda\archive\TableAccess](suda/archive/TableAccess.md) | 表创建器 |
 |[suda\archive\Table](suda/archive/Table.md) | 数据表抽象对象 |
 |[suda\archive\TableInstance](suda/archive/TableInstance.md) |  |
 |[suda\core\Application](suda/core/Application.md) | 应用处理类 |
@@ -48,6 +49,7 @@
 |[suda\exception\JSONException](suda/exception/JSONException.md) |  |
 |[suda\exception\KernelException](suda/exception/KernelException.md) |  |
 |[suda\exception\MailException](suda/exception/MailException.md) |  |
+|[suda\exception\PregException](suda/exception/PregException.md) |  |
 |[suda\exception\SQLException](suda/exception/SQLException.md) |  |
 |[suda\exception\TableException](suda/exception/TableException.md) |  |
 |[suda\mail\Factory](suda/mail/Factory.md) |  |
@@ -62,7 +64,6 @@
 |[suda\template\Manager](suda/template/Manager.md) | 模板管理类 |
 |[suda\tool\Command](suda/tool/Command.md) |  |
 |[suda\tool\CookieSetter](suda/tool/CookieSetter.md) |  |
-|[suda\tool\Value](suda/tool/Value.md) | 值迭代器 |
 |[suda\tool\ZipHelper](suda/tool/ZipHelper.md) |  |
 |[suda\core\storage\Storage](suda/core/storage/Storage.md) | 存储系统 |
 |[suda\archive\SQLStatement](suda/archive/SQLStatement.md) | 数据库查询语句接口 |
@@ -70,3 +71,4 @@
 |[suda\core\session\Session](suda/core/session/Session.md) | Session 接口 |
 |[suda\mail\sender\Sender](suda/mail/sender/Sender.md) |  |
 |[suda\template\Compiler](suda/template/Compiler.md) | 编译器接口 |
+|[suda\template\Template](suda/template/Template.md) |  |

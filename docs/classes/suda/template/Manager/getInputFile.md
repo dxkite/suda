@@ -1,6 +1,6 @@
 # Manager::getInputFile
 模板输入路径
-> *文件信息* suda\template\Manager.php: 31~686
+> *文件信息* suda\template\Manager.php: 32~696
 ## 所属类 
 
 [Manager](../Manager.md)

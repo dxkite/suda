@@ -1,6 +1,6 @@
 # Compiler::buildCommand
 创建模板扩展命令
-> *文件信息* suda\template\compiler\suda\Compiler.php: 27~403
+> *文件信息* suda\template\compiler\suda\Compiler.php: 27~414
 ## 所属类 
 
 [Compiler](../Compiler.md)

@@ -1,6 +1,6 @@
 #  Connection 
 
-> *文件信息* suda\archive\Connection.php: 28~207
+> *文件信息* suda\archive\Connection.php: 28~210
 
 
 数据表链接对象
@@ -30,6 +30,7 @@
 | protected    | pdo | | 
 | protected    | transaction | | 
 | protected  static  | _id | | 
+| protected  static  | defaultConnection | | 
 
 ## 方法
 

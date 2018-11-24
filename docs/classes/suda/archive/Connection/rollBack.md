@@ -1,6 +1,6 @@
 # Connection::rollBack
 事务系列，撤销事务
-> *文件信息* suda\archive\Connection.php: 28~207
+> *文件信息* suda\archive\Connection.php: 28~210
 ## 所属类 
 
 [Connection](../Connection.md)
