@@ -112,7 +112,7 @@ function u($name=null, $values=null)
  * @param boolean $static 资源是否为静态资源
  * @return string 获取到的资源URL
  */
-function assets(string $module, string $path, bool $static=true)
+function assets_url(string $module, string $path, bool $static=true)
 {
     if ($static) {
         return suda\template\Manager::assetServer(suda\template\Manager::getStaticAssetPath($module)).'/'.ltrim($path, '/');
