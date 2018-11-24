@@ -88,7 +88,7 @@ class Mapping implements \JsonSerializable
             }
         }
         if ($match) {
-            if (!hook()->execIf('suda:route:dispatch::filter', [$this->getFullName(),$this], true)) {
+            if (hook()->execIf('suda:route:dispatch::filter', [$this->getFullName(),$this], true)) {
                 return false;
             }
             foreach ($paramGet as $paramName=>$value) {
@@ -168,7 +168,7 @@ class Mapping implements \JsonSerializable
                 $response->render();
             } elseif (is_string($response)) {
                 echo $content.$response;
-            } elseif (is_object($response) && hook()->execIf('suda:template:render::object', [$response, $this], true) !== true) {
+            } elseif (is_object($response) && hook()->execIf('suda:template:render::object', [$response, $this], true) === false) {
                 throw new Exception(__('response return type must be one of Template,array or null, maybe you can attach suda:template:render::object to encoding object'));
             }
             return true;

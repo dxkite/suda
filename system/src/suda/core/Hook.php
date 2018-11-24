@@ -129,7 +129,6 @@ class Hook
 
     /**
      * 运行，遇到返回指定条件则停止并返回true
-     * 如果无监控也返回true
      * 
      * @param string $name
      * @param array $args
@@ -145,9 +144,8 @@ class Hook
                     return true;
                 }
             }
-            return false;
         }
-        return true;
+        return false;
     }
     
     /**

@@ -366,7 +366,7 @@ class Router
     public function dispatch()
     {
         debug()->time('dispatch');
-        if (Hook::execIf('suda:route:dispatch::before', [Request::getInstance()], true)) {
+        if (!Hook::execIf('suda:route:dispatch::before', [Request::getInstance()], false)) {
             if (($mapping=self::matchRouterMap())!==false) {
                 debug()->timeEnd('dispatch');
                 Response::setName($mapping->getFullName());

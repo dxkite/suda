@@ -33,7 +33,7 @@ class Autoloader
      *
      * @var array
      */
-    protected static $include_path=[];
+    protected static $includePath=[];
 
     /**
      * 将JAVA，路径分割转换为PHP分割符
@@ -77,8 +77,8 @@ class Autoloader
             @require_once $filename;
             return $filename;
         } else {
-            foreach (self::$include_path as $include_path) {
-                if ($path = self::realPath($include_path.DIRECTORY_SEPARATOR.$filename)) {
+            foreach (self::$includePath[0] as $includePath) {
+                if ($path = self::realPath($includePath.DIRECTORY_SEPARATOR.$filename)) {
                     @require_once $path;
                     return $path;
                 }
@@ -100,29 +100,31 @@ class Autoloader
         $namepath=self::formatSeparator($className);
         $classname=self::realName($className);
         // 搜索路径
-        foreach (self::$include_path as $include_namespace => $include_path) {
-            if (is_numeric($include_namespace)) {
-                $path = $include_path.DIRECTORY_SEPARATOR.$namepath.'.php';
-            } else {
-                $nl = strlen($include_namespace);
-                if (substr($classname, 0, $nl) == $include_namespace) {
-                    $path = $include_path.DIRECTORY_SEPARATOR.static::formatSeparator(substr($classname, $nl)).'.php';
+        foreach (self::$includePath as $includeNamespace => $includePaths) {
+            foreach ($includePaths as $includePath) {
+                if (is_numeric($includeNamespace)) {
+                    $path = $includePath.DIRECTORY_SEPARATOR.$namepath.'.php';
                 } else {
-                    $path = $include_path.DIRECTORY_SEPARATOR.$namepath.'.php';
+                    $nl = strlen($includeNamespace);
+                    if (substr($classname, 0, $nl) === $includeNamespace) {
+                        $path=$includePath.DIRECTORY_SEPARATOR.static::formatSeparator(substr($classname, $nl)).'.php';
+                    } else {
+                        $path=$includePath.DIRECTORY_SEPARATOR.$namepath.'.php';
+                    }
                 }
-            }
-            if ($path = self::realPath($path)) {
-                return $path;
-            } else {
-                // 添加命名空间
-                foreach (self::$namespace as $namespace) {
-                    $path = $include_path.DIRECTORY_SEPARATOR.$namespace.DIRECTORY_SEPARATOR.$namepath.'.php';
-                    if ($path = self::realPath($path)) {
-                        // 精简类名
-                        if (!class_exists($classname, false)) {
-                            class_alias($namespace.'\\'.$classname, $classname);
+                if ($path = self::realPath($path)) {
+                    return $path;
+                } else {
+                    // 添加命名空间
+                    foreach (self::$namespace as $namespace) {
+                        $path = $includePath.DIRECTORY_SEPARATOR.$namespace.DIRECTORY_SEPARATOR.$namepath.'.php';
+                        if ($path = self::realPath($path)) {
+                            // 精简类名
+                            if (!class_exists($classname, false)) {
+                                class_alias($namespace.'\\'.$classname, $classname);
+                            }
+                            return $path;
                         }
-                        return $path;
                     }
                 }
             }
@@ -132,18 +134,21 @@ class Autoloader
 
     public static function addIncludePath(string $path, string $namespace=null)
     {
-        if (static::realPath($path)) {
-            if (empty($namespace) && !in_array($path, self::$include_path)) {
-                self::$include_path[]=$path;
-            } elseif (array_search($path, self::$include_path) != $namespace) {
-                self::$include_path[$namespace]=$path;
+        if ($path = static::realPath($path)) {
+            $namespace = $namespace ?? 0;
+            if (array_key_exists($namespace, self::$includePath)) {
+                if (!\in_array($path, self::$includePath[$namespace])) {
+                    self::$includePath[$namespace][]=$path;
+                }
+            } else {
+                self::$includePath[$namespace][]=$path;
             }
         }
     }
 
     public static function getIncludePath()
     {
-        return self::$include_path;
+        return self::$includePath;
     }
 
     public static function getNamespace()
@@ -165,7 +170,7 @@ class Autoloader
      * @param string $separator
      * @return string
      */
-    public static function parsePath(string $path,string $separator = DIRECTORY_SEPARATOR):string
+    public static function parsePath(string $path, string $separator = DIRECTORY_SEPARATOR):string
     {
         if (defined('USER_HOME') && $path[0] === '~') {
             $scheme ='';
