@@ -8,5 +8,6 @@
     "redirect": "跳转中",
     "page is redirecting to": "正在跳转到：",
     "$0 seconds": "$0秒",
-    "APP_DIR $0 in unsafe path, please move it out of $1": "APP_DIR $0 在不安全的路径，请把它放在 $1 之外"
+    "APP_DIR $0 in unsafe path, please move it out of $1": "APP_DIR $0 在不安全的路径，请把它放在 $1 之外",
+    "$0 IS NOT WRITABLE, resource may not load":"$0 目录不可写，网页资源可能无法正常加载"
 }

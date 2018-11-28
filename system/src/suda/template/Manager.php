@@ -254,6 +254,8 @@ class Manager
                     $return=true;
                 }
             }
+        } else {
+            \debug()->warning(__('path not writeable: $0', $publicPath));
         }
         storage()->touchIndex(self::$assetsPath);
         return $return;

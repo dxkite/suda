@@ -440,7 +440,7 @@ abstract class Table extends TableAccess
      * @example
      *
      * 请尽量避免使用此函数
-     * 其中 #{user} 表示user表，加上 #{} 框架会自动处理浅醉
+     * 其中 #{user} 表示user表，加上 #{} 框架会自动处理前缀
      *
      * ```php
      * $table->query('select * from #{user} where id > :id',['id'=>2]);
