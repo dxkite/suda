@@ -52,7 +52,7 @@ class Compiler implements CompilerImpl
             'close' => '}'
         ],
         'command' => [
-            'open' => '@',
+            'open' => '',
             'close' => ''
         ],
     ];
@@ -214,41 +214,49 @@ class Compiler implements CompilerImpl
         return '';
     }
 
-    private function compileString(string $str)
+    private function compileString(string $str, array $tagConfig)
     {
-        $callback=function ($match)  {
-            // 0 编译后的字符
-            // 1 函数名
-            // 2 空白
-            // 3 参数列表
-            if (self::hasCommand(ucfirst($match[1]))) {
-                $match[0] = self::buildCommand($match[1], $match[3] ?? '');
-            } elseif (method_exists($this, $method = 'parse'.ucfirst($match[1]))) {
-                $match[0] = $this->$method($match[3] ?? '');
+        $callback=function ($match) {
+            if (count($match) >= 5) {
+                list($input, $ignore, $name, $space, $params) = $match;
+            } else {
+                list($input, $ignore, $name, $space) = $match;
+                $params = '';
             }
-            return isset($match[3]) ? $match[0] : $match[0].$match[2];
+            if ($ignore ==='!') {
+                return \str_replace('@!', '', $input);
+            } else {
+                if (self::hasCommand(ucfirst($name))) {
+                    $code = self::buildCommand($name, $params);
+                } elseif (method_exists($this, $method = 'parse'.ucfirst($name))) {
+                    $code = $this->$method($params);
+                }
+                $code = $this->echoValue($code);
+                return empty($params) ? $code : $code.$space;
+            }
         };
+        $key = 'command';
         // \x{4e00}-\x{9aff} 为中文字符集范围
-        $code = preg_replace_callback('/\B@([\w\x{4e00}-\x{9aff}]+)(\s*)(\( ( (?>[^()]+) | (?3) )* \) )? /ux', $callback, $str);
+        $pregExp = sprintf('/%s\s*\B(!)?@([\w\x{4e00}-\x{9aff}]+)(\s*)(\( ( (?>[^()]+) | (?4) )* \) )? \s*%s/ux', preg_quote($tagConfig[$key]['open']), preg_quote($tagConfig[$key]['close']));
+        $code = preg_replace_callback($pregExp, $callback, $str);
         $error = preg_last_error();
         if ($error !== PREG_NO_ERROR) {
             throw new \suda\exception\PregException($error);
         }
-        return $this->echoValue($code);
+        return $code;
     }
 
     private function compileCommand(string $code, array $tagConfig)
     {
-        $that = $this;
         foreach (self::$compiledPhp as $key => $value) {
             $pregExp = sprintf('/(!)?%s\s*(.+?)\s*%s/', preg_quote($tagConfig[$key]['open']), preg_quote($tagConfig[$key]['close']));
-            $code = \preg_replace_callback($pregExp, function($match) use ($value, $that)  {
+            $code = \preg_replace_callback($pregExp, function ($match) use ($value) {
                 if ($match[1] === '!') {
-                    return substr($match[0],1);
-                }else{
-                    return \str_replace('$code',$that->echoValue($match[2]),$value);
+                    return substr($match[0], 1);
+                } else {
+                    return \str_replace('$code', $this->echoValue($match[2]), $value);
                 }
-            },$code);
+            }, $code);
         }
         return $code;
     }
