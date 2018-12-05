@@ -26,13 +26,48 @@ use suda\template\Manager;
  */
 class Compiler implements CompilerImpl
 {
-    protected static $rawTag=['{{!','}}'];
-    protected static $echoTag=['{{','}}'];
-    protected static $hookTag=['{:','}'];
-    protected static $commentTag=['{--','--}'];
-    protected static $strTransTag=['{=','}'];
-    protected static $rawTransTag=['@{','}'];
+    protected static $tagConfig = [
+        'raw' => [
+            'open' => '{{!',
+            'close' => '}}'
+        ],
+        'echo' => [
+            'open' => '{{',
+            'close' => '}}'
+            ],
+        'comment' =>[
+            'open' => '{--',
+            'close' => '--}'
+        ],
+        'hook' => [
+            'open' => '{:',
+            'close' => '}'
+        ],
+        'str' =>[
+            'open' => '{=',
+            'close' => '}'
+        ],
+        'rawStr' =>[
+            'open' => '@{',
+            'close' => '}'
+        ],
+        'command' => [
+            'open' => '@',
+            'close' => ''
+        ],
+    ];
+
+    protected static $compiledPhp = [
+        'raw' => '<?php echo $code; ?>',
+        'echo' => '<?php echo htmlspecialchars(__($code), ENT_SUBSTITUTE | ENT_QUOTES | ENT_HTML5); ?>',
+        'comment' => '<?php /* $code */ ?>',
+        'hook'=> '<?php $this->execGlobalHook("$code"); ?>',
+        'str'=> '<?php echo htmlspecialchars(__("$code"), ENT_SUBSTITUTE | ENT_QUOTES | ENT_HTML5); ?>',
+        'rawStr' => '<?php echo htmlspecialchars($code, ENT_SUBSTITUTE | ENT_QUOTES | ENT_HTML5); ?>',
+    ];
+    
     const Template='suda\template\compiler\suda\Template';
+
     protected static $template=self::Template;
     /**
      * 附加模板命令
@@ -50,9 +85,10 @@ class Compiler implements CompilerImpl
      * 编译文本
      *
      * @param string $text
+     * @param array $tagConfig
      * @return string
      */
-    public function compileText(string $text):string
+    public function compileText(string $text, array $tagConfig=[]):string
     {
         $result='';
         foreach (token_get_all($text) as $token) {
@@ -61,9 +97,8 @@ class Compiler implements CompilerImpl
                 // 所有将要编译的文本
                 // 跳过各种的PHP
                 if ($tag == T_INLINE_HTML) {
-                    $content=self::compileString($content);
-                    $content=self::compileCommand($content);
-                    $content=self::echoValue($content);
+                    $content=self::compileString($content, $tagConfig);
+                    $content=self::compileCommand($content, $tagConfig);
                 }
                 $result .=$content;
             } else {
@@ -94,7 +129,7 @@ class Compiler implements CompilerImpl
             debug()->warning(__('compile error:no sorce file => $0 $1', $name, $input));
             return false;
         }
-        $content= $this->compileText(Storage::get($input));
+        $content= $this->compileText(Storage::get($input), self::$tagConfig);
         if (!Storage::isDir($dir=dirname($output))) {
             Storage::mkdirs(dirname($output));
         }
@@ -104,7 +139,7 @@ class Compiler implements CompilerImpl
         $content='<?php if (!class_exists("'.$classname.'", false)) { class '.$classname.' extends '.self::$template.' { protected $name="'. addslashes($name) .'";protected $module="'.addslashes($module).'"; protected $source="'. addslashes($input).'";protected function _render_template() {  ?>'.$content.'<?php }} } return ["class"=>"'.$classname.'","name"=>"'.addslashes($name).'","source"=>"'.addslashes($input).'","module"=>"'.addslashes($module).'"]; ';
         Storage::put($output, $content);
         debug()->timeEnd('compile '.$name);
-        $syntax=Manager::checkSyntax($output, $classname);
+        $syntax= true;//Manager::checkSyntax($output, $classname);
         if ($syntax !== true) {
             if (!conf('debug')) {
                 storage()->delete($output);
@@ -181,9 +216,13 @@ class Compiler implements CompilerImpl
 
     private function compileString(string $str)
     {
-        $callback=function ($match) {
+        $callback=function ($match)  {
+            // 0 编译后的字符
+            // 1 函数名
+            // 2 空白
+            // 3 参数列表
             if (self::hasCommand(ucfirst($match[1]))) {
-                $match[0]=self::buildCommand($match[1], $match[3] ?? '');
+                $match[0] = self::buildCommand($match[1], $match[3] ?? '');
             } elseif (method_exists($this, $method = 'parse'.ucfirst($match[1]))) {
                 $match[0] = $this->$method($match[3] ?? '');
             }
@@ -195,22 +234,23 @@ class Compiler implements CompilerImpl
         if ($error !== PREG_NO_ERROR) {
             throw new \suda\exception\PregException($error);
         }
-        return $code;
+        return $this->echoValue($code);
     }
 
-    private function compileCommand(string $str)
+    private function compileCommand(string $code, array $tagConfig)
     {
-        $echo=sprintf('/(?<!!)%s\s*(.+?)\s*%s/', preg_quote(self::$echoTag[0]), preg_quote(self::$echoTag[1]));
-        $rawecho=sprintf('/(?<!!)%s\s*(.+?)\s*%s/', preg_quote(self::$rawTag[0]), preg_quote(self::$rawTag[1]));
-        $comment=sprintf('/(?<!!)%s\s*(.+?)\s*%s/', preg_quote(self::$commentTag[0]), preg_quote(self::$commentTag[1]));
-        $hook=sprintf('/(?<!!)%s\s*(.+?)\s*%s/', preg_quote(self::$hookTag[0]), preg_quote(self::$hookTag[1]));
-        $strTransTag=sprintf('/(?<!!)%s\s*(.+?)\s*%s/', preg_quote(self::$strTransTag[0]), preg_quote(self::$strTransTag[1]));
-        $rawTransTag=sprintf('/(?<!!)%s\s*(.+?)\s*%s/', preg_quote(self::$rawTransTag[0]), preg_quote(self::$rawTransTag[1]));
-        return self::echoValue(preg_replace(
-            [$rawecho, $echo, $comment, $hook,$strTransTag,$rawTransTag],
-            ['<?php echo $1; ?>', '<?php echo htmlspecialchars(__($1), ENT_SUBSTITUTE | ENT_QUOTES | ENT_HTML5); ?>', '<?php /* $1 */ ?>', '<?php $this->execGlobalHook("$1"); ?>','<?php echo htmlspecialchars(__("$1"), ENT_SUBSTITUTE | ENT_QUOTES | ENT_HTML5); ?>','<?php echo htmlspecialchars($1, ENT_SUBSTITUTE | ENT_QUOTES | ENT_HTML5); ?>'],
-            $str
-        ));
+        $that = $this;
+        foreach (self::$compiledPhp as $key => $value) {
+            $pregExp = sprintf('/(!)?%s\s*(.+?)\s*%s/', preg_quote($tagConfig[$key]['open']), preg_quote($tagConfig[$key]['close']));
+            $code = \preg_replace_callback($pregExp, function($match) use ($value, $that)  {
+                if ($match[1] === '!') {
+                    return substr($match[0],1);
+                }else{
+                    return \str_replace('$code',$that->echoValue($match[2]),$value);
+                }
+            },$code);
+        }
+        return $code;
     }
 
     protected function echoValue($var)
