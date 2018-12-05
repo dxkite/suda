@@ -443,7 +443,7 @@ class Manager
         // 引用文件
         $static_url=Storage::cut($outpath, self::$assetsPath);
         $static_url=preg_replace('/[\\\\\/]+/', '/', $static_url);
-        return  self::assetServer(trim($static_url, '/'));
+        return  self::assetServer('/'.trim($static_url, '/'));
     }
 
     public static function include(string $name, $parent)
