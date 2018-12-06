@@ -181,6 +181,7 @@ class Hook
         if (\array_key_exists($name, self::$hooks) && is_array(self::$hooks[$name])) {
             return  self::call(array_shift(self::$hooks[$name]), $args);
         }
+        return null;
     }
 
     /**
@@ -194,8 +195,9 @@ class Hook
     {
         debug()->trace($name);
         if (\array_key_exists($name, self::$hooks) && is_array(self::$hooks[$name])) {
-            return  self::call(array_pop(self::$hooks[$name]), $args);
+            return self::call(array_pop(self::$hooks[$name]), $args);
         }
+        return null;
     }
 
     protected static function call($command, array &$args)

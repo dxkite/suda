@@ -163,13 +163,15 @@ class Mapping implements \JsonSerializable
             $response = $callback->exec([request()->setMapping($this)]);
         }
         cookie()->sendCookies();
-        if (is_string($response) || is_object($response)) {
+        if (\is_string($response) || \is_object($response) || \is_array($response)) {
             if ($response instanceof Template) {
                 $response->render();
             } elseif (is_string($response)) {
                 echo $content.$response;
-            } elseif (is_object($response) && hook()->execIf('suda:template:render::object', [$response, $this], true) === false) {
-                throw new Exception(__('response return type must be one of Template,array or null, maybe you can attach suda:template:render::object to encoding object'));
+            } elseif (is_array($response) && hook()->execTail('suda:response:render::array', [$response, $this]) !== true) {
+                throw new Exception(__('response return type must be one of Template,string or null, maybe you can attach suda:response:render::array to encoding array'));
+            } elseif (is_object($response) && hook()->execTail('suda:response:render::object', [$response, $this]) !== true) {
+                throw new Exception(__('response return type must be one of Template,string or null, maybe you can attach suda:response:render::object to encoding object'));
             }
             return true;
         }
