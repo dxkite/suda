@@ -52,7 +52,7 @@ class Compiler implements CompilerImpl
             'close' => '}'
         ],
         'command' => [
-            'open' => '',
+            'open' => '@',
             'close' => ''
         ],
     ];
@@ -154,9 +154,9 @@ class Compiler implements CompilerImpl
     protected function getTagConfig(string $root, string $input)
     {
         $tagConfig = null;
-        if ($path = config()->resolve($root.'/.tpl.ini')) {
+        if ($path = config()->resolve($input.'.ini')) {
             $tagConfig = config()->loadConfig($path);
-        } elseif ($path = config()->resolve($input.'.ini')) {
+        } elseif ($path = config()->resolve($root.'/.tpl.ini')) {
             $tagConfig = config()->loadConfig($path);
         }
         if (is_null($tagConfig)) {
@@ -264,7 +264,7 @@ class Compiler implements CompilerImpl
         };
         $key = 'command';
         // \x{4e00}-\x{9aff} 为中文字符集范围
-        $pregExp = sprintf('/%s\s*\B(!)?@([\w\x{4e00}-\x{9aff}]+)(\s*)(\( ( (?>[^()]+) | (?4) )* \) )? \s*%s/ux', preg_quote($tagConfig[$key]['open']), preg_quote($tagConfig[$key]['close']));
+        $pregExp = sprintf('/\B(!)?%s([\w\x{4e00}-\x{9aff}]+)(\s*)(\( ( (?>[^()]+) | (?4) )* \) )? /ux', preg_quote($tagConfig[$key]['open']));
         $code = preg_replace_callback($pregExp, $callback, $str);
         $error = preg_last_error();
         if ($error !== PREG_NO_ERROR) {

@@ -550,7 +550,7 @@ class Mapping implements \JsonSerializable
                         if ($view=$this->view($template, $mapping->getParam()??[])) {
                             return $view->render();
                         } else {
-                            echo $template;
+                            echo __('missing template $0', $template);
                         }
                     }
                 }
@@ -581,7 +581,7 @@ class Mapping implements \JsonSerializable
                             }
                         } else {
                             $this->state(404);
-                            echo 'source not find in module ['.$mapping->getModule().'] : path '.$path;
+                            echo __('source not find in module [$0] : path $1', $mapping->getModule(), $path);
                         }
                     }
                 }

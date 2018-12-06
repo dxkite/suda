@@ -480,7 +480,7 @@ class Manager
      * @param string $extRaw
      * @return array
      */
-    public static function getInputFile(string $module, string $basename, bool $ext=true, string $extRaw='html'):array
+    public static function getInputFile(string $module, string $basename, bool $ext=true, string $extRaw='html'):?array
     {
         $source=self::getTemplateSource($module);
         foreach ($source as $path) {
