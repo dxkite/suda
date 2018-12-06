@@ -154,12 +154,14 @@ class Manager
             self::$init = true;
         }
         // 编译文件
-        if ($path = self::getInputFile($name, true, $ext)) {
+        list($module, $basename) = Router::parseName($name);
+        if ($data = self::getInputFile($module, $basename, true, $ext)) {
+            list($root,$path) = $data;
             if (is_null($outpath)) {
-                $outpath=self::getOutputFile($name);
+                $outpath=self::getOutputFile($module, $basename);
             }
             Hook::exec('suda:template:compile::before', [ self::$compiler ]);
-            return self::$compiler->compile($name, $path, $outpath);
+            return self::$compiler->compile($module, $root, $basename, $path, $outpath);
         }
         return false;
     }
@@ -191,7 +193,8 @@ class Manager
     public static function displaySource(string $name, string $ext='html', ?string $viewpath=null)
     {
         if (empty($viewpath)) {
-            $viewpath=static::getOutputFile($name);
+            list($module, $basename) = Router::parseName($name);
+            $viewpath=static::getOutputFile($module, $basename);
         }
         if (Storage::exist($viewpath)) {
             if (Config::get('debug', true) || Config::get('exception', false)) {
@@ -405,8 +408,8 @@ class Manager
     public static function file(string $name, $parent)
     {
         list($module, $basename)=Router::parseName($name, $parent->getModule());
-        $name=$module.':'.$basename;
-        $input=self::getInputFile($name, false);
+        list($root, $input)=self::getInputFile($module, $basename, false);
+
         if (!Storage::exist($input)) {
             throw new KernelException(__('missing file $0:$1', self::$theme, $input));
             return;
@@ -414,14 +417,14 @@ class Manager
         // 获取文件夹
         $module_dir=Application::getInstance()->getModuleDir($module);
         // 获取输出
-        $output=self::getOutputFile($name);
+        $output=self::getOutputFile($module, $basename);
         // 动态文件导出
         $outpath=self::$assetsPath.'/'.self::$dynamicPath.'/'.self::moduleUniqueId($module).'/'.$basename;
         $path=Storage::path(dirname($outpath));
         // 编译检查
         if (Storage::exist($output)) {
             if (Config::get('debug', true) || Config::get('exception', false)) {
-                if (!self::$compiler->compile($name, $input, $output)) {
+                if (!self::$compiler->compile($module, $root, $name, $input, $output)) {
                     throw new KernelException(__('missing file $0:$1', self::$theme, $input));
                     return;
                 }
@@ -473,20 +476,20 @@ class Manager
      * 模板输入路径
      *
      * @param string $name
-     * @return string
+     * @param boolean $ext
+     * @param string $extRaw
+     * @return array
      */
-    public static function getInputFile(string & $name, bool $ext=true, string $extRaw='html')
+    public static function getInputFile(string $module, string $basename, bool $ext=true, string $extRaw='html'):array
     {
-        list($module, $basename)=Router::parseName($name);
-        $name=$module.':'.$basename;
         $source=self::getTemplateSource($module);
         foreach ($source as $path) {
             $input=$path.'/'.trim($basename, '/').($ext?self::$extRaw.$extRaw:'');
             if (Storage::exist($input)) {
-                return $input;
+                return [$path, $input];
             }
         }
-        return false;
+        return null;
     }
 
     /**
@@ -495,10 +498,8 @@ class Manager
      * @param string $name
      * @return string
      */
-    public static function getOutputFile(string & $name):string
+    public static function getOutputFile(string $module, string $basename):string
     {
-        list($module, $basename)=Router::parseName($name);
-        $name=$module.':'.$basename;
         $module_dir=Application::getInstance()->getModuleDir($module);
         $output=VIEWS_DIR.'/'. $module_dir .'/'.$basename.self::$extCpl;
         return $output;

@@ -122,24 +122,24 @@ class Compiler implements CompilerImpl
      * @param string $output
      * @return boolean
      */
-    public function compile(string $name, string $input, string $output):bool
+    public function compile(string $module, string $root, string $name, string $input, string $output):bool
     {
-        debug()->time('compile '.$name);
+        $timeName = __('compile $0 $1', $module, $name);
+        debug()->time($timeName);
         if (!Storage::exist($input)) {
-            debug()->warning(__('compile error:no sorce file => $0 $1', $name, $input));
+            debug()->warning(__('compile error no sorce file <$0> $1 at $1', $module, $name, $input));
             return false;
         }
-        $content= $this->compileText(Storage::get($input), self::$tagConfig);
+        $tagConfig = $this->getTagConfig($root, $input);
+        $content= $this->compileText(Storage::get($input), $tagConfig);
         if (!Storage::isDir($dir=dirname($output))) {
             Storage::mkdirs(dirname($output));
         }
         $classname=Manager::className($name);
-        preg_match('/^((?:[a-zA-Z0-9_\-.]+\/)?[a-zA-Z0-9_\-.]+)(?::([^:]+))?(?::(.+))?$/', $name, $match);
-        $module = isset($match[3])?$match[1].(isset($match[2])?':'.$match[2]:''):$match[1];
         $content='<?php if (!class_exists("'.$classname.'", false)) { class '.$classname.' extends '.self::$template.' { protected $name="'. addslashes($name) .'";protected $module="'.addslashes($module).'"; protected $source="'. addslashes($input).'";protected function _render_template() {  ?>'.$content.'<?php }} } return ["class"=>"'.$classname.'","name"=>"'.addslashes($name).'","source"=>"'.addslashes($input).'","module"=>"'.addslashes($module).'"]; ';
         Storage::put($output, $content);
-        debug()->timeEnd('compile '.$name);
-        $syntax= true;//Manager::checkSyntax($output, $classname);
+        debug()->timeEnd($timeName);
+        $syntax= Manager::checkSyntax($output, $classname);
         if ($syntax !== true) {
             if (!conf('debug')) {
                 storage()->delete($output);
@@ -149,6 +149,33 @@ class Compiler implements CompilerImpl
             }
         }
         return $syntax===true?:$syntax;
+    }
+
+    protected function getTagConfig(string $root, string $input)
+    {
+        $tagConfig = null;
+        if ($path = config()->resolve($root.'/.tpl.ini')) {
+            $tagConfig = config()->loadConfig($path);
+        } elseif ($path = config()->resolve($input.'.ini')) {
+            $tagConfig = config()->loadConfig($path);
+        }
+        if (is_null($tagConfig)) {
+            return self::$tagConfig;
+        } else {
+            foreach (self::$tagConfig as $key => $config) {
+                if (\array_key_exists($key, $tagConfig)) {
+                    if (!\array_key_exists('open', $tagConfig[$key])) {
+                        $tagConfig[$key]['open'] = $config['open'];
+                    }
+                    if (!\array_key_exists('close', $tagConfig[$key])) {
+                        $tagConfig[$key]['close'] = $config['close'];
+                    }
+                } else {
+                    $tagConfig[$key] = $config;
+                }
+            }
+        }
+        return $tagConfig;
     }
 
     public function render(string $viewfile, ?string $name =null)

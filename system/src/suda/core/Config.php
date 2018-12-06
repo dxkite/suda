@@ -3,7 +3,7 @@
  * Suda FrameWork
  *
  * An open source application development framework for PHP 7.2.0 or newer
- * 
+ *
  * Copyright (c)  2017-2018 DXkite
  *
  * @category   PHP FrameWork
@@ -60,6 +60,11 @@ class Config
                 case 'php':
                     $data = include $path;
                     break;
+                case 'ini':
+                    $content = file_get_contents($path);
+                    $content = self::parseValue($content, $module);
+                    $data =  \parse_ini_string($content, true);
+                    break;
                 case 'json':
                 default:
                     $content = file_get_contents($path);
@@ -107,6 +112,8 @@ class Config
             } elseif (file_exists($conf=$basepath.'.json')) {
                 return $conf;
             } elseif (file_exists($conf=$basepath.'.php')) {
+                return $conf;
+            } elseif (file_exists($conf=$basepath.'.ini')) {
                 return $conf;
             }
         }
