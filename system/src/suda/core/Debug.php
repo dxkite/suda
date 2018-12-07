@@ -70,7 +70,7 @@ class Debug
         if (defined('APP_LOG') && storage()->path(APP_LOG) && is_writable(APP_LOG)) {
             self::$latest =APP_LOG.'/latest.log';
         }
-        self::$hash= $hash = substr(md5(microtime().''.self::$ip), 0, 6);
+        self::$hash= $hash = substr(md5(microtime().''.self::$ip), 0, 8);
         self::$ip = request()->ip();
         $file = tmpfile();
         if ($file === false) {
@@ -401,8 +401,8 @@ class Debug
         $str=str_replace(['$request_id','$request_address','$current_time','$time_format','$time','$memoery_format','$memoery','$level','$file','$line','$name','$message'], [
             self::$hash,
             self::$ip,
-            microtime(true),
-            number_format($log['time'], 10),
+            number_format(microtime(true), 4, '.', ''),
+            number_format($log['time'], 10, '.', ''),
             $log['time'],
             self::formatBytes($log['mem'], 2),
             $log['mem'],
