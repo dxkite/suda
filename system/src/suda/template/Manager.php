@@ -505,11 +505,10 @@ class Manager
         return $output;
     }
 
-    public static function className(string $name)
+    public static function className(string $module,string $name)
     {
-        list($module, $basename)=Router::parseName($name);
-        $fullName=Application::getInstance()->getModuleFullName($module);
-        return 'Template_'.md5($fullName.':'.$basename);
+        $fullModuleName=Application::getInstance()->getModuleFullName($module);
+        return 'Template_'.md5($fullModuleName.':'.$name);
     }
 
     public static function initResource(array $modules=null)

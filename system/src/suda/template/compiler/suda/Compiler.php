@@ -135,7 +135,7 @@ class Compiler implements CompilerImpl
         if (!Storage::isDir($dir=dirname($output))) {
             Storage::mkdirs(dirname($output));
         }
-        $classname=Manager::className($name);
+        $classname=Manager::className($module, $name);
         $content='<?php if (!class_exists("'.$classname.'", false)) { class '.$classname.' extends '.self::$template.' { protected $name="'. addslashes($name) .'";protected $module="'.addslashes($module).'"; protected $source="'. addslashes($input).'";protected function _render_template() {  ?>'.$content.'<?php }} } return ["class"=>"'.$classname.'","name"=>"'.addslashes($name).'","source"=>"'.addslashes($input).'","module"=>"'.addslashes($module).'"]; ';
         Storage::put($output, $content);
         debug()->timeEnd($timeName);
