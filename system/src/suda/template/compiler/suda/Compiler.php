@@ -466,7 +466,7 @@ class Compiler implements CompilerImpl
 
     protected function parseNonce()
     {
-        return 'nonce="<?php echo $this->getScriptNonce() ?>"';
+        return 'nonce="<?php echo $this->getNonce() ?>"';
     }
 
     protected function parseInsert($exp)

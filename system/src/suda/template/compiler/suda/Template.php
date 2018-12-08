@@ -19,10 +19,12 @@ use suda\core\Hook;
 use suda\core\Router;
 use suda\tool\Command;
 use suda\core\Response;
+use suda\tool\Security;
 use suda\tool\ArrayHelper;
-use suda\template\Template as TemplateInterface;
+use suda\core\route\Mapping;
 use suda\exception\KernelException;
 use suda\exception\CommandException;
+use suda\template\Template as TemplateInterface;
 
 abstract class Template implements TemplateInterface
 {
@@ -44,7 +46,7 @@ abstract class Template implements TemplateInterface
     // 渲染堆栈
     protected static $render=[];
     // 安全Nonce
-    protected static $scriptNonce = null;
+    protected static $nonce = null;
 
     protected $extend=null;
 
@@ -57,20 +59,23 @@ abstract class Template implements TemplateInterface
         hook()->exec('suda:template:render::before', [&$content]);
         debug()->trace('echo '.$this->name);
         if ($this->response) {
-            $cspDefault = 'default-src \'self\';';
-            if (self::$scriptNonce) {
-                $cspDefault .= 'script-src \'self\' \'unsafe-eval\' \'nonce-$RANDOM\';';
-                $cspDefault .= 'style-src \'self\' \'nonce-$RANDOM\' \'unsafe-inline\';';
+            $csp = null;
+            if (\property_exists($this->response, 'contentSecurityPolicy')) {
+                $csp = Security::cspGeneretor($this->response->contentSecurityPolicy, self::$nonce);
+            } elseif (\method_exists($this->response, 'getContentSecurityPolicy')) {
+                $csp = Security::cspGeneretor($this->response->getContentSecurityPolicy(), self::$nonce);
+            } elseif (array_key_exists('Content-Security-Policy', Mapping::$current->getParam())) {
+                $csp = Security::cspGeneretor(Mapping::$current->getParam()['Content-Security-Policy'], self::$nonce);
             } else {
-                $cspDefault .= 'script-src \'self\' \'unsafe-eval\' \'unsafe-inline\';';
-                $cspDefault .= 'style-src \'self\' \'unsafe-inline\';';
+                $csp = Security::cspGeneretor(conf('module.header.Content-Security-Policy', conf('header.Content-Security-Policy')), self::$nonce);
             }
-            $cspDefault .= 'img-src \'self\' data:;';
-            $csp = conf('header.Content-Security-Policy', $cspDefault);
-            $xfo = conf('header.X-Frame-Options', 'sameorigin');
-            $csp = str_replace('\'nonce-$RANDOM\'', is_null(self::$scriptNonce)?'':'\'nonce-'.self::$scriptNonce.'\'', $csp);
-            $this->response->addHeader('Content-Security-Policy', $csp);
-            $this->response->addHeader('X-Frame-Options', $xfo);
+            if (\is_string($csp)) {
+                $this->response->addHeader('Content-Security-Policy', $csp);
+            }
+            $xfo = conf('module.header.Content-Security-Policy', conf('header.X-Frame-Options', 'sameorigin'));
+            if (\is_string($xfo)) {
+                $this->response->addHeader('X-Frame-Options', $xfo);
+            }
             $this->response->type('html');
             if (conf('app.etag', !conf('debug'))  && $this->response->etag(md5($content))) {
             } else {
@@ -157,12 +162,12 @@ abstract class Template implements TemplateInterface
         return self::$render;
     }
 
-    protected function getScriptNonce()
+    protected function getNonce()
     {
-        if (is_null(self::$scriptNonce)) {
-            self::$scriptNonce = base64_encode(md5($this->name.time(), true));
+        if (is_null(self::$nonce)) {
+            self::$nonce = base64_encode(md5($this->name.time(), true));
         }
-        return self::$scriptNonce;
+        return self::$nonce;
     }
 
     /**
