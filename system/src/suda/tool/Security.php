@@ -55,9 +55,9 @@ class Security
     protected static function getRule(string $ruleName, ?string $nonce)
     {
         $lowerRuleName = strtolower($ruleName);
-        if (\in_array($lowerRuleName, static::$keywords)) {
+        if (\in_array($lowerRuleName, static::$keywords) || \preg_match('/^sha(256|384|512)\-/',$lowerRuleName) === 1) {
             $scpRules = "'{$lowerRuleName}'";
-        } elseif ($lowerRuleName === 'nonce' || $nonce) {
+        } elseif ($lowerRuleName === 'nonce') {
             if ($nonce) {
                 $scpRules = "'nonce-{$nonce}'";
             }
