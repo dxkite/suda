@@ -109,12 +109,16 @@ class ClassExport
         $classes=get_declared_classes();
         $userClasses=[];
         foreach ($classes as $class) {
-            if ((new \ReflectionClass($class))->isUserDefined()) {
+            $reflectClass = new \ReflectionClass($class);
+            if ($reflectClass->isUserDefined()) {
                 if (preg_match('/^class@anonymous/', $class)) {
                     continue;
                 }
                 if (\suda\core\Autoloader::getClassPath($class)) {
-                    $userClasses[]=$class;
+                    $name = $reflectClass->getName();
+                    if (!in_array($name, $userClasses)) {
+                        $userClasses[]=$class;
+                    }
                 }
             }
         }

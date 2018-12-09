@@ -3,7 +3,7 @@
 > **注：** 文档由程序自动生成
 
 - suda 2.0.3 
-- 2018-12-09 04:04:36
+- 2018-12-09 04:14:35
 
 
 ## 类列表
@@ -18,7 +18,6 @@
 |[suda\core\Request](suda/core/Request.md) | 请求描述类，客户端向框架发送请求时会生成此类 |
 |[suda\core\Config](suda/core/Config.md) | 文件配置类 |
 |[suda\tool\ArrayHelper](suda/tool/ArrayHelper.md) | 数组操纵 |
-|[system](system.md) | 系统类，处理系统报错函数以及程序加载 |
 |[suda\core\Hook](suda/core/Hook.md) | 系统钩子，监听系统内部一些操作并载入一些自定义行为 |
 |[suda\core\Locale](suda/core/Locale.md) | I18N 国际化支持 |
 |[suda\core\storage\iterator\PathPregFilterIterator](suda/core/storage/iterator/PathPregFilterIterator.md) | 路径正则迭代器 |
