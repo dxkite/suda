@@ -9,22 +9,23 @@ class Security
     protected static $defaultCsp = [
         'default-src' => ['self'],
         'img-src' => ['self','data:'],
-        'script-src' => ['self','nonce','unsafe-eval'],
-        'style-src' => ['self','nonce','unsafe-inline'],
+        'script-src' => ['self','unsafe-inline','unsafe-eval', 'nonce'],
+        'style-src' => ['self','unsafe-inline','nonce'],
     ];
 
     /**
      * CSP的关键字
-     * 
+     *
      * @link https://www.w3.org/TR/CSP3
-     * 
+     *
      * keyword-source = "'self'" / "'unsafe-inline'" / "'unsafe-eval'"
      *           / "'strict-dynamic'" / "'unsafe-hashes'" /
      *           / "'report-sample'" / "'unsafe-allow-redirects'"
      */
-    protected static $keywords = ['self','unsafe-eval','unsafe-eval','unsafe-hashes','strict-dynamic','report-sample','unsafe-allow-redirects'];
+    protected static $keywords = ['self','unsafe-inline','unsafe-eval','unsafe-hashes','strict-dynamic','report-sample','unsafe-allow-redirects'];
 
-    public static function getDefaultCsp():array {
+    public static function getDefaultCsp():array
+    {
         return static::$defaultCsp;
     }
 
@@ -42,20 +43,23 @@ class Security
             $scpRules .= $ruleName.' ';
             if (\is_array($ruleValue)) {
                 foreach ($ruleValue as $ruleNameChild) {
-                    $scpRules .= self::getRule($ruleNameChild, $nonce).' ';
+                    if ($rule = self::getRule($ruleNameChild, $nonce)) {
+                        $scpRules .= $rule.' ';
+                    }
                 }
-            } else {
-                $scpRules .= self::getRule($ruleValue, $nonce).' ';
+            } elseif ($rule = self::getRule($ruleNameChild, $nonce)) {
+                $scpRules .= $rule.' ';
             }
             $scpRules = trim($scpRules) .';';
         }
         return \rtrim($scpRules, ';');
     }
 
-    protected static function getRule(string $ruleName, ?string $nonce)
+    protected static function getRule(string $ruleName, ?string $nonce):?string
     {
         $lowerRuleName = strtolower($ruleName);
-        if (\in_array($lowerRuleName, static::$keywords) || \preg_match('/^sha(256|384|512)\-/',$lowerRuleName) === 1) {
+        $scpRules = null;
+        if (\in_array($lowerRuleName, static::$keywords) || \preg_match('/^sha(256|384|512)\-/', $lowerRuleName) === 1) {
             $scpRules = "'{$lowerRuleName}'";
         } elseif ($lowerRuleName === 'nonce') {
             if ($nonce) {
