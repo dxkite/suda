@@ -12,7 +12,7 @@ if (!defined('USER_HOME')) {
     elseif (array_key_exists('HOMEDRIVE', $_SERVER) && array_key_exists('HOMEPATH', $_SERVER)) {
         define('USER_HOME', $_SERVER["HOMEDRIVE"].$_SERVER["HOMEPATH"]);
     } 
-    // for unkown
+    // for unknown
     else {
         define('USER_HOME', getcwd());
     }

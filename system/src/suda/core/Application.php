@@ -828,10 +828,13 @@ class Application
     public static function getFileModule(string $file):?string
     {
         $modules=app()->getModules();
+        debug()->info($modules);
         foreach ($modules as $module) {
             $config=app()->getModuleConfig($module);
             $modulePath=storage()->path($config['path']);
             $dir = substr($file, 0, strlen($modulePath));
+            debug()->info($modulePath);
+            debug()->info($dir);
             if ($modulePath === $dir) {
                 $next = substr($file, strlen($modulePath), 1);
                 $nextIsSp = $next === '/' || $next === '\\';

@@ -177,7 +177,7 @@ class Manager
     {
         $template = static::displaySource($name, 'html', $viewpath??'');
         if (is_null($template)) {
-            throw new KernelException(__('missing template $0:$1', self::$theme, $name));
+            throw new KernelException(__('missing template $0 $1', self::$theme, $name));
         }
         return $template;
     }
@@ -575,13 +575,10 @@ class Manager
             if (is_dir(self::$assetsPath.DIRECTORY_SEPARATOR.self::$staticPath)) {
                 $base    = Request::hostBase();
                 $script  = $_SERVER['SCRIPT_NAME'];
-                $baseUrl = $base.rtrim(str_replace('\\', '/', dirname($script)), '/').'/assets';
+                self::$baseUrl = $base.rtrim(str_replace('\\', '/', dirname($script)), '/').'/assets';
             } else {
-                $base    = Request::hostBase();
-                $script  = $_SERVER['SCRIPT_NAME'];
-                $baseUrl = $base.$script.'/assets';
+                self::$baseUrl = rtrim(Request::baseUrl(),'/').'/assets';
             }
-            self::$baseUrl = $baseUrl;
         }
         return conf('asset-server', self::$baseUrl).$url;
     }

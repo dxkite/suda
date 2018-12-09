@@ -202,6 +202,10 @@ class Hook
 
     protected static function call($command, array &$args)
     {
+        if (conf('hook.enable',true) == false){
+            debug()->warning(__('hook.enable == false refuse run command'));
+            return null;
+        }
         if (is_string($command)) {
             if (preg_match('/^(debug)|d\=/', $command)) {
                 if (conf('debug')) {

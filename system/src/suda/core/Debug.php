@@ -256,6 +256,8 @@ class Debug
 
     protected static function displayLog(array $logarray)
     {
+        // - 不允许全局控制钩子注入
+        config()->set('hook.enable',false);
         /* ---- 外部变量 ----- */
         $line=$logarray['line'];
         $file=$logarray['file'];
@@ -330,6 +332,8 @@ class Debug
             ]);
         \suda\template\Manager::loadCompile();
         $render->render();
+        // - 启用全局钩子注入
+        config()->set('hook.enable',true);
         exit;
     }
 

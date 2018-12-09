@@ -467,10 +467,10 @@ class Request
         // 3 index.php?/
         $base=self::hostBase();
         $script= self::$script;
-        $module=conf('app.url.mode', 0);
+        $mode=conf('app.url.mode', 0);
         $beautify=conf('app.url.beautify', false);
         $index=conf('app.index', 'index.php');
-        if ($module==0 || $module==1) {
+        if ($mode==0 || $mode==1) {
             // 如果当前脚本为AutoIndex索引
             if (ltrim($script, '/\\') === $index) {
                 // 开启重写
@@ -479,9 +479,9 @@ class Request
                 }
                 return $base.'/?/';
             }
-        } elseif ($module==2) {
+        } elseif ($mode==2) {
             return $base.$script.'/';
-        } elseif ($module==3) {
+        } elseif ($mode==3) {
             return $base.$script.'?/';
         }
         return $base.$script.(self::$type==2?'?':'').'/';
