@@ -45,6 +45,13 @@ class ArrayHelper
         return $array;
     }
 
+    /**
+     * 检查元素是否存在
+     *
+     * @param array $array
+     * @param string $name
+     * @return void
+     */
     public static function exist(array $array, string $name)
     {
         $path = explode('.', $name);

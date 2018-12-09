@@ -3,7 +3,7 @@
  * Suda FrameWork
  *
  * An open source application development framework for PHP 7.2.0 or newer
- * 
+ *
  * Copyright (c)  2017-2018 DXkite
  *
  * @category   PHP FrameWork
@@ -18,6 +18,9 @@ namespace suda\tool;
 use suda\exception\CommandException;
 use suda\core\Autoloader;
 
+/**
+ * 可执行命令表达式
+ */
 class Command
 {
     public $command;
@@ -164,7 +167,7 @@ class Command
             list($cmdstr, $functionFile) = $matchs;
             $this->file=$functionFile;
         } else {
-            throw (new CommandException(__('unknown command: $0',$command)))->setCmd($command);
+            throw (new CommandException(__('unknown command: $0', $command)))->setCmd($command);
         }
         $this->cmdStr= $command;
     }
@@ -181,7 +184,7 @@ class Command
             if (json_last_error() === JSON_ERROR_NONE) {
                 return $params;
             } else {
-                throw (new CommandException(__('can not parse param $0',$param)));
+                throw (new CommandException(__('can not parse param $0', $param)));
             }
         } elseif (preg_match('/^\=s(erialize)?\:(\:)?(.+)$/', $param, $matchs)) {
             if (isset($matchs[2]) && $matchs[2]) {
@@ -223,7 +226,7 @@ class Command
      *
      * @param [type] $command
      * @param [type] $params
-     * @return void
+     * @return mixed
      */
     public static function _absoluteCall($command, $params)
     {
@@ -241,6 +244,7 @@ class Command
             return forward_static_call_array($command, $params);
         }
     }
+
     public function __toString()
     {
         return $this->cmdStr ?? $this->name ?? __CLASS__;
