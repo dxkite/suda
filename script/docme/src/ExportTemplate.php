@@ -57,7 +57,8 @@ class ExportTemplate
     protected function compile(string $name, string $input, string $output)
     {
         $compiler=Manager::getCompiler();
-        $content= $compiler->compileText(Storage::get($input));
+        $tagConfig = $compiler->getTagConfig(null, $input);
+        $content= $compiler->compileText(Storage::get($input),$tagConfig);
         $classname='Class'.md5($name);
         $content='<?php  class '.$classname.' extends '. $compiler::Template.' { protected $name="'.$name.'";protected $module=""; protected function _render_template() {  ?>'.$content.'<?php }}';
         Storage::put($output, $content);

@@ -85,12 +85,13 @@ class Compiler implements CompilerImpl
      * 编译文本
      *
      * @param string $text
-     * @param array $tagConfig
+     * @param array|null $tagConfig
      * @return string
      */
-    public function compileText(string $text, array $tagConfig=[]):string
+    public function compileText(string $text, ?array $tagConfig=null):string
     {
         $result='';
+        $tagConfig = $tagConfig ?? self::$tagConfig;
         foreach (token_get_all($text) as $token) {
             if (is_array($token)) {
                 list($tag, $content) = $token;
@@ -151,13 +152,20 @@ class Compiler implements CompilerImpl
         return $syntax===true?:$syntax;
     }
 
-    protected function getTagConfig(string $root, string $input)
+    public function getTagConfig(?string $root=null, ?string $input=null)
     {
         $tagConfig = null;
-        if ($path = config()->resolve($input.'.ini')) {
-            $tagConfig = config()->loadConfig($path);
-        } elseif ($path = config()->resolve($root.'/.tpl.ini')) {
-            $tagConfig = config()->loadConfig($path);
+        // 加载特定配置
+        if (!is_null($input)) {
+            if ($path = config()->resolve($input.'.ini')) {
+                $tagConfig = config()->loadConfig($path);
+            }
+        }
+        // 加载全局配置
+        if (is_null($tagConfig) && !is_null($root)) {
+            if ($path = config()->resolve($root.'/.tpl.ini')) {
+                $tagConfig = config()->loadConfig($path);
+            }
         }
         if (is_null($tagConfig)) {
             return self::$tagConfig;
@@ -253,13 +261,18 @@ class Compiler implements CompilerImpl
             if ($ignore ==='!') {
                 return \str_replace('@!', '', $input);
             } else {
+                $code = null;
                 if (self::hasCommand(ucfirst($name))) {
                     $code = self::buildCommand($name, $params);
                 } elseif (method_exists($this, $method = 'parse'.ucfirst($name))) {
                     $code = $this->$method($params);
                 }
-                $code = $this->echoValue($code);
-                return empty($params) ? $code : $code.$space;
+                if (is_null($code)) {
+                    return $input;
+                } else {
+                    $code = $this->echoValue($code);
+                    return empty($params) ? $code : $code.$space;
+                }
             }
         };
         $key = 'command';
