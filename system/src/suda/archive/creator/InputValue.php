@@ -18,6 +18,10 @@ namespace suda\archive\creator;
 
 use PDO;
 
+/**
+ * 数据输入值
+ * 用于处理模板输入值
+ */
 class InputValue implements \JsonSerializable
 {
     private $name;

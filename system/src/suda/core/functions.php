@@ -260,25 +260,6 @@ function class_name(string $name)
 }
 
 /**
- * 获取数据表对象，该对象需要在module.json文件中注册过
- * 如：
- * ```json
- * {
- *    "table":{
- *        "user":"classNameOfUserTable"
- *     }
- * }
- * ```
- *
- * @param string $tableName 数据表名
- * @return Table 获取的表对象
- */
-function table(string $tableName)
-{
-    return suda\archive\TableInstance::new($tableName);
-}
-
-/**
  * 获取默认Session对象
  *
  * @return void

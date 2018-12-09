@@ -16,6 +16,10 @@
 
 namespace suda\archive\creator;
 
+/**
+ * 数据表字段创建工具
+ * 用于创建数据表字段
+ */
 class Field
 {
     // AUTO_INCREMENT

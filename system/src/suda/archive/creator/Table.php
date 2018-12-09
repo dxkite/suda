@@ -16,6 +16,10 @@
 
 namespace suda\archive\creator;
 
+/**
+ * 数据表结构构建类
+ * 用于构建数据表结构
+ */
 class Table
 {
     const ENGINE_MyISAM='MyISAM';

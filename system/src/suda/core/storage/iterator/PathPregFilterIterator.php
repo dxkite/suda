@@ -1,6 +1,10 @@
 <?php
 namespace suda\core\storage\iterator;
 
+/**
+ * 路径正则迭代器
+ * 用于查找路径中符合正则规则的路径
+ */
 class PathPregFilterIterator extends \FilterIterator
 {
     protected $preg;
