@@ -1,6 +1,6 @@
 # ArrayHelper::arr2string
 
-> *文件信息* suda\tool\ArrayHelper.php: 23~165
+> *文件信息* suda\tool\ArrayHelper.php: 23~172
 ## 所属类 
 
 [ArrayHelper](../ArrayHelper.md)
@@ -16,10 +16,8 @@
 ## 参数
 
 无参数
-
 ## 返回值
 返回值类型不定
-
 ## 例子
 
 example

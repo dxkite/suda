@@ -14,15 +14,15 @@
 
 ## 参数
 
+ 
 | 参数名 | 类型 | 默认值 | 说明 |
 |--------|-----|-------|-------|
-| name |  string | 无 |  cookie名 |
-| default |  [type] |  |  cookie的默认值 |
-
+ | name |  string | 无 |  cookie名 |
+ | default |  [type] |  |  cookie的默认值 |
 ## 返回值
+ 
 类型：[type]
  获取的值，如果没有，则是default设置的值
-
 ## 例子
 
 example

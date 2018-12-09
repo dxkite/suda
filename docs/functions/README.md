@@ -3,7 +3,7 @@
 > **注：** 文档由程序自动生成
 
 - suda 2.0.3 
-- 2018-11-24 03:19:44
+- 2018-12-09 04:04:36
 
 ## 函数列表 
 | 函数名 | 说明 |
@@ -27,7 +27,6 @@
 | [config](config.md) |  获取一个配置对象  |
 | [cmd](cmd.md) |  新建一个命令对象  |
 | [class_name](class_name.md) |  获取类名，将JAVA包式的类名转化为 PHP的标准类名  |
-| [table](table.md) |  获取数据表对象，该对象需要在module.json文件中注册过  |
 | [session](session.md) |  获取默认Session对象  |
 | [module](module.md) |  获取当前文件所在的模块  |
 | [email_poster](email_poster.md) |  获取邮件发送 **使用前请设置完成SMTP规则**  |

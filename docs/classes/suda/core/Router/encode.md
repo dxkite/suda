@@ -14,15 +14,15 @@
 
 ## 参数
 
+ 
 | 参数名 | 类型 | 默认值 | 说明 |
 |--------|-----|-------|-------|
-| url |  string | 无 | 无 |
-| fullmodule |  bool |  | 无 |
-
+ | url |  string | 无 | 无 |
+ | fullmodule |  bool |  | 无 |
 ## 返回值
+ 
 类型：string|null
 无
-
 ## 例子
 
 example

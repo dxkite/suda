@@ -1,6 +1,6 @@
 # Table::setCharset
 
-> *文件信息* suda\archive\creator\Table.php: 19~204
+> *文件信息* suda\archive\creator\Table.php: 23~208
 ## 所属类 
 
 [Table](../Table.md)
@@ -10,17 +10,16 @@
   public  
 ## 说明
 
-该函数暂时无说明
+用于构建数据表结构
 
 ## 参数
 
+ 
 | 参数名 | 类型 | 默认值 | 说明 |
 |--------|-----|-------|-------|
-| charset |  int | 无 | 无 |
-
+ | charset |  int | 无 | 无 |
 ## 返回值
 返回值类型不定
-
 ## 例子
 
 example

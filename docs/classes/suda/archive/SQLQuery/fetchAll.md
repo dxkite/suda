@@ -15,12 +15,12 @@
 
 ## 参数
 
+ 
 | 参数名 | 类型 | 默认值 | 说明 |
 |--------|-----|-------|-------|
-| fetchStyle |  int | PDO::FETCH_ASSOC | 无 |
-
+ | fetchStyle |  int | PDO::FETCH_ASSOC | 无 |
 ## 返回值
+ 
 类型：array|false
  查询成功则返回查询结果，否则返回false
-
 ## 例子

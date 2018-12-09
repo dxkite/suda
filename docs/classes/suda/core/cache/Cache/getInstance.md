@@ -15,11 +15,10 @@ abstract  public  static
 ## 参数
 
 无参数
-
 ## 返回值
+ 
 类型：Cache
 无
-
 ## 例子
 
 example

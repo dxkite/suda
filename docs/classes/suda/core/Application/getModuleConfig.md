@@ -1,6 +1,6 @@
 # Application::getModuleConfig
 获取模块的配置信息
-> *文件信息* suda\core\Application.php: 33~835
+> *文件信息* suda\core\Application.php: 33~845
 ## 所属类 
 
 [Application](../Application.md)
@@ -16,15 +16,15 @@
 
 ## 参数
 
+ 
 | 参数名 | 类型 | 默认值 | 说明 |
 |--------|-----|-------|-------|
-| module |  string | 无 | 无 |
-| configName |  string | null | 无 |
-
+ | module |  string | 无 | 无 |
+ | configName |  string | null | 无 |
 ## 返回值
+ 
 类型：array|null
 无
-
 ## 例子
 
 

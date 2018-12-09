@@ -1,6 +1,6 @@
 # Manager::loadCompile
 载入模板编译器
-> *文件信息* suda\template\Manager.php: 32~696
+> *文件信息* suda\template\Manager.php: 32~698
 ## 所属类 
 
 [Manager](../Manager.md)
@@ -15,10 +15,8 @@
 ## 参数
 
 无参数
-
 ## 返回值
 返回值类型不定
-
 ## 例子
 
 example

@@ -1,6 +1,6 @@
 # Command::_absoluteCall
 绝对调用函数，可调用类私有和保护函数
-> *文件信息* suda\tool\Command.php: 21~248
+> *文件信息* suda\tool\Command.php: 24~252
 ## 所属类 
 
 [Command](../Command.md)
@@ -14,15 +14,15 @@
 
 ## 参数
 
+ 
 | 参数名 | 类型 | 默认值 | 说明 |
 |--------|-----|-------|-------|
-| command |  [type] | 无 | 无 |
-| params |  [type] | 无 | 无 |
-
+ | command |  [type] | 无 | 无 |
+ | params |  [type] | 无 | 无 |
 ## 返回值
-类型：void
+ 
+类型：mixed
 无
-
 ## 例子
 
 example

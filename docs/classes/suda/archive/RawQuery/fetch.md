@@ -14,14 +14,14 @@
 
 ## 参数
 
+ 
 | 参数名 | 类型 | 默认值 | 说明 |
 |--------|-----|-------|-------|
-| fetch_style |  int | PDO::FETCH_ASSOC |  结果集形式 |
-
+ | fetch_style |  int | PDO::FETCH_ASSOC |  结果集形式 |
 ## 返回值
+ 
 类型：array|null
  查询成功则返回一列查询结果
-
 ## 例子
 
 example

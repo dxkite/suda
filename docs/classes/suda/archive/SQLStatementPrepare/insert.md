@@ -14,14 +14,13 @@
 
 ## 参数
 
+ 
 | 参数名 | 类型 | 默认值 | 说明 |
 |--------|-----|-------|-------|
-| table |  string | 无 | 无 |
-| binds |  array | Array | 无 |
-
+ | table |  string | 无 | 无 |
+ | binds |  array | Array | 无 |
 ## 返回值
 返回值类型不定
-
 ## 例子
 
 example

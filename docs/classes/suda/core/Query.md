@@ -11,16 +11,12 @@
 
 
 提供了数据库的查询的静态封装
-
-
-
 ## 方法
 
+ 
 | 可见性 | 方法名 | 说明 |
 |--------|-------|------|
-|  public  static|[__callStatic](Query/__callStatic.md) |  |
- 
-
+ |  public  static|[__callStatic](Query/__callStatic.md) |  |
 ## 例子
 
 example

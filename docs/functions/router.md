@@ -5,11 +5,10 @@
 ## 参数
 
 无参数
-
 ## 返回值
+ 
 类型：suda\core\Router
  获取的路由单例对象
-
 ## 例子
 
 example

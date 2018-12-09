@@ -11,21 +11,18 @@
 
 
 该类暂时无说明
-
-
+ 
 ## 变量列表
 | 可见性 |  变量名   | 说明 |
 |--------|----|------|
-| protected  static  | storage | | 
-
+ | protected  static  | storage | | 
 ## 方法
 
+ 
 | 可见性 | 方法名 | 说明 |
 |--------|-------|------|
-|  public  static|[getInstance](Storage/getInstance.md) |  |
-|  public  static|[__callStatic](Storage/__callStatic.md) |  |
- 
-
+ |  public  static|[getInstance](Storage/getInstance.md) |  |
+ |  public  static|[__callStatic](Storage/__callStatic.md) |  |
 ## 例子
 
 example

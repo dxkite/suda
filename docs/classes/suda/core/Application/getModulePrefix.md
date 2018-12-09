@@ -1,6 +1,6 @@
 # Application::getModulePrefix
 获取模块URL前缀
-> *文件信息* suda\core\Application.php: 33~835
+> *文件信息* suda\core\Application.php: 33~845
 ## 所属类 
 
 [Application](../Application.md)
@@ -16,15 +16,15 @@
 
 ## 参数
 
+ 
 | 参数名 | 类型 | 默认值 | 说明 |
 |--------|-----|-------|-------|
-| module |  string | 无 | 无 |
-| group |  string | null | 无 |
-
+ | module |  string | 无 | 无 |
+ | group |  string | null | 无 |
 ## 返回值
+ 
 类型：array|string|null
 无
-
 ## 例子
 
 example

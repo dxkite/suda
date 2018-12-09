@@ -1,6 +1,6 @@
 # Template::echo
 输出当前模板
-> *文件信息* suda\template\compiler\suda\Template.php: 27~340
+> *文件信息* suda\template\compiler\suda\Template.php: 29~345
 ## 所属类 
 
 [Template](../Template.md)
@@ -15,11 +15,10 @@
 ## 参数
 
 无参数
-
 ## 返回值
+ 
 类型：void
 无
-
 ## 例子
 
 example

@@ -16,15 +16,15 @@
 
 ## 参数
 
+ 
 | 参数名 | 类型 | 默认值 | 说明 |
 |--------|-----|-------|-------|
-| command |  [type] | 无 |  可调用的对象 |
-| params |  array | Array |  调用时的参数 |
-
+ | command |  [type] | 无 |  可调用的对象 |
+ | params |  array | Array |  调用时的参数 |
 ## 返回值
+ 
 类型：suda\tool\Command
  可调用命令对象
-
 ## 例子
 
 example

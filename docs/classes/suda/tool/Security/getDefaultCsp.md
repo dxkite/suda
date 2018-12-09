@@ -1,13 +1,13 @@
-# TableInstance::getTables
+# Security::getDefaultCsp
 
-> *文件信息* suda\archive\TableInstance.php: 21~91
+> *文件信息* suda\tool\Security.php: 7~73
 ## 所属类 
 
-[TableInstance](../TableInstance.md)
+[Security](../Security.md)
 
 ## 可见性
 
-  public  
+  public  static
 ## 说明
 
 该函数暂时无说明
@@ -15,10 +15,8 @@
 ## 参数
 
 无参数
-
 ## 返回值
 返回值类型不定
-
 ## 例子
 
 example

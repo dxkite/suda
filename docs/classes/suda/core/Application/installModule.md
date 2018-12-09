@@ -1,6 +1,6 @@
 # Application::installModule
 安装有自动安装功能的模块
-> *文件信息* suda\core\Application.php: 33~835
+> *文件信息* suda\core\Application.php: 33~845
 ## 所属类 
 
 [Application](../Application.md)
@@ -16,14 +16,14 @@
 
 ## 参数
 
+ 
 | 参数名 | 类型 | 默认值 | 说明 |
 |--------|-----|-------|-------|
-| module |  string | 无 | 无 |
-
+ | module |  string | 无 | 无 |
 ## 返回值
+ 
 类型：void
 无
-
 ## 例子
 
 example

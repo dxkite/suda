@@ -14,14 +14,13 @@
 
 ## 参数
 
+ 
 | 参数名 | 类型 | 默认值 | 说明 |
 |--------|-----|-------|-------|
-| directory |  string | 无 | 无 |
-| extension |  string | html | 无 |
-
+ | directory |  string | 无 | 无 |
+ | extension |  string | html | 无 |
 ## 返回值
 返回值类型不定
-
 ## 例子
 
 example

@@ -7,15 +7,15 @@
 
 ## 参数
 
+ 
 | 参数名 | 类型 | 默认值 | 说明 |
 |--------|-----|-------|-------|
-| name |  [type] | null |  路由名称 |
-| values |  [type] | null |  路由的值 |
-
+ | name |  [type] | null |  路由名称 |
+ | values |  [type] | null |  路由的值 |
 ## 返回值
+ 
 类型：string
  生成的URL
-
 ## 例子
 
 example

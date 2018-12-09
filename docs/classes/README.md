@@ -3,7 +3,7 @@
 > **注：** 文档由程序自动生成
 
 - suda 2.0.3 
-- 2018-11-24 03:19:44
+- 2018-12-09 04:04:36
 
 
 ## 类列表
@@ -21,17 +21,16 @@
 |[system](system.md) | 系统类，处理系统报错函数以及程序加载 |
 |[suda\core\Hook](suda/core/Hook.md) | 系统钩子，监听系统内部一些操作并载入一些自定义行为 |
 |[suda\core\Locale](suda/core/Locale.md) | I18N 国际化支持 |
-|[suda\core\storage\iterator\PathPregFilterIterator](suda/core/storage/iterator/PathPregFilterIterator.md) |  |
+|[suda\core\storage\iterator\PathPregFilterIterator](suda/core/storage/iterator/PathPregFilterIterator.md) | 路径正则迭代器 |
 |[suda\archive\Connection](suda/archive/Connection.md) | 数据表链接对象 |
-|[suda\archive\creator\Field](suda/archive/creator/Field.md) |  |
-|[suda\archive\creator\InputValue](suda/archive/creator/InputValue.md) |  |
-|[suda\archive\creator\Table](suda/archive/creator/Table.md) |  |
+|[suda\archive\creator\Field](suda/archive/creator/Field.md) | 数据表字段创建工具 |
+|[suda\archive\creator\InputValue](suda/archive/creator/InputValue.md) | 数据输入值 |
+|[suda\archive\creator\Table](suda/archive/creator/Table.md) | 数据表结构构建类 |
 |[suda\archive\RawQuery](suda/archive/RawQuery.md) | 数据库查询方案，提供原始查询方案 |
 |[suda\archive\SQLStatementPrepare](suda/archive/SQLStatementPrepare.md) | 数据库查询语句接口 |
 |[suda\archive\SQLQuery](suda/archive/SQLQuery.md) | 数据库查询方案，简化数据库查 |
 |[suda\archive\TableAccess](suda/archive/TableAccess.md) | 表创建器 |
 |[suda\archive\Table](suda/archive/Table.md) | 数据表抽象对象 |
-|[suda\archive\TableInstance](suda/archive/TableInstance.md) |  |
 |[suda\core\Application](suda/core/Application.md) | 应用处理类 |
 |[suda\core\cache\FileCache](suda/core/cache/FileCache.md) | 文件缓存 |
 |[suda\core\Cache](suda/core/Cache.md) | 缓存系统 |
@@ -62,8 +61,9 @@
 |[suda\template\compiler\suda\TemplateInfo](suda/template/compiler/suda/TemplateInfo.md) | 获取模板信息类 |
 |[suda\template\iterator\RecursiveTemplateIterator](suda/template/iterator/RecursiveTemplateIterator.md) |  |
 |[suda\template\Manager](suda/template/Manager.md) | 模板管理类 |
-|[suda\tool\Command](suda/tool/Command.md) |  |
+|[suda\tool\Command](suda/tool/Command.md) | 可执行命令表达式 |
 |[suda\tool\CookieSetter](suda/tool/CookieSetter.md) |  |
+|[suda\tool\Security](suda/tool/Security.md) | 安全辅助工具 |
 |[suda\tool\ZipHelper](suda/tool/ZipHelper.md) |  |
 |[suda\core\storage\Storage](suda/core/storage/Storage.md) | 存储系统 |
 |[suda\archive\SQLStatement](suda/archive/SQLStatement.md) | 数据库查询语句接口 |

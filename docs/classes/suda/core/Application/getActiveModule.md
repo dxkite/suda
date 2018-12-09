@@ -1,6 +1,6 @@
 # Application::getActiveModule
 获取当前激活的模块
-> *文件信息* suda\core\Application.php: 33~835
+> *文件信息* suda\core\Application.php: 33~845
 ## 所属类 
 
 [Application](../Application.md)
@@ -17,11 +17,10 @@
 ## 参数
 
 无参数
-
 ## 返回值
+ 
 类型：string
 无
-
 ## 例子
 
 example

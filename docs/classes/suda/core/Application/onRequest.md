@@ -1,6 +1,6 @@
 # Application::onRequest
 截获请求，请求发起的时候会调用
-> *文件信息* suda\core\Application.php: 33~835
+> *文件信息* suda\core\Application.php: 33~845
 ## 所属类 
 
 [Application](../Application.md)
@@ -16,14 +16,14 @@
 
 ## 参数
 
+ 
 | 参数名 | 类型 | 默认值 | 说明 |
 |--------|-----|-------|-------|
-| request |  suda\core\Request | 无 | 无 |
-
+ | request |  suda\core\Request | 无 | 无 |
 ## 返回值
+ 
 类型：boolean
  true 表示请求可达,false将截获请求
-
 ## 例子
 
 example

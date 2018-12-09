@@ -15,16 +15,16 @@
 
 ## 参数
 
+ 
 | 参数名 | 类型 | 默认值 | 说明 |
 |--------|-----|-------|-------|
-| values |  [type] | 无 |  更新的列 |
-| where |  [type] | 无 |  条件区域 |
-| bind |  array | Array |  扩展条件值 |
-
+ | values |  [type] | 无 |  更新的列 |
+ | where |  [type] | 无 |  条件区域 |
+ | bind |  array | Array |  扩展条件值 |
 ## 返回值
+ 
 类型：integer
 无
-
 ## 例子
 
 

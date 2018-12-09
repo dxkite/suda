@@ -14,17 +14,16 @@
 
 ## 参数
 
+ 
 | 参数名 | 类型 | 默认值 | 说明 |
 |--------|-----|-------|-------|
-| status |  int | 无 | 无 |
-| type |  string | 无 | 无 |
-| message |  string | 无 | 无 |
-| code |  int | null | 无 |
-| params |  array | Array | 无 |
-
+ | status |  int | 无 | 无 |
+ | type |  string | 无 | 无 |
+ | message |  string | 无 | 无 |
+ | code |  int | null | 无 |
+ | params |  array | Array | 无 |
 ## 返回值
 返回值类型不定
-
 ## 例子
 
 example

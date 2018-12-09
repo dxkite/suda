@@ -14,14 +14,14 @@
 
 ## 参数
 
+ 
 | 参数名 | 类型 | 默认值 | 说明 |
 |--------|-----|-------|-------|
-| message |  suda\mail\message\Message | 无 |  信息体 |
-
+ | message |  suda\mail\message\Message | 无 |  信息体 |
 ## 返回值
+ 
 类型：boolean
 无
-
 ## 例子
 
 ```php

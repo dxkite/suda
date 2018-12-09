@@ -1,6 +1,6 @@
 # Manager::getInputFile
 模板输入路径
-> *文件信息* suda\template\Manager.php: 32~696
+> *文件信息* suda\template\Manager.php: 32~698
 ## 所属类 
 
 [Manager](../Manager.md)
@@ -14,16 +14,17 @@
 
 ## 参数
 
+ 
 | 参数名 | 类型 | 默认值 | 说明 |
 |--------|-----|-------|-------|
-| name |  string | 无 | 无 |
-| ext |  bool | 1 | 无 |
-| extRaw |  string | html | 无 |
-
+ | module |  string | 无 | 无 |
+ | basename |  string | 无 | 无 |
+ | ext |  bool | 1 | 无 |
+ | extRaw |  string | html | 无 |
 ## 返回值
-类型：string
+ 
+类型：array
 无
-
 ## 例子
 
 example

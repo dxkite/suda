@@ -11,17 +11,13 @@
 
 
 该类暂时无说明
-
-
-
 ## 方法
 
+ 
 | 可见性 | 方法名 | 说明 |
 |--------|-------|------|
-|abstract  public  |[render](Template/render.md) |  |
-|abstract  public  |[echo](Template/echo.md) |  |
- 
-
+ |abstract  public  |[render](Template/render.md) |  |
+ |abstract  public  |[echo](Template/echo.md) |  |
 ## 例子
 
 example

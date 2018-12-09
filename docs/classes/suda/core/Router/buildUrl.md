@@ -14,18 +14,18 @@
 
 ## 参数
 
+ 
 | 参数名 | 类型 | 默认值 | 说明 |
 |--------|-----|-------|-------|
-| name |  string | 无 |  路由名称 |
-| values |  array | Array |  路由中的参数 |
-| query |  bool | 1 |  是否使用多余路由参数作为查询参数 |
-| queryArr |  array | Array |  查询参数 |
-| moduleDefault |  string | null |  路由未指定模块时的默认模块 |
-
+ | name |  string | 无 |  路由名称 |
+ | values |  array | Array |  路由中的参数 |
+ | query |  bool | 1 |  是否使用多余路由参数作为查询参数 |
+ | queryArr |  array | Array |  查询参数 |
+ | moduleDefault |  string | null |  路由未指定模块时的默认模块 |
 ## 返回值
+ 
 类型：string
 无
-
 ## 例子
 
 example

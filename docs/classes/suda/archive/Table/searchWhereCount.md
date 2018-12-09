@@ -15,17 +15,17 @@
 
 ## 参数
 
+ 
 | 参数名 | 类型 | 默认值 | 说明 |
 |--------|-----|-------|-------|
-| field |  [type] | 无 | 无 |
-| search |  string | 无 | 无 |
-| where |  [type] | null | 无 |
-| bind |  array | Array | 无 |
-
+ | field |  [type] | 无 | 无 |
+ | search |  string | 无 | 无 |
+ | where |  [type] | null | 无 |
+ | bind |  array | Array | 无 |
 ## 返回值
+ 
 类型：integer
 无
-
 ## 例子
 
 

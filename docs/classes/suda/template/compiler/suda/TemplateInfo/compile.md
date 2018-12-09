@@ -15,16 +15,18 @@
 
 ## 参数
 
+ 
 | 参数名 | 类型 | 默认值 | 说明 |
 |--------|-----|-------|-------|
-| name |  string | 无 | 无 |
-| input |  string | 无 | 无 |
-| output |  string | 无 | 无 |
-
+ | module |  string | 无 | 无 |
+ | root |  string | 无 | 无 |
+ | name |  string | 无 | 无 |
+ | input |  string | 无 | 无 |
+ | output |  string | 无 | 无 |
 ## 返回值
+ 
 类型：boolean
 无
-
 ## 例子
 
 example

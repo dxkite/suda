@@ -15,15 +15,15 @@
 
 ## 参数
 
+ 
 | 参数名 | 类型 | 默认值 | 说明 |
 |--------|-----|-------|-------|
-| field |  string | 无 | 无 |
-| order |  int | self::ORDER_ASC | 无 |
-
+ | field |  string | 无 | 无 |
+ | order |  int | self::ORDER_ASC | 无 |
 ## 返回值
+ 
 类型：Table
 无
-
 ## 例子
 
 example

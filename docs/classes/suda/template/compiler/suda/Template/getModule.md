@@ -1,6 +1,6 @@
 # Template::getModule
 
-> *文件信息* suda\template\compiler\suda\Template.php: 27~340
+> *文件信息* suda\template\compiler\suda\Template.php: 29~345
 ## 所属类 
 
 [Template](../Template.md)
@@ -15,10 +15,8 @@
 ## 参数
 
 无参数
-
 ## 返回值
 返回值类型不定
-
 ## 例子
 
 example

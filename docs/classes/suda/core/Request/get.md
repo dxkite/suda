@@ -14,15 +14,15 @@
 
 ## 参数
 
+ 
 | 参数名 | 类型 | 默认值 | 说明 |
 |--------|-----|-------|-------|
-| name |  string | null |  GET名 |
-| default |  [type] | null |  GET值 |
-
+ | name |  string | null |  GET名 |
+ | default |  [type] | null |  GET值 |
 ## 返回值
+ 
 类型：[type]
  获取的值
-
 ## 例子
 
 example

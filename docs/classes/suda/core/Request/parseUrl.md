@@ -14,14 +14,14 @@
 
 ## 参数
 
+ 
 | 参数名 | 类型 | 默认值 | 说明 |
 |--------|-----|-------|-------|
-| url |  string | 无 | 无 |
-
+ | url |  string | 无 | 无 |
 ## 返回值
+ 
 类型：array($path,$queryString,$phpSelf)
  处理的数据
-
 ## 例子
 
 example

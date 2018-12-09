@@ -5,11 +5,10 @@
 ## 参数
 
 无参数
-
 ## 返回值
+ 
 类型：suda\core\Config
  获取的配置对象
-
 ## 例子
 
 example

@@ -1,6 +1,6 @@
 # ArrayHelper::get
 获取数组元素
-> *文件信息* suda\tool\ArrayHelper.php: 23~165
+> *文件信息* suda\tool\ArrayHelper.php: 23~172
 ## 所属类 
 
 [ArrayHelper](../ArrayHelper.md)
@@ -15,16 +15,16 @@
 
 ## 参数
 
+ 
 | 参数名 | 类型 | 默认值 | 说明 |
 |--------|-----|-------|-------|
-| array |  array | 无 | 无 |
-| name |  string | 无 |  查询列 |
-| def |  mixed | null |  查询的默认值 |
-
+ | array |  array | 无 | 无 |
+ | name |  string | 无 |  查询列 |
+ | def |  mixed | null |  查询的默认值 |
 ## 返回值
+ 
 类型：mixed
  查询的值
-
 ## 例子
 
 array_get_value('a.b.c.d',$arr);

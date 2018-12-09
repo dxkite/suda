@@ -15,19 +15,19 @@
 
 ## 参数
 
+ 
 | 参数名 | 类型 | 默认值 | 说明 |
 |--------|-----|-------|-------|
-| wants |  [type] | 无 |  想要查询的列 |
-| where |  [type] | 无 |  查询条件 |
-| whereBinder |  array | Array |  查询条件的值 |
-| page |  int | null |  分页页码 |
-| row |  int | 10 |  分页行 |
-| offset |  bool |  |  直接偏移 |
-
+ | wants |  [type] | 无 |  想要查询的列 |
+ | where |  [type] | 无 |  查询条件 |
+ | whereBinder |  array | Array |  查询条件的值 |
+ | page |  int | null |  分页页码 |
+ | row |  int | 10 |  分页行 |
+ | offset |  bool |  |  直接偏移 |
 ## 返回值
+ 
 类型：RawQuery
 无
-
 ## 例子
 
 

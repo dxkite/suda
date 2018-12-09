@@ -14,16 +14,16 @@
 
 ## 参数
 
+ 
 | 参数名 | 类型 | 默认值 | 说明 |
 |--------|-----|-------|-------|
-| name |  string | 无 |  列名 |
-| value |  [type] | 无 |  值 |
-| type |  int | PDO::PARAM_STR |  类型 |
-
+ | name |  string | 无 |  列名 |
+ | value |  [type] | 无 |  值 |
+ | type |  int | PDO::PARAM_STR |  类型 |
 ## 返回值
+ 
 类型：InputValue
  输入变量类
-
 ## 例子
 
 example

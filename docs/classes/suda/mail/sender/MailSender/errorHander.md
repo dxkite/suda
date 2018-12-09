@@ -14,17 +14,16 @@
 
 ## 参数
 
+ 
 | 参数名 | 类型 | 默认值 | 说明 |
 |--------|-----|-------|-------|
-| errno |  int | 无 | 无 |
-| errstr |  string | 无 | 无 |
-| errfile |  string | 无 | 无 |
-| errline |  int | 无 | 无 |
-| errcontext |  array | 无 | 无 |
-
+ | errno |  int | 无 | 无 |
+ | errstr |  string | 无 | 无 |
+ | errfile |  string | 无 | 无 |
+ | errline |  int | 无 | 无 |
+ | errcontext |  array | 无 | 无 |
 ## 返回值
 返回值类型不定
-
 ## 例子
 
 example

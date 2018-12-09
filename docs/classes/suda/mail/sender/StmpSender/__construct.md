@@ -14,18 +14,17 @@
 
 ## 参数
 
+ 
 | 参数名 | 类型 | 默认值 | 说明 |
 |--------|-----|-------|-------|
-| server |  string | 无 |  SMTP邮件服务器 |
-| port |  int | 无 |  端口号 |
-| timeout |  int | 无 |  设置发送超时 |
-| name |  string | 无 |  邮箱用户名 |
-| password |  string | 无 |  邮箱密码 |
-| isSecurity |  bool | 1 |  是否使用SSL，需要开启 OpenSSL 模块 |
-
+ | server |  string | 无 |  SMTP邮件服务器 |
+ | port |  int | 无 |  端口号 |
+ | timeout |  int | 无 |  设置发送超时 |
+ | name |  string | 无 |  邮箱用户名 |
+ | password |  string | 无 |  邮箱密码 |
+ | isSecurity |  bool | 1 |  是否使用SSL，需要开启 OpenSSL 模块 |
 ## 返回值
 返回值类型不定
-
 ## 例子
 
 ```php

@@ -1,6 +1,6 @@
 # Command::args
 
-> *文件信息* suda\tool\Command.php: 21~248
+> *文件信息* suda\tool\Command.php: 24~252
 ## 所属类 
 
 [Command](../Command.md)
@@ -15,10 +15,8 @@
 ## 参数
 
 无参数
-
 ## 返回值
 返回值类型不定
-
 ## 例子
 
 example

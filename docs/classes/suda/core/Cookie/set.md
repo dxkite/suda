@@ -14,16 +14,16 @@
 
 ## 参数
 
+ 
 | 参数名 | 类型 | 默认值 | 说明 |
 |--------|-----|-------|-------|
-| name |  string | 无 |  Cookie名 |
-| value |  string | 无 |  设置的值 |
-| expire |  int | null |   到期时间 |
-
+ | name |  string | 无 |  Cookie名 |
+ | value |  string | 无 |  设置的值 |
+ | expire |  int | null |   到期时间 |
 ## 返回值
+ 
 类型：CookieSetter
  设置对象
-
 ## 例子
 
 example
