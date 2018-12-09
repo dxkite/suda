@@ -529,33 +529,43 @@ class Application
      * 激活运行的模块
      *
      * @param string $module
-     * @return void
+     * @return boolean
      */
-    public function activeModule(string $module)
+    public function activeModule(string $module):bool
     {
+        // 不允许激活不可访问模块
+        if (!self::isModuleReachable($module)) {
+            return false;
+        }
         Hook::exec('suda:application:active', [$module]);
         debug()->trace(__('active module $0', $module));
         $this->activeModule=$module;
         $root=self::getModulePath($module);
-        $module_config=self::getModuleConfig($module);
+        $moduleConfig=self::getModuleConfig($module);
+        // 注入常量
+        define('MODULE_NAME', $module);
+        define('MODULE_PATH', Storage::path($root));
         define('MODULE_RESOURCE', Storage::path($root.'/resource'));
         define('MODULE_CONFIG', Storage::path(MODULE_RESOURCE.'/config'));
+        // 加载语言配置项
         debug()->trace(__('set locale $0', Config::get('app.language', 'zh-CN')));
         Locale::path(MODULE_RESOURCE.'/locales');
         Locale::set(Config::get('app.language', 'zh-CN'));
-        if (isset($module_config['namespace'])) {
+        if (array_key_exists('namespace', $moduleConfig)) {
             // 缩减命名空间
-            Autoloader::setNamespace($module_config['namespace']);
+            Autoloader::setNamespace($moduleConfig['namespace']);
         }
         // 自动加载私有库
-        foreach ($module_config['import']['src'] as $namespace=>$path) {
+        foreach ($moduleConfig['import']['src'] as $namespace=>$path) {
             if (Storage::isDir($srcPath=$root.DIRECTORY_SEPARATOR.$path)) {
                 Autoloader::addIncludePath($srcPath, $namespace);
             } elseif (Storage::isFile($importPath=$root.DIRECTORY_SEPARATOR.$path)) {
                 Autoloader::import($importPath);
             }
         }
-        Config::set('module', $module_config);
+        Config::set('module', $moduleConfig);
+        Config::set('module-config', self::getModuleConfig($module, 'config'));
+        return true;
     }
 
     /**
