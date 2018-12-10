@@ -31,6 +31,7 @@ class System
     protected static $appInstance=null;
     protected static $applicationClass=null;
     const APP_CACHE='app.cache';
+    const NAME_MATCH = '[a-zA-Z0-9_\-.]+';
 
     public static function init()
     {

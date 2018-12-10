@@ -1,7 +1,7 @@
 <?php
 namespace suda\exception;
 
-class PregException extends \RuntimeException
+class RegexException extends \RuntimeException
 {
     protected static $error=[
         PREG_INTERNAL_ERROR => 'PREG_INTERNAL_ERROR',

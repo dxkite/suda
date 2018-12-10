@@ -621,12 +621,17 @@ class Application
      */
     public function getModuleFullName(string $name)
     {
-        // 存在缓存则返回缓存
+        // name = [namespace/]name[:version]
+        // - 存在缓存则返回缓存
         if (array_key_exists($name, $this->moduleNameCache)) {
             return $this->moduleNameCache[$name];
         }
-        preg_match('/^(?:([a-zA-Z0-9_\-.]+)\/)?([a-zA-Z0-9_\-.]+)(?::(.+))?$/', $name, $matchname);
-        $preg='/^'.(isset($matchname[1])&&$matchname[1]? preg_quote($matchname[1]).'\/':'([a-zA-Z0-9_\-.]+\/)?') // 限制域
+        // - 查找名称相同的系统
+        // - 如果有命名空间则筛选命名空间
+        // - 如果有版本则赛选版本
+        // - 如果无版本则按版本大小排序，筛选最终版本
+        preg_match('/^(?:('.System::NAME_MATCH.')\/)?('.System::NAME_MATCH.')(?::(.+))?$/', $name, $matchname);
+        $preg='/^'.(isset($matchname[1])&&$matchname[1]? preg_quote($matchname[1]).'\/':'('.System::NAME_MATCH.'+\/)?') // 限制域
             .preg_quote($matchname[2]) // 名称
             .(isset($matchname[3])&&$matchname[3]?':'.preg_quote($matchname[3]):'(:.+)?').'$/'; // 版本号
         $targets=[];
@@ -635,7 +640,7 @@ class Application
             foreach ($this->moduleConfigs as $module_name=>$module_config) {
                 // 匹配到模块名
                 if (preg_match($preg, $module_name)) {
-                    preg_match('/^(?:([a-zA-Z0-9_\-.]+)\/)?([a-zA-Z0-9_\-.]+)(?::(.+))?$/', $module_name, $matchname);
+                    preg_match('/^(?:('.System::NAME_MATCH.')\/)?('.System::NAME_MATCH.')(?::(.+))?$/', $module_name, $matchname);
                     // 获取版本号
                     if (isset($matchname[3])&&$matchname[3]) {
                         $targets[$matchname[3]]=$module_name;

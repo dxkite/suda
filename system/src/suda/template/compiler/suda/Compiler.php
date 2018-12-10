@@ -281,7 +281,7 @@ class Compiler implements CompilerImpl
         $code = preg_replace_callback($pregExp, $callback, $str);
         $error = preg_last_error();
         if ($error !== PREG_NO_ERROR) {
-            throw new \suda\exception\PregException($error);
+            throw new \suda\exception\RegexException($error);
         }
         return $code;
     }
@@ -307,7 +307,7 @@ class Compiler implements CompilerImpl
         $code = preg_replace_callback('/\B[$](\?)?[:]([.\w\x{4e00}-\x{9aff}]+)(\s*)(\( ( (?>[^()]+) | (?4) )* \) )?/ux', [$this,'echoValueCallback'], $var);
         $error = preg_last_error();
         if ($error !== PREG_NO_ERROR) {
-            throw new \suda\exception\PregException($error);
+            throw new \suda\exception\RegExException($error);
         }
         return $code;
     }
