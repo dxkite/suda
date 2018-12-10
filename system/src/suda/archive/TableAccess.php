@@ -39,8 +39,9 @@ abstract class TableAccess
         // 默认ID为表主键
         $this->primaryKey[]='id';
         $this->tableName  = $tableName;
-        $this->cachePath  = CACHE_DIR.'/database/fields/'.$this->tableName.'.php';
-        $this->connection = $connection ?? Connection::getDefaultConnection()->connect();
+        $this->connection = $connection ?? Connection::getDefaultConnection();
+        $this->connection->connect();
+        $this->cachePath  = CACHE_DIR.'/database/'.$this->connection->name.'/fields/'.$this->tableName.'.php';
         // 读取类名作为表名
         self::initTableFields();
     }
