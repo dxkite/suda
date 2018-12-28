@@ -15,8 +15,9 @@
  */
 namespace suda\tool;
 
-use suda\exception\CommandException;
+use ReflectionClass;
 use suda\core\Autoloader;
+use suda\exception\CommandException;
 
 /**
  * 可执行命令表达式
@@ -36,7 +37,7 @@ class Command
     {
         $this->command= is_string($command)?self::parseCommand($command):$command;
         $this->params=$params;
-        $this->name=is_string($command)? $command : 'Closure';
+        $this->name= self::getCommandName($command);
     }
     
     public function name(string $name)
@@ -53,7 +54,7 @@ class Command
 
     public function exec(array $params=[])
     {
-        debug()->trace(__('exec command $0 with args $1', $this->name, json_encode($params)));
+        debug()->trace(__('exec command $0 with args', $this->name), $params);
         // 集合所有参数
         if (count($params)) {
             $this->params=$params;
@@ -79,7 +80,7 @@ class Command
                     if ($this->static) {
                     } else {
                         if ($this->constructParam) {
-                            $class = new \ReflectionClass($this->command[0]);
+                            $class = new ReflectionClass($this->command[0]);
                             $this->command[0]= $class->newInstanceArgs($this->constructParam);
                         } else {
                             $this->command[0]=new $this->command[0];
@@ -214,7 +215,7 @@ class Command
             }
             $params=self::parseParam($constructParams);
             $className = Autoloader::realName($className);
-            $classRef= new \ReflectionClass($className);
+            $classRef= new ReflectionClass($className);
             return $classRef->newInstanceArgs($params);
         }
         $className = Autoloader::realName($class);
@@ -243,6 +244,21 @@ class Command
         } else {
             return forward_static_call_array($command, $params);
         }
+    }
+
+    protected static function getCommandName($command):string
+    {
+        if (\is_string($command)) {
+            return $command;
+        }
+        if (\is_array($command)) {
+            if (\is_object($command[0])) {
+                return \get_class($command[0]).'->'.$command[1];
+            } else {
+                return $command[0].'::'.$command[1];
+            }
+        }
+        return 'Closure Object()';
     }
 
     public function __toString()
