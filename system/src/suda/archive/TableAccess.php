@@ -17,9 +17,9 @@ abstract class TableAccess
     /**
      * 数据表当前列
      *
-     * @var array
+     * @var array|null
      */
-    protected $fields=[];
+    protected $fields=null;
     protected $primaryKey;
     protected $tableName;
     protected $cachePath;
@@ -27,13 +27,13 @@ abstract class TableAccess
     /**
      * 数据表所有当前列
      *
-     * @var array
+     * @var array|null
      */
     protected $allFields = null;
     /**
      * 设置导出列大小
      *
-     * @var array
+     * @var array|null
      */
     protected $exportFields = null;
 
@@ -237,7 +237,7 @@ abstract class TableAccess
      */
     public function setTableName(string $name)
     {
-        $this->tableName;
+        $this->tableName = $name;
         return $this;
     }
 

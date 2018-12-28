@@ -28,9 +28,9 @@ abstract class Table extends TableAccess
     /**
      * 需求类型
      *
-     * @var array
+     * @var array|null
      */
-    protected $wants = [];
+    protected $wants = null;
     protected $orderField=null;
     protected $order=null;
 
@@ -520,7 +520,7 @@ abstract class Table extends TableAccess
      */
     public function getWants():array
     {
-        return count($this->wants) > 0 ? $this->wants: $this->fields;
+        return $this->wants ?? $this->fields;
     }
 
     /**
