@@ -520,7 +520,7 @@ abstract class Table extends TableAccess
      */
     public function getWants():array
     {
-        return $this->wants ?? $this->fields;
+        return is_null($this->wants)?$this->getFields():$this->fields;
     }
 
     /**

@@ -17,13 +17,14 @@ abstract class TableAccess
     /**
      * 数据表当前列
      *
-     * @var array|null
+     * @var array
      */
-    protected $fields=null;
+    protected $fields=[];
     protected $primaryKey;
     protected $tableName;
     protected $cachePath;
     protected $creator;
+
     /**
      * 数据表所有当前列
      *

@@ -122,7 +122,7 @@ class Request
      * 设置get的值
      *
      * @param string $name GET名
-     * @param [type] $value GET的值
+     * @param mixed $value GET的值
      * @return void
      */
     public static function set(string $name, $value)
@@ -134,8 +134,8 @@ class Request
      * 获取请求的GET数据
      *
      * @param string $name GET名
-     * @param [type] $default GET值
-     * @return [type] 获取的值
+     * @param mixed $default GET值
+     * @return mixed 获取的值
      */
     public static function get(?string $name=null, $default=null)
     {
@@ -156,8 +156,8 @@ class Request
      * 获取POST请求的值
      *
      * @param string $name
-     * @param [type] $default
-     * @return [type] 获取的值
+     * @param mixed $default
+     * @return mixed 获取的值
      */
     public static function post(?string $name=null, $default=null)
     {
@@ -195,8 +195,8 @@ class Request
      * 获取Cookie的值
      *
      * @param string $name cookie名
-     * @param [type] $default cookie的默认值
-     * @return [type] 获取的值，如果没有，则是default设置的值
+     * @param mixed $default cookie的默认值
+     * @return mixed 获取的值，如果没有，则是default设置的值
      */
     public static function cookie(string $name, $default ='')
     {
@@ -258,7 +258,7 @@ class Request
         if ($name) {
             return \array_key_exists($name, $get);
         }
-        return count($get);
+        return count($get) > 0;
     }
 
     /**
@@ -272,7 +272,7 @@ class Request
         if ($name) {
             return \array_key_exists($name, $post);
         }
-        return count($post);
+        return count($post) > 0;
     }
 
     /**
@@ -347,7 +347,7 @@ class Request
      * 处理请求的URL
      *
      * @param string $url
-     * @return array($path,$queryString,$phpSelf) 处理的数据
+     * @return array ($path,$queryString,$phpSelf) 处理的数据
      */
     public static function parseUrl(string $url)
     {
@@ -368,7 +368,7 @@ class Request
         (preg_match('/^(.*)\/'.$index.'(?:(\?)?\/)?/', $url, $check)) {
             // debug()->trace($check,$check[2]);
             $preg='/(.*)\/'.$index.'\??(\/[^?]*)?(?:[?](.+)?)?$/';
-            self::$type=strlen($check[2]??false)>0?2:3;
+            self::$type=strlen($check[2]??'')>0?2:3;
             preg_match($preg, $url, $match);
             $queryString=$match[3]??'';
             $path= $match[2] ?? '/';
