@@ -1,11 +1,14 @@
 ![Suda@PHP7](docs/imgs/logo.png)
 ---------------------------------
 
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/dxkite/suda/badges/quality-score.png)](https://scrutinizer-ci.com/g/dxkite/suda)
 [![Latest Stable Version](https://poser.pugx.org/dxkite/suda/v/stable)](https://packagist.org/packages/dxkite/suda) 
 [![Latest Unstable Version](https://poser.pugx.org/dxkite/suda/v/unstable)](https://packagist.org/packages/dxkite/suda) 
 [![Total Downloads](https://poser.pugx.org/dxkite/suda/downloads)](https://packagist.org/packages/dxkite/suda) 
 [![License](https://poser.pugx.org/dxkite/suda/license)](https://packagist.org/packages/dxkite/suda)
 
+
+ 
 [中文](README.zh.md)
 
 a ligth and fast web framework based on php7
