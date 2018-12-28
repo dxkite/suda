@@ -16,7 +16,6 @@
 
 namespace suda\archive;
 
-
 /**
  * 数据表抽象对象
  *
@@ -26,7 +25,12 @@ abstract class Table extends TableAccess
 {
     // 数据库语句
     protected $statement;
-    protected $wants;
+    /**
+     * 需求类型
+     *
+     * @var array
+     */
+    protected $wants = [];
     protected $orderField=null;
     protected $order=null;
 
@@ -182,7 +186,7 @@ abstract class Table extends TableAccess
      * @return integer 影响的行数
      */
     public function deleteByPrimaryKey($value):int
-    {   
+    {
         return $this->statement->delete($this->getTableName(), $this->checkPrimaryKey($value), [], $this);
     }
 
@@ -516,7 +520,7 @@ abstract class Table extends TableAccess
      */
     public function getWants():array
     {
-        return $this->wants??$this->fields;
+        return count($this->wants) > 0 ? $this->wants: $this->fields;
     }
 
     /**

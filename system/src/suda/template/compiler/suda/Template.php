@@ -270,8 +270,9 @@ abstract class Template implements TemplateInterface
     {
         // 存在父模板
         if ($this->parent) {
-            return $this->parent->execHook($name, $callback);
+            $this->parent->execHook($name, $callback);
         } else {
+            // 添加回调钩子
             $this->hooks[$name][]=(new Command($callback))->name($name);
         }
     }

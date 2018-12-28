@@ -14,11 +14,21 @@ abstract class TableAccess
 {
     // 数据库连接
     protected $connection;
+    /**
+     * 数据表当前列
+     *
+     * @var array
+     */
     protected $fields=[];
     protected $primaryKey;
     protected $tableName;
     protected $cachePath;
     protected $creator;
+    /**
+     * 数据表所有当前列
+     *
+     * @var array
+     */
     protected $allFields = null;
     /**
      * 设置导出列大小
@@ -200,7 +210,7 @@ abstract class TableAccess
     /**
      * 获取主键
      *
-     * @return string
+     * @return array
      */
     public function getPrimaryKey():array
     {
