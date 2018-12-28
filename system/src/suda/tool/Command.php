@@ -21,6 +21,7 @@ use suda\exception\CommandException;
 
 /**
  * 可执行命令表达式
+ * 
  */
 class Command
 {
@@ -35,9 +36,9 @@ class Command
 
     public function __construct($command, array $params=[])
     {
-        $this->command= is_string($command)?self::parseCommand($command):$command;
-        $this->params=$params;
-        $this->name= self::getCommandName($command);
+        $this->command = is_string($command)? $this->parseCommand($command):$command;
+        $this->params  = $params;
+        $this->name    = $this->getCommandName($command);
     }
     
     public function name(string $name)
@@ -79,7 +80,7 @@ class Command
                 if (!is_object($this->command[0])) {
                     if ($this->static) {
                     } else {
-                        if ($this->constructParam) {
+                        if (!empty($this->constructParam)) {
                             $class = new ReflectionClass($this->command[0]);
                             $this->command[0]= $class->newInstanceArgs($this->constructParam);
                         } else {
@@ -101,7 +102,7 @@ class Command
 
     public function args()
     {
-        return self::exec(func_get_args());
+        return $this->exec(func_get_args());
     }
     
     /**
@@ -149,13 +150,11 @@ class Command
             return [$className,$method];
         } elseif (preg_match('/^ ([\w\\\\\/.]+) (\( ( (?>[^()]+) | (?2) )* \))? (?:\@(.+))? $/ux', $command, $matchs)) {
             $matchCount = count($matchs);
+            $functionFile = null;
             if ($matchCount == 2) {
                 list($cmdstr, $functionName) = $matchs;
-                $functionParam = null;
-                $functionFile = null;
             } elseif ($matchCount == 3) {
                 list($cmdstr, $functionName, $functionParam) = $matchs;
-                $functionFile = null;
             } else {
                 list($cmdstr, $functionName, $functionParam, $functionFile) = $matchs;
             }
@@ -225,8 +224,8 @@ class Command
     /**
      * 绝对调用函数，可调用类私有和保护函数
      *
-     * @param [type] $command
-     * @param [type] $params
+     * @param mixed $command
+     * @param mixed $params
      * @return mixed
      */
     public static function _absoluteCall($command, $params)
@@ -263,6 +262,6 @@ class Command
 
     public function __toString()
     {
-        return $this->cmdStr ?? $this->name ?? __CLASS__;
+        return $this->cmdstr ?? $this->name ?? __CLASS__;
     }
 }
