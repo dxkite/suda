@@ -159,7 +159,7 @@ class Command
                 list($cmdstr, $functionName, $functionParam, $functionFile) = $matchs;
             }
             $functionName = Autoloader::realName($functionName);
-            if ($functionFile) {
+            if (!is_null($functionFile)) {
                 $this->file=$functionFile;
             }
             return $functionName;
@@ -169,7 +169,7 @@ class Command
         } else {
             throw (new CommandException(__('unknown command: $0', $command)))->setCmd($command);
         }
-        $this->cmdStr= $command;
+        $this->cmdstr= $command;
     }
 
     protected static function parseParam(string $param)
