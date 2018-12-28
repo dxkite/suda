@@ -29,6 +29,7 @@ defined('LOG_TAG') or define('LOG_TAG', ['{%','%}']);
 class Debug
 {
     const MAX_LOG_SIZE=2097152;
+    const MAX_STR_LEN = 80;
     const TRACE = 'trace'; // 运行跟踪
     const DEBUG = 'debug'; // 调试记录
     const INFO = 'info'; // 普通消息
@@ -110,7 +111,7 @@ class Debug
                 }
             }
             $call=(isset($traceInfo['class'])?$traceInfo['class'].'#':'').$traceInfo['function'];
-            self::writeLogLevel(self::$time[$name]['type'], $call, __('process $0 $1s', $name, number_format($pass, 5)), $traceInfo['file'] ??'unknown', $traceInfo['line'] ?? 0, $backtrace);
+            self::log(self::$time[$name]['type'], $call, __('process $0 $1s', $name, number_format($pass, 5)), $traceInfo['file'] ??'unknown', $traceInfo['line'] ?? 0, $backtrace);
             return $pass;
         }
         return 0;
@@ -121,33 +122,6 @@ class Debug
         $levela_num=is_numeric($levela)?$levela:(self::$level[strtolower($levela)]??100);
         $levelb_num=is_numeric($levelb)?$levelb:(self::$level[strtolower($levelb)]??100);
         return $levela_num - $levelb_num;
-    }
-
-    protected static function writeLogLevel(string $level, string $name, string $message, string $file, int $line, ?array $backtrace=null)
-    {
-        if (defined('LOG_LEVEL')) {
-            if (self::compareLevel(LOG_LEVEL, $level)>0) {
-                return;
-            }
-        }
-        self::writeLog($level, $name, $message, $file, $line, $backtrace);
-    }
-
-    protected static function writeLog(string $level, string $name, string $message, string $file, int $line, ?array $backtrace=null)
-    {
-        $loginfo['file']=$file;
-        $loginfo['line']=$line;
-        $loginfo['message']=$message;
-        $loginfo['name']=$name;
-        $loginfo['level']=$level;
-        $loginfo['backtrace']=$backtrace;
-        $loginfo['time']=microtime(true) - SUDA_START_TIME;
-        $loginfo['mem']=memory_get_usage() - SUDA_START_MEMORY;
-        self::writeLine($loginfo);
-        $dump_log = defined('DEBUG_DUMP_LOG') && DEBUG_DUMP_LOG;
-        if ($dump_log) {
-            self::$log[]=$loginfo;
-        }
     }
 
     public static function displayException(Exception $e)
@@ -257,7 +231,7 @@ class Debug
     protected static function displayLog(array $logarray)
     {
         // - 不允许全局控制钩子注入
-        config()->set('hook.enable',false);
+        config()->set('hook.enable', false);
         /* ---- 外部变量 ----- */
         $line=$logarray['line'];
         $file=$logarray['file'];
@@ -333,7 +307,7 @@ class Debug
         \suda\template\Manager::loadCompile();
         $render->render();
         // - 启用全局钩子注入
-        config()->set('hook.enable',true);
+        config()->set('hook.enable', true);
         exit;
     }
 
@@ -408,8 +382,8 @@ class Debug
             number_format(microtime(true), 4, '.', ''),
             number_format($log['time'], 10, '.', ''),
             $log['time'],
-            self::formatBytes($log['mem'], 2),
-            $log['mem'],
+            self::formatBytes($log['memory'], 2),
+            $log['memory'],
             $log['level'],
             $log['file'],
             $log['line'],
@@ -479,26 +453,41 @@ class Debug
         self::writeLogLevel('die', $call, $message, $backtrace[$offset]['file'] ??'unknown', $backtrace[$offset]['line'] ?? 0, $backtrace);
         die($message);
     }
-    
-    public static function __callStatic($method, $args)
-    {
-        self::aliasMethod($method, $args);
-    }
-    
-    private static function aliasMethod(string $method, array $args)
-    {
-        static $mpk=['d','t','i','n','w','e','u'];
-        static $map=['d'=>'debug','t'=>'trace','i'=>'info','n'=>'notice','w'=>'warning','e'=>'error','u'=>'user'];
 
-        if (preg_match('/([dtinweu]|debug|trace|info|notice|warning|error|user)/i', $method)) {
-            if (in_array($method, $mpk)) {
-                $level=$map[strtolower($method)];
-            } else {
-                $level=strtolower($method);
-            }
-        }
-        $backtrace =null;
-        foreach ($args as $e) {
+    public static function debug($name =null, $message=null)
+    {
+        self::log('debug', $name, $message);
+    }
+    public static function trace($name =null, $message=null)
+    {
+        self::log('trace', $name, $message);
+    }
+    public static function info($name =null, $message=null)
+    {
+        self::log('info', $name, $message);
+    }
+    public static function notice($name =null, $message=null)
+    {
+        self::log('notice', $name, $message);
+    }
+    public static function warning($name =null, $message=null)
+    {
+        self::log('warning', $name, $message);
+    }
+    public static function error($name =null, $message=null)
+    {
+        self::log('error', $name, $message);
+    }
+    public static function user($name =null, $message=null)
+    {
+        self::log('user', $name, $message);
+    }
+
+  
+    protected static function log(string $level, $name =null, $message=null)
+    {
+        $backtrace = null;
+        foreach ([$name,$message] as $e) {
             if ($e instanceof \Exception) {
                 $backtrace=$e->getTrace();
             }
@@ -507,44 +496,84 @@ class Debug
             $backtrace=debug_backtrace();
         }
 
-        $name=(isset($backtrace[2]['class'])?$backtrace[2]['class'].'#':'').$backtrace[2]['function'];
+        if (is_null($message)) {
+            $message = $name;
+            $name=(array_key_exists('class', $backtrace[2])?$backtrace[2]['class'].'#':'').$backtrace[2]['function'];
+        }
+       
         $traceInfo = null;
-
         // 获取第一个带位置的信息
         foreach ($backtrace as $trace) {
-            if (array_key_exists('file', $trace) && $trace['file'] != __FILE__) {
+            if (array_key_exists('file', $trace) && $trace['file'] !== __FILE__) {
                 $traceInfo = $trace;
                 break;
             }
         }
-
-        self::writeLogLevel(
+        self::writeLog(
             $level,
-            self::strify(isset($args[1])?$args[0]:$name),
-            self::strify($args[1]??$args[0]??null),
+            $name,
+            $message,
             $traceInfo['file'],
             $traceInfo['line'],
             $backtrace
         );
     }
 
-    protected static function strify($object)
+    protected static function writeLog(string $level, $name, $message, string $file, int $line, ?array $backtrace=null)
+    {
+        // 等级限制
+        if (defined('LOG_LEVEL')) {
+            if (self::compareLevel(LOG_LEVEL, $level)>0) {
+                return;
+            }
+        }
+        $loginfo['level']=$level;
+        $loginfo['name']=$name;
+        $loginfo['message']=$message;
+        $loginfo['file']=$file;
+        $loginfo['line']=$line;
+        $loginfo['backtrace']=$backtrace;
+        $loginfo['time']=microtime(true) - SUDA_START_TIME;
+        $loginfo['memory']=memory_get_usage() - SUDA_START_MEMORY;
+        $dumpLog = defined('DEBUG_DUMP_LOG') && DEBUG_DUMP_LOG;
+        if ($dumpLog) {
+            self::$log[]=$loginfo;
+        }
+        $loginfo['name']= self::parameterToString($name);
+        $loginfo['message']=  self::parameterToString($message);
+        self::writeLine($loginfo);
+    }
+
+    protected static function parameterToString($object)
     {
         if (is_null($object)) {
-            return '[NULL]';
+            return 'NULL';
         } elseif (is_object($object)) {
-            return serialize($object);
+            $objectName = get_class($object);
+            $parameterString = '';
+            foreach (get_class_vars($objectName) as $key) {
+                $value = $object->$key;
+                if (is_string($value) && strlen($value) >  conf('log.str-size', self::MAX_STR_LEN)) {
+                    $parameterString .= substr($value, 0, 80) .'...,';
+                } else {
+                    $parameterString .= self::parameterToString($value) .',';
+                }
+            }
+            return $objectName.' {'.trim($parameterString, ',').'}';
         } elseif (is_array($object)) {
-            return json_encode($object, JSON_UNESCAPED_UNICODE);
+            $parameterString = '';
+            foreach ($object as $key => $value) {
+                if (is_string($value) && strlen($value) >  conf('log.str-size', self::MAX_STR_LEN)) {
+                    $parameterString .=  json_encode(substr($value, 0, 80), JSON_UNESCAPED_UNICODE) .'...,';
+                } else {
+                    $parameterString .= self::parameterToString($value) .',';
+                }
+            }
+            return '['.trim($parameterString, ',').']';
         }
         return $object;
     }
-
-    public function __call($method, $args)
-    {
-        self::aliasMethod($method, $args);
-    }
-
+    
     /**
      * 检查日志文件大小
      *
