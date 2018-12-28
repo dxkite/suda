@@ -71,13 +71,13 @@ class Debug
         if (defined('APP_LOG') && storage()->path(APP_LOG) && is_writable(APP_LOG)) {
             self::$latest =APP_LOG.'/latest.log';
         }
-        self::$hash= $hash = substr(md5(microtime().''.self::$ip), 0, 8);
+        self::$hash= substr(md5(microtime().''.self::$ip), 0, 8);
         self::$ip = request()->ip();
         $file = tmpfile();
         if ($file === false) {
             self::$tempname =  APP_LOG .'/.suda.tmp';
-            storage()->path(dirname(static::$tempname));
-            $file = fopen(static::$tempname, 'w+');
+            storage()->path(dirname(self::$tempname));
+            $file = fopen(self::$tempname, 'w+');
         }
         self::$file= $file;
         Config::set('request', self::$hash);
@@ -111,7 +111,14 @@ class Debug
                 }
             }
             $call=(isset($traceInfo['class'])?$traceInfo['class'].'#':'').$traceInfo['function'];
-            self::log(self::$time[$name]['type'], $call, __('process $0 $1s', $name, number_format($pass, 5)), $traceInfo['file'] ??'unknown', $traceInfo['line'] ?? 0, $backtrace);
+            self::writeLog(
+                self::$time[$name]['type'],
+                $call,
+                __('process $0 $1s', $name, number_format($pass, 5)),
+                $traceInfo['file'] ??'unknown',
+                $traceInfo['line'] ?? 0,
+                $backtrace
+            );
             return $pass;
         }
         return 0;
@@ -128,9 +135,9 @@ class Debug
     {
         self::writeException($e);
         if (IS_CONSOLE) {
-            return self::printConsole($e);
+            self::printConsole($e);
         } else {
-            return self::printHTML($e);
+            self::printHTML($e);
         }
     }
 
@@ -201,7 +208,7 @@ class Debug
     {
         // // 非致命错误
         if ($e->getSeverity() !== E_ERROR) {
-            if (cookie()->get(conf('log.cookie', '__debug')) == conf('debugSecret', base64_encode('dxkite'))) {
+            if (cookie()->get(conf('log.cookie', '__debug')) == conf('debug-secret', base64_encode('dxkite'))) {
                 echo '<div class="suda-error" style="color:red"><b>'.$e->getName().'['.$e->getLevel().']</b>: '.$e->getMessage().' at '.$e->getFile().'#'.$e->getLine().'</div>';
             }
             return;
@@ -287,14 +294,14 @@ class Debug
             {
                 $stack=$this->template->getRenderStack();
                 while ($name=array_pop($stack)) {
-                    $get=ob_get_clean();
+                    ob_end_clean();
                     debug()->trace('free render', $name);
                 }
                 $this->template->render();
             }
         };
         $render->onRequest(Request::getInstance());
-        $debug=self::getInfo();
+        // $debug=self::getInfo();
         $render->template->assign([
                 'error_type'=>$name,
                 'error_message'=>$message,
@@ -450,7 +457,7 @@ class Debug
             $offset--;
         }
         $call=(isset($backtrace[$offset]['class'])?$backtrace[$offset]['class'].'#':'').$backtrace[$offset]['function'];
-        self::writeLogLevel('die', $call, $message, $backtrace[$offset]['file'] ??'unknown', $backtrace[$offset]['line'] ?? 0, $backtrace);
+        self::writeLog('die', $call, $message, $backtrace[$offset]['file'] ??'unknown', $backtrace[$offset]['line'] ?? 0, $backtrace);
         die($message);
     }
 
@@ -527,6 +534,7 @@ class Debug
                 return;
             }
         }
+        $loginfo = array();
         $loginfo['level']=$level;
         $loginfo['name']=$name;
         $loginfo['message']=$message;

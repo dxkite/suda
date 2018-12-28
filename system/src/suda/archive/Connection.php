@@ -117,13 +117,12 @@ class Connection
         } else {
             return $this->pdo->lastInsertId($name);
         }
-        return false;
     }
 
     /**
      * 事务系列，开启事务
      *
-     * @return any
+     * @return mixed
      */
     public function begin()
     {
@@ -133,7 +132,7 @@ class Connection
     /**
      * 事务系列，开启事务
      *
-     * @return any
+     * @return mixed
      */
     public function beginTransaction()
     {
@@ -151,7 +150,7 @@ class Connection
     /**
      * 事务系列，提交事务
      *
-     * @return any
+     * @return mixed
      */
     public function commit()
     {
@@ -164,7 +163,7 @@ class Connection
     /**
      * 事务系列，撤销事务
      *
-     * @return any
+     * @return mixed
      */
     public function rollBack()
     {

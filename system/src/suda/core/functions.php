@@ -60,7 +60,7 @@ function debug() : suda\core\Debug
  *
  * @param string $name 配置名
  * @param [type] $default 获取失败时的值
- * @return void
+ * @return mixed
  */
 function conf(string $name, $default=null)
 {
