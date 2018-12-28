@@ -35,7 +35,7 @@ interface Storage
      * 判断路径是否存在，不存在则创建，创建成功返回路径绝对地址
      *
      * @param string $path
-     * @return string
+     * @return string|null
      */
     public function path(string $path):?string;
     
@@ -229,7 +229,7 @@ interface Storage
      *
      * @param string $name
      * @param array $charset
-     * @return boolean
+     * @return string|boolean
      */
     public function exist(string $name, array $charset=[]);
     /**

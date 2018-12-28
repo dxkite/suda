@@ -35,32 +35,32 @@ class Application
     /**
      * app 目录
      *
-     * @var [type]
+     * @var string
      */
     private $path;
     /**
      * 当前模块名
      *
-     * @var [type]
+     * @var string
      */
     private $activeModule;
     /**
      * 激活的模块
      *
-     * @var [type]
+     * @var array
      */
     private $moduleLive=null;
 
     /**
      * 启用路由的模块
      *
-     * @var [type]
+     * @var array
      */
     private $routeReachable = null;
     /**
      * 模块配置
      *
-     * @var [type]
+     * @var array
      */
     private $moduleConfigs=null;
     /**
@@ -158,7 +158,7 @@ class Application
     protected function loadModules()
     {
         // 激活模块
-        $moduleLive=self::getLiveModules();
+        $moduleLive=$this->getLiveModules();
         // 安装、启用使用的模块
         foreach ($moduleLive as $module) {
             $this->loadModule($module);
@@ -198,14 +198,14 @@ class Application
         }
         // 加载监听器
         if ($listenerPath=Config::resolve($root.'/resource/config/listener.json')) {
-            $fullname = self::getModuleFullName($module);
+            $fullname = $this->getModuleFullName($module);
             Hook::loadConfig($listenerPath, $fullname);
             Hook::exec('suda:module:load:on::'.$fullname);
         }
         // 自动安装
         if (conf('auto-install', true)) {
             Hook::listen('suda:application:init', function () use ($module) {
-                self::installModule($module);
+                $this->installModule($module);
             });
         }
         // 设置语言包库
@@ -274,8 +274,8 @@ class Application
      */
     public function installModule(string $module)
     {
-        $config=self::getModuleConfig($module);
-        $installName = self::getModuleFullName($module);
+        $config = $this->getModuleConfig($module);
+        $installName = $this->getModuleFullName($module);
         $installLock = DATA_DIR.'/install/install_'.substr(md5($installName), 0, 6).'.lock';
         storage()->path(dirname($installLock));
         if (array_key_exists('install', $config) && !file_exists($installLock)) {
@@ -344,9 +344,9 @@ class Application
     public function getModuleConfig(string $module, ?string $configName=null):?array
     {
         if (is_null($configName)) {
-            return $this->moduleConfigs[self::getModuleFullName($module)]??[];
+            return $this->moduleConfigs[$this->getModuleFullName($module)]??[];
         }
-        if ($path = self::getModuleConfigPath($module, $configName)) {
+        if ($path = $this->getModuleConfigPath($module, $configName)) {
             return Config::loadConfig($path, $module);
         }
         return null;
@@ -378,7 +378,7 @@ class Application
      */
     public function getModuleResourcePath(string $module):string
     {
-        return self::getModulePath($module).'/resource';
+        return $this->getModulePath($module).'/resource';
     }
     
     /**
@@ -390,7 +390,7 @@ class Application
      */
     public function getModuleConfigPath(string $module, string $name):?string
     {
-        return  Config::resolve(self::getModulePath($module).'/resource/config/'.$name)?:null;
+        return  Config::resolve($this->getModulePath($module).'/resource/config/'.$name)?:null;
     }
 
     /**
@@ -403,7 +403,7 @@ class Application
     {
         $prefixs=conf('router-prefix.'.$module, null);
         if (is_null($prefixs)) {
-            $config = self::getModuleConfig($module);
+            $config = $this->getModuleConfig($module);
             if (array_key_exists('prefix', $config)) {
                 $prefixs = $config['prefix'];
             }
@@ -429,7 +429,7 @@ class Application
      */
     public function checkModuleExist(string $name):bool
     {
-        $name=self::getModuleFullName($name);
+        $name=$this->getModuleFullName($name);
         return array_key_exists($name, $this->moduleConfigs);
     }
 
@@ -446,7 +446,7 @@ class Application
         if (file_exists($path=RUNTIME_DIR.'/modules.config.php')) {
             $modules=include $path;
         } else {
-            $modules=conf('app.modules', self::getModules());
+            $modules=conf('app.modules', $this->getModules());
         }
         $exclude=defined('DISABLE_MODULES')?explode(',', trim(DISABLE_MODULES, ',')):[];
         foreach ($exclude as $index=>$name) {
@@ -455,7 +455,7 @@ class Application
         foreach ($modules as $index => $name) {
             $fullname=$this->getModuleFullName($name);
             // 剔除模块名
-            if (!self::checkModuleExist($name) || in_array($fullname, $exclude)) {
+            if (!$this->checkModuleExist($name) || in_array($fullname, $exclude)) {
                 unset($modules[$index]);
             } else {
                 $modules[$index]=$fullname;
@@ -476,7 +476,7 @@ class Application
         if ($this->routeReachable) {
             return $this->routeReachable;
         }
-        $liveModules = self::getLiveModules();
+        $liveModules = $this->getLiveModules();
         if (file_exists($path=RUNTIME_DIR.'/reachable.config.php')) {
             $modules=include $path;
         } else {
@@ -489,7 +489,7 @@ class Application
         foreach ($modules as $index => $name) {
             $fullname=$this->getModuleFullName($name);
             // 剔除模块名
-            if (!self::checkModuleExist($name) || in_array($fullname, $exclude)) {
+            if (!$this->checkModuleExist($name) || in_array($fullname, $exclude)) {
                 unset($modules[$index]);
             } elseif (in_array($fullname, $liveModules)) {
                 $modules[$index]=$fullname;
@@ -534,14 +534,14 @@ class Application
     public function activeModule(string $module):bool
     {
         // 不允许激活不可访问模块
-        if (!self::isModuleReachable($module)) {
+        if (!$this->isModuleReachable($module)) {
             return false;
         }
         Hook::exec('suda:application:active', [$module]);
         debug()->trace(__('active module $0', $module));
         $this->activeModule=$module;
-        $root=self::getModulePath($module);
-        $moduleConfig=self::getModuleConfig($module);
+        $root=$this->getModulePath($module);
+        $moduleConfig=$this->getModuleConfig($module);
         // 注入常量
         define('MODULE_NAME', $module);
         define('MODULE_PATH', Storage::path($root));
@@ -607,7 +607,7 @@ class Application
      */
     public function getModuleName(string $name)
     {
-        $name=self::getModuleFullName($name);
+        $name=$this->getModuleFullName($name);
         return preg_replace('/:.+$/', '', $name);
     }
     
@@ -667,7 +667,7 @@ class Application
      */
     public function getModuleDir(string $name):?string
     {
-        $name=self::getModuleFullName($name);
+        $name=$this->getModuleFullName($name);
         if (array_key_exists($name, $this->moduleConfigs)) {
             return $this->moduleConfigs[$name]['directory'];
         }
@@ -704,7 +704,7 @@ class Application
                         continue;
                     }
                 }
-                self::registerModule($modulePath);
+                $this->registerModule($modulePath);
             }
         }
     }
@@ -730,6 +730,7 @@ class Application
         }
         // 自定义配置或使用标准配置
         $config = is_null($config) ? 'module.json': $config;
+        $configData = [];
 
         if (is_string($config)) {
             if ($config = Config::resolve($path.'/'.$config)) {
@@ -774,9 +775,15 @@ class Application
         return $this->moduleConfigs;
     }
 
+    /**
+     * 获取模块地址
+     *
+     * @param string $module
+     * @return boolean|string
+     */
     public function getModulePath(string $module)
     {
-        $name=self::getModuleFullName($module);
+        $name= $this->getModuleFullName($module);
         if (isset($this->moduleConfigs[$name])) {
             return $this->moduleConfigs[$name]['path'];
         }
@@ -796,7 +803,7 @@ class Application
      *
      * @param string $version 比较用的版本，包含比较符号
      * @param string $compire 对比的版本
-     * @return void
+     * @return int
      */
     protected static function versionCompire(string $version, string $compire)
     {
