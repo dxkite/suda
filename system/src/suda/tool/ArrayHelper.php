@@ -50,7 +50,7 @@ class ArrayHelper
      *
      * @param array $array
      * @param string $name
-     * @return void
+     * @return boolean
      */
     public static function exist(array $array, string $name)
     {

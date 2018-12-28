@@ -36,16 +36,45 @@ abstract class Template implements TemplateInterface
     * 模板所属于的响应
     */
     protected $response=null;
+    /**
+     * 模板名
+     *
+     * @var string
+     */
     protected $name=null;
+    /**
+     * 父模版
+     *
+     * @var Template
+     */
     protected $parent=null;
     protected $hooks=[];
-    // 所在模块
+    /**
+     * 所在模块
+     *
+     * @var string
+     */
     protected $module=null;
-    // 源文件
+
+    /**
+     * 源文件
+     *
+     * @var string
+     */
     protected $source=null;
-    // 渲染堆栈
+    
+    /**
+     * 渲染堆栈
+     *
+     * @var array
+     */
     protected static $render=[];
-    // 安全Nonce
+    
+    /**
+     * 安全Nonce
+     *
+     * @var string
+     */
     protected static $nonce = null;
 
     protected $extend=null;
@@ -55,7 +84,7 @@ abstract class Template implements TemplateInterface
     */
     public function render()
     {
-        $content=self::getRenderedString();
+        $content= $this->getRenderedString();
         hook()->exec('suda:template:render::before', [&$content]);
         debug()->trace('echo '.$this->name);
         if ($this->response) {
@@ -69,9 +98,7 @@ abstract class Template implements TemplateInterface
             } else {
                 $csp = Security::cspGeneretor(conf('module.header.Content-Security-Policy', conf('header.Content-Security-Policy')), self::$nonce);
             }
-            if (\is_string($csp)) {
-                $this->response->addHeader('Content-Security-Policy', $csp);
-            }
+            $this->response->addHeader('Content-Security-Policy', $csp);
             $xfo = conf('module.header.Content-Security-Policy', conf('header.X-Frame-Options', 'sameorigin'));
             if (\is_string($xfo)) {
                 $this->response->addHeader('X-Frame-Options', $xfo);
@@ -123,7 +150,7 @@ abstract class Template implements TemplateInterface
     */
     public function __toString()
     {
-        return self::getRenderedString();
+        return $this->getRenderedString();
     }
 
     /**

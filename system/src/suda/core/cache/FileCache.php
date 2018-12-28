@@ -124,7 +124,7 @@ class FileCache implements Cache
     public static function gc()
     {
         debug()->time('cache gc');
-        $files=Storage::readDirFiles(self::$storage, '/^(?!\.)/');
+        $files=Storage::readDirFiles(self::$storage, true);
         foreach ($files as $file) {
             if (Config::get('cache', true)) {
                 $value=Storage::get($file);
@@ -141,7 +141,7 @@ class FileCache implements Cache
 
     public function clear()
     {
-        return Storage::delete(CACHE_DIR);
+        Storage::delete(CACHE_DIR);
     }
 
     public function enable():bool

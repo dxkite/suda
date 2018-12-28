@@ -43,17 +43,17 @@ abstract class TableAccess
         $this->connection->connect();
         $this->cachePath  = CACHE_DIR.'/database/'.$this->connection->name.'/fields/'.$this->tableName.'.php';
         // 读取类名作为表名
-        self::initTableFields();
+        $this->initTableFields();
     }
 
     /**
      * 创建数据表
      *
-     * @return void
+     * @return boolean
      */
     public function createTable()
     {
-        return self::initFromTable(self::getCreator());
+        return $this->initFromTable($this->getCreator());
     }
     
     public function getCreateSql():string
@@ -75,17 +75,17 @@ abstract class TableAccess
 
     public function begin()
     {
-        return $this->connection->beginTransaction();
+        $this->connection->beginTransaction();
     }
 
     public function commit()
     {
-        return $this->connection->commit();
+        $this->connection->commit();
     }
 
     public function rollBack()
     {
-        return $this->connection->rollBack();
+        $this->connection->rollBack();
     }
 
     
@@ -141,7 +141,7 @@ abstract class TableAccess
             $dataBase64 = preg_split('/\r?\n/', $dataFile);
             $num=0;
             try {
-                static::begin();
+                $this->begin();
                 foreach ($dataBase64 as $dataCode) {
                     if (!empty($dataCode)) {
                         try {
@@ -156,10 +156,10 @@ abstract class TableAccess
                         $num+= (new RawQuery($this->connection, base64_decode($data)))->exec();
                     }
                 }
-                static::commit();
+                $this->commit();
                 return $num;
             } catch (\Exception $e) {
-                static::rollBack();
+                $this->rollBack();
             }
         }
         return false;
@@ -211,7 +211,7 @@ abstract class TableAccess
      * 设置主键
      *
      * @param array $keys
-     * @return void
+     * @return TableAccess
      */
     public function setPrimaryKey(array $keys)
     {
@@ -223,7 +223,7 @@ abstract class TableAccess
      * 设置表名
      *
      * @param string $name
-     * @return void
+     * @return TableAccess 
      */
     public function setTableName(string $name)
     {
@@ -245,13 +245,13 @@ abstract class TableAccess
      * 设置表列
      *
      * @param array|null $fields
-     * @return void
+     * @return TableAccess 
      */
     public function setFields(?array $fields=null)
     {
         if (is_null($fields)) {
             if (is_null($this->allFields)) {
-                self::initTableFields();
+                $this->initTableFields();
             }
             $this->fields = $this->allFields;
             return $this;
@@ -276,7 +276,7 @@ abstract class TableAccess
      * @param TableSQLCreator $table
      * @return boolean
      */
-    protected function initFromTable(TableSQLCreator $table):bool 
+    protected function initFromTable(TableSQLCreator $table):bool
     {
         (new RawQuery($this->connection, $table))->exec();
         $this->primaryKey=$table->getPrimaryKeyName();
@@ -307,7 +307,7 @@ abstract class TableAccess
     /**
      * 从数据表创建字段
      *
-     * @return void
+     * @return boolean
      */
     protected function initFromDatabase()
     {
@@ -333,6 +333,7 @@ abstract class TableAccess
 
     protected function cacheDbInfo()
     {
+        $info =[];
         $info['fields']=$this->getFields();
         $info['primaryKey']=$this->getPrimaryKey();
         if (cache()->enable()) {
@@ -348,7 +349,7 @@ abstract class TableAccess
      * @param integer|null $limit
      * @param integer|null $offset
      * @return string|null
-     */    
+     */
     protected function getDataStringLimit(?int $limit=null, ?int $offset=null):?string
     {
         $table=$this->tableName;
