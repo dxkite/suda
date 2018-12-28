@@ -37,14 +37,14 @@ class RawQuery implements SQLStatement
     /**
      * 查询语句
      *
-     * @var [type]
+     * @var mixed
      */
     protected $query=null;
     
     /**
      *  模板值
      *
-     * @var [type]
+     * @var mixed
      */
     protected $values=null;
     protected $scroll=false;
@@ -52,7 +52,7 @@ class RawQuery implements SQLStatement
     /**
      * 使用的数据库
      *
-     * @var [type]
+     * @var mixed
      */
     protected $database=null;
     protected $dbchange=false;
@@ -92,12 +92,12 @@ class RawQuery implements SQLStatement
     {
         if ($this->stmt) {
             if ($data=$this->stmt->fetch($fetch_style)) {
-                return self::__outputRowTransfrom($data);
+                return $this->__outputRowTransfrom($data);
             }
         } else {
-            if (self::__query($this->query, $this->values)) {
+            if ($this->__query($this->query, $this->values)) {
                 if ($data=$this->stmt->fetch($fetch_style)) {
-                    return self::__outputRowTransfrom($data);
+                    return $this->__outputRowTransfrom($data);
                 }
             }
         }
@@ -116,8 +116,8 @@ class RawQuery implements SQLStatement
         if ($this->stmt) {
             return $this->stmt->fetchObject($class);
         } else {
-            if (self::__query($this->query, $this->values)) {
-                return self::__outputObjectTransfrom($this->stmt->fetchObject($class));
+            if ($this->__query($this->query, $this->values)) {
+                return $this->__outputObjectTransfrom($this->stmt->fetchObject($class));
             }
         }
         return null;
@@ -131,9 +131,9 @@ class RawQuery implements SQLStatement
      */
     public function fetchAll(int $fetch_style = PDO::FETCH_ASSOC):?array
     {
-        if (self::__query($this->query, $this->values)) {
+        if ($this->__query($this->query, $this->values)) {
             if ($data=$this->stmt->fetchAll($fetch_style)) {
-                return self::__outputRowsTransfrom($data);
+                return $this->__outputRowsTransfrom($data);
             }
         }
         return null;
@@ -146,7 +146,7 @@ class RawQuery implements SQLStatement
      */
     public function exec():int
     {
-        if (self::__query($this->query, $this->values)) {
+        if ($this->__query($this->query, $this->values)) {
             return $this->stmt->rowCount();
         }
         return 0;
@@ -156,7 +156,7 @@ class RawQuery implements SQLStatement
      * 生成一个数据输入值
      *
      * @param string $name 列名
-     * @param [type] $value 值
+     * @param mixed $value 值
      * @param integer $type 类型
      * @return InputValue 输入变量类
      */
@@ -169,7 +169,7 @@ class RawQuery implements SQLStatement
      * SQL语句模板绑定值
      *
      * @param array $values
-     * @return SQLQuery
+     * @return RawQuery
      */
     public function values(array $values)
     {
@@ -182,7 +182,7 @@ class RawQuery implements SQLStatement
      *
      * @param string $query 查询语句模板
      * @param array $array 查询语句模板值
-     * @return SQLQuery
+     * @return RawQuery
      */
     public function query(string $query, array $array=[], bool $scroll=false)
     {
@@ -197,7 +197,7 @@ class RawQuery implements SQLStatement
      * 切换使用的数据表
      *
      * @param string $name
-     * @return SQLQuery
+     * @return RawQuery
      */
     public function use(string $name=null)
     {
@@ -237,7 +237,7 @@ class RawQuery implements SQLStatement
      * 获取最后一次插入的主键ID（用于自增值
      *
      * @param string $name
-     * @return false|int false则获取失败，整数则获取成功
+     * @return int 获插入ID
      */
     public function lastInsertId(string $name=null)
     {
@@ -246,23 +246,22 @@ class RawQuery implements SQLStatement
         } else {
             return $this->connection->getPdo()->lastInsertId($name);
         }
-        return false;
     }
 
     /**
      * 事务系列，开启事务
      *
-     * @return any
+     * @return void
      */
     public function begin()
     {
-        return self::beginTransaction();
+        $this->beginTransaction();
     }
 
     /**
      * 事务系列，开启事务
      *
-     * @return any
+     * @return void
      */
     public function beginTransaction()
     {
@@ -272,7 +271,7 @@ class RawQuery implements SQLStatement
     /**
      * 事务系列，提交事务
      *
-     * @return any
+     * @return void
      */
     public function commit()
     {
@@ -282,7 +281,7 @@ class RawQuery implements SQLStatement
     /**
      * 事务系列，撤销事务
      *
-     * @return any
+     * @return void
      */
     public function rollBack()
     {
@@ -300,7 +299,7 @@ class RawQuery implements SQLStatement
         foreach ($array as $value) {
             $temp[] = is_int($value) ? $value : $this->connection->getPdo()->quote($value);
         }
-        return implode($temp, ',');
+        return implode(',', $temp);
     }
 
     private function __SqlPrefix(string $query)
@@ -313,7 +312,7 @@ class RawQuery implements SQLStatement
         if (!conf('database.enable', true)) {
             return false;
         }
-        $query=self::__SqlPrefix($query);
+        $query=$this->__SqlPrefix($query);
         $debug=debug_backtrace();
         // 调整数据表
         if ($this->database && $this->dbchange) {
@@ -329,7 +328,7 @@ class RawQuery implements SQLStatement
                 if ($this->connection->getPdo()->query('USE '.$database)) {
                     $this->database=$database;
                 } else {
-                    debug()->warning(__('could not select database:$0, maybe you should create database.', $database), 0, E_ERROR, $debug[1]['file'], $debug[1]['line']);
+                    debug()->warning(__('could not select database:$0, maybe you should create database.', $database));
                 }
             } else {
                 throw new SQLException(__('make sure you have set database info'), 0, E_ERROR, $debug[1]['file'], $debug[1]['line']);
@@ -345,7 +344,7 @@ class RawQuery implements SQLStatement
         foreach ($array as $key=> $value) {
             $bindName=':'.ltrim($key, ':');
             if ($value instanceof InputValue) {
-                $data= self::__inputFieldTransfrom($value->getName(), $value->getValue());
+                $data= $this->__inputFieldTransfrom($value->getName(), $value->getValue());
                 $stmt->bindValue($bindName, $data, InputValue::bindParam($data));
             } else {
                 $stmt->bindValue($bindName, $value, InputValue::bindParam($value));
@@ -376,7 +375,7 @@ class RawQuery implements SQLStatement
      * 添加列处理类
      *
      * @param object $object
-     * @return void
+     * @return RawQuery
      */
     public function object(object $object)
     {
@@ -391,8 +390,8 @@ class RawQuery implements SQLStatement
      *
      * @param string $name
      * @param string $fieldName
-     * @param [type] $inputData
-     * @return void
+     * @param mixed $inputData
+     * @return mixed
      */
     protected function __dataTransfrom(string $name, string $fieldName, $inputData)
     {
@@ -431,7 +430,7 @@ class RawQuery implements SQLStatement
     private function __outputRowsTransfrom(array $inputRows)
     {
         foreach ($inputRows as $id=>$inputData) {
-            $inputRows[$id]=self::__outputRowTransfrom($inputRows[$id]);
+            $inputRows[$id]=$this->__outputRowTransfrom($inputRows[$id]);
         }
         return $inputRows;
     }
@@ -441,7 +440,7 @@ class RawQuery implements SQLStatement
         foreach ($inputData as $fieldName => $fieldData) {
             $inputData[$fieldName]=$this->__outputFieldTransfrom($fieldName, $fieldData);
         }
-        return self::__outputDataFilter($inputData);
+        return $this->__outputDataFilter($inputData);
     }
 
     private function __outputObjectTransfrom($object)
@@ -452,6 +451,6 @@ class RawQuery implements SQLStatement
             $prop->setAccessible(true);
             $prop->setValue($object, $this->__outputFieldTransfrom($prop->getName(), $prop->getValue()));
         }
-        return self::__outputDataFilter($object);
+        return $this->__outputDataFilter($object);
     }
 }
