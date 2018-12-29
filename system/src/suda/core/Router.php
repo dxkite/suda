@@ -356,7 +356,7 @@ class Router
     public function createUrl(string $name, array $values=[], bool $query=true, array $queryArr=[], ?string $moduleDefault =null):?string
     {
         $name = self::getRouterFullName($name, $moduleDefault);
-        if (isset($this->routers[$name])) {
+        if (array_key_exists($name,$this->routers)) {
             return $this->routers[$name]->createUrl($values, $query, $queryArr);
         } else {
             return null;
@@ -579,7 +579,7 @@ class Router
             sort($groups);
             sort($reachable);
             self::$cacheModules = $reachable;
-            self::$cacheName = implode('-', $groups).'/'.substr(md5(implode('-', $reachable)), 0, 8);
+            self::$cacheName = substr(md5(implode('-', $reachable)), 0, 8);
         }
 
         $path = CACHE_DIR.'/router/'.self::$cacheName;

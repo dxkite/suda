@@ -93,7 +93,7 @@ abstract class Template implements TemplateInterface
                 $csp = Security::cspGeneretor($this->response->contentSecurityPolicy, self::$nonce);
             } elseif (\method_exists($this->response, 'getContentSecurityPolicy')) {
                 $csp = Security::cspGeneretor($this->response->getContentSecurityPolicy(), self::$nonce);
-            } elseif (is_array(Mapping::$current->getParam()) && array_key_exists('Content-Security-Policy', Mapping::$current->getParam())) {
+            } elseif (!is_null(Mapping::$current) && is_array(Mapping::$current->getParam()) && array_key_exists('Content-Security-Policy', Mapping::$current->getParam())) {
                 $csp = Security::cspGeneretor(Mapping::$current->getParam()['Content-Security-Policy'], self::$nonce);
             } else {
                 $csp = Security::cspGeneretor(conf('module.header.Content-Security-Policy', conf('header.Content-Security-Policy')), self::$nonce);

@@ -363,19 +363,20 @@ class Request
             $phpSelf=$match[1];
             $queryString=$match[3]??'';
             $path=$match[2];
-        } elseif // 匹配 [2] /index.php?/
+        } elseif 
+        // 匹配 [2] /index.php?/
         // 匹配 [3] /index.php/xx
         (preg_match('/^(.*)\/'.$index.'(?:(\?)?\/)?/', $url, $check)) {
-            // debug()->trace($check,$check[2]);
             $preg='/(.*)\/'.$index.'\??(\/[^?]*)?(?:[?](.+)?)?$/';
             self::$type=strlen($check[2]??'')>0?2:3;
             preg_match($preg, $url, $match);
             $queryString=$match[3]??'';
             $path= $match[2] ?? '/';
+            $path= strlen($path) > 0?$path:'/';
         } else {
-            $preg='/^([^?]*)/';
-            preg_match($preg, $url, $match);
+            preg_match('/^([^?]*)(?:[?](.+)?)?/', $url, $match);
             $path=$match[1];
+            $queryString = $match[2]??'';
         }
         $path=preg_replace('/[\/]+/', '/', $path);
         $path=($path==='/'?$path:rtrim($path, '/'));
@@ -389,18 +390,13 @@ class Request
         list(self::$url, $queryString, $phpSelf) = static::parseUrl($_SERVER['REQUEST_URI']??'/');
         $_SERVER['PATH_INFO'] = self::$url;
         $_SERVER['SCRIPT_NAME'] = self::$script;
-
-        if ($queryString && strlen($queryString)) {
+        $_GET = [];
+        if (!empty($queryString) && strlen($queryString) > 0) {
             parse_str($queryString, $queryGET);
-            $_GET = array_merge($_GET, $queryGET);
+            $_GET = $queryGET;
         }
-
         if ($phpSelf) {
             $_SERVER['PHP_SELF'] = $phpSelf;
-        }
-        
-        if (isset($_GET[self::$url])) {
-            unset($_GET[self::$url]);
         }
     }
 
