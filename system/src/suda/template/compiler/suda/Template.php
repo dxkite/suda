@@ -98,9 +98,11 @@ abstract class Template implements TemplateInterface
             } else {
                 $csp = Security::cspGeneretor(conf('module.header.Content-Security-Policy', conf('header.Content-Security-Policy')), self::$nonce);
             }
-            $this->response->addHeader('Content-Security-Policy', $csp);
+            if (\strlen($csp) > 0) {
+                $this->response->addHeader('Content-Security-Policy', $csp);
+            }
             $xfo = conf('module.header.Content-Security-Policy', conf('header.X-Frame-Options', 'sameorigin'));
-            if (\is_string($xfo)) {
+            if (\strlen($xfo) > 0) {
                 $this->response->addHeader('X-Frame-Options', $xfo);
             }
             $this->response->type('html');
