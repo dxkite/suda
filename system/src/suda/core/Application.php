@@ -50,14 +50,14 @@ class Application extends Module
     /**
      * 激活的模块
      *
-     * @var array
+     * @var array|null
      */
     private $moduleLive=null;
 
     /**
      * 启用路由的模块
      *
-     * @var array
+     * @var array|null
      */
     private $routeReachable = null;
 

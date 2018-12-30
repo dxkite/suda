@@ -350,12 +350,12 @@ class Request
     public static function parseUrl(string $url)
     {
         $queryString='';
-        // for /?/xx
+        // for /?/xx 
         if (\strpos($url, '/?/') === 0) {
             $url = substr($url, 2);
         }
         $phpSelf= $indexFile = self::$script;
-        // for /index.php
+        // for /index.php/
         if (\strpos($url, $indexFile) === 0) {
             $url = \substr($url, strlen($indexFile));
             // for /index.php?/
@@ -443,20 +443,17 @@ class Request
 
     protected static function getBaseUrl():string
     {
-        // 0 auto
-        // 1 /
-        // 3 index.php/
         $index=conf('app.index', 'index.php');
         $base=self::hostBase();
         $script= self::$script;
         // $mode=conf('app.url.mode', 0);
-        // $beautify=conf('app.url.beautify', true);
+        $beautifyUrl=conf('app.url.beautify', true);
         $rewrite=conf('app.url.rewrite', false);
         $root= substr($script, 1) === $index;
         $isWindows = !IS_LINUX;
         // 如果开启了重写URL
         if ($rewrite && $root) {
-            if ($isWindows) {
+            if ($isWindows && !$beautifyUrl) {
                 return $base.'/?/';
             }
             return $base.'/';
