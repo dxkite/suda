@@ -381,7 +381,7 @@ class Request
             parse_str($queryString, $queryGET);
             $_GET = $queryGET;
         }
-        if ($phpSelf) {
+        if (!empty($phpSelf)) {
             $_SERVER['PHP_SELF'] = $phpSelf;
         }
     }
@@ -449,12 +449,16 @@ class Request
         $index=conf('app.index', 'index.php');
         $base=self::hostBase();
         $script= self::$script;
-        $mode=conf('app.url.mode', 0);
-        $beautify=conf('app.url.beautify', true);
+        // $mode=conf('app.url.mode', 0);
+        // $beautify=conf('app.url.beautify', true);
         $rewrite=conf('app.url.rewrite', false);
         $root= substr($script, 1) === $index;
+        $isWindows = !IS_LINUX;
         // 如果开启了重写URL
         if ($rewrite && $root) {
+            if ($isWindows) {
+                return $base.'/?/';
+            }
             return $base.'/';
         }
         return $base.$script.'/';

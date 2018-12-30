@@ -358,7 +358,7 @@ class Application extends Module
             }
         }
         Config::set('module', $moduleConfig);
-        Config::set('module-config', self::getModuleConfig($module, 'config'));
+        Config::set('module-config', $this->getModuleConfig($module, 'config'));
         return true;
     }
 
