@@ -147,35 +147,43 @@ abstract class TableAccess
      */
     public function import(string $path)
     {
-        if (storage()->exist($path)) {
-            $dataFile=  storage()->get($path);
-            $dataBase64 = preg_split('/\r?\n/', $dataFile);
-            $num=0;
-            try {
-                $this->begin();
-                foreach ($dataBase64 as $dataCode) {
-                    if (!empty($dataCode)) {
-                        try {
-                            list($head, $data)=explode(';', $dataCode);
-                            list($name, $time, $sha1, $dataType)=explode(',', $head);
-                        } catch (\Exception $e) {
-                            return false;
-                        }
-                        if (sha1($data)!=$sha1 || $time >time() || $name!=$this->tableName) {
-                            return false;
-                        }
-                        $num+= (new RawQuery($this->connection, base64_decode($data)))->exec();
-                    }
-                }
-                $this->commit();
-                return $num;
-            } catch (\Exception $e) {
-                $this->rollBack();
-            }
+        if (!storage()->exist($path)) {
+            return false;
         }
-        return false;
+        $dataFile=  storage()->get($path);
+        $dataBase64 = preg_split('/\r?\n/', $dataFile);
+        $num=0;
+        try {
+            $this->begin();
+            foreach ($dataBase64 as $dataCode) {
+                if ($imported=$this->importDataLine($dataCode)) {
+                    $num+= $imported;
+                }
+            }
+            $this->commit();
+            return $num;
+        } catch (\Exception $e) {
+            $this->rollBack();
+        }
     }
     
+    private function importDataLine(string $dataLine)
+    {
+        if (strlen($dataLine) < 50) {
+            return false;
+        }
+        try {
+            list($head, $data)=explode(';', $dataCode);
+            list($name, $time, $sha1, $dataType)=explode(',', $head);
+        } catch (\Exception $e) {
+            return false;
+        }
+        if (sha1($data)!=$sha1 || $time >time() || $name!=$this->tableName) {
+            return false;
+        }
+        return (new RawQuery($this->connection, base64_decode($data)))->exec();
+    }
+
     protected function checkPrimaryKey($value)
     {
         if (count($this->primaryKey)===1) {
@@ -234,7 +242,7 @@ abstract class TableAccess
      * 设置表名
      *
      * @param string $name
-     * @return TableAccess 
+     * @return TableAccess
      */
     public function setTableName(string $name)
     {
@@ -256,7 +264,7 @@ abstract class TableAccess
      * 设置表列
      *
      * @param array|null $fields
-     * @return TableAccess 
+     * @return TableAccess
      */
     public function setFields(?array $fields=null)
     {
@@ -364,6 +372,42 @@ abstract class TableAccess
     protected function getDataStringLimit(?int $limit=null, ?int $offset=null):?string
     {
         $table=$this->tableName;
+        $limitCondition= $this->prepareDataLimitCondition($limit, $offset);
+        $key = $this->prepareDataKeyString();
+        $q=new RawQuery($this->connection, 'SELECT * FROM `#{'.$table.'}` WHERE 1 '. $limitCondition, [], true);
+        
+
+        $sqlout='INSERT INTO `#{'.$table.'}` '.$key.' VALUES ';
+        $first=true;
+        while ($values=$q->fetch()) {
+            $sql='';
+            if ($first) {
+                $first=false;
+            } else {
+                $sql.=',';
+            }
+            $sql.='(';
+            $columns='';
+            foreach ($values as $val) {
+                if (is_null($val)) {
+                    $columns.='NULL,';
+                } else {
+                    $columns.='\''.addslashes($val).'\',';
+                }
+            }
+            $columns=rtrim($columns, ',');
+            $sql.= $columns;
+            $sql.=')';
+            $sqlout.=$sql;
+        }
+        if ($first) {
+            return null;
+        }
+        return $sqlout;
+    }
+
+    private function prepareDataLimitCondition(?int $limit=null, ?int $offset=null):string
+    {
         $limitCondition=';';
         if (!is_null($limit)) {
             $limitCondition='LIMIT ';
@@ -372,49 +416,22 @@ abstract class TableAccess
             }
             $limitCondition.=$limit.';';
         }
-        $q=new RawQuery($this->connection, 'SELECT * FROM `#{'.$table.'}` WHERE 1 '. $limitCondition, [], true);
+        return $limitCondition;
+    }
+
+    private function prepareDataKeyString():string
+    {
+        $key='(';
         if (is_null($this->exportFields)) {
             $columns=(new RawQuery($this->connection, 'SHOW COLUMNS FROM `#{'.$table.'}`;'))->fetchAll();
-            $key='(';
             foreach ($columns  as $column) {
                 $key.='`'.$column['Field'].'`,';
             }
         } else {
-            $key='(';
             foreach ($this->exportFields  as $field) {
                 $key.='`'.$field.'`,';
             }
         }
-        $key=rtrim($key, ',').')';
-        if ($q) {
-            $sqlout='INSERT INTO `#{'.$table.'}` '.$key.' VALUES ';
-            $first=true;
-            while ($values=$q->fetch()) {
-                $sql='';
-                if ($first) {
-                    $first=false;
-                } else {
-                    $sql.=',';
-                }
-                $sql.='(';
-                $columns='';
-                foreach ($values as $val) {
-                    if (is_null($val)) {
-                        $columns.='NULL,';
-                    } else {
-                        $columns.='\''.addslashes($val).'\',';
-                    }
-                }
-                $columns=rtrim($columns, ',');
-                $sql.= $columns;
-                $sql.=')';
-                $sqlout.=$sql;
-            }
-            if ($first) {
-                return null;
-            }
-            return $sqlout;
-        }
-        return null;
+        return rtrim($key, ',').')';
     }
 }
