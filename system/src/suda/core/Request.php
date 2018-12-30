@@ -23,8 +23,6 @@ use suda\exception\JSONException;
 class Request
 {
     private static $json=null;
-
-    private static $crawlers=null;
     protected static $instance=null;
     protected static $type=0;
     protected static $query='';
@@ -347,40 +345,28 @@ class Request
      * 处理请求的URL
      *
      * @param string $url
-     * @return array ($path,$queryString,$phpSelf) 处理的数据
+     * @return array 处理的数据 格式：array($path,$queryString,$phpSelf)
      */
     public static function parseUrl(string $url)
     {
-        $path= '';
         $queryString='';
-        $phpSelf='';
-        
-        $index=pathinfo(self::$script, PATHINFO_BASENAME);
-        //  匹配 [1] /?/xxxxx
-        if (preg_match('/^\/\?\//', $url)) {
-            $preg='/^(\/\?(\/[^?]*))(?:[?](.+)?)?$/';
-            preg_match($preg, $url, $match);
-            $phpSelf=$match[1];
-            $queryString=$match[3]??'';
-            $path=$match[2];
-        } elseif 
-        // 匹配 [2] /index.php?/
-        // 匹配 [3] /index.php/xx
-        (preg_match('/^(.*)\/'.$index.'(?:(\?)?\/)?/', $url, $check)) {
-            $preg='/(.*)\/'.$index.'\??(\/[^?]*)?(?:[?](.+)?)?$/';
-            self::$type=strlen($check[2]??'')>0?2:3;
-            preg_match($preg, $url, $match);
-            $queryString=$match[3]??'';
-            $path= $match[2] ?? '/';
-            $path= strlen($path) > 0?$path:'/';
-        } else {
-            preg_match('/^([^?]*)(?:[?](.+)?)?/', $url, $match);
-            $path=$match[1];
-            $queryString = $match[2]??'';
+        // for /?/xx
+        if (\strpos($url, '/?/') === 0) {
+            $url = substr($url, 2);
         }
-        $path=preg_replace('/[\/]+/', '/', $path);
-        $path=($path==='/'?$path:rtrim($path, '/'));
-        return [$path,$queryString,$phpSelf];
+        $phpSelf= $indexFile = self::$script;
+        // for /index.php
+        if (\strpos($url, $indexFile) === 0) {
+            $url = \substr($url, strlen($indexFile));
+            // for /index.php?/
+            $url =ltrim($url,'?');
+        }
+        $queryStart = \strpos($url, '?');
+        if ($queryStart !== false) {
+            $queryString = \substr($url, $queryStart+1);
+            $url = \substr($url, 0, $queryStart);
+        }
+        return [$url,$queryString,$phpSelf];
     }
 
     protected static function parseRequest()
@@ -458,45 +444,22 @@ class Request
     protected static function getBaseUrl():string
     {
         // 0 auto
-        // 1 windows = /?/, linux = /
-        // 2 index.php/
-        // 3 index.php?/
+        // 1 /
+        // 3 index.php/
+        $index=conf('app.index', 'index.php');
         $base=self::hostBase();
         $script= self::$script;
         $mode=conf('app.url.mode', 0);
-        $beautify=conf('app.url.beautify', false);
-        $index=conf('app.index', 'index.php');
-        if ($mode==0 || $mode==1) {
-            // 如果当前脚本为AutoIndex索引
-            if (ltrim($script, '/\\') === $index) {
-                // 开启重写
-                if (conf('app.url.rewrite', false)) {
-                    return $base. ((IS_LINUX || $beautify)? '/':'/?/');
-                }
-                return $base.'/?/';
-            }
-        } elseif ($mode==2) {
-            return $base.$script.'/';
-        } elseif ($mode==3) {
-            return $base.$script.'?/';
+        $beautify=conf('app.url.beautify', true);
+        $rewrite=conf('app.url.rewrite', false);
+        $root= substr($script, 1) === $index;
+        // 如果开启了重写URL
+        if ($rewrite && $root) {
+            return $base.'/';
         }
-        return $base.$script.(self::$type==2?'?':'').'/';
+        return $base.$script.'/';
     }
-    
-    public function isCrawler()
-    {
-        $agent= $_SERVER['HTTP_USER_AGENT'] ?? '';
-        if (is_null(self::$crawlers)) {
-            self::$crawlers=require SYSTEM_RESOURCE.'/crawlers.php';
-        }
-        foreach (self::$crawlers as $crawler) {
-            if (preg_match('/'.preg_quote($crawler).'/i', $agent)) {
-                return $crawler;
-            }
-        }
-        return false;
-    }
-
+ 
     public function getMapping()
     {
         return $this->mapping;
