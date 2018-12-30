@@ -234,7 +234,7 @@ class Application extends Module
      */
     public function getLiveModules()
     {
-        if ($this->moduleLive) {
+        if (!is_null($this->moduleLive)) {
             return $this->moduleLive;
         }
         if (file_exists($path=RUNTIME_DIR.'/modules.config.php')) {
@@ -242,7 +242,7 @@ class Application extends Module
         } else {
             $modules=conf('app.modules', $this->getModules());
         }
-        $exclude=defined('DISABLE_MODULES')?explode(',', trim(DISABLE_MODULES, ',')):[];
+        $exclude=defined('DISABLE_MODULES')?explode(',', trim(\DISABLE_MODULES, ',')):[];
         foreach ($exclude as $index=>$name) {
             $exclude[$index]=$this->getModuleFullName($name);
         }
@@ -267,9 +267,27 @@ class Application extends Module
      */
     public function getReachableModules()
     {
-        if ($this->routeReachable) {
-            return $this->routeReachable;
+        if (is_null($this->routeReachable)) {
+            $this->routeReachable = $this->getConfigReachableModule();
         }
+        return $this->routeReachable;
+    }
+
+    /**
+     * 添加可达模块
+     *
+     * @param string $name
+     * @return void
+     */
+    public function addReachableModule(string $name)
+    {
+        if (is_null($this->routeReachable)) {
+            $this->routeReachable = $this->getConfigReachableModule();
+        }
+        $this->routeReachable [] = $this->getModuleFullName($name);
+    }
+
+    protected function getConfigReachableModule() {
         $liveModules = $this->getLiveModules();
         if (file_exists($path=RUNTIME_DIR.'/reachable.config.php')) {
             $modules=include $path;
@@ -291,9 +309,9 @@ class Application extends Module
         }
         // sort($modules);
         debug()->trace('reachable modules', json_encode($modules));
-        return $this->routeReachable=$modules;
+        return $modules;
     }
-    
+
     /**
      * 判断模块是否可达
      *
@@ -303,20 +321,6 @@ class Application extends Module
     public function isModuleReachable(string $name):bool
     {
         return in_array($this->getModuleFullName($name), $this->getReachableModules());
-    }
-
-    /**
-     * 添加可达模块
-     *
-     * @param string $name
-     * @return void
-     */
-    public function addReachableModule(string $name)
-    {
-        if (is_null($this->routeReachable)) {
-            $this->getReachableModules();
-        }
-        $this->routeReachable [] = $this->getModuleFullName($name);
     }
 
     /**
