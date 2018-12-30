@@ -41,7 +41,7 @@ abstract class Template implements TemplateInterface
     /**
      * 模板所属于的响应
      *
-     * @var suda\core\Response|null
+     * @var \suda\core\Response|null
      */
     protected $response=null;
     /**
@@ -54,7 +54,7 @@ abstract class Template implements TemplateInterface
     /**
      * 父模版
      *
-     * @var suda\template\compiler\suda\Template|null
+     * @var \suda\template\compiler\suda\Template|null
      */
     protected $parent=null;
 
@@ -96,7 +96,7 @@ abstract class Template implements TemplateInterface
     /**
      * 继承的模板
      *
-     * @var suda\template\compiler\suda\Template|null
+     * @var string|null
      */
     protected $extend=null;
 
