@@ -138,6 +138,12 @@ class Application extends Module
         // 安装、启用使用的模块
         foreach ($moduleLive as $module) {
             $this->loadModule($module);
+             // 自动安装
+            if (conf('auto-install', true)) {
+                Hook::listen('suda:application:init', function () use ($module) {
+                    $this->installModule($module);
+                });
+            }
         }
         Hook::exec('suda:module:load');
     }

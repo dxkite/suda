@@ -85,12 +85,6 @@ class Module
             Hook::loadConfig($listenerPath, $fullname);
             Hook::exec('suda:module:load:on::'.$fullname);
         }
-        // 自动安装
-        if (conf('auto-install', true)) {
-            Hook::listen('suda:application:init', function () use ($module) {
-                $this->installModule($module);
-            });
-        }
         // 设置语言包库
         Locale::path($root.'/resource/locales/');
     }

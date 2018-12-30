@@ -173,7 +173,7 @@ abstract class TableAccess
             return false;
         }
         try {
-            list($head, $data)=explode(';', $dataCode);
+            list($head, $data)=explode(';', $dataLine);
             list($name, $time, $sha1, $dataType)=explode(',', $head);
         } catch (\Exception $e) {
             return false;
@@ -373,7 +373,7 @@ abstract class TableAccess
     {
         $table=$this->tableName;
         $limitCondition= $this->prepareDataLimitCondition($limit, $offset);
-        $key = $this->prepareDataKeyString();
+        $key = $this->prepareDataKeyString($table);
         $q=new RawQuery($this->connection, 'SELECT * FROM `#{'.$table.'}` WHERE 1 '. $limitCondition, [], true);
         
 
@@ -419,7 +419,7 @@ abstract class TableAccess
         return $limitCondition;
     }
 
-    private function prepareDataKeyString():string
+    private function prepareDataKeyString(string $table):string
     {
         $key='(';
         if (is_null($this->exportFields)) {

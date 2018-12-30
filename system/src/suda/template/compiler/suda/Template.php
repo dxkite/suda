@@ -26,40 +26,56 @@ use suda\exception\KernelException;
 use suda\exception\CommandException;
 use suda\template\Template as TemplateInterface;
 
+/**
+ * 抽象 suda 模板
+ */
 abstract class Template implements TemplateInterface
 {
     /**
-    * 模板的值
-    */
+     * 模板的值
+     *
+     * @var array
+     */
     protected $value=[];
+  
     /**
-    * 模板所属于的响应
-    */
+     * 模板所属于的响应
+     *
+     * @var suda\core\Response|null
+     */
     protected $response=null;
     /**
      * 模板名
      *
-     * @var string
+     * @var string|null
      */
     protected $name=null;
+    
     /**
      * 父模版
      *
-     * @var Template
+     * @var suda\template\compiler\suda\Template|null
      */
     protected $parent=null;
+
+    /**
+     * 模板钩子
+     *
+     * @var array
+     */
     protected $hooks=[];
+    
     /**
      * 所在模块
      *
-     * @var string
+     * @var string|null
      */
     protected $module=null;
 
     /**
      * 源文件
      *
-     * @var string
+     * @var string|null
      */
     protected $source=null;
     
@@ -73,10 +89,15 @@ abstract class Template implements TemplateInterface
     /**
      * 安全Nonce
      *
-     * @var string
+     * @var string|null
      */
     protected static $nonce = null;
 
+    /**
+     * 继承的模板
+     *
+     * @var suda\template\compiler\suda\Template|null
+     */
     protected $extend=null;
 
     /**
