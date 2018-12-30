@@ -108,7 +108,7 @@ abstract class Template implements TemplateInterface
         $content= $this->getRenderedString();
         hook()->exec('suda:template:render::before', [&$content]);
         debug()->trace('echo '.$this->name);
-        if ($this->response) {
+        if (!is_null($this->response)) {
             $csp = null;
             if (\property_exists($this->response, 'contentSecurityPolicy')) {
                 $csp = Security::cspGeneretor($this->response->contentSecurityPolicy, self::$nonce);

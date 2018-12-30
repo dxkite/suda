@@ -237,7 +237,7 @@ abstract class Response
      * 注意：请不要再输出内容
      *
      * @param string $etag
-     * @return void
+     * @return boolean
      */
     public static function etag(string $etag)
     {
