@@ -2,7 +2,8 @@
 namespace suda\core\request;
 
 /**
- * 请求描述类，客户端向框架发送请求时会生成此类
+ * 请求属性类
+ * 包括请求的各种基本属性
  */
 trait RequestAttriubute
 {
@@ -142,4 +143,26 @@ trait RequestAttriubute
     {
         return file_get_contents('php://input');
     }
+
+    /**
+     * 获取请求的 IP
+     *
+     * @return string ip地址
+     */
+    public static function ip()
+    {
+        static $ipFrom = ['HTTP_CLIENT_IP','HTTP_X_FORWARDED_FOR','HTTP_X_FORWARDED', 'HTTP_X_CLUSTER_CLIENT_IP','HTTP_FORWARDED_FOR','HTTP_FORWARDED','REMOTE_ADDR'];
+        foreach ($ipFrom as $key) {
+            if (array_key_exists($key, $_SERVER)) {
+                foreach (explode(',', $_SERVER[$key]) as $ip) {
+                    $ip = trim($ip);
+                    if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4 | FILTER_FLAG_IPV6 | FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE) !== false) {
+                        return $ip;
+                    }
+                }
+            }
+        }
+        return  '127.0.0.1';
+    }
+
 }
