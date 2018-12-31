@@ -27,7 +27,6 @@ class InputValue implements \JsonSerializable
     private $name;
     private $value;
 
-
     public function __construct(string $name, $value)
     {
         $this->name=$name;
