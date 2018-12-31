@@ -40,7 +40,7 @@ class Hook
      * 注册一条命令
      *
      * @param string $name
-     * @param [type] $command
+     * @param mixed $command
      * @return void
      */
     public static function listen(string $name, $command)
@@ -52,7 +52,7 @@ class Hook
      * 注册一条命令
      *
      * @param string $name
-     * @param [type] $command
+     * @param mixed $command
      * @return void
      */
     public static function register(string $name, $command)
@@ -64,7 +64,7 @@ class Hook
      * 添加命令到底部
      *
      * @param string $name
-     * @param [type] $command
+     * @param mixed $command
      * @return void
      */
     public static function add(string $name, $command)
@@ -76,7 +76,7 @@ class Hook
      * 添加命令到顶部
      *
      * @param string $name
-     * @param [type] $command
+     * @param mixed $command
      * @return void
      */
     public static function addTop(string $name, $command)
@@ -92,7 +92,7 @@ class Hook
      * 移除一条命令
      *
      * @param string $name
-     * @param [type] $remove
+     * @param mixed $remove
      * @return void
      */
     public static function remove(string $name, $remove)
@@ -129,7 +129,7 @@ class Hook
 
     /**
      * 运行，遇到返回指定条件则停止并返回true
-     * 
+     *
      * @param string $name
      * @param array $args
      * @param boolean $condition
@@ -153,7 +153,7 @@ class Hook
      *
      * @param string $name
      * @param array $args
-     * @return [type]
+     * @return mixed|null
      */
     public static function execNotNull(string $name, array $args=[])
     {
@@ -173,7 +173,7 @@ class Hook
      *
      * @param string $name
      * @param array $args
-     * @return [type]
+     * @return mixed|null
      */
     public static function execTop(string $name, array $args=[])
     {
@@ -189,7 +189,7 @@ class Hook
      *
      * @param string $name
      * @param array $args
-     * @return [type]
+     * @return mixed|null
      */
     public static function execTail(string $name, array $args=[])
     {
@@ -202,7 +202,7 @@ class Hook
 
     protected static function call($command, array &$args)
     {
-        if (conf('hook.enable',true) == false){
+        if (conf('hook.enable', true) == false) {
             debug()->warning(__('hook.enable == false refuse run command'));
             return null;
         }
