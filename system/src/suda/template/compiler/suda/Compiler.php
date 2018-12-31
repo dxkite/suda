@@ -122,7 +122,7 @@ class Compiler implements CompilerImpl
         $timeName = __('compile $0 $1', $module, $name);
         debug()->time($timeName);
         if (!Storage::exist($input)) {
-            $this->raiseException(1,__('input file <$0> $1 at $1 not exist ', $module, $name, $input),'unknown',0);
+            $this->raiseException(1, __('input file <$0> $1 at $1 not exist ', $module, $name, $input), 'unknown', 0);
         }
 
         $tagConfig = $this->getTagConfig($root, $input);
@@ -139,7 +139,7 @@ class Compiler implements CompilerImpl
             if (!conf('debug')) {
                 storage()->delete($output);
             }
-            $this->raiseException(2,__('syntax error: $0 near $1:$2', $syntax->getMessage(), $input, $syntax->getLine()), $input, $syntax->getLine());
+            $this->raiseException(2, __('syntax error: $0 near $1:$2', $syntax->getMessage(), $input, $syntax->getLine()), $input, $syntax->getLine());
         }
     }
 
@@ -224,20 +224,19 @@ class Compiler implements CompilerImpl
     public static function buildCommand(string $name, string $exp):string
     {
         $name=ucfirst($name);
+        $commandString = '';
         if (self::hasCommand($name)) {
             $echo=self::$command[$name]['echo']?'echo':'';
             $command=self::$command[$name]['command'];
             if (is_string($command)) {
-                return '<?php '.$echo.' (new \suda\tool\Command(\''.$command.'\'))->args'. ($exp?:'()').' ?>';
+                $commandString = '<?php '.$echo.' (new \suda\tool\Command(\''.$command.'\'))->args'. ($exp?:'()').' ?>';
+            } elseif ($command instanceof Command) {
+                $commandString = $command->exec([$exp]);
             } else {
-                if ($command instanceof Command) {
-                    return $command->exec([$exp]);
-                } else {
-                    return (new Command($command))->exec([$exp]);
-                }
+                $commandString = (new Command($command))->exec([$exp]);
             }
         }
-        return '';
+        return strval($commandString);
     }
 
     private function compileString(string $str, array $tagConfig)
