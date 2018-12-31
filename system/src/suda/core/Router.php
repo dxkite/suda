@@ -59,7 +59,7 @@ class Router
             $group = trim(is_numeric($index)?$name:$index);
             $config = $group === Mapping::DEFAULT_GROUP ? 'router': 'router-'.$name;
             if ($file=Application::getInstance()->getModuleConfigPath($module, $config)) {
-                $loadedRouters= self::loadModuleRouteConfig($group, $module, $file);
+                $loadedRouters= $this->loadModuleRouteConfig($group, $module, $file);
                 debug()->trace(__('loaded $1 router from file $0', $file, $group));
                 $this->routers=array_merge($this->routers, $loadedRouters);
             }
@@ -110,12 +110,12 @@ class Router
     {
         // 如果DEBUG模式
         if (conf('debug', false)) {
-            self::prepareRouterInfo();
+            $this->prepareRouterInfo();
         } else {
-            if (self::routerCached()) {
-                self::loadFile();
+            if ($this->routerCached()) {
+                $this->loadFile();
             } else {
-                self::prepareRouterInfo();
+                $this->prepareRouterInfo();
             }
         }
         Hook::exec('suda:route:load', [$this]);
@@ -136,12 +136,12 @@ class Router
     {
         $modules=Application::getInstance()->getReachableModules();
         foreach ($modules as $module) {
-            self::load($module);
+            $this->load($module);
         }
         Hook::exec('suda:route:prepare', [$this]);
         // 缓存路由信息
         if (storage()->isWritable(CACHE_DIR)) {
-            self::saveCacheFile();
+            $this->saveCacheFile();
         }
     }
 
@@ -198,7 +198,7 @@ class Router
      *
      * @param string $name
      * @param string $moduleDefault
-     * @return list(module,name)
+     * @return array 模板信息 array(module,name)
      */
     public static function parseName(string $name, ?string $moduleDefault=null)
     {
@@ -241,7 +241,7 @@ class Router
      */
     public function getRouterFullName(string $name, ?string $moduleDefault=null):string
     {
-        list($module, $name)=self::parseName($name, $moduleDefault);
+        list($module, $name)=$this->parseName($name, $moduleDefault);
         $module=Application::getInstance()->getModuleFullName($module);
         return $module.':'.$name;
     }
@@ -256,7 +256,7 @@ class Router
      */
     public function buildUrlArgs(string $name, array $args, ?string $moduleDefault =null):array
     {
-        $name = self::getRouterFullName($name, $moduleDefault);
+        $name = $this->getRouterFullName($name, $moduleDefault);
         if (isset($this->routers[$name])) {
             $types=$this->routers[$name]->getTypes();
             if ($types) {
@@ -289,7 +289,7 @@ class Router
         $name = trim($values['path']??'', '/');
         parse_str($values['query'] ?? '', $params);
         if ($type == 'router') {
-            $name = self::getRouterFullName($name);
+            $name = $this->getRouterFullName($name);
             if (isset($this->routers[$name])) {
                 $router=clone $this->routers[$name];
                 $router->setHost($host);
@@ -334,7 +334,7 @@ class Router
      */
     public function buildUrl(string $name, array $values=[], bool $query=true, array $queryArr=[], ?string $moduleDefault =null):string
     {
-        $url = self::createUrl($name, $values, $query, $queryArr, $moduleDefault);
+        $url = $this->createUrl($name, $values, $query, $queryArr, $moduleDefault);
         if ($url) {
             return $url;
         } else {
@@ -355,7 +355,7 @@ class Router
      */
     public function createUrl(string $name, array $values=[], bool $query=true, array $queryArr=[], ?string $moduleDefault =null):?string
     {
-        $name = self::getRouterFullName($name, $moduleDefault);
+        $name = $this->getRouterFullName($name, $moduleDefault);
         if (array_key_exists($name,$this->routers)) {
             return $this->routers[$name]->createUrl($values, $query, $queryArr);
         } else {
@@ -367,7 +367,7 @@ class Router
     {
         debug()->time('dispatch');
         if (!Hook::execIf('suda:route:dispatch::before', [Request::getInstance()], false)) {
-            if (($mapping=self::matchRouterMap())!==false) {
+            if (($mapping=$this->matchRouterMap())!==false) {
                 debug()->timeEnd('dispatch');
                 Response::setName($mapping->getFullName());
                 debug()->time('run router');
@@ -392,7 +392,7 @@ class Router
      */
     public function getRouter(string $name, ?string $moduleDefault=null):?Mapping
     {
-        $name=self::getRouterFullName($name, $moduleDefault);
+        $name=$this->getRouterFullName($name, $moduleDefault);
         if (isset($this->routers[$name])) {
             return $this->routers[$name];
         }
@@ -408,8 +408,8 @@ class Router
      */
     public function setRouterAlias(string $name, string $alias)
     {
-        $name=self::getRouterFullName($name);
-        $alias=self::getRouterFullName($alias);
+        $name=$this->getRouterFullName($name);
+        $alias=$this->getRouterFullName($alias);
         if (isset($this->routers[$name])) {
             $this->routers[$alias]=$this->routers[$name];
         }
@@ -424,8 +424,8 @@ class Router
      */
     public function routerReplace(string $name, string $alias)
     {
-        $name=self::getRouterFullName($name);
-        $alias=self::getRouterFullName($alias);
+        $name=$this->getRouterFullName($name);
+        $alias=$this->getRouterFullName($alias);
         if (isset($this->routers[$name])) {
             if (isset($this->routers[$alias])) {
                 $this->routers[$name]=$this->routers[$alias];
@@ -443,7 +443,7 @@ class Router
     public function routerMove(string $name, string $alias)
     {
         $this->routerReplace($name, $alias);
-        $alias=self::getRouterFullName($alias);
+        $alias=$this->getRouterFullName($alias);
         unset($this->router[$alias]);
     }
     
@@ -472,7 +472,7 @@ class Router
      * @param string $class
      * @param string $module
      * @param array $method
-     * @return void
+     * @return string
      */
     public function addRouter(string $name, string $url, string $class, string $module, array $method=[], bool $autoPrefix=false)
     {
@@ -491,12 +491,12 @@ class Router
      * @param string $name
      * @param string $url
      * @param bool $preg
-     * @return void
+     * @return Mapping|null
      */
     public function replaceMatch(string $name, string $url, bool $preg=false)
     {
-        $name=self::getRouterFullName($name);
-        if (isset($this->routers[$name])) {
+        $name=$this->getRouterFullName($name);
+        if (array_key_exists($name, $this->routers)) {
             if ($preg) {
                 return $this->routers[$name]->setMapping($url);
             }
@@ -510,12 +510,12 @@ class Router
      * @param string $name
      * @param string $class
      * @param array $method
-     * @return void
+     * @return Mapping|null
      */
     public function replaceClass(string $name, string $class, string $module=null, array $method=null)
     {
-        $name=self::getRouterFullName($name);
-        if (isset($this->routers[$name])) {
+        $name=$this->getRouterFullName($name);
+        if (array_key_exists($name, $this->routers)) {
             $this->routers[$name]->setCallback($class.'->onRequest');
             if ($module) {
                 $this->routers[$name]->setModule($module);
@@ -547,6 +547,7 @@ class Router
     public static function error(int $code=404)
     {
         $render=new class extends Response {
+            public $code;
             public function onRequest(Request $request)
             {
                 $this->state($this->code);
