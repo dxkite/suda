@@ -25,8 +25,8 @@ use suda\exception\CommandException;
  */
 class Command
 {
-    public $command;
-    public $file;
+    public $command =null;
+    public $file = null;
     public $static=false;
     public $params=[];
     public $funcParam=[];
@@ -61,6 +61,14 @@ class Command
         if (count($params)) {
             $this->params=$params;
         }
+        // 文件引入
+        if (!is_null($this->file) && $this->singleFile) {
+            // 文件参数引入
+            array_unshift($params, $this->file);
+            $_SERVER['argv']=$params;
+            $_SERVER['args']=count($params);
+            return include $this->file;
+        }
 
         // 设置了参数绑定
         if (count($this->funcParam)>0) {
@@ -70,10 +78,11 @@ class Command
             }
             $this->params=$args;
         }
+
         // 非空调用
-        if ($this->command) {
+        if (!is_null($this->command)) {
             // 是函数调用&指定了文件&函数不存在
-            if (is_string($this->command) && !function_exists($this->command) && $this->file) {
+            if (is_string($this->command) && !function_exists($this->command) && !is_null($this->file)) {
                 require_once $this->file;
             }
             // 调用接口
@@ -91,12 +100,8 @@ class Command
                 }
             }
             return static::_absoluteCall($this->command, $this->params);
-        } elseif ($this->file) {
-            // 文件参数引入
-            $params=array_unshift($params, $this->file);
-            $_SERVER['argv']=$params;
-            $_SERVER['args']=count($params);
-            return include $this->file;
+        } else  {
+            throw (new CommandException(__('invaild command: $0', $this->cmdstr)))->setCmd($this);
         }
     }
 
@@ -132,7 +137,6 @@ class Command
         }
         return Autoloader::realName($name);
     }
-
     
     protected static function parseParameter(string $param)
     {
