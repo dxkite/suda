@@ -41,11 +41,11 @@ class FileStorage implements Storage
     public function mkdirs(string $dir, int $mode=0755):bool
     {
         $path=Autoloader::parsePath($dir);
-        if (!self::isDir($path)) {
-            if (!self::mkdirs(dirname($path), $mode)) {
+        if (!$this->isDir($path)) {
+            if (!$this->mkdirs(dirname($path), $mode)) {
                 return false;
             }
-            if (!self::mkdir($path, $mode)) {
+            if (!$this->mkdir($path, $mode)) {
                 return false;
             }
         }
@@ -55,7 +55,7 @@ class FileStorage implements Storage
     public function path(string $path):?string
     {
         $path=Autoloader::parsePath($path);
-        return self::exist($path)?$path:self::mkdirs($path)?$path:null;
+        return $this->exist($path)?$path:$this->mkdirs($path)?$path:null;
     }
     
     public function abspath(string $path)
@@ -70,9 +70,9 @@ class FileStorage implements Storage
     public function readDirFiles(string $parent, bool $repeat=false, ?string $preg=null, bool $full=true) : \Iterator
     {
         $parent=Autoloader::parsePath($parent);
-        foreach (self::readPath($parent, $repeat, $preg, $full) as $file) {
+        foreach ($this->readPath($parent, $repeat, $preg, $full) as $file) {
             $path = $full?$file:$parent.DIRECTORY_SEPARATOR.$file;
-            if (self::isFile($path)) {
+            if ($this->isFile($path)) {
                 yield $file;
             }
         }
@@ -81,9 +81,9 @@ class FileStorage implements Storage
     public function readDirs(string $parent, bool $repeat=false, ?string $preg=null, bool $full=false): \Iterator
     {
         $parent=Autoloader::parsePath($parent);
-        foreach (self::readPath($parent, $repeat, $preg, $full) as $dir) {
+        foreach ($this->readPath($parent, $repeat, $preg, $full) as $dir) {
             $path = $full?$dir:$parent.DIRECTORY_SEPARATOR.$dir;
-            if (self::isDir($path)) {
+            if ($this->isDir($path)) {
                 yield $dir;
             }
         }
@@ -92,7 +92,7 @@ class FileStorage implements Storage
     public function readPath(string $parent, bool $repeat=false, ?string $preg=null, bool $full=true): \Iterator
     {
         $directory=Autoloader::parsePath($parent);
-        if (self::isDir($directory)) {
+        if ($this->isDir($directory)) {
             if ($repeat) {
                 $it = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($directory));
             } else {
@@ -103,7 +103,7 @@ class FileStorage implements Storage
                 if ($full) {
                     yield $key;
                 } else {
-                    yield self::cut($key, $directory);
+                    yield $this->cut($key, $directory);
                 }
             }
         }
@@ -119,12 +119,12 @@ class FileStorage implements Storage
         if (empty($path)) {
             return false;
         }
-        if (self::isFile($path)) {
-            self::remove($path);
-        } elseif (self::isDir($path)) {
-            self::rmdirs($path);
+        if ($this->isFile($path)) {
+            $this->remove($path);
+        } elseif ($this->isDir($path)) {
+            $this->rmdirs($path);
         }
-        return self::exist($path) === false;
+        return $this->exist($path) === false;
     }
 
     /**
@@ -135,9 +135,9 @@ class FileStorage implements Storage
      */
     public function rmdirs(string $parent):bool
     {
-        if (self::isDir($parent)) {
-            foreach (self::readPath($parent) as $path) {
-                if (self::isFile($path)) {
+        if ($this->isDir($parent)) {
+            foreach ($this->readPath($parent) as $path) {
+                if ($this->isFile($path)) {
                     $errorhandler = function ($erron, $error, $file, $line) {
                         Debug::warning($error);
                     };
@@ -145,10 +145,10 @@ class FileStorage implements Storage
                     unlink($path);
                     restore_error_handler();
                 }
-                if (self::isEmpty($path)) {
+                if ($this->isEmpty($path)) {
                     rmdir($path);
                 } else {
-                    self::rmdirs($path);
+                    $this->rmdirs($path);
                 }
             }
             rmdir($parent);
@@ -159,7 +159,7 @@ class FileStorage implements Storage
 
     public function isEmpty(string $dirOpen):bool
     {
-        while (self::readDirs($dirOpen)) {
+        while ($this->readDirs($dirOpen)) {
             return false;
         }
         return true;
@@ -167,12 +167,12 @@ class FileStorage implements Storage
 
     public function copydir(string $src, string $dest, ?string $preg=null):bool
     {
-        if ($path = self::path($dest)) {
-            foreach (self::readPath($src, false, $preg, false) as $read) {
-                if (self::isDir($src.DIRECTORY_SEPARATOR.$read)) {
-                    self::copydir($src.DIRECTORY_SEPARATOR.$read, $dest.DIRECTORY_SEPARATOR.$read, $preg);
+        if ($path = $this->path($dest)) {
+            foreach ($this->readPath($src, false, $preg, false) as $read) {
+                if ($this->isDir($src.DIRECTORY_SEPARATOR.$read)) {
+                    $this->copydir($src.DIRECTORY_SEPARATOR.$read, $dest.DIRECTORY_SEPARATOR.$read, $preg);
                 } else {
-                    self::copy($src.DIRECTORY_SEPARATOR.$read, $dest.DIRECTORY_SEPARATOR.$read);
+                    $this->copy($src.DIRECTORY_SEPARATOR.$read, $dest.DIRECTORY_SEPARATOR.$read);
                 }
             }
             return true;
@@ -183,16 +183,16 @@ class FileStorage implements Storage
     
     public function movedir(string $src, string $dest, ?string $preg=null):bool
     {
-        if ($path = self::path($dest)) {
-            foreach (self::readPath($src, false, $preg, false) as $read) {
-                if (self::isDir($src.DIRECTORY_SEPARATOR.$read)) {
-                    self::movedir($src.DIRECTORY_SEPARATOR.$read, $dest.DIRECTORY_SEPARATOR.$read, $preg);
-                    self::rmdir($src.DIRECTORY_SEPARATOR.$read);
+        if ($path = $this->path($dest)) {
+            foreach ($this->readPath($src, false, $preg, false) as $read) {
+                if ($this->isDir($src.DIRECTORY_SEPARATOR.$read)) {
+                    $this->movedir($src.DIRECTORY_SEPARATOR.$read, $dest.DIRECTORY_SEPARATOR.$read, $preg);
+                    $this->rmdir($src.DIRECTORY_SEPARATOR.$read);
                 } else {
-                    self::move($src.DIRECTORY_SEPARATOR.$read, $dest.DIRECTORY_SEPARATOR.$read);
+                    $this->move($src.DIRECTORY_SEPARATOR.$read, $dest.DIRECTORY_SEPARATOR.$read);
                 }
             }
-            self::rmdir($src);
+            $this->rmdir($src);
             return true;
         } else {
             return false;
@@ -206,7 +206,7 @@ class FileStorage implements Storage
         if (!is_writable(dirname($dest))) {
             return false;
         }
-        if (self::exist($src)) {
+        if ($this->exist($src)) {
             return copy($src, $dest);
         }
         return false;
@@ -219,7 +219,7 @@ class FileStorage implements Storage
         if (!is_writable(dirname($dest))) {
             return false;
         }
-        if (self::exist($src)) {
+        if ($this->exist($src)) {
             return rename($src, $dest);
         }
         return false;
@@ -229,7 +229,7 @@ class FileStorage implements Storage
     public function mkdir(string $path, int $mode=0755):bool
     {
         $path=Autoloader::parsePath($path);
-        if (!self::isDir($path) && is_writable(dirname($path))) {
+        if (!$this->isDir($path) && is_writable(dirname($path))) {
             $mk = mkdir($path, $mode);
             if ($mk) {
                 chmod($path, $mode);
@@ -253,7 +253,7 @@ class FileStorage implements Storage
     {
         $name=Autoloader::parsePath($name);
         $dirname=dirname($name);
-        if (self::isDir($dirname) && is_writable($dirname)) {
+        if ($this->isDir($dirname) && is_writable($dirname)) {
             return file_put_contents($name, $content, $flags);
         }
         return false;
@@ -262,7 +262,7 @@ class FileStorage implements Storage
     public function get(string $name):string
     {
         $name=Autoloader::parsePath($name);
-        if ($file=self::exist($name)) {
+        if ($file=$this->exist($name)) {
             if (is_string($file)) {
                 $name=$file;
             }
@@ -280,7 +280,7 @@ class FileStorage implements Storage
     public function remove(string $name) : bool
     {
         $name=Autoloader::parsePath($name);
-        if ($file=self::exist($name)) {
+        if ($file=$this->exist($name)) {
             if (is_string($file)) {
                 $name=$file;
             }
@@ -319,7 +319,7 @@ class FileStorage implements Storage
     public function size(string $name):int
     {
         $name=Autoloader::parsePath($name);
-        if ($file=self::exist($name)) {
+        if ($file=$this->exist($name)) {
             if (is_string($file)) {
                 $name=$file;
             }
@@ -328,13 +328,13 @@ class FileStorage implements Storage
         return 0;
     }
 
-    public static function download(string $url, string $save):int
+    public function download(string $url, string $save):boolean
     {
         $save=Autoloader::parsePath($save);
-        return self::put($save, self::curl($url));
+        return $this->put($save, $this->curl($url));
     }
     
-    public static function curl(string $url, int $timeout=3)
+    public function curl(string $url, int $timeout=3)
     {
         $ch=curl_init($url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -348,7 +348,7 @@ class FileStorage implements Storage
     public function type(string $name):string
     {
         $name=Autoloader::parsePath($name);
-        if ($file=self::exist($name)) {
+        if ($file=$this->exist($name)) {
             if (is_string($file)) {
                 $name=$file;
             }
@@ -361,14 +361,14 @@ class FileStorage implements Storage
     {
         $path=Autoloader::parsePath($name);
         // UTF-8 格式文件路径
-        if (self::existCase($path)) {
+        if ($this->existCase($path)) {
             return true;
         }
         // Windows 文件中文编码
         $charset=array_merge(self::$charset, $charset);
         foreach ($charset as $code) {
             $file = iconv('UTF-8', $code, $path);
-            if ($file && self::existCase($file)) {
+            if ($file && $this->existCase($file)) {
                 return $file;
             }
         }
@@ -395,16 +395,16 @@ class FileStorage implements Storage
     public function touchIndex(string $dest, string $content = 'dxkite-suda@'.SUDA_VERSION)
     {
         $dest=Autoloader::parsePath($dest);
-        $dest=self::path($dest);
+        $dest=$this->path($dest);
         if ($dest) {
             $index = $dest.'/'.conf('default-index', 'index.html');
-            if (!self::exist($index)) {
+            if (!$this->exist($index)) {
                 file_put_contents($index, $content);
             }
-            $dirs = self::readDirs($dest, true, null, true);
+            $dirs = $this->readDirs($dest, true, null, true);
             foreach ($dirs as $path) {
                 $index = $path.'/'.conf('default-index', 'index.html');
-                if (!self::exist($index)) {
+                if (!$this->exist($index)) {
                     file_put_contents($index, $content);
                 }
             }
