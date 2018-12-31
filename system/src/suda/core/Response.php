@@ -44,7 +44,7 @@ abstract class Response
         }
         
         if (conf('debug')) {
-            self::noCache();
+            $this->noCache();
             // for windows debug touch file to avoid 304 by server
             if (!IS_LINUX && !IN_PHAR) {
                 $content=file_get_contents(SUDA_ENTRANCE);
@@ -97,7 +97,7 @@ abstract class Response
             throw new JSONException(json_last_error());
         }
         Hook::exec('suda:system:display:json', [&$jsonstr]);
-        self::type('json');
+        $this->type('json');
         self::_etag(md5($jsonstr));
         self::send($jsonstr);
     }
@@ -191,7 +191,7 @@ abstract class Response
 
     public function refresh()
     {
-        return $this->go(Router::getInstance()->buildUrl(self::$name, $_GET, false));
+        $this->go(Router::getInstance()->buildUrl(self::$name, $_GET, false));
     }
 
     public function forward():bool
@@ -290,7 +290,7 @@ abstract class Response
 
     public static function addHeader(string $name, string $value)
     {
-        return self::setHeader(trim($name).':'.$value);
+        self::setHeader(trim($name).':'.$value);
     }
 
     protected static function _etag(string $etag)
