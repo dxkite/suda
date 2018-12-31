@@ -41,8 +41,9 @@ class SQLStatementPrepare
     public function insert(string $table, $values, array $binds=[]):int
     {
         $table=self::table($table);
+        $sql='';
         if (is_string($values)) {
-            $sql=$sql='INSERT INTO `'.$table.'` '.trim($values, ';').' ;';
+            $sql='INSERT INTO `'.$table.'` '.trim($values, ';').' ;';
         } elseif (is_array($values)) {
             $bind='';
             $names='';
@@ -91,7 +92,7 @@ class SQLStatementPrepare
     public function where(string $table, $wants='*', $condithon='1', array $binds=[], array $page=null, bool $scroll=false):RawQuery
     {
         $where=self::prepareWhere($condithon, $binds);
-        return self::select($table, $wants, $where, $binds, $page, $scroll);
+        return $this->select($table, $wants, $where, $binds, $page, $scroll);
     }
 
 
@@ -100,7 +101,7 @@ class SQLStatementPrepare
      *
      * @param string $table 表名
      * @param string|array $wants 提取的列
-     * @param [type] $field 搜索的列，支持对一列或者多列搜索
+     * @param string|array $field 搜索的列，支持对一列或者多列搜索
      * @param string $search 搜索的值
      * @param array $page 分页获取
      * @param boolean $scroll 滚动获取
@@ -109,7 +110,7 @@ class SQLStatementPrepare
     public function search(string $table, $wants='*', $field, string $search, array $page=null, bool $scroll=false):RawQuery
     {
         list($search_str, $bind)=self::prepareSearch($field, $search);
-        return self::where($table, $wants, $search_str, $bind, $page, $scroll);
+        return $this->where($table, $wants, $search_str, $bind, $page, $scroll);
     }
 
     /**
@@ -125,8 +126,8 @@ class SQLStatementPrepare
      * SELECT auths FROM `mc_user_group`  JOIN `mc_user` ON `mc_user`.`id` = :id  WHERE `user` = :id  or `mc_user_group`.`id` =`mc_user`.`group` LIMIT 1;
      * ```
      * @param string $table 数据表名
-     * @param [type] $wants 为查询的字段，可以为字符串如`"field1,field2"` 或者数组 `[ "field1","field2" ]`； 建议使用数组模式。
-     * @param [type] $conditions 为查询的条件 ，可以为字符串 或者数组 ， 建议使用数组模式。
+     * @param string|array $wants 为查询的字段，可以为字符串如`"field1,field2"` 或者数组 `[ "field1","field2" ]`； 建议使用数组模式。
+     * @param string|array $conditions 为查询的条件 ，可以为字符串 或者数组 ， 建议使用数组模式。
      * @param array $binds 查询字符串中绑定的数据
      * @param array $page 分页查询，接受数组 ，格式为： [为分页的页数,每页长度,是否为OFFSET]
      * @param boolean $scroll 滚动查询，一次取出一条记录
@@ -163,10 +164,9 @@ class SQLStatementPrepare
      * UPDATE `mc_user_token` SET expire = :time , token=:new_token,value=:refresh  WHERE id=:id AND UNIX_TIMESTAMP() < `time` + :alive AND value = :value ;
      * ```
      * @param string $table 数据表名
-     * @param [type] $set_fields 为设置的字段，使用键值数组式设置值。
-     * @param string $where 为更新的条件 ，可以为字符串 或者数组 ， 建议使用数组模式。
+     * @param string|array $set_fields 为设置的字段，使用键值数组式设置值。
+     * @param string|array $where 为更新的条件 ，可以为字符串 或者数组 ， 建议使用数组模式。
      * @param array $binds 查询字符串中绑定的数据
-     * @param [type] $object 数据库回调对象
      * @return integer
      */
     public function update(string $table, $set_fields, $where='1', array $binds=[]):int
@@ -191,9 +191,8 @@ class SQLStatementPrepare
      * 删除列
      *
      * @param string $table 数据表名
-     * @param string $where 为删除的条件 ，可以为字符串 或者数组 ， 建议使用数组模式。
+     * @param string|array $where 为删除的条件 ，可以为字符串 或者数组 ， 建议使用数组模式。
      * @param array $binds 查询字符串中绑定的数据
-     * @param [type] $object
      * @return integer
      */
     public function delete(string $table, $where='1', array $binds=[]):int
@@ -223,6 +222,7 @@ class SQLStatementPrepare
     {
         $search=preg_replace('/([%_])/', '\\\\$1', $search);
         $search=preg_replace('/\s+/', '%', $search);
+        $bind=[];
         if (is_array($field)) {
             $search_str=[];
             foreach ($field as $item=>$want) {

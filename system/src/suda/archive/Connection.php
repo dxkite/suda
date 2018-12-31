@@ -3,7 +3,7 @@
  * Suda FrameWork
  *
  * An open source application development framework for PHP 7.2.0 or newer
- * 
+ *
  * Copyright (c)  2017-2018 DXkite
  *
  * @category   PHP FrameWork
@@ -122,11 +122,11 @@ class Connection
     /**
      * 事务系列，开启事务
      *
-     * @return mixed
+     * @return void
      */
     public function begin()
     {
-        return self::beginTransaction();
+        $this->beginTransaction();
     }
 
     /**
@@ -194,7 +194,7 @@ class Connection
         foreach ($array as $value) {
             $temp[] = is_int($value) ? $value : $this->pdo->quote($value);
         }
-        return implode($temp, ',');
+        return implode(',', $temp);
     }
 
     public function prefixStr(string $query)

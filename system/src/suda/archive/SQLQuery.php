@@ -261,7 +261,7 @@ class SQLQuery extends SQLStatementPrepare implements SQLStatement
     /**
      * 添加列处理类
      *
-     * @param [type] $object
+     * @param object $object
      * @return SQLQuery|SQLStatement
      */
     public function object($object)
