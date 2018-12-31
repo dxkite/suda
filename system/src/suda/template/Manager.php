@@ -52,15 +52,15 @@ class Manager
     protected static $theme='default';
     /**
      * 模板编译器
-     * @var null
+     * @var null|Compiler
      */
-    private static $compiler=null;
+    protected static $compiler=null;
     private static $staticPath='static';
     private static $dynamicPath='';
     /**
      * 外部资源目录
      *
-     * @var [type]
+     * @var string
      */
     private static $assetsPath= APP_PUBLIC.'/assets';
     protected static $baseUrl=null;
@@ -119,7 +119,7 @@ class Manager
      */
     public static function getCompiler()
     {
-        return static::$compiler;
+        return self::$compiler;
     }
 
     /**
@@ -172,11 +172,11 @@ class Manager
      *
      * @param string $name
      * @param string $viewpath
-     * @return void
+     * @return Template
      */
     public static function display(string $name, ?string $viewpath=null)
     {
-        $template = static::displaySource($name, 'html', $viewpath??'');
+        $template = self::displaySource($name, 'html', $viewpath??'');
         if (is_null($template)) {
             throw new KernelException(__('missing template $0 $1', self::$theme, $name));
         }
@@ -195,11 +195,11 @@ class Manager
     {
         if (empty($viewpath)) {
             list($module, $basename) = Router::parseName($name);
-            $viewpath=static::getOutputFile($module, $basename);
+            $viewpath=self::getOutputFile($module, $basename);
         }
         if (Storage::exist($viewpath)) {
             if (Config::get('debug', true) || Config::get('exception', false)) {
-                if (!static::compile($name, $ext)) {
+                if (!self::compile($name, $ext)) {
                     return null;
                 }
             }
@@ -210,11 +210,11 @@ class Manager
                 // NOTICE: 这里可能会创建临时文件失败
                 $viewpath=storage()->temp('tpl_');
             }
-            if (!static::compile($name, $ext, $viewpath)) {
+            if (!self::compile($name, $ext, $viewpath)) {
                 return null;
             }
         }
-        return static::displayFile($viewpath, $name);
+        return self::displayFile($viewpath, $name);
     }
 
     /**
@@ -222,11 +222,11 @@ class Manager
      *
      * @param string $file
      * @param string $name
-     * @return void
+     * @return Template
      */
     public static function displayFile(string $file, string $name = null)
     {
-        return static::$compiler->render($file, $name??$file);
+        return self::$compiler->render($file, $name??$file);
     }
 
     /**
@@ -274,7 +274,7 @@ class Manager
             if (!storage()->exist($index)) {
                 file_put_contents($index, $content);
             }
-            $dirs = storage()->readDirs($dest, true, null, true);
+            $dirs = storage()->readDirs($dest, true);
             foreach ($dirs as $path) {
                 $index = $path.'/'.conf('default-index', 'index.html');
                 if (!storage()->exist($index)) {
@@ -357,7 +357,7 @@ class Manager
      * 获取模板源
      *
      * @param string $module
-     * @return void
+     * @return array
      */
     public static function getTemplateSource(string $module)
     {
@@ -424,8 +424,8 @@ class Manager
      * 编译动态文件
      *
      * @param string $name
-     * @param [type] $parent
-     * @return void
+     * @param mixed $parent
+     * @return string
      */
     public static function file(string $name, $parent)
     {
@@ -434,15 +434,12 @@ class Manager
 
         if (!Storage::exist($input)) {
             throw new KernelException(__('missing file $0:$1', self::$theme, $input));
-            return;
         }
-        // 获取文件夹
-        $module_dir=Application::getInstance()->getModuleDir($module);
         // 获取输出
         $output=self::getOutputFile($module, $basename);
         // 动态文件导出
         $outpath=self::$assetsPath.'/'.self::$dynamicPath.'/'.self::moduleUniqueId($module).'/'.$basename;
-        $path=Storage::path(dirname($outpath));
+        Storage::path(dirname($outpath));
         // 编译检查
         if (Storage::exist($output)) {
             if (Config::get('debug', true) || Config::get('exception', false)) {
@@ -478,6 +475,9 @@ class Manager
             return $include->parent($parent)->assign($parent->getValue());
         } else {
             $class= new class implements Template {
+                public $name;
+                public $moduleName;
+                public $basename;
                 public function render()
                 {
                     $this->echo();
@@ -546,7 +546,7 @@ class Manager
             $tempaltes=self::findModuleTemplates($module);
             foreach ($tempaltes as $name) {
                 $success=self::compile($module.':'.$name);
-                if ($success != true) {
+                if ($success !== true) {
                     $init[$module]['template'][$name]=false;
                 } else {
                     $init[$module]['template'][$name]=true;
@@ -609,7 +609,7 @@ class Manager
      * 检查语法
      *
      * @param string $file
-     * @return bool|ParseError 语法错误报错
+     * @return bool|\ParseError 语法错误报错
      */
     public static function checkSyntax(string $file, string $className='')
     {
@@ -642,7 +642,7 @@ class Manager
      * 动态加载静态资源
      *
      * @param Request $request
-     * @return void
+     * @return bool
      */
     protected static function assetsResponse(Request $request)
     {
@@ -656,6 +656,7 @@ class Manager
                 {
                     $name=$this->assetName;
                     $path=$this->assetPath;
+                    $moduleHash = '';
                     if ($name == 'static') {
                         preg_match('/^([^\/]+)\/(.+)$/', $path, $match);
                         if (count($match) ==3) {
@@ -668,13 +669,12 @@ class Manager
                     $modules= app()->getLiveModules();
                     $module=null;
                     foreach ($modules as $temp) {
-                        if (Manager::moduleUniqueId($temp) == $moduleHash) {
+                        if (Manager::moduleUniqueId($temp) === $moduleHash) {
                             $module=$temp;
                             break;
                         }
                     }
                     if ($module) {
-                        $root=app()->getModulePath($module);
                         $res=Manager::getTemplateSource($module);
                         foreach ($res as $templateRoot) {
                             $assetPath=$templateRoot.'/'.$path;
@@ -700,7 +700,7 @@ class Manager
                     $hash   = md5($content);
                     $size   = strlen($content);
                     if (!$this->_etag($hash)) {
-                        $type   = $type ?? pathinfo($path, PATHINFO_EXTENSION);
+                        $type   = pathinfo($path, PATHINFO_EXTENSION);
                         $this->type($type);
                         self::setHeader('Content-Length:'.$size);
                         echo $content;
