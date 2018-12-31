@@ -122,7 +122,7 @@ class Config
 
     public static function exist(string $path):bool
     {
-        return self::resolve($path) != null;
+        return self::resolve($path) !== null;
     }
 
     public static function assign(array $config)

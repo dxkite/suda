@@ -29,7 +29,7 @@ class Session
             static::$session[$type]=$class::getInstance();
             return static::$session[$type];
         } else {
-            throw new Exception(__('unsupport type of session:$0', $type));
+            throw new \Exception(__('unsupport type of session:$0', $type));
         }
     }
  

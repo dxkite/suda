@@ -48,13 +48,13 @@ class FileCache implements Cache
     /**
      * 设置
      * @param string $name 名
-     * @param $value 值
+     * @param mixed $value 值
      * @param int $expire 过期时间
      * @return bool
      */
     public function set(string $name, $value, int $expire=null):bool
     {
-        if (self::disable()) {
+        if ($this->disable()) {
             return false;
         }
         $path=self::getPath($name);
@@ -89,7 +89,7 @@ class FileCache implements Cache
                 return unserialize($value);
             } else {
                 // 过期则删除
-                self::delete($path);
+                $this->delete($path);
             }
         }
         // 返回默认值
@@ -115,7 +115,7 @@ class FileCache implements Cache
      */
     public function has(string $name):bool
     {
-        return self::get($name)!==null;
+        return $this->get($name)!==null;
     }
 
     /**
@@ -151,7 +151,7 @@ class FileCache implements Cache
 
     public function disable():bool
     {
-        return !self::enable();
+        return !$this->enable();
     }
 
     private static function getPath(string $name)

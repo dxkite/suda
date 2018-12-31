@@ -31,7 +31,7 @@ class Cache
             static::$cache[$type]=$class::getInstance();
             return static::$cache[$type];
         } else {
-            throw new Exception(__('unsupport type of cache:$0', $type));
+            throw new \Exception(__('unsupport type of cache:$0', $type));
         }
     }
  

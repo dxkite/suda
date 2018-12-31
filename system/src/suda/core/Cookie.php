@@ -29,7 +29,7 @@ class Cookie
      * @param string $name Cookie名
      * @param string $value 设置的值
      * @param int $expire  到期时间
-     * @return CookieSetter 设置对象
+     * @return \suda\tool\CookieSetter 设置对象
      */
     public static function set(string $name, string $value, int $expire=null) : Setter
     {
