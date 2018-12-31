@@ -52,7 +52,7 @@ class Manager
     protected static $theme='default';
     /**
      * 模板编译器
-     * @var null|Compiler
+     * @var Compiler|null
      */
     protected static $compiler=null;
     private static $staticPath='static';
@@ -80,9 +80,9 @@ class Manager
     private static $init = false;
     
     /**
-     * 载入模板编译器
+     * 获取模板编译器
      */
-    public static function loadCompile()
+    public static function getCompiler():Compiler
     {
         if (is_null(self::$compiler)) {
             Hook::exec('suda:template:load-compile::before');
@@ -96,15 +96,6 @@ class Manager
             }
             Hook::listen('suda:route:dispatch::extra', [__CLASS__,'assetsResponse']);
         }
-    }
-
-    /**
-     * 获取编译器
-     *
-     * @return Compiler
-     */
-    public static function getCompiler()
-    {
         return self::$compiler;
     }
 
@@ -137,7 +128,7 @@ class Manager
     {
         // 初始化一次
         if (!self::$init) {
-            Hook::exec('suda:template:compile::init', [ self::$compiler ]);
+            Hook::exec('suda:template:compile::init', [ self::getCompiler() ]);
             self::$init = true;
         }
         // 编译文件
@@ -147,8 +138,8 @@ class Manager
             if (is_null($outpath)) {
                 $outpath=self::getOutputFile($module, $basename);
             }
-            Hook::exec('suda:template:compile::before', [ self::$compiler ]);
-            return self::$compiler->compile($module, $root, $basename, $path, $outpath);
+            Hook::exec('suda:template:compile::before', [ self::getCompiler() ]);
+            return self::getCompiler()->compile($module, $root, $basename, $path, $outpath);
         }
         return false;
     }
@@ -212,7 +203,7 @@ class Manager
      */
     public static function displayFile(string $file, string $name = null)
     {
-        return self::$compiler->render($file, $name??$file);
+        return self::getCompiler()->render($file, $name??$file);
     }
 
     /**
@@ -429,7 +420,7 @@ class Manager
         // 编译检查
         if (Storage::exist($output)) {
             if (Config::get('debug', true) || Config::get('exception', false)) {
-                if (!self::$compiler->compile($module, $root, $name, $input, $output)) {
+                if (!self::getCompiler()->compile($module, $root, $name, $input, $output)) {
                     throw new KernelException(__('missing file $0:$1', self::$theme, $input));
                     return;
                 }
@@ -440,13 +431,13 @@ class Manager
             if (!storage()->isWritable($pathOutput)) {
                 $output=storage()->temp('tpl_');
             }
-            if (!self::$compiler->compile($name, $input, $output)) {
+            if (!self::getCompiler()->compile($name, $input, $output)) {
                 throw new KernelException(__('missing file $0:$1', self::$theme, $input));
                 return;
             }
         }
         // 输出内容
-        $public=self::$compiler->render($output, $name)->parent($parent)->getRenderedString();
+        $public=self::getCompiler()->render($output, $name)->parent($parent)->getRenderedString();
         Storage::put($outpath, $public);
         // 引用文件
         $static_url=Storage::cut($outpath, self::$assetsPath);

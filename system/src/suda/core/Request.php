@@ -355,15 +355,16 @@ class Request
             $url = substr($url, 2);
         }
         $phpSelf= $indexFile = self::$script;
-        // for /index.php/
-        $url = \substr($url, strlen($indexFile));
-        // for /index.php?/
-        if (\strpos($url, '?/') === 0) {
-            $url = ltrim($url, '?');
-        }
-        // for /index.php
-        elseif (\strpos($url, '/')!== 0) {
-            $url = '/'.$url;
+        if (\strpos($url, $indexFile) ===0) {
+            // for /index.php/
+            $url = \substr($url, strlen($indexFile));// for /index.php?/
+            if (\strpos($url, '?/') === 0) {
+                $url = ltrim($url, '?');
+            }
+            // for /index.php
+            elseif (\strpos($url, '/')!== 0) {
+                $url = '/'.$url;
+            }
         }
         $queryStart = \strpos($url, '?');
         if ($queryStart !== false) {
