@@ -63,10 +63,9 @@ interface SQLStatement
      *
      * @param string $name 列名
      * @param mixed $value 值
-     * @param integer $type 类型
      * @return InputValue 输入变量类
      */
-    public static function value(string $name, $value, int $type=PDO::PARAM_STR):InputValue;
+    public static function value(string $name, $value):InputValue;
 
     /**
      * SQL语句模板绑定值

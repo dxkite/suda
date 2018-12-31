@@ -99,20 +99,6 @@ class Manager
     }
 
     /**
-     * 设置模板基类
-     *
-     * @param string $template
-     * @return void
-     */
-    public static function setTemplate(string $template=null)
-    {
-        if (is_null($template)) {
-            return self::$compiler->setBase();
-        }
-        return self::$compiler->setBase($template);
-    }
-
-    /**
      * 获取编译器
      *
      * @return Compiler

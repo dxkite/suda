@@ -69,17 +69,13 @@ class Compiler implements CompilerImpl
     const Template='suda\template\compiler\suda\Template';
 
     protected static $template=self::Template;
+    
     /**
      * 附加模板命令
      *
      * @var array
      */
     protected static $command=[];
-
-    public static function setBase(string $tpl=self::Template)
-    {
-        self::$template=$tpl;
-    }
 
     /**
      * 编译文本

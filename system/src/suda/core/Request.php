@@ -350,16 +350,20 @@ class Request
     public static function parseUrl(string $url)
     {
         $queryString='';
-        // for /?/xx 
+        // for /?/xx
         if (\strpos($url, '/?/') === 0) {
             $url = substr($url, 2);
         }
         $phpSelf= $indexFile = self::$script;
         // for /index.php/
-        if (\strpos($url, $indexFile) === 0) {
-            $url = \substr($url, strlen($indexFile));
-            // for /index.php?/
-            $url =ltrim($url,'?');
+        $url = \substr($url, strlen($indexFile));
+        // for /index.php?/
+        if (\strpos($url, '?/') === 0) {
+            $url = ltrim($url, '?');
+        }
+        // for /index.php
+        elseif (\strpos($url, '/')!== 0) {
+            $url = '/'.$url;
         }
         $queryStart = \strpos($url, '?');
         if ($queryStart !== false) {
