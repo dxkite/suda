@@ -165,7 +165,7 @@ abstract class Response
     public function view(string $template, array $values=[])
     {
         $tpl=Manager::displaySource($template, 'html');
-        if ($tpl) {
+        if (!is_null($tpl)) {
             return $tpl->response($this)->assign($values);
         }
         return null;
@@ -181,12 +181,7 @@ abstract class Response
      */
     public function template(string $filepath, array $values=[], ?string  $name=null)
     {
-        // Template lost
-        $tpl=Manager::displayFile($filepath, $name);
-        if ($tpl) {
-            return $tpl->response($this)->assign($values);
-        }
-        return null;
+        return Manager::displayFile($filepath, $name)->response($this)->assign($values);
     }
 
     public function refresh()
