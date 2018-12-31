@@ -144,12 +144,12 @@ class Mapping implements \JsonSerializable
                 }
                 if (function_exists($command)) {
                     $method=new \ReflectionFunction($command);
-                    $ob = self::getResponseObStatus($method);
+                    $ob = $this->getResponseObStatus($method);
                 }
             } elseif (is_array($command)) {
                 if (class_exists($command[0])) {
                     $method=new \ReflectionMethod($command[0], $command[1]);
-                    $ob = self::getResponseObStatus($method, $command[0]);
+                    $ob = $this->getResponseObStatus($method, $command[0]);
                 }
             }
             if ($ob) {
@@ -185,7 +185,7 @@ class Mapping implements \JsonSerializable
 
     protected function getResponseObStatus($method, $class=false)
     {
-        if ($doc = $method->getDocComment()) {
+        if ($docs = $method->getDocComment()) {
             if (preg_match('/@ob\s+(\w+)\s+/ims', $docs, $match)) {
                 // 开启OB
                 if (!filter_var(strtolower($match[1]??'true'), FILTER_VALIDATE_BOOLEAN)) {
@@ -227,10 +227,7 @@ class Mapping implements \JsonSerializable
             list($module, $name)=router()->parseName($that);
             return app()->getModuleFullName($module).':'.$name == $this->getFullName();
         }
-        if ($that instanceof Mapping) {
-            return $that->getFullName() == $this->getFullName();
-        }
-        return false;
+        return $that->getFullName() == $this->getFullName();
     }
     
     /**
@@ -471,9 +468,9 @@ class Mapping implements \JsonSerializable
         return $this->scheme.'://'. $this->getHost() .'/';
     }
 
-    public function getPrefix()
+    public function getPrefix():string
     {
-        return app()->getModulePrefix($this->module, $this->group);
+        return strval(app()->getModulePrefix($this->module, $this->group));
     }
 
     protected function buildMatch(string $url)
@@ -576,7 +573,7 @@ class Mapping implements \JsonSerializable
                             $hash   = md5($content);
                             $size   = strlen($content);
                             if (!$this->_etag($hash)) {
-                                $type   = $type ?? pathinfo($path, PATHINFO_EXTENSION);
+                                $type   = pathinfo($path, PATHINFO_EXTENSION);
                                 $this->type($type);
                                 self::setHeader('Content-Length:'.$size);
                                 echo $content;
