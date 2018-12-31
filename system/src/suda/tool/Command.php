@@ -21,7 +21,7 @@ use suda\exception\CommandException;
 
 /**
  * 可执行命令表达式
- * 
+ *
  */
 class Command
 {
@@ -33,6 +33,7 @@ class Command
     public $constructParam=[];
     public $name;
     public $cmdstr;
+    public $singleFile=false;
 
     public function __construct($command, array $params=[])
     {
@@ -104,74 +105,36 @@ class Command
         return $this->exec(func_get_args());
     }
     
-    /**
-     * 解析表达式，参数只支持基本参数（数字，字符串）
-     *
-     * @param string $command
-     * @return mixed
-     */
-    private function parseCommand(string $command)
-    {
-        
-        // 支持表达式：
-        // 1. [name.space.|name\space\|name/space/]Class[(param)]->method[(params)]
-        // 2. [name.space.|name\space\|name/space/]Class#method[(params)]
-        // 3. [name.space.|name\space\|name/space/]Class::method[(params)]
-        // 4. [name.space.|name\space\|name/space/]function[(param)][@filepath]
-        // 5. @filepath
 
-        if (preg_match('/^ ([\w\\\\\/.]+) (\( (?: (?>[^()]+) | (?2) )* \))? (\-\>|\:\:|\#) (\w+) (\( (?: (?>[^()]+) | (?5) )* \))? $/ux', $command, $matchs)) {
-            if (count($matchs) === 6) {
-                list($cmdstr, $className, $constructParams, $type, $method, $methodParam) = $matchs;
-                if (preg_match('/\((.+)\)/', $constructParams, $tmp)) {
-                    $constructParams=$tmp[1];
-                }
-                if (preg_match('/\((.+)\)/', $methodParam, $tmp)) {
-                    $methodParam=$tmp[1];
-                }
-            } else {
-                list($cmdstr, $className, $constructParams, $type, $method) = $matchs;
-                if (preg_match('/\((.+)\)/', $constructParams, $tmp)) {
-                    $constructParams=$tmp[1];
-                }
-                $methodParam = null;
-            }
-            $className = Autoloader::realName($className);
-            // debug()->trace(__('parse command $0 as rule 1,2,3', $command), $matchs);
-            $this->name = $className.'->'.$method;
-            if ($constructParams) {
-                $this->constructParam = self::parseParam($constructParams);
-            }
-            if ($methodParam) {
-                $this->funcParam = self::parseParam($methodParam);
-            }
-            $this->static = $type === '#' || $type === '::';
-            return [$className,$method];
-        } elseif (preg_match('/^ ([\w\\\\\/.]+) (\( ( (?>[^()]+) | (?2) )* \))? (?:\@(.+))? $/ux', $command, $matchs)) {
-            $matchCount = count($matchs);
-            $functionFile = null;
-            if ($matchCount == 2) {
-                list($cmdstr, $functionName) = $matchs;
-            } elseif ($matchCount == 3) {
-                list($cmdstr, $functionName, $functionParam) = $matchs;
-            } else {
-                list($cmdstr, $functionName, $functionParam, $functionFile) = $matchs;
-            }
-            $functionName = Autoloader::realName($functionName);
-            if (!is_null($functionFile)) {
-                $this->file=$functionFile;
-            }
-            return $functionName;
-        } elseif (preg_match('/\@(.+)$/', $command, $matchs)) {
-            list($cmdstr, $functionFile) = $matchs;
-            $this->file=$functionFile;
-        } else {
-            throw (new CommandException(__('unknown command: $0', $command)))->setCmd($command);
+    private static function splitParameter(string $command):array
+    {
+        $parameter = null;
+        if (strrpos($command, ')') === strlen($command) -1) {
+            $paramStart = strpos($command, '(');
+            $parameter = substr($command, $paramStart + 1, strlen($command) - $paramStart - 2);
+            $command = substr($command, 0, $paramStart);
         }
-        $this->cmdstr= $command;
+        return [$command,$parameter];
     }
 
-    protected static function parseParam(string $param)
+    private static function buildParameter(?string $parameter)
+    {
+        if (is_null($parameter)) {
+            return [];
+        }
+        return self::parseParameter($parameter);
+    }
+
+    private function buildCommandName(string $name)
+    {
+        if (preg_match('/^[\w\\\\\/.]+$/', $name) !== 1) {
+            throw (new CommandException(__('invaild command name: $0', $name)))->setCmd($this);
+        }
+        return Autoloader::realName($name);
+    }
+
+    
+    protected static function parseParameter(string $param)
     {
         $param = trim($param);
         if (preg_match('/^\=j(son)?\:(\:)?(.+)$/', $param, $matchs)) {
@@ -203,6 +166,54 @@ class Command
             return $params;
         }
     }
+
+    /**
+     * 解析表达式，参数只支持基本参数（数字，字符串）
+     *
+     * @param string $command
+     * @return mixed
+     */
+    private function parseCommand(string $command)
+    {
+        
+        // 支持表达式：
+        // 1. [name.space.|name\space\|name/space/]Class[(param)]->method[(params)]
+        // 2. [name.space.|name\space\|name/space/]Class#method[(params)]
+        // 3. [name.space.|name\space\|name/space/]Class::method[(params)]
+        // 4. [name.space.|name\space\|name/space/]function[(param)][@filepath]
+        // 5. @filepath
+        $this->cmdstr= $command;
+        $fileStart = \strrpos($command, '@');
+        // for @file
+        if ($fileStart > 0) {
+            $this->file = substr($command, $fileStart+1);
+            $command = substr($command, 0, $fileStart);
+        }
+        if ($fileStart === 0) {
+            $this->singleFile = true;
+            return null;
+        }
+        // for parameter list
+        list($command, $parameter) = self::splitParameter($command);
+        // for method
+        $dynmicsMethod = strpos($command, '->');
+        $splitLength = strpos($command, '#');
+        $methodStart = $splitLength ?: strpos($command, '::') ?: $dynmicsMethod;
+        // static method
+        $this->static = !$dynmicsMethod;
+        $this->funcParam = self::buildParameter($parameter);
+        if ($methodStart > 0) {
+            $splitLength = $splitLength > 0 ? 1:2;
+            $methodName = substr($command, $methodStart + $splitLength);
+            $command = substr($command, 0, $methodStart);
+            list($command, $constructParameter) = self::splitParameter($command);
+            $this->constructParam = self::buildParameter($constructParameter);
+            return [$this->buildCommandName($command),$methodName];
+        } else {
+            return $this->buildCommandName($command);
+        }
+    }
+
     
     public static function newClassInstance(string $class)
     {
@@ -211,7 +222,7 @@ class Command
             if (preg_match('/\((.+)\)/', $constructParams, $tmp)) {
                 $constructParams=$tmp[1];
             }
-            $params=self::parseParam($constructParams);
+            $params=self::buildParameter($constructParams);
             $className = Autoloader::realName($className);
             $classRef= new ReflectionClass($className);
             return $classRef->newInstanceArgs($params);
