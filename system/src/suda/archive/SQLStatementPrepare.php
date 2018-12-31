@@ -127,7 +127,7 @@ class SQLStatementPrepare
      * ```
      * @param string $table 数据表名
      * @param string|array $wants 为查询的字段，可以为字符串如`"field1,field2"` 或者数组 `[ "field1","field2" ]`； 建议使用数组模式。
-     * @param string|array $conditions 为查询的条件 ，可以为字符串 或者数组 ， 建议使用数组模式。
+     * @param string $conditions 为查询的条件 ，可以为字符串 或者数组 ， 建议使用数组模式。
      * @param array $binds 查询字符串中绑定的数据
      * @param array $page 分页查询，接受数组 ，格式为： [为分页的页数,每页长度,是否为OFFSET]
      * @param boolean $scroll 滚动查询，一次取出一条记录

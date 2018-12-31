@@ -62,7 +62,7 @@ interface SQLStatement
      * 生成一个数据输入值
      *
      * @param string $name 列名
-     * @param [type] $value 值
+     * @param mixed $value 值
      * @param integer $type 类型
      * @return InputValue 输入变量类
      */

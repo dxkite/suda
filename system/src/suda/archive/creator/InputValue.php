@@ -28,7 +28,7 @@ class InputValue implements \JsonSerializable
     private $value;
 
 
-    public function __construct(string $name, $value, int $bindType=PDO::PARAM_STR)
+    public function __construct(string $name, $value)
     {
         $this->name=$name;
         $this->value=$value;

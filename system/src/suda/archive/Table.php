@@ -58,10 +58,8 @@ abstract class Table extends TableAccess
      */
     public function insert(array $values):int
     {
-        if (is_array($values)) {
-            $this->checkFields(array_keys($values));
-        }
-        return $this->statement->insert($this->getTableName(), $values, [], $this);
+        $this->checkFields(array_keys($values));
+        return $this->statement->insert($this->getTableName(), $values);
     }
 
     /**
@@ -93,7 +91,7 @@ abstract class Table extends TableAccess
                 $insert[$field]=$value;
             }
         }
-        return $this->statement->insert($this->getTableName(), $insert, [], $this);
+        return $this->statement->insert($this->getTableName(), $insert);
     }
 
     /**
@@ -119,7 +117,7 @@ abstract class Table extends TableAccess
      * $table->getByPrimaryKey(['key1'=>$key1,'key2'=>$key2]);
      * ```
      *
-     * @param [type] $value 主键的值
+     * @param mixed $value 主键的值
      * @return array|null
      */
     public function getByPrimaryKey($value):?array
@@ -149,16 +147,14 @@ abstract class Table extends TableAccess
      * $table->updateByPrimaryKey(['key1'=>$key1,'key2'=>$key2],['name'=>$name,'value'=>$value]);
      * ```
      *
-     * @param [type] $value 主键
-     * @param [type] $values 待更新的数据
+     * @param mixed $value 主键
+     * @param array $values 待更新的数据
      * @return integer 影响的行数
      */
-    public function updateByPrimaryKey($value, $values):int
+    public function updateByPrimaryKey($value,array $values):int
     {
-        if (is_array($values)) {
-            $this->checkFields(array_keys($values));
-        }
-        return $this->statement->update($this->getTableName(), $values, $this->checkPrimaryKey($value), [], $this);
+        $this->checkFields(array_keys($values));
+        return $this->statement->update($this->getTableName(), $values, $this->checkPrimaryKey($value));
     }
     
     /**
@@ -182,12 +178,12 @@ abstract class Table extends TableAccess
      * $table->deleteByPrimaryKey(['key1'=>$key1,'key2'=>$key2]);
      * ```
      *
-     * @param [type] $value 主键
+     * @param mixed $value 主键
      * @return integer 影响的行数
      */
     public function deleteByPrimaryKey($value):int
     {
-        return $this->statement->delete($this->getTableName(), $this->checkPrimaryKey($value), [], $this);
+        return $this->statement->delete($this->getTableName(), $this->checkPrimaryKey($value));
     }
 
     /**
@@ -209,7 +205,7 @@ abstract class Table extends TableAccess
      *  $table->search('name',$name,1,10);
      * ```
      *
-     * @param [type] $field 搜索的字段
+     * @param string|array $field 搜索的字段
      * @param string $search 搜索列
      * @param integer|null $page 页码
      * @param integer $rows 每页数
@@ -247,9 +243,9 @@ abstract class Table extends TableAccess
      *  $table->searchWhere('name',$name,' status > :status ',['status'=>1]);
      * ```
      *
-     * @param [type] $field 搜索字段
+     * @param string|array $field 搜索字段
      * @param string $search 搜索值
-     * @param [type] $where 限制搜索条件
+     * @param string|array $where 限制搜索条件
      * @param array $bind 条件值绑定
      * @param integer|null $page 条件页
      * @param integer $rows 页列
@@ -261,7 +257,7 @@ abstract class Table extends TableAccess
         $statment = $this->statement;
         list($searchStr, $searchBind)=$statment->prepareSearch($field, $search);
         $whereStr=$statment->prepareWhere($where, $bind);
-        return $statment->select($this->getTableName(), $this->getWants(), $whereStr . ' AND ('. $searchStr.') '. self::genOrderBy(), array_merge($searchBind, $bind), [$page,$rows,$offset])->fetchAll();
+        return $statment->select($this->getTableName(), $this->getWants(), $whereStr . ' AND ('. $searchStr.') '. $this->genOrderBy(), array_merge($searchBind, $bind), [$page,$rows,$offset])->fetchAll();
     }
 
     /**
@@ -284,9 +280,9 @@ abstract class Table extends TableAccess
      *  $table->searchWhereCount('name',$name,' status > :status ',['status'=>1]);
      * ```
      *
-     * @param [type] $field
+     * @param string|array $field
      * @param string $search
-     * @param [type] $where
+     * @param string|array $where
      * @param array $bind
      * @return integer
      */
@@ -317,7 +313,7 @@ abstract class Table extends TableAccess
      */
     public function list(?int $page=null, int $rows=10, bool $offset=false):?array
     {
-        return $this->statement->where($this->getTableName(), $this->getWants(), '1 '.  self::genOrderBy(), [], [$page, $rows,$offset])->fetchAll();
+        return $this->statement->where($this->getTableName(), $this->getWants(), '1 '.  $this->genOrderBy(), [], [$page, $rows,$offset])->fetchAll();
     }
 
     /**
@@ -340,7 +336,7 @@ abstract class Table extends TableAccess
      * ```
      * **注意** :status 必须后面的键名对上
      *
-     * @param [type] $where 条件描述
+     * @param string|array $where 条件描述
      * @param array $binds 条件附带参数
      * @param integer|null $page 是否分页（页数）
      * @param integer $rows 分页的元素个数
@@ -351,7 +347,7 @@ abstract class Table extends TableAccess
     {
         $statment = $this->statement;
         $where_str = $statment->prepareWhere($where, $binds);
-        $where= $where_str.' '.self::genOrderBy();
+        $where= $where_str.' '.$this->genOrderBy();
         return $statment->where($this->getTableName(), $this->getWants(), $where, $binds, [$page, $rows,$offset])->fetchAll();
     }
 
@@ -378,8 +374,8 @@ abstract class Table extends TableAccess
      * $table->update(['name'=>$name],'id > :id ',['id'=>3]);
      * ```
      *
-     * @param [type] $values 更新的列
-     * @param [type] $where 条件区域
+     * @param string|array $values 更新的列
+     * @param string|array $where 条件区域
      * @param array $bind 扩展条件值
      * @return integer
      */
@@ -419,8 +415,8 @@ abstract class Table extends TableAccess
      * $table->select(['name'],'id > :id',['id'=>2])->fetchAll();
      * ```
      *
-     * @param [type] $wants 想要查询的列
-     * @param [type] $where 查询条件
+     * @param string|array $wants 想要查询的列
+     * @param string|array $where 查询条件
      * @param array $whereBinder 查询条件的值
      * @param integer|null $page 分页页码
      * @param integer $row 分页行
@@ -488,7 +484,7 @@ abstract class Table extends TableAccess
      * $table->delete('id > :id ',['id'=>3]);
      * ```
      *
-     * @param [type] $where 删除条件
+     * @param string|array $where 删除条件
      * @param array $binds 条件值绑定
      * @return integer
      */
@@ -497,14 +493,14 @@ abstract class Table extends TableAccess
         if (is_array($where)) {
             $this->checkFields(array_keys($where));
         }
-        return $this->statement->delete($this->getTableName(), $where, $binds, $this);
+        return $this->statement->delete($this->getTableName(), $where, $binds);
     }
 
     /**
      * 设置想要的列
      *
      * @param array $fields
-     * @return void
+     * @return Table
      */
     public function setWants(array $fields=null)
     {
