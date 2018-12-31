@@ -169,7 +169,7 @@ class RawQuery implements SQLStatement
      * SQL语句模板绑定值
      *
      * @param array $values
-     * @return RawQuery
+     * @return SQLStatement|RawQuery
      */
     public function values(array $values)
     {
@@ -182,7 +182,7 @@ class RawQuery implements SQLStatement
      *
      * @param string $query 查询语句模板
      * @param array $array 查询语句模板值
-     * @return RawQuery
+     * @return SQLStatement|RawQuery
      */
     public function query(string $query, array $array=[], bool $scroll=false)
     {
@@ -197,7 +197,7 @@ class RawQuery implements SQLStatement
      * 切换使用的数据表
      *
      * @param string $name
-     * @return RawQuery
+     * @return SQLStatement|RawQuery
      */
     public function use(string $name=null)
     {

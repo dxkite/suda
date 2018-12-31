@@ -50,7 +50,7 @@ class Table
      * @param string $name
      * @param string $type
      * @param int $length
-     * @return void
+     * @return Field
      */
     public function field(string $name, string $type, int $length=null)
     {
@@ -70,8 +70,8 @@ class Table
     /**
      * 表全部的列
      *
-     * @param [type] $fields
-     * @return void
+     * @param mixed $fields
+     * @return Table
      */
     public function fields($fields)
     {

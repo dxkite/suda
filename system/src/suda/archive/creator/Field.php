@@ -95,7 +95,7 @@ class Field
 
     public function collate(string $collate)
     {
-        $this->collate=$collate;
+        $this->collation=$collate;
         return $this;
     }
     

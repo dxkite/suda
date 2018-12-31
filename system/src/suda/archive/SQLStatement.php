@@ -72,7 +72,7 @@ interface SQLStatement
      * SQL语句模板绑定值
      *
      * @param array $values
-     * @return SQLQuery
+     * @return SQLStatement
      */
     public function values(array $values);
 
@@ -81,14 +81,14 @@ interface SQLStatement
      *
      * @param string $query 查询语句模板
      * @param array $array 查询语句模板值
-     * @return SQLQuery
+     * @return SQLStatement
      */
     public function query(string $query, array $array=[], bool $scroll=false);
     /**
      * 切换使用的数据表
      *
      * @param string $name
-     * @return SQLQuery
+     * @return SQLStatement
      */
     public function use(string $name=null);
     /**
