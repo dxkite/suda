@@ -35,6 +35,6 @@ class HTMLMessage extends Message
     {
         $message=Manager::display($template);
         $message->assign($values);
-        parent::__construct($subject, $message);
+        parent::__construct($subject, $message->getRenderedString());
     }
 }

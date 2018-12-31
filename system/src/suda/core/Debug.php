@@ -311,7 +311,6 @@ class Debug
                 'pos_num'=>$pos_num,
                 'traces'=>$traces,
             ]);
-        \suda\template\Manager::loadCompile();
         $render->render();
         // - 启用全局钩子注入
         config()->set('hook.enable', true);

@@ -463,6 +463,11 @@ class Manager
                 {
                     echo '<div style="color:red" title="'.__('can\'t include $0', $this->moduleName.':'.$this->basename).'">{include:{'.$this->name.'}}</div>';
                 }
+                public function response(\suda\core\Response $response){}
+                public function get(string $name, $default=null){}
+                public function set(string $name, $value){}
+                public function assign(array $values){}
+                public function getRenderedString(){}
             };
             $class->moduleName=$moduleName;
             $class->basename=$basename;
@@ -692,6 +697,3 @@ class Manager
         return false;
     }
 }
-
-// 加载编译器
-Manager::loadCompile();
