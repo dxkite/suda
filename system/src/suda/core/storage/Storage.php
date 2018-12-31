@@ -43,7 +43,7 @@ interface Storage
      * 返回路径绝对地址
      *
      * @param string $path
-     * @return string
+     * @return string|null
      */
     public function abspath(string $path);
     

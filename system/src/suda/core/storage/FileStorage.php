@@ -60,9 +60,6 @@ class FileStorage implements Storage
     
     public function abspath(string $path)
     {
-        if (empty($path)) {
-            return false;
-        }
         $path=Autoloader::parsePath($path);
         return Autoloader::realPath($path);
     }
@@ -139,7 +136,7 @@ class FileStorage implements Storage
             foreach ($this->readPath($parent) as $path) {
                 if ($this->isFile($path)) {
                     $errorhandler = function ($erron, $error, $file, $line) {
-                        Debug::warning($error);
+                        debug()->warning($error);
                     };
                     set_error_handler($errorhandler);
                     unlink($path);
@@ -168,11 +165,11 @@ class FileStorage implements Storage
     public function copydir(string $src, string $dest, ?string $preg=null):bool
     {
         if ($path = $this->path($dest)) {
-            foreach ($this->readPath($src, false, $preg, false) as $read) {
-                if ($this->isDir($src.DIRECTORY_SEPARATOR.$read)) {
-                    $this->copydir($src.DIRECTORY_SEPARATOR.$read, $dest.DIRECTORY_SEPARATOR.$read, $preg);
+            foreach ($this->readPath($path, false, $preg, false) as $read) {
+                if ($this->isDir($path.DIRECTORY_SEPARATOR.$read)) {
+                    $this->copydir($path.DIRECTORY_SEPARATOR.$read, $dest.DIRECTORY_SEPARATOR.$read, $preg);
                 } else {
-                    $this->copy($src.DIRECTORY_SEPARATOR.$read, $dest.DIRECTORY_SEPARATOR.$read);
+                    $this->copy($path.DIRECTORY_SEPARATOR.$read, $dest.DIRECTORY_SEPARATOR.$read);
                 }
             }
             return true;
@@ -184,15 +181,15 @@ class FileStorage implements Storage
     public function movedir(string $src, string $dest, ?string $preg=null):bool
     {
         if ($path = $this->path($dest)) {
-            foreach ($this->readPath($src, false, $preg, false) as $read) {
-                if ($this->isDir($src.DIRECTORY_SEPARATOR.$read)) {
-                    $this->movedir($src.DIRECTORY_SEPARATOR.$read, $dest.DIRECTORY_SEPARATOR.$read, $preg);
-                    $this->rmdir($src.DIRECTORY_SEPARATOR.$read);
+            foreach ($this->readPath($path, false, $preg, false) as $read) {
+                if ($this->isDir($path.DIRECTORY_SEPARATOR.$read)) {
+                    $this->movedir($path.DIRECTORY_SEPARATOR.$read, $dest.DIRECTORY_SEPARATOR.$read, $preg);
+                    $this->rmdir($path.DIRECTORY_SEPARATOR.$read);
                 } else {
-                    $this->move($src.DIRECTORY_SEPARATOR.$read, $dest.DIRECTORY_SEPARATOR.$read);
+                    $this->move($path.DIRECTORY_SEPARATOR.$read, $dest.DIRECTORY_SEPARATOR.$read);
                 }
             }
-            $this->rmdir($src);
+            $this->rmdir($path);
             return true;
         } else {
             return false;
@@ -254,7 +251,7 @@ class FileStorage implements Storage
         $name=Autoloader::parsePath($name);
         $dirname=dirname($name);
         if ($this->isDir($dirname) && is_writable($dirname)) {
-            return file_put_contents($name, $content, $flags);
+            return file_put_contents($name, $content, $flags) > 0;
         }
         return false;
     }
