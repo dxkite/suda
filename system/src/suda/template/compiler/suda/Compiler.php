@@ -65,11 +65,9 @@ class Compiler implements CompilerImpl
         'str'=> '<?php echo htmlspecialchars(__("$code"), ENT_SUBSTITUTE | ENT_QUOTES | ENT_HTML5); ?>',
         'rawStr' => '<?php echo htmlspecialchars($code, ENT_SUBSTITUTE | ENT_QUOTES | ENT_HTML5); ?>',
     ];
-    
+
     const Template='suda\template\compiler\suda\Template';
 
-    protected static $template=self::Template;
-    
     /**
      * 附加模板命令
      *
@@ -94,8 +92,8 @@ class Compiler implements CompilerImpl
                 // 所有将要编译的文本
                 // 跳过各种的PHP
                 if ($tag == T_INLINE_HTML) {
-                    $content=self::compileString($content, $tagConfig);
-                    $content=self::compileCommand($content, $tagConfig);
+                    $content=$this->compileString($content, $tagConfig);
+                    $content=$this->compileCommand($content, $tagConfig);
                 }
                 $result .=$content;
             } else {
@@ -117,35 +115,32 @@ class Compiler implements CompilerImpl
      * @param string $name
      * @param string $input
      * @param string $output
-     * @return boolean
+     * @return void
      */
-    public function compile(string $module, string $root, string $name, string $input, string $output):bool
+    public function compile(string $module, string $root, string $name, string $input, string $output)
     {
         $timeName = __('compile $0 $1', $module, $name);
         debug()->time($timeName);
         if (!Storage::exist($input)) {
-            debug()->warning(__('compile error no sorce file <$0> $1 at $1', $module, $name, $input));
-            return false;
+            $this->raiseException(1,__('input file <$0> $1 at $1 not exist ', $module, $name, $input),'unknown',0);
         }
+
         $tagConfig = $this->getTagConfig($root, $input);
         $content= $this->compileText(Storage::get($input), $tagConfig);
         if (!Storage::isDir($dir=dirname($output))) {
             Storage::mkdirs(dirname($output));
         }
         $classname=Manager::className($module, $name);
-        $content='<?php if (!class_exists("'.$classname.'", false)) { class '.$classname.' extends '.self::$template.' { protected $name="'. addslashes($name) .'";protected $module="'.addslashes($module).'"; protected $source="'. addslashes($input).'";protected function _render_template() {  ?>'.$content.'<?php }} } return ["class"=>"'.$classname.'","name"=>"'.addslashes($name).'","source"=>"'.addslashes($input).'","module"=>"'.addslashes($module).'"]; ';
+        $content='<?php if (!class_exists("'.$classname.'", false)) { class '.$classname.' extends '. Compiler::Template .' { protected $name="'. addslashes($name) .'";protected $module="'.addslashes($module).'"; protected $source="'. addslashes($input).'";protected function _render_template() {  ?>'.$content.'<?php }} } return ["class"=>"'.$classname.'","name"=>"'.addslashes($name).'","source"=>"'.addslashes($input).'","module"=>"'.addslashes($module).'"]; ';
         Storage::put($output, $content);
         debug()->timeEnd($timeName);
-        $syntax= Manager::checkSyntax($output, $classname);
+        $syntax = Manager::checkSyntax($output, $classname);
         if ($syntax !== true) {
             if (!conf('debug')) {
                 storage()->delete($output);
             }
-            if ($syntax instanceof \Exception || $syntax instanceof \Error) {
-                throw new \suda\core\Exception(new \ErrorException(__('compile error: $0 near line $1', $syntax->getMessage(), $syntax->getLine()), $syntax->getCode(), conf('exception.compile-error', true)?E_ERROR:E_WARNING, $input, $syntax->getLine()), 'TemplateError');
-            }
+            $this->raiseException(2,__('syntax error: $0 near $1:$2', $syntax->getMessage(), $input, $syntax->getLine()), $input, $syntax->getLine());
         }
-        return $syntax===true?:$syntax;
     }
 
     public function getTagConfig(?string $root=null, ?string $input=null)
@@ -187,7 +182,7 @@ class Compiler implements CompilerImpl
         if (storage()->exist($viewfile)) {
             $templateInfo =  include $viewfile;
             $classname = $templateInfo['class'];
-            return $template=new $classname;
+            return new $classname;
         } else {
             throw new \suda\exception\KernelException(__('template $0 is not ready!', $name ?? $viewfile));
         }
@@ -324,7 +319,7 @@ class Compiler implements CompilerImpl
         return '$this->get("'.$name.'")';
     }
 
-    protected static function parseValue($var)
+    protected function parseValue($var)
     {
         return '<?php echo $this->get'.self::echoValue($var) .'; ?>';
     }
@@ -485,14 +480,8 @@ class Compiler implements CompilerImpl
         return "<?php \$this->exec('{$name}'); ?>";
     }
 
-    // 错误报错
-    public function error()
+    protected function raiseException(int $code, string $message, string $file, int $line)
     {
-        return self::$error[self::$erron];
-    }
-    // 错误码
-    public function erron()
-    {
-        return self::$erron;
+        throw new \suda\core\Exception(new \ErrorException($message, $code, E_ERROR, $file, $line), 'CompileError');
     }
 }

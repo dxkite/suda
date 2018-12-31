@@ -140,10 +140,12 @@ abstract class Response
     }
 
     /**
-    * 输出HTML页面
-    * $template HTML页面模板
-    * $values 页面模板的值
-    */
+     * 输出HTML页面
+     * 
+     * @param string $template HTML页面模板
+     * @param array $values 页面模板的值
+     * @return mixed
+     */
     public function page(string $template, array $values=[])
     {
         $view = $this->view($template, $values);
@@ -154,26 +156,28 @@ abstract class Response
     }
 
     /**
-    * 输出HTML页面
-    * $template HTML页面模板
-    * $values 页面模板的值
-    */
+     * 输出HTML页面
+     * 
+     * @param string $template HTML页面模板
+     * @param array $values 页面模板的值
+     * @return mixed
+     */
     public function view(string $template, array $values=[])
     {
         $tpl=Manager::displaySource($template, 'html');
         if ($tpl) {
             return $tpl->response($this)->assign($values);
         }
-        return false;
+        return null;
     }
 
     /**
-     * 输出模板
+     * 输出模板文件
      *
      * @param string $template 模板路径
      * @param array $values 页面值
      * @param string $name 模板名
-     * @return void
+     * @return mixed
      */
     public function template(string $filepath, array $values=[], ?string  $name=null)
     {
@@ -182,7 +186,7 @@ abstract class Response
         if ($tpl) {
             return $tpl->response($this)->assign($values);
         }
-        return false;
+        return null;
     }
 
     public function refresh()

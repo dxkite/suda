@@ -134,12 +134,13 @@ class Manager
         // 编译文件
         list($module, $basename) = Router::parseName($name);
         if ($data = self::getInputFile($module, $basename, true, $ext)) {
-            list($root,$path) = $data;
+            list($root, $path) = $data;
             if (is_null($outpath)) {
                 $outpath=self::getOutputFile($module, $basename);
             }
             Hook::exec('suda:template:compile::before', [ self::getCompiler() ]);
-            return self::getCompiler()->compile($module, $root, $basename, $path, $outpath);
+            self::getCompiler()->compile($module, $root, $basename, $path, $outpath);
+            return true;
         }
         return false;
     }
@@ -463,11 +464,21 @@ class Manager
                 {
                     echo '<div style="color:red" title="'.__('can\'t include $0', $this->moduleName.':'.$this->basename).'">{include:{'.$this->name.'}}</div>';
                 }
-                public function response(\suda\core\Response $response){}
-                public function get(string $name, $default=null){}
-                public function set(string $name, $value){}
-                public function assign(array $values){}
-                public function getRenderedString(){}
+                public function response(\suda\core\Response $response)
+                {
+                }
+                public function get(string $name, $default=null)
+                {
+                }
+                public function set(string $name, $value)
+                {
+                }
+                public function assign(array $values)
+                {
+                }
+                public function getRenderedString()
+                {
+                }
             };
             $class->moduleName=$moduleName;
             $class->basename=$basename;
@@ -509,7 +520,7 @@ class Manager
         return $output;
     }
 
-    public static function className(string $module,string $name)
+    public static function className(string $module, string $name)
     {
         $fullModuleName=Application::getInstance()->getModuleFullName($module);
         return 'Template_'.md5($fullModuleName.':'.$name);
@@ -581,7 +592,7 @@ class Manager
                 $script  = $_SERVER['SCRIPT_NAME'];
                 self::$baseUrl = $base.rtrim(str_replace('\\', '/', dirname($script)), '/').'/assets';
             } else {
-                self::$baseUrl = rtrim(Request::baseUrl(),'/').'/assets';
+                self::$baseUrl = rtrim(Request::baseUrl(), '/').'/assets';
             }
         }
         return conf('asset-server', self::$baseUrl).$url;

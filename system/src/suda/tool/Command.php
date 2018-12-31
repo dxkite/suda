@@ -97,7 +97,6 @@ class Command
             $_SERVER['args']=count($params);
             return include $this->file;
         }
-        return false;
     }
 
     public function args()
