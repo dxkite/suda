@@ -21,6 +21,7 @@ use suda\core\Config;
 use suda\core\Router;
 use suda\core\Request;
 use suda\core\Storage;
+use suda\core\Autoloader;
 use suda\core\Application;
 use suda\template\Template;
 use suda\exception\KernelException;
@@ -260,8 +261,29 @@ class Manager
         } else {
             \debug()->warning(__('path not writeable: $0', $publicPath));
         }
-        storage()->touchIndex(self::$assetsPath);
+        self::touchIndex(self::$assetsPath);
         return $return;
+    }
+
+    private static function touchIndex(string $dest, string $content = 'dxkite-suda@'.SUDA_VERSION)
+    {
+        $dest=Autoloader::parsePath($dest);
+        $dest=storage()->path($dest);
+        if ($dest) {
+            $index = $dest.'/'.conf('default-index', 'index.html');
+            if (!storage()->exist($index)) {
+                file_put_contents($index, $content);
+            }
+            $dirs = storage()->readDirs($dest, true, null, true);
+            foreach ($dirs as $path) {
+                $index = $path.'/'.conf('default-index', 'index.html');
+                if (!storage()->exist($index)) {
+                    file_put_contents($index, $content);
+                }
+            }
+            return true;
+        }
+        return false;
     }
 
     private static function getPublicModulePath(string $module)

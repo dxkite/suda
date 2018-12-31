@@ -391,25 +391,4 @@ class FileStorage implements Storage
     {
         return tempnam(sys_get_temp_dir(), $prefix);
     }
-    
-    public function touchIndex(string $dest, string $content = 'dxkite-suda@'.SUDA_VERSION)
-    {
-        $dest=Autoloader::parsePath($dest);
-        $dest=$this->path($dest);
-        if ($dest) {
-            $index = $dest.'/'.conf('default-index', 'index.html');
-            if (!$this->exist($index)) {
-                file_put_contents($index, $content);
-            }
-            $dirs = $this->readDirs($dest, true, null, true);
-            foreach ($dirs as $path) {
-                $index = $path.'/'.conf('default-index', 'index.html');
-                if (!$this->exist($index)) {
-                    file_put_contents($index, $content);
-                }
-            }
-            return true;
-        }
-        return false;
-    }
 }
