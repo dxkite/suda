@@ -36,12 +36,14 @@ class TemplateInfo extends Compiler
 
     public function __construct(string $name, string $parent=null)
     {
-        list($module_name, $basename)=router()->parseName($name, $parent);
-        $this->name=$module_name.':'.$basename;
-        $this->module=$module_name;
-        if ($path=Manager::getInputFile($this->name)) {
+        list($module, $basename)=router()->parseName($name, $parent);
+        $this->name=$module.':'.$basename;
+        $this->module=$module;
+        if ($inputInfo=Manager::getInputFile($module,$basename)) {
+            list($root,$path) = $inputInfo;
             $this->path=$path;
-            $this->compileText(file_get_contents($path));
+            $tagConfig = $this->getTagConfig($root, $path);
+            $this->compileText(file_get_contents($path), $tagConfig);
         }
     }
 

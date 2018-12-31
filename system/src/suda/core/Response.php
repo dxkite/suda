@@ -203,7 +203,7 @@ abstract class Response
         return false;
     }
 
-    public function getForward():?string
+    public static function getForward():?string
     {
         $referer =  $_GET['redirect_uri']??Request::referer();
         if (Cookie::has('redirect_uri')) {

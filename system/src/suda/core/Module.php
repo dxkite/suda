@@ -356,7 +356,7 @@ class Module
 
         if (is_string($config)) {
             if ($config = Config::resolve($path.'/'.$config)) {
-                $configData = Config::loadConfig($config);
+                $configData = Config::loadConfig($config) ?? [];
             } else {
                 return false;
             }

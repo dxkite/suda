@@ -25,6 +25,8 @@ use suda\mail\message\Message;
 class MailSender implements Sender
 {
     protected $error;
+    protected $errno;
+
     protected $message;
 
     public function send(Message $message):bool
@@ -45,7 +47,7 @@ class MailSender implements Sender
     {
         $this->errno=$errno;
         $this->errstr=$errstr;
-        self::setError($errno.':'.$errstr);
+        $this->setError($errno.':'.$errstr);
     }
 
     protected function setError(string $error)

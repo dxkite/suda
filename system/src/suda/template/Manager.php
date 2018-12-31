@@ -493,7 +493,7 @@ class Manager
      * @param string $name
      * @param boolean $ext
      * @param string $extRaw
-     * @return array
+     * @return array 返回文件根目录和路径 array<root,input>
      */
     public static function getInputFile(string $module, string $basename, bool $ext=true, string $extRaw='html'):?array
     {

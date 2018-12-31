@@ -147,9 +147,9 @@ abstract class Template implements TemplateInterface
     */
     public function getRenderedString()
     {
-        self::_render_start();
+        $this->_render_start();
         $this->echo();
-        $content=self::_render_end();
+        $content=$this->_render_end();
         return $content;
     }
     

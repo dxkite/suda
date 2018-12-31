@@ -234,11 +234,11 @@ class Mapping implements \JsonSerializable
      * 判断路由是否为指定模块的路由
      *
      * @param string $that
-     * @return void
+     * @return bool
      */
     public function inModule(string $that)
     {
-        return  app()->getModuleFullName($that) == $this->module;
+        return  app()->getModuleFullName($that) === $this->module;
     }
 
     public function getFullName()

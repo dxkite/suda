@@ -239,7 +239,7 @@ function config()
  * 类名->方法名
  * ```
  *
- * @param [type] $command 可调用的对象
+ * @param mixed $command 可调用的对象
  * @param array $params 调用时的参数
  * @return suda\tool\Command 可调用命令对象
  */
@@ -272,7 +272,7 @@ function session()
 /**
  * 获取当前文件所在的模块
  *
- * @param integer $var 文件路径或者回溯调用层数
+ * @param  integer|string $var 文件路径或者回溯调用层数
  * @return string 模块名
  */
 function module($var=0)

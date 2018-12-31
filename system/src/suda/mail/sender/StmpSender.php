@@ -266,7 +266,7 @@ class StmpSender implements Sender
                 $this->setError($command . ' send failed');
                 return false;
             }
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             $this->setError($e->getMessage());
         }
     }

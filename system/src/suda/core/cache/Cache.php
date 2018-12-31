@@ -25,12 +25,11 @@ interface Cache
     /**
      * 设置
      * @param string $name 名
-     * @param $value 值
+     * @param mixed $value 值
      * @param int $expire 过期时间
      * @return bool
      */
     public function set(string $name, $value, int $expire=null):bool;
-
 
     /**
      * 获取值

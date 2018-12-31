@@ -163,7 +163,7 @@ interface Storage
      * 创建文件
      *
      * @param string $name 文件名
-     * @param [type] $content 内容
+     * @param string $content 内容
      * @param integer $flags 标志
      * @return boolean
      */

@@ -20,7 +20,6 @@ require_once __DIR__.'/Debug.php';
 
 
 use suda\archive\SQLQuery;
-use suda\core\exception\ApplicationException;
 use suda\core\Autoloader;
 
 /**
@@ -70,7 +69,7 @@ class System
     public static function getAppClassName()
     {
         if (is_null(self::$applicationClass)) {
-            self::$applicationClass = class_name(Config::get('app.application', 'suda.core.Application'));
+            self::$applicationClass = class_name(Config::get('app.application', Application::class));
         }
         return self::$applicationClass;
     }

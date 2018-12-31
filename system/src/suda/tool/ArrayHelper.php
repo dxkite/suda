@@ -70,8 +70,8 @@ class ArrayHelper
      *
      * @param array $array
      * @param string $name
-     * @param [type] $value
-     * @param [type] $def
+     * @param mixed $value
+     * @param mixed $def
      * @return array 设置后的数组
      */
     public static function set(array &$array, string $name, $value, $def=null):array 

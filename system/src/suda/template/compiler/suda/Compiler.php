@@ -320,7 +320,7 @@ class Compiler implements CompilerImpl
 
     protected function parseValue($var)
     {
-        return '<?php echo $this->get'.self::echoValue($var) .'; ?>';
+        return '<?php echo $this->get'.$this->echoValue($var) .'; ?>';
     }
     
     protected function parseEcho($exp)
