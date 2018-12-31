@@ -40,7 +40,7 @@ class SQLQuery extends SQLStatementPrepare implements SQLStatement
     public function __construct(string $query='', array $binds=[], bool $scroll=false)
     {
         $this->query = clone self::currentQuery()->query($query, $binds, $scroll);
-        $this->connecton = $this->query->getConnection();
+        $this->connection = $this->query->getConnection();
     }
 
     public function setConnection(Connection $connection)
@@ -118,7 +118,7 @@ class SQLQuery extends SQLStatementPrepare implements SQLStatement
      * 生成一个数据输入值
      *
      * @param string $name 列名
-     * @param [type] $value 值
+     * @param array|string $value 值
      * @param integer $type 类型
      * @return InputValue 输入变量类
      */
@@ -131,7 +131,7 @@ class SQLQuery extends SQLStatementPrepare implements SQLStatement
      * SQL语句模板绑定值
      *
      * @param array $values
-     * @return SQLQuery
+     * @return SQLQuery|SQLStatement
      */
     public function values(array $values)
     {
@@ -144,7 +144,7 @@ class SQLQuery extends SQLStatementPrepare implements SQLStatement
      *
      * @param string $query 查询语句模板
      * @param array $array 查询语句模板值
-     * @return SQLQuery
+     * @return SQLQuery|SQLStatement
      */
     public function query(string $query, array $array=[], bool $scroll=false)
     {
@@ -156,7 +156,7 @@ class SQLQuery extends SQLStatementPrepare implements SQLStatement
      * 切换使用的数据表
      *
      * @param string $name
-     * @return SQLQuery
+     * @return SQLQuery|SQLStatement
      */
     public function use(string $name=null)
     {
@@ -198,23 +198,22 @@ class SQLQuery extends SQLStatementPrepare implements SQLStatement
         } else {
             return $this->query->lastInsertId($name);
         }
-        return false;
     }
 
     /**
      * 事务系列，开启事务
      *
-     * @return any
+     * @return void
      */
     public static function begin()
     {
-        return self::beginTransaction();
+        self::beginTransaction();
     }
 
     /**
      * 事务系列，开启事务
      *
-     * @return any
+     * @return void
      */
     public static function beginTransaction()
     {
@@ -224,7 +223,7 @@ class SQLQuery extends SQLStatementPrepare implements SQLStatement
     /**
      * 事务系列，提交事务
      *
-     * @return any
+     * @return void
      */
     public static function commit()
     {
@@ -234,7 +233,7 @@ class SQLQuery extends SQLStatementPrepare implements SQLStatement
     /**
      * 事务系列，撤销事务
      *
-     * @return any
+     * @return void
      */
     public static function rollBack()
     {
@@ -263,7 +262,7 @@ class SQLQuery extends SQLStatementPrepare implements SQLStatement
      * 添加列处理类
      *
      * @param [type] $object
-     * @return void
+     * @return SQLQuery|SQLStatement
      */
     public function object($object)
     {

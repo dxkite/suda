@@ -17,10 +17,12 @@
 namespace suda\archive;
 
 use PDO;
+use ReflectionClass;
 use suda\core\Config;
+use suda\tool\Command;
+use ReflectionProperty;
 use suda\exception\SQLException;
 use suda\archive\creator\InputValue;
-use suda\tool\Command;
 
 /**
  * 数据库查询方案，提供原始查询方案
@@ -375,7 +377,7 @@ class RawQuery implements SQLStatement
      * 添加列处理类
      *
      * @param object $object
-     * @return RawQuery
+     * @return SQLStatement|RawQuery
      */
     public function object(object $object)
     {
@@ -446,7 +448,7 @@ class RawQuery implements SQLStatement
     private function __outputObjectTransfrom($object)
     {
         $reflect=new \ReflectionClass($object);
-        $props=$reflect->getProperties(\ReflectionProperty::IS_PUBLIC | \ReflectionProperty::IS_PROTECTED | ReflectionProperty::IS_PRIVATE);
+        $props=$reflect->getProperties(\ReflectionProperty::IS_PUBLIC | \ReflectionProperty::IS_PROTECTED | \ReflectionProperty::IS_PRIVATE);
         foreach ($props as $prop) {
             $prop->setAccessible(true);
             $prop->setValue($object, $this->__outputFieldTransfrom($prop->getName(), $prop->getValue()));

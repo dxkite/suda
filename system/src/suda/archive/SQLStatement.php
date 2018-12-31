@@ -109,7 +109,7 @@ interface SQLStatement
      * 添加列处理类
      *
      * @param object $object
-     * @return void
+     * @return SQLStatement
      */
     public function object(object $object);
 }
