@@ -59,7 +59,7 @@ function debug() : suda\core\Debug
  * 获取配置信息
  *
  * @param string $name 配置名
- * @param [type] $default 获取失败时的值
+ * @param mixed $default 获取失败时的值
  * @return mixed
  */
 function conf(string $name, $default=null)
@@ -75,7 +75,7 @@ function conf(string $name, $default=null)
  */
 function use_namespace(string $namespace)
 {
-    return suda\core\Autoloader::setNamespace($namespace);
+    suda\core\Autoloader::setNamespace($namespace);
 }
 
 /**
@@ -84,8 +84,8 @@ function use_namespace(string $namespace)
  * 如果第一个参数为字符串，则将字符串作为路由名称，第二个参数作为路由的值获取组合后的路由
  * 如果第一个参数为数组，则获取正在运行的路由的URL，参数使用第一个参数
  *
- * @param [type] $name 路由名称
- * @param [type] $values 路由的值
+ * @param string|null|array $name 路由名称
+ * @param array|null|mixed $values 路由的值
  * @return string 生成的URL
  */
 function u($name=null, $values=null)
@@ -125,7 +125,7 @@ function assets_url(string $module, string $path, bool $static=true)
  * 导入PHP文件
  *
  * @param string $path 导入文件的路径
- * @return bool 是否导入成功
+ * @return string 导入的文件路径
  */
 function import(string $path)
 {
@@ -146,7 +146,7 @@ function init_resource(array $modules=null)
 /**
  * 获取当运行的APP单例对象
  *
- * @return any 获取的APP单例对象
+ * @return \suda\core\Application 获取的APP单例对象
  */
 function app()
 {
@@ -197,7 +197,7 @@ function cookie()
  * 获取一个缓存对象
  *
  * @param string $type
- * @return voiCache 获取的缓存对象d
+ * @return suda\core\cache\Cache 获取的缓存对象d
  */
 function cache(string $type='File')
 {
@@ -207,7 +207,7 @@ function cache(string $type='File')
 /**
  * 获取一个储存对象
  *
- * @return Storage 获取的储存对象
+ * @return suda\core\storage\Storage 获取的储存对象
  */
 function storage(string $type='File')
 {
@@ -262,7 +262,7 @@ function class_name(string $name)
 /**
  * 获取默认Session对象
  *
- * @return void
+ * @return \suda\core\Session
  */
 function session()
 {
@@ -273,7 +273,7 @@ function session()
  * 获取当前文件所在的模块
  *
  * @param integer $var 文件路径或者回溯调用层数
- * @return void
+ * @return string 模块名
  */
 function module($var=0)
 {
@@ -287,7 +287,7 @@ function module($var=0)
  * 获取邮件发送 **使用前请设置完成SMTP规则**
  *
  * @param integer|null $type 发送类型。0 使用 sendmail 发送邮件， 1使用 SMTP发送邮件
- * @return void
+ * @return \suda\mail\sender\Sender
  */
 function email_poster(?int $type=null)
 {

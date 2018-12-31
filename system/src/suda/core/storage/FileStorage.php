@@ -328,7 +328,7 @@ class FileStorage implements Storage
         return 0;
     }
 
-    public function download(string $url, string $save):boolean
+    public function download(string $url, string $save):bool
     {
         $save=Autoloader::parsePath($save);
         return $this->put($save, $this->curl($url));
