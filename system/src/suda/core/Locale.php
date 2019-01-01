@@ -32,8 +32,8 @@ class Locale
     private static $paths=[];
 
     /**
-    * 包含本地化语言数组
-    */
+     * 包含本地化语言数组
+     */
     public static function include(array $locales)
     {
         return self::$langs=array_merge(self::$langs, $locales);
@@ -41,8 +41,8 @@ class Locale
 
     
     /**
-    * 设置语言化文件夹路径
-    */
+     * 设置语言化文件夹路径
+     */
     public static function path(string $path)
     {
         if (!in_array($path, self::$paths)) {
@@ -52,8 +52,8 @@ class Locale
     }
 
     /**
-    * 设置本地化语言类型
-    */
+     * 设置本地化语言类型
+     */
     public static function set(string $locale)
     {
         self::$set=$locale;
@@ -61,12 +61,12 @@ class Locale
     }
 
     /**
-    * 加载语言本地化文件
-    */
+     * 加载语言本地化文件
+     */
     public static function load(string $locale)
     {
         foreach (self::$paths as $path) {
-            self::loadPath($path);
+            self::loadPath($path.'/'.$locale);
         }
     }
 
@@ -79,7 +79,7 @@ class Locale
     public static function loadPath(string $path)
     {
         if (Storage::isFile($path)) {
-            self::loadFile($path.'/'.$locale);
+            self::loadFile($path);
         } elseif (Storage::isDir($path)) {
             $langFiles = Storage::readDirFiles($path);
             foreach ($langFiles as $langFile) {
@@ -89,13 +89,18 @@ class Locale
     }
 
     /**
-    * 加载语言本地化文件
-    */
+     * 加载语言本地化文件
+     *
+     * @param string $path
+     * @return array
+     */
     public static function loadFile(string $path)
     {
         if ($file = Config::resolve($path)) {
             $localeArray = Config::loadConfig($file);
-            return self::include($localeArray);
+            if (\is_array($localeArray)) {
+                return self::include($localeArray);
+            }
         }
         return [];
     }
