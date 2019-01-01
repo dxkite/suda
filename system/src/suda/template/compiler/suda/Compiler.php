@@ -66,7 +66,7 @@ class Compiler implements CompilerImpl
         'rawStr' => '<?php echo htmlspecialchars($code, ENT_SUBSTITUTE | ENT_QUOTES | ENT_HTML5); ?>',
     ];
 
-    const Template='suda\template\compiler\suda\Template';
+    const Template = Template::class;
 
     /**
      * 附加模板命令
@@ -131,7 +131,7 @@ class Compiler implements CompilerImpl
             Storage::mkdirs(dirname($output));
         }
         $classname=Manager::className($module, $name);
-        $content='<?php if (!class_exists("'.$classname.'", false)) { class '.$classname.' extends '. Compiler::Template .' { protected $name="'. addslashes($name) .'";protected $module="'.addslashes($module).'"; protected $source="'. addslashes($input).'";protected function _render_template() {  ?>'.$content.'<?php }} } return ["class"=>"'.$classname.'","name"=>"'.addslashes($name).'","source"=>"'.addslashes($input).'","module"=>"'.addslashes($module).'"]; ';
+        $content='<?php if (!class_exists("'.$classname.'", false)) { class '.$classname.' extends \\'. Template::class .' { protected $name="'. addslashes($name) .'";protected $module="'.addslashes($module).'"; protected $source="'. addslashes($input).'";protected function _render_template() {  ?>'.$content.'<?php }} } return ["class"=>"'.$classname.'","name"=>"'.addslashes($name).'","source"=>"'.addslashes($input).'","module"=>"'.addslashes($module).'"]; ';
         Storage::put($output, $content);
         debug()->timeEnd($timeName);
         $syntax = Manager::checkSyntax($output, $classname);
@@ -241,7 +241,8 @@ class Compiler implements CompilerImpl
 
     private function compileString(string $str, array $tagConfig)
     {
-        $callback=function ($match) {
+        $processer = new Processer($this);
+        $callback=function ($match) use ($processer) {
             if (count($match) >= 5) {
                 list($input, $ignore, $name, $space, $params) = $match;
             } else {
@@ -254,8 +255,8 @@ class Compiler implements CompilerImpl
                 $code = null;
                 if (self::hasCommand(ucfirst($name))) {
                     $code = self::buildCommand($name, $params);
-                } elseif (method_exists($this, $method = 'parse'.ucfirst($name))) {
-                    $code = $this->$method($params);
+                } elseif (method_exists($processer, $method = 'parse'.ucfirst($name))) {
+                    $code = $processer->$method($params);
                 }
                 if (is_null($code)) {
                     return $input;
@@ -318,165 +319,12 @@ class Compiler implements CompilerImpl
         return '$this->get("'.$name.'")';
     }
 
-    protected function parseValue($var)
-    {
-        return '<?php echo $this->get'.$this->echoValue($var) .'; ?>';
-    }
-    
-    protected function parseEcho($exp)
-    {
-        return "<?php echo htmlspecialchars{$exp}; ?>";
-    }
-    
-    protected function parseData($exp)
-    {
-        return "<?php \$this->data{$exp}; ?>";
-    }
-
-    protected function parseFile($exp)
-    {
-        if (preg_match('/\((.+)\)/', $exp, $v)) {
-            $name=trim($v[1], '"\'');
-            return "<?php echo suda\\template\\Manager::file('{$name}',\$this) ?>";
-        }
-        return '@file';
-    }
-
-    protected function parse_($exp)
-    {
-        return "<?php echo __$exp; ?>";
-    }
-
-    protected function parseIf($exp)
-    {
-        return "<?php if {$exp}: ?>";
-    }
-
-    protected function parseEndif()
-    {
-        return '<?php endif; ?>';
-    }
-    protected function parseElse()
-    {
-        return '<?php else: ?>';
-    }
-    protected function parseElseif($exp)
-    {
-        return "<?php elseif {$exp}: ?>";
-    }
-    // for
-    protected function parseFor($expression)
-    {
-        return "<?php for{$expression}: ?>";
-    }
-    protected function parseEndfor()
-    {
-        return '<?php endfor; ?>';
-    }
-    // foreach
-    protected function parseForeach($exp)
-    {
-        return "<?php foreach{$exp}: ?>";
-    }
-    protected function parseEndforeach()
-    {
-        return '<?php endforeach; ?>';
-    }
-    // while
-    protected function parseWhile($exp)
-    {
-        return "<?php while{$exp}: ?>";
-    }
-
-    protected function parseEndwhile()
-    {
-        return '<?php endwhile; ?>';
-    }
-
-    // include
-    protected function parseInclude($exp)
-    {
-        return '<?php $this->include'.$exp.'; ?>';
-    }
-
-    // extend
-    protected function parseExtend($exp)
-    {
-        return '<?php $this->extend'.$exp.'; ?>';
-    }
-
-    protected function parseU($exp)
-    {
-        if ($exp==='') {
-            $exp='()';
-        }
-        return "<?php echo \$this->url$exp; ?>";
-    }
-    
-    protected function parseSelf($exp)
-    {
-        if ($exp) {
-            return '<?php echo suda\core\Router::getInstance()->buildUrl(suda\core\Response::$name,$_GET,false,'.$exp.'); ?>';
-        }
-        return '<?php echo suda\core\Router::getInstance()->buildUrl(suda\core\Response::$name,$_GET,false); ?>';
-    }
-
-    protected function parseSet($exp)
-    {
-        return "<?php \$this->set{$exp}; ?>";
-    }
-
-    public function parseB($exp)
-    {
-        return "<?php echo \$this->boolecho{$exp}; ?>";
-    }
-
-    protected function parseStatic($exp)
-    {
-        if (preg_match('/^\((.+)\)$/', $exp, $match)) {
-            if (isset($match[1])&&$match[1]) {
-                $module=trim(trim($match[1], '"\''));
-                return '<?php echo suda\\template\\Manager::assetServer(\''.Manager::getStaticAssetPath($module).'\');?>';
-            }
-        }
-        return '<?php echo suda\\template\\Manager::assetServer(suda\\template\\Manager::getStaticAssetPath($this->getModule())); ?>';
-    }
-
-    
-    protected function parseUrl($exp)
-    {
-        return "<?php echo u{$exp}; ?>";
-    }
     // View echo
     public static function echo($something)
     {
         foreach (func_get_args() as $arg) {
             echo htmlspecialchars($arg);
         }
-    }
-
-    protected function parseStartInsert($exp)
-    {
-        preg_match('/\((.+)\)/', $exp, $v);
-        $name=trim(str_replace('\'', '-', trim($v[1], '"\'')));
-        return '<?php $this->execHook(\''.$name.'\',function () { ?>';
-    }
-    
-    protected function parseEndInsert()
-    {
-        return '<?php });?>';
-    }
-
-    protected function parseNonce()
-    {
-        return 'nonce="<?php echo $this->getNonce() ?>"';
-    }
-
-    protected function parseInsert($exp)
-    {
-        preg_match('/\((.+)\)/', $exp, $v);
-        $name=str_replace('\'', '-', trim($v[1], '"\''));
-        return "<?php \$this->exec('{$name}'); ?>";
     }
 
     protected function raiseException(int $code, string $message, string $file, int $line)

@@ -127,7 +127,7 @@ class Locale
         return preg_replace_callback('/(?<!\$)\$(\{)?(\d+|\w+?\b)(?(1)\})/', function ($match) use ($param) {
             $key = $match[2];
             if (array_key_exists($key, $param)) {
-                return $param[$key];
+                return strval($param[$key]);
             }
             return $match[0];
         }, $string);
