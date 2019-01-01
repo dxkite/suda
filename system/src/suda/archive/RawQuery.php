@@ -22,6 +22,7 @@ use suda\core\Config;
 use suda\tool\Command;
 use ReflectionProperty;
 use suda\exception\SQLException;
+use suda\archive\DateTransfromer;
 use suda\archive\creator\InputValue;
 
 /**
@@ -32,7 +33,7 @@ class RawQuery implements SQLStatement
 {
     protected $connection = null;
     
-    protected $object;
+    protected $transfromer;
 
     protected $stmt=null;
 
@@ -69,7 +70,7 @@ class RawQuery implements SQLStatement
     public function __construct(Connection $connection, string $query='', array $binds=[], bool $scroll=false)
     {
         $this->connection= $connection;
-        $this->object=null;
+        $this->transfromer= new DateTransfromer;
         $this->query($query, $binds, $scroll);
     }
 
@@ -94,18 +95,17 @@ class RawQuery implements SQLStatement
     {
         if ($this->stmt) {
             if ($data=$this->stmt->fetch($fetch_style)) {
-                return $this->__outputRowTransfrom($data);
+                return $this->transfromer->outputRowTransfrom($data);
             }
         } else {
             if ($this->__query($this->query, $this->values)) {
                 if ($data=$this->stmt->fetch($fetch_style)) {
-                    return $this->__outputRowTransfrom($data);
+                    return $this->transfromer->outputRowTransfrom($data);
                 }
             }
         }
         return null;
     }
-
 
     /**
      * 获取查询结果的一列，并作为类对象
@@ -119,7 +119,7 @@ class RawQuery implements SQLStatement
             return $this->stmt->fetchObject($class);
         } else {
             if ($this->__query($this->query, $this->values)) {
-                return $this->__outputObjectTransfrom($this->stmt->fetchObject($class));
+                return $this->transfromer->outputObjectTransfrom($this->stmt->fetchObject($class));
             }
         }
         return null;
@@ -135,7 +135,7 @@ class RawQuery implements SQLStatement
     {
         if ($this->__query($this->query, $this->values)) {
             if ($data=$this->stmt->fetchAll($fetch_style)) {
-                return $this->__outputRowsTransfrom($data);
+                return $this->transfromer->outputRowsTransfrom($data);
             }
         }
         return null;
@@ -345,7 +345,7 @@ class RawQuery implements SQLStatement
         foreach ($array as $key=> $value) {
             $bindName=':'.ltrim($key, ':');
             if ($value instanceof InputValue) {
-                $data= $this->__inputFieldTransfrom($value->getName(), $value->getValue());
+                $data= $this->transfromer->inputFieldTransfrom($value->getName(), $value->getValue());
                 $stmt->bindValue($bindName, $data, InputValue::bindParam($data));
             } else {
                 $stmt->bindValue($bindName, $value, InputValue::bindParam($value));
@@ -380,78 +380,7 @@ class RawQuery implements SQLStatement
      */
     public function object(object $object)
     {
-        $this->object=$object;
+        $this->transfromer->setObject($object);
         return $this;
-    }
-
-    /**
-     * 转换函数；统一处理数据库输入输出
-     *
-     * 只处理InputValue类型的数据
-     *
-     * @param string $name
-     * @param string $fieldName
-     * @param mixed $inputData
-     * @return mixed
-     */
-    protected function __dataTransfrom(string $name, string $fieldName, $inputData)
-    {
-        $methodName='_'.$name.ucfirst($fieldName).'Field';
-        if ($this->object) {
-            if (method_exists($this->object, '__dataTransfrom')) {
-                return Command::_absoluteCall([$this->object,'__dataTransfrom'], func_get_args());
-            } elseif (method_exists($this->object, $methodName)) {
-                $inputData= Command::_absoluteCall([$this->object,$methodName], [$inputData]);
-            }
-        }
-        return $inputData;
-    }
-
-    private function __inputFieldTransfrom(string $name, $inputData)
-    {
-        return $this->__dataTransfrom('input', $name, $inputData);
-    }
-
-    private function __outputDataFilter($rowData)
-    {
-        $methodName='_outputDataFilter';
-        if ($this->object) {
-            if (method_exists($this->object, $methodName)) {
-                return Command::_absoluteCall([$this->object, $methodName], [$rowData]);
-            }
-        }
-        return $rowData;
-    }
-
-    private function __outputFieldTransfrom(string $name, $inputData)
-    {
-        return $this->__dataTransfrom('output', $name, $inputData);
-    }
-
-    private function __outputRowsTransfrom(array $inputRows)
-    {
-        foreach ($inputRows as $id=>$inputData) {
-            $inputRows[$id]=$this->__outputRowTransfrom($inputRows[$id]);
-        }
-        return $inputRows;
-    }
-
-    private function __outputRowTransfrom(array $inputData)
-    {
-        foreach ($inputData as $fieldName => $fieldData) {
-            $inputData[$fieldName]=$this->__outputFieldTransfrom($fieldName, $fieldData);
-        }
-        return $this->__outputDataFilter($inputData);
-    }
-
-    private function __outputObjectTransfrom($object)
-    {
-        $reflect=new \ReflectionClass($object);
-        $props=$reflect->getProperties(\ReflectionProperty::IS_PUBLIC | \ReflectionProperty::IS_PROTECTED | \ReflectionProperty::IS_PRIVATE);
-        foreach ($props as $prop) {
-            $prop->setAccessible(true);
-            $prop->setValue($object, $this->__outputFieldTransfrom($prop->getName(), $prop->getValue()));
-        }
-        return $this->__outputDataFilter($object);
     }
 }
