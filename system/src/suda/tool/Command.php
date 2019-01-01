@@ -141,9 +141,8 @@ class Command
     protected static function parseParameter(string $param)
     {
         $param = trim($param);
-        if (strpos($param, '=') === 0) {
+        if ($param[0] === '=') {
             list($prefix, $value) = explode(':', $param, 2);
-            $length = \strlen($prefix) - 1 ;
             if ($value[0] === ':') {
                 $value = base64_decode(substr($value, 1));
             }

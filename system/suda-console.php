@@ -7,11 +7,11 @@ if (!defined('USER_HOME')) {
     // for linux
     if (array_key_exists('HOME', $_SERVER)) {
         define('USER_HOME', $_SERVER["HOME"]);
-    } 
+    }
     // for windows
     elseif (array_key_exists('HOMEDRIVE', $_SERVER) && array_key_exists('HOMEPATH', $_SERVER)) {
         define('USER_HOME', $_SERVER["HOMEDRIVE"].$_SERVER["HOMEPATH"]);
-    } 
+    }
     // for unknown
     else {
         define('USER_HOME', getcwd());

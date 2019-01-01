@@ -141,7 +141,7 @@ abstract class Response
 
     /**
      * 输出HTML页面
-     * 
+     *
      * @param string $template HTML页面模板
      * @param array $values 页面模板的值
      * @return mixed
@@ -157,7 +157,7 @@ abstract class Response
 
     /**
      * 输出HTML页面
-     * 
+     *
      * @param string $template HTML页面模板
      * @param array $values 页面模板的值
      * @return mixed

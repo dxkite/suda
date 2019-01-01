@@ -74,7 +74,7 @@ class ArrayHelper
      * @param mixed $def
      * @return array 设置后的数组
      */
-    public static function set(array &$array, string $name, $value, $def=null):array 
+    public static function set(array &$array, string $name, $value, $def=null):array
     {
         $path = explode('.', $name);
         $root = &$array;

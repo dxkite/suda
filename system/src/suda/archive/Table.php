@@ -151,7 +151,7 @@ abstract class Table extends TableAccess
      * @param array $values 待更新的数据
      * @return integer 影响的行数
      */
-    public function updateByPrimaryKey($value,array $values):int
+    public function updateByPrimaryKey($value, array $values):int
     {
         $this->checkFields(array_keys($values));
         return $this->statement->update($this->getTableName(), $values, $this->checkPrimaryKey($value));

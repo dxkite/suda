@@ -138,7 +138,7 @@ class Application extends Module
         // 安装、启用使用的模块
         foreach ($moduleLive as $module) {
             $this->loadModule($module);
-             // 自动安装
+            // 自动安装
             if (conf('auto-install', true)) {
                 Hook::listen('suda:application:init', function () use ($module) {
                     $this->installModule($module);
@@ -293,7 +293,8 @@ class Application extends Module
         $this->routeReachable [] = $this->getModuleFullName($name);
     }
 
-    protected function getConfigReachableModule() {
+    protected function getConfigReachableModule()
+    {
         $liveModules = $this->getLiveModules();
         if (file_exists($path=RUNTIME_DIR.'/reachable.config.php')) {
             $modules=include $path;

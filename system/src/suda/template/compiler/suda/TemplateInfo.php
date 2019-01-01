@@ -39,8 +39,8 @@ class TemplateInfo extends Compiler
         list($module, $basename)=router()->parseName($name, $parent);
         $this->name=$module.':'.$basename;
         $this->module=$module;
-        if ($inputInfo=Manager::getInputFile($module,$basename)) {
-            list($root,$path) = $inputInfo;
+        if ($inputInfo=Manager::getInputFile($module, $basename)) {
+            list($root, $path) = $inputInfo;
             $this->path=$path;
             $tagConfig = $this->getTagConfig($root, $path);
             $this->compileText(file_get_contents($path), $tagConfig);

@@ -3,7 +3,7 @@
  * Suda FrameWork
  *
  * An open source application development framework for PHP 7.2.0 or newer
- * 
+ *
  * Copyright (c)  2017-2018 DXkite
  *
  * @category   PHP FrameWork
@@ -18,7 +18,7 @@ namespace suda\core;
 
 /**
  * 文件存储系统包装类，封装了常用的文件系统函数
- * 
+ *
  * @method static bool mkdirs(string $dir, int $mode=0777)
  * @method static string|null path(string $path)
  * @method static string abspath(string $path)
@@ -37,7 +37,7 @@ namespace suda\core;
  * @method static bool rmdir(string $path)
  * @method static bool put(string $name, $content, int $flags = 0)
  * @method static string get(string $name)
- * @method static bool remove(string $name) 
+ * @method static bool remove(string $name)
  * @method static bool isFile(string $name)
  * @method static bool isDir(string $name)
  * @method static bool isReadable(string $name)

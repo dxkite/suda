@@ -2,7 +2,6 @@
 
 namespace suda\template;
 
-
 interface Template
 {
     public function render();

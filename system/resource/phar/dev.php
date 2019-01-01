@@ -18,7 +18,7 @@
     // 设置默认时区
     define('DEFAULT_TIMEZONE', 'PRC');
     // 设置路由组
-    define('ROUTER_GROUPS','default,dev');
+    define('ROUTER_GROUPS', 'default,dev');
     // 系统所在目录
     define('SYSTEM', __DIR__.'/system');
     // 载入框架

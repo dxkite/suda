@@ -3,7 +3,7 @@
  * Suda FrameWork
  *
  * An open source application development framework for PHP 7.2.0 or newer
- * 
+ *
  * Copyright (c)  2017-2018 DXkite
  *
  * @category   PHP FrameWork
@@ -19,12 +19,12 @@ define('SUDA_VERSION', '2.0.3');
 // 环境信息
 defined('IS_LINUX') or define('IS_LINUX', DIRECTORY_SEPARATOR ===  '/');
 defined('IS_CONSOLE') or define('IS_CONSOLE', PHP_SAPI === 'cli');
-defined('IN_PHAR') or define('IN_PHAR', strpos(__DIR__,'phar://') === 0);
+defined('IN_PHAR') or define('IN_PHAR', strpos(__DIR__, 'phar://') === 0);
 defined('DEBUG') or define('DEBUG', $_SERVER['SUDA_DEBUG'] ?? $_ENV['SUDA_DEBUG'] ?? false);
 // 注册基本常量
 defined('SUDA_START_TIME') or define('SUDA_START_TIME', microtime(true));
 defined('SUDA_START_MEMORY') or define('SUDA_START_MEMORY', memory_get_usage());
-defined('SUDA_ENTRANCE') or define('SUDA_ENTRANCE',get_included_files()[intval(IN_PHAR)]);
+defined('SUDA_ENTRANCE') or define('SUDA_ENTRANCE', get_included_files()[intval(IN_PHAR)]);
 // 基本信息
 defined('ROOT_PATH') or define('ROOT_PATH', dirname(__DIR__));
 defined('SYSTEM_DIR') or define('SYSTEM_DIR', __DIR__);

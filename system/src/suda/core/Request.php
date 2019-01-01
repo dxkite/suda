@@ -18,10 +18,11 @@ namespace suda\core;
 use suda\exception\JSONException;
 use suda\core\request\RequestParser;
 use suda\core\request\RequestAttriubute;
+
 /**
  * 请求描述类，客户端向框架发送请求时会生成此类
  */
-class Request 
+class Request
 {
     use RequestAttriubute;
     use RequestParser;
