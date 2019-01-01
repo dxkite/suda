@@ -100,7 +100,7 @@ class Command
                 }
             }
             return static::_absoluteCall($this->command, $this->params);
-        } else  {
+        } else {
             throw (new CommandException(__('invaild command: $0', $this->cmdstr)))->setCmd($this);
         }
     }
@@ -141,27 +141,25 @@ class Command
     protected static function parseParameter(string $param)
     {
         $param = trim($param);
-        if (preg_match('/^\=j(son)?\:(\:)?(.+)$/', $param, $matchs)) {
-            if (isset($matchs[2]) && $matchs[2]) {
-                $params = json_decode(base64_decode($matchs[3]));
-            } else {
-                $params = json_decode($matchs[3]);
+        if (strpos($param, '=') === 0) {
+            list($prefix, $value) = explode(':', $param, 2);
+            $length = \strlen($prefix) - 1 ;
+            if ($value[0] === ':') {
+                $value = base64_decode(substr($value, 1));
             }
-            if (json_last_error() === JSON_ERROR_NONE) {
-                return $params;
-            } else {
+            if ($prefix ==='=j' || $prefix ==='=json') {
+                $params = json_decode($value);
+                if (json_last_error() === JSON_ERROR_NONE) {
+                    return $params;
+                }
                 throw (new CommandException(__('can not parse param $0', $param)));
-            }
-        } elseif (preg_match('/^\=s(erialize)?\:(\:)?(.+)$/', $param, $matchs)) {
-            if (isset($matchs[2]) && $matchs[2]) {
-                $params = unserialize(base64_decode($matchs[3]));
             } else {
-                $params = unserialize($matchs[3]);
+                $params = unserialize($value);
+                if (is_object($params)) {
+                    return [$params];
+                }
+                return $params;
             }
-            if (is_object($params)) {
-                return [$params];
-            }
-            return $params;
         } else {
             $params = explode(',', trim($param, ','));
             foreach ($params as $index=>$value) {
@@ -221,18 +219,14 @@ class Command
     
     public static function newClassInstance(string $class)
     {
-        if (preg_match('/^([\w\\\\\/.]+) (\( ( (?>[^()]+) | (?2) )* \)) /ux', $class, $matchs)) {
-            list($str, $className, $constructParams) = $matchs;
-            if (preg_match('/\((.+)\)/', $constructParams, $tmp)) {
-                $constructParams=$tmp[1];
-            }
-            $params=self::buildParameter($constructParams);
-            $className = Autoloader::realName($className);
-            $classRef= new ReflectionClass($className);
-            return $classRef->newInstanceArgs($params);
+        list($className, $parameter) = self::splitParameter($class);
+        $classRelName = Autoloader::realName($className);
+        if (is_null($parameter)) {
+            return new  $classRelName;
         }
-        $className = Autoloader::realName($class);
-        return new $className;
+        $params=self::buildParameter($parameter);
+        $classRef= new ReflectionClass($className);
+        return $classRef->newInstanceArgs($params);
     }
 
     /**
