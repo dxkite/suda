@@ -671,5 +671,3 @@ class Debug
         return array_merge($dump, self::$dump);
     }
 }
-
-Debug::init();

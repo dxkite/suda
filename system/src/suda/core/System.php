@@ -15,10 +15,6 @@
  */
 namespace suda\core;
 
-require_once __DIR__.'/functions.php';
-require_once __DIR__.'/Debug.php';
-
-
 use suda\archive\SQLQuery;
 use suda\core\Autoloader;
 

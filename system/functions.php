@@ -23,7 +23,7 @@
  */
 function mime(string $type)
 {
-    return suda\core\Response::mime($type);
+    return \suda\core\Response::mime($type);
 }
 
 /**
@@ -42,17 +42,17 @@ function __(?string $message)
     if (is_null($message)) {
         return null;
     }
-    return call_user_func_array([suda\core\Locale::class,'_'], func_get_args());
+    return call_user_func_array([\suda\core\Locale::class,'_'], func_get_args());
 }
 
 /**
  * 获取debug对象
  *
- * @return suda\core\Debug 调试用对象实例
+ * @return \suda\core\Debug 调试用对象实例
  */
-function debug() : suda\core\Debug
+function debug() : \suda\core\Debug
 {
-    return new suda\core\Debug;
+    return new \suda\core\Debug;
 }
 
 /**
@@ -64,7 +64,7 @@ function debug() : suda\core\Debug
  */
 function conf(string $name, $default=null)
 {
-    return suda\core\Config::get($name, $default);
+    return \suda\core\Config::get($name, $default);
 }
 
 /**
@@ -75,7 +75,7 @@ function conf(string $name, $default=null)
  */
 function use_namespace(string $namespace)
 {
-    suda\core\Autoloader::setNamespace($namespace);
+    \suda\core\Autoloader::setNamespace($namespace);
 }
 
 /**
@@ -94,13 +94,13 @@ function u($name=null, $values=null)
         if (!is_array($values)) {
             $args=func_get_args();
             array_shift($args);
-            $values=suda\core\Router::getInstance()->buildUrlArgs($name, $args);
+            $values=\suda\core\Router::getInstance()->buildUrlArgs($name, $args);
         }
-        return suda\core\Router::getInstance()->buildUrl($name, $values);
+        return \suda\core\Router::getInstance()->buildUrl($name, $values);
     } elseif (is_array($name)) {
-        return suda\core\Router::getInstance()->buildUrl(suda\core\Response::$name, array_merge($_GET, $name));
+        return \suda\core\Router::getInstance()->buildUrl(\suda\core\Response::$name, array_merge($_GET, $name));
     } else {
-        return suda\core\Router::getInstance()->buildUrl(suda\core\Response::$name, $_GET, false);
+        return \suda\core\Router::getInstance()->buildUrl(\suda\core\Response::$name, $_GET, false);
     }
 }
 
@@ -115,9 +115,9 @@ function u($name=null, $values=null)
 function assets_url(string $module, string $path, bool $static=true)
 {
     if ($static) {
-        return suda\template\Manager::assetServer(suda\template\Manager::getStaticAssetPath($module)).'/'.ltrim($path, '/');
+        return \suda\template\Manager::assetServer(\suda\template\Manager::getStaticAssetPath($module)).'/'.ltrim($path, '/');
     } else {
-        return suda\template\Manager::assetServer(suda\template\Manager::getDynamicAssetPath($path, $module));
+        return \suda\template\Manager::assetServer(\suda\template\Manager::getDynamicAssetPath($path, $module));
     }
 }
 
@@ -129,7 +129,7 @@ function assets_url(string $module, string $path, bool $static=true)
  */
 function import(string $path)
 {
-    return suda\core\Autoloader::import($path);
+    return \suda\core\Autoloader::import($path);
 }
 
 /**
@@ -140,7 +140,7 @@ function import(string $path)
  */
 function init_resource(array $modules=null)
 {
-    return $modules?suda\template\Manager::initResource($modules):suda\template\Manager::initResource();
+    return $modules?\suda\template\Manager::initResource($modules):\suda\template\Manager::initResource();
 }
 
 /**
@@ -150,78 +150,78 @@ function init_resource(array $modules=null)
  */
 function app()
 {
-    return suda\core\System::getAppInstance();
+    return \suda\core\System::getAppInstance();
 }
 
 /**
  * 获取当运行的路由单例对象
  *
- * @return suda\core\Router 获取的路由单例对象
+ * @return \suda\core\Router 获取的路由单例对象
  */
 function router()
 {
-    return suda\core\Router::getInstance();
+    return \suda\core\Router::getInstance();
 }
 
 /**
  * 获取当运行的请求的单例对象
  *
- * @return suda\core\Request 获取的请求单例对象
+ * @return \suda\core\Request 获取的请求单例对象
  */
 function request()
 {
-    return suda\core\Request::getInstance();
+    return \suda\core\Request::getInstance();
 }
 
 /**
  * 获取当系统钩子对象
  *
- * @return suda\core\Hook 获取的系统钩子对象
+ * @return \suda\core\Hook 获取的系统钩子对象
  */
 function hook()
 {
-    return new suda\core\Hook;
+    return new \suda\core\Hook;
 }
 
 /**
  * 获取Cookie对象
  *
- * @return suda\core\Cookie 获取的Cookie对象
+ * @return \suda\core\Cookie 获取的Cookie对象
  */
 function cookie()
 {
-    return new suda\core\Cookie;
+    return new \suda\core\Cookie;
 }
 
 /**
  * 获取一个缓存对象
  *
  * @param string $type
- * @return suda\core\cache\Cache 获取的缓存对象d
+ * @return \suda\core\cache\Cache 获取的缓存对象d
  */
 function cache(string $type='File')
 {
-    return suda\core\Cache::getInstance($type);
+    return \suda\core\Cache::getInstance($type);
 }
 
 /**
  * 获取一个储存对象
  *
- * @return suda\core\storage\Storage 获取的储存对象
+ * @return \suda\core\storage\Storage 获取的储存对象
  */
 function storage(string $type='File')
 {
-    return suda\core\Storage::getInstance($type);
+    return \suda\core\Storage::getInstance($type);
 }
 
 /**
  * 获取一个配置对象
  *
- * @return suda\core\Config 获取的配置对象
+ * @return \suda\core\Config 获取的配置对象
  */
 function config()
 {
-    return new suda\core\Config;
+    return new \suda\core\Config;
 }
 
 /**
@@ -241,11 +241,11 @@ function config()
  *
  * @param mixed $command 可调用的对象
  * @param array $params 调用时的参数
- * @return suda\tool\Command 可调用命令对象
+ * @return \suda\tool\Command 可调用命令对象
  */
 function cmd($command, array $params=[])
 {
-    return new suda\tool\Command($command, $params);
+    return new \suda\tool\Command($command, $params);
 }
 
 /**
@@ -256,7 +256,7 @@ function cmd($command, array $params=[])
  */
 function class_name(string $name)
 {
-    return suda\core\Autoloader::realName($name);
+    return \suda\core\Autoloader::realName($name);
 }
 
 /**
@@ -266,7 +266,7 @@ function class_name(string $name)
  */
 function session()
 {
-    return suda\core\Session::getInstance();
+    return \suda\core\Session::getInstance();
 }
 
 /**
@@ -291,7 +291,7 @@ function module($var=0)
  */
 function email_poster(?int $type=null)
 {
-    return suda\mail\Factory::sender(is_null($type)? suda\mail\Factory::SMTP : $type);
+    return \suda\mail\Factory::sender(is_null($type)? \suda\mail\Factory::SMTP : $type);
 }
 
 /**
@@ -322,9 +322,9 @@ function parse_absolute_path(string $path):string
  * @param string $sql
  * @param array $bind
  * @param boolean $scroll
- * @return suda\archive\SQLQuery
+ * @return \suda\archive\SQLQuery
  */
-function query(string $sql, array $bind=[], bool $scroll=false): suda\archive\SQLQuery
+function query(string $sql, array $bind=[], bool $scroll=false): \suda\archive\SQLQuery
 {
-    return new suda\archive\SQLQuery($sql, $bind, $scroll);
+    return new \suda\archive\SQLQuery($sql, $bind, $scroll);
 }
