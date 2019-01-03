@@ -363,10 +363,10 @@ class Router
         }
     }
 
-    public function dispatch()
+    public function dispatch(Request $request)
     {
         debug()->time('dispatch');
-        if (!Hook::execIf('suda:route:dispatch::before', [Request::getInstance()], false)) {
+        if (!Hook::execIf('suda:route:dispatch::before', [$request], false)) {
             if (($mapping=$this->matchRouterMap())!==false) {
                 debug()->timeEnd('dispatch');
                 Response::setName($mapping->getFullName());
@@ -374,7 +374,7 @@ class Router
                 $this->runRouter($mapping);
                 debug()->timeEnd('run router');
             } else {
-                if (!Hook::execIf('suda:route:dispatch::extra', [Request::getInstance()], true)) {
+                if (!Hook::execIf('suda:route:dispatch::extra', [$request], true)) {
                     Hook::execTail('suda:system:error::404');
                 }
             }

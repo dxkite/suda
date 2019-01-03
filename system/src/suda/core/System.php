@@ -78,13 +78,14 @@ class System
     {
         debug()->time('init application');
         $router=Router::getInstance();
+        $request=Request::getInstance();
         static::initApplication();
         debug()->timeEnd('init application');
         debug()->time('init router');
         $router->loadModulesRouter();
         debug()->timeEnd('init router');
         debug()->time('run request');
-        $router->dispatch();
+        $router->dispatch($request);
         debug()->timeEnd('run request');
         debug()->time('before shutdown');
     }
