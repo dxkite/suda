@@ -54,9 +54,9 @@ class DateTransfromer
         $methodName='_'.$name.ucfirst($fieldName).'Field';
         if ($this->object) {
             if (method_exists($this->object, '__dataTransfrom')) {
-                return Command::_absoluteCall([$this->object,'__dataTransfrom'], func_get_args());
+                return Command::invoke([$this->object,'__dataTransfrom'], func_get_args());
             } elseif (method_exists($this->object, $methodName)) {
-                $inputData= Command::_absoluteCall([$this->object,$methodName], [$inputData]);
+                $inputData= Command::invoke([$this->object,$methodName], [$inputData]);
             }
         }
         return $inputData;
@@ -72,7 +72,7 @@ class DateTransfromer
         $methodName='_outputDataFilter';
         if ($this->object) {
             if (method_exists($this->object, $methodName)) {
-                return Command::_absoluteCall([$this->object, $methodName], [$rowData]);
+                return Command::invoke([$this->object, $methodName], [$rowData]);
             }
         }
         return $rowData;

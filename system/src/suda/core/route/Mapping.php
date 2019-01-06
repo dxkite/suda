@@ -18,9 +18,10 @@ namespace suda\core\route;
 
 use \Exception;
 use suda\core\Request;
-use suda\tool\Command;
 use suda\core\Response;
+use suda\core\Runnable;
 use suda\template\Template;
+use suda\tool\Command;
 
 class Mapping implements \JsonSerializable
 {
@@ -131,36 +132,29 @@ class Mapping implements \JsonSerializable
     public function run():bool
     {
         self::$current=$this;
-        $callback = new Command($this->callback);
+        $callback = new Runnable($this->callback);
         $response = null;
         $content = null;
 
-        if ($command  = $callback->command) {
+        if ($command  = $callback->getRunnableTarget()) {
             $method = null;
             $ob =$this->buffer;
             if (is_string($command)) {
-                if (!function_exists($command) && $callback->file) {
-                    require_once $callback->file;
-                }
-                if (function_exists($command)) {
-                    $method=new \ReflectionFunction($command);
-                    $ob = $this->getResponseObStatus($method);
-                }
+                $method=new \ReflectionFunction($command);
+                $ob = $this->getResponseObStatus($method);
             } elseif (is_array($command)) {
-                if (class_exists($command[0])) {
-                    $method=new \ReflectionMethod($command[0], $command[1]);
-                    $ob = $this->getResponseObStatus($method, $command[0]);
-                }
+                $method=new \ReflectionMethod($command[0], $command[1]);
+                $ob = $this->getResponseObStatus($method, $command[0]);
             }
             if ($ob) {
                 ob_start();
-                $response = $callback->exec([request()->setMapping($this)]);
+                $response = Command::invoke($callback, [request()->setMapping($this)]);
                 $content = ob_get_clean();
             } else {
-                $response = $callback->exec([request()->setMapping($this)]);
+                $response = Command::invoke($callback, [request()->setMapping($this)]);
             }
         } else {
-            $response = $callback->exec([request()->setMapping($this)]);
+            $response = Command::invoke($callback, [request()->setMapping($this)]);
         }
         cookie()->sendCookies();
         if (\is_string($response) || \is_object($response) || \is_array($response)) {
