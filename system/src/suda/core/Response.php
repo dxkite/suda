@@ -15,10 +15,12 @@
  */
 namespace suda\core;
 
-use suda\tool\ArrayHelper;
+use suda\tool\Security;
 use suda\template\Manager;
-use suda\exception\ApplicationException;
+use suda\tool\ArrayHelper;
+use suda\core\route\Mapping;
 use suda\exception\JSONException;
+use suda\exception\ApplicationException;
 
 // TODO: If-Modified-Since
 // TODO: Access-Control
@@ -88,8 +90,11 @@ abstract class Response
     }
 
     /**
-    * 构建JSON输出
-    */
+     * 渲染输出JSON
+     *
+     * @param mixed $values
+     * @return void
+     */
     public function json($values)
     {
         $jsonstr=json_encode($values, JSON_UNESCAPED_UNICODE);
@@ -103,8 +108,13 @@ abstract class Response
     }
 
     /**
-    *  直接输出文件
-    */
+     * 渲染输出文件
+     *
+     * @param string $path
+     * @param string $filename
+     * @param string $type
+     * @return void
+     */
     public function file(string $path, string $filename=null, string $type=null)
     {
         $content=file_get_contents($path);
@@ -120,6 +130,38 @@ abstract class Response
             self::setHeader('Cache-Control: cache, must-revalidate');
             self::setHeader('Pragma: public');
             self::send($content);
+        }
+    }
+
+    /**
+     * 渲染HTML
+     *
+     * @param string $html
+     * @return void
+     */
+    public function html(string $html)
+    {
+        $csp = null;
+        if (\property_exists($this, 'contentSecurityPolicy')) {
+            $csp = Security::cspGeneretor($this->contentSecurityPolicy, Security::getNonce());
+        } elseif (\method_exists($this, 'getContentSecurityPolicy')) {
+            $csp = Security::cspGeneretor($this->getContentSecurityPolicy(), Security::getNonce());
+        } elseif (!is_null(Mapping::$current) && is_array(Mapping::$current->getParam()) && array_key_exists('Content-Security-Policy', Mapping::$current->getParam())) {
+            $csp = Security::cspGeneretor(Mapping::$current->getParam()['Content-Security-Policy'], Security::getNonce());
+        } else {
+            $csp = Security::cspGeneretor(conf('module.header.Content-Security-Policy', conf('header.Content-Security-Policy')), Security::getNonce());
+        }
+        if (\strlen($csp) > 0) {
+            $this->addHeader('Content-Security-Policy', $csp);
+        }
+        $xfo = conf('module.header.Content-Security-Policy', conf('header.X-Frame-Options', 'sameorigin'));
+        if (\strlen($xfo) > 0) {
+            $this->addHeader('X-Frame-Options', $xfo);
+        }
+        $this->type('html');
+        if (conf('app.etag', !conf('debug'))  && $this->etag(md5($html))) {
+        } else {
+            self::send($html);
         }
     }
 

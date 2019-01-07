@@ -23,10 +23,24 @@ class Security
      *           / "'report-sample'" / "'unsafe-allow-redirects'"
      */
     protected static $keywords = ['self','unsafe-inline','unsafe-eval','unsafe-hashes','strict-dynamic','report-sample','unsafe-allow-redirects'];
+    /**
+     * 安全Nonce
+     *
+     * @var string|null
+     */
+    protected static $nonce = null;
 
     public static function getDefaultCsp():array
     {
         return static::$defaultCsp;
+    }
+
+    public static function getNonce():string
+    {
+        if (is_null(self::$nonce)) {
+            self::$nonce = base64_encode(md5(\microtime(true), true));
+        }
+        return self::$nonce;
     }
 
     public static function cspGeneretor($scpConfig, ?string $nonce):?string

@@ -85,13 +85,6 @@ abstract class Template implements TemplateInterface
      * @var array
      */
     protected static $render=[];
-    
-    /**
-     * 安全Nonce
-     *
-     * @var string|null
-     */
-    protected static $nonce = null;
 
     /**
      * 继承的模板
@@ -109,30 +102,7 @@ abstract class Template implements TemplateInterface
         hook()->exec('suda:template:render::before', [&$content]);
         debug()->trace('echo '.$this->name);
         if (!is_null($this->response)) {
-            $csp = null;
-            if (\property_exists($this->response, 'contentSecurityPolicy')) {
-                $csp = Security::cspGeneretor($this->response->contentSecurityPolicy, self::$nonce);
-            } elseif (\method_exists($this->response, 'getContentSecurityPolicy')) {
-                $csp = Security::cspGeneretor($this->response->getContentSecurityPolicy(), self::$nonce);
-            } elseif (!is_null(Mapping::$current) && is_array(Mapping::$current->getParam()) && array_key_exists('Content-Security-Policy', Mapping::$current->getParam())) {
-                $csp = Security::cspGeneretor(Mapping::$current->getParam()['Content-Security-Policy'], self::$nonce);
-            } else {
-                $csp = Security::cspGeneretor(conf('module.header.Content-Security-Policy', conf('header.Content-Security-Policy')), self::$nonce);
-            }
-            if (\strlen($csp) > 0) {
-                $this->response->addHeader('Content-Security-Policy', $csp);
-            }
-            $xfo = conf('module.header.Content-Security-Policy', conf('header.X-Frame-Options', 'sameorigin'));
-            if (\strlen($xfo) > 0) {
-                $this->response->addHeader('X-Frame-Options', $xfo);
-            }
-            $this->response->type('html');
-            if (conf('app.etag', !conf('debug'))  && $this->response->etag(md5($content))) {
-            } else {
-                $this->response->send($content);
-            }
-        } else {
-            $this->response->send($content);
+            $this->response->html($content);
         }
         return $this;
     }
@@ -214,11 +184,9 @@ abstract class Template implements TemplateInterface
 
     protected function getNonce()
     {
-        if (is_null(self::$nonce)) {
-            self::$nonce = base64_encode(md5($this->name.time(), true));
-        }
-        return self::$nonce;
+        return Security::getNonce();
     }
+
 
     /**
     * 单个设置值
@@ -353,15 +321,10 @@ abstract class Template implements TemplateInterface
     {
         return $this->name;
     }
-    
-    public function responseName()
-    {
-        return $this->response->getName();
-    }
 
     public function isMe(string $name, ?array $param=null):bool
     {
-        if ($this->response->getName()!=Router::getInstance()->getRouterFullName($name, $this->module)) {
+        if (Response::getName()!=Router::getInstance()->getRouterFullName($name, $this->module)) {
             return false;
         }
         if (is_array($param)) {

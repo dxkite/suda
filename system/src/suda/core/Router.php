@@ -25,17 +25,36 @@ use suda\core\route\Mapping;
  */
 class Router
 {
-    protected static $router=null;
-    protected $routers=[];
     const CACHE_NAME='route.mapping';
+
+    /**
+     * 单例
+     *
+     * @var Router
+     */
+    protected static $router=null;
+    /**
+     * 路由列表
+     *
+     * @var array
+     */
+    protected $routers=[];
+    /**
+     * 路由分组
+     *
+     * @var array
+     */
+    protected $groups=[];
+    
     protected static $cacheName=null;
     protected static $cacheModules=null;
-    protected static $groups=null;
+    
 
     private function __construct()
     {
         Hook::listen('suda:system:error::404', [$this,'error']);
         Hook::listen('suda:route:dispatch::error', [$this,'error']);
+        $this->groups = $this->loadGroupConfig();
     }
 
     public static function getInstance()
@@ -68,14 +87,15 @@ class Router
     
     public function getRouterGroups():array
     {
-        if (is_null(self::$groups)) {
-            $groups = conf('app.router.groups', [Mapping::DEFAULT_GROUP]);
-            if (defined('ROUTER_GROUPS')) {
-                $groups = explode(',', ROUTER_GROUPS);
-            }
-            self::$groups = $groups;
+        return $this->groups;
+    }
+
+    protected function loadGroupConfig():array {
+        $groups = conf('app.router.groups', [Mapping::DEFAULT_GROUP]);
+        if (defined('ROUTER_GROUPS')) {
+            $groups = explode(',', ROUTER_GROUPS);
         }
-        return self::$groups;
+        return $groups;
     }
 
     protected function loadModuleRouteConfig(string $group, string $module, string $configFile)
