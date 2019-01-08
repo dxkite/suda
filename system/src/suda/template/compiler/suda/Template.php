@@ -184,7 +184,7 @@ abstract class Template implements TemplateInterface
 
     protected function getNonce()
     {
-        return Security::getNonce();
+        return Security::getGeneratedNonce();
     }
 
 

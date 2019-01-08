@@ -35,11 +35,15 @@ class Security
         return static::$defaultCsp;
     }
 
-    public static function getNonce():string
-    {
+    public static function getGeneratedNonce() {
         if (is_null(self::$nonce)) {
             self::$nonce = base64_encode(md5(\microtime(true), true));
         }
+        return self::$nonce;
+    }
+
+    public static function getNonce():?string
+    {
         return self::$nonce;
     }
 
@@ -51,11 +55,13 @@ class Security
         if (is_null($scpConfig)) {
             $scpConfig = self::$defaultCsp;
         }
-        
         $scpRules = '';
         foreach ($scpConfig as $ruleName => $ruleValue) {
             $scpRules .= $ruleName.' ';
             if (\is_array($ruleValue)) {
+                if (\is_null($nonce)) {
+                    $ruleValue = \array_diff($ruleValue, ['nonce']);
+                }
                 foreach ($ruleValue as $ruleNameChild) {
                     if ($rule = self::getRule($ruleNameChild, $nonce)) {
                         $scpRules .= $rule.' ';
