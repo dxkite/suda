@@ -558,12 +558,12 @@ class Debug
         } elseif (is_object($object)) {
             $objectName = get_class($object);
             $parameterString = '';
-            foreach (get_class_vars($objectName) as $key) {
-                $value = $object->$key;
+            $vars = get_class_vars($objectName);
+            foreach ($vars as $key => $value) {
                 if (is_string($value) && strlen($value) >  conf('log.str-size', self::MAX_STR_LEN)) {
-                    $parameterString .= substr($value, 0, 80) .'...,';
+                    $parameterString .= $key.'='.substr($value, 0, 80) .'...,';
                 } else {
-                    $parameterString .= self::parameterToString($value) .',';
+                    $parameterString .= $key.'='.self::parameterToString($value) .',';
                 }
             }
             return $objectName.' {'.trim($parameterString, ',').'}';
