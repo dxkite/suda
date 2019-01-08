@@ -692,7 +692,7 @@ class Manager
                     $content=file_get_contents($path);
                     $hash   = md5($content);
                     $size   = strlen($content);
-                    if (!$this->_etag($hash)) {
+                    if (!$this->ifMatchETag($hash)) {
                         $type   = pathinfo($path, PATHINFO_EXTENSION);
                         $this->type($type);
                         self::setHeader('Content-Length:'.$size);
