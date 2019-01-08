@@ -103,7 +103,7 @@ abstract class Response
         }
         Hook::exec('suda:system:display:json', [&$jsonstr]);
         $this->type('json');
-        self::_etag(md5($jsonstr));
+        self::ifMatchETag(md5($jsonstr));
         self::send($jsonstr);
     }
 
@@ -119,7 +119,7 @@ abstract class Response
     {
         $content=file_get_contents($path);
         $hash   = md5($content);
-        if (!$this->_etag($hash)) {
+        if (! self::ifMatchETag($hash)) {
             $type   = $type ?? pathinfo($path, PATHINFO_EXTENSION);
             $name = $filename ?? pathinfo($path, PATHINFO_FILENAME);
             $this->type($type);
@@ -330,7 +330,8 @@ abstract class Response
         self::setHeader(trim($name).':'.$value);
     }
 
-    protected static function _etag(string $etag)
+    
+    protected static function ifMatchETag(string $etag)
     {
         if (conf('app.etag', !conf('debug'))) {
             return self::etag($etag);
