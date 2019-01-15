@@ -32,24 +32,24 @@ class Docme
 
     public function path(string $path)
     {
-        return self::cut($path,$this->rootPath);
+        return self::cut($path, $this->rootPath);
     }
 
     public function exportPath(string $path)
     {
-        return self::realPath(self::cut($path,$this->exportPath));
+        return self::realPath(self::cut($path, $this->exportPath));
     }
 
-    public function cut(string $path,string $parent)
+    public function cut(string $path, string $parent)
     {
         return Storage::cut(Storage::abspath($path), Storage::abspath($parent));
     }
 
     public function isTarget(string $file)
     {
-        $filePath=Storage::abspath($file);
-        $preg='/^'.preg_quote($this->rootPath, '/').'/';
-        return preg_match($preg, $filePath);
+        $filePath = Storage::abspath($file);
+        $root = Storage::abspath($this->rootPath).DIRECTORY_SEPARATOR;
+        return \strpos($filePath,$root) === 0;
     }
 
     public function root(string $path)
@@ -81,10 +81,13 @@ class Docme
 
         foreach ($this->exportClass as $className) {
             $class = new \ReflectionClass($className);
+            if (!$class->isUserDefined()) {
+                continue;
+            }
             $interfaces = $class->getInterfaces();
             foreach ($interfaces as $name=>$interface) {
                 if ($interface->isUserDefined()) {
-                    array_push($userDefinedInterfaces,$interface);
+                    array_push($userDefinedInterfaces, $interface);
                 }
             }
             $classInfo=(new ClassExport($class, $this))->export($path.'/classes');
@@ -143,13 +146,13 @@ class Docme
         print 'generate readme  --> '.$destPath ."\r\n";
     }
 
-    public function genSummary($path)
+    public function genSummary($path,  $classes, $functions)
     {
         $template=new ExportTemplate;
         $template->setSrc(__DIR__.'/../template/summary.md');
         $template->setValues([
-            'classes'=> $this->mdIndex['classes'],
-            'functions'=> $this->mdIndex['functions'],
+            'classes'=>  $classes,
+            'functions'=> $functions,
             'docme' => $this,
         ]);
         $destPath=$path.'/SUMMARY.md';
@@ -170,5 +173,31 @@ class Docme
     public static function realPath(string $path)
     {
         return preg_replace('/[\\\\\/]+/', '/', $path);
+    }
+
+    public static function parameterToString($object)
+    {
+        if (is_null($object)) {
+            return 'NULL';
+        } elseif (is_object($object)) {
+            $objectName = get_class($object);
+            $parameterString = '';
+            $vars = get_class_vars($objectName);
+            foreach ($vars as $key => $value) {
+                if (is_string($value)) {
+                    $parameterString .= $key.'="'.\addcslashes($value).'",';
+                } else {
+                    $parameterString .= $key.'='.self::parameterToString($value)  .',';
+                }
+            }
+            return $objectName.' {'.trim($parameterString, ',').'}';
+        } elseif (is_array($object)) {
+            $parameterString = '';
+            foreach ($object as $key => $value) {
+                $parameterString .= self::parameterToString($value) .',';
+            }
+            return '['.trim($parameterString, ',').']';
+        }
+        return $object;
     }
 }

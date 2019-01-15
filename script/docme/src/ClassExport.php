@@ -3,7 +3,7 @@
  * Suda FrameWork
  *
  * An open source application development framework for PHP 7.0.0 or newer
- * 
+ *
  * Copyright (c)  2017 DXkite
  *
  * @category   PHP FrameWork
@@ -21,7 +21,7 @@ class ClassExport
     protected $reflect;
     protected $docme;
 
-    public function __construct($class,$docme)
+    public function __construct($class, $docme)
     {
         $this->reflect=$class;
         $this->docme=$docme;
@@ -30,7 +30,7 @@ class ClassExport
     public function export(string $path)
     {
         $reflect=$this->reflect;
-        if (!$this->docme->isTarget($reflect->getFileName())){
+        if (!$this->docme->isTarget($reflect->getFileName())) {
             return false;
         }
         $methods=$reflect->getMethods(\ReflectionMethod::IS_PUBLIC | \ReflectionMethod::IS_PROTECTED);
@@ -43,8 +43,13 @@ class ClassExport
             'classDoc' => $doc,
         ]);
 
-        $classData['constants'] =$reflect->getConstants();
+        $constants = $reflect->getConstants();
+        foreach ($constants as $key => $value) {
+            $constants[$key] = Docme::parameterToString($value);
+        }
+        $classData['constants'] = $constants;
         $classData['fileName']=  $this->docme->path($reflect->getFileName());
+       
         $classData['lineStart']= $reflect->getStartLine();
         $classData['lineEnd']=  $reflect->getEndLine();
         $classData['properties']=static::exportValues($reflect);
@@ -58,13 +63,15 @@ class ClassExport
         print 'doc  class '.$classData['className'].' --> '.$destPath ."\r\n";
 
         $this->docme->mdIndex['classes'][$reflect->getName()]['path'] = $destPath;
-        
+        $classData['export'] = $destPath;
         $methodsInfo=[];
 
         foreach ($methods as $method) {
-            $methodInfo=self::exportMethod($method, $classData, $methodPath);
-            $methodInfo['functionDoc']=trim(preg_replace('/\r?\n/', ' ', $methodInfo['functionDoc']));
-            $methodsInfo[$method->getName()]=$methodInfo;
+            if ($method->isUserDefined()) {
+                $methodInfo=self::exportMethod($method, $classData, $methodPath);
+                $methodInfo['functionDoc']=trim(preg_replace('/\r?\n/', ' ', $methodInfo['functionDoc']));
+                $methodsInfo[$method->getName()]=$methodInfo;
+            }
         }
 
         $classData['methods']= $methodsInfo;
@@ -74,15 +81,16 @@ class ClassExport
     }
 
 
-    public static function exportValues($reflect) {
+    public static function exportValues($reflect)
+    {
         $props=$reflect->getProperties(\ReflectionProperty::IS_PUBLIC |\ReflectionProperty::IS_PROTECTED);
         $propInfos=[];
-        foreach($props as $prop){
-           list($doc)=FunctionExport::getDoc($prop->getDocComment());
-           $propInfo['visibility']=$prop->isProtected()? 'protected':'public';
-           $propInfo['static'] = $prop->isStatic()? 'static':'';
-           $propInfo['docs']=$doc;
-           $propInfos[$prop->getName()]=$propInfo;
+        foreach ($props as $prop) {
+            list($doc)=FunctionExport::getDoc($prop->getDocComment());
+            $propInfo['visibility']=$prop->isProtected()? 'protected':'public';
+            $propInfo['static'] = $prop->isStatic()? 'static':'';
+            $propInfo['docs']=$doc;
+            $propInfos[$prop->getName()]=$propInfo;
         }
         return $propInfos;
     }
@@ -91,7 +99,7 @@ class ClassExport
     {
         $template=new ExportTemplate;
         $template->setSrc(__DIR__.'/../template/method.md');
-        $value=FunctionExport::getFunctionInfo($reflect,$this->docme);
+        $value=FunctionExport::getFunctionInfo($reflect, $this->docme);
         $value['visibility'] = $reflect->isProtected()? 'protected':'public';
         $value['abstract'] = $reflect->isAbstract()? 'abstract':'';
         $value['static'] = $reflect->isStatic()? 'static':'';

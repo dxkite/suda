@@ -38,10 +38,9 @@ class FunctionExport
         $template->setValues($value);
         $destPath=$path.'/'.$this->reflect->getName().'.md';
         print 'doc function '.$value['functionName'] .' --> '.$destPath ."\r\n";
-
         $this->docme->mdIndex['functions'][$value['functionName']] =  $destPath;
-        
         $template->export($destPath);
+        $value['export'] = $destPath;
         return $value;
     }
 
@@ -57,6 +56,7 @@ class FunctionExport
         $value['functionName']=$reflect->getName();
         $value['functionDoc']=$comment;
         $value['fileName']= $docme->path($reflect->getFileName());
+        $value['path'] = $reflect->getFileName();
         $value['lineStart']= $reflect->getStartLine();
         $value['lineEnd']=  $reflect->getEndLine();
         
@@ -72,7 +72,7 @@ class FunctionExport
                 if ($refParam->isDefaultValueConstant()) {
                     $paramValues[$name]['default']=$refParam->getDefaultValueConstantName();
                 } else {
-                    $paramValues[$name]['default']=static::getValue($refParam->getDefaultValue());
+                    $paramValues[$name]['default']= Docme::parameterToString($refParam->getDefaultValue());
                 }
             }
             if ($refParam->hasType()) {
@@ -120,18 +120,6 @@ class FunctionExport
         }
         $datas=static::docField($docs);
         return [$datas['description'],$params,$return,$datas];
-    }
-
-    public static function getValue($value)
-    {
-        if (is_null($value)) {
-            $value='null';
-        } elseif (is_array($value)) {
-            $value='Array';
-        } elseif (is_object($value)) {
-            $value='Object '.get_class($value);
-        }
-        return $value;
     }
 
     public static function docField(array $lines)

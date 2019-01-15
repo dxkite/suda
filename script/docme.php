@@ -21,9 +21,9 @@ require_once __DIR__ .'/../system/suda-console.php';
 
 $summary=new docme\Docme;
 
-$summary->root(SYSTEM_DIR.'/src');
+$summary->root(Storage::abspath(SYSTEM_DIR.'/src'));
 $summary->setFunctions(docme\FunctionExport::getUserDefinedFunctions());
 $summary->setClasses(docme\ClassExport::getUserDefinedClasses());
-$summary->export(__DIR__.'/../docs');
+$summary->export(Storage::abspath(__DIR__.'/../docs'));
 
 file_put_contents(DATA_DIR.'/export.json',json_encode($summary->mdIndex,JSON_PRETTY_PRINT));

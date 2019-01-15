@@ -1,6 +1,6 @@
 # mime
 根据文件类型获取MIME描述
-> *文件信息* suda\core\functions.php: 24~27
+> *文件信息* functions.php: 24~27
 其中文本硬编码为UTF-8
 
 ## 参数
