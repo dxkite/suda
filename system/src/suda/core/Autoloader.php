@@ -172,10 +172,7 @@ class Autoloader
      */
     public static function parsePath(string $path, string $separator = DIRECTORY_SEPARATOR):string
     {
-        if (strlen($path) === 0) {
-            return '';
-        }
-        if (defined('USER_HOME') && $path[0] === '~') {
+        if (defined('USER_HOME') && strpos($path, '~') === 0) {
             $scheme ='';
             $subpath = USER_HOME.DIRECTORY_SEPARATOR.substr($path, 1);
         } elseif (strpos($path, '://') !== false) {
@@ -188,7 +185,7 @@ class Autoloader
         $subpath = str_replace(['/', '\\'], '/', $subpath);
         $root = null;
         if (DIRECTORY_SEPARATOR === '/') {
-            if ($subpath[0] !== '/') {
+            if (strpos($path, '/') !== 0) {
                 $subpath = getcwd().DIRECTORY_SEPARATOR.$subpath;
             }
             $root = '/';
