@@ -54,6 +54,5 @@ if (version_compare(PHP_VERSION, '7.2.0', '<')) {
 }
 
 require_once __DIR__.'/src/suda/core/Autoloader.php';
-require_once __DIR__.'/functions.php';
+require_once __DIR__.'/src/functions.php';
 \suda\core\Autoloader::register();
-\suda\core\Debug::init();

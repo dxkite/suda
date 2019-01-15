@@ -157,11 +157,7 @@ class Debug
             $args_d='';
             if (!empty($trace['args'])) {
                 foreach ($trace['args'] as $arg) {
-                    if (is_object($arg)) {
-                        $args_d .= 'class '.get_class($arg).',';
-                    } else {
-                        $args_d.= (is_array($arg)?json_encode($arg):$arg) .',';
-                    }
+                    $args_d.= self::parameterToString($arg) .',';
                 }
                 $args_d = rtrim($args_d, ',');
             }
@@ -223,7 +219,7 @@ class Debug
     protected static function dumpException(Exception $e):string
     {
         $ex= substr(md5($e->getName().'#'.$e->getMessage().'#'.$e->getFile().'#'.$e->getLine()), 0, 8);
-        $hash = $ex.'-'.self::$hash;
+        $hash = microtime(true).'-'.$ex.'-'.self::$hash;
         $dump = ['Exception'=>$e,'Dump'=>self::dumpArray()];
         storage()->path(APP_LOG.'/dump');
         $codeDump = json_encode($dump, JSON_PRETTY_PRINT|JSON_UNESCAPED_UNICODE);

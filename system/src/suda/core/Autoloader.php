@@ -172,6 +172,9 @@ class Autoloader
      */
     public static function parsePath(string $path, string $separator = DIRECTORY_SEPARATOR):string
     {
+        if (strlen($path) === 0) {
+            return '';
+        }
         if (defined('USER_HOME') && $path[0] === '~') {
             $scheme ='';
             $subpath = USER_HOME.DIRECTORY_SEPARATOR.substr($path, 1);

@@ -23,5 +23,6 @@ require_once __DIR__.'/__autoload.php';
 defined('DATA_DIR') or define('DATA_DIR', suda\core\Autoloader::parsePath('~/.suda'));
 defined('APP_PUBLIC') or define('APP_PUBLIC', DATA_DIR.'/public');
 
-suda\core\System::init();
-suda\core\Config::set('console', true);
+\suda\core\Debug::init();
+\suda\core\System::init();
+\suda\core\Config::set('console', true);
