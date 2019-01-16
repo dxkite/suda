@@ -267,7 +267,7 @@ class Runnable
             return new  $classRelName;
         }
         $parameters=self::buildParameter($parameter);
-        $classRef= new ReflectionClass($className);
+        $classRef= new ReflectionClass($classRelName);
         return $classRef->newInstanceArgs($parameters);
     }
 

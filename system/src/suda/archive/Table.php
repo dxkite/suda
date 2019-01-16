@@ -23,7 +23,11 @@ namespace suda\archive;
  */
 abstract class Table extends TableAccess
 {
-    // 数据库语句
+    /**
+     * 数据库语句
+     *
+     * @var SQLStatementPrepare
+     */
     protected $statement;
     /**
      * 需求类型
@@ -516,7 +520,7 @@ abstract class Table extends TableAccess
      */
     public function getWants():array
     {
-        return is_null($this->wants)?$this->getFields():$this->fields;
+        return is_null($this->wants)?$this->getFields():$this->wants;
     }
 
     /**

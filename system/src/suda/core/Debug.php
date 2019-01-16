@@ -62,8 +62,11 @@ class Debug
     protected static $dump=[];
     protected static $removeFiles=[];
 
+    protected static $strLength;
+
     public static function init()
     {
+        self::$strLength = conf('log.str-size', self::MAX_STR_LEN);
         if (defined('DEFAULT_TIMEZONE')) {
             date_default_timezone_set(DEFAULT_TIMEZONE);
         }
@@ -547,30 +550,40 @@ class Debug
         self::writeLine($loginfo);
     }
 
-    protected static function parameterToString($object)
+    protected static function parameterToString($object, int $deep=2)
     {
         if (is_null($object)) {
             return 'NULL';
         } elseif (is_object($object)) {
             $objectName = get_class($object);
             $parameterString = '';
-            $vars = get_class_vars($objectName);
-            foreach ($vars as $key => $value) {
-                if (is_string($value) && strlen($value) >  conf('log.str-size', self::MAX_STR_LEN)) {
-                    $parameterString .= $key.'='.substr($value, 0, 80) .'...,';
-                } else {
-                    $parameterString .= $key.'='.self::parameterToString($value) .',';
+            
+            if ($deep > 0) {
+                $vars = get_class_vars($objectName);
+                foreach ($vars as $key => $value) {
+                    if (is_string($value) && strlen($value) >  self::$strLength) {
+                        $parameterString .= $key.'='.json_encode(substr($value, 0, 80), JSON_UNESCAPED_UNICODE) .'...,';
+                    } else {
+                        $parameterString .= $key.'='.self::parameterToString($value, $deep-1) .',';
+                    }
                 }
+            } else {
+                $parameterString = '...';
             }
+            
             return $objectName.' {'.trim($parameterString, ',').'}';
         } elseif (is_array($object)) {
             $parameterString = '';
-            foreach ($object as $key => $value) {
-                if (is_string($value) && strlen($value) >  conf('log.str-size', self::MAX_STR_LEN)) {
-                    $parameterString .=  json_encode(substr($value, 0, 80), JSON_UNESCAPED_UNICODE) .'...,';
-                } else {
-                    $parameterString .= self::parameterToString($value) .',';
+            if ($deep > 0) {
+                foreach ($object as $key => $value) {
+                    if (is_string($value) && strlen($value) > self::$strLength) {
+                        $parameterString .=  json_encode(substr($value, 0, 80), JSON_UNESCAPED_UNICODE) .'...,';
+                    } else {
+                        $parameterString .= self::parameterToString($value, $deep-1) .',';
+                    }
                 }
+            } else {
+                $parameterString = '...';
             }
             return '['.trim($parameterString, ',').']';
         }
