@@ -195,4 +195,12 @@ class Field
     {
         return $this->auto;
     }
+
+    /**
+     * Get the value of comment
+     */ 
+    public function getComment()
+    {
+        return $this->comment;
+    }
 }
