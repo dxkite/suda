@@ -63,21 +63,22 @@ class Security
         if (strlen($name) > 0) {
             $name = self::getName($name);
             $nonce = base64_encode(md5(\microtime(true), true));
-            self::pushNonce($name,$nonce);
+            self::pushNonce($name, $nonce);
             return $nonce;
         }
         $nonce = base64_encode(md5(\microtime(true), true));
-        self::pushNonce('style-src',$nonce);
-        self::pushNonce('script-src',$nonce);
+        self::pushNonce('style-src', $nonce);
+        self::pushNonce('script-src', $nonce);
         return $nonce;
     }
 
-    public static function getNonceSet(string $name='')
+    public static function getNonceSet()
     {
         return self::$nonceSet;
     }
 
-    protected static function pushNonce(string $name, string $hash) {
+    protected static function pushNonce(string $name, string $hash)
+    {
         if (!\array_key_exists($name, self::$nonceSet)) {
             self::$nonceSet[$name]  = [];
         }
@@ -131,15 +132,7 @@ class Security
             $scpRules = "'{$lowerRuleName}'";
         } elseif ($lowerRuleName === 'nonce') {
             if ($nonce) {
-                if (\is_string($nonce)) {
-                    $scpRules = "'nonce-{$nonce}'";
-                } elseif (is_array($nonce)) {
-                    $nonceStr ='';
-                    foreach ($nonce as $hash) {
-                        $nonceStr.= "'nonce-{$hash}' ";
-                    }
-                    $scpRules = trim($nonceStr);
-                }
+                $scpRules = self::generateNonceRule($nonce);
             }
         } else {
             $scpRules = $ruleName;
@@ -156,5 +149,24 @@ class Security
             $name = $name.'-src';
         }
         return strtolower($name);
+    }
+
+    /**
+     * 生成nonce
+     *
+     * @param string|array $nonce
+     * @return string
+     */
+    protected static function generateNonceRule($nonce):string
+    {
+        if (is_string($nonce)) {
+            return "'nonce-{$nonce}'";
+        } else {
+            $nonceStr ='';
+            foreach ($nonce as $hash) {
+                $nonceStr.= "'nonce-{$hash}' ";
+            }
+            return trim($nonceStr);
+        }
     }
 }
