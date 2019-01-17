@@ -295,7 +295,7 @@ class Manager
      */
     public static function getThemePath(string $module):string
     {
-        return Application::getInstance()->getModulePath($module).'/resource/template/:theme:';
+        return Application::getInstance()->getModuleResourcePath($module).'/template/:theme:';
     }
 
     /**

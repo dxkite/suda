@@ -85,6 +85,12 @@ class Module
             Hook::loadConfig($listenerPath, $fullname);
             Hook::exec('suda:module:load:on::'.$fullname);
         }
+        // 检测是否覆盖他模块模板
+        if (\array_key_exists('template', $config)) {
+            foreach ($config['template'] as $module => $path) {
+                Manager::addTemplateSource($module, $root.'/'.$path);
+            }
+        }
         // 设置语言包库
         Locale::path($root.'/resource/locales/');
     }
@@ -173,7 +179,7 @@ class Module
     public function getModuleConfig(string $module, ?string $configName=null):?array
     {
         if (is_null($configName)) {
-            return $this->moduleConfigs[$this->getModuleFullName($module)]??[];
+            return $this->getModuleConfigArray($module);
         }
         if ($path = $this->getModuleConfigPath($module, $configName)) {
             return Config::loadConfig($path, $module);
@@ -190,9 +196,21 @@ class Module
      */
     public function getModuleResourcePath(string $module):string
     {
-        return $this->getModulePath($module).'/resource';
+        $config = $this->getModuleConfigArray($module);
+        $resource = $config['resource'] ?? 'resource';
+        return $this->getModulePath($module).'/'.$resource;
     }
     
+    /**
+     * 直接获取模块配置
+     *
+     * @param string $module
+     * @return array
+     */
+    protected function getModuleConfigArray(string $module):array {
+        return $this->moduleConfigs[$this->getModuleFullName($module)]??[];
+    }
+
     /**
      * 获取模块 resource/config 路径
      *
@@ -202,7 +220,7 @@ class Module
      */
     public function getModuleConfigPath(string $module, string $name):?string
     {
-        return  Config::resolve($this->getModulePath($module).'/resource/config/'.$name)?:null;
+        return  Config::resolve($this->getModuleResourcePath($module).'/config/'.$name)?:null;
     }
 
     /**

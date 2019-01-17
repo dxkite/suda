@@ -147,7 +147,7 @@ class Application extends Module
         }
         Hook::exec('suda:module:load');
     }
-    
+
     protected function initDatabase()
     {
         // 自动创建数据库
