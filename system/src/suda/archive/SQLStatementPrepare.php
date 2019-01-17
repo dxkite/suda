@@ -300,14 +300,14 @@ class SQLStatementPrepare
 
     protected static function page(array $page)
     {
+        if (count($page) == 1) {
+            return $page[0];
+        }
         if (count($page)>2) {
             list($page, $row, $offset)=$page;
         } else {
             list($page, $row)=$page;
             $offset=false;
-        }
-        if (is_null($page)) {
-            return '';
         }
         if ($row<1) {
             $row=1;
