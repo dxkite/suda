@@ -182,9 +182,9 @@ abstract class Template implements TemplateInterface
         return self::$render;
     }
 
-    protected function getNonce()
+    protected function getNonce(string $name='')
     {
-        return Security::getGeneratedNonce();
+        return Security::getNonce($name);
     }
 
 

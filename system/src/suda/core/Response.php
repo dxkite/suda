@@ -143,13 +143,13 @@ abstract class Response
     {
         $csp = null;
         if (\property_exists($this, 'contentSecurityPolicy')) {
-            $csp = Security::cspGeneretor($this->contentSecurityPolicy, Security::getNonce());
+            $csp = Security::cspGeneretor($this->contentSecurityPolicy);
         } elseif (\method_exists($this, 'getContentSecurityPolicy')) {
-            $csp = Security::cspGeneretor($this->getContentSecurityPolicy(), Security::getNonce());
+            $csp = Security::cspGeneretor($this->getContentSecurityPolicy());
         } elseif (!is_null(Mapping::$current) && is_array(Mapping::$current->getParam()) && array_key_exists('Content-Security-Policy', Mapping::$current->getParam())) {
-            $csp = Security::cspGeneretor(Mapping::$current->getParam()['Content-Security-Policy'], Security::getNonce());
+            $csp = Security::cspGeneretor(Mapping::$current->getParam()['Content-Security-Policy']);
         } else {
-            $csp = Security::cspGeneretor(conf('module.header.Content-Security-Policy', conf('header.Content-Security-Policy')), Security::getNonce());
+            $csp = Security::cspGeneretor(conf('module.header.Content-Security-Policy', conf('header.Content-Security-Policy')));
         }
         if (\strlen($csp) > 0) {
             $this->addHeader('Content-Security-Policy', $csp);

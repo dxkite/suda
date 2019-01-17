@@ -153,8 +153,13 @@ class Processer
         return '<?php });?>';
     }
 
-    public function parseNonce()
+    public function parseNonce($exp)
     {
+        if (preg_match('/\((.+)\)/', $exp, $v)) {
+            preg_match('/\((.+)\)/', $exp, $v);
+            $name=trim($v[1], '"\'');
+            return 'nonce="<?php echo $this->getNonce("'.$name.'") ?>"';
+        }
         return 'nonce="<?php echo $this->getNonce() ?>"';
     }
 
