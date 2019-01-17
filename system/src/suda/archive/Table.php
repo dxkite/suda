@@ -463,7 +463,7 @@ abstract class Table extends TableAccess
      */
     public function query(string $query, array $binds=[], bool $scroll=false):RawQuery
     {
-        $queryString=preg_replace('/@table@/i', $this->getTableName(), $query);
+        $queryString=preg_replace(['/@table@/i','/%table%/i'], [$this->getTableName(),'#{'.$this->getTableName().'}'], $query);
         return (new RawQuery($this->connection, $queryString, $binds, $scroll))->object($this);
     }
 

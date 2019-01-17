@@ -136,15 +136,7 @@ class SQLStatementPrepare
     public function select(string $table, $wants, $conditions, array $binds=[], array $page=null, bool $scroll=false): RawQuery
     {
         $table=self::table($table);
-        if (is_string($wants)) {
-            $fields=$wants;
-        } else {
-            $field=[];
-            foreach ($wants as $want) {
-                $field[]="`$want`";
-            }
-            $fields=implode(',', $field);
-        }
+        $fields = self::prepareWants($wants);
         $limit= self::prepareLimit($page);
         return clone $this->query->query('SELECT '.$fields.' FROM `'.$table.'` WHERE '.trim($conditions, ';').' '.$limit.';', $binds, $scroll);
     }
@@ -200,6 +192,25 @@ class SQLStatementPrepare
         $table=self::table($table);
         $sql='DELETE FROM `'.$table.'` WHERE '.self::prepareWhere($where, $binds).';';
         return $this->query->query($sql, $binds)->exec();
+    }
+
+    /**
+     * 准备选择列
+     *
+     * @param string|array $wants
+     * @return string
+     */
+    public static function prepareWants($wants):string {
+        if (is_string($wants)) {
+            $fields=$wants;
+        } else {
+            $field=[];
+            foreach ($wants as $want) {
+                $field[]="`$want`";
+            }
+            $fields=implode(',', $field);
+        }
+        return $fields;
     }
 
     public static function prepareIn(string $name, array $invalues, string $prefix='in_', int $count=0)
@@ -288,7 +299,7 @@ class SQLStatementPrepare
         return conf('database.prefix', '').$name;
     }
 
-    protected static function prepareLimit(?array $page =null)
+    public static function prepareLimit(?array $page =null)
     {
         if (is_null($page)) {
             return '';
