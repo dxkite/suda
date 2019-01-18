@@ -191,9 +191,9 @@ class Runnable
     protected static function parseParameter(string $param)
     {
         $param = trim($param);
-        if ($param[0] === '=') {
+        if (strpos($param,'=') === 0) {
             list($prefix, $value) = explode(':', $param, 2);
-            if ($value[0] === ':') {
+            if (strpos($value,':') === 0) {
                 $value = base64_decode(substr($value, 1));
             }
             if ($prefix ==='=j' || $prefix ==='=json') {

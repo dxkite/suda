@@ -461,7 +461,7 @@ class Module
         // debug()->info($modules);
         foreach ($modules as $module) {
             $config=app()->getModuleConfig($module);
-            $modulePath=storage()->path($config['path']);
+            $modulePath=storage()->abspath($config['path']);
             $dir = substr($file, 0, strlen($modulePath));
             // debug()->info($modulePath);
             // debug()->info($dir);

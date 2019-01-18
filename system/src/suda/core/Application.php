@@ -347,10 +347,11 @@ class Application extends Module
         $this->activeModule=$module;
         $root=$this->getModulePath($module);
         $moduleConfig=$this->getModuleConfig($module);
+        $resource = $moduleConfig['resource'] ?? 'resource';
         // 注入常量
         define('MODULE_NAME', $module);
         define('MODULE_PATH', Storage::path($root));
-        define('MODULE_RESOURCE', Storage::path($root.'/resource'));
+        define('MODULE_RESOURCE', Storage::path($root.'/'.$resource));
         define('MODULE_CONFIG', Storage::path(MODULE_RESOURCE.'/config'));
         // 加载语言配置项
         debug()->trace(__('set locale $0', Config::get('app.language', 'zh-CN')));
