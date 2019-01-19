@@ -226,33 +226,28 @@ abstract class Template implements TemplateInterface
     }
 
     /**
-    * 创建模板获取值
-    */
-    public function get(string $name, $default=null)
+     * 创建模板获取值
+     */
+    public function get(string $name=null, $default=null)
     {
-        $fmt= ArrayHelper::get($this->value, $name, $default ?? $name);
-        if (func_num_args() > 2) {
-            $args=array_slice(func_get_args(), 2);
-            array_unshift($args, $fmt);
-            return call_user_func_array('sprintf', $args);
+        if (is_null($name)) {
+            return $this->value;
         }
-        return $fmt;
+        return ArrayHelper::get($this->value, $name, $default ?? $name);
     }
 
     /**
-    * 检测值
-    */
+     * 检测值
+     */
     public function has(string $name)
     {
         return ArrayHelper::exist($this->value, $name);
     }
 
-    public function data(string $name)
+    public function data(string $name, ...$args)
     {
         if (func_num_args()>1) {
-            $args=func_get_args();
-            $args[0]=$this;
-            return (new Command($name))->exec($args);
+            return (new Command($name))->args($this, ...$args);
         }
         return (new Command($name))->exec([$this]);
     }

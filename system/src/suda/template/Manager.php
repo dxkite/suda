@@ -230,6 +230,7 @@ class Manager
             storage()->mkdirs($publicPath);
         }
         if (storage()->isWritable($publicPath)) {
+            Storage::delete($publicPath);
             foreach ($sources as $source) {
                 if ($path=Storage::abspath($source.'/static')) {
                     self::copyStatic($path, $publicPath);
