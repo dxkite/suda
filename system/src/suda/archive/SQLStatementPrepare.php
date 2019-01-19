@@ -301,7 +301,7 @@ class SQLStatementPrepare
 
     public static function prepareLimit(?array $page =null)
     {
-        if (is_null($page)) {
+        if (is_null($page) || is_null($page[0])) {
             return '';
         }
         if ($limit = self::page($page)) {
