@@ -17,7 +17,6 @@ namespace suda\core;
 
 use suda\tool\Security;
 use suda\template\Manager;
-use suda\tool\ArrayHelper;
 use suda\core\route\Mapping;
 use suda\exception\JSONException;
 use suda\exception\ApplicationException;
