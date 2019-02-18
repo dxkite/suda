@@ -1,0 +1,9 @@
+<phpunit bootstrap="./tests/bootstrap.php">
+  <testsuites>
+   
+    <testsuite name="Nebula Components Test Suite">
+      <directory>./tests/src/</directory>
+    </testsuite>
+
+  </testsuites>
+</phpunit>

@@ -1,0 +1,7 @@
+name: suda/v2wrapper
+version: '1.0.0'
+type: yaml
+require:
+  files:
+    - hello.php
+    - world.php
