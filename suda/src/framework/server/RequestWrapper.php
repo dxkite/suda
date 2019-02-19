@@ -75,11 +75,18 @@ class RequestWrapper
     protected $index;
 
     /**
+     * 请求头部
+     *
+     * @var string[]
+     */
+    protected $header;
+
+    /**
      * 从服务器载入数据
      *
      * @return void
      */
-    public function loadFromServer()
+    public function wrapperServer()
     {
         $this->setRemoteAddr($this->filterRemoteAddr());
         $this->setMethod(strtoupper($_SERVER['REQUEST_METHOD'] ?? 'GET'));
@@ -88,6 +95,7 @@ class RequestWrapper
         $this->setPort($this->getServerPort());
         $this->createFiles();
         $this->createUri();
+        $this->createHeader();
     }
 
     /**
@@ -138,7 +146,7 @@ class RequestWrapper
     }
 
     /**
-     * 获取HTTP
+     * 获取安全状态
      *
      * @return boolean
      */
@@ -169,6 +177,17 @@ class RequestWrapper
         $this->query = $url->getQuery();
         $this->uri = $url->getUri();
         $_GET = $this->query;
+    }
+
+    private function createHeader()
+    {
+        foreach ($_SERVER as $key => $value) {
+            if (strpos($key, 'HTTP_') === 0) {
+                $name = substr($key, strlen('HTTP_'));
+                $name = \strtolower(\str_replace('_', '-', $name));
+                $this->header[$name] = $value;
+            }
+        }
     }
 
     /**
@@ -322,9 +341,9 @@ class RequestWrapper
      * @param mixed $default
      * @return mixed
      */
-    public function getQuery(string $name, $default = null)
+    public function getQuery(?string $name = null, $default = null)
     {
-        return $this->query[$name] ?? $default;
+        return  $name === null ? $this->query:$this->query[$name] ?? $default;
     }
 
     /**
@@ -369,9 +388,35 @@ class RequestWrapper
      * 获取文件
      *
      * @return  UploadedFile[]|UploadedFile|null
-     */ 
-    public function getFile(string $name = null)
+     */
+    public function getFile(?string $name = null)
     {
-        return is_null($name) ? $this->files : $this->files[$name] ?? null;
+        return null === $name ? $this->files : $this->files[$name] ?? null;
+    }
+
+    /**
+     * 获取请求头
+     *
+     * @param string $name
+     * @param mixed $default
+     * @return mixed
+     */
+    public function getHeader(string $name, $default = null)
+    {
+        if (array_key_exists(strtolower($name), $this->header)) {
+            return $this->header[$name];
+        }
+        return $default;
+    }
+
+    /**
+     * 判断请求头
+     *
+     * @param string $name
+     * @return boolean
+     */
+    public function hasHeader(string $name)
+    {
+        return $this->getHeader($name) !== null;
     }
 }

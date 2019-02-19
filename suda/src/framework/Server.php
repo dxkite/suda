@@ -2,6 +2,7 @@
 namespace suda\framework;
 
 use suda\framework\server\Config;
+use suda\framework\server\Request;
 
 class Server
 {
@@ -15,8 +16,14 @@ class Server
         return Config::instance();
     }
     
-    public static function request()
+    /**
+     * 获取请求
+     *
+     * @return Request
+     */
+    public static function request():Request
     {
+        return Request::instance();
     }
 
     public static function response()
