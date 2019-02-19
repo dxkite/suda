@@ -28,16 +28,59 @@ class Server
      */
     protected static $request;
 
-   
+    /**
+     * 获取服务器参数
+     *
+     * @var array
+     */
+    protected static $server;
+    
     /**
      * 解析请求
      */
     public static function parse()
     {
-        static::$config = new Config;
-        static::$request = Builder::create();
+        static::build(Builder::create(), $_SERVER);
     }
 
+    /**
+     * 创建请求环境
+     *
+     * @param Request $request
+     * @param array $server
+     * @return void
+     */
+    public static function build(Request $request, array $server = null)
+    {
+        static::$config = new Config;
+        static::$request = $request;
+        static::$server = $server;
+    }
+
+
+    /**
+     * 获取$_SERVER数据
+     *
+     * @param string $name
+     * @param mixed $default
+     * @return mixed
+     */
+    public static function get(string $name, $default = null)
+    {
+        return static::$server === null ? $_SERVER[$name] ?? $default : static::$server[$name] ?? $default;
+    }
+    
+    /**
+     * 检测是否含
+     *
+     * @param string $name
+     * @return boolean
+     */
+    public static function has(string $name)
+    {
+        return static::get($name) !== null;
+    }
+    
     /**
      * SERVER配置
      *

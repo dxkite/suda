@@ -11,12 +11,54 @@ use suda\framework\server\request\UploadedFile;
  */
 class Builder
 {
+    /**
+     * 从服务器请求创建
+     *
+     * @return Request
+     */
     public static function create():Request
     {
         $builder = new static;
         return $builder->wrapperRequest();
     }
-    
+
+    /**
+     * 创建虚拟请求
+     *
+     * @param string $method
+     * @param string $url
+     * @param array $data
+     * @param array $headers
+     * @param string $remoteAddr
+     * @return Request
+     */
+    public static function createVirtual(string $method, string $url, array $data = [], array $headers = [], string $remoteAddr = '0.0.0.0') : Request
+    {
+        $request = new Request;
+        $method = \strtolower($method);
+        $request->setMethod($method);
+        $request->setRemoteAddr($remoteAddr);
+        $request->setParameter($data);
+        $request->setHeaders($headers);
+        $request->setIsJson($request->isJson($request));
+        $uriData = parse_url($url);
+        $request->setSecure($uriData['scheme'] === 'https');
+        $request->setPort($uriData['port'] ?? $uriData['scheme'] === 'https'?443:80);
+        $request->setHost($uriData['host']);
+        $request->setUri($uriData['path']);
+        if (\array_key_exists('query', $uriData)) {
+            \parse_str($uriData['query'], $queryData);
+            foreach ($queryData as $key => $value) {
+                $request->setQuery($key, $value);
+            }
+        } elseif (count($data) && $method === 'GET') {
+            foreach ($data as $key => $value) {
+                $request->setQuery($key, $value);
+            }
+        }
+        return $request;
+    }
+
     /**
      * 从服务器载入数据
      *
@@ -31,8 +73,10 @@ class Builder
         $request->setSecure($this->getSecure());
         $request->setPort($this->getServerPort());
         $request->setHeaders($this->createHeaders());
+        $request->setIsJson($this->isJson($request));
         $this->createFiles($request);
         $this->createUri($request);
+        $this->buildData($request);
         return $request;
     }
 
@@ -130,5 +174,23 @@ class Builder
             }
         }
         return $headers;
+    }
+
+    private function isJson(Request $request)
+    {
+        $header = strtolower($request->getHeader('content-type'));
+        return null !== $header && strpos($header, 'json') !== false;
+    }
+
+    private function buildData(Request $request)
+    {
+        if ($request->isJson()) {
+            $data = json_decode($request->input(), true, 512, JSON_BIGINT_AS_STRING);
+            if (json_last_error() === JSON_ERROR_NONE) {
+                $request->setParameter($data);
+            }
+        } else {
+            $request->setParameter($_POST);
+        }
     }
 }

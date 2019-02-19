@@ -7,11 +7,11 @@ use suda\framework\server\request\UploadedFile;
 class Request extends RequestWrapper
 {
     /**
-     * JSON数据
+     * 参数
      *
      * @var array
      */
-    protected $json;
+    protected $parameter;
 
     /**
      * 附加属性
@@ -19,6 +19,13 @@ class Request extends RequestWrapper
      * @var array
      */
     protected $attribute;
+
+    /**
+     * 是否为JSON提交
+     *
+     * @var boolean
+     */
+    protected $isJson = false;
 
     /**
      * 获取请求属性
@@ -81,8 +88,7 @@ class Request extends RequestWrapper
      */
     public function isJson():bool
     {
-        $header = strtolower($this->getHeader('content-type'));
-        return null !== $header && strpos($header, 'json') !== false;
+        return $this->isJson;
     }
 
     /**
@@ -102,14 +108,7 @@ class Request extends RequestWrapper
      */
     public function json():?array
     {
-        if (isset($this->json)) {
-            return $this->json;
-        }
-        $data = json_decode($this->input(), true, 512, JSON_BIGINT_AS_STRING);
-        if (json_last_error() !== JSON_ERROR_NONE) {
-            $this->json = null;
-        }
-        return $this->json = $data;
+        return $this->isJson?$this->parameter:null;
     }
 
     /**
@@ -174,17 +173,7 @@ class Request extends RequestWrapper
      */
     public function post(?string $name = null, $default = null)
     {
-        if (null === $name) {
-            return $_POST;
-        }
-        if (array_key_exists($name, $_POST)) {
-            if (\is_string($_POST[$name]) && strlen($_POST[$name])) {
-                return $_POST[$name];
-            } else {
-                return $_POST[$name];
-            }
-        }
-        return $default;
+        return $this->getParameter($name, $default);
     }
 
     /**
@@ -197,5 +186,43 @@ class Request extends RequestWrapper
     public function get(?string $name = null, $default = null)
     {
         return $this->getQuery($name, $default);
+    }
+
+    /**
+     * Get 参数
+     *
+     * @return  array
+     */
+    public function getParameter(?string $name = null, $default = null)
+    {
+        return $name === null ? $this->parameter : $this->parameter[$name] ?? null;
+    }
+
+    /**
+     * Set 参数
+     *
+     * @param  array  $parameter  参数
+     *
+     * @return  self
+     */
+    public function setParameter(array $parameter)
+    {
+        $this->parameter = $parameter;
+
+        return $this;
+    }
+
+    /**
+     * Set 是否为JSON提交
+     *
+     * @param  bool  $isJson  是否为JSON提交
+     *
+     * @return  self
+     */
+    public function setIsJson(bool $isJson)
+    {
+        $this->isJson = $isJson;
+
+        return $this;
     }
 }
