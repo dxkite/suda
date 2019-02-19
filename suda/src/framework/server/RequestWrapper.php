@@ -79,116 +79,7 @@ class RequestWrapper
      *
      * @var string[]
      */
-    protected $header;
-
-    /**
-     * 从服务器载入数据
-     *
-     * @return void
-     */
-    public function wrapperServer()
-    {
-        $this->setRemoteAddr($this->filterRemoteAddr());
-        $this->setMethod(strtoupper($_SERVER['REQUEST_METHOD'] ?? 'GET'));
-        $this->setHost($this->getHttpHost());
-        $this->setSecure($this->getSecure());
-        $this->setPort($this->getServerPort());
-        $this->createFiles();
-        $this->createUri();
-        $this->createHeader();
-    }
-
-    /**
-     * 获取IP地址
-     *
-     * @return string
-     */
-    private function filterRemoteAddr():string
-    {
-        static $ipFrom = ['HTTP_CLIENT_IP','HTTP_X_FORWARDED_FOR','HTTP_X_FORWARDED', 'HTTP_X_CLUSTER_CLIENT_IP','HTTP_FORWARDED_FOR','HTTP_FORWARDED','REMOTE_ADDR'];
-        foreach ($ipFrom as $key) {
-            if (array_key_exists($key, $_SERVER)) {
-                foreach (explode(',', $_SERVER[$key]) as $ip) {
-                    $ip = trim($ip);
-                    if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4 | FILTER_FLAG_IPV6 | FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE) !== false) {
-                        return $ip;
-                    }
-                }
-            }
-        }
-        return  '0.0.0.0';
-    }
-    
-    /**
-     * 从请求投中获取HOST
-     *
-     * @return string
-     */
-    private function getHttpHost():string
-    {
-        if (array_key_exists('HTTP_HOST', $_SERVER)) {
-            return explode(':', $_SERVER['HTTP_HOST'])[0];
-        }
-        return 'localhost';
-    }
-
-    /**
-     * 获取端口
-     *
-     * @return integer
-     */
-    private function getServerPort():int
-    {
-        if (array_key_exists('SERVER_PORT', $_SERVER)) {
-            return $_SERVER['SERVER_PORT'];
-        }
-        return $this->getSecure()?443:80;
-    }
-
-    /**
-     * 获取安全状态
-     *
-     * @return boolean
-     */
-    private function getSecure():bool
-    {
-        $https = array_key_exists('HTTPS', $_SERVER) && strcasecmp($_SERVER['HTTPS'], 'off') != 0;
-        $scheme = array_key_exists('REQUEST_SCHEME', $_SERVER) && strcasecmp($_SERVER['REQUEST_SCHEME'], 'https') === 0;
-        return $https || $scheme;
-    }
-
-    /**
-     * 创建请求文件
-     *
-     * @return void
-     */
-    private function createFiles()
-    {
-        foreach ($_FILES as $name => $file) {
-            $this->files[$name] = new UploadedFile($file['tmp_name'], $file['name'], $file['type'], $file['error']);
-        }
-    }
-
-    private function createUri()
-    {
-        $index = new IndexFinder;
-        $this->index = $index->getIndexFile();
-        $url = new UriParser($_SERVER['REQUEST_URI'], $this->index);
-        $this->query = $url->getQuery();
-        $this->uri = $url->getUri();
-        $_GET = $this->query;
-    }
-
-    private function createHeader()
-    {
-        foreach ($_SERVER as $key => $value) {
-            if (strpos($key, 'HTTP_') === 0) {
-                $name = substr($key, strlen('HTTP_'));
-                $name = \strtolower(\str_replace('_', '-', $name));
-                $this->header[$name] = $value;
-            }
-        }
-    }
+    protected $headers;
 
     /**
      * Get 远程地址
@@ -403,8 +294,8 @@ class RequestWrapper
      */
     public function getHeader(string $name, $default = null)
     {
-        if (array_key_exists(strtolower($name), $this->header)) {
-            return $this->header[$name];
+        if (array_key_exists(strtolower($name), $this->headers)) {
+            return $this->headers[$name];
         }
         return $default;
     }
@@ -418,5 +309,53 @@ class RequestWrapper
     public function hasHeader(string $name)
     {
         return $this->getHeader($name) !== null;
+    }
+
+    /**
+     * Get 文件包装
+     *
+     * @return  UploadedFile[]
+     */ 
+    public function getFiles()
+    {
+        return $this->files;
+    }
+
+    /**
+     * Set 文件包装
+     *
+     * @param  UploadedFile[]  $files  文件包装
+     *
+     * @return  self
+     */ 
+    public function setFiles(array $files)
+    {
+        $this->files = $files;
+
+        return $this;
+    }
+
+    /**
+     * Get 请求头部
+     *
+     * @return  string[]
+     */ 
+    public function getHeaders()
+    {
+        return $this->headers;
+    }
+
+    /**
+     * Set 请求头部
+     *
+     * @param  string[]  $headers  请求头部
+     *
+     * @return  self
+     */ 
+    public function setHeaders(array $headers)
+    {
+        $this->headers = $headers;
+
+        return $this;
     }
 }

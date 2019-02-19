@@ -32,7 +32,7 @@ class UriParser
      *
      * @var array
      */
-    protected $query;
+    protected $query = [];
     
     public function __construct(string $uri, string $indexFile)
     {

@@ -6,32 +6,12 @@ use suda\framework\server\request\UploadedFile;
 
 class Request extends RequestWrapper
 {
+    /**
+     * JSON数据
+     *
+     * @var array
+     */
     protected $json;
-    /**
-     * 静态实例
-     *
-     * @var self
-     */
-    protected static $instance;
-
-
-    protected function __construct()
-    {
-        $this->wrapperServer();
-    }
-
-    /**
-     * 返回实例
-     *
-     * @return self
-     */
-    public static function instance()
-    {
-        if (isset(static::$instance)) {
-            return static::$instance;
-        }
-        return static::$instance = new static;
-    }
 
     /**
      * 附加属性

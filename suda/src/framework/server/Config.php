@@ -18,30 +18,11 @@ class Config
      */
     public $config;
 
-    /**
-     * 静态实例
-     *
-     * @var self
-     */
-    protected static $instance;
 
 
-    protected function __construct()
+    public function __construct(array $config = [])
     {
-        $this->config = [];
-    }
-
-    /**
-     * 返回实例
-     *
-     * @return self
-     */
-    public static function instance()
-    {
-        if (isset(static::$instance)) {
-            return static::$instance;
-        }
-        return static::$instance = new static;
+        $this->config = $config;
     }
 
     /**

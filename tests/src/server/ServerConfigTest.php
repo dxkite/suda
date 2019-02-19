@@ -8,6 +8,7 @@ class ServerConfigTest extends TestCase
 {
     public function testConfigYamlOrJsonLoad()
     {
+        Server::parse();
         $this->assertEquals(Server::config()->loadConfig(TEST_RESOURCE.'/configs/test.json'), [
             'name' => 'suda/v2wrapper',
             'version' => '1.0.0',
@@ -16,6 +17,7 @@ class ServerConfigTest extends TestCase
 
     public function testConfigLoad()
     {
+        Server::parse();
         $this->assertEquals(Server::config()->load(TEST_RESOURCE.'/configs/test')->get('type'), 'yaml');
         $this->assertEquals(Server::config()->get('require.files'), [
             'hello.php',

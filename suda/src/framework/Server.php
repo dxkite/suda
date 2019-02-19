@@ -3,9 +3,41 @@ namespace suda\framework;
 
 use suda\framework\server\Config;
 use suda\framework\server\Request;
+use suda\framework\server\request\Builder;
 
 class Server
 {
+    /**
+     * 静态实例
+     *
+     * @var self
+     */
+    protected static $instance;
+
+    /**
+     * 配置文件
+     *
+     * @var Config
+     */
+    protected static $config;
+
+    /**
+     * 请求数据
+     *
+     * @var Request
+     */
+    protected static $request;
+
+   
+    /**
+     * 解析请求
+     */
+    public static function parse()
+    {
+        static::$config = new Config;
+        static::$request = Builder::create();
+    }
+
     /**
      * SERVER配置
      *
@@ -13,9 +45,9 @@ class Server
      */
     public static function config():Config
     {
-        return Config::instance();
+        return static::$config;
     }
-    
+
     /**
      * 获取请求
      *
@@ -23,7 +55,7 @@ class Server
      */
     public static function request():Request
     {
-        return Request::instance();
+        return static::$request;
     }
 
     public static function response()
