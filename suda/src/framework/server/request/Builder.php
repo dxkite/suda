@@ -34,13 +34,19 @@ class Builder
      */
     public static function createVirtual(string $method, string $url, array $data = [], array $headers = [], string $remoteAddr = '0.0.0.0') : Request
     {
+        $builder = new static;
+        return $builder->buildVirtualRequest($method, $url, $data, $headers, $remoteAddr);
+    }
+
+    private function buildVirtualRequest(string $method, string $url, array $data = [], array $headers = [], string $remoteAddr = '0.0.0.0')
+    {
         $request = new Request;
         $method = \strtolower($method);
         $request->setMethod($method);
         $request->setRemoteAddr($remoteAddr);
         $request->setParameter($data);
         $request->setHeaders($headers);
-        $request->setIsJson($request->isJson($request));
+        $request->setIsJson($this->isJson($request));
         $uriData = parse_url($url);
         $request->setSecure($uriData['scheme'] === 'https');
         $request->setPort($uriData['port'] ?? $uriData['scheme'] === 'https'?443:80);
@@ -48,15 +54,18 @@ class Builder
         $request->setUri($uriData['path']);
         if (\array_key_exists('query', $uriData)) {
             \parse_str($uriData['query'], $queryData);
-            foreach ($queryData as $key => $value) {
-                $request->setQuery($key, $value);
-            }
+            $this->buildQuery($request, $queryData);
         } elseif (count($data) && $method === 'GET') {
-            foreach ($data as $key => $value) {
-                $request->setQuery($key, $value);
-            }
+            $this->buildQuery($request, $data);
         }
         return $request;
+    }
+
+    private function buildQuery(Request $request, array $data)
+    {
+        foreach ($data as $key => $value) {
+            $request->setQuery($key, $value);
+        }
     }
 
     /**
@@ -146,9 +155,11 @@ class Builder
      */
     private function createFiles(Request $request)
     {
+        $files = [];
         foreach ($_FILES as $name => $file) {
-            $this->files[$name] = new UploadedFile($file['tmp_name'], $file['name'], $file['type'], $file['error']);
+            $files[$name] = new UploadedFile($file['tmp_name'], $file['name'], $file['type'], $file['error']);
         }
+        $request->setFiles($files);
     }
 
     private function createUri(Request $request)
@@ -156,9 +167,7 @@ class Builder
         $index = (new IndexFinder)->getIndexFile();
         $request->setIndex($index);
         $url = new UriParser($_SERVER['REQUEST_URI'] ?? '/', $index);
-        foreach ($url->getQuery() as $key => $value) {
-            $request->setQuery($key, $value);
-        }
+        $this->buildQuery($request, $url->getQuery());
         $request->setUri($url->getUri());
         $_GET = $url->getQuery();
     }

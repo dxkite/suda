@@ -8,8 +8,23 @@ use suda\component\file\File;
  */
 class UploadedFile extends File
 {
+    /**
+     * 上传的文件名
+     *
+     * @var string
+     */
     private $originalName;
+    /**
+     * 文件的Mimetype
+     *
+     * @var string
+     */
     private $mimeType;
+    /**
+     * 错误码
+     *
+     * @var int
+     */
     private $error;
 
     /**
@@ -84,5 +99,29 @@ class UploadedFile extends File
         if (file_exists($path) && is_writeable($path)) {
             unlink($path);
         }
+    }
+
+    /**
+     * Get 上传的文件名
+     *
+     * @return  string
+     */ 
+    public function getOriginalName()
+    {
+        return $this->originalName;
+    }
+
+    /**
+     * Set 上传的文件名
+     *
+     * @param  string  $originalName  上传的文件名
+     *
+     * @return  self
+     */ 
+    public function setOriginalName(string $originalName)
+    {
+        $this->originalName = $originalName;
+
+        return $this;
     }
 }

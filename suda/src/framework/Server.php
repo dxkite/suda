@@ -31,7 +31,7 @@ class Server
     /**
      * 获取服务器参数
      *
-     * @var array
+     * @var array|null
      */
     protected static $server;
     

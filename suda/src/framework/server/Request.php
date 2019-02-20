@@ -195,7 +195,7 @@ class Request extends RequestWrapper
      */
     public function getParameter(?string $name = null, $default = null)
     {
-        return $name === null ? $this->parameter : $this->parameter[$name] ?? null;
+        return $name === null ? $this->parameter : $this->parameter[$name] ?? $default;
     }
 
     /**
