@@ -8,5 +8,4 @@ use RuntimeException;
  */
 class YamlException extends RuntimeException
 {
-    
 }

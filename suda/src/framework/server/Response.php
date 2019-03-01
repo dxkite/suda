@@ -114,7 +114,7 @@ class Response
      * Get 状态码
      *
      * @return  int
-     */ 
+     */
     public function getStatusCode()
     {
         return $this->statusCode;

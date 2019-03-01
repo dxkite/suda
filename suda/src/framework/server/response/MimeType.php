@@ -1,7 +1,6 @@
 <?php
 namespace suda\framework\server\response;
 
-
 /**
  * 响应MIME
  */

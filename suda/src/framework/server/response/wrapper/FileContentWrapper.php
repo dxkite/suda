@@ -18,8 +18,7 @@ class FileContentWrapper extends AbstractContentWrapper
             $response->setHeader('Content-Disposition', 'attachment;filename="' . $content->getBasename().'"');
             $response->setHeader('Cache-Control', 'max-age=0');
             return file_get_contents($content->getRealPath());
-        } else {
-            throw new \Exception('returned SplFileInfo must be file');
-        }
+        } 
+        throw new \Exception('wrappered SplFileInfo must be file');
     }
 }

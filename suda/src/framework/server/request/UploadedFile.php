@@ -105,7 +105,7 @@ class UploadedFile extends File
      * Get 上传的文件名
      *
      * @return  string
-     */ 
+     */
     public function getOriginalName()
     {
         return $this->originalName;
@@ -117,7 +117,7 @@ class UploadedFile extends File
      * @param  string  $originalName  上传的文件名
      *
      * @return  self
-     */ 
+     */
     public function setOriginalName(string $originalName)
     {
         $this->originalName = $originalName;

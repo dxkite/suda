@@ -40,16 +40,16 @@ class ArrayDump
         $exstr = '';
         foreach ($array as $key => $value) {
             $line = '';
-            $current=$arrname."['".addslashes($key)."']";
+            $current = $arrname."['".addslashes($key)."']";
             if (is_array($value)) {
                 $line .= self::parserArraySub($current, $value);
             } else {
-                $line =  $current;
+                $line = $current;
                 if (is_string($value)) {
                     $line .= "='".addslashes($value).'\';'.PHP_EOL;
                 } elseif (is_bool($value)) {
                     $line .= '='.($value ? 'true' : 'false').';'.PHP_EOL;
-                } elseif (is_null($value)) {
+                } elseif (null === $value) {
                     $line .= '=null;'.PHP_EOL;
                 } else {
                     $line .= '='.$value.';'.PHP_EOL;
@@ -73,7 +73,7 @@ class ArrayDump
                     $line .= "='".addslashes($value).'\';'.PHP_EOL;
                 } elseif (is_bool($value)) {
                     $line .= '='.($value ? 'true' : 'false').';'.PHP_EOL;
-                } elseif (is_null($value)) {
+                } elseif (null === $value) {
                     $line .= '=null;'.PHP_EOL;
                 } else {
                     $line .= '='.$value.';'.PHP_EOL;

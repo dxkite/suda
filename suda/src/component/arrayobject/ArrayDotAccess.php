@@ -15,7 +15,7 @@ class ArrayDotAccess implements \ArrayAccess
 
     public function offsetSet($offset, $value)
     {
-        if (is_null($offset)) {
+        if (null === $offset) {
             $this->value[] = $value;
         } else {
             static::set($this->value, $offset, $value);
@@ -87,7 +87,7 @@ class ArrayDotAccess implements \ArrayAccess
      * @param mixed $def
      * @return array 设置后的数组
      */
-    public static function set(array &$array, string $name, $value, $def=null):array
+    public static function set(array &$array, string $name, $value, $def = null):array
     {
         $path = explode('.', $name);
         $root = &$array;
@@ -98,7 +98,7 @@ class ArrayDotAccess implements \ArrayAccess
                     $array[$key] = [];
                 }
             } else {
-                $array=[];
+                $array = [];
             }
             $array = &$array[$key];
         }
@@ -106,7 +106,7 @@ class ArrayDotAccess implements \ArrayAccess
         if (is_array($array) && array_key_exists($key, $array) && is_array($array[$key]) && is_array($value)) {
             $array[$key] = array_merge($array[$key], is_array($def) ? $def : [], $value);
         } else {
-            $array[$key] = is_null($value) ? $def : $value;
+            $array[$key] = null === $value ? $def : $value;
         }
         return $root;
     }
@@ -121,7 +121,7 @@ class ArrayDotAccess implements \ArrayAccess
                     $array[$key] = [];
                 }
             } else {
-                $array=[];
+                $array = [];
             }
             $array = &$array[$key];
         }
@@ -134,7 +134,8 @@ class ArrayDotAccess implements \ArrayAccess
      *
      * @return array
      */
-    public function toArray():array {
+    public function toArray():array
+    {
         return $this->value;
     }
 }

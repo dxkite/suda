@@ -315,7 +315,7 @@ class RequestWrapper
      * Get 文件包装
      *
      * @return  UploadedFile[]
-     */ 
+     */
     public function getFiles()
     {
         return $this->files;
@@ -327,7 +327,7 @@ class RequestWrapper
      * @param  UploadedFile[]  $files  文件包装
      *
      * @return  self
-     */ 
+     */
     public function setFiles(array $files)
     {
         $this->files = $files;
@@ -339,7 +339,7 @@ class RequestWrapper
      * Get 请求头部
      *
      * @return  string[]
-     */ 
+     */
     public function getHeaders()
     {
         return $this->headers;
@@ -351,7 +351,7 @@ class RequestWrapper
      * @param  string[]  $headers  请求头部
      *
      * @return  self
-     */ 
+     */
     public function setHeaders(array $headers)
     {
         $this->headers = $headers;

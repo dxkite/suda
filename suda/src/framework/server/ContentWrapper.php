@@ -42,7 +42,7 @@ class ContentWrapper
      * @param string $type
      * @return boolean
      */
-    public static function isTypeOf($data,string $type) : bool
+    public static function isTypeOf($data, string $type) : bool
     {
         if (is_object($data) && !\in_array($type, ['boolean', 'integer','double', 'string','array','NULL'])) {
             $class = new ReflectionClass($data);
@@ -75,6 +75,6 @@ class ContentWrapper
         if (\method_exists($content, '__toString')) {
             return new HtmlContentWrapper($content, 'string');
         }
-        return new NullContentWrapper;
+        throw new \Exception(sprintf('no wrapper for type %s', \get_class($content)));
     }
 }
