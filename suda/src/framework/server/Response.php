@@ -50,7 +50,7 @@ class Response
      */
     public function setType(string $extension)
     {
-        $this->header->remove('Content-Type')->add('Content-Type', MimeType::getMimeType($extension), true);
+        $this->header->remove('Content-Type')->add('Content-Type', MimeType::getMimeType($extension));
         return $this;
     }
 
@@ -86,7 +86,7 @@ class Response
      */
     public function send()
     {
-        $this->header->sendHeaders();
+        $this->header->sendHeaders($this->statusCode);
         $this->sendContent();
     }
 

@@ -10,6 +10,11 @@ use suda\framework\server\response\AbstractContentWrapper;
  */
 class NullContentWrapper extends AbstractContentWrapper
 {
+    public function __construct()
+    {
+        parent::__construct(null, 'null');
+    }
+    
     public function getContent(Request $request, Response $response): string
     {
         return '';

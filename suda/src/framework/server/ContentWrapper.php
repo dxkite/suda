@@ -39,10 +39,10 @@ class ContentWrapper
      * 判断是否为某种类型
      *
      * @param mixed $data
-     * @param string|object $type
+     * @param string $type
      * @return boolean
      */
-    public static function isTypeOf($data, $type) : bool
+    public static function isTypeOf($data,string $type) : bool
     {
         if (is_object($data) && !\in_array($type, ['boolean', 'integer','double', 'string','array','NULL'])) {
             $class = new ReflectionClass($data);
@@ -75,5 +75,6 @@ class ContentWrapper
         if (\method_exists($content, '__toString')) {
             return new HtmlContentWrapper($content, 'string');
         }
+        return new NullContentWrapper;
     }
 }
