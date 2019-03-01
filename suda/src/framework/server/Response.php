@@ -15,6 +15,13 @@ class Response
     protected $header;
 
     /**
+     * Cookie
+     *
+     * @var Cookie[]
+     */
+    protected $cookie;
+    
+    /**
      * 状态码
      *
      * @var int
@@ -87,6 +94,7 @@ class Response
     public function send()
     {
         $this->header->sendHeaders($this->statusCode);
+        $this->sendCookies();
         $this->sendContent();
     }
 
@@ -98,6 +106,17 @@ class Response
     protected function sendContent()
     {
         echo $this->getContent();
+    }
+
+    /**
+     * 设置Cookie
+     *
+     * @return void
+     */
+    protected function sendCookies() {
+        foreach($this->cookie as $cookie ) {
+            $cookie->send();
+        }
     }
 
     /**
@@ -118,5 +137,29 @@ class Response
     public function getStatusCode()
     {
         return $this->statusCode;
+    }
+
+    /**
+     * 设置 Cookie
+     *
+     * @param  Cookie  $cookie  Cookie
+     *
+     * @return  self
+     */
+    public function setCookie(Cookie $cookie)
+    {
+        $this->cookie[$cookie->getName()] = $cookie;
+        return $this;
+    }
+
+    /**
+     * 获取Cookie
+     *
+     * @param string $name
+     * @return Cookie|null
+     */
+    public function getCookie(string $name):?Cookie
+    {
+        return $this->cookie[$name] ?? null;
     }
 }
