@@ -3,6 +3,7 @@ namespace suda\framework;
 
 use suda\framework\server\Config;
 use suda\framework\server\Request;
+use suda\framework\server\Response;
 use suda\framework\server\request\Builder;
 
 class Server
@@ -27,6 +28,14 @@ class Server
      * @var Request
      */
     protected static $request;
+
+
+    /**
+     * 请求数据
+     *
+     * @var Response
+     */
+    protected static $response;
 
     /**
      * 获取服务器参数
@@ -54,6 +63,7 @@ class Server
     {
         static::$config = new Config;
         static::$request = $request;
+        static::$response = new Response(200);
         static::$server = $server;
     }
 
@@ -101,7 +111,13 @@ class Server
         return static::$request;
     }
 
-    public static function response()
+    /**
+     * 获取响应控制
+     *
+     * @return Response
+     */
+    public static function response(): Response
     {
+        return static::$response;
     }
 }
