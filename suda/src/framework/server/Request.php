@@ -189,6 +189,17 @@ class Request extends RequestWrapper
     }
 
     /**
+     * 获取Cookie
+     *
+     * @param string $name
+     * @param mixed $default
+     * @return mixed
+     */
+    public function cookie(string $name, $default = null) {
+        return $_COOKIE[$name] ?? $default;
+    }
+
+    /**
      * Get 参数
      *
      * @return  array
