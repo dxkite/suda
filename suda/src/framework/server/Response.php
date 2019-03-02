@@ -47,6 +47,7 @@ class Response
         $this->statusCode = $statusCode;
         $this->header = new Header;
         $this->setContent($content);
+        $this->cookie = [];
     }
     
     /**
@@ -84,6 +85,8 @@ class Response
     {
         $wrapper = ContentWrapper::getWrapper($content);
         $this->content = $wrapper->getContent(Server::request(), $this);
+        $this->setHeader('Content-Length', strlen($this->content));
+        return $this;
     }
 
     /**
