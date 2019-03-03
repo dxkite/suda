@@ -1,6 +1,7 @@
 <?php
 
 use suda\framework\Event;
+use suda\framework\Route;
 use suda\framework\Config;
 use suda\framework\Server;
 use suda\framework\Request;
@@ -20,6 +21,7 @@ Server::$container = new Container;
 Server::$container->setSingle('loader', $loader);
 Server::$container->setSingle('config', Config::class);
 Server::$container->setSingle('event', Event::class);
+Server::$container->setSingle('route', Route::class);
 
 Server::$container->setSingle('request', function () {
     return new Request(HTTPRequest::create());

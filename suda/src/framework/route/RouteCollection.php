@@ -55,12 +55,12 @@ class RouteCollection implements IteratorAggregate
      * 添加集合
      *
      * @param string $name
-     * @param RouteMatcher $collection
+     * @param RouteMatcher $routeMatcher
      * @return void
      */
-    public function add(string $name, RouteMatcher $collection)
+    public function add(string $name, RouteMatcher $routeMatcher)
     {
-        $this->collection[$name] = $collection;
+        $this->collection[$name] = $routeMatcher;
     }
 
     /**
