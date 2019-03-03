@@ -15,6 +15,17 @@ use suda\framework\debug\log\logger\NullLogger;
  */
 class Debugger extends Debug
 {
+
+    /**
+     * 注册错误处理函数
+     */
+    public function __construct()
+    {
+        register_shutdown_function([$this,'uncaughtFatalError']);
+        set_error_handler([$this,'uncaughtError']);
+        set_exception_handler([$this,'uncaughtException']);
+    }
+    
     /**
      * 创建调式工具
      *
@@ -77,7 +88,47 @@ class Debugger extends Debug
         }
         return new NullLogger;
     }
-    
+ 
+    /**
+     * 末异常处理
+     *
+     * @return void
+     */
+    public function uncaughtFatalError()
+    {
+        if ($e = error_get_last()) {
+            $isFatalError = E_ERROR | E_PARSE | E_CORE_ERROR | E_CORE_WARNING | E_COMPILE_ERROR | E_COMPILE_WARNING;
+            if ($e['type'] === ($e['type'] & $isFatalError)) {
+                $this->uncaughtError($e['type'], $e['message'], $e['file'], $e['line']);
+            }
+        }
+    }
+
+    /**
+     * 异常托管
+     *
+     * @param \Exception $exception
+     * @return void
+     */
+    public function uncaughtException($exception)
+    {
+        $this->error($exception->getMessage(),['exception' => $exception]);
+    }
+
+    /**
+     * 错误托管
+     *
+     * @param int $errno
+     * @param string $errstr
+     * @param string $errfile
+     * @param int $errline
+     * @return void
+     */
+    public function uncaughtError($errno, $errstr, $errfile, $errline)
+    {
+        $this->uncaughtException(new \ErrorException($errstr, 0, $errno, $errfile, $errline));
+    }
+
     public function getDefaultConfig():array
     {
         return [

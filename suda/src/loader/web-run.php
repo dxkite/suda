@@ -40,9 +40,6 @@ $context->setSingle('debug', function () use ($context) {
 
 $context->get('debug')->notice('system booting');
 
-
-$app = new Application($context);
-
 $route = $context->get('route');
 
 $route->get('index', '/', function ($request, $response) use ($route) {
@@ -51,6 +48,10 @@ $route->get('index', '/', function ($request, $response) use ($route) {
 
 $route->get('hello', '/helloworld', function ($request, $response) use ($route) {
     return 'hello world <strong>' . $route->create('hello', ['name' => 'dxkite']).'</strong>';
+});
+
+$route->get('exception', '/exception', function ($request, $response) use ($route) {
+    throw new \Exception('some exception!');
 });
 
 $match = $route->match($context->get('request'));
