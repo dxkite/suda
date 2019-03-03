@@ -71,6 +71,20 @@ class Request extends RequestWrapper
 
         return $this;
     }
+    
+    /**
+     * Set 属性
+     *
+     * @param  array  $attribute  属性
+     *
+     * @return  self
+     */
+    public function setAttributes(array $attribute)
+    {
+        $this->attribute = $attribute;
+
+        return $this;
+    }
 
     /**
      * 获取Scheme
