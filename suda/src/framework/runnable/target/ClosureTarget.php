@@ -6,7 +6,7 @@ use suda\framework\runnable\target\RunnableTarget;
 
 /**
  * 可执行命令：文件类型
- * 
+ *
  */
 class ClosureTarget extends RunnableTarget
 {
@@ -18,7 +18,8 @@ class ClosureTarget extends RunnableTarget
      */
     protected $closure;
     
-    public function __construct(Closure $closure, array $parameter =[]) {
+    public function __construct(Closure $closure, array $parameter = [])
+    {
         $this->closure = $closure;
         $this->parameter = $parameter;
         $this->name = 'Closure object()';
@@ -37,7 +38,7 @@ class ClosureTarget extends RunnableTarget
      */
     public function isValid():bool
     {
-        return true; 
+        return true;
     }
 
     /**

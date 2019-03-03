@@ -5,7 +5,7 @@ use suda\framework\runnable\target\FileTarget;
 
 /**
  * 可执行命令：函数名
- * 
+ *
  */
 class FunctionTarget extends FileTarget
 {
@@ -17,7 +17,8 @@ class FunctionTarget extends FileTarget
      */
     protected $function;
  
-    public function __construct(string $name, array $parameter =[]) {
+    public function __construct(string $name, array $parameter = [])
+    {
         $this->setParameter($parameter);
         $this->function = $name;
     }
@@ -72,7 +73,7 @@ class FunctionTarget extends FileTarget
         if (count($parameter) == 0) {
             $parameter = $this->getParameter();
         }
-        if (!is_null($this->requireFile) && !function_exists($this->function)) {
+        if (null !== $this->requireFile && !function_exists($this->function)) {
             require_once $this->requireFile;
         }
         return forward_static_call_array($this->function, $parameter);
@@ -82,7 +83,7 @@ class FunctionTarget extends FileTarget
      * Get 可执行函数名
      *
      * @return  string
-     */ 
+     */
     public function getFunction()
     {
         return $this->function;

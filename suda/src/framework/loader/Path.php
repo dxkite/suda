@@ -1,7 +1,6 @@
 <?php
 namespace suda\framework\loader;
 
-
 /**
  * 文件路径推测
  * 包括非UTF-8路径以及大小写敏感
@@ -9,9 +8,9 @@ namespace suda\framework\loader;
 class Path
 {
     /**
-     * 格式化路径   
+     * 格式化路径
      *
-     * @param string $path 目标路径 
+     * @param string $path 目标路径
      * @return string|null 返回格式化结果，如果路径不存在则返回NULL
      */
     public static function format(string $path):?string
@@ -69,8 +68,9 @@ class Path
      * @param string $path
      * @return boolean
      */
-    public static function isRelativePath(string $path):bool {
-        $path = \str_replace('\\','/', $path);
+    public static function isRelativePath(string $path):bool
+    {
+        $path = \str_replace('\\', '/', $path);
         return !(strpos($path, ':/') > 0 || strpos($path, '/') === 0);
     }
 }

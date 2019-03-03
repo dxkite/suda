@@ -6,8 +6,8 @@ use suda\framework\route\uri\parameter\Parameter;
 /**
  * 匹配 string 参数
  */
-class UrlParameter extends StringParameter {
-
+class UrlParameter extends StringParameter
+{
     protected static $name = 'url';
     
     /**
@@ -15,7 +15,8 @@ class UrlParameter extends StringParameter {
      *
      * @return string
      */
-    public function getMatch():string {
+    public function getMatch():string
+    {
         return '(.+)';
     }
 }

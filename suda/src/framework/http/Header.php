@@ -26,8 +26,9 @@ class Header
      */
     protected $ucfirst;
 
-    public function __construct(string $name, string $value, bool $ucfirst = true) {
-        $this->name =  \str_replace('_', '-', \strtolower($name));
+    public function __construct(string $name, string $value, bool $ucfirst = true)
+    {
+        $this->name = \str_replace('_', '-', \strtolower($name));
         $this->value = $value;
         $this->ucfirst = $ucfirst;
     }
@@ -38,7 +39,7 @@ class Header
      * Get 头部名
      *
      * @return  string
-     */ 
+     */
     public function getName()
     {
         return $this->name;
@@ -48,7 +49,7 @@ class Header
      * Get 头部值
      *
      * @return  string
-     */ 
+     */
     public function getValue()
     {
         return $this->value;
@@ -59,7 +60,8 @@ class Header
      *
      * @return string
      */
-    public function __toString() {
+    public function __toString()
+    {
         $name = $this->name;
         if ($this->ucfirst) {
             $names = \explode('-', $name);

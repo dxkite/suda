@@ -6,7 +6,7 @@ namespace suda\framework\loader;
  *
  */
 interface PathInterface
-{    
+{
     public static function formatSeparator(string $path):string;
 
     public static function toAbsolutePath(string $path, string $separator = DIRECTORY_SEPARATOR):string;

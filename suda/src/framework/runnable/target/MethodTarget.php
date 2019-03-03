@@ -46,7 +46,7 @@ class MethodTarget extends FileTarget
      * @param string $method
      * @param array $parameter
      */
-    public function __construct($object, ?array $constructParameter=null, string $method, array $parameter = [])
+    public function __construct($object, ?array $constructParameter = null, string $method, array $parameter = [])
     {
         $this->object = $object;
         $this->constructParameter = $constructParameter;
@@ -67,23 +67,23 @@ class MethodTarget extends FileTarget
         if (\is_object($this->object)) {
             return $this->object;
         }
-        if (is_null($this->constructParameter)) {
+        if (null === $this->constructParameter) {
             return null;
         }
-        if (!is_null($this->requireFile) && !\class_exists($this->object)) {
+        if (null !== $this->requireFile && !\class_exists($this->object)) {
             require_once $this->requireFile;
         }
-        $classRef= new ReflectionClass($this->object);
+        $classRef = new ReflectionClass($this->object);
         return $classRef->newInstanceArgs($this->constructParameter);
     }
 
     public function getRunnableTarget()
     {
-        if (is_null($this->runnableTarget)) {
+        if (null === $this->runnableTarget) {
             if ($this->isStatic() || \is_object($this->object)) {
                 $this->runnableTarget = [$this->object, $this->method];
             }
-            $this->runnableTarget =  [$this->getObjectInstance() ?? $this->object, $this->method];
+            $this->runnableTarget = [$this->getObjectInstance() ?? $this->object, $this->method];
         }
         return $this->runnableTarget;
     }
@@ -95,7 +95,7 @@ class MethodTarget extends FileTarget
      */
     public function isStatic():bool
     {
-        return !\is_object($this->object) && \is_null($this->constructParameter);
+        return !\is_object($this->object) && null === $this->constructParameter;
     }
 
     /**
@@ -107,7 +107,7 @@ class MethodTarget extends FileTarget
      */
     public function setRequireFile($requireFile)
     {
-        if (is_null($this->requireFile)) {
+        if (null === $this->requireFile) {
             $this->requireFile = $requireFile;
             $this->name = $this->name.'@'.$requireFile;
         }
@@ -151,7 +151,7 @@ class MethodTarget extends FileTarget
      * Get 类方法
      *
      * @return  string
-     */ 
+     */
     public function getMethod()
     {
         return $this->method;
@@ -161,7 +161,7 @@ class MethodTarget extends FileTarget
      * Get 构建方法参数
      *
      * @return  array
-     */ 
+     */
     public function getConstructParameter()
     {
         return $this->constructParameter;

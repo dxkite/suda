@@ -16,14 +16,14 @@ class IncludeManager implements PathInterface
      *
      * @var array
      */
-    protected $namespace=[ __NAMESPACE__ ];
+    protected $namespace = [ __NAMESPACE__ ];
 
     /**
      * 包含路径
      *
      * @var array
      */
-    protected $includePath=[];
+    protected $includePath = [];
 
     /**
      * 将JAVA，路径分割转换为PHP分割符
@@ -69,16 +69,16 @@ class IncludeManager implements PathInterface
         return null;
     }
 
-    public function addIncludePath(string $path, string $namespace=null)
+    public function addIncludePath(string $path, string $namespace = null)
     {
         if ($path = static::realPath($path)) {
             $namespace = $namespace ?? 0;
             if (array_key_exists($namespace, $this->includePath)) {
                 if (!\in_array($path, $this->includePath[$namespace])) {
-                    $this->includePath[$namespace][]=$path;
+                    $this->includePath[$namespace][] = $path;
                 }
             } else {
-                $this->includePath[$namespace][]=$path;
+                $this->includePath[$namespace][] = $path;
             }
         }
     }
@@ -96,7 +96,7 @@ class IncludeManager implements PathInterface
     public function setNamespace(string $namespace)
     {
         if (!in_array($namespace, $this->namespace)) {
-            $this->namespace[]=$namespace;
+            $this->namespace[] = $namespace;
         }
     }
 }

@@ -26,18 +26,18 @@ class MatcherHelper
         // 参数
         $parameters = [];
         // 转义正则
-        $url=preg_replace('/([\/\.\\\\\+\(\^\)\$\!\<\>\-\?\*])/', '\\\\$1', $uri);
+        $url = preg_replace('/([\/\.\\\\\+\(\^\)\$\!\<\>\-\?\*])/', '\\\\$1', $uri);
         // 添加忽略
-        $url=preg_replace('/(\[)([^\[\]]+)(?(1)\])/', '(?:$2)?', $url);
+        $url = preg_replace('/(\[)([^\[\]]+)(?(1)\])/', '(?:$2)?', $url);
         // 添加 * ? 匹配
-        $url=str_replace(['\*','\?'], ['[^/]*?','[^/]'], $url);
+        $url = str_replace(['\*','\?'], ['[^/]*?','[^/]'], $url);
         // 编译页面参数
-        $url=preg_replace_callback('/\{(\w+)(?:\:([^}]+?))?\}/', function ($match) use (&$parameters) {
+        $url = preg_replace_callback('/\{(\w+)(?:\:([^}]+?))?\}/', function ($match) use (&$parameters) {
             $name = $match[1];
             $type = 'string';
             $extra = '';
             if (isset($match[2])) {
-                if (strpos($match[2], '=')!==false) {
+                if (strpos($match[2], '=') !== false) {
                     list($type, $extra) = \explode('=', $match[2]);
                 } else {
                     $type = $match[2];
@@ -56,16 +56,16 @@ class MatcherHelper
 
     public static function buildUri(UriMatcher $matcher, array $parameter, bool $allowQuery = true):string
     {
-        $uri =  $matcher->getUri();
+        $uri = $matcher->getUri();
         // 拆分参数
         list($mapper, $query) = static::analyseParameter($matcher, $parameter);
         // for * ?
-        $url=\str_replace(['*','?'], ['','-'], $uri);
+        $url = \str_replace(['*','?'], ['','-'], $uri);
         // for ignore value
-        $url=preg_replace_callback('/\[(.+?)\]/', function ($match) use ($matcher, $parameter, $mapper) {
+        $url = preg_replace_callback('/\[(.+?)\]/', function ($match) use ($matcher, $parameter, $mapper) {
             if (preg_match('/\{(\w+).+?\}/', $match[1])) {
                 $count = 0;
-                $subUrl= static::replaceParameter($match[1], $matcher, $parameter, $mapper, $count);
+                $subUrl = static::replaceParameter($match[1], $matcher, $parameter, $mapper, $count);
                 if ($count > 0) {
                     return $subUrl;
                 }
@@ -73,7 +73,7 @@ class MatcherHelper
             return '';
         }, $url);
  
-        $url= static::replaceParameter($url, $matcher, $parameter, $mapper);
+        $url = static::replaceParameter($url, $matcher, $parameter, $mapper);
 
         if (count($query) && $allowQuery) {
             return $url.'?'.http_build_query($query, 'v', '&', PHP_QUERY_RFC3986);
@@ -89,7 +89,7 @@ class MatcherHelper
         foreach ($parameter as $key => $value) {
             $mp = $matcher->getParameter($key);
             // 多余参数
-            if (is_null($mp)) {
+            if (null === $mp) {
                 $query[$key] = $value;
             }
             $mapper[$key] = $mp;
@@ -97,7 +97,7 @@ class MatcherHelper
         return [$mapper, $query];
     }
 
-    protected static function replaceParameter(string $input, UriMatcher $matcher, array $parameter, array $mapper, ?int &$count=null)
+    protected static function replaceParameter(string $input, UriMatcher $matcher, array $parameter, array $mapper, ?int &$count = null)
     {
         return preg_replace_callback('/\{(\w+).+?\}/', function ($match) use ($matcher, $parameter, $mapper) {
             if (\array_key_exists($match[1], $mapper)) {

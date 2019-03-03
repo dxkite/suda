@@ -6,16 +6,18 @@ use suda\framework\route\uri\parameter\Parameter;
 /**
  * 匹配float参数
  */
-class FloatParameter extends Parameter {
-
+class FloatParameter extends Parameter
+{
     protected static $name = 'float';
 
 
-    public function __construct(string $extra) {
+    public function __construct(string $extra)
+    {
         $this->default = floatval($this->getCommonDefault($extra));
     }
  
-    public function unpackValue(string $matched) {
+    public function unpackValue(string $matched)
+    {
         return floatval($matched);
     }
 
@@ -24,7 +26,8 @@ class FloatParameter extends Parameter {
      *
      * @return string
      */
-    public function getMatch():string {
+    public function getMatch():string
+    {
         return '(\d+\.\d+)';
     }
 }

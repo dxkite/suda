@@ -6,16 +6,18 @@ use suda\framework\route\uri\parameter\Parameter;
 /**
  * 匹配int参数
  */
-class IntParameter extends Parameter {
-
+class IntParameter extends Parameter
+{
     protected static $name = 'int';
 
 
-    public function __construct(string $extra) {
+    public function __construct(string $extra)
+    {
         $this->default = intval($this->getCommonDefault($extra));
     }
  
-    public function unpackValue(string $matched) {
+    public function unpackValue(string $matched)
+    {
         return intval($matched);
     }
 
@@ -24,7 +26,8 @@ class IntParameter extends Parameter {
      *
      * @return string
      */
-    public function getMatch():string {
+    public function getMatch():string
+    {
         return '(\d+)';
     }
 }

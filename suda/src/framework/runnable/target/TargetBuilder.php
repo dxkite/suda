@@ -52,7 +52,7 @@ class TargetBuilder
         }
         $requireFile = '';
         if ($fileStart > 0) {
-            $requireFile = substr($command, $fileStart+1);
+            $requireFile = substr($command, $fileStart + 1);
             $command = substr($command, 0, $fileStart);
         }
         // for parameter list
@@ -83,11 +83,11 @@ class TargetBuilder
     {
         list($className, $parameter) = self::splitParameter($class);
         $classRelName = self::buildName($className);
-        if (is_null($parameter)) {
+        if (null === $parameter) {
             return new  $classRelName;
         }
-        $parameters=self::buildParameter($parameter);
-        $classRef= new ReflectionClass($classRelName);
+        $parameters = self::buildParameter($parameter);
+        $classRef = new ReflectionClass($classRelName);
         return $classRef->newInstanceArgs($parameters);
     }
 
@@ -102,7 +102,7 @@ class TargetBuilder
     private static function splitParameter(string $command):array
     {
         $parameter = null;
-        if (strrpos($command, ')') === strlen($command) -1) {
+        if (strrpos($command, ')') === strlen($command) - 1) {
             $paramStart = strpos($command, '(');
             $parameter = substr($command, $paramStart + 1, strlen($command) - $paramStart - 2);
             $command = substr($command, 0, $paramStart);
@@ -112,7 +112,7 @@ class TargetBuilder
 
     private static function buildParameter(?string $parameter)
     {
-        if (is_null($parameter)) {
+        if (null === $parameter) {
             return [];
         }
         return self::parseParameter($parameter);
@@ -126,7 +126,7 @@ class TargetBuilder
             if (strpos($value, ':') === 0) {
                 $value = base64_decode(substr($value, 1));
             }
-            if ($prefix ==='=j' || $prefix ==='=json') {
+            if ($prefix === '=j' || $prefix === '=json') {
                 $params = json_decode($value);
                 if (json_last_error() === JSON_ERROR_NONE) {
                     return $params;
@@ -141,8 +141,8 @@ class TargetBuilder
             }
         } else {
             $params = explode(',', trim($param, ','));
-            foreach ($params as $index=>$value) {
-                $params[$index]=trim($value);
+            foreach ($params as $index => $value) {
+                $params[$index] = trim($value);
             }
             return $params;
         }

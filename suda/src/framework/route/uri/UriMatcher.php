@@ -68,12 +68,12 @@ class UriMatcher extends MatcherHelper
         $parameters = [];
         foreach ($this->parameter as $index => $parameter) {
             $match = $matchedParameter[$index] ?? null;
-            if (is_null($match)) {
+            if (null === $match) {
                 $value = $parameter->getDefaultValue();
             } else {
                 $value = $parameter->unpackValue($match);
             }
-            $parameters[$parameter->getIndexName()] =  $value;
+            $parameters[$parameter->getIndexName()] = $value;
         }
         return $parameters;
     }

@@ -5,7 +5,8 @@ namespace suda\framework\runnable\target;
  * 可执行命令表目标
  *
  */
-abstract class RunnableTarget  {
+abstract class RunnableTarget
+{
     
     /**
      * 参数
@@ -25,7 +26,7 @@ abstract class RunnableTarget  {
      * Get 可执行对象
      *
      * @return  mixed
-     */ 
+     */
     abstract public function getRunnableTarget();
     /**
      * 是否可执行
@@ -47,7 +48,8 @@ abstract class RunnableTarget  {
      * @param mixed ...$args
      * @return mixed
      */
-    public function run(...$args) {
+    public function run(...$args)
+    {
         return $this->apply($args);
     }
 
@@ -55,7 +57,7 @@ abstract class RunnableTarget  {
      * Get 执行参数
      *
      * @return  array
-     */ 
+     */
     public function getParameter()
     {
         return $this->parameter;
@@ -67,7 +69,7 @@ abstract class RunnableTarget  {
      * @param  array  $parameter  执行参数
      *
      * @return  self
-     */ 
+     */
     public function setParameter(array $parameter)
     {
         $this->parameter = $parameter;
@@ -79,7 +81,7 @@ abstract class RunnableTarget  {
      * Get 可执行命令字符串表示
      *
      * @return  string
-     */ 
+     */
     public function getName()
     {
         return $this->name;
@@ -91,7 +93,7 @@ abstract class RunnableTarget  {
      * @param  string  $name  可执行命令字符串表示
      *
      * @return  self
-     */ 
+     */
     public function setName(string $name)
     {
         $this->name = $name;
@@ -99,4 +101,14 @@ abstract class RunnableTarget  {
         return $this;
     }
 
+    /**
+     * 调用函数
+     *
+     * @param mixed ...$args
+     * @return mixed
+     */
+    public function __invoke(...$args)
+    {
+        return $this->apply($args);
+    }
 }

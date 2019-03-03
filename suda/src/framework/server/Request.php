@@ -195,7 +195,8 @@ class Request extends RequestWrapper
      * @param mixed $default
      * @return mixed
      */
-    public function cookie(string $name, $default = null) {
+    public function cookie(string $name, $default = null)
+    {
         return $_COOKIE[$name] ?? $default;
     }
 

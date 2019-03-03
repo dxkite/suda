@@ -116,8 +116,9 @@ class Response
      *
      * @return void
      */
-    protected function sendCookies() {
-        foreach($this->cookie as $cookie ) {
+    protected function sendCookies()
+    {
+        foreach ($this->cookie as $cookie) {
             $cookie->send();
         }
     }

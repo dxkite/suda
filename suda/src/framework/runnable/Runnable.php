@@ -12,7 +12,8 @@ use suda\framework\runnable\target\RunnableTarget;
  * 可执行命令表达式
  *
  */
-class Runnable   {
+class Runnable
+{
 
     /**
      * 运行对象
@@ -21,7 +22,8 @@ class Runnable   {
      */
     protected $target;
 
-    public function __construct($runnable, array $parameter=[]) {
+    public function __construct($runnable, array $parameter = [])
+    {
         $this->target = TargetBuilder::build($runnable, $parameter);
     }
 
@@ -29,7 +31,7 @@ class Runnable   {
      * Get 运行对象
      *
      * @return  FunctionTarget|MethodTarget|FileTarget|ClosureTarget
-     */ 
+     */
     public function getTarget()
     {
         return $this->target;
@@ -61,7 +63,8 @@ class Runnable   {
      * @param mixed ...$args
      * @return mixed
      */
-    public function run(...$args) {
+    public function run(...$args)
+    {
         return $this->apply($args);
     }
 
@@ -71,7 +74,8 @@ class Runnable   {
      * @param array $parameter
      * @return mixed
      */
-    public function apply(array $parameter) {
+    public function apply(array $parameter)
+    {
         return $this->target->apply($parameter);
     }
 

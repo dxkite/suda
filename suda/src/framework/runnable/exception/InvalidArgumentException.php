@@ -6,5 +6,4 @@ namespace suda\framework\runnable\exception;
  */
 class InvalidArgumentException extends \RuntimeException
 {
-    
 }

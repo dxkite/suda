@@ -24,7 +24,7 @@ class RouteCollection implements IteratorAggregate
      *
      * @param RouteMatcher[] $collection
      */
-    public function __construct(array $collection=[])
+    public function __construct(array $collection = [])
     {
         $this->mergeArray($collection);
     }
@@ -35,7 +35,7 @@ class RouteCollection implements IteratorAggregate
      * @param array $collection
      * @return void
      */
-    public function mergeArray(array $collection=[])
+    public function mergeArray(array $collection = [])
     {
         $this->collection = array_merge($this->collection, $collection);
     }

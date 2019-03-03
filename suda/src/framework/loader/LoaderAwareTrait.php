@@ -5,11 +5,11 @@ use suda\framework\loader\Loader;
 
 trait LoaderAwareTrait
 {
-     /**
-     * 加载器
-     *
-     * @var Loader
-     */
+    /**
+    * 加载器
+    *
+    * @var Loader
+    */
     protected $loader;
 
     
@@ -17,7 +17,7 @@ trait LoaderAwareTrait
      * Get 加载器
      *
      * @return  Loader
-     */ 
+     */
     public function getLoader()
     {
         return $this->loader;
@@ -29,7 +29,7 @@ trait LoaderAwareTrait
      * @param  Loader  $loader  加载器
      *
      * @return  self
-     */ 
+     */
     public function setLoader(Loader $loader)
     {
         $this->loader = $loader;

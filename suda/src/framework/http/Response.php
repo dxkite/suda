@@ -120,7 +120,7 @@ class Response
     public function sendFile(string $filename, int $offset = 0, int $length = null)
     {
         if (!file_exists($filename)) {
-            throw new \Exception('File No Found: '.$filename);
+            throw new \Exception('file no found: '.$filename);
         }
         $this->data = new Stream($filename, $offset, $length);
         $this->end();

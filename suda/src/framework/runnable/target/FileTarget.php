@@ -5,7 +5,7 @@ use suda\framework\runnable\target\RunnableTarget;
 
 /**
  * 可执行命令：文件类型
- * 
+ *
  */
 class FileTarget extends RunnableTarget
 {
@@ -15,9 +15,10 @@ class FileTarget extends RunnableTarget
      *
      * @var string|null
      */
-    protected $requireFile=null;
+    protected $requireFile = null;
     
-    public function __construct(string $path, array $parameter =[]) {
+    public function __construct(string $path, array $parameter = [])
+    {
         $this->setRequireFile($path);
         $this->setParameter($parameter);
     }
@@ -47,7 +48,7 @@ class FileTarget extends RunnableTarget
     public function setRequireFile($requireFile)
     {
         $this->requireFile = $requireFile;
-        $this->name ='@'.$requireFile;
+        $this->name = '@'.$requireFile;
         return $this;
     }
 
@@ -73,8 +74,8 @@ class FileTarget extends RunnableTarget
             $args = $this->getParameter();
         }
         array_unshift($args, $this->requireFile);
-        $_SERVER['argv']=$args;
-        $_SERVER['args']=count($args);
+        $_SERVER['argv'] = $args;
+        $_SERVER['args'] = count($args);
         return include $this->requireFile;
     }
 }

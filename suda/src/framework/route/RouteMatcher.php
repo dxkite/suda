@@ -40,7 +40,7 @@ class RouteMatcher
     protected $matcher;
     
 
-    public function __construct(array $methods, string $uri, array $attribute=[])
+    public function __construct(array $methods, string $uri, array $attribute = [])
     {
         array_walk($methods, function ($value) {
             return strtoupper($value);

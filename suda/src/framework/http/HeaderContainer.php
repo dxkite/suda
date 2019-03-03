@@ -76,7 +76,8 @@ class HeaderContainer
      *
      * @return array
      */
-    public function all():string {
+    public function all():string
+    {
         return $this->header;
     }
 }
