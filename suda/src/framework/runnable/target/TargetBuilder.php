@@ -3,13 +3,13 @@ namespace suda\framework\runnable\target;
 
 use Closure;
 use ReflectionClass;
+use InvalidArgumentException;
 use suda\framework\runnable\target\FileTarget;
 use suda\framework\runnable\target\MethodTarget;
 use suda\framework\runnable\target\ClosureTarget;
 use suda\framework\runnable\target\FunctionTarget;
 use suda\framework\runnable\target\RunnableTarget;
 use suda\framework\runnable\exception\InvalidNameException;
-use suda\framework\route\exception\InvalidArgumentException;
 
 /**
  * 目标构造器

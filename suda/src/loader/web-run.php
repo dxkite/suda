@@ -8,9 +8,10 @@ use suda\framework\Debugger;
 use suda\framework\Container;
 use suda\framework\runnable\Runnable;
 use suda\framework\filesystem\FileSystem;
+use suda\framework\debug\log\LoggerInterface;
 use suda\framework\debug\log\logger\FileLogger;
 use suda\framework\debug\log\logger\NullLogger;
-use suda\framework\http\Request as HTTPRequest;
+use suda\framework\http\{Request as HTTPRequest};
 
 require_once __DIR__ .'/loader.php';
 
@@ -59,8 +60,11 @@ Server::$container->setSingle('debug', function () {
         'start-time' => \constant('SUDA_START_TIME'),
         'start-memory' => \constant('SUDA_START_MEMORY'),
     ]);
-    
-    $debugger->setLogger($logger);
+    if ($logger instanceof LoggerInterface) {
+        $debugger->setLogger($logger);
+    } else {
+        $debugger->setLogger(new NullLogger);
+    }
     $logger->notice(PHP_EOL.'{request-time} {remote-ip} {request-method} {request-uri} debug={debug}', $debugger->getAttribute());
     return $debugger;
 });
