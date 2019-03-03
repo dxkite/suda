@@ -1,5 +1,5 @@
 <?php
-namespace suda\framework\server\config;
+namespace suda\framework\config;
 
 use suda\framework\exception\JsonException;
 use suda\framework\exception\YamlException;

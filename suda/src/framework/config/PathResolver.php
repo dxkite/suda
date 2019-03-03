@@ -1,5 +1,5 @@
 <?php
-namespace suda\framework\server\config;
+namespace suda\framework\config;
 
 /**
  * 路径解析器
