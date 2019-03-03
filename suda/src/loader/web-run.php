@@ -39,7 +39,7 @@ $service = new Service($context);
 
 
 
-$service->on('service:on:load-route', function ($route) {
+$service->on('service:load-route', function ($route) {
     $route->get('index', '/', function ($request, $response) use ($route) {
         return 'hello, index';
     });

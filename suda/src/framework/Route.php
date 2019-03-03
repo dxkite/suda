@@ -2,6 +2,7 @@
 namespace suda\framework;
 
 use suda\framework\Request;
+use suda\framework\route\MatchResult;
 use suda\framework\runnable\Runnable;
 use suda\framework\route\RouteMatcher;
 use suda\framework\route\uri\UriMatcher;
@@ -184,20 +185,32 @@ class Route
      * 匹配路由
      *
      * @param Request $request
-     * @return Response
+     * @return MatchResult|null
      */
-    public function match(Request $request, Response $response): Response
+    public function match(Request $request): ?MatchResult
     {
         foreach ($this->routes as $name => $matcher) {
             if (($parameter = $matcher->match($request)) !== null) {
-                return $this->buildResponse($matcher, $request, $response, $name, $parameter);
+                return new MatchResult($matcher, $name, $parameter);
             }
         }
-        $content = $this->default->run($request, $response);
-        if ($content != null) {
-            $response->setContent($content);
+        return null;
+    }
+
+    /**
+     * 运行结果
+     *
+     * @param Request $request
+     * @param Response $response
+     * @param MatchResult|null $result
+     * @return Response
+     */
+    public function run(Request $request, Response $response, ?MatchResult $result):Response
+    {
+        if ($result !== null) {
+            return $this->buildResponse($result->getMatcher(), $request, $response, $result->getName(), $result->getParameter());
         }
-        return $response;
+        return $this->buildDefaultResponse($request, $response);
     }
 
     /**
@@ -215,9 +228,24 @@ class Route
         foreach ($parameter as $key => $value) {
             $request->setQuery($key, $value);
         }
-        $request->setAttributes($matcher->getAttribute());
         $content = $this->runnable[$name]->run($request, $response);
-        if ($content != null) {
+        if ($content !== null && !$response->isSended()) {
+            $response->setContent($content);
+        }
+        return $response;
+    }
+
+    /**
+     * 构建默认响应
+     *
+     * @param Request $request
+     * @param Response $response
+     * @return Response
+     */
+    protected function buildDefaultResponse(Request $request, Response $response):Response
+    {
+        $content = $this->default->run($request, $response);
+        if ($content !== null && !$response->isSended()) {
             $response->setContent($content);
         }
         return $response;

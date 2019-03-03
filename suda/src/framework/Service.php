@@ -71,9 +71,24 @@ class Service
      */
     public function run()
     {
-        $this->context->get('event')->exec('service:on:load-config', [$this->context->get('config') ,$this]);
-        $this->context->get('event')->exec('service:on:load-route', [$this->context->get('route') , $this]);
-        $response = $this->context->get('route')->match($this->context->get('request'), $this->context->get('response'));
+        $route = $this->context->get('route');
+        $event = $this->context->get('event');
+        $config = $this->context->get('config');
+        $request = $this->context->get('request');
+        $response = $this->context->get('response');
+
+        $event->exec('service:load-config', [$config ,$this]);
+
+        $event->exec('service:load-route', [$route , $this]);
+
+        $result = $route->match($request, $response);
+
+        if ($result !== null) {
+            $event->exec('service:route:match::after', [$result, $request]);
+        }
+        
+        $response = $route->run($request, $response, $result);
+
         if (!$response->isSended()) {
             $response->sendContent();
         }

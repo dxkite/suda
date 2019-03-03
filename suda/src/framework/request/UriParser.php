@@ -29,7 +29,7 @@ class UriParser
     
     public function __construct(string $uri, ?string $indexFile = null)
     {
-        $url = strlen($indexFile) > 0 && $indexFile !== null ?$uri:$this->clearIndex($uri, $indexFile);
+        $url = strlen($indexFile) > 0 && $indexFile !== null ? $this->clearIndex($uri, $indexFile) : $uri;
         $query = parse_url($url, PHP_URL_QUERY);
         if (strlen($query) > 0) {
             parse_str($query, $this->query);
