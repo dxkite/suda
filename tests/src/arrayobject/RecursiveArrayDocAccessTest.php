@@ -2,7 +2,7 @@
 namespace test\arrayobject;
 
 use PHPUnit\Framework\TestCase;
-use suda\component\arrayobject\RecursiveArrayDocAccess;
+use suda\framework\arrayobject\RecursiveArrayDocAccess;
 
 class RecursiveArrayDocAccessTest extends TestCase
 {

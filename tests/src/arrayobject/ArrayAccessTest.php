@@ -2,7 +2,7 @@
 namespace test\arrayobject;
 
 use PHPUnit\Framework\TestCase;
-use suda\component\arrayobject\ArrayDotAccess;
+use suda\framework\arrayobject\ArrayDotAccess;
 
 class ArrayAccessTest extends TestCase
 {
