@@ -27,7 +27,7 @@ class IndexFinder
      */
     protected $entranceFile;
 
-    public function __construct(?string $entranceFile = null, ?string $documentRoot = null)
+    public function __construct(?string $entranceFile = null, string $documentRoot)
     {
         $this->entranceFile = $entranceFile ?? \get_included_files()[0];
         $this->documentRoot = $documentRoot;

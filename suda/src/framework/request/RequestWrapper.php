@@ -5,7 +5,6 @@ use suda\framework\http\Request;
 use suda\framework\http\UploadedFile;
 use suda\framework\request\IndexFinder;
 
-
 /**
  * 请求包装器
  * 包装PHP请求
@@ -80,7 +79,8 @@ class RequestWrapper
      *
      * @param Request $request
      */
-    public function __construct(Request $request) {
+    public function __construct(Request $request)
+    {
         $this->request = $request;
         $this->setRemoteAddr($this->filterRemoteAddr());
         $this->setMethod(strtoupper($request->server['request-method'] ?? 'GET'));
@@ -376,11 +376,11 @@ class RequestWrapper
     private function filterRemoteAddr():string
     {
         static $ipFrom = [
-            'http-client-ip', 
-            'http-x-forwarded-for', 
+            'http-client-ip',
+            'http-x-forwarded-for',
             'http-x-forwarded',
-            'http-x-cluster-client-ip', 
-            'http-forwarded-for', 
+            'http-x-cluster-client-ip',
+            'http-forwarded-for',
             'http-forwarded',
             'remote-addr',
         ];
@@ -442,10 +442,14 @@ class RequestWrapper
      */
     private function createUri()
     {
-        $index = (new IndexFinder(null, $this->request->server['document-root']))->getIndexFile();
+        if (\array_key_exists('document-root', $this->request->server)) {
+            $index = (new IndexFinder(null, $this->request->server['document-root']))->getIndexFile();
+        } else {
+            $index = '';
+        }
         $this->setIndex($index);
         $url = new UriParser($this->request->server['request-uri'] ?? '/', $index);
-        $this->query =  $url->getQuery();
+        $this->query = $url->getQuery();
         $this->setUri($url->getUri());
         $this->request->get = $url->getQuery();
     }

@@ -37,6 +37,8 @@ $context->get('debug')->notice('system booting');
 
 $service = new Service($context);
 
+
+
 $service->on('service:on:load-route', function ($route) {
     $route->get('index', '/', function ($request, $response) use ($route) {
         return 'hello, index';

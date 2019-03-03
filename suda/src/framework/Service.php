@@ -46,6 +46,25 @@ class Service
     }
 
     /**
+     * 请求页面
+     *
+     * @param string $method
+     * @param string $uri
+     * @param array $header
+     * @return self
+     */
+    public function request(string $method, string $uri, array $header = [])
+    {
+        $request = new RawRequest;
+        $request->server['remote-addr'] = '0.0.0.0';
+        $request->server['request-uri'] = $uri;
+        $request->server['request-method'] = $method;
+        $request->header = $header;
+        $this->context->set('request', new Request($request));
+        return $this;
+    }
+
+    /**
      * 运行请求
      *
      * @return void

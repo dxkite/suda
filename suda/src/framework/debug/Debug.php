@@ -30,12 +30,21 @@ class Debug implements LoggerInterface, LoggerAwareInterface, DumpInterface, Att
         $attribute = $this->getAttribute();
         $attribute['message'] = $this->strtr($message, $context);
         $attribute['level'] = $level;
-        $caller = new Caller(debug_backtrace(), [__DIR__]);
+        $caller = new Caller(debug_backtrace(), $this->getIgnoreTraces());
         $trace = $caller->getCallerTrace();
         $attribute['file'] = $trace['file'];
         $attribute['line'] = $trace['line'];
         $attribute = $this->assignAttributes($attribute);
         $this->logger->log($level, $this->interpolate($this->getConfig('log-format'), $context, $attribute), []);
+    }
+
+    /**
+     * 设置忽略前缀
+     *
+     * @return array
+     */
+    public function getIgnoreTraces():array {
+        return [__DIR__];
     }
 
     public function getDefaultConfig():array

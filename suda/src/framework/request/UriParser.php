@@ -1,17 +1,11 @@
 <?php
 namespace suda\framework\request;
+
 /**
  * HTTP URI处理
  */
 class UriParser
 {
-    /**
-     * 入口文件
-     *
-     * @var string
-     */
-    protected $indexFile;
-
     /**
      * 文本根目录
      *
@@ -33,10 +27,9 @@ class UriParser
      */
     protected $query = [];
     
-    public function __construct(string $uri, string $indexFile)
+    public function __construct(string $uri, ?string $indexFile = null)
     {
-        $this->indexFile = $indexFile;
-        $url = $this->clearIndex($uri, $indexFile);
+        $url = strlen($indexFile) === 0 ?$uri:$this->clearIndex($uri, $indexFile);
         $query = parse_url($url, PHP_URL_QUERY);
         if (strlen($query) > 0) {
             parse_str($query, $this->query);

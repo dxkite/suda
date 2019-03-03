@@ -145,4 +145,15 @@ class Debugger extends Debug
             'start-memory' => 0,
         ];
     }
+    
+    /**
+     * 设置忽略前缀
+     *
+     * @return array
+     */
+    public function getIgnoreTraces():array {
+        $trace = parent::getIgnoreTraces();
+        $trace[] = __FILE__;
+        return $trace;
+    }
 }
