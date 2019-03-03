@@ -1,5 +1,5 @@
 <?php
-namespace suda\component\loader;
+namespace suda\framework\loader;
 
 /**
  * 自动加载路径处理

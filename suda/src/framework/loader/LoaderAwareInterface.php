@@ -1,7 +1,7 @@
 <?php
-namespace suda\component\debug\log;
+namespace suda\framework\debug\log;
 
-use suda\component\loader\Loader;
+use suda\framework\loader\Loader;
 
 interface LoaderAwareInterface
 {

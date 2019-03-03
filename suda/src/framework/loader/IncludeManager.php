@@ -1,8 +1,8 @@
 <?php
-namespace suda\component\loader;
+namespace suda\framework\loader;
 
-use suda\component\loader\Path;
-use suda\component\loader\PathTrait;
+use suda\framework\loader\Path;
+use suda\framework\loader\PathTrait;
 
 /**
  * 包含管理器

@@ -1,5 +1,5 @@
 <?php
-namespace suda\component\loader;
+namespace suda\framework\loader;
 
 
 /**

@@ -1,7 +1,7 @@
 <?php
-namespace suda\component\arrayobject;
+namespace suda\framework\arrayobject;
 
-use suda\component\arrayobject\ArrayDotAccess;
+use suda\framework\arrayobject\ArrayDotAccess;
 
 /**
  * 递归数组点获取类

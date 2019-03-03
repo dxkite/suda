@@ -1,5 +1,5 @@
 <?php
-namespace suda\component\arrayobject;
+namespace suda\framework\arrayobject;
 
 /**
  * 数组点获取类
