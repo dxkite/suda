@@ -3,12 +3,14 @@
 use suda\framework\Event;
 use suda\framework\Config;
 use suda\framework\Server;
+use suda\framework\Request;
 use suda\framework\Debugger;
 use suda\framework\Container;
 use suda\framework\runnable\Runnable;
 use suda\framework\filesystem\FileSystem;
 use suda\framework\debug\log\logger\FileLogger;
 use suda\framework\debug\log\logger\NullLogger;
+use suda\framework\http\Request as HTTPRequest;
 
 require_once __DIR__ .'/loader.php';
 
@@ -16,6 +18,11 @@ Server::$container = new Container;
 Server::$container->setSingle('loader', $loader);
 Server::$container->setSingle('config', Config::class);
 Server::$container->setSingle('event', Event::class);
+
+Server::$container->setSingle('request', function() {
+    return new Request(HTTPRequest::create());
+});
+
 Server::$container->setSingle('debug', function () {
     $logger = (new Runnable(Server::$container->get('config')->get('app.logger-build', new Runnable(
         function () {

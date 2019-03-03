@@ -1,6 +1,5 @@
 <?php
-namespace suda\framework\server\request;
-
+namespace suda\framework\request;
 /**
  * HTTP URI处理
  */

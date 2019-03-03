@@ -4,7 +4,6 @@ namespace suda\framework\http;
 use suda\framework\http\Stream;
 use suda\framework\http\UploadedFile;
 
-
 class Request
 {
     /**
@@ -12,42 +11,42 @@ class Request
      *
      * @var array
      */
-    public $header;
+    public $header = [];
 
     /**
      * 服务环境数据
      *
      * @var array
      */
-    public $server;
+    public $server = [];
 
     /**
      * GET数据
      *
      * @var array
      */
-    public $get;
+    public $get = [];
 
     /**
      * POST数据
      *
      * @var array
      */
-    public $post;
+    public $post = [];
 
     /**
      * 输出的文件
      *
      * @var UploadedFile[]
      */
-    public $files;
+    public $files = [];
 
     /**
      * 输入的Cookie
      *
      * @var string[]
      */
-    public $cookies;
+    public $cookies = [];
 
     /**
      * 输入流
@@ -114,12 +113,11 @@ class Request
     {
         foreach ($_SERVER as $key => $value) {
             $name = \strtolower(\str_replace('_', '-', $key));
-            if (strpos($key, 'http-') === 0) {
+            if (strpos($name, 'http-') === 0) {
                 $name = substr($name, strlen('http-'));
                 $this->header[$name] = $value;
-            } else {
-                $this->server[$name] = $value;
             }
+            $this->server[$name] = $value;
         }
     }
 }
