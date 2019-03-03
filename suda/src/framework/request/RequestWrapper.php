@@ -363,7 +363,7 @@ class RequestWrapper
      */
     public function setHeaders(array $headers)
     {
-        $this->request->headers = $headers;
+        $this->request->header = $headers;
 
         return $this;
     }

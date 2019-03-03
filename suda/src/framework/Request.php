@@ -31,12 +31,21 @@ class Request extends RequestWrapper
     /**
      * 创建请求
      *
-     * @param suda\framework\http\Request $request
+     * @param \suda\framework\http\Request $request
      */
     public function __construct(HTTPRequest $request) {
         parent::__construct($request);
         $this->setIsJson($this->contentIsJson());
-        $this->buildData($request);
+        $this->buildData();
+    }
+
+    /**
+     * 获取URL
+     *
+     * @return string
+     */
+    public function getUrl():string {
+        return $this->getUri();
     }
 
     /**

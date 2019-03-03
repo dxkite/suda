@@ -19,12 +19,13 @@ Server::$container->setSingle('loader', $loader);
 Server::$container->setSingle('config', Config::class);
 Server::$container->setSingle('event', Event::class);
 
-Server::$container->setSingle('request', function() {
+Server::$container->setSingle('request', function () {
     return new Request(HTTPRequest::create());
 });
 
 Server::$container->setSingle('debug', function () {
-    $logger = (new Runnable(Server::$container->get('config')->get('app.logger-build', new Runnable(
+    $logger = (new Runnable(Server::$container->get('config')->get(
+        'app.logger-build',
         function () {
             $dataPath = SUDA_DATA.'/logs';
             FileSystem::makes($dataPath);
@@ -43,14 +44,14 @@ Server::$container->setSingle('debug', function () {
             }
             return new NullLogger;
         }
-    ))))->run();
+    )))->run();
 
     $debugger = new Debugger;
     
-    // $debugger->addAttribute('remote-ip', $this->getRequest()->ip());
-    // $debugger->addAttribute('debug', $this->isDebug());
-    // $debugger->addAttribute('request-uri', $this->getRequest()->getUrl());
-    // $debugger->addAttribute('request-method', $this->getRequest()->getMethod());
+    $debugger->addAttribute('remote-ip', Server::$container->get('request')->getRemoteAddr());
+    $debugger->addAttribute('debug', Server::$container->get('config')->get('debug', false));
+    $debugger->addAttribute('request-uri', Server::$container->get('request')->getUrl());
+    $debugger->addAttribute('request-method', Server::$container->get('request')->getMethod());
     
     $debugger->addAttribute('request-time', date('Y-m-d H:i:s', \constant('SUDA_START_TIME')));
 
@@ -64,4 +65,4 @@ Server::$container->setSingle('debug', function () {
     return $debugger;
 });
 
-Server::$container->get('debug')->notice('system start running');
+Server::$container->get('debug')->notice('system booted...');
