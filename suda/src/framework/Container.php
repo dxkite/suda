@@ -30,15 +30,17 @@ class Container
      * 设置单例
      *
      * @param string $name
-     * @param string|Closure|\suda\framework\runnable\Runnable $class
+     * @param string|Closure|\suda\framework\runnable\Runnable|object $class
      * @return self
      */
     public function setSingle(string $name, $class)
     {
         if (\is_string($class)) {
             return $this->set($name, new $class);
-        } else {
+        } elseif ($class instanceof Runnable || $class instanceof Closure) {
             return $this->set($name, $class());
+        } else {
+            return $this->set($name, $class);
         }
     }
 

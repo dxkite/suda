@@ -12,8 +12,8 @@ use suda\framework\debug\log\logger\NullLogger;
 
 require_once __DIR__ .'/loader.php';
 
-
 Server::$container = new Container;
+Server::$container->setSingle('loader', $loader);
 Server::$container->setSingle('config', Config::class);
 Server::$container->setSingle('event', Event::class);
 Server::$container->setSingle('debug', function () {
