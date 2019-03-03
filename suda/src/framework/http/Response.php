@@ -46,7 +46,15 @@ class Response
      */
     protected $cookie;
 
-    public function __construct() {
+    /**
+     * 是否发送
+     *
+     * @var boolean
+     */
+    protected $sended = false;
+
+    public function __construct()
+    {
         $this->cookie = [];
         $this->header = new HeaderContainer;
     }
@@ -73,6 +81,16 @@ class Response
     {
         $this->version = $version;
         return $this;
+    }
+
+    /**
+     * 判断是否发送
+     *
+     * @return boolean
+     */
+    public function isSended(): bool
+    {
+        return $this->sended;
     }
 
     /**
@@ -152,6 +170,7 @@ class Response
      */
     protected function end()
     {
+        $this->sended = true;
         $this->sendHeaders();
         $this->sendCookies();
         $this->sendData();

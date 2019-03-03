@@ -140,6 +140,9 @@ class MatchResult
         foreach ($this->parameter as $key => $value) {
             $request->setQuery($key, $value);
         }
-        return $this->runnable->run($request, $response);
+        $result = $this->runnable->run($request, $response);
+        if (!$response->isSended()) {
+            $response->sendContent($result);
+        }
     }
 }

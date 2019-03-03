@@ -11,8 +11,12 @@ require_once SUDA_SYSTEM.'/src/loader/web-run.php';
 
 $route = Server::$container->get('route');
 
-$route->get('index', '/', function ($request, $response) {
-    $response->sendContent('hello world');
+$route->get('index', '/', function ($request, $response) use ($route) {
+    return 'hello, index';
+});
+
+$route->get('hello', '/helloworld', function ($request, $response) use ($route) {
+    return 'hello world <strong>' . $route->create('hello', ['name' => 'dxkite']).'</strong>';
 });
 
 $match = $route->match(Server::$container->get('request'));

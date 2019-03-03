@@ -76,4 +76,4 @@ Server::$container->setSingle('debug', function () {
     return $debugger;
 });
 
-Server::$container->get('debug')->notice('system booted...');
+Server::$container->get('debug')->notice('system booting');

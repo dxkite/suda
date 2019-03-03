@@ -6,6 +6,7 @@ use suda\framework\Request;
 use suda\framework\route\MatchResult;
 use suda\framework\runnable\Runnable;
 use suda\framework\route\RouteMatcher;
+use suda\framework\route\uri\UriMatcher;
 use suda\framework\route\RouteCollection;
 
 class Route
@@ -24,7 +25,8 @@ class Route
      */
     protected $runnable;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->routes = new RouteCollection;
         $this->runnable = [];
     }
@@ -171,6 +173,22 @@ class Route
             if (($parameter = $matcher->match($request)) !== null) {
                 return new MatchResult($name, $matcher, $this->runnable[$name], $parameter);
             }
+        }
+        return null;
+    }
+
+    /**
+     * 创建URL
+     *
+     * @param string $name
+     * @param array $parameter
+     * @param boolean $allowQuery
+     * @return string|null
+     */
+    public function create(string $name, array $parameter, bool $allowQuery = true):?string
+    {
+        if ($matcher = $this->routes->get($name)) {
+            return UriMatcher::buildUri($matcher->getMatcher(), $parameter, $allowQuery);
         }
         return null;
     }
