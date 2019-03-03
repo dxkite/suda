@@ -36,7 +36,7 @@ class Route
      *
      * @param string $name
      * @param string $url
-     * @param Runnable|Closure|array|string $runnable
+     * @param \suda\framework\runnable\Runnable|\Closure|array|string $runnable
      * @param array $attributes
      * @return void
      */
@@ -50,7 +50,7 @@ class Route
      *
      * @param string $name
      * @param string $url
-     * @param Runnable|Closure|array|string $runnable
+     * @param \suda\framework\runnable\Runnable|\Closure|array|string $runnable
      * @param array $attributes
      * @return void
      */
@@ -64,7 +64,7 @@ class Route
      *
      * @param string $name
      * @param string $url
-     * @param Runnable|Closure|array|string $runnable
+     * @param \suda\framework\runnable\Runnable|\Closure|array|string $runnable
      * @param array $attributes
      * @return void
      */
@@ -78,7 +78,7 @@ class Route
      *
      * @param string $name
      * @param string $url
-     * @param Runnable|Closure|array|string $runnable
+     * @param \suda\framework\runnable\Runnable|\Closure|array|string $runnable
      * @param array $attributes
      * @return void
      */
@@ -93,7 +93,7 @@ class Route
      *
      * @param string $name
      * @param string $url
-     * @param Runnable|Closure|array|string $runnable
+     * @param \suda\framework\runnable\Runnable|\Closure|array|string $runnable
      * @param array $attributes
      * @return void
      */
@@ -107,7 +107,7 @@ class Route
      *
      * @param string $name
      * @param string $url
-     * @param Runnable|Closure|array|string $runnable
+     * @param \suda\framework\runnable\Runnable|\Closure|array|string $runnable
      * @param array $attributes
      * @return void
      */
@@ -121,7 +121,7 @@ class Route
      *
      * @param string $name
      * @param string $url
-     * @param Runnable|Closure|array|string $runnable
+     * @param \suda\framework\runnable\Runnable|\Closure|array|string $runnable
      * @param array $attributes
      * @return void
      */
@@ -135,7 +135,7 @@ class Route
      *
      * @param string $name
      * @param string $url
-     * @param Runnable|Closure|array|string $runnable
+     * @param \suda\framework\runnable\Runnable|\Closure|array|string $runnable
      * @param array $attributes
      * @return void
      */
@@ -150,7 +150,7 @@ class Route
      * @param array $method
      * @param string $name
      * @param string $url
-     * @param Runnable|Closure|array|string $runnable
+     * @param \suda\framework\runnable\Runnable|\Closure|array|string $runnable
      * @param array $attributes
      * @return void
      */

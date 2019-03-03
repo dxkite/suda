@@ -2,6 +2,7 @@
 namespace suda\framework;
 
 use suda\framework\Server;
+use suda\framework\http\Cookie;
 use suda\framework\http\Header;
 use suda\framework\response\MimeType;
 use suda\framework\response\ContentWrapper;
