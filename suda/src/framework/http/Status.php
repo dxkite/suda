@@ -1,5 +1,5 @@
 <?php
-namespace suda\framework\server\response;
+namespace suda\framework\http;
 
 /**
  * 响应状态

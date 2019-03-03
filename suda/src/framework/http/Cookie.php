@@ -1,5 +1,5 @@
 <?php
-namespace suda\framework\server;
+namespace suda\framework\http;
 
 class Cookie implements \JsonSerializable
 {
