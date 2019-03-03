@@ -3,7 +3,7 @@ namespace suda\framework\config;
 
 use suda\framework\exception\JsonException;
 use suda\framework\exception\YamlException;
-use suda\component\arrayobject\ArrayDotAccess;
+use suda\framework\arrayobject\ArrayDotAccess;
 
 /**
  * 配置文件加载器

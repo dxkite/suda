@@ -113,9 +113,9 @@ class Request
     protected function buildEnv()
     {
         foreach ($_SERVER as $key => $value) {
-            $name = \strtolower(\str_replace('_', '-', $name));
+            $name = \strtolower(\str_replace('_', '-', $key));
             if (strpos($key, 'http-') === 0) {
-                $name = substr($key, strlen('http-'));
+                $name = substr($name, strlen('http-'));
                 $this->header[$name] = $value;
             } else {
                 $this->server[$name] = $value;

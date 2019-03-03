@@ -155,7 +155,7 @@ class Response
     /**
      * 发送头部信息
      *
-     * @return void
+     * @return self
      */
     protected function sendHeaders()
     {

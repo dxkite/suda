@@ -2,9 +2,10 @@
 namespace suda\framework\server\request;
 
 use suda\framework\server\Request;
+use suda\framework\http\UploadedFile;
 use suda\framework\server\request\UriParser;
 use suda\framework\server\request\IndexFinder;
-use suda\framework\server\request\UploadedFile;
+
 
 /**
  * HTTP 入口解析查找

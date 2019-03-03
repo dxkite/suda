@@ -9,7 +9,7 @@ class Container
     /**
      * 对象容器
      *
-     * @var object
+     * @var object[]
      */
     protected $instance;
 

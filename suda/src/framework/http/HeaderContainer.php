@@ -24,6 +24,7 @@ class HeaderContainer
      */
     public function add(Header $header, bool $replace = false)
     {
+        $name = $header->getName();
         if ($replace) {
             $this->header[$name] = [];
         }
@@ -76,7 +77,7 @@ class HeaderContainer
      *
      * @return array
      */
-    public function all():string
+    public function all():array
     {
         return $this->header;
     }
