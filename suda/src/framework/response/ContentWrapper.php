@@ -50,7 +50,7 @@ class ContentWrapper
             if ($typeRef->isInterface()) {
                 return $class->implementsInterface($type);
             } else {
-                return $class->isSubclassOf($type) || $class->isInstance($data);
+                return $class->isSubclassOf($type) || $typeRef->isInstance($class);
             }
         } else {
             return \gettype($data) === $type;

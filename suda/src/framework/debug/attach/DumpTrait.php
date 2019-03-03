@@ -31,7 +31,7 @@ trait DumpTrait
         foreach ($methods as $method) {
             if (strpos($method, 'get') === 0) {
                 $methodRef = new \ReflectionMethod($object, $method);
-                $ignore = \preg_match('/@ignore(-d|D)ump/i', $methodRef->getDocComment()??'') > 0;
+                $ignore = \preg_match('/@ignore-dump/i', $methodRef->getDocComment()??'') > 0;
                 if (count($methodRef->getParameters()) === 0 && !$ignore) {
                     $parameterString.=static::valueToString($method.'()', $object->$method(), $deep);
                 }

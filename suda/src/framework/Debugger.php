@@ -15,7 +15,13 @@ use suda\framework\debug\log\logger\NullLogger;
  */
 class Debugger extends Debug
 {
-
+    /**
+     * 环境内容
+     *
+     * @var Context
+     */
+    protected $context;
+    
     /**
      * 注册错误处理函数
      */
@@ -45,6 +51,7 @@ class Debugger extends Debug
             'start-memory' => \constant('SUDA_START_MEMORY'),
         ]);
         $debugger->setLogger(static::createLogger($context));
+        $debugger->context = $context;
         $debugger->logger->notice(PHP_EOL.'{request-time} {remote-ip} {request-method} {request-uri} debug={debug}', $debugger->getAttribute());
         return $debugger;
     }
@@ -113,6 +120,7 @@ class Debugger extends Debug
     public function uncaughtException($exception)
     {
         $this->error($exception->getMessage(),['exception' => $exception]);
+        $this->context->get('response')->sendContent($exception);
     }
 
     /**
