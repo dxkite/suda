@@ -46,6 +46,11 @@ class Response
      */
     protected $cookie;
 
+    public function __construct() {
+        $this->cookie = [];
+        $this->header = new HeaderContainer;
+    }
+
     /**
      * 设置状态码
      *

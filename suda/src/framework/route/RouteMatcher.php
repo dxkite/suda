@@ -1,7 +1,7 @@
 <?php
 namespace suda\framework\route;
 
-use suda\framework\server\Request;
+use suda\framework\Request;
 use suda\framework\route\uri\UriMatcher;
 
 /**

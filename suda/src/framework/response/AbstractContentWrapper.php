@@ -1,8 +1,9 @@
 <?php
-namespace suda\framework\server\response;
+namespace suda\framework\response;
 
-use suda\framework\server\Request;
-use suda\framework\server\Response;
+use suda\framework\Request;
+use suda\framework\Response;
+use suda\framework\http\Stream;
 
 /**
  * 响应接口
@@ -30,5 +31,12 @@ abstract class AbstractContentWrapper
         $this->type = $type;
     }
 
-    abstract public function getContent(Request $request, Response $response): string;
+    /**
+     * 获取内容
+     *
+     * @param Request $request
+     * @param Response $response
+     * @return Stream|string
+     */
+    abstract public function getContent(Request $request, Response $response);
 }

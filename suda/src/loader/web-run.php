@@ -5,13 +5,14 @@ use suda\framework\Config;
 use suda\framework\Server;
 use suda\framework\Request;
 use suda\framework\Debugger;
+use suda\framework\Response;
 use suda\framework\Container;
 use suda\framework\runnable\Runnable;
 use suda\framework\filesystem\FileSystem;
 use suda\framework\debug\log\LoggerInterface;
 use suda\framework\debug\log\logger\FileLogger;
 use suda\framework\debug\log\logger\NullLogger;
-use suda\framework\http\{Request as HTTPRequest};
+use suda\framework\http\Request as HTTPRequest;
 
 require_once __DIR__ .'/loader.php';
 
@@ -22,6 +23,10 @@ Server::$container->setSingle('event', Event::class);
 
 Server::$container->setSingle('request', function () {
     return new Request(HTTPRequest::create());
+});
+
+Server::$container->setSingle('response', function () {
+    return new Response;
 });
 
 Server::$container->setSingle('debug', function () {

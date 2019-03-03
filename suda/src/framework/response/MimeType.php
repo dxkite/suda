@@ -1,5 +1,5 @@
 <?php
-namespace suda\framework\server\response;
+namespace suda\framework\response;
 
 /**
  * 响应MIME

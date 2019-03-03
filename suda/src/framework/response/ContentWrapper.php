@@ -1,15 +1,15 @@
 <?php
-namespace suda\framework\server;
+namespace suda\framework\response;
 
 use SplFileInfo;
 use ReflectionClass;
 use JsonSerializable;
-use suda\framework\server\Response;
-use suda\framework\server\response\AbstractContentWrapper;
-use suda\framework\server\response\wrapper\FileContentWrapper;
-use suda\framework\server\response\wrapper\HtmlContentWrapper;
-use suda\framework\server\response\wrapper\JsonContentWrapper;
-use suda\framework\server\response\wrapper\NullContentWrapper;
+use suda\framework\Response;
+use suda\framework\response\AbstractContentWrapper;
+use suda\framework\response\wrapper\FileContentWrapper;
+use suda\framework\response\wrapper\HtmlContentWrapper;
+use suda\framework\response\wrapper\JsonContentWrapper;
+use suda\framework\response\wrapper\NullContentWrapper;
 
 /**
  * 内容包装

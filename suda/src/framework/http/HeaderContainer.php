@@ -13,7 +13,7 @@ class HeaderContainer
      *
      * @var array
      */
-    protected $header;
+    protected $header = [];
 
     /**
      * 添加请求头
