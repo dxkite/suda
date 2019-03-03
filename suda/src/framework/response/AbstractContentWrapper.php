@@ -34,9 +34,8 @@ abstract class AbstractContentWrapper
     /**
      * 获取内容
      *
-     * @param Request $request
      * @param Response $response
      * @return \suda\framework\http\Stream|string
      */
-    abstract public function getContent(Request $request, Response $response);
+    abstract public function getContent(Response $response);
 }

@@ -9,20 +9,3 @@ define('SUDA_SYSTEM', __DIR__.'/../suda');
 require_once SUDA_SYSTEM.'/src/loader/web-run.php';
 
 
-$route = Server::$container->get('route');
-
-$route->get('index', '/', function ($request, $response) use ($route) {
-    return 'hello, index';
-});
-
-$route->get('hello', '/helloworld', function ($request, $response) use ($route) {
-    return 'hello world <strong>' . $route->create('hello', ['name' => 'dxkite']).'</strong>';
-});
-
-$match = $route->match(Server::$container->get('request'));
-
-if ($match) {
-    $match->run(Server::$container->get('request'), Server::$container->get('response'));
-} else {
-    echo '404';
-}

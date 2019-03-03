@@ -4,10 +4,12 @@ use suda\framework\Event;
 use suda\framework\Route;
 use suda\framework\Config;
 use suda\framework\Server;
+use suda\framework\Context;
 use suda\framework\Request;
 use suda\framework\Debugger;
 use suda\framework\Response;
 use suda\framework\Container;
+use suda\framework\Application;
 use suda\framework\runnable\Runnable;
 use suda\framework\filesystem\FileSystem;
 use suda\framework\debug\log\LoggerInterface;
@@ -17,22 +19,23 @@ use suda\framework\http\Request as HTTPRequest;
 
 require_once __DIR__ .'/loader.php';
 
-Server::$container = new Container;
-Server::$container->setSingle('loader', $loader);
-Server::$container->setSingle('config', Config::class);
-Server::$container->setSingle('event', Event::class);
-Server::$container->setSingle('route', Route::class);
+$context = new Context;
 
-Server::$container->setSingle('request', function () {
+$context->setSingle('loader', $loader);
+$context->setSingle('config', Config::class);
+$context->setSingle('event', Event::class);
+$context->setSingle('route', Route::class);
+
+$context->setSingle('request', function () {
     return new Request(HTTPRequest::create());
 });
 
-Server::$container->setSingle('response', function () {
+$context->setSingle('response', function () {
     return new Response;
 });
 
-Server::$container->setSingle('debug', function () {
-    $logger = (new Runnable(Server::$container->get('config')->get(
+$context->setSingle('debug', function () use ($context) {
+    $logger = (new Runnable($context->get('config')->get(
         'app.logger-build',
         function () {
             $dataPath = SUDA_DATA.'/logs';
@@ -56,10 +59,10 @@ Server::$container->setSingle('debug', function () {
 
     $debugger = new Debugger;
     
-    $debugger->addAttribute('remote-ip', Server::$container->get('request')->getRemoteAddr());
-    $debugger->addAttribute('debug', Server::$container->get('config')->get('debug', false));
-    $debugger->addAttribute('request-uri', Server::$container->get('request')->getUrl());
-    $debugger->addAttribute('request-method', Server::$container->get('request')->getMethod());
+    $debugger->addAttribute('remote-ip', $context->get('request')->getRemoteAddr());
+    $debugger->addAttribute('debug', $context->get('config')->get('debug', false));
+    $debugger->addAttribute('request-uri', $context->get('request')->getUrl());
+    $debugger->addAttribute('request-method', $context->get('request')->getMethod());
     
     $debugger->addAttribute('request-time', date('Y-m-d H:i:s', \constant('SUDA_START_TIME')));
 
@@ -76,4 +79,25 @@ Server::$container->setSingle('debug', function () {
     return $debugger;
 });
 
-Server::$container->get('debug')->notice('system booting');
+$context->get('debug')->notice('system booting');
+
+
+$app = new Application($context);
+
+$route = $context->get('route');
+
+$route->get('index', '/', function ($request, $response) use ($route) {
+    return 'hello, index';
+});
+
+$route->get('hello', '/helloworld', function ($request, $response) use ($route) {
+    return 'hello world <strong>' . $route->create('hello', ['name' => 'dxkite']).'</strong>';
+});
+
+$match = $route->match($context->get('request'));
+
+if ($match) {
+    $match->run($context->get('request'), $context->get('response'));
+} else {
+    echo '404';
+}

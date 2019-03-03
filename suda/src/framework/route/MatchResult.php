@@ -129,7 +129,7 @@ class MatchResult
     }
 
     /**
-     * 运行程序
+     * 运行结果
      *
      * @param Request $request
      * @param Response $response

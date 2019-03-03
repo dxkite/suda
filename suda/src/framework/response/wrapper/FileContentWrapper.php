@@ -14,11 +14,10 @@ class FileContentWrapper extends AbstractContentWrapper
     /**
      * 获取内容
      *
-     * @param Request $request
      * @param Response $response
      * @return \suda\framework\http\Stream|string
      */
-    public function getContent(Request $request, Response $response)
+    public function getContent(Response $response)
     {
         $content = $this->content;
         if ($content->isFile()) {

@@ -4,7 +4,10 @@ namespace suda\framework;
 use Closure;
 use suda\framework\runnable\Runnable;
 
-class Container
+/**
+ * 环境容器
+ */
+class Context
 {
     /**
      * 对象容器

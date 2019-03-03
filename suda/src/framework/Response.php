@@ -2,6 +2,7 @@
 namespace suda\framework;
 
 use suda\framework\Server;
+use suda\framework\Request;
 use suda\framework\http\Cookie;
 use suda\framework\http\Header;
 use suda\framework\response\MimeType;
@@ -44,7 +45,7 @@ class Response extends HTTPResponse
     public function setContent($content)
     {
         $wrapper = ContentWrapper::getWrapper($content);
-        $this->data = $wrapper->getContent(Server::$container->get('request'), $this);
+        $this->data = $wrapper->getContent($this);
         $this->setHeader('content-length', is_string($this->data) ? strlen($this->data) : $this->data->length());
         return $this;
     }
