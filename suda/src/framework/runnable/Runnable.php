@@ -18,13 +18,17 @@ class Runnable
     /**
      * 运行对象
      *
-     * @var FunctionTarget|MethodTarget|FileTarget|ClosureTarget
+     * @var FunctionTarget|MethodTarget|FileTarget|ClosureTarget|Runnable
      */
     protected $target;
 
     public function __construct($runnable, array $parameter = [])
     {
-        $this->target = TargetBuilder::build($runnable, $parameter);
+        if ($runnable instanceof self) {
+            $this->target = $runnable->target;
+        } else {
+            $this->target = TargetBuilder::build($runnable, $parameter);
+        }
     }
 
     /**
@@ -77,6 +81,17 @@ class Runnable
     public function apply(array $parameter)
     {
         return $this->target->apply($parameter);
+    }
+
+    /**
+     * 调用函数
+     *
+     * @param mixed ...$args
+     * @return mixed
+     */
+    public function __invoke(...$args)
+    {
+        return $this->apply($args);
     }
 
     public static function newClassInstance(string $class)

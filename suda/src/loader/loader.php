@@ -1,7 +1,8 @@
 <?php
 
 
-use suda\component\loader\Loader;
+use suda\framework\loader\Path;
+use suda\framework\loader\Loader;
 
 defined('SUDA_SYSTEM') or define('SUDA_SYSTEM', dirname(__DIR__));
 defined('SUDA_RESOURCE') or define('SUDA_RESOURCE', dirname(__DIR__).'/resource');
@@ -30,3 +31,5 @@ require_once SUDA_SYSTEM .'/src/framework/loader/Loader.php';
 $loader = new Loader;
 $loader->register();
 $loader->addIncludePath(SUDA_SYSTEM .'/src', 'suda');
+
+defined('SUDA_DATA') or define('SUDA_DATA', Path::toAbsolutePath('~/data'));

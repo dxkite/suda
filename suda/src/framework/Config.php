@@ -1,9 +1,9 @@
 <?php
-namespace suda\framework\server;
+namespace suda\framework;
 
-use suda\framework\server\config\PathResolver;
-use suda\framework\server\config\ContentLoader;
-use suda\component\arrayobject\ArrayDotAccess;
+use suda\framework\config\PathResolver;
+use suda\framework\config\ContentLoader;
+use suda\framework\arrayobject\ArrayDotAccess;
 
 /**
  * 服务器参数处理
