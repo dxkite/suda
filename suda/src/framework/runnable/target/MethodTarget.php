@@ -1,8 +1,8 @@
 <?php
-namespace suda\component\runnable\target;
+namespace suda\framework\runnable\target;
 
 use ReflectionClass;
-use suda\component\runnable\target\FileTarget;
+use suda\framework\runnable\target\FileTarget;
 
 /**
  * 可执行命令：类方法

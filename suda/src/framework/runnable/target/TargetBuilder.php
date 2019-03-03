@@ -1,15 +1,15 @@
 <?php
-namespace suda\component\runnable\target;
+namespace suda\framework\runnable\target;
 
 use Closure;
 use ReflectionClass;
-use suda\component\runnable\target\FileTarget;
-use suda\component\runnable\target\MethodTarget;
-use suda\component\runnable\target\ClosureTarget;
-use suda\component\runnable\target\FunctionTarget;
-use suda\component\runnable\target\RunnableTarget;
-use suda\component\runnable\exception\InvalidNameException;
-use suda\component\route\exception\InvalidArgumentException;
+use suda\framework\runnable\target\FileTarget;
+use suda\framework\runnable\target\MethodTarget;
+use suda\framework\runnable\target\ClosureTarget;
+use suda\framework\runnable\target\FunctionTarget;
+use suda\framework\runnable\target\RunnableTarget;
+use suda\framework\runnable\exception\InvalidNameException;
+use suda\framework\route\exception\InvalidArgumentException;
 
 /**
  * 目标构造器

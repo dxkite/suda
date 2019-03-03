@@ -1,7 +1,7 @@
 <?php
-namespace suda\component\runnable\target;
+namespace suda\framework\runnable\target;
 
-use suda\component\runnable\target\RunnableTarget;
+use suda\framework\runnable\target\RunnableTarget;
 
 /**
  * 可执行命令：文件类型

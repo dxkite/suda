@@ -1,5 +1,5 @@
 <?php
-namespace suda\component\runnable\exception;
+namespace suda\framework\runnable\exception;
 
 /**
  * 连接异常

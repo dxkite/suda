@@ -1,12 +1,12 @@
 <?php
-namespace suda\component\runnable;
+namespace suda\framework\runnable;
 
-use suda\component\runnable\target\FileTarget;
-use suda\component\runnable\target\MethodTarget;
-use suda\component\runnable\target\ClosureTarget;
-use suda\component\runnable\target\TargetBuilder;
-use suda\component\runnable\target\FunctionTarget;
-use suda\component\runnable\target\RunnableTarget;
+use suda\framework\runnable\target\FileTarget;
+use suda\framework\runnable\target\MethodTarget;
+use suda\framework\runnable\target\ClosureTarget;
+use suda\framework\runnable\target\TargetBuilder;
+use suda\framework\runnable\target\FunctionTarget;
+use suda\framework\runnable\target\RunnableTarget;
 
 /**
  * 可执行命令表达式

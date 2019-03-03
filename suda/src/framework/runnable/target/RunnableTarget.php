@@ -1,5 +1,5 @@
 <?php
-namespace suda\component\runnable\target;
+namespace suda\framework\runnable\target;
 
 /**
  * 可执行命令表目标
