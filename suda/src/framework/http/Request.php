@@ -2,7 +2,8 @@
 namespace suda\framework\http;
 
 use suda\framework\http\Stream;
-use suda\framework\server\request\UploadedFile;
+use suda\framework\http\UploadedFile;
+
 
 class Request
 {
@@ -55,6 +56,11 @@ class Request
      */
     public $input;
 
+    /**
+     * 获取原始输入
+     *
+     * @return string
+     */
     public function input():string
     {
         return $this->input;
@@ -82,7 +88,7 @@ class Request
     protected function buildFilesFromEnv()
     {
         foreach ($_FILES as $name => $file) {
-            $request->files[$name] = new UploadedFile($file['tmp_name'], $file['name'], $file['type'], $file['error']);
+            $this->files[$name] = new UploadedFile($file['tmp_name'], $file['name'], $file['type'], $file['error']);
         }
     }
 
@@ -93,10 +99,10 @@ class Request
      */
     protected function buildData()
     {
-        $request->cookies = $_COOKIES;
-        $request->get = $_GET;
-        $request->post = $_POST;
-        $request->input = new Stream('php://input');
+        $this->cookies = $_COOKIE;
+        $this->get = $_GET;
+        $this->post = $_POST;
+        $this->input = new Stream('php://input');
     }
 
     /**
@@ -110,9 +116,9 @@ class Request
             $name = \strtolower(\str_replace('_', '-', $name));
             if (strpos($key, 'http-') === 0) {
                 $name = substr($key, strlen('http-'));
-                $request->header[$name] = $value;
+                $this->header[$name] = $value;
             } else {
-                $request->server[$name] = $value;
+                $this->server[$name] = $value;
             }
         }
     }

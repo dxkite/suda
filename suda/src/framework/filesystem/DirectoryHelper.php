@@ -2,8 +2,8 @@
 namespace suda\framework\filesystem;
 
 use RecursiveIteratorIterator;
-use suda\component\loader\Path;
-use suda\component\loader\PathTrait;
+use suda\framework\loader\Path;
+use suda\framework\loader\PathTrait;
 use suda\framework\filesystem\FileHelper;
 
 /**

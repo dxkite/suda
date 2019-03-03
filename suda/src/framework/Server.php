@@ -19,6 +19,6 @@ class Server
     }
 
     public function on(string $event, Runnable $callback) {
-        
+        Server::$container->get('event')->listen($event, $callback);
     }
 }

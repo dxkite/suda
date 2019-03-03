@@ -67,6 +67,6 @@ class Header
             $names = \explode('-', $name);
             $name = \implode('-', \array_map('ucfirst', $names));
         }
-        return \sprintf('%s: %s', $this->name, $this->value);
+        return \sprintf('%s: %s', $name, $this->value);
     }
 }

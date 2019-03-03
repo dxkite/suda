@@ -2,7 +2,7 @@
 namespace suda\framework;
 
 
-use suda\framework\server\Config;
+use suda\framework\Config;
 
 class Event
 {
@@ -183,7 +183,7 @@ class Event
      *
      * @param mixed $command
      * @param array $args
-     * @return void
+     * @return mixed
      */
     protected  function call($command, array &$args)
     {
