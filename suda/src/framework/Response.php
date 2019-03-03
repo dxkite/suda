@@ -1,7 +1,6 @@
 <?php
 namespace suda\framework;
 
-use suda\framework\Server;
 use suda\framework\Request;
 use suda\framework\http\Cookie;
 use suda\framework\http\Header;

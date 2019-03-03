@@ -254,6 +254,19 @@ class RequestWrapper
 
         return $this;
     }
+    
+    /**
+     * 设置查询参数
+     *
+     * @param array $query
+     * @return void
+     */
+    public function setQueries(array $query)
+    {
+        $this->query = $query;
+
+        return $this;
+    }
 
     /**
      * Get 请求索引

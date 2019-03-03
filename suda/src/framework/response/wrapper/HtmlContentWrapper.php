@@ -3,6 +3,7 @@ namespace suda\framework\response\wrapper;
 
 use suda\framework\Request;
 use suda\framework\Response;
+use suda\framework\http\Stream;
 use suda\framework\response\AbstractContentWrapper;
 
 /**

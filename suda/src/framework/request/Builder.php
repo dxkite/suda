@@ -39,7 +39,7 @@ class Builder
     public function build(Request $request)
     {
         $request->setRemoteAddr($this->filterRemoteAddr());
-        $request->setMethod(strtoupper($request->server['request-method'] ?? 'GET'));
+        $request->setMethod(strtoupper($this->request->server['request-method'] ?? 'GET'));
         $request->setHost($this->getHttpHost());
         $request->setSecure($this->getSecure());
         $request->setPort($this->getServerPort());
@@ -126,7 +126,7 @@ class Builder
         }
         $request->setIndex($index);
         $url = new UriParser($this->request->server['request-uri'] ?? '/', $index);
-        $this->query = $url->getQuery();
+        $request->setQueries($url->getQuery());
         $request->setUri($url->getUri());
         $this->request->get = $url->getQuery();
     }

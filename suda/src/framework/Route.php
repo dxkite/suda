@@ -1,9 +1,7 @@
 <?php
 namespace suda\framework;
 
-use suda\framework\Server;
 use suda\framework\Request;
-use suda\framework\route\MatchResult;
 use suda\framework\runnable\Runnable;
 use suda\framework\route\RouteMatcher;
 use suda\framework\route\uri\UriMatcher;
@@ -195,7 +193,7 @@ class Route
                 return $this->buildResponse($matcher, $request, $response, $name, $parameter);
             }
         }
-        $content =$this->default->run($request, $response);
+        $content = $this->default->run($request, $response);
         if ($content != null) {
             $response->setContent($content);
         }
