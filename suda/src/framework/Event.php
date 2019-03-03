@@ -3,6 +3,7 @@ namespace suda\framework;
 
 
 use suda\framework\Config;
+use suda\framework\runnable\Runnable;
 
 class Event
 {
@@ -187,6 +188,6 @@ class Event
      */
     protected  function call($command, array &$args)
     {
-        return (new Runnable($command))($args);
+        return (new Runnable($command))->apply($args);
     }
 }

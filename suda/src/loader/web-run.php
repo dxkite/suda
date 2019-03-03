@@ -1,20 +1,14 @@
 <?php
 
+
 use suda\framework\Event;
 use suda\framework\Route;
 use suda\framework\Config;
-use suda\framework\Server;
 use suda\framework\Context;
 use suda\framework\Request;
+use suda\framework\Service;
 use suda\framework\Debugger;
 use suda\framework\Response;
-use suda\framework\Container;
-use suda\framework\Application;
-use suda\framework\runnable\Runnable;
-use suda\framework\filesystem\FileSystem;
-use suda\framework\debug\log\LoggerInterface;
-use suda\framework\debug\log\logger\FileLogger;
-use suda\framework\debug\log\logger\NullLogger;
 use suda\framework\http\Request as HTTPRequest;
 
 require_once __DIR__ .'/loader.php';
@@ -38,26 +32,26 @@ $context->setSingle('debug', function () use ($context) {
     return Debugger::create($context);
 });
 
+
 $context->get('debug')->notice('system booting');
 
-$route = $context->get('route');
+$service = new Service($context);
 
-$route->get('index', '/', function ($request, $response) use ($route) {
-    return 'hello, index';
+$service->on('service:on:load-route', function ($route) {
+    $route->get('index', '/', function ($request, $response) use ($route) {
+        return 'hello, index';
+    });
+    
+    $route->get('hello', '/helloworld', function ($request, $response) use ($route) {
+        return 'hello world <strong>' . $route->create('hello', ['name' => 'dxkite']).'</strong>';
+    });
+    
+    $route->get('exception', '/exception', function ($request, $response) use ($route) {
+        throw new \Exception('some exception!');
+    });
 });
 
-$route->get('hello', '/helloworld', function ($request, $response) use ($route) {
-    return 'hello world <strong>' . $route->create('hello', ['name' => 'dxkite']).'</strong>';
-});
+$service->run();
 
-$route->get('exception', '/exception', function ($request, $response) use ($route) {
-    throw new \Exception('some exception!');
-});
-
-$match = $route->match($context->get('request'));
-
-if ($match) {
-    $match->run($context->get('request'), $context->get('response'));
-} else {
-    echo '404';
-}
+$context->get('debug')->notice('system shutdown');
+exit;

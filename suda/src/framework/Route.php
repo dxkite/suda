@@ -25,10 +25,18 @@ class Route
      */
     protected $runnable;
 
+    /**
+     * 设置默认
+     *
+     * @var Runnable
+     */
+    protected $default;
+
     public function __construct()
     {
         $this->routes = new RouteCollection;
         $this->runnable = [];
+        $this->default = $this->createDefaultRunnable();
     }
 
     /**
@@ -38,11 +46,11 @@ class Route
      * @param string $url
      * @param \suda\framework\runnable\Runnable|\Closure|array|string $runnable
      * @param array $attributes
-     * @return void
+     * @return self
      */
     public function get(string $name, string $url, $runnable, array $attributes = [])
     {
-        $this->request(['GET'], $name, $url, $runnable, $attributes);
+        return $this->request(['GET'], $name, $url, $runnable, $attributes);
     }
 
     /**
@@ -52,11 +60,11 @@ class Route
      * @param string $url
      * @param \suda\framework\runnable\Runnable|\Closure|array|string $runnable
      * @param array $attributes
-     * @return void
+     * @return self
      */
     public function post(string $name, string $url, $runnable, array $attributes = [])
     {
-        $this->request(['POST'], $name, $url, $runnable, $attributes);
+        return $this->request(['POST'], $name, $url, $runnable, $attributes);
     }
 
     /**
@@ -66,11 +74,11 @@ class Route
      * @param string $url
      * @param \suda\framework\runnable\Runnable|\Closure|array|string $runnable
      * @param array $attributes
-     * @return void
+     * @return self
      */
     public function delete(string $name, string $url, $runnable, array $attributes = [])
     {
-        $this->request(['DELETE'], $name, $url, $runnable, $attributes);
+        return $this->request(['DELETE'], $name, $url, $runnable, $attributes);
     }
 
     /**
@@ -80,11 +88,11 @@ class Route
      * @param string $url
      * @param \suda\framework\runnable\Runnable|\Closure|array|string $runnable
      * @param array $attributes
-     * @return void
+     * @return self
      */
     public function head(string $name, string $url, $runnable, array $attributes = [])
     {
-        $this->request(['HEAD'], $name, $url, $runnable, $attributes);
+        return $this->request(['HEAD'], $name, $url, $runnable, $attributes);
     }
 
 
@@ -95,11 +103,11 @@ class Route
      * @param string $url
      * @param \suda\framework\runnable\Runnable|\Closure|array|string $runnable
      * @param array $attributes
-     * @return void
+     * @return self
      */
     public function options(string $name, string $url, $runnable, array $attributes = [])
     {
-        $this->request(['OPTIONS'], $name, $url, $runnable, $attributes);
+        return $this->request(['OPTIONS'], $name, $url, $runnable, $attributes);
     }
 
     /**
@@ -109,11 +117,11 @@ class Route
      * @param string $url
      * @param \suda\framework\runnable\Runnable|\Closure|array|string $runnable
      * @param array $attributes
-     * @return void
+     * @return self
      */
     public function put(string $name, string $url, $runnable, array $attributes = [])
     {
-        $this->request(['PUT'], $name, $url, $runnable, $attributes);
+        return $this->request(['PUT'], $name, $url, $runnable, $attributes);
     }
 
     /**
@@ -123,11 +131,11 @@ class Route
      * @param string $url
      * @param \suda\framework\runnable\Runnable|\Closure|array|string $runnable
      * @param array $attributes
-     * @return void
+     * @return self
      */
     public function trace(string $name, string $url, $runnable, array $attributes = [])
     {
-        $this->request(['TRACE'], $name, $url, $runnable, $attributes);
+        return $this->request(['TRACE'], $name, $url, $runnable, $attributes);
     }
 
     /**
@@ -137,11 +145,11 @@ class Route
      * @param string $url
      * @param \suda\framework\runnable\Runnable|\Closure|array|string $runnable
      * @param array $attributes
-     * @return void
+     * @return self
      */
     public function any(string $name, string $url, $runnable, array $attributes = [])
     {
-        $this->request([], $name, $url, $runnable, $attributes);
+        return $this->request([], $name, $url, $runnable, $attributes);
     }
 
     /**
@@ -152,29 +160,83 @@ class Route
      * @param string $url
      * @param \suda\framework\runnable\Runnable|\Closure|array|string $runnable
      * @param array $attributes
-     * @return void
+     * @return self
      */
     public function request(array $method, string $name, string $url, $runnable, array $attributes = [])
     {
         $matcher = new RouteMatcher($method, $url, $attributes);
         $this->routes->add($name, $matcher);
         $this->runnable[$name] = new Runnable($runnable);
+        return $this;
+    }
+
+    /**
+     * 设置默认运行器
+     *
+     * @param \suda\framework\runnable\Runnable|\Closure|array|string $runnable
+     * @return self
+     */
+    public function default($runnable)
+    {
+        $this->default = new Runnable($runnable);
+        return $this;
     }
 
     /**
      * 匹配路由
      *
      * @param Request $request
-     * @return MatchResult|null
+     * @return Response
      */
-    public function match(Request $request):? MatchResult
+    public function match(Request $request, Response $response): Response
     {
         foreach ($this->routes as $name => $matcher) {
             if (($parameter = $matcher->match($request)) !== null) {
-                return new MatchResult($name, $matcher, $this->runnable[$name], $parameter);
+                return $this->buildResponse($matcher, $request, $response, $name, $parameter);
             }
         }
-        return null;
+        $content =$this->default->run($request, $response);
+        if ($content != null) {
+            $response->setContent($content);
+        }
+        return $response;
+    }
+
+    /**
+     * 构建响应
+     *
+     * @param RouteMatcher $matcher
+     * @param Request $request
+     * @param Response $response
+     * @param string $name
+     * @param array $parameter
+     * @return Response
+     */
+    protected function buildResponse(RouteMatcher $matcher, Request $request, Response $response, string $name, array  $parameter):Response
+    {
+        foreach ($parameter as $key => $value) {
+            $request->setQuery($key, $value);
+        }
+        $request->setAttributes($matcher->getAttribute());
+        $content = $this->runnable[$name]->run($request, $response);
+        if ($content != null) {
+            $response->setContent($content);
+        }
+        return $response;
+    }
+
+    /**
+     * 创建默认运行器
+     *
+     * @return Runnable
+     */
+    protected function createDefaultRunnable():Runnable
+    {
+        return new Runnable(function (Request $request, Response $response) {
+            $response->status(404);
+            $response->setType('html');
+            return 'Page Not Found: '.$request->getUrl();
+        });
     }
 
     /**
