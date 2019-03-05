@@ -62,4 +62,12 @@ class Fields
     {
         return $this->name;
     }
+
+    /**
+     * Get the value of fields
+     */ 
+    public function all()
+    {
+        return $this->fields;
+    }
 }
