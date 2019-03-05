@@ -3,11 +3,12 @@ namespace suda\orm;
 
 use PDO;
 use PDOStatement;
-use suda\orm\Statement;
+
 use suda\orm\DataSource;
 use suda\orm\Middleware;
 use suda\orm\TableStruct;
 use suda\archive\creator\Binder;
+use suda\orm\statement\Statement;
 
 class TableAccess
 {
@@ -55,20 +56,18 @@ class TableAccess
     public function run(Statement $statement)
     {
         $source = $statement->isRead() ? $this->source->read() : $this->source->write();
-        if ($statement->scroll()) {
-            $stmt = $this->getStatement()?:$this->createStmt($statement);
-        } else {
-            $stmt = $this->createStmt($statement);
-        }
-        $this->bindStmt($stmt, $statement);
         $source->switchTable($this->struct->getName());
-        if ($statement->isFetchOne()) {
-            return $this->fetchOneProccess($statement, $stmt->fetch(PDO::FETCH_ASSOC));
-        } elseif ($statement->isFetchAll()) {
-            return $this->fetchAllProccess($statement, $stmt->fetchAll(PDO::FETCH_ASSOC));
-        } else {
-            return $stmt->execute();
+
+        $result = $this->runStatement($statement);
+
+        if ($result === false && $statement->isFetch()) {
+            throw new SQLException('run '.$statement.' error, could not fetch');
         }
+        
+        if ($result && $statement->isFetch()) {
+            return $this->fetchResult($statement);
+        }
+        return $result;
     }
 
     /**
@@ -195,5 +194,39 @@ class TableAccess
             $data[$index] = $this->middleware->outputRow($row);
         }
         return $data;
+    }
+
+    /**
+     * 运行语句
+     *
+     * @param Statement $statement
+     * @return boolean
+     */
+    protected function runStatement(Statement $statement):bool
+    {
+        if ($statement->scroll() && $this->getStatement() !== null) {
+            $stmt = $this->getStatement();
+            return true;
+        } else {
+            $stmt = $this->createStmt($statement);
+            $this->bindStmt($stmt, $statement);
+            $statement->setStatement($stmt);
+            return $stmt->execute();
+        }
+    }
+
+    /**
+     * 取结果
+     *
+     * @param Statement $statement
+     * @return mixed
+     */
+    protected function fetchResult(Statement $statement)
+    {
+        if ($statement->isFetchOne()) {
+            return $this->fetchOneProccess($statement, $statement->getStatement()->fetch(PDO::FETCH_ASSOC));
+        } elseif ($statement->isFetchAll()) {
+            return $this->fetchAllProccess($statement, $statement->getStatement()->fetchAll(PDO::FETCH_ASSOC));
+        }
     }
 }

@@ -1,5 +1,5 @@
 <?php
-namespace suda\orm;
+namespace suda\orm\statement;
 
 use PDOStatement;
 use suda\archive\creator\Binder;
@@ -98,6 +98,16 @@ class Statement
             $this->fetch = self::FETCH_ONE;
         }
         return $this->fetch === self::FETCH_ONE;
+    }
+
+    /**
+     * 判断是否为一条
+     *
+     * @return boolean
+     */
+    public function isFetch():bool
+    {
+        return $this->fetch !== null;
     }
 
     /**
