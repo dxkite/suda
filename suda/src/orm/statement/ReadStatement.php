@@ -1,11 +1,10 @@
 <?php
 namespace suda\orm\statement;
 
-use PrepareTrait;
 use suda\orm\TableStruct;
-use suda\archive\creator\Binder;
 use suda\orm\statement\Statement;
 use suda\orm\exception\SQLException;
+use suda\orm\statement\PrepareTrait;
 
 class ReadStatement extends Statement
 {
@@ -58,6 +57,9 @@ class ReadStatement extends Statement
      */
     public function want($want)
     {
+        if (\func_num_args() > 1) {
+            $want = \func_get_args();
+        }
         $this->select = $this->prepareWants($want);
         return $this;
     }
@@ -75,7 +77,7 @@ class ReadStatement extends Statement
             list($where, $whereBinder) = $this->parepareWhere($where);
         }
         $this->where = ' WHERE '. $where;
-        $this->binders = array_merge($this->binders, $whereBinder);
+        $this->binder = array_merge($this->binder, $whereBinder);
         return $this;
     }
 
@@ -100,12 +102,13 @@ class ReadStatement extends Statement
      */
     public function having($what, array $whereBinder = [])
     {
-        if (\is_array($where)) {
-            list($this->having, $binder) = $this->parepareWhere($where);
-            $this->binders = array_merge($this->binders, $binder);
+        if (\is_array($what)) {
+            list($having, $binder) = $this->parepareWhere($what);
+            $this->having = 'HAVING '.$having;
+            $this->binder = array_merge($this->binder, $binder);
         } else {
             $this->having = 'HAVING '.$what;
-            $this->binders = array_merge($this->binders, $whereBinder);
+            $this->binder = array_merge($this->binder, $whereBinder);
         }
         return $this;
     }

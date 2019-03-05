@@ -3,6 +3,7 @@ namespace suda\orm\connection;
 
 use PDO;
 use PDOException;
+use suda\orm\struct\Fields;
 use suda\orm\connection\Connection;
 use suda\orm\exception\SQLException;
 use suda\orm\connection\creator\MySQLCreator;
@@ -40,7 +41,7 @@ class MySQLConnection extends Connection
         }
     }
 
-    public function createIfNotExists(Fields $fields)
+    public function createIfTableNotExists(Fields $fields)
     {
         $creator = new MySQLCreator($this, $fields);
         $creator->create();

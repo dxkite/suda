@@ -10,14 +10,14 @@ class DataSource
      *
      * @var Connection[]
      */
-    protected $write;
+    protected $write = [];
 
     /**
      * 写连接
      *
      * @var Connection[]
      */
-    protected $read;
+    protected $read = [];
 
     /**
      * 当前写数据库
@@ -104,7 +104,7 @@ class DataSource
      */
     protected function selectReadConnection()
     {
-        $postion = mt_rand(0, strlen($this->read));
+        $postion = mt_rand(0, count($this->read) -1);
         $this->slave = $this->read[$postion];
     }
 
@@ -116,7 +116,7 @@ class DataSource
     protected function selectWriteConnection()
     {
         if ($this->master === null) {
-            $postion = mt_rand(0, strlen($this->write));
+            $postion = mt_rand(0, count($this->write) -1);
             $this->master = $this->write[$postion];
         }
     }

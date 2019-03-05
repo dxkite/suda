@@ -2,7 +2,7 @@
 namespace suda\orm\statement;
 
 use PDOStatement;
-use suda\archive\creator\Binder;
+use suda\orm\Binder;
 
 class Statement
 {
@@ -141,7 +141,7 @@ class Statement
         if ($this->string === null) {
             $this->prepare();
         }
-        return $this->string;
+        return trim($this->string);
     }
 
     /**

@@ -1,11 +1,11 @@
 <?php
 namespace suda\orm\statement;
 
-use PrepareTrait;
+use suda\orm\Binder;
 use suda\orm\TableStruct;
-use suda\archive\creator\Binder;
 use suda\orm\statement\Statement;
 use suda\orm\exception\SQLException;
+use suda\orm\statement\PrepareTrait;
 
 class WriteStatement extends Statement
 {
@@ -70,7 +70,7 @@ class WriteStatement extends Statement
     {
         if (is_array($name)) {
             foreach ($name as $key => $value) {
-                $this->write($name, $value);
+                $this->write($key, $value);
             }
         } else {
             if ($this->struct->getFields()->hasField($name)) {
@@ -110,13 +110,13 @@ class WriteStatement extends Statement
             list($updateSet, $upbinder) = $this->prepareUpdateSet($this->data);
             list($where, $wherebinder) = $this->parepareWhere($this->where);
             $this->string = "UPDATE {$this->table} SET {$updateSet} WHERE {$where}";
-            $this->binders = array_merge($upbinder, $wherebinder);
+            $this->binder = array_merge($upbinder, $wherebinder);
         } elseif ($this->whereCondition !== null) {
             list($updateSet, $upbinder) = $this->prepareUpdateSet($this->data);
-            $this->binders = array_merge($this->binders, $wherebinder);
+            $this->binder = array_merge($this->binder, $upbinder);
             $this->string = "UPDATE {$this->table} SET {$updateSet} WHERE {$this->whereCondition}";
         } else {
-            $this->parepareInsert();
+            $this->parepareInsert($this->data);
         }
     }
 
@@ -149,7 +149,7 @@ class WriteStatement extends Statement
         $binds = [];
         foreach ($data as $name => $value) {
             $_name = Binder::index($name);
-            $this->binders[] = new Binder($_name, $value, $name);
+            $this->binder[] = new Binder($_name, $value, $name);
             $names[] = "`{$name}`";
             $binds[] = ":{$_name}";
         }

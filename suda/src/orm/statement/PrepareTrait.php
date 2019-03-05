@@ -1,4 +1,8 @@
 <?php
+namespace suda\orm\statement;
+
+use suda\orm\Binder;
+
 
 
 trait PrepareTrait {

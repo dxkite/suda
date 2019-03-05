@@ -3,6 +3,7 @@ namespace suda\orm\connection;
 
 use PDO;
 use PDOException;
+use suda\orm\struct\Fields;
 use suda\orm\connection\Connection;
 use suda\orm\exception\SQLException;
 
@@ -35,7 +36,7 @@ class SQLiteConnection extends Connection
         }
     }
 
-    public function createIfNotExists(Fields $fields)
+    public function createIfTableNotExists(Fields $fields)
     {
         // $this->getPdo()->query('USE ' . $table);
     }

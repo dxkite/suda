@@ -47,7 +47,7 @@ class TableStruct implements ArrayAccess, IteratorAggregate
 
     public function field(string $name, string $type, int $length = 0)
     {
-        return $this->field($name, $type, $length);
+        return $this->fields->newField($name, $type, $length);
     }
 
     public function createAll(array $data)

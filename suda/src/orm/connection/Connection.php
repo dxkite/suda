@@ -1,7 +1,6 @@
 <?php
 namespace suda\orm\connection;
 
-
 use PDO;
 use PDOException;
 use suda\orm\struct\Fields;
@@ -22,11 +21,11 @@ abstract class Connection
      */
     protected $config;
 
-    protected $queryCount=0;
-    protected $pdo=null;
+    protected $queryCount = 0;
+    protected $pdo = null;
     protected $transaction = 0;
     protected $id;
-    protected static $_id=0;
+    protected static $_id = 0;
     protected static $defaultConnection = null;
     
     /**
@@ -34,9 +33,12 @@ abstract class Connection
      *
      * @param array $config
      */
-    public function __construct(array $config) {
+    public function __construct(array $config)
+    {
         $this->config = $config;
-        \register_shutdown_function([$this, 'onBeforeSystemShutdown']);
+        \register_shutdown_function(function () {
+            $this->onBeforeSystemShutdown();
+        });
     }
 
     abstract public function getDsn();
@@ -52,11 +54,10 @@ abstract class Connection
     public function connect()
     {
         // 链接数据库
-        if (is_null($this->pdo) && ($this->config['enable'] ?? false )) {
+        if (null === $this->pdo && ($this->config['enable'] ?? false)) {
             try {
-               
                 $this->pdo = $this->createPDO();
-                $this->id =static::$_id;
+                $this->id = static::$_id;
                 static::$_id ++;
             } catch (PDOException $e) {
                 throw new SQLException($this->__toString().' connect database error:'.$e->getMessage(), $e->getCode(), E_ERROR, __FILE__, __LINE__, $e);
@@ -74,11 +75,11 @@ abstract class Connection
      * 获取最后一次插入的主键ID（用于自增值
      *
      * @param string $name
-     * @return null|int 
+     * @return null|int
      */
-    public function lastInsertId(string $name=null):?int
+    public function lastInsertId(string $name = null):?int
     {
-        if (is_null($name)) {
+        if (null === $name) {
             return $this->pdo->lastInsertId()?:null;
         } else {
             return $this->pdo->lastInsertId($name)?:null;
@@ -139,7 +140,7 @@ abstract class Connection
     public function rollBack()
     {
         if ($this->transaction == 1) {
-            $this->transaction=0;
+            $this->transaction = 0;
             $this->pdo->rollBack();
         } else {
             $this->transaction--;
@@ -153,7 +154,7 @@ abstract class Connection
      */
     protected function onBeforeSystemShutdown()
     {
-        if ($this->transaction > 0 || $this->pdo->inTransaction()) {
+        if ($this->pdo && ($this->transaction > 0 || $this->pdo->inTransaction())) {
             throw new SQLException('SQL transaction is open (' . $this->transaction.') in connection '.$this->__toString());
         }
     }

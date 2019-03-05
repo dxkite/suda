@@ -252,4 +252,34 @@ class TableAccess
             return $this->fetchAllProccess($statement, $statement->getStatement()->fetchAll(PDO::FETCH_ASSOC));
         }
     }
+
+    /**
+     * Get 数据源
+     *
+     * @return  DataSource
+     */ 
+    public function getSource()
+    {
+        return $this->source;
+    }
+
+    /**
+     * Get 表结构
+     *
+     * @return  TableStruct
+     */ 
+    public function getStruct()
+    {
+        return $this->struct;
+    }
+
+    /**
+     * Get 中间件
+     *
+     * @return  Middleware|null
+     */ 
+    public function getMiddleware():?Middleware
+    {
+        return $this->middleware;
+    }
 }
