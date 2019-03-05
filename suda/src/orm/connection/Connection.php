@@ -200,5 +200,6 @@ abstract class Connection
     }
 
     abstract public function createIfTableNotExists(Fields $fields);
-    abstract public function switchTable(string $string);
+    abstract public function switchTable(string $name);
+    abstract public function rawTableName(string $name);
 }

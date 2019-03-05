@@ -9,6 +9,7 @@ use suda\orm\Middleware;
 use suda\orm\TableStruct;
 use suda\archive\creator\Binder;
 use suda\orm\statement\Statement;
+use suda\orm\statement\WriteStatement;
 
 class TableAccess
 {
@@ -63,7 +64,7 @@ class TableAccess
         if ($result === false && $statement->isFetch()) {
             throw new SQLException('run '.$statement.' error, could not fetch');
         }
-        
+
         if ($result && $statement->isFetch()) {
             return $this->fetchResult($statement);
         }
@@ -80,6 +81,16 @@ class TableAccess
     {
         $this->middleware = $middleware;
         return $this;
+    }
+
+    /**
+     * 写
+     *
+     * @param mixed ...$args
+     * @return WriteStatement
+     */
+    public function write(...$args):WriteStatement {
+        return (new WriteStatement($this->source->write()->rawTableName($this->struct->getName()), $this->struct))->write(...$args);
     }
 
     /**

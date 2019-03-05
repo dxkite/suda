@@ -38,9 +38,9 @@ class Binder implements \JsonSerializable
         static::$index ++;
     }
 
-    public function index():int
+    public function index(string $name):string
     {
-        return static::$index;
+        return '_'.static::$index.$name;
     }
 
     public function getName():string

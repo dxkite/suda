@@ -38,14 +38,14 @@ class Statement
      *
      * @var Binder[]
      */
-    protected $binder;
+    protected $binder = [];
 
     /**
      * SQL语句
      *
-     * @var string
+     * @var string|null
      */
-    protected $string;
+    protected $string = null;
 
     /**
      * PDOStatement
@@ -143,9 +143,22 @@ class Statement
      */
     public function getString()
     {
-        return $this->scroll;
+        if ($this->string === null) {
+            $this->prepare();
+        }
+        return $this->string;
     }
 
+    /**
+     * 获取SQL字符串
+     *
+     * @return void
+     */
+    public function prepare()
+    {
+        // noop
+    }
+    
     /**
      * 获取绑定信息
      *
@@ -192,7 +205,7 @@ class Statement
                 $binders[] = $binder;
                 return $bind[$index]->getName();
             } else {
-                $name = ':_'. Binder::index();
+                $name = Binder::index($index);
                 $binder = new Binder($name, $bind[$index]);
                 $binders[] = $binder;
                 $index++;
@@ -204,7 +217,7 @@ class Statement
 
     public function __toString()
     {
-        return $this->string;
+        return $this->getString();
     }
     
 
@@ -212,7 +225,7 @@ class Statement
      * Get PDOStatement
      *
      * @return  PDOStatement
-     */ 
+     */
     public function getStatement():?PDOStatement
     {
         return $this->statement;
@@ -224,7 +237,7 @@ class Statement
      * @param  PDOStatement  $statement  PDOStatement
      *
      * @return  self
-     */ 
+     */
     public function setStatement(PDOStatement $statement)
     {
         $this->statement = $statement;

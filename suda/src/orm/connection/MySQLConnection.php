@@ -48,6 +48,12 @@ class MySQLConnection extends Connection
 
     public function switchTable(string $string)
     {
-        $this->getPdo()->query('USE `' . $table.'`');
+        $this->getPdo()->query('USE `' . $this->rawTableName($table).'`');
+    }
+
+    public function rawTableName(string $name)
+    {
+        $prefix = $this->config['prefix'] ?? '';
+        return $prefix.$name;
     }
 }
