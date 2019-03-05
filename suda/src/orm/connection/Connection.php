@@ -73,14 +73,14 @@ abstract class Connection
      * 获取最后一次插入的主键ID（用于自增值
      *
      * @param string $name
-     * @return false|int false则获取失败，整数则获取成功
+     * @return null|int 
      */
-    public function lastInsertId(string $name=null)
+    public function lastInsertId(string $name=null):?int
     {
         if (is_null($name)) {
-            return $this->pdo->lastInsertId();
+            return $this->pdo->lastInsertId()?:null;
         } else {
-            return $this->pdo->lastInsertId($name);
+            return $this->pdo->lastInsertId($name)?:null;
         }
     }
 
@@ -156,7 +156,7 @@ abstract class Connection
             throw new SQLException('SQL transaction is open (' . $this->transaction.') in connection '.$this->__toString());
         }
     }
-    
+
     /**
      * 转义字符
      *
