@@ -2,6 +2,25 @@
 
 
 trait PrepareTrait {
+    
+    /**
+     * 准备选择列
+     *
+     * @param string|array $wants
+     * @return string
+     */
+    public  function prepareWants($wants):string {
+        if (is_string($wants)) {
+            $fields=$wants;
+        } else {
+            $field=[];
+            foreach ($wants as $want) {
+                $field[]="`$want`";
+            }
+            $fields=implode(',', $field);
+        }
+        return $fields;
+    }
 
     protected  function parepareWhere(array $where)
     {
@@ -11,7 +30,7 @@ trait PrepareTrait {
             $_name = Binder::index($name);
             // in cause
             if (is_array($value)) {
-                list($sql, $in_binder) = static::prepareIn($name, $value);
+                list($sql, $in_binder) = $this->prepareIn($name, $value);
                 $and[] = $sql;
                 $binders = array_merge($binders, $in_binder);
             } else {

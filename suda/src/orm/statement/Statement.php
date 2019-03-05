@@ -54,22 +54,17 @@ class Statement
      */
     protected $statement = null;
 
-    public function __construct(string $sql, ...$args)
+    public function __construct(string $sql, array $parameter = [])
     {
         $this->string = $sql;
-        if (func_get_args() == 2 && is_array($args[0])) {
-            foreach ($args[0] as $key => $value) {
-                if ($value instanceof Binder) {
-                    $this->binder[] = $value;
-                } else {
-                    $this->binder[] = new Binder($key, $value);
-                }
+        foreach ($parameter as $key => $value) {
+            if ($value instanceof Binder) {
+                $this->binder[] = $value;
+            } else {
+                $this->binder[] = new Binder($key, $value);
             }
-        } else {
-            list($this->string, $this->binder) = $this->matchBinder($sql, $args);
         }
     }
-
     
     public function isRead(bool $set = null):bool
     {
@@ -158,7 +153,7 @@ class Statement
     {
         // noop
     }
-    
+
     /**
      * 获取绑定信息
      *
@@ -184,35 +179,6 @@ class Statement
                 $statement->binder = array_merge($statement->binder, $item->binder);
             }
         }
-    }
-
-    /**
-     * 问号匹配
-     *
-     * @param string $sql
-     * @param array $bind
-     * @return array
-     */
-    protected function matchBinder(string $sql, array $bind)
-    {
-        if (substr_count($sql, '?') !== count($bind)) {
-            throw new SQLException('bind number is not equals to ?');
-        }
-        $index = 0;
-        $binders = [];
-        $sql = \preg_replace('/?/', $sql, function ($match) use ($bind, &$index, &$binders) {
-            if ($bind[$index] instanceof Binder) {
-                $binders[] = $binder;
-                return $bind[$index]->getName();
-            } else {
-                $name = Binder::index($index);
-                $binder = new Binder($name, $bind[$index]);
-                $binders[] = $binder;
-                $index++;
-                return $name;
-            }
-        });
-        return [$sql, $binders];
     }
 
     public function __toString()

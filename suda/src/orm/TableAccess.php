@@ -9,6 +9,8 @@ use suda\orm\Middleware;
 use suda\orm\TableStruct;
 use suda\archive\creator\Binder;
 use suda\orm\statement\Statement;
+use suda\orm\exception\SQLException;
+use suda\orm\statement\ReadStatement;
 use suda\orm\statement\WriteStatement;
 
 class TableAccess
@@ -91,6 +93,16 @@ class TableAccess
      */
     public function write(...$args):WriteStatement {
         return (new WriteStatement($this->source->write()->rawTableName($this->struct->getName()), $this->struct))->write(...$args);
+    }
+
+    /**
+     * 读
+     *
+     * @param mixed ...$args
+     * @return ReadStatement
+     */
+    public function read(...$args):ReadStatement {
+        return (new ReadStatement($this->source->write()->rawTableName($this->struct->getName()), $this->struct))->want(...$args);
     }
 
     /**

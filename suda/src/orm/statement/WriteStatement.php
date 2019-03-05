@@ -54,6 +54,7 @@ class WriteStatement extends Statement
      */
     public function __construct(string $rawTableName, TableStruct $struct)
     {
+        $this->type = self::WRITE;
         $this->struct = $struct;
         $this->table = $rawTableName;
     }
@@ -88,7 +89,7 @@ class WriteStatement extends Statement
      * @param array $whereParameter
      * @return self
      */
-    public function where($where, $whereParameter = null)
+    public function where($where, array $whereParameter = [])
     {
         if (\is_string($where)) {
             $this->whereCondition($where, $whereParameter);
