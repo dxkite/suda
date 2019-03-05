@@ -4,6 +4,7 @@ namespace suda\orm\connection;
 
 use PDO;
 use PDOException;
+use suda\orm\struct\Fields;
 use suda\orm\exception\SQLException;
 
 /**
@@ -198,4 +199,6 @@ abstract class Connection
         return 'DB Connection ['.$this->type.'] {'.$this->getDsn().'}';
     }
 
+    abstract public function createIfTableNotExists(Fields $fields);
+    abstract public function switchTable(string $string);
 }

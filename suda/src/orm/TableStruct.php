@@ -93,4 +93,14 @@ class TableStruct implements ArrayAccess, IteratorAggregate
     {
         return new ArrayIterator($this->data);
     }
+
+    /**
+     * Get 数据表名
+     *
+     * @return  string
+     */ 
+    public function getName()
+    {
+        return $this->name;
+    }
 }

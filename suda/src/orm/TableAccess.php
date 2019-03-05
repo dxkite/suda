@@ -57,6 +57,7 @@ class TableAccess
         $source = $statement->isRead() ? $this->source->read() : $this->source->write();
         $stmt = $this->createStmt($statement);
         $this->bindStmt($stmt, $statement);
+        $source->switchTable($this->struct->getName());
         return $this->fetchProccess($statement, $stmt->execute());
     }
 

@@ -54,4 +54,12 @@ class Fields
     {
         return array_keys($this->fields);
     }
+
+    /**
+     * Get the value of name
+     */ 
+    public function getName()
+    {
+        return $this->name;
+    }
 }

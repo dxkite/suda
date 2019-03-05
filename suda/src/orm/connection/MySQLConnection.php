@@ -5,6 +5,7 @@ use PDO;
 use PDOException;
 use suda\orm\connection\Connection;
 use suda\orm\exception\SQLException;
+use suda\orm\connection\creator\MySQLCreator;
 
 /**
  * 数据表链接对象
@@ -37,5 +38,16 @@ class MySQLConnection extends Connection
         } catch (PDOException $e) {
             throw new SQLException($this->__toString().' connect database error:'.$e->getMessage(), $e->getCode(), E_ERROR, __FILE__, __LINE__, $e);
         }
+    }
+
+    public function createIfNotExists(Fields $fields)
+    {
+        $creator = new MySQLCreator($this, $fields);
+        $creator->create();
+    }
+
+    public function switchTable(string $string)
+    {
+        $this->getPdo()->query('USE `' . $table.'`');
     }
 }

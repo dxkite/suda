@@ -34,4 +34,14 @@ class SQLiteConnection extends Connection
             throw new SQLException($this->__toString().' connect database error:'.$e->getMessage(), $e->getCode(), E_ERROR, __FILE__, __LINE__, $e);
         }
     }
+
+    public function createIfNotExists(Fields $fields)
+    {
+        // $this->getPdo()->query('USE ' . $table);
+    }
+
+    public function switchTable(string $table)
+    {
+        $this->getPdo()->query('USE ' . $table);
+    }
 }
