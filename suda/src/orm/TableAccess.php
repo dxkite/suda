@@ -54,7 +54,7 @@ class TableAccess
      */
     public function run(Statement $statement)
     {
-        $source = $statement->getType() === Statement::READ ? $this->source->read() : $this->source->write();
+        $source = $statement->isRead() ? $this->source->read() : $this->source->write();
         $stmt = $this->createStmt($statement);
         $this->bindStmt($stmt, $statement);
         return $this->fetchProccess($statement, $stmt->execute());
@@ -131,7 +131,7 @@ class TableAccess
      */
     protected function createStmt(Statement $statement): PDOStatement
     {
-        if ($statement->scroll) {
+        if ($statement->scroll()) {
             return $source->getPdo()->prepare($statement->getString(), [PDO::ATTR_CURSOR => PDO::CURSOR_SCROLL]);
         } else {
             return $source->getPdo()->prepare($statement->getString());

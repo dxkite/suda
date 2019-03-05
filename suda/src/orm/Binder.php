@@ -28,11 +28,19 @@ class Binder implements \JsonSerializable
     private $name;
     private $value;
 
-    public function __construct(string $name, $value,string $key = null)
+    protected static $index = 0;
+
+    public function __construct(string $name, $value, string $key = null)
     {
-        $this->name=$name;
-        $this->value=$value;
+        $this->name = $name;
+        $this->value = $value;
         $this->key = $key;
+        static::$index ++;
+    }
+
+    public function index():int
+    {
+        return static::$index;
     }
 
     public function getName():string
@@ -48,18 +56,18 @@ class Binder implements \JsonSerializable
 
     public static function build($value)
     {
-        if (is_null($value)) {
-            $type=PDO::PARAM_NULL;
+        if (null === $value) {
+            $type = PDO::PARAM_NULL;
         } elseif (is_bool($value)) {
-            $type=PDO::PARAM_BOOL;
+            $type = PDO::PARAM_BOOL;
         } elseif (is_numeric($value) && intval($value) === $value) {
-            $type=PDO::PARAM_INT;
+            $type = PDO::PARAM_INT;
         } else {
-            $type=PDO::PARAM_STR;
+            $type = PDO::PARAM_STR;
         }
         return $type;
     }
-    
+
     public function getKey()
     {
         return $this->key;
@@ -68,9 +76,9 @@ class Binder implements \JsonSerializable
     public function jsonSerialize()
     {
         return [
-            'name'=>$this->name,
+            'name' => $this->name,
             'key' => $this->key,
-            'value'=>$this->value,
+            'value' => $this->value,
         ];
     }
 
@@ -78,6 +86,4 @@ class Binder implements \JsonSerializable
     {
         return json_encode($this->jsonSerialize(), JSON_UNESCAPED_UNICODE);
     }
-
-   
 }
