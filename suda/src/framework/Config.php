@@ -44,16 +44,35 @@ class Config
         return $this;
     }
 
+    /**
+     * 判断配置文件是否存在
+     *
+     * @param string $path
+     * @return boolean
+     */
     public function exist(string $path):bool
     {
         return PathResolver::resolve($path) !== null;
     }
 
-    public function assign(array $config)
+    /**
+     * 合并配置
+     *
+     * @param array $config
+     * @return array
+     */
+    public function assign(array $config):array
     {
         return $this->config = array_merge($this->config, $config);
     }
 
+    /**
+     * 获取配置
+     *
+     * @param string $name
+     * @param mixed $default
+     * @return mixed
+     */
     public function get(string $name = null, $default = null)
     {
         if (null === $name) {
@@ -62,16 +81,37 @@ class Config
         return ArrayDotAccess::get($this->config, $name, $default);
     }
 
+    /**
+     * 设置配置
+     *
+     * @param string $name
+     * @param mixed $value
+     * @param mixed $combine 默认参数
+     * @return array
+     */
     public function set(string $name, $value, $combine = null)
     {
         return ArrayDotAccess::set($this->config, $name, $value, $combine);
     }
 
+    /**
+     * 判断配置是否存在
+     *
+     * @param string $name
+     * @return boolean
+     */
     public function has(string $name)
     {
         return ArrayDotAccess::exist($this->config, $name);
     }
 
+    /**
+     * 从文本载入配置项
+     *
+     * @param string $path
+     * @param array $extra
+     * @return array|null
+     */
     public function loadConfig(string $path, array $extra = []):?array
     {
         if (!file_exists($path)) {
