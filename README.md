@@ -13,3 +13,10 @@
 - [ ] 错误处理
 - [ ] 路由解析
 
+
+
+## CS Fixer Rules
+
+```
+@PSR2,dir_constant,final_internal_class,is_null,line_ending,lowercase_static_reference,no_empty_statement,no_multiline_whitespace_around_double_arrow,no_unset_cast,single_quote,binary_operator_spaces
+```
