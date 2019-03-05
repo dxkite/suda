@@ -1,6 +1,7 @@
 <?php
 namespace suda\orm;
 
+use PDO;
 use PDOStatement;
 use suda\orm\Statement;
 use suda\orm\DataSource;
@@ -40,7 +41,6 @@ class TableAccess
      */
     public function __construct(TableStruct $struct, DataSource $source, Middleware $middleware = null)
     {
-     
         $this->source = $source;
         $this->struct = $struct;
         $this->middleware = $middleware;
@@ -55,10 +55,20 @@ class TableAccess
     public function run(Statement $statement)
     {
         $source = $statement->isRead() ? $this->source->read() : $this->source->write();
-        $stmt = $this->createStmt($statement);
+        if ($statement->scroll()) {
+            $stmt = $this->getStatement()?:$this->createStmt($statement);
+        } else {
+            $stmt = $this->createStmt($statement);
+        }
         $this->bindStmt($stmt, $statement);
         $source->switchTable($this->struct->getName());
-        return $this->fetchProccess($statement, $stmt->execute());
+        if ($statement->isFetchOne()) {
+            return $this->fetchOneProccess($statement, $stmt->fetch(PDO::FETCH_ASSOC));
+        } elseif ($statement->isFetchAll()) {
+            return $this->fetchAllProccess($statement, $stmt->fetchAll(PDO::FETCH_ASSOC));
+        } else {
+            return $stmt->execute();
+        }
     }
 
     /**
@@ -156,26 +166,6 @@ class TableAccess
                 $stmt->bindValue($binder->getName(), $binder->getValue(), Binder::bindParam($value));
             }
         }
-    }
-
-    /**
-     * 处理输出数据
-     *
-     * @param Statement $statement
-     * @param array $data
-     * @return array
-     */
-    protected function fetchProccess(Statement $statement, $data): array
-    {
-        if ($this->middleware !== null && $statement->isFetchOne()) {
-            return $this->fetchOneProccess($data);
-        }
-
-        if ($this->middleware !== null && $statement->isFetchAll()) {
-            return $this->fetchAllProccess($data);
-        }
-
-        return $data;
     }
 
     /**

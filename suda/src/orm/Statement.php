@@ -1,6 +1,7 @@
 <?php
 namespace suda\orm;
 
+use PDOStatement;
 use suda\archive\creator\Binder;
 
 class Statement
@@ -45,6 +46,13 @@ class Statement
      * @var string
      */
     protected $string;
+
+    /**
+     * PDOStatement
+     *
+     * @var PDOStatement|null
+     */
+    protected $statement = null;
 
     public function __construct(string $sql, ...$args)
     {
@@ -187,5 +195,30 @@ class Statement
     public function __toString()
     {
         return $this->string;
+    }
+    
+
+    /**
+     * Get PDOStatement
+     *
+     * @return  PDOStatement
+     */ 
+    public function getStatement():?PDOStatement
+    {
+        return $this->statement;
+    }
+
+    /**
+     * Set PDOStatement
+     *
+     * @param  PDOStatement  $statement  PDOStatement
+     *
+     * @return  self
+     */ 
+    public function setStatement(PDOStatement $statement)
+    {
+        $this->statement = $statement;
+
+        return $this;
     }
 }
