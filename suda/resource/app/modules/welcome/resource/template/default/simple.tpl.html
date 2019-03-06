@@ -1,0 +1,16 @@
+@extend ('layout')
+
+@startInsert('content')
+<div class="wrapper">
+    <div class="content">
+        <div class="hello-world">Hello, Developer</div>
+        <div class="text-ip">{{ $:ip }}</div>
+        <div class="links">
+            <a href="https://github.com/DXkite/suda" class="link">Github</a>
+            <a href="@u('index')" class="link">Welcome</a>
+            <a href="@u('hello')" class="link">Hello World</a>
+            <a href="@u('simple')" class="link">Simple</a>
+        </div>
+    </div>
+</div>
+@endInsert
