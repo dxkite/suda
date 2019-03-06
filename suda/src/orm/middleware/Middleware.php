@@ -1,5 +1,5 @@
 <?php
-namespace suda\orm;
+namespace suda\orm\middleware;
 
 /**
  * 中间件
