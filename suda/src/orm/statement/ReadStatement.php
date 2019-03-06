@@ -24,6 +24,8 @@ class ReadStatement extends Statement
      */
     protected $table;
 
+    protected $distinct = '';
+
     protected $select = '*';
 
     protected $where = '';
@@ -47,6 +49,16 @@ class ReadStatement extends Statement
         $this->struct = $struct;
         $this->table = $rawTableName;
         $this->type = self::WRITE;
+    }
+
+    /**
+     * 单独去重复
+     *
+     * @return self
+     */
+    public function distinct() {
+        $this->distinct = 'DISTINCT';
+        return $this;
     }
 
     /**
@@ -181,6 +193,10 @@ class ReadStatement extends Statement
      */
     public function prepare()
     {
-        $this->string = "SELECT {$this->select} FROM {$this->table} {$this->where} {$this->groupBy} {$this->having} {$this->orderBy} {$this->limit}";
+        $where = [$this->where,$this->groupBy,$this->having,$this->orderBy,$this->limit];
+        $condition = implode(' ',  array_filter(array_map('trim', $where), 'strlen'));
+        $select = [$this->distinct,$this->select];
+        $selection = implode(' ',  array_filter(array_map('trim', $select), 'strlen'));
+        $this->string = "SELECT {$selection} FROM {$this->table} {$condition}";
     }
 }
