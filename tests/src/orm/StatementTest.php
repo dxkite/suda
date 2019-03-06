@@ -40,7 +40,7 @@ class StatementTest extends TestCase
         (new SQLite3(TEST_RESOURCE.'/test.db'))->close();
         
         $source->add(DataSource::connect('mysql', [
-            'host' =>'localhost',
+            'host' => 'localhost',
             'name' => 'test',
             'user' => 'root',
             'password' => DIRECTORY_SEPARATOR === '/' ?'':'root',
@@ -100,6 +100,10 @@ class StatementTest extends TestCase
             (new Statement('hello > :name', ['name' => 'dxkite']))->getString()
         );
 
-        $this->assertNull($table->run($table->write(['name' => 'dxkite'])));
+        $this->assertTrue($table->run($table->write(['name' => 'dxkite'])));
+
+        $data = $table->run($table->read('name')->where(['id' => 1])->fetch());
+
+        $this->assertEquals('dxkite', $data['name']);
     }
 }

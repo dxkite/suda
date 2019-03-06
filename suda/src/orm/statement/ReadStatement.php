@@ -48,7 +48,7 @@ class ReadStatement extends Statement
     {
         $this->struct = $struct;
         $this->table = $rawTableName;
-        $this->type = self::WRITE;
+        $this->type = self::READ;
     }
 
     /**

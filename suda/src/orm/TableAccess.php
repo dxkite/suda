@@ -60,8 +60,11 @@ class TableAccess
      */
     public function run(Statement $statement)
     {
-        $this->runStatement($statement);
-        if ($statement->isFetch()) {
+        $source = $statement->isRead() ? $this->source->read() : $this->source->write();
+        $this->runStatement($source, $statement);
+        if ($statement->isWrite()) {
+            return $statement->getStatement()->rowCount() > 0;
+        } elseif ($statement->isFetch()) {
             return $this->fetchResult($statement);
         }
         return null;
@@ -192,12 +195,14 @@ class TableAccess
      * 处理一行数据
      *
      * @param array $data
-     * @return array
+     * @return TableStruct
      */
-    protected function fetchOneProccess(array $data):array
+    protected function fetchOneProccess(array $data):TableStruct
     {
-        foreach ($data as $name => $value) {
-            $data[$name] = $this->middleware->output($name, $value);
+        if ($this->middleware !== null) {
+            foreach ($data as $name => $value) {
+                $data[$name] = $this->middleware->output($name, $value);
+            }
         }
         return $this->struct->createOne($data);
     }
@@ -206,13 +211,15 @@ class TableAccess
      * 处理多行数据
      *
      * @param array $data
-     * @return array
+     * @return TableStruct[]
      */
-    protected function fetchAllProccess(array $data):array
+    protected function fetchAllProccess(array $data): array
     {
         foreach ($data as $index => $row) {
             $row = $this->fetchOneProccess($row);
-            $data[$index] = $this->middleware->outputRow($row);
+            if ($this->middleware !== null) {
+                $data[$index] = $this->middleware->outputRow($row);
+            }
         }
         return $data;
     }
@@ -223,9 +230,8 @@ class TableAccess
      * @param Statement $statement
      * @return void
      */
-    protected function runStatement(Statement $statement)
+    protected function runStatement(Connection $source, Statement $statement)
     {
-        $source = $statement->isRead() ? $this->source->read() : $this->source->write();
         if ($statement->scroll() && $this->getStatement() !== null) {
             $stmt = $this->getStatement();
         } else {
@@ -247,9 +253,9 @@ class TableAccess
     protected function fetchResult(Statement $statement)
     {
         if ($statement->isFetchOne()) {
-            return $this->fetchOneProccess($statement, $statement->getStatement()->fetch(PDO::FETCH_ASSOC));
+            return $this->fetchOneProccess($statement->getStatement()->fetch(PDO::FETCH_ASSOC));
         } elseif ($statement->isFetchAll()) {
-            return $this->fetchAllProccess($statement, $statement->getStatement()->fetchAll(PDO::FETCH_ASSOC));
+            return $this->fetchAllProccess($statement->getStatement()->fetchAll(PDO::FETCH_ASSOC));
         }
     }
 
