@@ -25,6 +25,7 @@ class Field
     protected $attribute; // binary unsigned
     protected $collation;
     protected $tableName;
+    protected $charset;
     
     const BINARY='BINARY';
     const UNSIGNED='UNSIGNED';
@@ -41,6 +42,11 @@ class Field
         $this->type=strtoupper($type);
         $this->length=$length;
         $this->isDefault=false;
+    }
+
+    public function charset(string $charset) {
+        $this->charset = 'CHARACTER SET ' . $charset;
+        return $this;
     }
 
     public function comment(string $comment)
@@ -148,7 +154,11 @@ class Field
             $default='';
         }
         
-        return trim("`{$this->name}` {$type} {$attr} {$null} {$default} {$auto} {$comment}");
+        $list = [$type, $attr, $this->charset, $null, $default, $auto, $comment];
+
+        $data = implode(' ',array_filter(array_map($list, 'trim'),'strlen'));
+
+        return trim("`{$this->name}` {$data}");
     }
 
     public function getKeyType()
