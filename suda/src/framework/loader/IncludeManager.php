@@ -47,29 +47,7 @@ class IncludeManager implements PathInterface
         return Path::format($name);
     }
 
-    /**
-     * 导入文件
-     *
-     * @param string $filename
-     * @return string|null
-     */
-    public function import(string $filename):?string
-    {
-        if ($filename = static::realPath($filename)) {
-            @require_once $filename;
-            return $filename;
-        } else {
-            foreach ($this->includePath[0] as $includePath) {
-                if ($path = static::realPath($includePath.DIRECTORY_SEPARATOR.$filename)) {
-                    @require_once $path;
-                    return $path;
-                }
-            }
-        }
-        return null;
-    }
-
-    public function addIncludePath(string $path, string $namespace = null)
+    public function addIncludePath(string $path, ?string $namespace = null)
     {
         if ($path = static::realPath($path)) {
             $namespace = $namespace ?? 0;
