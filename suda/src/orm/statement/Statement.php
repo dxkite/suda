@@ -121,9 +121,9 @@ class Statement
     /**
      * 是否滚动
      *
-     * @return boolean
+     * @return boolean|null
      */
-    public function scroll(bool $set = null):bool
+    public function scroll(bool $set = null):?bool
     {
         if ($set !== null) {
             $this->scroll = true;

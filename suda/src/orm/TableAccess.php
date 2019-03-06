@@ -10,6 +10,7 @@ use suda\orm\Middleware;
 
 use suda\orm\TableStruct;
 use suda\orm\statement\Statement;
+use suda\orm\connection\Connection;
 use suda\orm\exception\SQLException;
 use suda\orm\statement\ReadStatement;
 use suda\orm\statement\WriteStatement;
@@ -59,19 +60,11 @@ class TableAccess
      */
     public function run(Statement $statement)
     {
-        $source = $statement->isRead() ? $this->source->read() : $this->source->write();
-        $source->switchTable($this->struct->getName());
-
-        $result = $this->runStatement($statement);
-
-        if ($result === false && $statement->isFetch()) {
-            throw new SQLException('run '.$statement.' error, could not fetch');
-        }
-
-        if ($result && $statement->isFetch()) {
+        $this->runStatement($statement);
+        if ($statement->isFetch()) {
             return $this->fetchResult($statement);
         }
-        return $result;
+        return null;
     }
 
     /**
@@ -92,7 +85,8 @@ class TableAccess
      * @param mixed ...$args
      * @return WriteStatement
      */
-    public function write(...$args):WriteStatement {
+    public function write(...$args):WriteStatement
+    {
         return (new WriteStatement($this->source->write()->rawTableName($this->struct->getName()), $this->struct))->write(...$args);
     }
 
@@ -102,7 +96,8 @@ class TableAccess
      * @param mixed ...$args
      * @return ReadStatement
      */
-    public function read(...$args):ReadStatement {
+    public function read(...$args):ReadStatement
+    {
         return (new ReadStatement($this->source->write()->rawTableName($this->struct->getName()), $this->struct))->want(...$args);
     }
 
@@ -161,11 +156,13 @@ class TableAccess
     /**
      * 创建SQL语句
      *
+     * @param Connection $source
+     * @param Statement $statement
      * @return PDOStatement
      */
-    protected function createStmt(Statement $statement): PDOStatement
+    protected function createStmt(Connection $source, Statement $statement): PDOStatement
     {
-        if ($statement->scroll()) {
+        if ($statement->scroll() === true) {
             return $source->getPdo()->prepare($statement->getString(), [PDO::ATTR_CURSOR => PDO::CURSOR_SCROLL]);
         } else {
             return $source->getPdo()->prepare($statement->getString());
@@ -184,9 +181,9 @@ class TableAccess
         foreach ($statement->getBinder() as $binder) {
             if ($binder->getKey() !== null && $this->middleware !== null) {
                 $value = $this->middleware->input($binder->getKey(), $binder->getValue());
-                $stmt->bindValue($binder->getName(), $value, Binder::bindParam($value));
+                $stmt->bindValue($binder->getName(), $value, Binder::build($value));
             } else {
-                $stmt->bindValue($binder->getName(), $binder->getValue(), Binder::bindParam($value));
+                $stmt->bindValue($binder->getName(), $binder->getValue(), Binder::build($binder->getValue()));
             }
         }
     }
@@ -224,18 +221,20 @@ class TableAccess
      * 运行语句
      *
      * @param Statement $statement
-     * @return boolean
+     * @return void
      */
-    protected function runStatement(Statement $statement):bool
+    protected function runStatement(Statement $statement)
     {
+        $source = $statement->isRead() ? $this->source->read() : $this->source->write();
         if ($statement->scroll() && $this->getStatement() !== null) {
             $stmt = $this->getStatement();
-            return true;
         } else {
-            $stmt = $this->createStmt($statement);
+            $stmt = $this->createStmt($source, $statement);
             $this->bindStmt($stmt, $statement);
             $statement->setStatement($stmt);
-            return $stmt->execute();
+            if ($stmt->execute() === false) {
+                throw new SQLException($stmt->errorInfo()[2], intval($stmt->errorCode()));
+            }
         }
     }
 
@@ -258,7 +257,7 @@ class TableAccess
      * Get 数据源
      *
      * @return  DataSource
-     */ 
+     */
     public function getSource()
     {
         return $this->source;
@@ -268,7 +267,7 @@ class TableAccess
      * Get 表结构
      *
      * @return  TableStruct
-     */ 
+     */
     public function getStruct()
     {
         return $this->struct;
@@ -278,7 +277,7 @@ class TableAccess
      * Get 中间件
      *
      * @return  Middleware|null
-     */ 
+     */
     public function getMiddleware():?Middleware
     {
         return $this->middleware;

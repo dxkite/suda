@@ -39,7 +39,7 @@ class MySQLCreator
     protected $charset = 'utf8';
     
     protected $auto;
-    protected $foreignKeys;
+
     public function __construct(Connection $connection, Fields $fields)
     {
         $this->name = $fields->getName();
@@ -50,28 +50,17 @@ class MySQLCreator
     public function create()
     {
         $sql = $this->toSQL();
-        $this->connection->getPdo()->query($sql);
+        return $this->connection->query($sql);
     }
-
-    protected function seekField(Field $field)
-    {
-        $name = $field->getName();
-        $this->fields[$name] = $field;
-        if ($foreign = $field->getForeignKey()) {
-            $this->foreignKeys[$name] = $foreign;
-        }
-        return $this;
-    }
-
 
     protected function toSQL()
     {
-        if (!is_array($this->fields)) {
-            return false;
+        if ($this->fields === null) {
+            return null;
         }
         $content = [];
-        foreach ($this->fields as $field) {
-            $content[] = $field->getFieldSQL();
+        foreach ($this->fields->all() as $field) {
+            $content[] = $this->createField($field);
         }
         $content[] = $this->parsePrimaryKeys();
         $content = $this->parseUniqueKeys($content);
@@ -79,8 +68,8 @@ class MySQLCreator
         $content = $this->parseKeys($content);
         $content = $this->parseForeignKeys($content);
         $table = $this->connection->rawTableName($this->name);
-        $sql = "CREATE TABLE `{$table}` (\r\n\t";
-        $sql .= implode(",\r\n\t", $content);
+        $sql = "CREATE TABLE IF NOT EXISTS `{$table}` (\r\n\t";
+        $sql .= implode(",\r\n\t", array_filter($content, 'strlen'));
         $auto = null === $this->auto?'':'AUTO_INCREMENT='.$this->auto;
         $collate = null === $this->collate?'':'COLLATE '.$this->collate;
         $sql .= "\r\n) ENGINE={$this->engine} {$collate} {$auto} DEFAULT CHARSET={$this->charset};";
@@ -97,10 +86,6 @@ class MySQLCreator
             }
         }
         if (count($primary)) {
-            $primary = 'PRIMARY KEY (';
-            foreach ($this->primaryKeys as $field) {
-                $primary .= '`'.$field->getName().'`,';
-            }
             return 'PRIMARY KEY ('.\implode(',', $primary).')';
         }
     }
@@ -140,11 +125,32 @@ class MySQLCreator
 
     protected function parseForeignKeys(array $content)
     {
-        if (is_array($this->foreignKeys)) {
-            foreach ($this->foreignKeys as $name => $field) {
-                $content[] = 'FOREIGN KEY (`'.$name.'`) REFERENCES  `#{'.$field->getTableName().'}` (`'.$field->getName().'`)';
+        foreach ($this->fields->all() as $field) {
+            if ($field->getForeignKey() !== null) {
+                $content[] = 'FOREIGN KEY (`'.$field->getName().'`) REFERENCES  `#{'.$field->getTableName().'}` (`'.$field->getName().'`)';
             }
         }
         return $content;
+    }
+
+    protected function createField(Field $field)
+    {
+        $type = $field->getLength()? strtoupper($field->getValueType()).'('.$field->getLength().')':strtoupper($field->getValueType());
+        $auto = $field->getAuto() ?'AUTO_INCREMENT':'';
+        $null = $field->getNull() ?'NULL':'NOT NULL';
+        $attr = $field->getAttribute() ?strtoupper($field->getAttribute()):'';
+        $comment = $field->getComment() ?('COMMENT \''.addcslashes($field->getComment(), '\'').'\''):'';
+        // default设置
+        if ($field->isDefault()) {
+            if (null === $field->getDefault()) {
+                $default = 'DEFAULT NULL';
+            } else {
+                $default = 'DEFAULT \''.addcslashes($field->getDefault(), '\'').'\'';
+            }
+        } else {
+            $default = '';
+        }
+        $list = ['`'.$field->getName().'`', $type, $attr, $field->getCharset(), $null, $default, $auto, $comment];
+        return implode(' ', array_filter(array_map('trim', $list), 'strlen'));
     }
 }

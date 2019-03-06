@@ -6,6 +6,8 @@ use PDOException;
 use suda\orm\struct\Fields;
 use suda\orm\connection\Connection;
 use suda\orm\exception\SQLException;
+use suda\orm\connection\creator\MySQLCreator;
+use suda\orm\connection\creator\SQLiteCreator;
 
 /**
  * 数据表链接对象
@@ -36,13 +38,20 @@ class SQLiteConnection extends Connection
         }
     }
 
-    public function createIfTableNotExists(Fields $fields)
+    public function createTable(Fields $fields)
     {
-        // $this->getPdo()->query('USE ' . $table);
+        $creator = new SQLiteCreator($this, $fields);
+        return $creator->create();
     }
 
-    public function switchTable(string $table)
+    public function switchDatabase(string $string)
     {
-        $this->getPdo()->query('USE ' . $table);
+        $this->query('USE `' . $this->rawTableName($table).'`');
+    }
+
+    public function rawTableName(string $name)
+    {
+        $prefix = $this->config['prefix'] ?? '';
+        return $prefix.$name;
     }
 }

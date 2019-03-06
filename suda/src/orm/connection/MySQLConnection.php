@@ -21,9 +21,13 @@ class MySQLConnection extends Connection
         if (!array_key_exists('host', $this->config)) {
             throw new SQLException('config missing host');
         }
+        
         $host = $this->config['host'];
         $charset = $this->config['charset'] ?? 'utf8mb4';
         $port = $this->config['charset'] ?? 3306;
+        if (array_key_exists('name', $this->config)) {
+            return static::$type.':host='.$host.';dbname='.$this->config['name'].';charset='.$charset.';port='.$port;
+        }
         return static::$type.':host='.$host.';charset='.$charset.';port='.$port;
     }
     
@@ -41,15 +45,15 @@ class MySQLConnection extends Connection
         }
     }
 
-    public function createIfTableNotExists(Fields $fields)
+    public function createTable(Fields $fields)
     {
         $creator = new MySQLCreator($this, $fields);
-        $creator->create();
+        return $creator->create();
     }
 
-    public function switchTable(string $string)
+    public function switchDatabase(string $database)
     {
-        $this->getPdo()->query('USE `' . $this->rawTableName($table).'`');
+        return $this->query('USE `' . $database.'`');
     }
 
     public function rawTableName(string $name)

@@ -2,6 +2,9 @@
 namespace suda\orm;
 
 use suda\orm\connection\Connection;
+use suda\orm\exception\SQLException;
+use suda\orm\connection\MySQLConnection;
+use suda\orm\connection\SQLiteConnection;
 
 class DataSource
 {
@@ -32,6 +35,11 @@ class DataSource
      * @var Connection|null
      */
     protected $slave;
+
+    protected static $type = [
+        'mysql' => MySQLConnection::class,
+        'sqlite' => SQLiteConnection::class,
+    ];
 
     /**
      * 添加连接
@@ -98,13 +106,29 @@ class DataSource
     }
 
     /**
+     * 创建连接
+     *
+     * @param string $type
+     * @param array $config
+     * @return Connection
+     */
+    public static function connect(string $type, array $config): Connection
+    {
+        if (array_key_exists($type, static::$type)) {
+            return new static::$type[$type]($config);
+        } else {
+            throw new SQLException(sprintf('no connection type of %s', $type));
+        }
+    }
+
+    /**
      * 读数据库选择
      *
      * @return void
      */
     protected function selectReadConnection()
     {
-        $postion = mt_rand(0, count($this->read) -1);
+        $postion = mt_rand(0, count($this->read) - 1);
         $this->slave = $this->read[$postion];
     }
 
@@ -116,7 +140,7 @@ class DataSource
     protected function selectWriteConnection()
     {
         if ($this->master === null) {
-            $postion = mt_rand(0, count($this->write) -1);
+            $postion = mt_rand(0, count($this->write) - 1);
             $this->master = $this->write[$postion];
         }
     }

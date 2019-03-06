@@ -45,7 +45,6 @@ abstract class Connection
     
     abstract public function createPDO(): PDO;
 
-    
     /**
      * 连接服务器
      *
@@ -54,7 +53,7 @@ abstract class Connection
     public function connect()
     {
         // 链接数据库
-        if (null === $this->pdo && ($this->config['enable'] ?? false)) {
+        if (null === $this->pdo && ($this->config['enable'] ?? true)) {
             try {
                 $this->pdo = $this->createPDO();
                 $this->id = static::$_id;
@@ -68,6 +67,7 @@ abstract class Connection
 
     public function getPdo()
     {
+        $this->connect();
         return $this->pdo;
     }
 
@@ -160,6 +160,21 @@ abstract class Connection
     }
 
     /**
+     * 查询SQL
+     *
+     * @param string $sql
+     * @return void
+     */
+    public function query(string $sql)
+    {
+        if ($stmt = $this->getPdo()->query($sql)) {
+            return $stmt ->execute();
+        }
+        $debug=debug_backtrace();
+        throw (new SQLException($this->getPdo()->errorInfo()[2], intval($this->getPdo()->errorCode()), E_ERROR, $debug[1]['file'], $debug[1]['line']))->setSql($sql);
+    }
+
+    /**
      * 转义字符
      *
      * @param array $array
@@ -167,7 +182,7 @@ abstract class Connection
      */
     public function quote($string)
     {
-        return $this->pdo->quote($string);
+        return $this->getPdo()->quote($string);
     }
 
     /**
@@ -180,7 +195,7 @@ abstract class Connection
     {
         $temp = array();
         foreach ($array as $value) {
-            $temp[] = is_int($value) ? $value : $this->pdo->quote($value);
+            $temp[] = is_int($value) ? $value : $this->quote($value);
         }
         return implode(',', $temp);
     }
@@ -200,7 +215,7 @@ abstract class Connection
         return 'DB Connection ['.$this->type.'] {'.$this->getDsn().'}';
     }
 
-    abstract public function createIfTableNotExists(Fields $fields);
-    abstract public function switchTable(string $name);
+    abstract public function createTable(Fields $fields);
+    abstract public function switchDatabase(string $name);
     abstract public function rawTableName(string $name);
 }
