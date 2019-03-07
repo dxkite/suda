@@ -33,13 +33,6 @@ class Application implements RequestProcessor
     protected $module;
 
     /**
-     * 时区
-     *
-     * @var string
-     */
-    protected $timezone = 'PRC';
-
-    /**
      * 语言
      *
      * @var string
@@ -159,31 +152,7 @@ class Application implements RequestProcessor
 
         return $this;
     }
-
-    /**
-     * Get 时区
-     *
-     * @return  string
-     */
-    public function getTimezone()
-    {
-        return $this->timezone;
-    }
-
-    /**
-     * Set 时区
-     *
-     * @param  string  $timezone  时区
-     *
-     * @return  self
-     */
-    public function setTimezone(string $timezone)
-    {
-        $this->timezone = $timezone;
-
-        return $this;
-    }
-
+    
     /**
      * Get 配置数组
      *

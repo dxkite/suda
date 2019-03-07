@@ -1,14 +1,12 @@
 <?php
-
-
-
-
-
+// 基本常量
+defined('SUDA_TIMEZONE') or define('SUDA_TIMEZONE', 'PRC');
 defined('SUDA_SYSTEM') or define('SUDA_SYSTEM', dirname(dirname(__DIR__)));
 defined('SUDA_RESOURCE') or define('SUDA_RESOURCE', SUDA_SYSTEM.'/resource');
 defined('SUDA_START_TIME') or define('SUDA_START_TIME', microtime(true));
 defined('SUDA_START_MEMORY') or define('SUDA_START_MEMORY', memory_get_usage());
-
+// 设置默认时区
+date_default_timezone_set(SUDA_TIMEZONE);
 // HOME PAHT GET
 if (!defined('USER_HOME_PATH')) {
     // for linux
