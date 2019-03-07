@@ -32,10 +32,10 @@ class NullMiddleware
     /**
      * 对输出列进行处理
      *
-     * @param TableStruct[] $row
-     * @return TableStruct[]
+     * @param TableStruct $row
+     * @return TableStruct
      */
-    public function outputRow(array $row) {
+    public function outputRow(TableStruct $row) {
         return $row;
     }
 }

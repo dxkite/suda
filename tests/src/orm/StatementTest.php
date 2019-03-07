@@ -102,7 +102,7 @@ class StatementTest extends TestCase
 
         $this->assertTrue($table->run($table->write(['name' => 'dxkite'])));
 
-        $data = $table->run($table->read('name')->where(['id' => 1])->fetch());
+        $data = $table->run($table->read('name')->where(['id' => 1]));
 
         $this->assertEquals('dxkite', $data['name']);
     }

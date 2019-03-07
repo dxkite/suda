@@ -38,6 +38,8 @@ class ReadStatement extends Statement
 
     protected $limit = '';
 
+    protected $withKey = null;
+
     /**
      * 创建写
      *
@@ -49,6 +51,7 @@ class ReadStatement extends Statement
         $this->struct = $struct;
         $this->table = $rawTableName;
         $this->type = self::READ;
+        $this->fetch = self::FETCH_ONE;
     }
 
     /**
@@ -187,6 +190,18 @@ class ReadStatement extends Statement
     }
 
     /**
+     * 用某段做Key
+     *
+     * @param string $key
+     * @return self
+     */
+    public function withKey(string $key) {
+        $this->withKey = $key;
+        $this->fetchAll();
+        return $this;
+    }
+
+    /**
      * 获取字符串
      *
      * @return void
@@ -198,5 +213,13 @@ class ReadStatement extends Statement
         $select = [$this->distinct,$this->select];
         $selection = implode(' ',  array_filter(array_map('trim', $select), 'strlen'));
         $this->string = "SELECT {$selection} FROM {$this->table} {$condition}";
+    }
+
+    /**
+     * Get the value of withKey
+     */ 
+    public function getWithKey()
+    {
+        return $this->withKey;
     }
 }

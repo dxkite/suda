@@ -224,15 +224,21 @@ class TableAccess
     /**
      * 处理多行数据
      *
+     * @param ReadStatement $statement
      * @param array $data
-     * @return TableStruct[]
+     * @return array
      */
-    protected function fetchAllProccess(array $data): array
+    protected function fetchAllProccess(ReadStatement $statement, array $data): array
     {
         foreach ($data as $index => $row) {
             $row = $this->fetchOneProccess($row);
-            if ($this->middleware !== null) {
-                $data[$index] = $this->middleware->outputRow($row);
+            $row = $this->middleware->outputRow($row);
+            $key = $statement->getWithKey();
+            if ($key === null) {
+                $data[$index] = $row;
+            } else {
+                unset($data[$index]);
+                $data[$row[$key]] = $row;
             }
         }
         return $data;
@@ -272,7 +278,7 @@ class TableAccess
         if ($statement->isFetchOne()) {
             return $this->fetchOneProccess($statement->getStatement()->fetch(PDO::FETCH_ASSOC));
         } elseif ($statement->isFetchAll()) {
-            return $this->fetchAllProccess($statement->getStatement()->fetchAll(PDO::FETCH_ASSOC));
+            return $this->fetchAllProccess($statement, $statement->getStatement()->fetchAll(PDO::FETCH_ASSOC));
         }
     }
 
@@ -310,7 +316,7 @@ class TableAccess
      * Get 性能观测
      *
      * @return  Observer
-     */ 
+     */
     public function getObserver()
     {
         return $this->observer;
@@ -322,7 +328,7 @@ class TableAccess
      * @param  Observer  $observer  性能观测
      *
      * @return  self
-     */ 
+     */
     public function setObserver(Observer $observer)
     {
         $this->observer = $observer;
