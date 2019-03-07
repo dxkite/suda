@@ -9,7 +9,9 @@ use suda\framework\Response;
 use suda\application\Resource;
 use suda\framework\loader\Path;
 use suda\application\Application;
+use suda\framework\loader\Loader;
 use suda\application\processor\Processor;
+use suda\application\builder\ApplicationBuilder;
 use suda\application\processor\RequestProcessor;
 
 /**
@@ -101,16 +103,7 @@ class ModuleLoader implements RequestProcessor
      */
     protected function importClassLoader(array $import, string $relativePath)
     {
-        foreach ($import as $name => $path) {
-            $path = Resource::getPathByRelativedPath($path, $relativePath);
-            if (\is_numeric($name)) {
-                $this->application->getContext()->get('loader')->addIncludePath($path);
-            } elseif (is_file($path)) {
-                $this->application->getContext()->get('loader')->import($path);
-            } else {
-                $this->application->getContext()->get('loader')->addIncludePath($path, $name);
-            }
-        }
+        ApplicationBuilder::importClassLoader($this->application->getContext()->get('loader'), $import, $relativePath);
     }
 
     protected function loadRouteGroup(string $groupName)

@@ -18,14 +18,7 @@ class ApplicationLoader
      * @var \suda\application\Application
      */
     protected $application;
-
-    /**
-     * 运行环境
-     *
-     * @var \suda\framework\Context
-     */
-    protected $context;
-
+    
     /**
      * 模块加载器
      *
@@ -33,11 +26,9 @@ class ApplicationLoader
      */
     protected $moduleLoader;
 
-    public function __construct(Application $application, Context $context)
+    public function __construct(Application $application)
     {
-        $this->context = $context;
         $this->application = $application;
-        $this->application->setContext($context);
     }
 
     public function load()
@@ -46,16 +37,18 @@ class ApplicationLoader
         $this->prepareModuleLoader();
     }
 
-    public function loadRoute() {
-        $modules =  $this->application->getManifast('reachable');
-        foreach ($modules as $name ) {
+    public function loadRoute()
+    {
+        $modules = $this->application->getManifast('reachable');
+        foreach ($modules as $name) {
             $fullname = $this->application->find($name)->getFullName();
             $this->moduleLoader[$fullname]->toReacheable();
         }
     }
 
-    public function prepareModuleLoader() {
-        $modules =  $this->application->getManifast('modules');
+    public function prepareModuleLoader()
+    {
+        $modules = $this->application->getManifast('modules');
         foreach ($modules as $moduleName) {
             if ($module = $this->application->find($moduleName)) {
                 $this->moduleLoader[$module->getFullName()] = new ModuleLoader($this->application, $module);
@@ -72,7 +65,7 @@ class ApplicationLoader
         }
     }
 
-    public function registerModuleFrom(string $path,string $extractPath)
+    public function registerModuleFrom(string $path, string $extractPath)
     {
         foreach (ModuleBuilder::scan($path, $extractPath) as $module) {
             $this->application->add($module);

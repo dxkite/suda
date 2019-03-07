@@ -47,7 +47,7 @@ $context->get('debug')->notice('system booting');
 
 $service = new Service($context);
 
-$appLoader = new ApplicationLoader(ApplicationBuilder::build(SUDA_APP), $context);
+$appLoader = new ApplicationLoader(ApplicationBuilder::build($context, SUDA_APP));
 
 $service->on('service:load-config', function () use ($appLoader) {
     $appLoader->load();

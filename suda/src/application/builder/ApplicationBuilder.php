@@ -2,7 +2,10 @@
 namespace suda\application\builder;
 
 use suda\framework\Config;
+use suda\framework\Context;
+use suda\application\Resource;
 use suda\application\Application;
+use suda\framework\loader\Loader;
 use suda\framework\config\PathResolver;
 use suda\framework\filesystem\FileSystem;
 
@@ -14,13 +17,20 @@ class ApplicationBuilder
     /**
      * 从路径加载应用
      *
+     * @param Context $context
      * @param string $path
      * @return Application
      */
-    public static function build(string $path):Application
+    public static function build(Context $context, string $path):Application
     {
         $manifast = static::resolveManifastPath($path);
-        $application = new Application($path, Config::loadConfig($manifast));
+        $manifastConfig = Config::loadConfig($manifast);
+        if (\array_key_exists('import', $manifastConfig)) {
+            static::importClassLoader($context->get('loader'), $manifastConfig['import'], $path);
+        }
+        $applicationClass = $manifastConfig['application'] ?? Application::class;
+        $application = new $applicationClass($path, $manifastConfig);
+        $application->setContext($context);
         return $application;
     }
     
@@ -40,15 +50,17 @@ class ApplicationBuilder
         return $manifast;
     }
 
-    public static function loadModules(Application $application)
+    public static function importClassLoader(Loader $loader, array $import, string $relativePath)
     {
-        foreach ($application->getModulePaths() as  $path) {
-            static::registerModuleFrom($application, $path);
+        foreach ($import as $name => $path) {
+            $path = Resource::getPathByRelativedPath($path, $relativePath);
+            if (\is_numeric($name)) {
+                $loader->addIncludePath($path);
+            } elseif (is_file($path)) {
+                $loader->import($path);
+            } else {
+                $loader->addIncludePath($path, $name);
+            }
         }
-    }
-
-
-    public static function registerModuleFrom(Application $application, string $path)
-    {
     }
 }
