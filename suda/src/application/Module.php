@@ -83,6 +83,15 @@ class Module
     }
 
     /**
+     * 获取全名
+     *
+     * @return string
+     */
+    public function getFullName() {
+        return $this->getName().':'.$this->getVersion();
+    }
+
+    /**
      * Get 资源路径
      *
      * @return  Resource

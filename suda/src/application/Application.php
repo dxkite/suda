@@ -5,6 +5,7 @@ use suda\framework\Context;
 use suda\application\Module;
 use suda\application\Resource;
 use suda\application\ModuleBag;
+use suda\framework\arrayobject\ArrayDotAccess;
 
 /**
  * 应用程序
@@ -75,9 +76,26 @@ class Application
         $this->initProperty($manifast);
     }
 
+    /**
+     * 添加模块
+     *
+     * @param \suda\application\Module $module
+     * @return void
+     */
     public function add(Module $module)
     {
         $this->module->add($module);
+    }
+
+    /**
+     * 查找模块
+     *
+     * @param string $name
+     * @return \suda\application\Module|null
+     */
+    public function find(string $name):?Module
+    {
+        return $this->module->get($name);
     }
 
     /**
@@ -155,10 +173,13 @@ class Application
     /**
      * Get 配置数组
      *
-     * @return  string
+     * @return  mixed
      */
-    public function getManifast()
+    public function getManifast(string $name = null, $default = null)
     {
+        if ($name !== null) {
+            return ArrayDotAccess::get($this->manifast, $name, $default);
+        }
         return $this->manifast;
     }
 

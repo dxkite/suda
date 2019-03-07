@@ -38,28 +38,33 @@ class ModuleLoader
 
     public function toLoaded()
     {
+        $this->loadEventListener();
+        $this->loadShareLibrary();
     }
 
     public function toReacheable()
     {
+        $this->loadRoute();
     }
 
     public function toRunning()
     {
+        $this->loadPrivateLibrary();
     }
 
-    public function loadShareLibrary()
+    protected function loadShareLibrary()
     {
     }
 
-    public function loadPrivateLibrary()
+    protected function loadPrivateLibrary()
     {
     }
 
-    public function loadEventListener()
+    protected function loadEventListener()
     {
     }
-    public function loadRoute()
+
+    protected function loadRoute()
     {
     }
 }

@@ -27,7 +27,7 @@ class ModuleBag
      *
      * @var array
      */
-    protected $cache;
+    protected $cache = [];
 
     public function add(Module $module)
     {
