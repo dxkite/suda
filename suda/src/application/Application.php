@@ -1,6 +1,7 @@
 <?php
 namespace suda\application;
 
+use suda\framework\Context;
 use suda\application\Module;
 use suda\application\Resource;
 use suda\application\ModuleBag;
@@ -58,6 +59,13 @@ class Application
      * @var string
      */
     protected $modulePaths;
+
+    /**
+     * 运行环境
+     *
+     * @var Context $context
+     */
+    protected $context;
 
     public function __construct(string $path, array $manifast)
     {
@@ -168,7 +176,7 @@ class Application
         if (\array_key_exists('module-paths', $manifast)) {
             $this->modulePaths = \strtolower($manifast['module-paths']);
         } else {
-            $this->modulePaths = [ Resource::getPathByRelativedPath('modules', $path) ];
+            $this->modulePaths = [ Resource::getPathByRelativedPath('modules', $this->path) ];
         }
     }
 
@@ -176,9 +184,33 @@ class Application
      * Get 模块路径
      *
      * @return  string
-     */ 
+     */
     public function getModulePaths()
     {
         return $this->modulePaths;
+    }
+
+    /**
+     * Get $context
+     *
+     * @return  Context
+     */
+    public function getContext()
+    {
+        return $this->context;
+    }
+
+    /**
+     * Set $context
+     *
+     * @param  Context  $context  $context
+     *
+     * @return  self
+     */
+    public function setContext(Context $context)
+    {
+        $this->context = $context;
+
+        return $this;
     }
 }

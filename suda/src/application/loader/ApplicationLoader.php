@@ -1,8 +1,10 @@
 <?php
-namespace suda\application;
+namespace suda\application\loader;
 
-use suda\framework\Config;
-use suda\framework\config\PathResolver;
+use suda\framework\Context;
+use suda\application\Application;
+use suda\framework\filesystem\FileSystem;
+use suda\application\builder\ModuleBuilder;
 
 /**
  * 应用程序
@@ -10,43 +12,44 @@ use suda\framework\config\PathResolver;
 class ApplicationLoader
 {
     /**
-     * 从路径加载应用
+     * 应用程序
      *
-     * @param string $path
-     * @return Application
+     * @var Application
      */
-    public static function load(string $path):Application
-    {
-        $manifast = static::resolveManifastPath($path);
-        $application = new Application($path, Config::loadConfig($manifast));
+    protected $application;
 
-        return $application;
-    }
-    
     /**
-     * 获取Manifast路径
+     * 运行环境
      *
-     * @param string $path
-     * @return string
+     * @var Context
      */
-    public static function resolveManifastPath(string $path):string
+    protected $context;
+
+    public function __construct(Application $application, Context $context)
     {
-        $manifast = PathResolver::resolve($path.'/manifast');
-        if ($manifast === null) {
-            FileSystem::copyDir(SUDA_RESOURCE.'/app', $path);
-            $manifast = PathResolver::resolve($path.'/manifast');
-        }
-        return $manifast;
+        $this->context = $context;
+        $this->application = $application;
+        $this->application->setContext($context);
     }
 
-    public static function loadModules(Application $application) {
-        foreach ($application->getModulePaths() as  $path) {
-            static::registerModuleFrom($application, $path);
-        }
+    public function load()
+    {
+        $this->registerModule();
     }
 
-
-    public static function registerModuleFrom(Application $application, string $path) {
+    public function registerModule()
+    {
+        $extractPath = FileSystem::makes(SUDA_DATA .'/extract-module');
         
+        foreach ($this->application->getModulePaths() as  $path) {
+            $this->registerModuleFrom($path, $extractPath);
+        }
+    }
+
+    public function registerModuleFrom(string $path,string $extractPath)
+    {
+        foreach (ModuleBuilder::scan($path, $extractPath) as $module) {
+            $this->application->add($module);
+        }
     }
 }

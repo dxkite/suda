@@ -1,12 +1,12 @@
 <?php
-namespace suda\application\module;
+namespace suda\application\builder;
 
 use Iterator;
 use ZipArchive;
 use suda\framework\Config;
 use suda\application\Module;
+use suda\framework\config\PathResolver;
 use suda\framework\filesystem\FileSystem;
-
 
 /**
  * 模块构建工具
@@ -21,20 +21,39 @@ class ModuleBuilder
      */
     public static function build(string $path):Module
     {
-        $config = new Config;
-        $config->load($path);
-        if (!$config->has('name')) {
-            $config->set('name', basename(dirname($path)));
+        $config = Config::loadConfig($path, ['path' => $path]);
+        $name = dirname($path);
+        $version = '1.0.0';
+        if ($config) {
+            if (array_key_exists('name', $config)) {
+                $name = $config['name'];
+            }
+            if (array_key_exists('version', $config)) {
+                $version = $config['version'];
+            }
         }
-        $module = new Module(dirname($path), $config);
+        $module = new Module($name, $version, $config);
         return $module;
     }
     
+    /**
+     * 检查模块配置
+     *
+     * @param string $path
+     * @return string|null
+     */
     public static function check(string $path): ?string
     {
-        return Config::resolve($path.'/module');
+        return PathResolver::resolve($path.'/module');
     }
 
+    /**
+     * 检查ZIP包
+     *
+     * @param string $path
+     * @param string $unpackPath
+     * @return string|null
+     */
     public static function checkPack(string $path, string $unpackPath): ?string
     {
         $extension = pathinfo($path, PATHINFO_EXTENSION);
@@ -43,7 +62,7 @@ class ModuleBuilder
             $extension !== 'module') {
             return null;
         }
-        $zip=new ZipArchive;
+        $zip = new ZipArchive;
         if ($zip->open($path, ZipArchive::CHECKCONS)) {
             $unzipPath = $unpackPath.'/'. pathinfo($path, PATHINFO_FILENAME) .'-'.substr(md5_file($path), 0, 8);
             $zip->extractTo($unzipPath);
@@ -56,23 +75,22 @@ class ModuleBuilder
     /**
      * 扫描模块
      *
-     * @param array $scanPaths
+     * @param string $scanPaths
      * @param string $extractPath
      * @return Iterator
      */
-    public static function scan(array $scanPaths, string $extractPath): Iterator
+    public static function scan(string $modulesPath, string $extractPath): Iterator
     {
         $enabledPack = \class_exists('ZipArchive');
-        foreach ($scanPaths as $modulesPath) {
-            foreach (FileSystem::read($modulesPath) as $path) {
-                if (is_file($path) && $enabledPack) {
-                    if ($configPath = static::checkPack($path, $extractPath)) {
-                        yield static::build($configPath);
-                    }
-                } elseif (is_dir($path)) {
-                    if ($configPath = static::check($path)) {
-                        yield static::build($configPath);
-                    }
+         
+        foreach (FileSystem::read($modulesPath) as $path) {
+            if (is_file($path) && $enabledPack) {
+                if ($configPath = static::checkPack($path, $extractPath)) {
+                    yield static::build($configPath);
+                }
+            } elseif (is_dir($path)) {
+                if ($configPath = static::check($path)) {
+                    yield static::build($configPath);
                 }
             }
         }

@@ -50,7 +50,7 @@ class Loader extends IncludeManager
     {
         // 搜索路径
         foreach ($this->includePath as $includeNamespace => $includePaths) {
-            if ($path = $this->getClassPathFrom($includeNamespace, $includePaths)) {
+            if ($path = $this->getClassPathFrom($className, $includeNamespace, $includePaths)) {
                 return $path;
             }
         }
@@ -82,11 +82,12 @@ class Loader extends IncludeManager
     /**
      * 从路径中获取
      *
-     * @param srring $includeNamespace
+     * @param string $className
+     * @param string $includeNamespace
      * @param array $includePaths
      * @return string|null
      */
-    protected function getClassPathFrom(srring $includeNamespace, array $includePaths)
+    protected function getClassPathFrom(string $className, string $includeNamespace, array $includePaths)
     {
         foreach ($includePaths as $includePath) {
             if ($path = $this->getClassPathByName($includeNamespace, $includePath, $className)) {

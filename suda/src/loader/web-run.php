@@ -9,7 +9,10 @@ use suda\framework\Request;
 use suda\framework\Service;
 use suda\framework\Debugger;
 use suda\framework\Response;
+
+use suda\application\loader\ApplicationLoader;
 use suda\framework\http\Request as HTTPRequest;
+use suda\application\builder\ApplicationBuilder;
 
 require_once __DIR__ .'/loader.php';
 
@@ -37,6 +40,11 @@ $context->get('debug')->notice('system booting');
 
 $service = new Service($context);
 
+$appLoader = new ApplicationLoader(ApplicationBuilder::build(SUDA_APP), $context);
+
+$appLoader->load();
+
+
 $service->on('service:load-route', function ($route) {
     $route->get('index', '/', function ($request, $response) use ($route) {
         return 'hello, index';
@@ -54,4 +62,5 @@ $service->on('service:load-route', function ($route) {
 $service->run();
 
 $context->get('debug')->notice('system shutdown');
+var_dump($appLoader);
 exit;

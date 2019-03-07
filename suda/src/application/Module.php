@@ -53,11 +53,13 @@ class Module
      *
      * @param string $name
      * @param string $version
+     * @param array $config
      */
-    public function __construct(string $name, string $version = '1.0.0')
+    public function __construct(string $name, string $version = '1.0.0', array $config)
     {
         $this->name = $name;
         $this->version = $version;
+        $this->config = $config;
     }
 
     /**
