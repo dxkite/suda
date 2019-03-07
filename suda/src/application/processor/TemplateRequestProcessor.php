@@ -1,15 +1,17 @@
 <?php
-
-namespace suda\welcome\response;
+namespace suda\application\processor;
 
 use suda\framework\Request;
 use suda\framework\Response;
 use suda\application\processor\RequestProcessor;
 
-class SimpleResponse extends RequestProcessor
+/**
+ * 响应
+ */
+class TemplateRequestProcessor implements RequestProcessor
 {
     public function onRequest(Request $request, Response $response)
     {
-        return 'hello world :' .date('Y-m-d H:i:s');
+        $response->send($request->getAttribute('template'));
     }
 }

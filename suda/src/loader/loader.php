@@ -1,8 +1,8 @@
 <?php
 
 
-use suda\framework\loader\Path;
-use suda\framework\loader\Loader;
+
+
 
 defined('SUDA_SYSTEM') or define('SUDA_SYSTEM', dirname(dirname(__DIR__)));
 defined('SUDA_RESOURCE') or define('SUDA_RESOURCE', SUDA_SYSTEM.'/resource');
@@ -27,9 +27,4 @@ if (!defined('USER_HOME_PATH')) {
 
 require_once SUDA_SYSTEM .'/src/framework/loader/Loader.php';
 
-// 初始化系统加载器
-$loader = new Loader;
-$loader->register();
-$loader->addIncludePath(SUDA_SYSTEM .'/src', 'suda');
 
-defined('SUDA_DATA') or define('SUDA_DATA', Path::toAbsolutePath('~/data'));

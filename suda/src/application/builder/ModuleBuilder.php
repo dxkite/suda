@@ -5,6 +5,7 @@ use Iterator;
 use ZipArchive;
 use suda\framework\Config;
 use suda\application\Module;
+use suda\application\Resource;
 use suda\framework\config\PathResolver;
 use suda\framework\filesystem\FileSystem;
 
@@ -19,11 +20,12 @@ class ModuleBuilder
      * @param string $path
      * @return Module
      */
-    public static function build(string $path):Module
+    public static function build(string $path, string $configPath):Module
     {
-        $config = Config::loadConfig($path, ['path' => $path]);
+        $config = Config::loadConfig($configPath, ['path' => $path]);
         $name = dirname($path);
         $version = '1.0.0';
+        $resource = './resource';
         if ($config) {
             if (array_key_exists('name', $config)) {
                 $name = $config['name'];
@@ -31,8 +33,12 @@ class ModuleBuilder
             if (array_key_exists('version', $config)) {
                 $version = $config['version'];
             }
+            if (array_key_exists('resource', $config)) {
+                $resource = $config['resource'];
+            }
         }
-        $module = new Module($name, $version, $config);
+        $module = new Module($name, $version, $path, $config);
+        $module->getResource()->addResourcePath(Resource::getPathByRelativedPath($resource, $path) );
         return $module;
     }
     
@@ -86,11 +92,11 @@ class ModuleBuilder
         foreach (FileSystem::read($modulesPath) as $path) {
             if (is_file($path) && $enabledPack) {
                 if ($configPath = static::checkPack($path, $extractPath)) {
-                    yield static::build($configPath);
+                    yield static::build($path, $configPath);
                 }
             } elseif (is_dir($path)) {
                 if ($configPath = static::check($path)) {
-                    yield static::build($configPath);
+                    yield static::build($path, $configPath);
                 }
             }
         }

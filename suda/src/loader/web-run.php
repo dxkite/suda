@@ -9,12 +9,20 @@ use suda\framework\Request;
 use suda\framework\Service;
 use suda\framework\Debugger;
 use suda\framework\Response;
-
+use suda\framework\loader\Path;
+use suda\framework\loader\Loader;
 use suda\application\loader\ApplicationLoader;
 use suda\framework\http\Request as HTTPRequest;
 use suda\application\builder\ApplicationBuilder;
 
 require_once __DIR__ .'/loader.php';
+
+// 初始化系统加载器
+$loader = new Loader;
+$loader->register();
+$loader->addIncludePath(SUDA_SYSTEM .'/src', 'suda');
+
+defined('SUDA_DATA') or define('SUDA_DATA', Path::toAbsolutePath('~/data'));
 
 $context = new Context;
 
@@ -35,32 +43,21 @@ $context->setSingle('debug', function () use ($context) {
     return Debugger::create($context);
 });
 
-
 $context->get('debug')->notice('system booting');
 
 $service = new Service($context);
 
 $appLoader = new ApplicationLoader(ApplicationBuilder::build(SUDA_APP), $context);
 
-$appLoader->load();
+$service->on('service:load-config', function () use ($appLoader) {
+    $appLoader->load();
+});
 
-
-$service->on('service:load-route', function ($route) {
-    $route->get('index', '/', function ($request, $response) use ($route) {
-        return 'hello, index';
-    });
-    
-    $route->get('hello', '/helloworld', function ($request, $response) use ($route) {
-        return 'hello world <strong>' . $route->create('hello', ['name' => 'dxkite']).'</strong>';
-    });
-    
-    $route->get('exception', '/exception', function ($request, $response) use ($route) {
-        throw new \Exception('some exception!');
-    });
+$service->on('service:load-route', function () use ($appLoader) {
+     $appLoader->loadRoute();
 });
 
 $service->run();
 
 $context->get('debug')->notice('system shutdown');
-var_dump($appLoader);
 exit;

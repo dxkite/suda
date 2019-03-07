@@ -43,8 +43,8 @@ class Resource
     public function addResourcePath(string $path)
     {
         $path = Path::toAbsolutePath($path);
-        if (!\in_array($path, $this->share)) {
-            array_unshift($this->share, $path);
+        if (!\in_array($path, $this->resource)) {
+            array_unshift($this->resource, $path);
         }
     }
 

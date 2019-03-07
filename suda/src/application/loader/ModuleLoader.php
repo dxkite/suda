@@ -1,14 +1,21 @@
 <?php
 namespace suda\application\loader;
 
+use suda\framework\Config;
 use suda\framework\Context;
+use suda\framework\Request;
 use suda\application\Module;
+use suda\framework\Response;
+use suda\application\Resource;
+use suda\framework\loader\Path;
 use suda\application\Application;
+use suda\application\processor\Processor;
+use suda\application\processor\RequestProcessor;
 
 /**
  * 应用程序
  */
-class ModuleLoader
+class ModuleLoader implements RequestProcessor
 {
     /**
      * 应用程序
@@ -54,17 +61,87 @@ class ModuleLoader
 
     protected function loadShareLibrary()
     {
+        $import = $this->module->getConfig('import.share', []);
+        if (count($import)) {
+            $this->importClassLoader($import, $this->module->getPath());
+        }
     }
 
     protected function loadPrivateLibrary()
     {
+        $import = $this->module->getConfig('import.src', []);
+        if (count($import)) {
+            $this->importClassLoader($import, $this->module->getPath());
+        }
     }
 
     protected function loadEventListener()
     {
+        if ($path = $this->module->getResource()->getConfigResourcePath('config/listener')) {
+            $listener = Config::loadConfig($path, [
+                'module' => $this->module->getName(),
+                'config' => $this->module->getConfig(),
+            ]);
+            $this->application->getContext()->get('event')->load($listener);
+        }
     }
 
     protected function loadRoute()
     {
+        foreach ($this->application->getRouteGroup() as  $group) {
+            $this->loadRouteGroup($group);
+        }
+    }
+
+    /**
+     * 导入 ClassLoader 配置
+     *
+     * @param array $import
+     * @return void
+     */
+    protected function importClassLoader(array $import, string $relativePath)
+    {
+        foreach ($import as $name => $path) {
+            $path = Resource::getPathByRelativedPath($path, $relativePath);
+            if (\is_numeric($name)) {
+                $this->application->getContext()->get('loader')->addIncludePath($path);
+            } elseif (is_file($path)) {
+                $this->application->getContext()->get('loader')->import($path);
+            } else {
+                $this->application->getContext()->get('loader')->addIncludePath($path, $name);
+            }
+        }
+    }
+
+    protected function loadRouteGroup(string $groupName)
+    {
+        $group = $groupName === 'default' ? '': '-'. $groupName;
+        if ($path = $this->module->getResource()->getConfigResourcePath('config/router'.$group)) {
+            $routeConfig = Config::loadConfig($path, [
+                'module' => $this->module->getName(),
+                'group' => $groupName,
+                'config' => $this->module->getConfig(),
+            ]);
+            $this->loadRouteConfig($routeConfig);
+        }
+    }
+
+    protected function loadRouteConfig(array $routeConfig)
+    {
+        foreach ($routeConfig as $name => $config) {
+            $exname = $this->module->getFullName().':'.$name;
+            $runnable = [ $this, 'onRequest'];
+            $method = $config['method'] ?? [];
+            $attriute = [];
+            $attriute['module'] = $this->module->getFullName();
+            $attriute['route'] = $config;
+            $this->application->getContext()->get('route')->request($method, $exname, $config['url'] ?? '/', $runnable, $attriute);
+        }
+    }
+
+    public function onRequest(Request $request, Response $response)
+    {
+        $this->toRunning();
+        return $this->application->onRequest($request, $response);
     }
 }

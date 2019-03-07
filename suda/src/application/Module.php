@@ -3,6 +3,7 @@ namespace suda\application;
 
 use suda\framework\Config;
 use suda\application\Resource;
+use suda\framework\arrayobject\ArrayDotAccess;
 
 /**
  * 模块名
@@ -48,6 +49,14 @@ class Module
      */
     protected $config;
 
+
+    /**
+     * 路径
+     *
+     * @var string
+     */
+    protected $path;
+
     /**
      * 创建模块
      *
@@ -55,11 +64,13 @@ class Module
      * @param string $version
      * @param array $config
      */
-    public function __construct(string $name, string $version = '1.0.0', array $config)
+    public function __construct(string $name, string $version = '1.0.0', string $path, array $config)
     {
         $this->name = $name;
         $this->version = $version;
+        $this->path = $path;
         $this->config = $config;
+        $this->resource = new Resource();
     }
 
     /**
@@ -87,7 +98,8 @@ class Module
      *
      * @return string
      */
-    public function getFullName() {
+    public function getFullName()
+    {
         return $this->getName().':'.$this->getVersion();
     }
 
@@ -96,7 +108,7 @@ class Module
      *
      * @return  Resource
      */
-    public function getResource()
+    public function getResource():Resource
     {
         return $this->resource;
     }
@@ -129,9 +141,12 @@ class Module
      * Get 模块配置
      *
      * @return  array
-     */ 
-    public function getConfig()
+     */
+    public function getConfig(string $name = null, $default = null)
     {
+        if ($name !== null) {
+            return ArrayDotAccess::get($this->config, $name, $default);
+        }
         return $this->config;
     }
 
@@ -141,11 +156,21 @@ class Module
      * @param  array  $config  模块配置
      *
      * @return  self
-     */ 
+     */
     public function setConfig(array $config)
     {
         $this->config = $config;
 
         return $this;
+    }
+
+    /**
+     * Get 路径
+     *
+     * @return  string
+     */
+    public function getPath()
+    {
+        return $this->path;
     }
 }

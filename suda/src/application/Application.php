@@ -2,15 +2,21 @@
 namespace suda\application;
 
 use suda\framework\Context;
+use suda\framework\Request;
 use suda\application\Module;
+use suda\framework\Response;
 use suda\application\Resource;
 use suda\application\ModuleBag;
+use suda\framework\runnable\Runnable;
 use suda\framework\arrayobject\ArrayDotAccess;
+use suda\application\processor\RequestProcessor;
+use suda\application\processor\FileRequestProcessor;
+use suda\application\processor\TemplateRequestProcessor;
 
 /**
  * 应用程序
  */
-class Application
+class Application implements RequestProcessor
 {
     /**
      * 应用路径
@@ -48,6 +54,13 @@ class Application
     protected $style = 'default';
     
     /**
+     * 路由组
+     *
+     * @var array
+     */
+    protected $routeGroup;
+
+    /**
      * 配置数组
      *
      * @var array
@@ -73,6 +86,7 @@ class Application
         $this->path = $path;
         $this->module = new ModuleBag;
         $this->manifast = $manifast;
+        $this->routeGroup = $manifast['route-group'] ?? ['default'];
         $this->initProperty($manifast);
     }
 
@@ -233,5 +247,44 @@ class Application
         $this->context = $context;
 
         return $this;
+    }
+
+    /**
+     * Get 路由组
+     *
+     * @return  array
+     */ 
+    public function getRouteGroup()
+    {
+        return $this->routeGroup;
+    }
+
+    /**
+     * 请求处理
+     *
+     * @param Request $request
+     * @param Response $response
+     * @return void
+     */
+    public function onRequest(Request $request, Response $response)
+    {
+        $route = $request->getAttribute('route', []);
+        $runnable = null;
+        if (\array_key_exists('class', $route)) {
+            $runnable = $this->className($route['class']).'->onRequest';
+        } elseif (\array_key_exists('source', $route)) {
+            $request->setAttribute('source', $route['source']);
+            $runnable = FileRequestProcessor::class.'->onRequest';
+        } elseif (\array_key_exists('template', $route)) {
+            $request->setAttribute('template', $route['template']);
+            $runnable = TemplateRequestProcessor::class.'->onRequest';
+        }else{
+            throw new \Exception('request failed');
+        }
+        return (new Runnable($runnable))($request, $response);
+    }
+
+    protected function className(string $name) {
+        return str_replace(['.','/'], '\\', $name);
     }
 }

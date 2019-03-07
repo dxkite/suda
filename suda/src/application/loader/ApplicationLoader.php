@@ -46,11 +46,20 @@ class ApplicationLoader
         $this->prepareModuleLoader();
     }
 
+    public function loadRoute() {
+        $modules =  $this->application->getManifast('reachable');
+        foreach ($modules as $name ) {
+            $fullname = $this->application->find($name)->getFullName();
+            $this->moduleLoader[$fullname]->toReacheable();
+        }
+    }
+
     public function prepareModuleLoader() {
         $modules =  $this->application->getManifast('modules');
         foreach ($modules as $moduleName) {
             if ($module = $this->application->find($moduleName)) {
-                $this->moduleLoader[$module->getFullName()] = $module;
+                $this->moduleLoader[$module->getFullName()] = new ModuleLoader($this->application, $module);
+                $this->moduleLoader[$module->getFullName()]->toLoaded();
             }
         }
     }
