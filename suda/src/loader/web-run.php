@@ -44,20 +44,22 @@ $context->setSingle('debug', function () use ($context) {
 });
 
 $context->get('debug')->notice('system booting');
-
 $service = new Service($context);
-
+$context->get('debug')->time('ApplicationBuilder::build');
 $appLoader = new ApplicationLoader(ApplicationBuilder::build($context, SUDA_APP));
-
-$service->on('service:load-config', function () use ($appLoader) {
+$context->get('debug')->timeEnd('ApplicationBuilder::build');
+$service->on('service:load-config', function () use ($appLoader, $context) {
+    $context->get('debug')->time('ApplicationLoader->load');
     $appLoader->load();
+    $context->get('debug')->timeEnd('ApplicationLoader->load');
 });
-
-$service->on('service:load-route', function () use ($appLoader) {
-     $appLoader->loadRoute();
+$service->on('service:load-route',function () use ($appLoader, $context) {
+    $context->get('debug')->time('ApplicationLoader->loadRoute');
+    $appLoader->loadRoute();
+    $context->get('debug')->timeEnd('ApplicationLoader->loadRoute');
 });
-
+$context->get('debug')->time('service->run');
 $service->run();
-
+$context->get('debug')->timeEnd('service->run');
 $context->get('debug')->notice('system shutdown');
 exit;
