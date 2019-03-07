@@ -1,6 +1,8 @@
 <?php
 namespace suda\orm\middleware;
 
+use suda\orm\TableStruct;
+
 /**
  * 中间件
  * 处理数据输出输出

@@ -105,5 +105,9 @@ class StatementTest extends TestCase
         $data = $table->run($table->read('name')->where(['id' => 1]));
 
         $this->assertEquals('dxkite', $data['name']);
+
+        $data = $table->run($table->read('id', 'name')->where(['id' => 1])->withKey('id'));
+
+        $this->assertEquals('dxkite', $data[1]['name']);
     }
 }
