@@ -208,7 +208,7 @@ class Route
     public function run(Request $request, Response $response, ?MatchResult $result):Response
     {
         if ($result !== null) {
-            return $this->buildResponse($result->getMatcher(), $request, $response, $result->getName(), $result->getParameter());
+            return $this->buildResponse($request->mergeQueries($result->getParameter()), $response, $result->getName());
         }
         return $this->buildDefaultResponse($request, $response);
     }
@@ -216,18 +216,13 @@ class Route
     /**
      * 构建响应
      *
-     * @param RouteMatcher $matcher
      * @param Request $request
      * @param Response $response
      * @param string $name
-     * @param array $parameter
      * @return Response
      */
-    protected function buildResponse(RouteMatcher $matcher, Request $request, Response $response, string $name, array  $parameter):Response
+    protected function buildResponse(Request $request, Response $response, string $name):Response
     {
-        foreach ($parameter as $key => $value) {
-            $request->setQuery($key, $value);
-        }
         $content = $this->runnable[$name]->run($request, $response);
         if ($content !== null && !$response->isSended()) {
             $response->setContent($content);

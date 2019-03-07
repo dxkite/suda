@@ -1,7 +1,6 @@
 <?php
 namespace suda\framework\debug\log\logger;
 
-use ZipArchive;
 use suda\framework\debug\ConfigTrait;
 use suda\framework\debug\log\LogLevel;
 use suda\framework\debug\ConfigInterface;
@@ -46,7 +45,7 @@ class FileLogger extends AbstractLogger implements ConfigInterface
      * @throws FileLoggerException
      * @param array $config
      */
-    public function __construct(array $config=[])
+    public function __construct(array $config = [])
     {
         $this->applyConfig($config);
         $temp = tmpfile();
@@ -78,11 +77,10 @@ class FileLogger extends AbstractLogger implements ConfigInterface
     
     protected function packLogFile()
     {
-        $logFile= $this->latest;
-        $path=preg_replace('/[\\\\]+/', '/', $this->getConfig('save-zip-path') .'/'.date('Y-m-d').'.zip');
-        $zip = new ZipArchive;
-        $res = $zip->open($path, ZipArchive::CREATE);
-        if ($res === true) {
+        $logFile = $this->latest;
+        $path = preg_replace('/[\\\\]+/', '/', $this->getConfig('save-zip-path') .'/'.date('Y-m-d').'.zip');
+        $zip = $this->getZipArchive($path);
+        if ($zip !== null) {
             if ($zip->addFile($logFile, date('Y-m-d'). '-'. $zip->numFiles .'.log')) {
                 array_push($this->removeFiles, $logFile);
             }
@@ -103,13 +101,31 @@ class FileLogger extends AbstractLogger implements ConfigInterface
     }
 
     /**
+     * 获取压缩
+     *
+     * @param string $path
+     * @return ZipArchive|null
+     */
+    protected function getZipArchive(string $path)
+    {
+        if (\class_exists('ZipArchive')) {
+            $zip = new \ZipArchive;
+            $res = $zip->open($path, ZipArchive::CREATE);
+            if ($res === true) {
+                return $zip;
+            }
+        }
+        return null;
+    }
+
+    /**
      * 检查日志文件大小
      *
      * @return boolean
      */
     protected function checkSize():bool
     {
-        $logFile= $this->latest;
+        $logFile = $this->latest;
         if (file_exists($logFile)) {
             if (filesize($logFile) > $this->getConfig('max-file-size')) {
                 return true;
@@ -121,7 +137,7 @@ class FileLogger extends AbstractLogger implements ConfigInterface
 
     public function log($level, string $message, array $context = [])
     {
-        if (LogLevel::compare($level, $this->getConfig('log-level')) >=0) {
+        if (LogLevel::compare($level, $this->getConfig('log-level')) >= 0) {
             $replace = [];
             $message = $this->interpolate($message, $context);
             $replace['%level%'] = $level;
@@ -134,10 +150,10 @@ class FileLogger extends AbstractLogger implements ConfigInterface
     protected function rollLatest()
     {
         if (isset($this->latest)) {
-            $size=ftell($this->temp);
+            $size = ftell($this->temp);
             fseek($this->temp, 0);
             if ($size > 0) {
-                $body=fread($this->temp, $size);
+                $body = fread($this->temp, $size);
                 file_put_contents($this->latest, $body, FILE_APPEND);
             }
             fclose($this->temp);
@@ -171,7 +187,7 @@ class FileLogger extends AbstractLogger implements ConfigInterface
         foreach ($context as $key => $val) {
             if (\is_bool($val)) {
                 $val = $val ? 'true' : 'false';
-            } elseif (is_null($val)) {
+            } elseif (null === $val) {
                 $val = 'null';
             }
             $replace['{' . $key . '}'] = $val;

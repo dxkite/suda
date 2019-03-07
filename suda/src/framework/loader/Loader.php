@@ -50,10 +50,28 @@ class Loader extends IncludeManager
     {
         // 搜索路径
         foreach ($this->includePath as $includeNamespace => $includePaths) {
-            foreach ($includePaths as $includePath) {
-                if ($path = $this->getClassPathByName($includeNamespace, $includePath, $className)) {
-                    return $path;
-                } elseif ($path = $this->getClassPathByAlias($includePath, $className)) {
+            if ($path = $this->getClassPathFrom($includeNamespace, $includePaths)) {
+                return $path;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * 导入文件
+     *
+     * @param string $filename
+     * @return string|null
+     */
+    public function import(string $filename):?string
+    {
+        if ($filename = static::realPath($filename)) {
+            @require_once $filename;
+            return $filename;
+        } else {
+            foreach ($this->includePath[0] as $includePath) {
+                if ($path = static::realPath($includePath.DIRECTORY_SEPARATOR.$filename)) {
+                    @require_once $path;
                     return $path;
                 }
             }
@@ -61,6 +79,25 @@ class Loader extends IncludeManager
         return null;
     }
 
+    /**
+     * 从路径中获取
+     *
+     * @param srring $includeNamespace
+     * @param array $includePaths
+     * @return string|null
+     */
+    protected function getClassPathFrom(srring $includeNamespace, array $includePaths)
+    {
+        foreach ($includePaths as $includePath) {
+            if ($path = $this->getClassPathByName($includeNamespace, $includePath, $className)) {
+                return $path;
+            } elseif ($path = $this->getClassPathByAlias($includePath, $className)) {
+                return $path;
+            }
+        }
+        return null;
+    }
+    
     /**
      * 根据类别名获取路径
      *

@@ -1,0 +1,22 @@
+{
+    "name": "suda/welcome",
+    "unique": "welcome",
+    "namespace": "suda\\welcome",
+    "authors": [
+        {
+            "name": "dxkite",
+            "email": "dxkite@qq.com"
+        }
+    ],
+    "import": {
+        "share": {
+            "suda\\welcome": "share"
+        },
+        "src": {
+            "suda\\welcome\\response": "src"
+        }
+    },
+    "discription": "欢迎安装框架",
+    "require": {},
+    "version": "1.0.0"
+}

@@ -37,7 +37,7 @@ class Config
      */
     public function load(string $path, array $extra = null)
     {
-        $data = $this->loadConfig($path, $extra ?? $this->config);
+        $data = static::loadConfig($path, $extra ?? $this->config);
         if ($data) {
             $this->assign($data);
         }
@@ -112,7 +112,7 @@ class Config
      * @param array $extra
      * @return array|null
      */
-    public function loadConfig(string $path, array $extra = []):?array
+    public static function loadConfig(string $path, array $extra = []):?array
     {
         if (!file_exists($path)) {
             $path = PathResolver::resolve($path);

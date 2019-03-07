@@ -6,14 +6,20 @@ use PDOStatement;
 
 use suda\orm\Binder;
 use suda\orm\DataSource;
-use suda\orm\Middleware;
+
+
 
 use suda\orm\TableStruct;
+
+use suda\orm\observer\Observer;
 use suda\orm\statement\Statement;
 use suda\orm\connection\Connection;
+use suda\orm\middleware\Middleware;
+use suda\orm\observer\NullObserver;
 use suda\orm\exception\SQLException;
 use suda\orm\statement\ReadStatement;
 use suda\orm\statement\WriteStatement;
+use suda\orm\middleware\NullMiddleware;
 
 class TableAccess
 {
@@ -34,9 +40,16 @@ class TableAccess
     /**
      * 中间件
      *
-     * @var Middleware|null
+     * @var Middleware
      */
     protected $middleware;
+
+    /**
+     * 性能观测
+     *
+     * @var Observer
+     */
+    protected $observer;
 
     /**
      * 创建数据表
@@ -49,7 +62,8 @@ class TableAccess
     {
         $this->source = $source;
         $this->struct = $struct;
-        $this->middleware = $middleware;
+        $this->middleware = $middleware ?: new NullMiddleware;
+        $this->observer = new NullObserver;
     }
 
     /**
@@ -182,7 +196,7 @@ class TableAccess
     protected function bindStmt(PDOStatement $stmt, Statement $statement)
     {
         foreach ($statement->getBinder() as $binder) {
-            if ($binder->getKey() !== null && $this->middleware !== null) {
+            if ($binder->getKey() !== null) {
                 $value = $this->middleware->input($binder->getKey(), $binder->getValue());
                 $stmt->bindValue($binder->getName(), $value, Binder::build($value));
             } else {
@@ -238,7 +252,10 @@ class TableAccess
             $stmt = $this->createStmt($source, $statement);
             $this->bindStmt($stmt, $statement);
             $statement->setStatement($stmt);
-            if ($stmt->execute() === false) {
+            $start = \microtime(true);
+            $status = $stmt->execute();
+            $this->observer->observe($statement, \microtime(true) - $start, $status);
+            if ($status === false) {
                 throw new SQLException($stmt->errorInfo()[2], intval($stmt->errorCode()));
             }
         }
@@ -282,10 +299,34 @@ class TableAccess
     /**
      * Get 中间件
      *
-     * @return  Middleware|null
+     * @return  Middleware
      */
-    public function getMiddleware():?Middleware
+    public function getMiddleware():Middleware
     {
         return $this->middleware;
+    }
+
+    /**
+     * Get 性能观测
+     *
+     * @return  Observer
+     */ 
+    public function getObserver()
+    {
+        return $this->observer;
+    }
+
+    /**
+     * Set 性能观测
+     *
+     * @param  Observer  $observer  性能观测
+     *
+     * @return  self
+     */ 
+    public function setObserver(Observer $observer)
+    {
+        $this->observer = $observer;
+
+        return $this;
     }
 }

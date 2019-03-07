@@ -259,12 +259,18 @@ class RequestWrapper
      * 设置查询参数
      *
      * @param array $query
-     * @return void
+     * @return self
      */
     public function setQueries(array $query)
     {
         $this->query = $query;
 
+        return $this;
+    }
+
+    public function mergeQueries(array $query)
+    {
+        $this->query = array_merge($this->query, $query);
         return $this;
     }
 

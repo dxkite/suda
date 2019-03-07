@@ -163,7 +163,7 @@ abstract class Connection
      * 查询SQL
      *
      * @param string $sql
-     * @return void
+     * @return boolean
      */
     public function query(string $sql)
     {

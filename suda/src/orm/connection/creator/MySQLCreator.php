@@ -55,9 +55,6 @@ class MySQLCreator
 
     protected function toSQL()
     {
-        if ($this->fields === null) {
-            return null;
-        }
         $content = [];
         foreach ($this->fields->all() as $field) {
             $content[] = $this->createField($field);
