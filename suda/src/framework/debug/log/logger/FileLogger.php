@@ -1,7 +1,6 @@
 <?php
 namespace suda\framework\debug\log\logger;
 
-use ZipArchive;
 use suda\framework\debug\ConfigTrait;
 use suda\framework\debug\log\LogLevel;
 use suda\framework\debug\ConfigInterface;
@@ -110,7 +109,7 @@ class FileLogger extends AbstractLogger implements ConfigInterface
     protected function getZipArchive(string $path)
     {
         if (\class_exists('ZipArchive')) {
-            $zip = new ZipArchive;
+            $zip = new \ZipArchive;
             $res = $zip->open($path, ZipArchive::CREATE);
             if ($res === true) {
                 return $zip;

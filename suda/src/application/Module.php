@@ -1,9 +1,8 @@
 <?php
 namespace suda\application;
 
+use suda\framework\Config;
 use suda\application\Resource;
-
-
 
 /**
  * 模块名
@@ -12,7 +11,7 @@ class Module
 {
     const LOADED = 1;
     const REACHABLE = 2;
-    const RUNNING =3;
+    const RUNNING = 3;
     
     /**
      * 模块名
@@ -43,12 +42,20 @@ class Module
     protected $status;
 
     /**
+     * 模块配置
+     *
+     * @var array
+     */
+    protected $config;
+
+    /**
      * 创建模块
      *
      * @param string $name
      * @param string $version
      */
-    public function __construct(string $name, string $version = '1.0.0') {
+    public function __construct(string $name, string $version = '1.0.0')
+    {
         $this->name = $name;
         $this->version = $version;
     }
@@ -57,7 +64,7 @@ class Module
      * Get 版本
      *
      * @return  string
-     */ 
+     */
     public function getVersion()
     {
         return $this->version;
@@ -67,7 +74,7 @@ class Module
      * Get 模块名
      *
      * @return  string
-     */ 
+     */
     public function getName()
     {
         return $this->name;
@@ -77,7 +84,7 @@ class Module
      * Get 资源路径
      *
      * @return  Resource
-     */ 
+     */
     public function getResource()
     {
         return $this->resource;
@@ -89,7 +96,7 @@ class Module
      * @param  Resource  $resource  资源路径
      *
      * @return  self
-     */ 
+     */
     public function setResource(Resource $resource)
     {
         $this->resource = $resource;
@@ -102,9 +109,32 @@ class Module
      * @param integer $status
      * @return void
      */
-    public function setStatus(int $status) {
+    public function setStatus(int $status)
+    {
         $this->status = $status;
     }
 
+    /**
+     * Get 模块配置
+     *
+     * @return  array
+     */ 
+    public function getConfig()
+    {
+        return $this->config;
+    }
 
+    /**
+     * Set 模块配置
+     *
+     * @param  array  $config  模块配置
+     *
+     * @return  self
+     */ 
+    public function setConfig(array $config)
+    {
+        $this->config = $config;
+
+        return $this;
+    }
 }
