@@ -5,6 +5,7 @@ use PDO;
 use PDOException;
 use suda\orm\struct\Fields;
 use suda\orm\exception\SQLException;
+use suda\orm\connection\observer\Observer;
 
 /**
  * 数据表链接对象
@@ -33,6 +34,14 @@ abstract class Connection
      * @var string
      */
     protected $name;
+
+    /**
+     * 性能观测
+     *
+     * @var Observer
+     */
+    protected $observer;
+    
     /**
      * 创建连接
      *
@@ -42,6 +51,7 @@ abstract class Connection
     {
         $this->config = $config;
         $this->name = $name ?? 'anonymous';
+        $this->observer = new NullObserver;
         \register_shutdown_function(function () {
             $this->onBeforeSystemShutdown();
         });
@@ -54,7 +64,7 @@ abstract class Connection
     /**
      * 连接服务器
      *
-     * @return self
+     * @return bool
      */
     public function connect()
     {
@@ -124,7 +134,7 @@ abstract class Connection
      */
     public function isConnected():bool
     {
-        return $this->pdo != null;
+        return $this->pdo !== null;
     }
 
     /**
@@ -235,5 +245,30 @@ abstract class Connection
     public function getName()
     {
         return  $this->name.'['.static::$type.']@{'.$this->getDsn().'}';
+    }
+
+    
+    /**
+     * Get 性能观测
+     *
+     * @return  Observer
+     */
+    public function getObserver():Observer
+    {
+        return $this->observer;
+    }
+
+    /**
+     * Set 性能观测
+     *
+     * @param  Observer  $observer  性能观测
+     *
+     * @return  self
+     */
+    public function setObserver(Observer $observer)
+    {
+        $this->observer = $observer;
+
+        return $this;
     }
 }

@@ -8,6 +8,7 @@ use suda\application\Application;
 use suda\application\loader\ModuleLoader;
 use suda\framework\filesystem\FileSystem;
 use suda\application\builder\ModuleBuilder;
+use suda\application\database\DebugObserver;
 
 /**
  * 应用程序
@@ -53,6 +54,7 @@ class ApplicationLoader
     {
         $dataSourceConfigPath = $this->application->getResource()->getConfigResourcePath('config/data-source');
         $dataSource = new DataSource;
+        $observer = new DebugObserver($this->application->getContext()->get('debug'));
         if ($dataSourceConfigPath !== null) {
             $dataSourceConfig = Config::loadConfig($dataSourceConfigPath);
             foreach ($dataSourceConfig as $name => $config) {
@@ -61,12 +63,14 @@ class ApplicationLoader
         }
         $this->application->setDataSource($dataSource);
         $this->application->getContext()->set('data-source', $dataSource);
+        
     }
 
-    protected function addDataSource(DataSource $source,string $name,  string $type, string $mode, array $config)
+    protected function addDataSource(DataSource $source,Observer $observer, string $name,  string $type, string $mode, array $config)
     {
         $mode = \strtolower($mode);
         $data = DataSource::new($type, $config, $name);
+        $data->setObserver($observer);
         if (strpos($mode, 'read') !== false || strpos($mode, 'slave') !== false) {
             $source->addRead($data);
         } elseif (strpos($mode, 'write') !== false || strpos($mode, 'master') !== false) {

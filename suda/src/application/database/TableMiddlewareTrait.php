@@ -39,7 +39,7 @@ trait TableMiddlewareTrait
      * 对输出列进行处理
      *
      * @param TableStruct $row
-     * @return array
+     * @return TableStruct
      */
     public function outputRow(TableStruct $row){
         $methodName='_outputDataFilter';

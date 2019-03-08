@@ -1,5 +1,5 @@
 <?php
-namespace suda\orm\observer;
+namespace suda\orm\connection\observer;
 
 use suda\orm\statement\Statement;
 

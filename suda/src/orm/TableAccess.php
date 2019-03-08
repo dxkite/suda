@@ -3,15 +3,9 @@ namespace suda\orm;
 
 use PDO;
 use PDOStatement;
-
 use suda\orm\Binder;
 use suda\orm\DataSource;
-
-
-
 use suda\orm\TableStruct;
-
-use suda\orm\observer\Observer;
 use suda\orm\statement\Statement;
 use suda\orm\connection\Connection;
 use suda\orm\middleware\Middleware;
@@ -44,12 +38,6 @@ class TableAccess
      */
     protected $middleware;
 
-    /**
-     * 性能观测
-     *
-     * @var Observer
-     */
-    protected $observer;
 
     /**
      * 创建数据表
@@ -63,7 +51,6 @@ class TableAccess
         $this->source = $source;
         $this->struct = $struct;
         $this->middleware = $middleware ?: new NullMiddleware;
-        $this->observer = new NullObserver;
     }
 
     /**
@@ -260,7 +247,7 @@ class TableAccess
             $statement->setStatement($stmt);
             $start = \microtime(true);
             $status = $stmt->execute();
-            $this->observer->observe($statement, \microtime(true) - $start, $status);
+            $source->getObserver()->observe($statement, \microtime(true) - $start, $status);
             if ($status === false) {
                 throw new SQLException($stmt->errorInfo()[2], intval($stmt->errorCode()));
             }
@@ -310,29 +297,5 @@ class TableAccess
     public function getMiddleware():Middleware
     {
         return $this->middleware;
-    }
-
-    /**
-     * Get 性能观测
-     *
-     * @return  Observer
-     */
-    public function getObserver():Observer
-    {
-        return $this->observer;
-    }
-
-    /**
-     * Set 性能观测
-     *
-     * @param  Observer  $observer  性能观测
-     *
-     * @return  self
-     */
-    public function setObserver(Observer $observer)
-    {
-        $this->observer = $observer;
-
-        return $this;
     }
 }
