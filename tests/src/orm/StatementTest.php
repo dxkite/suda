@@ -34,18 +34,18 @@ class StatementTest extends TestCase
         ]);
 
      
-        if (DIRECTORY_SEPARATOR === '/') {
-            $source->add(DataSource::new('mysql', [
-                'host' => 'localhost',
-                'name' => 'test',
-                'user' => 'root',
-                'password' => DIRECTORY_SEPARATOR === '/' ?'':'root',
-            ]));
-        }
+         
+        $source->add(DataSource::new('mysql', [
+            'host' => 'localhost',
+            'name' => 'test',
+            'user' => 'root',
+            'password' => DIRECTORY_SEPARATOR === '/' ?'':'root',
+        ]));
+     
 
         $table = new TableAccess($struct, $source);
 
-        $this->assertTrue($table->getSource()->write()->createTable($struct->getFields()));
+        
 
         $this->assertEquals(
             'SELECT `id`,`name` FROM user_table',
@@ -98,6 +98,8 @@ class StatementTest extends TestCase
         );
 
         if (DIRECTORY_SEPARATOR === '/') {
+            $this->assertTrue($table->getSource()->write()->createTable($struct->getFields()));
+            
             $this->assertTrue($table->run($table->write(['name' => 'dxkite'])));
 
             $data = $table->run($table->read('name')->where(['id' => 1]));

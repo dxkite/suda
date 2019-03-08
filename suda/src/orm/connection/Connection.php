@@ -6,6 +6,7 @@ use PDOException;
 use suda\orm\struct\Fields;
 use suda\orm\exception\SQLException;
 use suda\orm\connection\observer\Observer;
+use suda\orm\connection\observer\NullObserver;
 
 /**
  * 数据表链接对象
