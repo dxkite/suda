@@ -70,7 +70,7 @@ class Module
         $this->version = $version;
         $this->path = $path;
         $this->config = $config;
-        $this->resource = new Resource();
+        $this->resource = new Resource;
     }
 
     /**

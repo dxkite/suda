@@ -33,18 +33,15 @@ class StatementTest extends TestCase
             $struct->field('name', 'varchar', 80),
         ]);
 
-        if (file_exists(TEST_RESOURCE.'/test.db')) {
-            \unlink(TEST_RESOURCE.'/test.db');
+     
+        if (DIRECTORY_SEPARATOR === '/') {
+            $source->add(DataSource::new('mysql', [
+                'host' => 'localhost',
+                'name' => 'test',
+                'user' => 'root',
+                'password' => DIRECTORY_SEPARATOR === '/' ?'':'root',
+            ]));
         }
-
-        (new SQLite3(TEST_RESOURCE.'/test.db'))->close();
-        
-        $source->add(DataSource::connect('mysql', [
-            'host' => 'localhost',
-            'name' => 'test',
-            'user' => 'root',
-            'password' => DIRECTORY_SEPARATOR === '/' ?'':'root',
-        ]));
 
         $table = new TableAccess($struct, $source);
 
@@ -100,14 +97,16 @@ class StatementTest extends TestCase
             (new Statement('hello > :name', ['name' => 'dxkite']))->getString()
         );
 
-        $this->assertTrue($table->run($table->write(['name' => 'dxkite'])));
+        if (DIRECTORY_SEPARATOR === '/') {
+            $this->assertTrue($table->run($table->write(['name' => 'dxkite'])));
 
-        $data = $table->run($table->read('name')->where(['id' => 1]));
-
-        $this->assertEquals('dxkite', $data['name']);
-
-        $data = $table->run($table->read('id', 'name')->where(['id' => 1])->withKey('id'));
-
-        $this->assertEquals('dxkite', $data[1]['name']);
+            $data = $table->run($table->read('name')->where(['id' => 1]));
+    
+            $this->assertEquals('dxkite', $data['name']);
+    
+            $data = $table->run($table->read('id', 'name')->where(['id' => 1])->withKey('id'));
+    
+            $this->assertEquals('dxkite', $data[1]['name']);
+        }
     }
 }

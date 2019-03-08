@@ -48,16 +48,25 @@ $service = new Service($context);
 $context->get('debug')->time('ApplicationBuilder::build');
 $appLoader = new ApplicationLoader(ApplicationBuilder::build($context, SUDA_APP));
 $context->get('debug')->timeEnd('ApplicationBuilder::build');
-$service->on('service:load-config', function () use ($appLoader, $context) {
+
+$service->on('service:load-config', function ($config) use ($appLoader, $context) {
     $context->get('debug')->time('ApplicationLoader->load');
     $appLoader->load();
     $context->get('debug')->timeEnd('ApplicationLoader->load');
 });
-$service->on('service:load-route',function () use ($appLoader, $context) {
+
+$service->on('service:load-environment',function ($config) use ($appLoader, $context) {
+    $context->get('debug')->time('ApplicationLoader->loadDataSource');
+    $appLoader->loadDataSource($config);
+    $context->get('debug')->timeEnd('ApplicationLoader->loadDataSource');
+});
+
+$service->on('service:load-route',function ($route) use ($appLoader, $context) {
     $context->get('debug')->time('ApplicationLoader->loadRoute');
     $appLoader->loadRoute();
     $context->get('debug')->timeEnd('ApplicationLoader->loadRoute');
 });
+
 $context->get('debug')->time('service->run');
 $service->run();
 $context->get('debug')->timeEnd('service->run');

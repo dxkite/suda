@@ -78,7 +78,7 @@ class Service
         $response = $this->context->get('response');
 
         $event->exec('service:load-config', [$config ,$this]);
-
+        $event->exec('service:load-environment', [$config ,$this]);
         $event->exec('service:load-route', [$route , $this]);
 
         $result = $route->match($request, $response);

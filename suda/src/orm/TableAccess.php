@@ -287,7 +287,7 @@ class TableAccess
      *
      * @return  DataSource
      */
-    public function getSource()
+    public function getSource():DataSource
     {
         return $this->source;
     }
@@ -297,7 +297,7 @@ class TableAccess
      *
      * @return  TableStruct
      */
-    public function getStruct()
+    public function getStruct():TableStruct
     {
         return $this->struct;
     }
@@ -317,7 +317,7 @@ class TableAccess
      *
      * @return  Observer
      */
-    public function getObserver()
+    public function getObserver():Observer
     {
         return $this->observer;
     }

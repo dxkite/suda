@@ -1,6 +1,8 @@
 <?php
 namespace suda\application\loader;
 
+use suda\orm\DataSource;
+use suda\framework\Config;
 use suda\framework\Context;
 use suda\application\Application;
 use suda\application\loader\ModuleLoader;
@@ -26,6 +28,7 @@ class ApplicationLoader
      */
     protected $moduleLoader;
 
+    
     public function __construct(Application $application)
     {
         $this->application = $application;
@@ -46,7 +49,34 @@ class ApplicationLoader
         }
     }
 
-    public function prepareModuleLoader()
+    public function loadDataSource()
+    {
+        $dataSourceConfigPath = $this->application->getResource()->getConfigResourcePath('config/data-source');
+        $dataSource = new DataSource;
+        if ($dataSourceConfigPath !== null) {
+            $dataSourceConfig = Config::loadConfig($dataSourceConfigPath);
+            foreach ($dataSourceConfig as $name => $config) {
+                $this->addDataSource($dataSource, $name, $config['type'] ?? 'mysql', $config['mode'] ?? 'master', $config);
+            }
+        }
+        $this->application->setDataSource($dataSource);
+        $this->application->getContext()->set('data-source', $dataSource);
+    }
+
+    protected function addDataSource(DataSource $source,string $name,  string $type, string $mode, array $config)
+    {
+        $mode = \strtolower($mode);
+        $data = DataSource::new($type, $config, $name);
+        if (strpos($mode, 'read') !== false || strpos($mode, 'slave') !== false) {
+            $source->addRead($data);
+        } elseif (strpos($mode, 'write') !== false || strpos($mode, 'master') !== false) {
+            $source->addWrite($data);
+        } else {
+            $source->add($data);
+        }
+    }
+
+    protected function prepareModuleLoader()
     {
         $modules = $this->application->getManifast('modules');
         foreach ($modules as $moduleName) {
@@ -57,7 +87,7 @@ class ApplicationLoader
         }
     }
 
-    public function registerModule()
+    protected function registerModule()
     {
         $extractPath = FileSystem::makes(SUDA_DATA .'/extract-module');
         foreach ($this->application->getModulePaths() as  $path) {
@@ -65,7 +95,7 @@ class ApplicationLoader
         }
     }
 
-    public function registerModuleFrom(string $path, string $extractPath)
+    protected function registerModuleFrom(string $path, string $extractPath)
     {
         foreach (ModuleBuilder::scan($path, $extractPath) as $module) {
             $this->application->add($module);

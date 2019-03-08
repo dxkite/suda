@@ -1,6 +1,7 @@
 <?php
 namespace suda\application;
 
+use suda\orm\DataSource;
 use suda\framework\Context;
 use suda\framework\Request;
 use suda\application\Module;
@@ -74,6 +75,20 @@ class Application implements RequestProcessor
      */
     protected $context;
 
+    /**
+     * 资源目录
+     *
+     * @var Resource
+     */
+    protected $resource;
+
+
+    /**
+     * 数据源
+     *
+     * @var DataSource
+     */
+    protected $dataSource;
     public function __construct(string $path, array $manifast)
     {
         $this->path = $path;
@@ -81,6 +96,7 @@ class Application implements RequestProcessor
         $this->manifast = $manifast;
         $this->routeGroup = $manifast['route-group'] ?? ['default'];
         $this->initProperty($manifast);
+        $this->resource = new Resource([Resource::getPathByRelativedPath($manifast['resource'] ?? './resource', $path)]);
     }
 
     /**
@@ -222,7 +238,7 @@ class Application implements RequestProcessor
      * Get 路由组
      *
      * @return  array
-     */ 
+     */
     public function getRouteGroup()
     {
         return $this->routeGroup;
@@ -247,13 +263,62 @@ class Application implements RequestProcessor
         } elseif (\array_key_exists('template', $route)) {
             $request->setAttribute('template', $route['template']);
             $runnable = TemplateRequestProcessor::class.'->onRequest';
-        }else{
+        } else {
             throw new \Exception('request failed');
         }
         return (new Runnable($runnable))($request, $response);
     }
 
-    protected function className(string $name) {
+    protected function className(string $name)
+    {
         return str_replace(['.','/'], '\\', $name);
+    }
+
+    /**
+     * Get 数据源
+     *
+     * @return  Resource
+     */
+    public function getResource(): Resource
+    {
+        return $this->resource;
+    }
+
+    /**
+     * Set 数据源
+     *
+     * @param  Resource  $resource  数据源
+     *
+     * @return  self
+     */
+    public function setResource(Resource $resource)
+    {
+        $this->resource = $resource;
+
+        return $this;
+    }
+
+    /**
+     * Get 数据源
+     *
+     * @return  DataSource
+     */
+    public function getDataSource()
+    {
+        return $this->dataSource;
+    }
+
+    /**
+     * Set 数据源
+     *
+     * @param  DataSource  $dataSource  数据源
+     *
+     * @return  self
+     */
+    public function setDataSource(DataSource $dataSource)
+    {
+        $this->dataSource = $dataSource;
+
+        return $this;
     }
 }

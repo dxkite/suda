@@ -1,0 +1,13 @@
+{
+    "master": {
+        "enable": true,
+        "prefix": "dx_",
+        "mode": "master",
+        "host": "127.0.0.1",
+        "port": 3306,
+        "name": "suda_system",
+        "user": "root",
+        "password": "root",
+        "charset": "utf8"
+    }
+}

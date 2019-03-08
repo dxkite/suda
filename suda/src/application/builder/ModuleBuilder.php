@@ -38,7 +38,7 @@ class ModuleBuilder
             }
         }
         $module = new Module($name, $version, $path, $config);
-        $module->getResource()->addResourcePath(Resource::getPathByRelativedPath($resource, $path) );
+        $module->getResource()->addResourcePath(Resource::getPathByRelativedPath($resource, $path));
         return $module;
     }
     

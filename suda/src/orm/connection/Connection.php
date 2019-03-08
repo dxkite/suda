@@ -27,15 +27,21 @@ abstract class Connection
     protected $id;
     protected static $_id = 0;
     protected static $defaultConnection = null;
-    
+    /**
+     * 链接别名
+     *
+     * @var string
+     */
+    protected $name;
     /**
      * 创建连接
      *
      * @param array $config
      */
-    public function __construct(array $config)
+    public function __construct(array $config, string $name = null)
     {
         $this->config = $config;
+        $this->name = $name ?? 'anonymous';
         \register_shutdown_function(function () {
             $this->onBeforeSystemShutdown();
         });
@@ -59,15 +65,17 @@ abstract class Connection
                 $this->id = static::$_id;
                 static::$_id ++;
             } catch (PDOException $e) {
-                throw new SQLException($this->__toString().' connect database error:'.$e->getMessage(), $e->getCode(), E_ERROR, __FILE__, __LINE__, $e);
+                throw new SQLException($this->getName().'connect database error:'.$e->getMessage(), $e->getCode(), E_ERROR, __FILE__, __LINE__, $e);
             }
         }
-        return $this;
+        return $this->isConnected();
     }
 
     public function getPdo()
     {
-        $this->connect();
+        if (!$this->connect()) {
+            throw new SQLException($this->getName().' data source is not connected');
+        }
         return $this->pdo;
     }
 
@@ -170,7 +178,7 @@ abstract class Connection
         if ($stmt = $this->getPdo()->query($sql)) {
             return $stmt ->execute();
         }
-        $debug=debug_backtrace();
+        $debug = debug_backtrace();
         throw (new SQLException($this->getPdo()->errorInfo()[2], intval($this->getPdo()->errorCode()), E_ERROR, $debug[1]['file'], $debug[1]['line']))->setSql($sql);
     }
 
@@ -212,10 +220,20 @@ abstract class Connection
 
     public function __toString()
     {
-        return 'DB Connection ['.$this->type.'] {'.$this->getDsn().'}';
+        return $this->getName();
     }
 
     abstract public function createTable(Fields $fields);
     abstract public function switchDatabase(string $name);
     abstract public function rawTableName(string $name);
+
+    /**
+     * Get 链接别名
+     *
+     * @return  string
+     */
+    public function getName()
+    {
+        return  $this->name.'['.static::$type.']@{'.$this->getDsn().'}';
+    }
 }

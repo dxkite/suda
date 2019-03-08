@@ -16,7 +16,11 @@ class Resource
      *
      * @var array
      */
-    protected $resource = [];
+    protected $resource;
+    
+    public function __construct(array $resource = []) {
+        $this->resource = $resource;
+    }
 
     /**
      * 获取相对的路径

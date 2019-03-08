@@ -110,12 +110,13 @@ class DataSource
      *
      * @param string $type
      * @param array $config
+     * @param string|null $name
      * @return Connection
      */
-    public static function connect(string $type, array $config): Connection
+    public static function new(string $type, array $config, ?string $name = null): Connection
     {
         if (array_key_exists($type, static::$type)) {
-            return new static::$type[$type]($config);
+            return new static::$type[$type]($config, $name);
         } else {
             throw new SQLException(sprintf('no connection type of %s', $type));
         }

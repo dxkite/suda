@@ -1,6 +1,8 @@
 <?php
 namespace suda\orm\middleware;
 
+use suda\orm\TableStruct;
+
 /**
  * 中间件
  * 处理数据输出输出
@@ -29,7 +31,7 @@ interface Middleware
      * 对输出列进行处理
      *
      * @param TableStruct $row
-     * @return array
+     * @return TableStruct
      */
     public function outputRow(TableStruct $row);
 }
