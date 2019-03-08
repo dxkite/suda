@@ -135,6 +135,7 @@ class ModuleLoader implements RequestProcessor
     public function onRequest(Request $request, Response $response)
     {
         $this->toRunning();
+        $request->setAttribute('context', $this->application->getContext());
         return $this->application->onRequest($request, $response);
     }
 }

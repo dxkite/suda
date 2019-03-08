@@ -21,7 +21,7 @@ class DebugObserver implements Observer
     public function observe(Statement $statement, $timeSpend, bool $result)
     {
         $query = $statement->getString();
-        $status = $result ? 'success' : 'fail';
+        $status = $result ? 'OK' : 'Err';
         $this->info('query['.$status.'] process cost '.$query.' '. number_format($pass, 5).'s');
     }
 }

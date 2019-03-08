@@ -31,6 +31,7 @@ class ApplicationBuilder
         $applicationClass = $manifastConfig['application'] ?? Application::class;
         $application = new $applicationClass($path, $manifastConfig);
         $application->setContext($context);
+        $context->set('application', $application);
         return $application;
     }
     
