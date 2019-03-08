@@ -6,5 +6,5 @@ use suda\orm\statement\Statement;
 
 interface Observer
 {
-    public function observe(Statement $statement, $timeSpend, $result);
+    public function observe(Statement $statement, $timeSpend, bool $result);
 }

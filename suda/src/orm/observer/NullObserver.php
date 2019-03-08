@@ -6,7 +6,7 @@ use suda\orm\statement\Statement;
 
 class NullObserver implements Observer
 {
-    public function observe(Statement $statement, $timeSpend, $result) {
+    public function observe(Statement $statement, $timeSpend, bool $result) {
         // noop
     }
 }
