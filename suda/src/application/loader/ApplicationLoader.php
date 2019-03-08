@@ -7,6 +7,7 @@ use suda\framework\Context;
 use suda\application\Application;
 use suda\application\loader\ModuleLoader;
 use suda\framework\filesystem\FileSystem;
+use suda\orm\connection\observer\Observer;
 use suda\application\builder\ModuleBuilder;
 use suda\application\database\DebugObserver;
 
@@ -58,15 +59,14 @@ class ApplicationLoader
         if ($dataSourceConfigPath !== null) {
             $dataSourceConfig = Config::loadConfig($dataSourceConfigPath);
             foreach ($dataSourceConfig as $name => $config) {
-                $this->addDataSource($dataSource, $name, $config['type'] ?? 'mysql', $config['mode'] ?? 'master', $config);
+                $this->addDataSource($dataSource, $observer, $name, $config['type'] ?? 'mysql', $config['mode'] ?? 'master', $config);
             }
         }
         $this->application->setDataSource($dataSource);
         $this->application->getContext()->set('data-source', $dataSource);
-        
     }
 
-    protected function addDataSource(DataSource $source,Observer $observer, string $name,  string $type, string $mode, array $config)
+    protected function addDataSource(DataSource $source, Observer $observer, string $name, string $type, string $mode, array $config)
     {
         $mode = \strtolower($mode);
         $data = DataSource::new($type, $config, $name);

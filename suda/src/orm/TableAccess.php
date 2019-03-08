@@ -50,6 +50,16 @@ class TableAccess extends StatementRunner
     }
 
     /**
+     * 获取表结构
+     *
+     * @return \suda\orm\TableStruct
+     */
+    public function getStruct():TableStruct
+    {
+        return $this->struct;
+    }
+
+    /**
      * 写
      *
      * @param mixed ...$args
