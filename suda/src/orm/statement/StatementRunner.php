@@ -112,6 +112,19 @@ class StatementRunner
     }
 
     /**
+     * 直接查询
+     *
+     * @param string $sql
+     * @param array $parameter
+     * @return mixed
+     */
+    public function query(string $sql, array $parameter = [])
+    {
+        $statement = new Statement($sql, $parameter);
+        return $this->run($statement);
+    }
+
+    /**
      * 设置中间件
      *
      * @param Middleware $middleware
