@@ -4,6 +4,7 @@ namespace suda\framework\response\wrapper;
 use suda\framework\Request;
 use suda\framework\Response;
 use suda\framework\http\Stream;
+use suda\framework\http\StringStream;
 use suda\framework\response\AbstractContentWrapper;
 
 /**
@@ -14,18 +15,17 @@ class HtmlContentWrapper extends AbstractContentWrapper
     /**
      * 获取内容
      *
-     * @param Response $response
-     * @return \suda\framework\http\Stream|string
+     * @param \suda\framework\Response $response
+     * @return \suda\framework\http\Stream
      */
-    public function getContent(Response $response)
+    public function getContent(Response $response): Stream
     {
         $response->setType('html');
         if (\is_object($this->content)) {
             if ($this->content instanceof Stream) {
                 return $this->content;
             }
-            return $this->content->__toString();
         }
-        return $this->content;
+        return new StringStream($this->content);
     }
 }

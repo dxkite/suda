@@ -45,7 +45,7 @@ class Response extends HTTPResponse
     {
         $wrapper = ContentWrapper::getWrapper($content);
         $this->data = $wrapper->getContent($this);
-        $this->setHeader('content-length', is_string($this->data) ? strlen($this->data) : $this->data->length());
+        $this->setHeader('content-length', $this->data->length());
         return $this;
     }
 

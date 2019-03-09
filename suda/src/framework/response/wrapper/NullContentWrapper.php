@@ -3,6 +3,7 @@ namespace suda\framework\response\wrapper;
 
 use suda\framework\Request;
 use suda\framework\Response;
+use suda\framework\http\StringStream;
 use suda\framework\response\AbstractContentWrapper;
 
 /**
@@ -18,11 +19,11 @@ class NullContentWrapper extends AbstractContentWrapper
     /**
      * 获取内容
      *
-     * @param Response $response
-     * @return \suda\framework\http\Stream|string
+     * @param \suda\framework\Response $response
+     * @return \suda\framework\http\Stream
      */
-    public function getContent(Response $response)
+    public function getContent(Response $response): Stream
     {
-        return '';
+        return new StringStream('');
     }
 }
