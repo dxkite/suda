@@ -53,9 +53,9 @@ class Request extends RequestWrapper
      *
      * @return  mixed
      */
-    public function getAttribute(string $name)
+    public function getAttribute(string $name, $default =null)
     {
-        return $this->attribute[$name] ?? null;
+        return $this->attribute[$name] ?? $default;
     }
 
     /**

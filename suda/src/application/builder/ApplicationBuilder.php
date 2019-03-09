@@ -24,7 +24,7 @@ class ApplicationBuilder
     public static function build(Context $context, string $path):Application
     {
         $manifast = static::resolveManifastPath($path);
-        $manifastConfig = Config::loadConfig($manifast);
+        $manifastConfig = Config::loadConfig($manifast) ?? [];
         if (\array_key_exists('import', $manifastConfig)) {
             static::importClassLoader($context->get('loader'), $manifastConfig['import'], $path);
         }

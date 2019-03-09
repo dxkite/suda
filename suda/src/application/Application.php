@@ -64,7 +64,7 @@ class Application implements RequestProcessor
     /**
      * 模块路径
      *
-     * @var string
+     * @var string[]
      */
     protected $modulePaths;
 
@@ -189,9 +189,6 @@ class Application implements RequestProcessor
         }
         if (\array_key_exists('locate', $manifast)) {
             $this->locate = \strtolower($manifast['locate']);
-        }
-        if (\array_key_exists('timezone', $manifast)) {
-            $this->timezone = \strtolower($manifast['timezone']);
         }
         if (\array_key_exists('module-paths', $manifast)) {
             $this->modulePaths = \strtolower($manifast['module-paths']);

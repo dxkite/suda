@@ -22,7 +22,7 @@ class ModuleBuilder
      */
     public static function build(string $path, string $configPath):Module
     {
-        $config = Config::loadConfig($configPath, ['path' => $path]);
+        $config = Config::loadConfig($configPath, ['path' => $path]) ?? [];
         $name = dirname($path);
         $version = '1.0.0';
         $resource = './resource';
@@ -73,7 +73,7 @@ class ModuleBuilder
             $unzipPath = $unpackPath.'/'. pathinfo($path, PATHINFO_FILENAME) .'-'.substr(md5_file($path), 0, 8);
             $zip->extractTo($unzipPath);
             $zip->close();
-            return Config::resolve($unzipPath.'/module');
+            return PathResolver::resolve($unzipPath.'/module');
         }
         return null;
     }
