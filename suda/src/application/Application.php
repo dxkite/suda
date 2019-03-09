@@ -191,7 +191,7 @@ class Application implements RequestProcessor
             $this->locate = \strtolower($manifast['locate']);
         }
         if (\array_key_exists('module-paths', $manifast)) {
-            $this->modulePaths = \strtolower($manifast['module-paths']);
+            $this->modulePaths = $manifast['module-paths'];
         } else {
             $this->modulePaths = [ Resource::getPathByRelativedPath('modules', $this->path) ];
         }

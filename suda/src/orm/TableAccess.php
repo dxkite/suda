@@ -9,13 +9,11 @@ use suda\orm\TableStruct;
 use suda\orm\statement\Statement;
 use suda\orm\connection\Connection;
 use suda\orm\middleware\Middleware;
-use suda\orm\observer\NullObserver;
 use suda\orm\exception\SQLException;
 use suda\orm\statement\ReadStatement;
 use suda\orm\statement\QueryAccess;
 use suda\orm\statement\WriteStatement;
 use suda\orm\middleware\NullMiddleware;
-
 
 class TableAccess extends QueryAccess
 {
@@ -77,7 +75,7 @@ class TableAccess extends QueryAccess
      */
     public function lastInsertId(string $name = null):?int
     {
-        return $this->source->write()->lastInsertId();
+        return $this->source->write()->lastInsertId($name);
     }
 
     /**
@@ -87,7 +85,7 @@ class TableAccess extends QueryAccess
      */
     public function beginTransaction()
     {
-        return $this->source->write()->beginTransaction();
+        $this->source->write()->beginTransaction();
     }
 
     /**
@@ -97,7 +95,7 @@ class TableAccess extends QueryAccess
      */
     public function commit()
     {
-        return $this->source->write()->commit();
+        $this->source->write()->commit();
     }
 
     /**
@@ -107,8 +105,9 @@ class TableAccess extends QueryAccess
      */
     public function rollBack()
     {
-        return $this->source->write()->rollBack();
+        $this->source->write()->rollBack();
     }
+
     /**
      * 写
      *
@@ -140,7 +139,7 @@ class TableAccess extends QueryAccess
     public function run(Statement $statement)
     {
         $connection = $statement->isRead() ? $this->source->read() : $this->source->write();
-        $this->runStatement($this->connection, $statement);
+        $this->runStatement($connection, $statement);
         return $this->resultFrom($statement);
     }
 

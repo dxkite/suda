@@ -4,10 +4,9 @@ namespace suda\orm\connection;
 use PDO;
 use PDOException;
 use suda\orm\struct\Fields;
+use suda\orm\statement\Statement;
 use suda\orm\connection\Connection;
 use suda\orm\exception\SQLException;
-use suda\orm\connection\creator\MySQLCreator;
-use suda\orm\connection\creator\SQLiteCreator;
 
 /**
  * 数据表链接对象
@@ -37,10 +36,10 @@ class SQLiteConnection extends Connection
             throw new SQLException($this->__toString().' connect database error:'.$e->getMessage(), $e->getCode(), E_ERROR, __FILE__, __LINE__, $e);
         }
     }
-
-    public function switchDatabase(string $string)
+    
+    public function switchDatabase(string $database)
     {
-        $this->query('USE `' . $this->rawTableName($table).'`');
+        return $this->query(new Statement('USE `' . $database.'`'));
     }
 
     public function rawTableName(string $name)

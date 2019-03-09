@@ -2,6 +2,7 @@
 namespace suda\orm\statement;
 
 use suda\orm\Binder;
+use suda\orm\exception\SQLException;
 
 
 

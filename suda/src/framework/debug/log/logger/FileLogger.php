@@ -104,13 +104,13 @@ class FileLogger extends AbstractLogger implements ConfigInterface
      * 获取压缩
      *
      * @param string $path
-     * @return ZipArchive|null
+     * @return \ZipArchive|null
      */
     protected function getZipArchive(string $path)
     {
         if (\class_exists('ZipArchive')) {
             $zip = new \ZipArchive;
-            $res = $zip->open($path, ZipArchive::CREATE);
+            $res = $zip->open($path, \ZipArchive::CREATE);
             if ($res === true) {
                 return $zip;
             }

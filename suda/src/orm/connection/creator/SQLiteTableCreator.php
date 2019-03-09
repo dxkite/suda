@@ -5,6 +5,7 @@ use PDO;
 use PDOException;
 use suda\orm\struct\Field;
 use suda\orm\struct\Fields;
+use suda\orm\statement\Statement;
 use suda\orm\connection\Connection;
 use suda\orm\exception\SQLException;
 
@@ -49,8 +50,9 @@ class SQLiteTableCreator
 
     public function create()
     {
-        $sql = $this->toSQL();
-        return $this->connection->query($sql);
+        $statement = new Statement($this->toSQL());
+        $statement->isWrite(true);
+        return $this->connection->query($statement) > 0;
     }
 
     protected function seekField(Field $field)
@@ -66,12 +68,7 @@ class SQLiteTableCreator
 
     protected function toSQL()
     {
-        if ($this->fields === null) {
-            return null;
-        }
         // TODO
-        return $sql;
+        return '';
     }
-
-
 }

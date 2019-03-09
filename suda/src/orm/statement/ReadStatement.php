@@ -181,7 +181,7 @@ class ReadStatement extends Statement
     /**
      * 取全部
      *
-     * @return void
+     * @return self
      */
     public function fetchAll()
     {

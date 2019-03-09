@@ -57,7 +57,7 @@ $service->on('service:load-config', function ($config) use ($appLoader, $context
 
 $service->on('service:load-environment',function ($config) use ($appLoader, $context) {
     $context->get('debug')->time('ApplicationLoader->loadDataSource');
-    $appLoader->loadDataSource($config);
+    $appLoader->loadDataSource();
     $context->get('debug')->timeEnd('ApplicationLoader->loadDataSource');
 });
 

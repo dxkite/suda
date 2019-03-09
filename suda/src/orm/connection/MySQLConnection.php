@@ -4,9 +4,9 @@ namespace suda\orm\connection;
 use PDO;
 use PDOException;
 use suda\orm\struct\Fields;
+use suda\orm\statement\Statement;
 use suda\orm\connection\Connection;
 use suda\orm\exception\SQLException;
-use suda\orm\connection\creator\MySQLCreator;
 
 /**
  * 数据表链接对象
@@ -47,7 +47,7 @@ class MySQLConnection extends Connection
 
     public function switchDatabase(string $database)
     {
-        return $this->query('USE `' . $database.'`');
+        return $this->query(new Statement('USE `' . $database.'`'));
     }
 
     public function rawTableName(string $name)

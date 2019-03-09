@@ -123,10 +123,8 @@ class WriteStatement extends Statement
     protected function whereCondition(string $where, array $whereParameter)
     {
         $this->whereCondition = $where;
-        if (\is_array($whereParameter)) {
-            foreach ($whereParameter as $key => $value) {
-                $this->binder[] = new Binder($key, $value);
-            }
+        foreach ($whereParameter as $key => $value) {
+            $this->binder[] = new Binder($key, $value);
         }
     }
 

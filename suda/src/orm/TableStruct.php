@@ -4,6 +4,7 @@ namespace suda\orm;
 use ArrayAccess;
 use ArrayIterator;
 use IteratorAggregate;
+use suda\orm\struct\Field;
 use suda\orm\struct\Fields;
 
 class TableStruct implements ArrayAccess, IteratorAggregate

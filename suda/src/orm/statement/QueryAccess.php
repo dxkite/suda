@@ -49,7 +49,7 @@ class QueryAccess
      */
     public function lastInsertId(string $name = null):?int
     {
-        return $this->connection->lastInsertId();
+        return $this->connection->lastInsertId($name);
     }
 
     /**
@@ -143,14 +143,14 @@ class QueryAccess
     protected function createStmt(Connection $source, Statement $statement): PDOStatement
     {
         if ($statement->scroll() === true) {
-            $stmt =  $source->getPdo()->prepare($statement->getString(), [PDO::ATTR_CURSOR => PDO::CURSOR_SCROLL]);
+            $stmt = $source->getPdo()->prepare($statement->getString(), [PDO::ATTR_CURSOR => PDO::CURSOR_SCROLL]);
         } else {
-            $stmt =  $source->getPdo()->prepare($statement->getString());
+            $stmt = $source->getPdo()->prepare($statement->getString());
         }
         if ($stmt instanceof PDOStatement) {
             return $stmt;
         }
-        throw new SQLException(sprintf("error prepare %s", $statement->getString()), SQLException::ERR_PREPARE);
+        throw new SQLException(sprintf('error prepare %s', $statement->getString()), SQLException::ERR_PREPARE);
     }
 
     /**
@@ -181,7 +181,7 @@ class QueryAccess
     protected function runStatement(Connection $connection, Statement $statement)
     {
         if ($statement->scroll() && $statement->getStatement() !== null) {
-            $stmt = $statement->getStatement();
+            // noop
         } else {
             $stmt = $this->createStmt($connection, $statement);
             $this->bindStmt($stmt, $statement);

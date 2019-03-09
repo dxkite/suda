@@ -164,23 +164,6 @@ class Statement
         return $this->binder;
     }
 
-    /**
-     * 连接多个语句
-     *
-     * @param Statement|string ...$args
-     * @return Statement
-     */
-    public static function concat(...$args):Statement
-    {
-        $statement = new Statement;
-        foreach ($args as $item) {
-            $statement->string .= $item;
-            if ($args instanceof Statement) {
-                $statement->binder = array_merge($statement->binder, $item->binder);
-            }
-        }
-    }
-
     public function __toString()
     {
         return $this->getString();
