@@ -88,7 +88,7 @@ abstract class Connection
     /**
      * 获取PDO
      * @ignore-dump
-     * @return PDOStatement
+     * @return PDO
      */
     public function getPdo()
     {

@@ -69,7 +69,7 @@ class QueryAccess
      */
     public function beginTransaction()
     {
-        return $this->connection->beginTransaction();
+        $this->connection->beginTransaction();
     }
 
     /**
@@ -79,7 +79,7 @@ class QueryAccess
      */
     public function commit()
     {
-        return $this->connection->commit();
+        $this->connection->commit();
     }
 
     /**
@@ -89,7 +89,7 @@ class QueryAccess
      */
     public function rollBack()
     {
-        return $this->connection->rollBack();
+        $this->connection->rollBack();
     }
 
 
@@ -111,7 +111,8 @@ class QueryAccess
      * @param Statement $statement
      * @return mixed
      */
-    protected function resultFrom(Statement $statement) {
+    protected function resultFrom(Statement $statement)
+    {
         if ($statement->isWrite()) {
             return $statement->getStatement()->rowCount() > 0;
         } elseif ($statement->isFetch()) {

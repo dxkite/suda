@@ -2,12 +2,13 @@
 namespace suda\orm\middleware;
 
 use suda\orm\TableStruct;
+use suda\orm\middleware\Middleware;
 
 /**
  * 中间件
  * 处理数据输出输出
  */
-class NullMiddleware 
+class NullMiddleware implements Middleware
 {
     /**
      * 处理输入数据
@@ -16,7 +17,8 @@ class NullMiddleware
      * @param mixed $data
      * @return mixed
      */
-    public function input(string $name, $data) {
+    public function input(string $name, $data)
+    {
         return $data;
     }
 
@@ -27,7 +29,8 @@ class NullMiddleware
      * @param mixed $data
      * @return mixed
      */
-    public function output(string $name, $data) {
+    public function output(string $name, $data)
+    {
         return $data;
     }
 
@@ -37,7 +40,8 @@ class NullMiddleware
      * @param TableStruct $row
      * @return TableStruct
      */
-    public function outputRow(TableStruct $row) {
+    public function outputRow(TableStruct $row)
+    {
         return $row;
     }
 }
