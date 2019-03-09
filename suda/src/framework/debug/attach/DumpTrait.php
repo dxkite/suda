@@ -33,7 +33,11 @@ trait DumpTrait
                 $methodRef = new \ReflectionMethod($object, $method);
                 $ignore = \preg_match('/@ignore-dump/i', $methodRef->getDocComment()??'') > 0;
                 if (count($methodRef->getParameters()) === 0 && !$ignore) {
-                    $parameterString.=static::valueToString($method.'()', $object->$method(), $deep);
+                    try {
+                        $parameterString.=static::valueToString($method.'()', $object->$method(), $deep);
+                    } catch(\Exception $e){
+
+                    }
                 }
             }
         }

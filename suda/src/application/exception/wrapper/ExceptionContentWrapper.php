@@ -4,6 +4,7 @@ namespace suda\application\exception\wrapper;
 use suda\framework\Request;
 use suda\framework\Response;
 use suda\framework\http\Stream;
+use suda\application\template\ExceptionTemplate;
 use suda\framework\response\AbstractContentWrapper;
 
 /**
@@ -20,6 +21,6 @@ class ExceptionContentWrapper extends AbstractContentWrapper
     public function getContent(Response $response)
     {
         $content = $this->content;
-        \var_dump($content);
+        return (new ExceptionTemplate($content))->__toString();
     }
 }

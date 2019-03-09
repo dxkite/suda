@@ -4,7 +4,7 @@ namespace suda\application\exception;
 use RuntimeException;
 
 /**
- * json置类
+ * 应用异常
  */
 class ApplicationException extends RuntimeException
 {

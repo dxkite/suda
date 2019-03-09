@@ -3,10 +3,11 @@ namespace suda\orm\connection;
 
 use PDO;
 use PDOException;
+use PDOStatement;
 use suda\orm\struct\Fields;
 use suda\orm\statement\Statement;
-use suda\orm\exception\SQLException;
 use suda\orm\statement\QueryAccess;
+use suda\orm\exception\SQLException;
 use suda\orm\connection\observer\Observer;
 use suda\orm\connection\observer\NullObserver;
 
@@ -84,6 +85,11 @@ abstract class Connection
         return $this->isConnected();
     }
 
+    /**
+     * 获取PDO
+     * @ignore-dump
+     * @return PDOStatement
+     */
     public function getPdo()
     {
         if (!$this->connect()) {
@@ -242,10 +248,9 @@ abstract class Connection
      */
     public function getName()
     {
-        return  $this->name.'['.static::$type.']@{'.$this->getDsn().'}';
+        return 'DataConnection['.$this->name.'][at '.$this->getDsn().']';
     }
 
-    
     /**
      * Get 性能观测
      *
