@@ -93,7 +93,7 @@ abstract class Connection
     public function getPdo()
     {
         if (!$this->connect()) {
-            throw new SQLException($this->getName().' data source is not connected');
+            throw new SQLException($this->getName().' data source is not connected', SQLException::ERROR_NO_CONNECTION);
         }
         return $this->pdo;
     }
@@ -182,7 +182,7 @@ abstract class Connection
     protected function onBeforeSystemShutdown()
     {
         if ($this->pdo && ($this->transaction > 0 || $this->pdo->inTransaction())) {
-            throw new SQLException('SQL transaction is open (' . $this->transaction.') in connection '.$this->__toString());
+            throw new SQLException('SQL transaction is open (' . $this->transaction.') in connection '.$this->__toString(), SQLException::ERROR_TRANSACTION);
         }
     }
 

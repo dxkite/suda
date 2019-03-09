@@ -3,24 +3,9 @@ namespace suda\orm\exception;
 
 class SQLException extends \ErrorException
 {
-    protected $sql;
-    protected $binds;
-    public function setSql(string $sql)
-    {
-        $this->sql=$sql;
-        return $this;
-    }
-    public function getSql()
-    {
-        return $this->sql;
-    }
-    public function getBinds()
-    {
-        return $this->binds;
-    }
-    public function setBinds(array $binds)
-    {
-        $this->binds=$binds;
-        return $this;
-    }
+    const ERROR_QUERY = 1;
+    const ERROR_PREPARE = 2;
+    const ERROR_NO_CONNECTION = 3;
+    const ERROR_TRANSACTION = 4;
+    const ERROR_CONFIGURATION = 5;
 }

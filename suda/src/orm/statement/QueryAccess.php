@@ -143,10 +143,14 @@ class QueryAccess
     protected function createStmt(Connection $source, Statement $statement): PDOStatement
     {
         if ($statement->scroll() === true) {
-            return $source->getPdo()->prepare($statement->getString(), [PDO::ATTR_CURSOR => PDO::CURSOR_SCROLL]);
+            $stmt =  $source->getPdo()->prepare($statement->getString(), [PDO::ATTR_CURSOR => PDO::CURSOR_SCROLL]);
         } else {
-            return $source->getPdo()->prepare($statement->getString());
+            $stmt =  $source->getPdo()->prepare($statement->getString());
         }
+        if ($stmt !== false) {
+            return $stmt;
+        }
+        throw new SQLException(sprintf("error prepare %s", $statement->getString()), SQLException::ERROR_PREPARE);
     }
 
     /**
@@ -176,7 +180,7 @@ class QueryAccess
      */
     protected function runStatement(Connection $connection, Statement $statement)
     {
-        if ($statement->scroll() && $this->getStatement() !== null) {
+        if ($statement->scroll() && $statement->getStatement() !== null) {
             $stmt = $this->getStatement();
         } else {
             $stmt = $this->createStmt($connection, $statement);
