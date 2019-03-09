@@ -147,7 +147,7 @@ class QueryAccess
         } else {
             $stmt =  $source->getPdo()->prepare($statement->getString());
         }
-        if ($stmt !== false) {
+        if ($stmt instanceof PDOStatement) {
             return $stmt;
         }
         throw new SQLException(sprintf("error prepare %s", $statement->getString()), SQLException::ERROR_PREPARE);
@@ -181,7 +181,7 @@ class QueryAccess
     protected function runStatement(Connection $connection, Statement $statement)
     {
         if ($statement->scroll() && $statement->getStatement() !== null) {
-            $stmt = $this->getStatement();
+            $stmt = $statement->getStatement();
         } else {
             $stmt = $this->createStmt($connection, $statement);
             $this->bindStmt($stmt, $statement);
