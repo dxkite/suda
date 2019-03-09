@@ -18,7 +18,7 @@ class ModuleBag
     /**
      * 已知全部全名
      *
-     * @var string[]
+     * @var array
      */
     protected $knownsFullName = [];
 

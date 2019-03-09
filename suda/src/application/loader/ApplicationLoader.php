@@ -9,7 +9,9 @@ use suda\application\loader\ModuleLoader;
 use suda\framework\filesystem\FileSystem;
 use suda\orm\connection\observer\Observer;
 use suda\application\builder\ModuleBuilder;
+use suda\framework\response\ContentWrapper;
 use suda\application\database\DebugObserver;
+use suda\application\exception\wrapper\ExceptionContentWrapper;
 
 /**
  * 应用程序
@@ -38,6 +40,7 @@ class ApplicationLoader
 
     public function load()
     {
+        ContentWrapper::register(ExceptionContentWrapper::class, [\Exception::class]);
         $this->registerModule();
         $this->prepareModuleLoader();
     }
@@ -93,7 +96,8 @@ class ApplicationLoader
 
     protected function registerModule()
     {
-        $extractPath = FileSystem::makes(SUDA_DATA .'/extract-module');
+        $extractPath = SUDA_DATA .'/extract-module';
+        FileSystem::makes($extractPath);
         foreach ($this->application->getModulePaths() as  $path) {
             $this->registerModuleFrom($path, $extractPath);
         }

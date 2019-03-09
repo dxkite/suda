@@ -200,7 +200,7 @@ class Application implements RequestProcessor
     /**
      * Get 模块路径
      *
-     * @return  string
+     * @return  string[]
      */
     public function getModulePaths()
     {
@@ -246,7 +246,7 @@ class Application implements RequestProcessor
      *
      * @param Request $request
      * @param Response $response
-     * @return void
+     * @return mixed
      */
     public function onRequest(Request $request, Response $response)
     {

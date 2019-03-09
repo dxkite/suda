@@ -48,7 +48,11 @@ class ApplicationBuilder
             FileSystem::copyDir(SUDA_RESOURCE.'/app', $path);
             $manifast = PathResolver::resolve($path.'/manifast');
         }
-        return $manifast;
+        if ($manifast === null) {
+            throw new ApplicationException(sprintf('missing manifast in %s', $path));
+        } else {
+            return $manifast;
+        }
     }
 
     public static function importClassLoader(Loader $loader, array $import, string $relativePath)

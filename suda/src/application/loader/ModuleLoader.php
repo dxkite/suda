@@ -2,15 +2,10 @@
 namespace suda\application\loader;
 
 use suda\framework\Config;
-use suda\framework\Context;
 use suda\framework\Request;
 use suda\application\Module;
 use suda\framework\Response;
-use suda\application\Resource;
-use suda\framework\loader\Path;
 use suda\application\Application;
-use suda\framework\loader\Loader;
-use suda\application\processor\Processor;
 use suda\application\builder\ApplicationBuilder;
 use suda\application\processor\RequestProcessor;
 
@@ -115,7 +110,9 @@ class ModuleLoader implements RequestProcessor
                 'group' => $groupName,
                 'config' => $this->module->getConfig(),
             ]);
-            $this->loadRouteConfig($routeConfig);
+            if ($routeConfig !== null) {
+                $this->loadRouteConfig($routeConfig);
+            }
         }
     }
 
