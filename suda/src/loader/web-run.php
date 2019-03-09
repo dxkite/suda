@@ -40,7 +40,7 @@ $context->setSingle('response', function () {
 });
 
 $context->setSingle('debug', function () use ($context) {
-    return Debugger::create($context);
+    return Debugger::create($context)->register();
 });
 
 $context->get('debug')->notice('system booting');

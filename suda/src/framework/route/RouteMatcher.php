@@ -163,7 +163,7 @@ class RouteMatcher
         if (count($this->methods) > 0 && !\in_array($request->getMethod(), $this->methods)) {
             return null;
         }
-        if (($parameter = $this->matcher->match($request->getUrl())) !== null) {
+        if (($parameter = $this->matcher->match($request->getUri())) !== null) {
             return $this->matcher->buildParamter($parameter);
         }
         return null;

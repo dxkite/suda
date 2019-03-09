@@ -24,12 +24,14 @@ class Debugger extends Debug
     
     /**
      * 注册错误处理函数
+     * @return self
      */
-    public function __construct()
+    public function register()
     {
         register_shutdown_function([$this,'uncaughtFatalError']);
         set_error_handler([$this,'uncaughtError']);
         set_exception_handler([$this,'uncaughtException']);
+        return $this;
     }
     
     /**
@@ -119,7 +121,7 @@ class Debugger extends Debug
      */
     public function uncaughtException($exception)
     {
-        $this->error($exception->getMessage(),['exception' => $exception]);
+        $this->error($exception->getMessage(), ['exception' => $exception]);
         $this->context->get('response')->sendContent($exception);
     }
 
@@ -151,7 +153,8 @@ class Debugger extends Debug
      *
      * @return array
      */
-    public function getIgnoreTraces():array {
+    public function getIgnoreTraces():array
+    {
         $trace = parent::getIgnoreTraces();
         $trace[] = __FILE__;
         return $trace;

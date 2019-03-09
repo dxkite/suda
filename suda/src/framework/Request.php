@@ -33,7 +33,8 @@ class Request extends RequestWrapper
      *
      * @param \suda\framework\http\Request $request
      */
-    public function __construct(HTTPRequest $request) {
+    public function __construct(HTTPRequest $request)
+    {
         parent::__construct($request);
         $this->setIsJson($this->contentIsJson());
         $this->buildData();
@@ -44,8 +45,9 @@ class Request extends RequestWrapper
      *
      * @return string
      */
-    public function getUrl():string {
-        return $this->getUri();
+    public function getUrl():string
+    {
+        return $this->request->server['request-uri'] ?? '/';
     }
 
     /**
@@ -53,7 +55,7 @@ class Request extends RequestWrapper
      *
      * @return  mixed
      */
-    public function getAttribute(string $name, $default =null)
+    public function getAttribute(string $name, $default = null)
     {
         return $this->attribute[$name] ?? $default;
     }

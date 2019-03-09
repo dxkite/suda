@@ -11,6 +11,7 @@ use suda\framework\debug\attach\AttachTrait;
 use suda\framework\debug\log\LoggerInterface;
 use suda\framework\debug\attach\DumpInterface;
 use suda\framework\debug\log\LoggerAwareTrait;
+use suda\framework\debug\log\logger\NullLogger;
 use suda\framework\debug\attach\AttachInterface;
 use suda\framework\debug\log\LoggerAwareInterface;
 
