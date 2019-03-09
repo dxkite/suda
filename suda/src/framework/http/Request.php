@@ -3,6 +3,7 @@ namespace suda\framework\http;
 
 use suda\framework\http\Stream;
 use suda\framework\http\UploadedFile;
+use suda\framework\http\stream\DataStream;
 
 class Request
 {
@@ -51,7 +52,7 @@ class Request
     /**
      * 输入流
      *
-     * @var \suda\framework\http\Stream|string
+     * @var \suda\framework\http\Stream
      */
     public $input;
 
@@ -101,7 +102,7 @@ class Request
         $this->cookies = $_COOKIE;
         $this->get = $_GET;
         $this->post = $_POST;
-        $this->input = new Stream('php://input');
+        $this->input = new DataStream('php://input');
     }
 
     /**

@@ -91,7 +91,7 @@ class FileCache implements Cache
      */
     public function has(string $name):bool
     {
-        return FileSystem::exists($this->getFilePath($name));
+        return FileSystem::exist($this->getFilePath($name));
     }
 
     /**

@@ -14,7 +14,7 @@ class PHPSession implements Session
     /**
      * 会话ID
      *
-     * @var int
+     * @var string
      */
     protected $id;
 
@@ -63,8 +63,8 @@ class PHPSession implements Session
         $name = $config['name'] ?? 'php_session';
         FileSystem::makes($path);
 
-        if ($id = $request->getCookie($name)) {
-            session_id($id );
+        if (is_string($id = $request->getCookie($name))) {
+            session_id($id);
         }else{
             $id = md5($path.$request->getRemoteAddr().uniqid());
             session_id($id);

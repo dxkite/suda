@@ -3,8 +3,10 @@ namespace suda\framework\http;
 
 use suda\framework\http\Cookie;
 use suda\framework\http\Header;
+use suda\framework\http\Status;
 use suda\framework\http\Stream;
 use suda\framework\http\HeaderContainer;
+use suda\framework\http\stream\DataStream;
 
 /**
  * 原始HTTP响应
@@ -35,7 +37,7 @@ class Response
     /**
      * 响应数据
      *
-     * @var string|\suda\framework\http\Stream
+     * @var \suda\framework\http\Stream|string
      */
     protected $data;
 
@@ -145,7 +147,7 @@ class Response
         if (!file_exists($filename)) {
             throw new \Exception('file no found: '.$filename);
         }
-        $this->data = new Stream($filename, $offset, $length);
+        $this->data = new DataStream($filename, $offset, $length);
         $this->end();
     }
 

@@ -1,12 +1,12 @@
 <?php
-namespace suda\framework\http;
+namespace suda\framework\http\stream;
 
-use suda\framework\http\Stream;
+use suda\framework\http\stream\DataStream;
 
 /**
  * 数据流
  */
-class StringStream extends Stream
+class StringStream implements DataStream
 {
     public function __construct(string $stream, int $offset = 0, int $length = null)
     {
