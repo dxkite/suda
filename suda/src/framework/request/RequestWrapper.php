@@ -381,4 +381,18 @@ class RequestWrapper
 
         return $this;
     }
+
+    /**
+     * 获取Cookie
+     *
+     * @param string $name
+     * @param mixed $default
+     * @return mixed
+     */
+    public function getCookie(string $name = null, $default = null) {
+        if ($name === null) {
+            return $this->request->cookies;
+        }
+        return $this->request->cookies[$name] ?? $default;
+    }
 }
