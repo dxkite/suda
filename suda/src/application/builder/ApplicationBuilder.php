@@ -8,6 +8,7 @@ use suda\application\Application;
 use suda\framework\loader\Loader;
 use suda\framework\config\PathResolver;
 use suda\framework\filesystem\FileSystem;
+use suda\application\exception\ApplicationException;
 
 /**
  * 应用程序
@@ -49,7 +50,7 @@ class ApplicationBuilder
             $manifast = PathResolver::resolve($path.'/manifast');
         }
         if ($manifast === null) {
-            throw new ApplicationException(sprintf('missing manifast in %s', $path));
+            throw new ApplicationException(sprintf('missing manifast in %s', $path), ApplicationException::ERR_MANIFAST_IS_EMPTY);
         } else {
             return $manifast;
         }

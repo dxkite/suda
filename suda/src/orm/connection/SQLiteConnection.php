@@ -20,7 +20,7 @@ class SQLiteConnection extends Connection
     public function getDsn()
     {
         if (!array_key_exists('path', $this->config)) {
-            throw new SQLException('config missing host', SQLException::ERROR_CONFIGURATION);
+            throw new SQLException('config missing host', SQLException::ERR_CONFIGURATION);
         }
         $path = $this->config['path'];
         return static::$type.':'.$path;

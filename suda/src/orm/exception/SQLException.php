@@ -3,9 +3,9 @@ namespace suda\orm\exception;
 
 class SQLException extends \ErrorException
 {
-    const ERROR_QUERY = 1;
-    const ERROR_PREPARE = 2;
-    const ERROR_NO_CONNECTION = 3;
-    const ERROR_TRANSACTION = 4;
-    const ERROR_CONFIGURATION = 5;
+    const ERR_QUERY = 1;
+    const ERR_PREPARE = 2;
+    const ERR_NO_CONNECTION = 3;
+    const ERR_TRANSACTION = 4;
+    const ERR_CONFIGURATION = 5;
 }

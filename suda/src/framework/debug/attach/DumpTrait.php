@@ -36,7 +36,7 @@ trait DumpTrait
                     try {
                         $parameterString.=static::valueToString($method.'()', $object->$method(), $deep);
                     } catch(\Exception $e){
-
+                        // noop 
                     }
                 }
             }

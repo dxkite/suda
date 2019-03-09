@@ -8,5 +8,5 @@ use RuntimeException;
  */
 class ApplicationException extends RuntimeException
 {
-    
+    const ERR_MANIFAST_IS_EMPTY = 1;
 }
