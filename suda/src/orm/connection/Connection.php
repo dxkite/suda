@@ -234,7 +234,6 @@ abstract class Connection
         return $this->getName();
     }
 
-    abstract public function createTable(Fields $fields);
     abstract public function switchDatabase(string $name);
     abstract public function rawTableName(string $name);
 

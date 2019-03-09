@@ -7,6 +7,7 @@ use suda\orm\TableAccess;
 use suda\orm\TableStruct;
 use PHPUnit\Framework\TestCase;
 use suda\orm\statement\Statement;
+use suda\orm\connection\creator\MySQLTableCreator;
 
 class StatementTest extends TestCase
 {
@@ -97,8 +98,8 @@ class StatementTest extends TestCase
             (new Statement('hello > :name', ['name' => 'dxkite']))->getString()
         );
 
-        if (DIRECTORY_SEPARATOR === '/') {
-            $this->assertTrue($table->getSource()->write()->createTable($struct->getFields()));
+        if (DIRECTORY_SEPARATOR === '\\') {
+            $this->assertTrue((new MySQLTableCreator($table->getSource()->write(),$struct->getFields()))->create());
             
             $this->assertTrue($table->run($table->write(['name' => 'dxkite'])));
 

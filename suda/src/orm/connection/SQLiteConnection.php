@@ -38,12 +38,6 @@ class SQLiteConnection extends Connection
         }
     }
 
-    public function createTable(Fields $fields)
-    {
-        $creator = new SQLiteCreator($this, $fields);
-        return $creator->create();
-    }
-
     public function switchDatabase(string $string)
     {
         $this->query('USE `' . $this->rawTableName($table).'`');

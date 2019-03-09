@@ -45,12 +45,6 @@ class MySQLConnection extends Connection
         }
     }
 
-    public function createTable(Fields $fields)
-    {
-        $creator = new MySQLCreator($this, $fields);
-        return $creator->create();
-    }
-
     public function switchDatabase(string $database)
     {
         return $this->query('USE `' . $database.'`');

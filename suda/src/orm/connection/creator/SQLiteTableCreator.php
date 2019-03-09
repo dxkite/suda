@@ -12,7 +12,7 @@ use suda\orm\exception\SQLException;
  * 数据表链接对象
  *
  */
-class SQLiteCreator
+class SQLiteTableCreator
 {
     /**
      * 连接

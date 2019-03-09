@@ -23,6 +23,6 @@ class DebugObserver implements Observer
     {
         $query = $statement->getString();
         $status = $result ? 'OK' : 'Err';
-        $this->info('query['.$status.'] process cost '.$query.' '. number_format($pass, 5).'s');
+        $this->debug->info('query['.$status.'] process cost '.$query.' '. number_format($pass, 5).'s');
     }
 }
