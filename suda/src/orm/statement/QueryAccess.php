@@ -13,14 +13,14 @@ use suda\orm\exception\SQLException;
 use suda\orm\statement\ReadStatement;
 use suda\orm\middleware\NullMiddleware;
 
-class StatementRunner
+class QueryAccess
 {
     /**
      * 数据源
      *
-     * @var DataSource
+     * @var Connection
      */
-    protected $source;
+    protected $connection;
 
     /**
      * 中间件
@@ -29,18 +29,18 @@ class StatementRunner
      */
     protected $middleware;
 
-
     /**
-     * 创建语句运行器
+     * 创建运行器
      *
-     * @param \suda\orm\DataSource $source
+     * @param \suda\orm\connection\Connection $connection
      * @param \suda\orm\middleware\Middleware $middleware
      */
-    public function __construct(DataSource $source, Middleware $middleware = null)
+    public function __construct(Connection $connection, Middleware $middleware = null)
     {
-        $this->source = $source;
+        $this->connection = $connection;
         $this->middleware = $middleware ?: new NullMiddleware;
     }
+    
     /**
      * 获取最后一次插入的主键ID（用于自增值
      *
@@ -49,7 +49,7 @@ class StatementRunner
      */
     public function lastInsertId(string $name = null):?int
     {
-        return $this->source->write()->lastInsertId();
+        return $this->connection->lastInsertId();
     }
 
     /**
@@ -69,7 +69,7 @@ class StatementRunner
      */
     public function beginTransaction()
     {
-        return $this->source->write()->beginTransaction();
+        return $this->connection->beginTransaction();
     }
 
     /**
@@ -79,7 +79,7 @@ class StatementRunner
      */
     public function commit()
     {
-        return $this->source->write()->commit();
+        return $this->connection->commit();
     }
 
     /**
@@ -89,7 +89,7 @@ class StatementRunner
      */
     public function rollBack()
     {
-        return $this->source->write()->rollBack();
+        return $this->connection->rollBack();
     }
 
 
@@ -101,27 +101,23 @@ class StatementRunner
      */
     public function run(Statement $statement)
     {
-        $source = $statement->isRead() ? $this->source->read() : $this->source->write();
-        $this->runStatement($source, $statement);
+        $this->runStatement($this->connection, $statement);
+        return $this->resultFrom($statement);
+    }
+
+    /**
+     * 获取运行结果
+     *
+     * @param Statement $statement
+     * @return mixed
+     */
+    protected function resultFrom(Statement $statement) {
         if ($statement->isWrite()) {
             return $statement->getStatement()->rowCount() > 0;
         } elseif ($statement->isFetch()) {
             return $this->fetchResult($statement);
         }
         return null;
-    }
-
-    /**
-     * 直接查询
-     *
-     * @param string $sql
-     * @param array $parameter
-     * @return mixed
-     */
-    public function query(string $sql, array $parameter = [])
-    {
-        $statement = new Statement($sql, $parameter);
-        return $this->run($statement);
     }
 
     /**
@@ -177,17 +173,17 @@ class StatementRunner
      * @param Statement $statement
      * @return void
      */
-    protected function runStatement(Connection $source, Statement $statement)
+    protected function runStatement(Connection $connection, Statement $statement)
     {
         if ($statement->scroll() && $this->getStatement() !== null) {
             $stmt = $this->getStatement();
         } else {
-            $stmt = $this->createStmt($source, $statement);
+            $stmt = $this->createStmt($connection, $statement);
             $this->bindStmt($stmt, $statement);
             $statement->setStatement($stmt);
             $start = \microtime(true);
             $status = $stmt->execute();
-            $source->getObserver()->observe($statement, \microtime(true) - $start, $status);
+            $connection->getObserver()->observe($statement, \microtime(true) - $start, $status);
             if ($status === false) {
                 throw new SQLException($stmt->errorInfo()[2], intval($stmt->errorCode()));
             }
@@ -217,15 +213,5 @@ class StatementRunner
     public function getMiddleware():Middleware
     {
         return $this->middleware;
-    }
-
-    /**
-     * Get 中间件
-     *
-     * @return  DataSource
-     */
-    public function getSource():DataSource
-    {
-        return $this->source;
     }
 }

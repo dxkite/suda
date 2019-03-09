@@ -4,7 +4,9 @@ namespace suda\orm\connection;
 use PDO;
 use PDOException;
 use suda\orm\struct\Fields;
+use suda\orm\statement\Statement;
 use suda\orm\exception\SQLException;
+use suda\orm\statement\QueryAccess;
 use suda\orm\connection\observer\Observer;
 use suda\orm\connection\observer\NullObserver;
 
@@ -181,16 +183,12 @@ abstract class Connection
     /**
      * 查询SQL
      *
-     * @param string $sql
-     * @return boolean
+     * @param \suda\orm\statement\Statement $statement
+     * @return mixed
      */
-    public function query(string $sql)
+    public function query(Statement $statement)
     {
-        if ($stmt = $this->getPdo()->query($sql)) {
-            return $stmt ->execute();
-        }
-        $debug = debug_backtrace();
-        throw (new SQLException($this->getPdo()->errorInfo()[2], intval($this->getPdo()->errorCode()), E_ERROR, $debug[1]['file'], $debug[1]['line']))->setSql($sql);
+        return (new QueryAccess($this))->run($statement);
     }
 
     /**

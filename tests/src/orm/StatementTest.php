@@ -99,7 +99,7 @@ class StatementTest extends TestCase
         );
 
         if (DIRECTORY_SEPARATOR === '\\') {
-            $this->assertTrue((new MySQLTableCreator($table->getSource()->write(),$struct->getFields()))->create());
+            $this->assertNotNull((new MySQLTableCreator($table->getSource()->write(),$struct->getFields()))->create());
             
             $this->assertTrue($table->run($table->write(['name' => 'dxkite'])));
 

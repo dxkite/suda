@@ -12,12 +12,21 @@ use suda\orm\middleware\Middleware;
 use suda\orm\observer\NullObserver;
 use suda\orm\exception\SQLException;
 use suda\orm\statement\ReadStatement;
+use suda\orm\statement\QueryAccess;
 use suda\orm\statement\WriteStatement;
 use suda\orm\middleware\NullMiddleware;
-use suda\orm\statement\StatementRunner;
 
-class TableAccess extends StatementRunner
+
+class TableAccess extends QueryAccess
 {
+
+    /**
+     * 数据源
+     *
+     * @var DataSource
+     */
+    protected $source;
+    
     /**
      * 表结构
      *
@@ -34,7 +43,8 @@ class TableAccess extends StatementRunner
      */
     public function __construct(TableStruct $struct, DataSource $source, Middleware $middleware = null)
     {
-        parent::__construct($source, $middleware);
+        parent::__construct($source->write(), $middleware);
+        $this->source = $source;
         $this->struct = $struct;
     }
 
@@ -60,6 +70,46 @@ class TableAccess extends StatementRunner
     }
 
     /**
+     * 获取最后一次插入的主键ID（用于自增值
+     *
+     * @param string $name
+     * @return null|int 则获取失败，整数则获取成功
+     */
+    public function lastInsertId(string $name = null):?int
+    {
+        return $this->source->write()->lastInsertId();
+    }
+
+    /**
+     * 事务系列，开启事务
+     *
+     * @return void
+     */
+    public function beginTransaction()
+    {
+        return $this->source->write()->beginTransaction();
+    }
+
+    /**
+     * 事务系列，提交事务
+     *
+     * @return void
+     */
+    public function commit()
+    {
+        return $this->source->write()->commit();
+    }
+
+    /**
+     * 事务系列，撤销事务
+     *
+     * @return void
+     */
+    public function rollBack()
+    {
+        return $this->source->write()->rollBack();
+    }
+    /**
      * 写
      *
      * @param mixed ...$args
@@ -79,6 +129,19 @@ class TableAccess extends StatementRunner
     public function read(...$args):ReadStatement
     {
         return (new ReadStatement($this->source->write()->rawTableName($this->struct->getName()), $this->struct))->want(...$args);
+    }
+
+    /**
+     * 运行SQL语句
+     *
+     * @param Statement $statement
+     * @return mixed
+     */
+    public function run(Statement $statement)
+    {
+        $connection = $statement->isRead() ? $this->source->read() : $this->source->write();
+        $this->runStatement($this->connection, $statement);
+        return $this->resultFrom($statement);
     }
 
     /**
@@ -133,5 +196,16 @@ class TableAccess extends StatementRunner
         } elseif ($statement->isFetchAll()) {
             return $this->fetchAllProccess($statement, $statement->getStatement()->fetchAll(PDO::FETCH_ASSOC));
         }
+    }
+
+
+    /**
+     * Get 中间件
+     *
+     * @return  DataSource
+     */
+    public function getSource():DataSource
+    {
+        return $this->source;
     }
 }
