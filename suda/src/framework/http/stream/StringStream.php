@@ -6,7 +6,7 @@ use suda\framework\http\stream\DataStream;
 /**
  * 数据流
  */
-class StringStream implements DataStream
+class StringStream extends DataStream
 {
     public function __construct(string $stream, int $offset = 0, int $length = null)
     {
