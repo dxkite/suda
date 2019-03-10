@@ -71,6 +71,7 @@ class Response extends HTTPResponse
         } else {
             throw new \Exception('sendFile must be file');
         }
+        $this->sendContentLength($this->data);
         $this->end();
     }
 
