@@ -37,7 +37,7 @@ class Response
     /**
      * 响应数据
      *
-     * @var \suda\framework\http\Stream|string
+     * @var \suda\framework\http\Stream|string|array
      */
     protected $data;
 
@@ -123,14 +123,29 @@ class Response
     }
 
     /**
-     * 发送数据
+     * 写数据
      *
-     * @param string $data
+     * @param Stream|string $data
      * @return void
      */
-    public function send(string $data)
+    public function write($data)
     {
-        $this->data = $data;
+        $this->data[] = $data;
+    }
+
+    /**
+     * 发送数据
+     *
+     * @param Stream|string $data
+     * @return void
+     */
+    public function send($data)
+    {
+        if (\is_array($this->data)) {
+            $this->data[] = $data;
+        } else {
+            $this->data = $data;
+        }
         $this->end();
     }
 
@@ -204,6 +219,9 @@ class Response
      */
     protected function sendCookies()
     {
+        if (\headers_sent()) {
+            return $this;
+        }
         foreach ($this->cookie as $cookie) {
             $cookie->send();
         }
@@ -217,10 +235,38 @@ class Response
      */
     protected function sendData()
     {
-        if (is_string($this->data)) {
-            echo $this->data;
-        } else {
-            $this->data->echo();
+        if (is_string($this->data) || $this->data instanceof Stream) {
+            $this->echoDataContent($this->data);
+        } elseif (is_array($this->data)) {
+            $this->sendArrayData($this->data);
+        }
+    }
+
+    /**
+     * 发送数据
+     *
+     * @param array $data
+     * @return void
+     */
+    protected function sendArrayData(array $data)
+    {
+        foreach ($data as $content) {
+            $this->echoDataContent($content);
+        }
+    }
+
+    /**
+     * 发送数据内容
+     *
+     * @param Stream|string $data
+     * @return void
+     */
+    protected function echoDataContent($data)
+    {
+        if (is_string($data)) {
+            echo $data;
+        } elseif ($data instanceof Stream) {
+            $data->echo();
         }
     }
 }
