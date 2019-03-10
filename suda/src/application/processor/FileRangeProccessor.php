@@ -89,7 +89,7 @@ class FileRangeProccessor implements RequestProcessor
      */
     protected function sendFileByRange(Response $response, array $range)
     {
-        $response->write(new DataStream($this->file->getRealPath(), $range['start'], $range['end'] -  $range['start'] + 1));
+        $response->write(new DataStream($this->file, $range['start'], $range['end'] -  $range['start'] + 1));
     }
 
     /**
