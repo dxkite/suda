@@ -79,7 +79,7 @@ class Response extends HTTPResponse
      * 发送内容数据
      *
      * @param array|string|Stream|null $data
-     * @return void
+     * @return self
      */
     protected function sendContentLength($data)
     {

@@ -1,13 +1,41 @@
 <?php
 namespace suda\framework\http\stream;
 
-use suda\framework\http\stream\DataStream;
+use suda\framework\http\Stream;
 
 /**
  * 数据流
  */
-class StringStream extends DataStream
+class StringStream implements Stream
 {
+    /**
+    * 设置偏移
+    *
+    * @var int
+    */
+    protected $offset = 0;
+
+    /**
+     * 设置长度
+     *
+     * @var int|null
+     */
+    protected $length = null;
+
+    /**
+     * 流描述
+     *
+     * @var string
+     */
+    protected $stream;
+
+    /**
+     * 创建字符流
+     *
+     * @param string $stream
+     * @param integer $offset
+     * @param integer $length
+     */
     public function __construct(string $stream, int $offset = 0, int $length = null)
     {
         $this->stream = $stream;

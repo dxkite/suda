@@ -43,6 +43,7 @@ class FileRangeProccessor implements RequestProcessor
     public function onRequest(Request $request, Response $response)
     {
         $ranges = $this->getRanges($request);
+        $response->setHeader('accept-ranges', 'bytes');
         if ($ranges === false || $request->getMethod() !== 'GET') {
             $response->status(400);
         } elseif ($ranges === null) {

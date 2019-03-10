@@ -235,10 +235,10 @@ class Response
      */
     protected function sendData()
     {
-        if (is_string($this->data) || $this->data instanceof Stream) {
-            $this->echoDataContent($this->data);
-        } elseif (is_array($this->data)) {
+        if (is_array($this->data)) {
             $this->sendArrayData($this->data);
+        } else {
+            $this->echoDataContent($this->data);
         }
     }
 
@@ -263,10 +263,10 @@ class Response
      */
     protected function echoDataContent($data)
     {
-        if (is_string($data)) {
-            echo $data;
-        } elseif ($data instanceof Stream) {
+        if ($data instanceof Stream) {
             $data->echo();
+        } else {
+            echo $data;
         }
     }
 }
