@@ -11,6 +11,7 @@ use suda\framework\Debugger;
 use suda\framework\Response;
 use suda\framework\loader\Path;
 use suda\framework\loader\Loader;
+use suda\framework\cache\FileCache;
 use suda\application\loader\ApplicationLoader;
 use suda\framework\http\Request as HTTPRequest;
 use suda\application\builder\ApplicationBuilder;
@@ -84,6 +85,10 @@ class Framework
             Framework::get('debug')->time('ApplicationLoader->loadDataSource');
             $appLoader->loadDataSource();
             Framework::get('debug')->timeEnd('ApplicationLoader->loadDataSource');
+            // TODO 缓存类型调整
+            $context->setSingle('cache', function () use ($context) {
+                return new FileCache;
+            });
         });
         
         $service->on('service:load-route', function ($route) use ($appLoader, $context) {

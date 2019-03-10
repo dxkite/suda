@@ -48,6 +48,19 @@ class FileLogger extends AbstractLogger implements ConfigInterface
     public function __construct(array $config = [])
     {
         $this->applyConfig($config);
+    }
+
+    public function getAviailbleWrite()
+    {
+        if (\is_resource($this->temp)) {
+            return $this->temp;
+        }
+        $this->prepareWrite();
+        return $this->temp;
+    }
+
+    protected function prepareWrite()
+    {
         $temp = tmpfile();
         if ($temp === false) {
             $this->tempname = $this->getConfig('save-path').'/log-'. microtime(true).'.tmp';
@@ -143,7 +156,7 @@ class FileLogger extends AbstractLogger implements ConfigInterface
             $replace['%level%'] = $level;
             $replace['%message%'] = $message;
             $write = \strtr($this->getConfig('log-format'), $replace);
-            \fwrite($this->temp, $write.PHP_EOL);
+            \fwrite($this->getAviailbleWrite(), $write.PHP_EOL);
         }
     }
 
