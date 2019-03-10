@@ -1,12 +1,12 @@
 <?php
 namespace suda\framework\http;
 
-use SplFileInfo;
+use SplFileObject;
 
 /**
  * HTTP请求文件
  */
-class UploadedFile extends SplFileInfo
+class UploadedFile extends SplFileObject
 {
     /**
      * 上传的文件名

@@ -1,7 +1,7 @@
 <?php
 namespace suda\framework;
 
-use SplFileInfo;
+use SplFileObject;
 use suda\framework\Request;
 use suda\framework\http\Cookie;
 use suda\framework\http\Header;
@@ -62,7 +62,7 @@ class Response extends HTTPResponse
      */
     public function sendFile(string $filename, int $offset = 0, int $length = null)
     {
-        $content = new  SplFileInfo($filename);
+        $content = new  SplFileObject($filename);
         if ($content->isFile()) {
             $this->setType($content->getExtension());
             $this->setHeader('Content-Disposition', 'attachment;filename="' . $content->getBasename().'"');
@@ -77,12 +77,14 @@ class Response extends HTTPResponse
     /**
      * 发送内容数据
      *
-     * @param array|string|Stream $data
+     * @param array|string|Stream|null $data
      * @return void
      */
     protected function sendContentLength($data)
     {
-        if (is_array($data)) {
+        if ($data === null) {
+            $this->setHeader('content-length', 0);
+        } elseif (is_array($data)) {
             $this->setHeader('content-length', $this->getDataLengthArray($data), true);
         } else {
             $this->setHeader('content-length', $this->getDataLengthItem($data), true);

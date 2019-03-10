@@ -1,7 +1,7 @@
 <?php
 namespace suda\framework\response;
 
-use SplFileInfo;
+use SplFileObject;
 use ReflectionClass;
 use JsonSerializable;
 use suda\framework\Response;
@@ -20,7 +20,7 @@ class ContentWrapper
         JsonContentWrapper::class => ['array', JsonSerializable::class],
         HtmlContentWrapper::class => ['boolean', 'integer','double', 'string'],
         NullContentWrapper::class => ['NULL'],
-        FileContentWrapper::class => [SplFileInfo::class],
+        FileContentWrapper::class => [SplFileObject::class],
     ];
 
     /**

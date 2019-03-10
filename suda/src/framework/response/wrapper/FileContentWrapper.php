@@ -21,12 +21,9 @@ class FileContentWrapper extends AbstractContentWrapper
     public function getContent(Response $response): Stream
     {
         $content = $this->content;
-        if ($content->isFile()) {
-            $response->setType($content->getExtension());
-            $response->setHeader('Content-Disposition', 'attachment;filename="' . $content->getBasename().'"');
-            $response->setHeader('Cache-Control', 'max-age=0');
-            return new DataStream($content->getRealPath());
-        }
-        throw new \Exception('wrappered SplFileInfo must be file');
+        $response->setType($content->getExtension());
+        $response->setHeader('Content-Disposition', 'attachment;filename="' . $content->getBasename().'"');
+        $response->setHeader('Cache-Control', 'max-age=0');
+        return new DataStream($content);
     }
 }
