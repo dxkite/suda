@@ -71,10 +71,10 @@ class FileRangeProccessor implements RequestProcessor
         $separates = 'multiple_range_'.base64_encode(\md5(\uniqid(), true));
         $response->setHeader('content-type', 'multipart/byteranges; boundary='.$separates);
         foreach ($ranges as $range) {
-            $this->write('--'.$separates);
-            $this->sendMultipleRange($range);
+            $response->write('--'.$separates."\r\n");
+            $this->sendMultipleRangePart($response, $range);
             $this->sendFileByRange($response, $range);
-            $this->write("\r\n");
+            $response->write("\r\n");
         }
     }
 
@@ -109,15 +109,16 @@ class FileRangeProccessor implements RequestProcessor
     }
 
     /**
-     * 发送Range头
+     * 写Range头
      *
+     * @param \suda\framework\Response $response
      * @param array $range
      * @return void
      */
-    protected function sendMultipleRangePart(array $range)
+    protected function sendMultipleRangePart(Response $response, array $range)
     {
-        $this->write('Content-Type: '.$this->mime."\r\n");
-        $this->write('Content-Range: '.$this->getRangeHeader($range) ."\r\n\r\n");
+        $response->write('Content-Type: '.$this->mime."\r\n");
+        $response->write('Content-Range: '.$this->getRangeHeader($range) ."\r\n\r\n");
     }
 
     /**
