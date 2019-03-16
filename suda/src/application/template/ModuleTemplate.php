@@ -50,6 +50,7 @@ class ModuleTemplate extends CompilableTemplate
 
     public function getUrl($name = null, $values = null)
     {
+        $defaultName = $this->application->request()->getAttribute('route');
         if (is_string($name)) {
             if (!is_array($values)) {
                 $args = func_get_args();
@@ -57,10 +58,11 @@ class ModuleTemplate extends CompilableTemplate
                 $values = $args;
             }
             return $this->application->getUrl($name, $values ?? [], true, $this->module);
-        } elseif (is_array($name)) {
-            return $this->application->getUrl($this->application->request()->getAttribute('route'), $name, true, $this->module);
-        } else {
-            return $this->application->getUrl($this->application->request()->getAttribute('route'), $this->application->request()->get() ?? [], true, $this->module);
+        } elseif (is_array($name) && \is_string($defaultName)) {
+            return $this->application->getUrl($defaultName, $name, true, $this->module);
+        } elseif (is_string($defaultName)) {
+            return $this->application->getUrl($defaultName, $this->application->request()->get() ?? [], true, $this->module);
         }
+        return '#'.$defaultName;
     }
 }

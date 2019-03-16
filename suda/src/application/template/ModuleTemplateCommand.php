@@ -1,6 +1,7 @@
 <?php
 namespace suda\application\template;
 
+use suda\application\template\compiler\EchoValueTrait;
 use suda\application\template\compiler\CommandInterface;
 
 class ModuleTemplateCommand implements CommandInterface

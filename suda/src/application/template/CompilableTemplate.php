@@ -208,7 +208,7 @@ class CompilableTemplate extends RawTemplate
     {
         if (is_dir($this->getStaticPath()) && !\in_array($this->getStaticPath(), static::$copyedStaticPaths)) {
             FileSystem::copyDir($this->getStaticPath(), $this->getStaticOutpath());
-            static::$copyedStaticPath[] = $this->getStaticPath();
+            static::$copyedStaticPaths[] = $this->getStaticPath();
         }
     }
 
