@@ -8,6 +8,7 @@ use suda\framework\Request;
 use suda\application\Module;
 use suda\framework\Response;
 use suda\application\Resource;
+use suda\application\LocaleBag;
 use suda\application\ModuleBag;
 use suda\framework\loader\Loader;
 use suda\framework\runnable\Runnable;
@@ -32,12 +33,26 @@ class Application extends ApplicationContext
     protected $module;
 
     /**
+     * 字符串包
+     *
+     * @var LanguageBag
+     */
+    protected $language;
+
+    /**
      * 模块路径
      *
      * @var string[]
      */
     protected $modulePaths;
 
+    /**
+     * 运行的模块
+     *
+     * @var Module
+     */
+    protected $running;
+    
     /**
      * 创建应用
      *
@@ -177,6 +192,18 @@ class Application extends ApplicationContext
     }
 
     /**
+     * 语言翻译
+     *
+     * @param string $message
+     * @param mixed  ...$args
+     * @return string
+     */
+    public function _(string $message, ...$args):string
+    {
+        return $this->language->interpolate($message, ...$args);
+    }
+
+    /**
      * 获取URL
      *
      * @param string $name
@@ -223,5 +250,53 @@ class Application extends ApplicationContext
             return $moduleObj->getFullName().':'.$name;
         }
         return $name;
+    }
+
+    /**
+     * Get 字符串包
+     *
+     * @return  LanguageBag
+     */ 
+    public function getLanguage()
+    {
+        return $this->language;
+    }
+
+    /**
+     * Set 字符串包
+     *
+     * @param  LanguageBag  $language  字符串包
+     *
+     * @return  self
+     */ 
+    public function setLanguage(LanguageBag $language)
+    {
+        $this->language = $language;
+
+        return $this;
+    }
+
+    /**
+     * Get 运行的模块
+     *
+     * @return  Module
+     */ 
+    public function getRunning()
+    {
+        return $this->running;
+    }
+
+    /**
+     * Set 运行的模块
+     *
+     * @param  Module  $running  运行的模块
+     *
+     * @return  self
+     */ 
+    public function setRunning(Module $running)
+    {
+        $this->running = $running;
+
+        return $this;
     }
 }

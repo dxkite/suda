@@ -7,7 +7,7 @@ use suda\application\Application;
 use suda\framework\filesystem\FileSystem;
 use suda\application\template\compiler\Compiler;
 use suda\application\template\CompilableTemplate;
-use suda\application\template\ModuleTemplateCommand;
+use suda\application\template\ModuleTemplateCompiler;
 
 /**
  * 模块模板
@@ -68,8 +68,7 @@ class ModuleTemplate extends CompilableTemplate
 
     protected function createCompiler():Compiler
     {
-        $compiler = new Compiler;
-        $compiler->registerCommand(new ModuleTemplateCommand);
+        $compiler = new ModuleTemplateCompiler;
         return $compiler;
     }
 

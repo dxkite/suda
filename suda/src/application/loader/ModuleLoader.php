@@ -54,6 +54,7 @@ class ModuleLoader
     public function toRunning()
     {
         $this->loadPrivateLibrary();
+        $this->application->setRunning($this->module);
     }
 
     protected function loadShareLibrary()
@@ -135,6 +136,8 @@ class ModuleLoader
     public function onRequest(Request $request, Response $response)
     {
         $this->toRunning();
+        // 加载语言
+        LanguageLoader::load($this->application);
         return $this->application->onRequest($request, $response);
     }
 }
