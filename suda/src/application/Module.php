@@ -140,7 +140,7 @@ class Module
     /**
      * Get 模块配置
      *
-     * @return  array
+     * @return  mixed
      */
     public function getConfig(string $name = null, $default = null)
     {

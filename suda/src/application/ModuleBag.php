@@ -2,6 +2,7 @@
 namespace suda\application;
 
 use suda\application\Module;
+use suda\application\exception\ApplicationException;
 
 /**
  * 模块名
@@ -102,7 +103,8 @@ class ModuleBag
         return $fullname;
     }
 
-    protected function createFullName(string $name) {
+    protected function createFullName(string $name)
+    {
         $version = null;
         $hasVersion = false;
         if (\strpos($name, ':')) {
@@ -125,14 +127,13 @@ class ModuleBag
             }
         }
         if (count($names) === 0) {
-            throw new \Exception(\sprintf('module name %s not exist', $name));
+            throw new ApplicationException(\sprintf('module %s not exist', $name), ApplicationException::ERR_MODULE_NAME);
         }
         if (count($names) > 1) {
-            throw new \Exception(\sprintf('conflict module name %s', $name));
+            throw new ApplicationException(\sprintf('conflict module name %s in %s', $name, \implode(',', $names)), ApplicationException::ERR_CONFLICT_MODULE_NAME);
         }
         return $names[0];
     }
-
 
     protected function sort(string $a, string $b)
     {

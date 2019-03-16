@@ -8,6 +8,7 @@ use suda\framework\Response;
 use suda\application\Application;
 use suda\application\builder\ApplicationBuilder;
 use suda\application\processor\RequestProcessor;
+use suda\application\exception\ApplicationException;
 
 /**
  * 应用程序
@@ -53,10 +54,52 @@ class ModuleLoader
 
     public function toRunning()
     {
+        $this->checkFrameworkVersion();
+        $this->checkRequirements();
         $this->loadPrivateLibrary();
         $this->application->setRunning($this->module);
     }
 
+    /**
+     * 检查框架依赖
+     *
+     * @return void
+     */
+    protected function checkRequirements()
+    {
+        if ($require = $this->module->getConfig('require')) {
+            foreach ($require as $module => $version) {
+                $this->checkModuleVersion($module, $version);
+            }
+        }
+    }
+
+
+    protected function checkModuleVersion(string $module, string $version)
+    {
+        try {
+            $target = $this->application->find($module);
+            if ($target === null || static::versionCompire($version, $target->getVersion()) !== true) {
+                throw new ApplicationException(sprintf('%s module need %s version %s', $this->module->getFullName(), $target->getName(), $target->getVersion()), ApplicationException::ERR_MODULE_REQUIREMENTS);
+            }
+        } catch (ApplicationException $e) {
+            throw new ApplicationException(sprintf('%s module need %s %s but not exist', $this->module->getFullName(), $module, $version), ApplicationException::ERR_MODULE_REQUIREMENTS);
+        }
+    }
+
+    /**
+     * 检查模块需求
+     *
+     * @return void
+     */
+    protected function checkFrameworkVersion()
+    {
+        if ($sudaVersion = $this->module->getConfig('suda')) {
+            if (static::versionCompire($sudaVersion, SUDA_VERSION) !== true) {
+                throw new ApplicationException(sprintf('%s module need suda version %s', $this->module->getFullName(), $sudaVersion), ApplicationException::ERR_FRAMEWORK_VERSION);
+            }
+        }
+    }
     protected function loadShareLibrary()
     {
         $import = $this->module->getConfig('import.share', []);
@@ -139,5 +182,21 @@ class ModuleLoader
         // 加载语言
         LanguageLoader::load($this->application);
         return $this->application->onRequest($request, $response);
+    }
+
+    /**
+     * 比较版本
+     *
+     * @param string $version 比较用的版本，包含比较符号
+     * @param string $compire 对比的版本
+     * @return bool
+     */
+    protected static function versionCompire(string $version, string $compire)
+    {
+        if (preg_match('/^(<=?|>=?|<>|!=)(.+)$/i', $version, $match)) {
+            list($s, $op, $ver) = $match;
+            return  version_compare($compire, $ver, $op);
+        }
+        return version_compare($compire, $version, '>=');
     }
 }
