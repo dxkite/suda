@@ -126,7 +126,8 @@ class ModuleLoader
             $method = $config['method'] ?? [];
             $attriute = [];
             $attriute['module'] = $this->module->getFullName();
-            $attriute['route'] = $config;
+            $attriute['route-config'] = $config;
+            $attriute['route'] = $exname;
             $this->application->route()->request($method, $exname, $config['url'] ?? '/', $runnable, $attriute);
         }
     }

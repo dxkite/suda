@@ -67,14 +67,19 @@ class RawTemplate
         return ArrayDotAccess::exist($this->value, $name);
     }
 
+    protected function getPath()
+    {
+        return $this->path;
+    }
+    
     public function __toString()
     {
-        if (file_exists($this->path)) {
+        if (file_exists($this->getPath())) {
             ob_start();
             \extract($this->value);
-            require $this->path;
+            require $this->getPath();
             return \ob_get_clean();
         }
-        throw new MissingTemplateException($this->path);
+        throw new MissingTemplateException($this->getPath());
     }
 }

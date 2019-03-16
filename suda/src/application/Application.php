@@ -149,7 +149,7 @@ class Application extends ApplicationContext
      */
     public function onRequest(Request $request, Response $response)
     {
-        $route = $request->getAttribute('route', []);
+        $route = $request->getAttribute('route-config', []);
         $runnable = null;
         if (\array_key_exists('class', $route)) {
             $runnable = $this->className($route['class']).'->onRequest';
@@ -165,44 +165,49 @@ class Application extends ApplicationContext
         return (new Runnable($runnable))($this, $request, $response);
     }
 
-
     /**
      * 获取URL
      *
      * @param string $name
      * @param array $parameter
      * @param boolean $allowQuery
+     * @param string|null $default
      * @return string|null
      */
-    public function getUrl(string $name, array $parameter = [], bool $allowQuery = true):?string
+    public function getUrl(string $name, array $parameter = [], bool $allowQuery = true, ?string $default = null):?string
     {
-        return $this->route->create($this->getFullModuleSource($name), $parameter, $allowQuery);
+        return $this->route->create($this->getFullModuleSource($name, $default), $parameter, $allowQuery);
     }
 
     /**
      * 获取模板页面
      *
      * @param string $name
+     * @param string|null $default
      * @return \suda\application\template\ModuleTemplate
      */
-    public function getTemplate(string $name): ModuleTemplate
+    public function getTemplate(string $name, ?string $default = null): ModuleTemplate
     {
-        return new ModuleTemplate($this->getFullModuleSource($name), $this);
+        return new ModuleTemplate($this->getFullModuleSource($name, $default), $this);
     }
 
     /**
-     * 获取模块全名
+     * 获取模板下的资源名
      *
      * @param string $name
+     * @param string|null $default
      * @return string
      */
-    protected function getFullModuleSource(string $name):string
+    protected function getFullModuleSource(string $name, ?string $default = null):string
     {
         if (strpos($name, ':') > 0) {
             list($module, $name) = \explode(':', $name);
             if ($moduleObj = $this->find($module)) {
                 return $moduleObj->getFullName().':'.$name;
             }
+        }
+        if ($default !== null && ($moduleObj = $this->find($module))) {
+            return $moduleObj->getFullName().':'.$name;
         }
         return $name;
     }

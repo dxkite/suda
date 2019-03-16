@@ -63,6 +63,20 @@ class CompilableTemplate extends RawTemplate
      * @var array
      */
     protected static $render = [];
+    
+    /**
+     * 编译器
+     *
+     * @var Compiler
+     */
+    protected static $compiler;
+
+    /**
+     * 检测已经拷贝的目录
+     *
+     * @var array
+     */
+    protected static $copyedStaticPaths = [];
 
     /**
      * 静态目录
@@ -90,28 +104,38 @@ class CompilableTemplate extends RawTemplate
         $this->name = \pathinfo($source, PATHINFO_FILENAME);
         $this->config = $config;
         $this->value = [];
-        $this->init();
     }
 
-    protected function init()
+    protected function getStaticPath()
     {
-        $this->output = $this->config['output'] ?? \constant('SUDA_DATA').'/template';
-        FileSystem::makes($this->output);
-        $this->path = $this->getSavePath();
-        $this->staticPath = Resource::getPathByRelativedPath($this->config['static'] ?? 'static', dirname($this->source));
+        return Resource::getPathByRelativedPath($this->config['static'] ?? 'static', dirname($this->getSourcePath()));
     }
 
-    protected function getSavePath()
+    protected function getStaticOutpath()
     {
-        return $this->output .'/'. $this->name.'-'.substr(md5_file($this->source), 10, 8).'.php';
+        $path = $this->config['assets-public'] ?? \constant('SUDA_PUBLIC').'/assets/'. $this->getStaticName();
+        FileSystem::makes($path);
+        return $path;
+    }
+
+    protected function getPath()
+    {
+        $output = $this->config['output'] ?? \constant('SUDA_DATA').'/template';
+        FileSystem::makes($output);
+        return $output .'/'. $this->name.'-'.substr(md5_file($this->source), 10, 8).'.php';
+    }
+
+    protected function getSourcePath()
+    {
+        return $this->source;
     }
 
     public function __toString()
     {
-        $content = FileSystem::get($this->source);
-        if (FileSystem::exist($this->path) === false && $content !== null) {
-            $compiled = CompilerBuilder::build()->compileText($content, $this->config);
-            FileSystem::put($this->path, $compiled);
+        $content = FileSystem::get($this->getSourcePath());
+        if (FileSystem::exist($this->getPath()) === false && $content !== null) {
+            $compiled = $this->compiler()->compileText($content, $this->config);
+            FileSystem::put($this->getPath(), $compiled);
         }
         return $this->getRenderedString();
     }
@@ -176,18 +200,17 @@ class CompilableTemplate extends RawTemplate
 
     protected function getStaticPrefix()
     {
-        if (is_dir($this->staticPath)) {
-            FileSystem::copyDir($this->staticPath, $this->getStaticOutpath());
-        }
+        $this->prepareStaticSource();
         $prefix = $this->config['assets-prefix'] ?? defined('SUDA_ASSETS')?\constant('SUDA_ASSETS'):'/assets';
         return $prefix .'/'.$this->getStaticName();
     }
 
-    protected function getStaticOutpath()
+    protected function prepareStaticSource()
     {
-        $path = $this->config['assets-public'] ?? \constant('SUDA_PUBLIC').'/assets/'. $this->getStaticName();
-        FileSystem::makes($path);
-        return $path;
+        if (is_dir($this->getStaticPath()) && !\in_array($this->getStaticPath(), static::$copyedStaticPaths)) {
+            FileSystem::copyDir($this->getStaticPath(), $this->getStaticOutpath());
+            $this->copyedStaticPath[] = $this->getStaticPath();
+        }
     }
 
     protected function getStaticName()
@@ -226,5 +249,18 @@ class CompilableTemplate extends RawTemplate
             echo '<div style="color:red">'.$e->getMessage().'</div>';
             return;
         }
+    }
+
+    protected function compiler()
+    {
+        if (static::$compiler === null) {
+            static::$compiler = $this->createCompiler();
+        }
+        return static::$compiler;
+    }
+
+    protected function getCompiler():Compiler
+    {
+        return new Compiler;
     }
 }
