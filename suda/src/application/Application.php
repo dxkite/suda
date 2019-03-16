@@ -11,25 +11,19 @@ use suda\application\Resource;
 use suda\application\ModuleBag;
 use suda\framework\loader\Loader;
 use suda\framework\runnable\Runnable;
+use suda\application\ApplicationContext;
+use suda\application\template\ModuleTemplate;
 use suda\application\loader\ApplicationLoader;
 use suda\framework\arrayobject\ArrayDotAccess;
 use suda\framework\http\Request as HttpRequest;
-use suda\application\processor\RequestProcessor;
 use suda\application\processor\FileRequestProcessor;
 use suda\application\processor\TemplateRequestProcessor;
 
 /**
  * 应用程序
  */
-class Application extends Context implements RequestProcessor
+class Application extends ApplicationContext
 {
-    /**
-     * 应用路径
-     *
-     * @var string
-     */
-    protected $path;
-
     /**
      * 模块集合
      *
@@ -38,60 +32,11 @@ class Application extends Context implements RequestProcessor
     protected $module;
 
     /**
-     * 语言
-     *
-     * @var string
-     */
-    protected $locate = 'zh-cn';
-
-    /**
-     * 使用的样式
-     *
-     * @var string
-     */
-    protected $style = 'default';
-    
-    /**
-     * 路由组
-     *
-     * @var array
-     */
-    protected $routeGroup;
-
-    /**
-     * 配置数组
-     *
-     * @var array
-     */
-    protected $manifast;
-
-    /**
      * 模块路径
      *
      * @var string[]
      */
     protected $modulePaths;
-
-    /**
-     * 运行环境
-     *
-     * @var Context $context
-     */
-    protected $context;
-
-    /**
-     * 资源目录
-     *
-     * @var Resource
-     */
-    protected $resource;
-
-    /**
-     * 数据源
-     *
-     * @var DataSource
-     */
-    protected $dataSource;
 
     /**
      * 创建应用
@@ -103,13 +48,9 @@ class Application extends Context implements RequestProcessor
      */
     public function __construct(string $path, array $manifast, HttpRequest $request, Loader $loader)
     {
-        parent::__construct($request, new Config(['app' => $manifast]), $loader);
-        $this->path = $path;
+        parent::__construct($path, $manifast, $request, $loader);
         $this->module = new ModuleBag;
-        $this->manifast = $manifast;
-        $this->routeGroup = $manifast['route-group'] ?? ['default'];
         $this->initProperty($manifast);
-        $this->resource = new Resource([Resource::getPathByRelativedPath($manifast['resource'] ?? './resource', $path)]);
     }
 
     /**
@@ -135,74 +76,13 @@ class Application extends Context implements RequestProcessor
     }
 
     /**
-     * Get 使用的样式
+     * 初始化属性
      *
-     * @return  string
+     * @param array $manifast
+     * @return void
      */
-    public function getStyle()
-    {
-        return $this->style;
-    }
-
-    /**
-     * Set 使用的样式
-     *
-     * @param  string  $style  使用的样式
-     *
-     * @return  self
-     */
-    public function setStyle(string $style)
-    {
-        $this->style = $style;
-
-        return $this;
-    }
-
-    /**
-     * Get 语言
-     *
-     * @return  string
-     */
-    public function getLocate()
-    {
-        return $this->locate;
-    }
-
-    /**
-     * Set 语言
-     *
-     * @param  string  $locate  语言
-     *
-     * @return  self
-     */
-    public function setLocate(string $locate)
-    {
-        $this->locate = $locate;
-
-        return $this;
-    }
-    
-    /**
-     * Get 配置数组
-     *
-     * @return  mixed
-     */
-    public function getManifast(string $name = null, $default = null)
-    {
-        if ($name !== null) {
-            return ArrayDotAccess::get($this->manifast, $name, $default);
-        }
-        return $this->manifast;
-    }
-
     protected function initProperty(array $manifast)
     {
-        if (\array_key_exists('style', $manifast)) {
-            $this->style = \strtolower($manifast['style']);
-        }
-        if (\array_key_exists('locate', $manifast)) {
-            $this->locate = \strtolower($manifast['locate']);
-        }
         if (\array_key_exists('module-paths', $manifast)) {
             $this->modulePaths = $manifast['module-paths'];
         } else {
@@ -218,40 +98,6 @@ class Application extends Context implements RequestProcessor
     public function getModulePaths()
     {
         return $this->modulePaths;
-    }
-
-    /**
-     * Get $context
-     *
-     * @return  Context
-     */
-    public function getContext()
-    {
-        return $this->context;
-    }
-
-    /**
-     * Set $context
-     *
-     * @param  Context  $context  $context
-     *
-     * @return  self
-     */
-    public function setContext(Context $context)
-    {
-        $this->context = $context;
-
-        return $this;
-    }
-
-    /**
-     * Get 路由组
-     *
-     * @return  array
-     */
-    public function getRouteGroup()
-    {
-        return $this->routeGroup;
     }
 
     /**
@@ -316,59 +162,48 @@ class Application extends Context implements RequestProcessor
         } else {
             throw new \Exception('request failed');
         }
-        return (new Runnable($runnable))($request, $response);
+        return (new Runnable($runnable))($this, $request, $response);
     }
 
-    protected function className(string $name)
+
+    /**
+     * 获取URL
+     *
+     * @param string $name
+     * @param array $parameter
+     * @param boolean $allowQuery
+     * @return string|null
+     */
+    public function getUrl(string $name, array $parameter = [], bool $allowQuery = true):?string
     {
-        return str_replace(['.','/'], '\\', $name);
+        return $this->route->create($this->getFullModuleSource($name), $parameter, $allowQuery);
     }
 
     /**
-     * Get 数据源
+     * 获取模板页面
      *
-     * @return  Resource
+     * @param string $name
+     * @return \suda\application\template\ModuleTemplate
      */
-    public function getResource(): Resource
+    public function getTemplate(string $name): ModuleTemplate
     {
-        return $this->resource;
+        return new ModuleTemplate($this->getFullModuleSource($name), $this);
     }
 
     /**
-     * Set 数据源
+     * 获取模块全名
      *
-     * @param  Resource  $resource  数据源
-     *
-     * @return  self
+     * @param string $name
+     * @return string
      */
-    public function setResource(Resource $resource)
+    protected function getFullModuleSource(string $name):string
     {
-        $this->resource = $resource;
-
-        return $this;
-    }
-
-    /**
-     * Get 数据源
-     *
-     * @return  DataSource
-     */
-    public function getDataSource()
-    {
-        return $this->dataSource;
-    }
-
-    /**
-     * Set 数据源
-     *
-     * @param  DataSource  $dataSource  数据源
-     *
-     * @return  self
-     */
-    public function setDataSource(DataSource $dataSource)
-    {
-        $this->dataSource = $dataSource;
-
-        return $this;
+        if (strpos($name, ':') > 0) {
+            list($module, $name) = \explode(':', $name);
+            if ($moduleObj = $this->find($module)) {
+                return $moduleObj->getFullName().':'.$name;
+            }
+        }
+        return $name;
     }
 }

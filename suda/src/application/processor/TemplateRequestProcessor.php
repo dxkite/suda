@@ -10,7 +10,7 @@ use suda\application\processor\RequestProcessor;
  */
 class TemplateRequestProcessor implements RequestProcessor
 {
-    public function onRequest(Request $request, Response $response)
+    public function onRequest(Application $application, Request $request, Response $response)
     {
         $response->send($request->getAttribute('template'));
     }

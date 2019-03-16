@@ -4,6 +4,7 @@ namespace suda\application\processor;
 use SplFileObject;
 use suda\framework\Request;
 use suda\framework\Response;
+use suda\application\Application;
 use suda\framework\response\MimeType;
 use suda\framework\http\stream\DataStream;
 use suda\application\processor\RequestProcessor;
@@ -36,11 +37,12 @@ class FileRangeProccessor implements RequestProcessor
     /**
      * 处理文件请求
      *
+     * @param \suda\application\Application $application
      * @param \suda\framework\Request $request
      * @param \suda\framework\Response $response
      * @return void
      */
-    public function onRequest(Request $request, Response $response)
+    public function onRequest(Application $application, Request $request, Response $response)
     {
         $ranges = $this->getRanges($request);
         $response->setHeader('accept-ranges', 'bytes');
