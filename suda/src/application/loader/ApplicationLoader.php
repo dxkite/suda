@@ -48,9 +48,11 @@ class ApplicationLoader
     public function loadRoute()
     {
         $modules = $this->application->getManifast('reachable');
-        foreach ($modules as $name) {
-            $fullname = $this->application->find($name)->getFullName();
-            $this->moduleLoader[$fullname]->toReacheable();
+        if (\is_array($modules)) {
+            foreach ($modules as $name) {
+                $fullname = $this->application->find($name)->getFullName();
+                $this->moduleLoader[$fullname]->toReacheable();
+            }
         }
     }
 

@@ -31,7 +31,7 @@ class ApplicationBuilder
             static::importClassLoader($loader, $manifastConfig['import'], $path);
         }
         $applicationClass = $manifastConfig['application'] ?? Application::class;
-        $application = new $applicationClass($path, ['app' => $manifastConfig], $request, $loader);
+        $application = new $applicationClass($path, $manifastConfig , $request, $loader);
         return $application;
     }
     

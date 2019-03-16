@@ -103,7 +103,7 @@ class Application extends Context implements RequestProcessor
      */
     public function __construct(string $path, array $manifast, HttpRequest $request, Loader $loader)
     {
-        parent::__construct($request, new Config($manifast), $loader);
+        parent::__construct($request, new Config(['app' => $manifast]), $loader);
         $this->path = $path;
         $this->module = new ModuleBag;
         $this->manifast = $manifast;
