@@ -26,6 +26,15 @@ class Response extends HTTPResponse
     }
 
     /**
+     * 获取状态码
+     *
+     * @return integer
+     */
+    public function getStatus():int {
+        return $this->status;
+    }
+
+    /**
      * 设置头部
      *
      * @param string $name

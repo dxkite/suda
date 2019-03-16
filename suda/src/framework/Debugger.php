@@ -45,7 +45,7 @@ class Debugger extends Debug
     {
         $debugger = new Debugger;
         $debugger->addAttribute('remote-ip', $context->request()->getRemoteAddr());
-        $debugger->addAttribute('debug', $context->conf('debug', false));
+        $debugger->addAttribute('debug', SUDA_DEBUG);
         $debugger->addAttribute('request-uri', $context->request()->getUrl());
         $debugger->addAttribute('request-method', $context->request()->getMethod());
         $debugger->addAttribute('request-time', date('Y-m-d H:i:s', \constant('SUDA_START_TIME')));
@@ -55,7 +55,7 @@ class Debugger extends Debug
         ]);
         $debugger->setLogger(static::createLogger($context));
         $debugger->context = $context;
-        $debugger->logger->notice(PHP_EOL.'{request-time} {remote-ip} {request-method} {request-uri} debug={debug}', $debugger->getAttribute());
+        $debugger->logger->info(PHP_EOL.'{request-time} {remote-ip} {request-method} {request-uri} debug={debug}', $debugger->getAttribute());
         return $debugger;
     }
 
@@ -88,7 +88,7 @@ class Debugger extends Debug
             FileSystem::makes($dataPath.'/dump');
             return new FileLogger(
             [
-                'log-level' => defined('SUDA_DEBUG_LEVEL') ? constant('SUDA_DEBUG_LEVEL') : 'debug',
+                'log-level' => SUDA_DEBUG_LEVEL,
                 'save-path' => $dataPath,
                 'save-zip-path' => $dataPath.'/zip',
                 'log-format' => '%message%',
@@ -106,6 +106,9 @@ class Debugger extends Debug
      */
     public function uncaughtFatalError()
     {
+        if (function_exists('fastcgi_finish_request')) {
+            fastcgi_finish_request();
+        }
         if ($e = error_get_last()) {
             $isFatalError = E_ERROR | E_PARSE | E_CORE_ERROR | E_CORE_WARNING | E_COMPILE_ERROR | E_COMPILE_WARNING;
             if ($e['type'] === ($e['type'] & $isFatalError)) {
@@ -124,6 +127,7 @@ class Debugger extends Debug
     {
         $this->error($exception->getMessage(), ['exception' => $exception]);
         $this->context->response()->sendContent($exception);
+        $debugger->logger->info('failed response with code {response_status}', $this->context->response()->getStatus());
     }
 
     /**

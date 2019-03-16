@@ -279,13 +279,14 @@ class Application extends Context implements RequestProcessor
         if ($result !== null) {
             $this->event->exec('application:route:match::after', [$result, $this->request]);
         } 
-        $this->debug->time('creating response');
+        $this->debug->time('sending response');
         $response = $this->route->run($this->request(), $this->response, $result);
         if (!$response->isSended()) {
             $response->sendContent();
         }
-        $this->debug->timeEnd('creating response');
-        $this->debug->notice('system shutdown');
+        $this->debug->timeEnd('sending response');
+        $this->debug->info('resposned with code '. $response->getStatus());
+        $this->debug->info('system shutdown');
     }
 
     /**

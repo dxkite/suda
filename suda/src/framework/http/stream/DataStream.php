@@ -74,7 +74,8 @@ class DataStream implements Stream
     {
         $remain = $this->length();
         if ($this->stream->fseek($this->offset) === 0) {
-            while ($this->stream->eof() === false && $remain > 0) {
+            // 持续链接则继续发送内容
+            while ($this->stream->eof() === false && $remain > 0 && connection_status() === CONNECTION_NORMAL) {
                 $readLength = $remain >= $this->blockSize ? $this->blockSize : $remain;
                 $remain -= $readLength;
                 echo $this->stream->fread($readLength);

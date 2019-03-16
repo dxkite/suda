@@ -61,11 +61,9 @@ class FileLogger extends AbstractLogger implements ConfigInterface
 
     protected function prepareWrite()
     {
-        $temp = tmpfile();
-        if ($temp === false) {
-            $this->tempname = $this->getConfig('save-path').'/log-'. microtime(true).'.tmp';
-            $temp = fopen($this->tempname, 'w+');
-        }
+        $msec = explode('.', \microtime(true))[1];
+        $this->tempname = $this->getConfig('save-path').'/'.date('YmdHis').'.'.$msec.'.log';
+        $temp = fopen($this->tempname, 'w+');
         if ($temp !== false) {
             $this->temp = $temp;
         } else {
@@ -170,7 +168,7 @@ class FileLogger extends AbstractLogger implements ConfigInterface
                 file_put_contents($this->latest, $body, FILE_APPEND);
             }
             fclose($this->temp);
-            if (isset($this->tempname)) {
+            if ($this->tempname !== null) {
                 unlink($this->tempname);
             }
         }
@@ -187,6 +185,9 @@ class FileLogger extends AbstractLogger implements ConfigInterface
 
     public function save()
     {
+        if (function_exists('fastcgi_finish_request')) {
+            fastcgi_finish_request();
+        }
         if ($this->checkSize()) {
             $this->packLogFile();
         }
