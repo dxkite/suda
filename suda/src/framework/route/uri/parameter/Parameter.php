@@ -19,6 +19,13 @@ abstract class Parameter
      * @var mixed
      */
     protected $default;
+
+    /**
+     * 参数出现的索引
+     *
+     * @var int
+     */
+    protected $index;
     
     public function __construct(string $extra)
     {
@@ -29,9 +36,10 @@ abstract class Parameter
         return static::$name;
     }
 
-    public static function build(string $indexName, string $extra):Parameter
+    public static function build(int $index, string $indexName, string $extra):Parameter
     {
         $parameter = new static($extra);
+        $parameter->setIndex($index);
         $parameter->setIndexName($indexName);
         return $parameter;
     }
@@ -83,6 +91,30 @@ abstract class Parameter
     public function setIndexName(string $indexName)
     {
         $this->indexName = $indexName;
+
+        return $this;
+    }
+
+    /**
+     * Get 参数出现的索引
+     *
+     * @return  int
+     */ 
+    public function getIndex()
+    {
+        return $this->index;
+    }
+
+    /**
+     * Set 参数出现的索引
+     *
+     * @param  int  $index  参数出现的索引
+     *
+     * @return  self
+     */ 
+    public function setIndex(int $index)
+    {
+        $this->index = $index;
 
         return $this;
     }

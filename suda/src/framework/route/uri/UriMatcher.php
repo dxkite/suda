@@ -121,4 +121,20 @@ class UriMatcher extends MatcherHelper
     {
         return $this->uri;
     }
+
+    /**
+     * 获取参数
+     *
+     * @param integer $index
+     * @return \suda\framework\route\uri\parameter\Parameter|null
+     */
+    public function getParameterByIndex(int $index):?Parameter
+    {
+        foreach ($this->parameter as $parameter) {
+            if ($parameter->getIndex() === $index) {
+                return $parameter;
+            }
+        }
+        return null;
+    }
 }

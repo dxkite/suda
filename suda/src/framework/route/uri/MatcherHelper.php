@@ -46,7 +46,8 @@ class MatcherHelper
             if (!\in_array($type, array_keys(static::$parameters))) {
                 throw new InvalidArgumentException(sprintf('unknown parameter type %s', $type), 1);
             }
-            $parameter = static::$parameters[$type]::build($name, $extra);
+            $index = count($parameters);
+            $parameter = static::$parameters[$type]::build($index, $name, $extra);
             $parameters[] = $parameter;
             return $parameter->getMatch();
         }, $url);
@@ -58,11 +59,21 @@ class MatcherHelper
     {
         $uri = $matcher->getUri();
         // 拆分参数
-        list($mapper, $query) = static::analyseParameter($matcher, $parameter);
+        list($mapper, $query, $parameter) = static::analyseParameter($matcher, $parameter);
         // for * ?
         $url = \str_replace(['*','?'], ['','-'], $uri);
         // for ignore value
-        $url = preg_replace_callback('/\[(.+?)\]/', function ($match) use ($matcher, $parameter, $mapper) {
+        $url = static::parseIgnoreableParameter($url, $matcher, $parameter, $mapper);
+        $url = static::replaceParameter($url, $matcher, $parameter, $mapper);
+        if (count($query) && $allowQuery) {
+            return $url.'?'.http_build_query($query, 'v', '&', PHP_QUERY_RFC3986);
+        }
+        return $url;
+    }
+
+    protected static function parseIgnoreableParameter(string $url, UriMatcher  $matcher, array $parameter, array $mapper):string
+    {
+        return preg_replace_callback('/\[(.+?)\]/', function ($match) use ($matcher, $parameter, $mapper) {
             if (preg_match('/\{(\w+).+?\}/', $match[1])) {
                 $count = 0;
                 $subUrl = static::replaceParameter($match[1], $matcher, $parameter, $mapper, $count);
@@ -72,29 +83,28 @@ class MatcherHelper
             }
             return '';
         }, $url);
- 
-        $url = static::replaceParameter($url, $matcher, $parameter, $mapper);
-
-        if (count($query) && $allowQuery) {
-            return $url.'?'.http_build_query($query, 'v', '&', PHP_QUERY_RFC3986);
-        }
-        return $url;
     }
 
     protected static function analyseParameter(UriMatcher $matcher, array $parameter):array
     {
         $query = [];
         $mapper = [];
-
         foreach ($parameter as $key => $value) {
-            $mp = $matcher->getParameter($key);
+            if (\is_numeric($key)) {
+                $mp = $matcher->getParameterByIndex($key);
+                unset($parameter[$key]);
+                $key = $mp->getIndexName();
+                $parameter[$key] = $value;
+            } else {
+                $mp = $matcher->getParameter($key);
+            }
             // 多余参数
             if (null === $mp) {
                 $query[$key] = $value;
             }
             $mapper[$key] = $mp;
         }
-        return [$mapper, $query];
+        return [$mapper, $query, $parameter];
     }
 
     protected static function replaceParameter(string $input, UriMatcher $matcher, array $parameter, array $mapper, ?int &$count = null)
