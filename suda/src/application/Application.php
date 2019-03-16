@@ -261,28 +261,30 @@ class Application extends Context implements RequestProcessor
      */
     public function run() {
         $appLoader = new ApplicationLoader($this);
-        $this->debug->time('ApplicationLoader->load');
+        $this->debug->time('loading application');
         $appLoader->load();
-        $this->event->exec('service:load-config', [ $this->config ,$this]);
-        $this->debug->timeEnd('ApplicationLoader->load');
-        $this->debug->time('ApplicationLoader->loadDataSource');
+        $this->event->exec('application:load-config', [ $this->config ,$this]);
+        $this->debug->timeEnd('loading application');
+        $this->debug->time('loading datasource');
         $appLoader->loadDataSource();
-        $this->event->exec('service:load-environment', [ $this->config ,$this]);
-        $this->debug->timeEnd('ApplicationLoader->loadDataSource');
-        $this->debug->time('ApplicationLoader->loadRoute');
+        $this->event->exec('application:load-environment', [ $this->config ,$this]);
+        $this->debug->timeEnd('loading datasource');
+        $this->debug->time('loading route');
         $appLoader->loadRoute();
-        $this->event->exec('service:load-route', [$this->route , $this]);
-        $this->debug->timeEnd('ApplicationLoader->loadRoute');
-        $this->debug->time('service->run');
-        $result = $this->route->match($this->request(), $this->response);
+        $this->event->exec('application:load-route', [$this->route , $this]);
+        $this->debug->timeEnd('loading route');
+        $this->debug->time('match route');
+        $result = $this->route->match($this->request());
+        $this->debug->timeEnd('match route');
         if ($result !== null) {
-            $this->event->exec('service:route:match::after', [$result, $this->request]);
-        }
+            $this->event->exec('application:route:match::after', [$result, $this->request]);
+        } 
+        $this->debug->time('creating response');
         $response = $this->route->run($this->request(), $this->response, $result);
         if (!$response->isSended()) {
             $response->sendContent();
         }
-        $this->debug->timeEnd('service->run');
+        $this->debug->timeEnd('creating response');
         $this->debug->notice('system shutdown');
     }
 

@@ -96,7 +96,7 @@ class Debug implements LoggerInterface, LoggerAwareInterface, DumpInterface, Att
     {
         if (\array_key_exists($name, $this->timeRecord)) {
             $pass=microtime(true)-$this->timeRecord[$name]['time'];
-            $this->log($this->timeRecord[$name]['level'], 'process cost '. $name.' '. number_format($pass, 5).'s');
+            $this->log($this->timeRecord[$name]['level'], 'process '. $name.' cost '. number_format($pass, 5).'s');
             return $pass;
         }
         return 0;

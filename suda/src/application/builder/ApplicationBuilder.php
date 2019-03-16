@@ -28,10 +28,10 @@ class ApplicationBuilder
         $manifast = static::resolveManifastPath($path);
         $manifastConfig = Config::loadConfig($manifast) ?? [];
         if (\array_key_exists('import', $manifastConfig)) {
-            static::importClassLoader($context->loader(), $manifastConfig['import'], $path);
+            static::importClassLoader($loader, $manifastConfig['import'], $path);
         }
         $applicationClass = $manifastConfig['application'] ?? Application::class;
-        $application = new $applicationClass($path, $manifastConfig, $request, $loader);
+        $application = new $applicationClass($path, ['app' => $manifastConfig], $request, $loader);
         return $application;
     }
     

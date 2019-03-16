@@ -79,7 +79,9 @@ class ModuleLoader implements RequestProcessor
                 'module' => $this->module->getName(),
                 'config' => $this->module->getConfig(),
             ]);
-            $this->application->event()->load($listener);
+            if (\is_array($listener)) {
+                $this->application->event()->load($listener);
+            }
         }
     }
 
