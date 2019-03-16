@@ -120,14 +120,14 @@ class Debugger extends Debug
     /**
      * 异常托管
      *
-     * @param \Exception $exception
+     * @param \Throwable $exception
      * @return void
      */
     public function uncaughtException($exception)
     {
         $this->error($exception->getMessage(), ['exception' => $exception]);
         $this->context->response()->sendContent($exception);
-        $debugger->logger->info('failed response with code {response_status}', $this->context->response()->getStatus());
+        $this->logger->info('failed response with code {response_status}', $this->context->response()->getStatus());
     }
 
     /**

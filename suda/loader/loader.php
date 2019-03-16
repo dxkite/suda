@@ -1,6 +1,8 @@
 <?php
 // 运行时长
 set_time_limit(0);
+// 忽略用户断开
+ignore_user_abort(true);
 // 基本常量
 defined('SUDA_TIMEZONE') or define('SUDA_TIMEZONE', 'PRC');
 defined('SUDA_SYSTEM') or define('SUDA_SYSTEM', dirname(__DIR__));
@@ -17,8 +19,6 @@ date_default_timezone_set(SUDA_TIMEZONE);
 if (SUDA_DEBUG) {
     error_reporting(E_ALL);
 }
-// 忽略用户断开
-ignore_user_abort(SUDA_DEBUG);
 // HOME PAHT GET
 if (!defined('USER_HOME_PATH')) {
     // for linux

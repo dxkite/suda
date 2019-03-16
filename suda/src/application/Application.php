@@ -259,7 +259,8 @@ class Application extends Context implements RequestProcessor
      *
      * @return void
      */
-    public function run() {
+    public function run()
+    {
         $appLoader = new ApplicationLoader($this);
         $this->debug->time('loading application');
         $appLoader->load();
@@ -278,14 +279,18 @@ class Application extends Context implements RequestProcessor
         $this->debug->timeEnd('match route');
         if ($result !== null) {
             $this->event->exec('application:route:match::after', [$result, $this->request]);
-        } 
+        }
         $this->debug->time('sending response');
-        $response = $this->route->run($this->request(), $this->response, $result);
-        if (!$response->isSended()) {
-            $response->sendContent();
+        try {
+            $response = $this->route->run($this->request(), $this->response, $result);
+            if (!$response->isSended()) {
+                $response->sendContent();
+            }
+            $this->debug->info('resposned with code '. $response->getStatus());
+        } catch (\Throwable $e) {
+            $this->debug->uncaughtException($e);
         }
         $this->debug->timeEnd('sending response');
-        $this->debug->info('resposned with code '. $response->getStatus());
         $this->debug->info('system shutdown');
     }
 
