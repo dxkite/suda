@@ -6,7 +6,6 @@ use suda\application\Application;
 use suda\framework\runnable\Runnable;
 use suda\framework\filesystem\FileSystem;
 use suda\application\template\RawTemplate;
-use suda\application\builder\CompilerBuilder;
 use suda\application\template\compiler\Compiler;
 
 /**
@@ -209,7 +208,7 @@ class CompilableTemplate extends RawTemplate
     {
         if (is_dir($this->getStaticPath()) && !\in_array($this->getStaticPath(), static::$copyedStaticPaths)) {
             FileSystem::copyDir($this->getStaticPath(), $this->getStaticOutpath());
-            $this->copyedStaticPath[] = $this->getStaticPath();
+            static::$copyedStaticPath[] = $this->getStaticPath();
         }
     }
 
@@ -259,7 +258,7 @@ class CompilableTemplate extends RawTemplate
         return static::$compiler;
     }
 
-    protected function getCompiler():Compiler
+    protected function createCompiler():Compiler
     {
         return new Compiler;
     }

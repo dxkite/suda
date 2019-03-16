@@ -5,6 +5,7 @@ use suda\application\template\compiler\CommandInterface;
 
 class ModuleTemplateCommand implements CommandInterface
 {
+    use EchoValueTrait;
     
     /**
      * 配置

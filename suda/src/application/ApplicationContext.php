@@ -154,17 +154,6 @@ class ApplicationContext extends Context
     }
 
     /**
-     * 转换类名
-     *
-     * @param string $name
-     * @return void
-     */
-    protected function className(string $name)
-    {
-        return str_replace(['.','/'], '\\', $name);
-    }
-
-    /**
      * Get 数据源
      *
      * @return  Resource

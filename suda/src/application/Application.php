@@ -149,7 +149,7 @@ class Application extends ApplicationContext
      */
     public function onRequest(Request $request, Response $response)
     {
-        $route = $request->getAttribute('route-config', []);
+        $route = $request->getAttribute('route-config') ?? [];
         $runnable = null;
         if (\array_key_exists('class', $route)) {
             $runnable = $this->className($route['class']).'->onRequest';
@@ -163,6 +163,17 @@ class Application extends ApplicationContext
             throw new \Exception('request failed');
         }
         return (new Runnable($runnable))($this, $request, $response);
+    }
+    
+    /**
+     * 转换类名
+     *
+     * @param string $name
+     * @return string
+     */
+    protected function className(string $name)
+    {
+        return str_replace(['.','/'], '\\', $name);
     }
 
     /**
@@ -206,7 +217,7 @@ class Application extends ApplicationContext
                 return $moduleObj->getFullName().':'.$name;
             }
         }
-        if ($default !== null && ($moduleObj = $this->find($module))) {
+        if ($default !== null && ($moduleObj = $this->find($default))) {
             return $moduleObj->getFullName().':'.$name;
         }
         return $name;

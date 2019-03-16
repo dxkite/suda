@@ -58,9 +58,9 @@ class ModuleTemplate extends CompilableTemplate
             }
             return $this->application->getUrl($name, $values ?? [], true, $this->module);
         } elseif (is_array($name)) {
-            return $this->application->getUrl($name, $values ?? [], true, $this->module);
+            return $this->application->getUrl($this->application->request()->getAttribute('route'), $name, true, $this->module);
         } else {
-            return $this->application->getUrl($this->application->request()->getAttribute('route'), $this->application->request()->get(), true, $this->module);
+            return $this->application->getUrl($this->application->request()->getAttribute('route'), $this->application->request()->get() ?? [], true, $this->module);
         }
     }
 }

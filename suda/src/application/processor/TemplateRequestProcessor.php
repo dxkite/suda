@@ -3,6 +3,7 @@ namespace suda\application\processor;
 
 use suda\framework\Request;
 use suda\framework\Response;
+use suda\application\Application;
 use suda\application\processor\RequestProcessor;
 
 /**
