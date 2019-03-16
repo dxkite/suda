@@ -80,8 +80,8 @@ trait DumpTrait
     {
         if (is_null($object)) {
             return 'NULL';
-        } elseif ($object instanceof \Exception) {
-            return static::dumpException($object);
+        } elseif ($object instanceof \Throwable) {
+            return static::dumpThrowable($object);
         } elseif (is_object($object)) {
             return static::objectToString($object, $deep);
         } elseif (is_array($object)) {
@@ -128,7 +128,7 @@ trait DumpTrait
         return $line;
     }
 
-    public static function dumpException(\Exception $e)
+    public static function dumpThrowable(\Throwable $e)
     {
         $dump = get_class($e).':'. $e->getMessage() .PHP_EOL;
         $dump.= 'At: ' . $e->getFile().':'.$e->getLine().PHP_EOL;

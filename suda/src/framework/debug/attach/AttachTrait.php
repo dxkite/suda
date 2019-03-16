@@ -11,9 +11,9 @@ trait AttachTrait
      *
      * @var array
      */
-    protected $attribute=[];
+    protected $attribute = [];
     
-    public function addAttribute(string $name , $value)
+    public function addAttribute(string $name, $value)
     {
         $this->attribute[$name] = $value;
     }
@@ -21,9 +21,9 @@ trait AttachTrait
     protected function analyse(array $context)
     {
         $replace = [];
-        $attach  =[] ;
+        $attach = [] ;
         foreach ($context as $key => $val) {
-            if (!is_array($val) && (!is_object($val) || method_exists($val, '__toString')) && ! $val instanceof \Exception) {
+            if ($this->isReplacedObj($val)) {
                 $replace['{' . $key . '}'] = $val;
             } else {
                 $attach[$key] = $val;
@@ -32,9 +32,14 @@ trait AttachTrait
         return [$attach, $replace];
     }
 
+    protected function isReplacedObj($val) : bool
+    {
+        return !is_array($val) && (!is_object($val) || method_exists($val, '__toString')) && ! $val instanceof \Throwable;
+    }
+
     public function interpolate(string $message, array $context, array $attribute)
     {
-        list($attach, $replace) =  $this->analyse($context);
+        list($attach, $replace) = $this->analyse($context);
         $attribute = array_merge($this->attribute, $attribute);
         foreach ($attribute as $key => $val) {
             $replace['%' . $key . '%'] = $val;
@@ -44,9 +49,9 @@ trait AttachTrait
         foreach ($attach as $name => $value) {
             $attachInfo = $name.' = ';
             if ($value instanceof AttachValueInterface) {
-                $attachInfo.= $value->getLogAttach().PHP_EOL;
+                $attachInfo .= $value->getLogAttach().PHP_EOL;
             } else {
-                $attachInfo.= DumpTrait::parameterToString($value).PHP_EOL;
+                $attachInfo .= DumpTrait::parameterToString($value).PHP_EOL;
             }
         }
         if (strlen($attachInfo) > 0) {
@@ -59,7 +64,7 @@ trait AttachTrait
      * Get 属性数组
      *
      * @return  array
-     */ 
+     */
     public function getAttribute()
     {
         return $this->attribute;

@@ -127,7 +127,7 @@ class Debugger extends Debug
     {
         $this->error($exception->getMessage(), ['exception' => $exception]);
         $this->context->response()->sendContent($exception);
-        $this->logger->info('failed response with code {response_status}', $this->context->response()->getStatus());
+        $this->info('failed response with code {response_status}',['response_status' => $this->context->response()->getStatus()]);
     }
 
     /**
