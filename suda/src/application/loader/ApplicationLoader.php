@@ -58,7 +58,7 @@ class ApplicationLoader
     {
         $dataSourceConfigPath = $this->application->getResource()->getConfigResourcePath('config/data-source');
         $dataSource = new DataSource;
-        $observer = new DebugObserver($this->application->getContext()->get('debug'));
+        $observer = new DebugObserver($this->application->debug());
         if ($dataSourceConfigPath !== null) {
             $dataSourceConfig = Config::loadConfig($dataSourceConfigPath);
             foreach ($dataSourceConfig as $name => $config) {
@@ -66,7 +66,6 @@ class ApplicationLoader
             }
         }
         $this->application->setDataSource($dataSource);
-        $this->application->getContext()->set('data-source', $dataSource);
     }
 
     protected function addDataSource(DataSource $source, Observer $observer, string $name, string $type, string $mode, array $config)

@@ -1,10 +1,11 @@
 <?php
 namespace suda\framework;
 
-use suda\framework\Context;
 use suda\framework\Debugger;
+
 use suda\framework\debug\Debug;
 use suda\framework\runnable\Runnable;
+use suda\framework\context\PHPContext;
 use suda\framework\filesystem\FileSystem;
 use suda\framework\debug\log\LoggerInterface;
 use suda\framework\debug\log\logger\FileLogger;
@@ -18,7 +19,7 @@ class Debugger extends Debug
     /**
      * 环境内容
      *
-     * @var Context
+     * @var PHPContext
      */
     protected $context;
     
@@ -40,13 +41,13 @@ class Debugger extends Debug
      * @param Context $context
      * @return Debugger
      */
-    public static function create(Context $context): Debugger
+    public static function create(PHPContext $context): Debugger
     {
         $debugger = new Debugger;
-        $debugger->addAttribute('remote-ip', $context->get('request')->getRemoteAddr());
-        $debugger->addAttribute('debug', $context->get('config')->get('debug', false));
-        $debugger->addAttribute('request-uri', $context->get('request')->getUrl());
-        $debugger->addAttribute('request-method', $context->get('request')->getMethod());
+        $debugger->addAttribute('remote-ip', $context->request()->getRemoteAddr());
+        $debugger->addAttribute('debug', $context->conf('debug', false));
+        $debugger->addAttribute('request-uri', $context->request()->getUrl());
+        $debugger->addAttribute('request-method', $context->request()->getMethod());
         $debugger->addAttribute('request-time', date('Y-m-d H:i:s', \constant('SUDA_START_TIME')));
         $debugger->applyConfig([
             'start-time' => \constant('SUDA_START_TIME'),
@@ -63,9 +64,9 @@ class Debugger extends Debug
      *
      * @return LoggerInterface
      */
-    protected static function createLogger(Context $context): LoggerInterface
+    protected static function createLogger(PHPContext $context): LoggerInterface
     {
-        $logger = (new Runnable($context->get('config')->get('app.logger-build', [__CLASS__, 'createDefaultLogger'])))->run();
+        $logger = (new Runnable($context->conf('app.logger-build', [__CLASS__, 'createDefaultLogger'])))->run();
         if ($logger instanceof LoggerInterface) {
             return $logger;
         } else {
@@ -122,7 +123,7 @@ class Debugger extends Debug
     public function uncaughtException($exception)
     {
         $this->error($exception->getMessage(), ['exception' => $exception]);
-        $this->context->get('response')->sendContent($exception);
+        $this->context->response()->sendContent($exception);
     }
 
     /**

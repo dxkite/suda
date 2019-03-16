@@ -1,65 +1,100 @@
 <?php
 namespace suda\framework;
 
-use Closure;
-use suda\framework\runnable\Runnable;
+use suda\framework\Cache;
+use suda\framework\Event;
+use suda\framework\Route;
+use suda\framework\Config;
+use suda\framework\http\Request;
+use suda\framework\loader\Loader;
+use suda\framework\cache\FileCache;
+use suda\framework\context\PHPContext;
 
 /**
  * 环境容器
  */
-class Context
+class Context extends PHPContext
 {
     /**
-     * 对象容器
+     * 事件监听器
      *
-     * @var object[]
+     * @var Event
      */
-    protected $instance;
+    protected $event;
 
     /**
-     * 添加实例
+     * 路由匹配工具
      *
-     * @param string $name
-     * @param object|Closure|\suda\framework\runnable\Runnable $instance
-     * @return self
+     * @var Route
      */
-    public function set(string $name, $instance)
+    protected $route;
+
+    /**
+     * 缓存
+     *
+     * @var Cache
+     */
+    protected $cache;
+    
+    public function __construct(Request $request, Config $config, Loader $loader)
     {
-        $this->instance[$name] = $instance;
-        return $this;
+        parent::__construct($request, $config, $loader);
+        $this->event = new Event;
+        $this->route = new Route;
     }
 
     /**
-     * 设置单例
+     * 获取路由
      *
-     * @param string $name
-     * @param string|Closure|\suda\framework\runnable\Runnable|object $class
-     * @return self
+     * @return \suda\framework\Route
      */
-    public function setSingle(string $name, $class)
+    public function route():Route
     {
-        if (\is_string($class)) {
-            return $this->set($name, new $class);
-        } elseif ($class instanceof Runnable || $class instanceof Closure) {
-            return $this->set($name, $class());
-        } else {
-            return $this->set($name, $class);
-        }
+        return $this->route;
     }
 
     /**
-     * 获取一个类的实例
-     * @param  string $alias 类名
-     * @return object
+     * 获取缓存
+     *
+     * @return \suda\framework\Cache
      */
-    public function get(string $name = '')
+    public function cache(): Cache
     {
-        if (array_key_exists($name, $this->instance)) {
-            if (\is_object($this->instance[$name])) {
-                return $this->instance[$name];
-            }
-            return $this->instance[$name]();
+        if ($this->cache === null) {
+            $this->cache = $this->getDefaultCache();
         }
-        throw new \Exception('instance no found: '.$name);
+        return $this->cache;
+    }
+
+    /**
+     * 获取事件
+     *
+     * @return \suda\framework\Event
+     */
+    public function event():Event
+    {
+        return $this->event;
+    }
+
+    /**
+     * 创建Cache
+     *
+     * @param string $cacheName
+     * @param array $cacheConfig
+     * @return \suda\framework\Cache
+     */
+    protected function createCacheFrom(string $cacheName, array $cacheConfig):Cache
+    {
+        return new $cacheName($cacheConfig);
+    }
+
+    /**
+     * 获取默认缓存
+     *
+     * @return \suda\framework\Cache
+     */
+    protected function getDefaultCache():Cache
+    {
+        return $this->createCacheFrom($this->conf('cache.class', FileCache::class), $this->conf('cache', []));
     }
 }

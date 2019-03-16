@@ -79,7 +79,7 @@ class ModuleLoader implements RequestProcessor
                 'module' => $this->module->getName(),
                 'config' => $this->module->getConfig(),
             ]);
-            $this->application->getContext()->get('event')->load($listener);
+            $this->application->event()->load($listener);
         }
     }
 
@@ -98,7 +98,7 @@ class ModuleLoader implements RequestProcessor
      */
     protected function importClassLoader(array $import, string $relativePath)
     {
-        ApplicationBuilder::importClassLoader($this->application->getContext()->get('loader'), $import, $relativePath);
+        ApplicationBuilder::importClassLoader($this->application->loader(), $import, $relativePath);
     }
 
     protected function loadRouteGroup(string $groupName)
@@ -125,7 +125,7 @@ class ModuleLoader implements RequestProcessor
             $attriute = [];
             $attriute['module'] = $this->module->getFullName();
             $attriute['route'] = $config;
-            $this->application->getContext()->get('route')->request($method, $exname, $config['url'] ?? '/', $runnable, $attriute);
+            $this->application->route()->request($method, $exname, $config['url'] ?? '/', $runnable, $attriute);
         }
     }
 

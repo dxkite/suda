@@ -2,8 +2,8 @@
 namespace suda\application\builder;
 
 use suda\framework\Config;
-use suda\framework\Context;
 use suda\application\Resource;
+use suda\framework\http\Request;
 use suda\application\Application;
 use suda\framework\loader\Loader;
 use suda\framework\config\PathResolver;
@@ -16,23 +16,22 @@ use suda\application\exception\ApplicationException;
 class ApplicationBuilder
 {
     /**
-     * 从路径加载应用
+     * 创建应用
      *
-     * @param Context $context
+     * @param \suda\framework\http\Request $request
+     * @param \suda\framework\loader\Loader $loader
      * @param string $path
-     * @return Application
+     * @return \suda\application\Application
      */
-    public static function build(Context $context, string $path):Application
+    public static function build(Request $request, Loader $loader, string $path):Application
     {
         $manifast = static::resolveManifastPath($path);
         $manifastConfig = Config::loadConfig($manifast) ?? [];
         if (\array_key_exists('import', $manifastConfig)) {
-            static::importClassLoader($context->get('loader'), $manifastConfig['import'], $path);
+            static::importClassLoader($context->loader(), $manifastConfig['import'], $path);
         }
         $applicationClass = $manifastConfig['application'] ?? Application::class;
-        $application = new $applicationClass($path, $manifastConfig);
-        $application->setContext($context);
-        $context->set('application', $application);
+        $application = new $applicationClass($path, $manifastConfig, $request, $loader);
         return $application;
     }
     

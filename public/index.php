@@ -5,6 +5,6 @@ define('SUDA_DATA', __DIR__.'/../app/data');
 define('SUDA_SYSTEM', __DIR__.'/../suda');
 define('SUDA_PUBLIC', __DIR__);
 
-require_once SUDA_SYSTEM.'/loader/web-run.php';
+require_once SUDA_SYSTEM.'/loader/main.php';
 
 

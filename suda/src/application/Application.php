@@ -2,14 +2,18 @@
 namespace suda\application;
 
 use suda\orm\DataSource;
+use suda\framework\Config;
 use suda\framework\Context;
 use suda\framework\Request;
 use suda\application\Module;
 use suda\framework\Response;
 use suda\application\Resource;
 use suda\application\ModuleBag;
+use suda\framework\loader\Loader;
 use suda\framework\runnable\Runnable;
+use suda\application\loader\ApplicationLoader;
 use suda\framework\arrayobject\ArrayDotAccess;
+use suda\framework\http\Request as HttpRequest;
 use suda\application\processor\RequestProcessor;
 use suda\application\processor\FileRequestProcessor;
 use suda\application\processor\TemplateRequestProcessor;
@@ -17,7 +21,7 @@ use suda\application\processor\TemplateRequestProcessor;
 /**
  * 应用程序
  */
-class Application implements RequestProcessor
+class Application extends Context implements RequestProcessor
 {
     /**
      * 应用路径
@@ -82,15 +86,24 @@ class Application implements RequestProcessor
      */
     protected $resource;
 
-
     /**
      * 数据源
      *
      * @var DataSource
      */
     protected $dataSource;
-    public function __construct(string $path, array $manifast)
+
+    /**
+     * 创建应用
+     *
+     * @param string $path
+     * @param array $manifast
+     * @param \suda\framework\http\Request $request
+     * @param \suda\framework\loader\Loader $loader
+     */
+    public function __construct(string $path, array $manifast, HttpRequest $request, Loader $loader)
     {
+        parent::__construct($request, new Config($manifast), $loader);
         $this->path = $path;
         $this->module = new ModuleBag;
         $this->manifast = $manifast;
@@ -239,6 +252,38 @@ class Application implements RequestProcessor
     public function getRouteGroup()
     {
         return $this->routeGroup;
+    }
+
+    /**
+     * 运行程序
+     *
+     * @return void
+     */
+    public function run() {
+        $appLoader = new ApplicationLoader($this);
+        $this->debug->time('ApplicationLoader->load');
+        $appLoader->load();
+        $this->event->exec('service:load-config', [ $this->config ,$this]);
+        $this->debug->timeEnd('ApplicationLoader->load');
+        $this->debug->time('ApplicationLoader->loadDataSource');
+        $appLoader->loadDataSource();
+        $this->event->exec('service:load-environment', [ $this->config ,$this]);
+        $this->debug->timeEnd('ApplicationLoader->loadDataSource');
+        $this->debug->time('ApplicationLoader->loadRoute');
+        $appLoader->loadRoute();
+        $this->event->exec('service:load-route', [$this->route , $this]);
+        $this->debug->timeEnd('ApplicationLoader->loadRoute');
+        $this->debug->time('service->run');
+        $result = $this->route->match($this->request(), $this->response);
+        if ($result !== null) {
+            $this->event->exec('service:route:match::after', [$result, $this->request]);
+        }
+        $response = $this->route->run($this->request(), $this->response, $result);
+        if (!$response->isSended()) {
+            $response->sendContent();
+        }
+        $this->debug->timeEnd('service->run');
+        $this->debug->notice('system shutdown');
     }
 
     /**
