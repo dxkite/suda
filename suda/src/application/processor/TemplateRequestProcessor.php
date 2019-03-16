@@ -13,6 +13,11 @@ class TemplateRequestProcessor implements RequestProcessor
 {
     public function onRequest(Application $application, Request $request, Response $response)
     {
-        $response->send($request->getAttribute('template'));
+        $template = $request->getAttribute('template');
+        if (is_string($template)) {
+            return $application->getTemplate($template, $application->getRunning()->getFullName());
+        } else {
+            $response->status(404);
+        }
     }
 }

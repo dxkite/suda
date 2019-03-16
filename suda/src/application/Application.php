@@ -8,7 +8,6 @@ use suda\framework\Request;
 use suda\application\Module;
 use suda\framework\Response;
 use suda\application\Resource;
-use suda\application\LocaleBag;
 use suda\application\ModuleBag;
 use suda\framework\loader\Loader;
 use suda\framework\runnable\Runnable;
@@ -226,6 +225,9 @@ class Application extends ApplicationContext
      */
     public function getTemplate(string $name, ?string $default = null): ModuleTemplate
     {
+        if ($default === null && $this->running) {
+            $default = $this->running->getFullName();
+        }
         return new ModuleTemplate($this->getFullModuleSource($name, $default), $this);
     }
 
@@ -256,7 +258,7 @@ class Application extends ApplicationContext
      * Get 字符串包
      *
      * @return  LanguageBag
-     */ 
+     */
     public function getLanguage()
     {
         return $this->language;
@@ -268,7 +270,7 @@ class Application extends ApplicationContext
      * @param  LanguageBag  $language  字符串包
      *
      * @return  self
-     */ 
+     */
     public function setLanguage(LanguageBag $language)
     {
         $this->language = $language;
@@ -280,7 +282,7 @@ class Application extends ApplicationContext
      * Get 运行的模块
      *
      * @return  Module
-     */ 
+     */
     public function getRunning()
     {
         return $this->running;
@@ -292,7 +294,7 @@ class Application extends ApplicationContext
      * @param  Module  $running  运行的模块
      *
      * @return  self
-     */ 
+     */
     public function setRunning(Module $running)
     {
         $this->running = $running;

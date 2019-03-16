@@ -13,6 +13,12 @@ class FileRequestProcessor implements RequestProcessor
 {
     public function onRequest(Application $application, Request $request, Response $response)
     {
-        $response->sendFile($request->getAttribute('source'));
+        $filename = $request->getAttribute('source');
+        if (is_string($filename)) {
+            $processor = new FileRangeProccessor($filename);
+            $processor->onRequest($application, $request, $response);
+        } else {
+            $response->status(404);
+        }
     }
 }
