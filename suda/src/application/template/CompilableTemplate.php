@@ -121,7 +121,7 @@ class CompilableTemplate extends RawTemplate
     {
         $output = $this->config['output'] ?? \constant('SUDA_DATA').'/template';
         FileSystem::makes($output);
-        return $output .'/'. $this->name.'-'.substr(md5_file($this->source), 10, 8).'.php';
+        return $output .'/'. $this->name.'-'.substr(md5_file($this->getSourcePath()), 10, 8).'.php';
     }
 
     protected function getSourcePath()
@@ -131,18 +131,22 @@ class CompilableTemplate extends RawTemplate
 
     public function __toString()
     {
-        $content = FileSystem::get($this->getSourcePath());
-        if (FileSystem::exist($this->getPath()) === false && $content !== null) {
-            $compiled = $this->compiler()->compileText($content, $this->config);
-            FileSystem::put($this->getPath(), $compiled);
+        $source = FileSystem::exist($this->getSourcePath()) ;
+        // $dest = FileSystem::exist($this->getPath());
+        if ($source === true) {
+            $content = FileSystem::get($this->getSourcePath());
+            if ($content !== null) {
+                $compiled = $this->compiler()->compileText($content, $this->config);
+                FileSystem::put($this->getPath(), $compiled);
+            }
         }
         return $this->getRenderedString();
     }
 
     /**
-    * 创建模板
-    */
-    public function parent(CompilableTemplate $template)
+     * 创建模板
+     */
+    public function parent($template)
     {
         $this->parent = $template;
         return $this;

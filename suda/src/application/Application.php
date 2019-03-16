@@ -212,7 +212,9 @@ class Application extends ApplicationContext
     protected function getFullModuleSource(string $name, ?string $default = null):string
     {
         if (strpos($name, ':') > 0) {
-            list($module, $name) = \explode(':', $name);
+            $dotpos = \strrpos($name, ':');
+            $module = substr($name, 0, $dotpos);
+            $name = substr($name, $dotpos + 1);
             if ($moduleObj = $this->find($module)) {
                 return $moduleObj->getFullName().':'.$name;
             }

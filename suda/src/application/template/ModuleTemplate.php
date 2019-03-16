@@ -1,7 +1,10 @@
 <?php
 namespace suda\application\template;
 
+use suda\framework\Config;
+use suda\application\Resource;
 use suda\application\Application;
+use suda\framework\filesystem\FileSystem;
 use suda\application\template\compiler\Compiler;
 use suda\application\template\CompilableTemplate;
 use suda\application\template\ModuleTemplateCommand;
@@ -32,16 +35,38 @@ class ModuleTemplate extends CompilableTemplate
      */
     protected $application;
 
-    public function __construct(string $name, Application $application)
+    /**
+     * 配置文件
+     *
+     * @var array
+     */
+    protected $config;
+
+    public function __construct(string $name, Application $application, ?string $defaultModule = '')
     {
+        $this->application = $application;
         if (strpos($name, ':') > 0) {
-            list($this->module, $this->name) = \explode(':', $name);
+            $dotpos = \strrpos($name, ':');
+            $this->name = substr($name, $dotpos + 1);
+            $this->module = substr($name, 0, $dotpos);
         } else {
             $this->name = $name;
+            $this->module = $defaultModule;
         }
+        $this->initConfig();
+        $this->value = [];
     }
 
-    protected function getCompiler():Compiler
+    protected function initConfig()
+    {
+        $config = $this->getResource()->getConfigResourcePath($this->getTemplatePath().'/config');
+        if ($config !== null) {
+            $this->config = Config::loadConfig($config) ?? [];
+        }
+        $this->config = [];
+    }
+
+    protected function createCompiler():Compiler
     {
         $compiler = new Compiler;
         $compiler->registerCommand(new ModuleTemplateCommand);
@@ -64,5 +89,51 @@ class ModuleTemplate extends CompilableTemplate
             return $this->application->getUrl($defaultName, $this->application->request()->get() ?? [], true, $this->module);
         }
         return '#'.$defaultName;
+    }
+
+    protected function getStaticPath()
+    {
+        $name = $this->config['static'] ?? 'static';
+        return $this->getResource()->getResourcePath($this->getTemplatePath().'/'.$name);
+    }
+
+    protected function getStaticOutpath()
+    {
+        $path = $this->config['assets-public'] ?? \constant('SUDA_PUBLIC').'/assets/'. $this->getStaticName();
+        FileSystem::makes($path);
+        return $path;
+    }
+
+    protected function getSourcePath()
+    {
+        $subfix = $this->config['subfix'] ?? '.tpl.html';
+        return $this->getResource()->getResourcePath($this->getTemplatePath().'/'.$this->name.$subfix);
+    }
+
+    protected function getPath()
+    {
+        $output = $this->config['output'] ?? \constant('SUDA_DATA').'/template/'. str_replace([':','/','\\'], '-', $this->module);
+        FileSystem::makes($output);
+        return $output .'/'. $this->name.'.php';
+    }
+
+    public function include(string $name)
+    {
+        $included = new self($name, $this->application, $this->module);
+        $included->parent = $this;
+        echo $included->__toString();
+    }
+
+    protected function getResource(): Resource
+    {
+        if ($this->module !== null && $module = $this->application->find($this->module)) {
+            return $module->getResource();
+        }
+        return $this->application->getResource();
+    }
+
+    protected function getTemplatePath()
+    {
+        return 'template/'.$this->application->getStyle();
     }
 }

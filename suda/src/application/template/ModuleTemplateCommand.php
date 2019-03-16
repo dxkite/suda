@@ -37,8 +37,8 @@ class ModuleTemplateCommand implements CommandInterface
     protected function parseU(string $data)
     {
         if (strlen(trim($data)) === 0) {
-            return '<?php $this->getUrl(); ?>';
+            return '<?php echo $this->getUrl(); ?>';
         }
-        return '<?php $this->getUrl'.$data.'; ?>';
+        return '<?php echo $this->getUrl'.$data.'; ?>';
     }
 }
