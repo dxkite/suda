@@ -40,7 +40,7 @@ class ApplicationLoader
 
     public function load()
     {
-        ContentWrapper::register(ExceptionContentWrapper::class, [\Throwable::class]);
+        $this->application->getResponse()->getWrapper()->register(ExceptionContentWrapper::class, [\Throwable::class]);
         $this->registerModule();
         $this->prepareModuleLoader();
     }

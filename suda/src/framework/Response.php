@@ -14,6 +14,21 @@ use suda\framework\http\Response as HTTPResponse;
 class Response extends HTTPResponse
 {
     /**
+     * 包装器
+     *
+     * @var ContentWrapper
+     */
+    protected $wrapper;
+
+    /**
+     * 创建响应
+     */
+    public function __construct() {
+        parent::__construct();
+        $this->wrapper = new ContentWrapper;
+    }
+    
+    /**
      * 设置类型
      *
      * @param string $extension
@@ -56,7 +71,7 @@ class Response extends HTTPResponse
      */
     public function setContent($content)
     {
-        $wrapper = ContentWrapper::getWrapper($content);
+        $wrapper = $this->wrapper->getWrapper($content);
         $this->data = $wrapper->getContent($this);
         return $this;
     }
@@ -169,5 +184,29 @@ class Response extends HTTPResponse
         }
         $this->sendContentLength($this->data);
         $this->end();
+    }
+
+    /**
+     * Get 包装器
+     *
+     * @return  ContentWrapper
+     */ 
+    public function getWrapper()
+    {
+        return $this->wrapper;
+    }
+
+    /**
+     * Set 包装器
+     *
+     * @param  ContentWrapper  $wrapper  包装器
+     *
+     * @return  self
+     */ 
+    public function setWrapper(ContentWrapper $wrapper)
+    {
+        $this->wrapper = $wrapper;
+
+        return $this;
     }
 }

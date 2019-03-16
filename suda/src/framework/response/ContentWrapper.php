@@ -16,7 +16,7 @@ use suda\framework\response\wrapper\NullContentWrapper;
  */
 class ContentWrapper
 {
-    protected static $types = [
+    protected $types = [
         JsonContentWrapper::class => ['array', JsonSerializable::class],
         HtmlContentWrapper::class => ['boolean', 'integer','double', 'string'],
         NullContentWrapper::class => ['NULL'],
@@ -30,9 +30,9 @@ class ContentWrapper
      * @param array $types
      * @return void
      */
-    public static function register(string $provider, array $types)
+    public function register(string $provider, array $types)
     {
-        static::$types[$provider] = $types;
+        $this->types[$provider] = $types;
     }
 
     /**
@@ -63,9 +63,9 @@ class ContentWrapper
      * @param mixed $content
      * @return AbstractContentWrapper
      */
-    public static function getWrapper($content): AbstractContentWrapper
+    public function getWrapper($content): AbstractContentWrapper
     {
-        foreach (static::$types as $wrapper => $types) {
+        foreach ($this->types as $wrapper => $types) {
             foreach ($types as $type) {
                 if (static::isTypeOf($content, $type)) {
                     return new $wrapper($content, $type);
