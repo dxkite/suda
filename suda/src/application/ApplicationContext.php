@@ -68,12 +68,11 @@ class ApplicationContext extends Context
      *
      * @param string $path
      * @param array $manifast
-     * @param \suda\framework\http\Request $request
      * @param \suda\framework\loader\Loader $loader
      */
-    public function __construct(string $path, array $manifast, Request $request, Loader $loader)
+    public function __construct(string $path, array $manifast, Loader $loader)
     {
-        parent::__construct($request, new Config(['app' => $manifast]), $loader);
+        parent::__construct(new Config(['app' => $manifast]), $loader);
         $this->path = $path;
         $this->routeGroup = $manifast['route-group'] ?? ['default'];
         $this->resource = new Resource([Resource::getPathByRelativedPath($manifast['resource'] ?? './resource', $path)]);

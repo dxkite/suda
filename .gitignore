@@ -4,3 +4,4 @@ composer.lock
 /app/
 *.db
 /public/assets/*
+/public/hello/*

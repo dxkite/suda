@@ -18,6 +18,7 @@ use suda\framework\arrayobject\ArrayDotAccess;
 use suda\framework\http\Request as HttpRequest;
 use suda\application\processor\FileRequestProcessor;
 use suda\application\processor\TemplateRequestProcessor;
+use suda\application\exception\wrapper\ExceptionContentWrapper;
 
 /**
  * 应用程序
@@ -57,12 +58,11 @@ class Application extends ApplicationContext
      *
      * @param string $path
      * @param array $manifast
-     * @param \suda\framework\http\Request $request
      * @param \suda\framework\loader\Loader $loader
      */
-    public function __construct(string $path, array $manifast, HttpRequest $request, Loader $loader)
+    public function __construct(string $path, array $manifast, Loader $loader)
     {
-        parent::__construct($path, $manifast, $request, $loader);
+        parent::__construct($path, $manifast, $loader);
         $this->module = new ModuleBag;
         $this->initProperty($manifast);
     }
@@ -115,11 +115,11 @@ class Application extends ApplicationContext
     }
 
     /**
-     * 运行程序
+     * 准备运行环境
      *
      * @return void
      */
-    public function run()
+    public function prepare()
     {
         $appLoader = new ApplicationLoader($this);
         $this->debug->time('loading application');
@@ -134,21 +134,32 @@ class Application extends ApplicationContext
         $appLoader->loadRoute();
         $this->event->exec('application:load-route', [$this->route , $this]);
         $this->debug->timeEnd('loading route');
+    }
+
+    /**
+     * 运行程序
+     *
+     * @return void
+     */
+    public function run(Request $request, Response $response)
+    {
+        $response->getWrapper()->register(ExceptionContentWrapper::class, [\Throwable::class]);
         $this->debug->time('match route');
-        $result = $this->route->match($this->request());
+        $result = $this->route->match($request);
         $this->debug->timeEnd('match route');
         if ($result !== null) {
-            $this->event->exec('application:route:match::after', [$result, $this->request]);
+            $this->event->exec('application:route:match::after', [$result, $request]);
         }
         $this->debug->time('sending response');
         try {
-            $response = $this->route->run($this->request(), $this->response, $result);
+            $response = $this->route->run($request, $response, $result);
             if (!$response->isSended()) {
                 $response->sendContent();
             }
             $this->debug->info('resposned with code '. $response->getStatus());
         } catch (\Throwable $e) {
             $this->debug->uncaughtException($e);
+            $response->sendContent($e);
         }
         $this->debug->timeEnd('sending response');
         $this->debug->info('system shutdown');
@@ -205,46 +216,49 @@ class Application extends ApplicationContext
     /**
      * 获取URL
      *
+     * @param \suda\framework\Request $request
      * @param string $name
      * @param array $parameter
      * @param boolean $allowQuery
      * @param string|null $default
      * @return string|null
      */
-    public function getUrl(string $name, array $parameter = [], bool $allowQuery = true, ?string $default = null):?string
+    public function getUrl(Request $request, string $name, array $parameter = [], bool $allowQuery = true, ?string $default = null):?string
     {
         $url = $this->route->create($this->getFullModuleSource($name, $default), $parameter, $allowQuery);
-        return $this->getUrlIndex().'/'.ltrim($url, '/');
+        return $this->getUrlIndex($request).'/'.ltrim($url, '/');
     }
 
     /**
      * 获取URL索引
      *
+     * @param \suda\framework\Request $request
      * @return string
      */
-    protected function getUrlIndex():string
+    protected function getUrlIndex(Request $request):string
     {
-        $indexs = $this->conf('indexs') ?? [];
-        $index = $this->request->getIndex();
+        $indexs = $this->conf('indexs') ?? [ 'index.php' ];
+        $index = ltrim($request->getIndex(), '/');
         if (!\in_array($index, $indexs)) {
             return $index;
         }
-        return dirname($index);
+        return '';
     }
 
     /**
      * 获取模板页面
      *
      * @param string $name
+     * @param \suda\framework\Request $request
      * @param string|null $default
      * @return \suda\application\template\ModuleTemplate
      */
-    public function getTemplate(string $name, ?string $default = null): ModuleTemplate
+    public function getTemplate(string $name, Request $request, ?string $default = null): ModuleTemplate
     {
         if ($default === null && $this->running) {
             $default = $this->running->getFullName();
         }
-        return new ModuleTemplate($this->getFullModuleSource($name, $default), $this);
+        return new ModuleTemplate($this->getFullModuleSource($name, $default), $this, $request, $default);
     }
 
     /**

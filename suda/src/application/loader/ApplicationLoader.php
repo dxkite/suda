@@ -11,7 +11,6 @@ use suda\orm\connection\observer\Observer;
 use suda\application\builder\ModuleBuilder;
 use suda\framework\response\ContentWrapper;
 use suda\application\database\DebugObserver;
-use suda\application\exception\wrapper\ExceptionContentWrapper;
 
 /**
  * 应用程序
@@ -41,7 +40,6 @@ class ApplicationLoader
     public function load()
     {
         $this->loadGlobalConfig();
-        $this->application->getResponse()->getWrapper()->register(ExceptionContentWrapper::class, [\Throwable::class]);
         $this->registerModule();
         $this->prepareModuleLoader();
     }

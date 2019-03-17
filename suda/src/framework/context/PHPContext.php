@@ -9,7 +9,7 @@ use suda\framework\loader\Loader;
 /**
  * PHP环境
  */
-class PHPContext extends ServerContext
+class PHPContext
 {
     /**
      * PHP自动加载
@@ -35,13 +35,11 @@ class PHPContext extends ServerContext
     /**
      * 创建PHP环境
      *
-     * @param \suda\framework\http\Request $request
      * @param \suda\framework\Config $config
      * @param \suda\framework\loader\Loader $loader
      */
-    public function __construct(Request $request, Config $config, Loader $loader)
+    public function __construct(Config $config, Loader $loader)
     {
-        parent::__construct($request);
         $this->loader = $loader;
         $this->config = $config;
         $this->debug = Debugger::create($this)->register();

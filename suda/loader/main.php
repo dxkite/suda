@@ -1,6 +1,8 @@
 <?php
+use suda\framework\Response;
 use suda\framework\loader\Path;
-use suda\framework\http\Request;
+use suda\framework\http\Request as HttpRequest;
+use suda\framework\Request;
 use suda\framework\loader\Loader;
 use suda\application\builder\ApplicationBuilder;
 
@@ -12,6 +14,7 @@ $loader->register();
 $loader->addIncludePath(SUDA_SYSTEM .'/src', 'suda');
 // 初始化数据目录
 defined('SUDA_DATA') or define('SUDA_DATA', Path::toAbsolutePath('~/data'));
-$applciation = ApplicationBuilder::build(Request::create(), $loader, SUDA_APP);
-$applciation->run();
+$applciation = ApplicationBuilder::build($loader, SUDA_APP);
+$applciation->prepare();
+$applciation->run(new Request(HttpRequest::create()), new Response);
 exit;

@@ -15,7 +15,7 @@ class TemplateRequestProcessor implements RequestProcessor
     {
         $template = $request->getAttribute('template');
         if (is_string($template)) {
-            return $application->getTemplate($template, $application->getRunning()->getFullName());
+            return $application->getTemplate($template, $request, $application->getRunning()->getFullName());
         } else {
             $response->status(404);
         }

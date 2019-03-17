@@ -11,7 +11,7 @@ class SimpleResponse implements RequestProcessor
 {
     public function onRequest(Application $application, Request $request, Response $response)
     {
-        $template = $application->getTemplate('simple');
+        $template = $application->getTemplate('simple', $request);
         $template->set('ip', $request->getRemoteAddr());
         return $template;
     }

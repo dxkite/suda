@@ -2,6 +2,7 @@
 namespace suda\application\template;
 
 use suda\framework\Config;
+use suda\framework\Request;
 use suda\application\Resource;
 use suda\application\Application;
 use suda\framework\filesystem\FileSystem;
@@ -42,9 +43,17 @@ class ModuleTemplate extends CompilableTemplate
      */
     protected $config;
 
-    public function __construct(string $name, Application $application, ?string $defaultModule = '')
+    /**
+     * 请求信息
+     *
+     * @var Request
+     */
+    protected $request;
+
+    public function __construct(string $name, Application $application, Request $request, ?string $defaultModule = '')
     {
         $this->application = $application;
+        $this->request = $request;
         if (strpos($name, ':') > 0) {
             $dotpos = \strrpos($name, ':');
             $this->name = substr($name, $dotpos + 1);
@@ -53,6 +62,7 @@ class ModuleTemplate extends CompilableTemplate
             $this->name = $name;
             $this->module = $defaultModule;
         }
+      
         $this->initConfig();
         $this->value = [];
     }
@@ -64,8 +74,8 @@ class ModuleTemplate extends CompilableTemplate
             $this->config = Config::loadConfig($config) ?? [];
         }
         $this->config = [];
-        if (!\array_key_exists('assets-prefix', $this->config)){
-            $this->config['assets-prefix'] = dirname($this->application->getRequest()->getIndex()).'/assets';
+        if (!\array_key_exists('assets-prefix', $this->config)) {
+            $this->config['assets-prefix'] = rtrim(str_replace('\\', '/', dirname($this->request->getIndex())), '/').'/assets';
         }
     }
 
@@ -77,18 +87,18 @@ class ModuleTemplate extends CompilableTemplate
 
     public function getUrl($name = null, $values = null)
     {
-        $defaultName = $this->application->request()->getAttribute('route');
+        $defaultName = $this->request->getAttribute('route');
         if (is_string($name)) {
             if (!is_array($values)) {
                 $args = func_get_args();
                 array_shift($args);
                 $values = $args;
             }
-            return $this->application->getUrl($name, $values ?? [], true, $this->module);
+            return $this->application->getUrl($this->request, $name, $values ?? [], true, $this->module);
         } elseif (is_array($name) && \is_string($defaultName)) {
-            return $this->application->getUrl($defaultName, $name, true, $this->module);
+            return $this->application->getUrl($this->request, $defaultName, $name, true, $this->module);
         } elseif (is_string($defaultName)) {
-            return $this->application->getUrl($defaultName, $this->application->request()->get() ?? [], true, $this->module);
+            return $this->application->getUrl($this->request, $defaultName, $this->request->get() ?? [], true, $this->module);
         }
         return '#'.$defaultName;
     }
@@ -121,7 +131,7 @@ class ModuleTemplate extends CompilableTemplate
 
     public function include(string $name)
     {
-        $included = new self($name, $this->application, $this->module);
+        $included = new self($name, $this->application, $this->request, $this->module);
         $included->parent = $this;
         echo $included->__toString();
     }

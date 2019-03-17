@@ -23,7 +23,7 @@ class ApplicationBuilder
      * @param string $path
      * @return \suda\application\Application
      */
-    public static function build(Request $request, Loader $loader, string $path):Application
+    public static function build(Loader $loader, string $path):Application
     {
         $manifast = static::resolveManifastPath($path);
         $manifastConfig = Config::loadConfig($manifast) ?? [];
@@ -31,7 +31,7 @@ class ApplicationBuilder
             static::importClassLoader($loader, $manifastConfig['import'], $path);
         }
         $applicationClass = $manifastConfig['application'] ?? Application::class;
-        $application = new $applicationClass($path, $manifastConfig , $request, $loader);
+        $application = new $applicationClass($path, $manifastConfig, $loader);
         return $application;
     }
     
