@@ -40,7 +40,9 @@ class UploadedFile extends SplFileObject
         $this->mimeType = $mimeType ?: 'application/octet-stream';
         $this->error = $error ?: UPLOAD_ERR_OK;
         $this->originalName = pathinfo($name, PATHINFO_FILENAME);
-        parent::__construct($path);
+        if ($this->error === UPLOAD_ERR_OK) {
+            parent::__construct($path);
+        }
     }
 
     /**
