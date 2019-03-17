@@ -40,6 +40,7 @@ class ApplicationLoader
 
     public function load()
     {
+        $this->loadGlobalConfig();
         $this->application->getResponse()->getWrapper()->register(ExceptionContentWrapper::class, [\Throwable::class]);
         $this->registerModule();
         $this->prepareModuleLoader();
@@ -53,6 +54,17 @@ class ApplicationLoader
                 $fullname = $this->application->find($name)->getFullName();
                 $this->moduleLoader[$fullname]->toReacheable();
             }
+        }
+    }
+
+    public function loadGlobalConfig()
+    {
+        $resource = $this->application->getResource();
+        if ($configPath = $resource->getConfigResourcePath('config/config')) {
+            $this->application->getConfig()->load($configPath);
+        }
+        if ($listenerPath = $resource->getConfigResourcePath('config/listener')) {
+            $this->application->loadEvent($listenerPath);
         }
     }
 

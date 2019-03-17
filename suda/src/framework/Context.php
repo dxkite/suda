@@ -61,7 +61,7 @@ class Context extends PHPContext
     public function cache(): Cache
     {
         if ($this->cache === null) {
-            $this->cache = $this->getDefaultCache();
+            $this->setCache($this->getDefaultCache());
         }
         return $this->cache;
     }
@@ -96,5 +96,67 @@ class Context extends PHPContext
     protected function getDefaultCache():Cache
     {
         return $this->createCacheFrom($this->conf('cache.class', FileCache::class), $this->conf('cache', []));
+    }
+
+    /**
+     * Get 事件监听器
+     *
+     * @return  Event
+     */
+    public function getEvent()
+    {
+        return $this->event;
+    }
+
+    /**
+     * Set 事件监听器
+     *
+     * @param  Event  $event  事件监听器
+     *
+     * @return  self
+     */
+    public function setEvent(Event $event)
+    {
+        $this->event = $event;
+
+        return $this;
+    }
+
+    /**
+     * Get 缓存
+     *
+     * @return  Cache
+     */
+    public function getCache()
+    {
+        return $this->cache();
+    }
+
+    /**
+     * Set 缓存
+     *
+     * @param  Cache  $cache  缓存
+     *
+     * @return  self
+     */
+    public function setCache(Cache $cache)
+    {
+        $this->cache = $cache;
+
+        return $this;
+    }
+
+    /**
+     * 加载事件
+     *
+     * @param string $path
+     * @return void
+     */
+    public function loadEvent(string $path)
+    {
+        $listener = Config::loadConfig($path, $this->config);
+        if (\is_array($listener)) {
+            $this->event->load($listener);
+        }
     }
 }

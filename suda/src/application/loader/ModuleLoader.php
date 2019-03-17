@@ -147,6 +147,12 @@ class ModuleLoader
         ApplicationBuilder::importClassLoader($this->application->loader(), $import, $relativePath);
     }
 
+    /**
+     * 加载路由组
+     *
+     * @param string $groupName
+     * @return void
+     */
     protected function loadRouteGroup(string $groupName)
     {
         $group = $groupName === 'default' ? '': '-'. $groupName;

@@ -16,7 +16,7 @@ class Config
      *
      * @var array
      */
-    public $config;
+    protected $config;
 
     /**
      * 构建配置
@@ -109,13 +109,16 @@ class Config
      * 从文本载入配置项
      *
      * @param string $path
-     * @param array $extra
+     * @param array|\suda\framework\Config $extra
      * @return array|null
      */
-    public static function loadConfig(string $path, array $extra = []):?array
+    public static function loadConfig(string $path, $extra = []):?array
     {
         if (!file_exists($path)) {
             $path = PathResolver::resolve($path);
+        }
+        if ($extra instanceof self) {
+            $extra = $extra->config;
         }
         if ($path) {
             $ext = strtolower(pathinfo($path, PATHINFO_EXTENSION));
