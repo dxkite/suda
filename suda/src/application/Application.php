@@ -144,6 +144,13 @@ class Application extends ApplicationContext
     public function run(Request $request, Response $response)
     {
         $response->getWrapper()->register(ExceptionContentWrapper::class, [\Throwable::class]);
+        $this->debug->getLogger()->info('{request-time} {remote-ip} {request-method} {request-uri} debug={debug}', [
+            'remote-ip' => $request->getRemoteAddr(),
+            'debug' => SUDA_DEBUG,
+            'request-uri' => $request->getUrl(),
+            'request-method' => $request->getMethod(),
+            'request-time' => date('Y-m-d H:i:s', \constant('SUDA_START_TIME')),
+        ]);
         $this->debug->time('match route');
         $result = $this->route->match($request);
         $this->debug->timeEnd('match route');

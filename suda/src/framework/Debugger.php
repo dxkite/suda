@@ -44,18 +44,12 @@ class Debugger extends Debug
     public static function create(PHPContext $context): Debugger
     {
         $debugger = new Debugger;
-        // $debugger->addAttribute('remote-ip', $context->request()->getRemoteAddr());
-        // $debugger->addAttribute('debug', SUDA_DEBUG);
-        // $debugger->addAttribute('request-uri', $context->request()->getUrl());
-        // $debugger->addAttribute('request-method', $context->request()->getMethod());
-        // $debugger->addAttribute('request-time', date('Y-m-d H:i:s', \constant('SUDA_START_TIME')));
         $debugger->applyConfig([
             'start-time' => \constant('SUDA_START_TIME'),
             'start-memory' => \constant('SUDA_START_MEMORY'),
         ]);
         $debugger->setLogger(static::createLogger($context));
-        $debugger->context = $context;
-        // $debugger->logger->info(PHP_EOL.'{request-time} {remote-ip} {request-method} {request-uri} debug={debug}', $debugger->getAttribute());
+        $debugger->context = $context;        
         return $debugger;
     }
 
@@ -97,6 +91,15 @@ class Debugger extends Debug
         );
         }
         return new NullLogger;
+    }
+
+    /**
+     * 获取原始记录器
+     *
+     * @return \suda\framework\debug\log\LoggerInterface
+     */
+    public function getLogger():LoggerInterface {
+        return $this->logger;
     }
  
     /**
