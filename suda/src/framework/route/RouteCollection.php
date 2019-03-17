@@ -96,17 +96,6 @@ class RouteCollection implements IteratorAggregate
         return new static($collection);
     }
 
-    /**
-     * 保存到文件
-     *
-     * @param string $path
-     * @return boolean
-     */
-    public function save(string $path):bool
-    {
-        return \file_put_contents($path, \serialize($this->collection)) > 0;
-    }
-
     public function getIterator():Iterator
     {
         return new ArrayIterator($this->collection);

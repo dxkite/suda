@@ -165,4 +165,28 @@ class Context extends PHPContext
             $this->event->load($listener);
         }
     }
+
+    /**
+     * Get 路由匹配工具
+     *
+     * @return  Route
+     */ 
+    public function getRoute()
+    {
+        return $this->route;
+    }
+
+    /**
+     * Set 路由匹配工具
+     *
+     * @param  Route  $route  路由匹配工具
+     *
+     * @return  self
+     */ 
+    public function setRoute(Route $route)
+    {
+        $this->route = $route;
+
+        return $this;
+    }
 }

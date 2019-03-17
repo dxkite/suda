@@ -58,7 +58,17 @@ class Runnable
      */
     public function isValid():bool
     {
-        return  $this->target->isValid();
+        return $this->target->isValid();
+    }
+
+    /**
+     * 判断是否为闭包
+     *
+     * @return boolean
+     */
+    public function isClosure():bool
+    {
+        return $this->target instanceof ClosureTarget;
     }
 
     /**

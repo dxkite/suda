@@ -31,6 +31,13 @@ class Route
      */
     protected $default;
 
+    /**
+     * 是否包含闭包
+     *
+     * @var boolean
+     */
+    protected $containClourse = false;
+    
     public function __construct()
     {
         $this->routes = new RouteCollection;
@@ -164,8 +171,12 @@ class Route
     public function request(array $method, string $name, string $url, $runnable, array $attributes = [])
     {
         $matcher = new RouteMatcher($method, $url, $attributes);
+        $target = new Runnable($runnable);
         $this->routes->add($name, $matcher);
-        $this->runnable[$name] = new Runnable($runnable);
+        $this->runnable[$name] = $target;
+        if ($target->isClosure()) {
+            $this->containClourse = true;
+        }
         return $this;
     }
 
@@ -253,11 +264,21 @@ class Route
      */
     protected function createDefaultRunnable():Runnable
     {
-        return new Runnable(function (Request $request, Response $response) {
-            $response->status(404);
-            $response->setType('html');
-            return 'Page Not Found: '.$request->getUrl();
-        });
+        return new Runnable([ __CLASS__, 'defaultResponse']);
+    }
+
+    /**
+     * 默认响应
+     *
+     * @param \suda\framework\Request $request
+     * @param Response $response
+     * @return mixed
+     */
+    protected static function defaultResponse(Request $request, Response $response)
+    {
+        $response->status(404);
+        $response->setType('html');
+        return 'Page Not Found: '.$request->getUrl();
     }
 
     /**
@@ -274,5 +295,15 @@ class Route
             return UriMatcher::buildUri($matcher->getMatcher(), $parameter, $allowQuery);
         }
         return null;
+    }
+
+    /**
+     * 判断是否包含闭包
+     *
+     * @return  boolean
+     */
+    public function isContainClourse():bool
+    {
+        return $this->containClourse;
     }
 }
