@@ -204,7 +204,13 @@ class CompilableTemplate extends RawTemplate
     protected function getStaticPrefix()
     {
         $this->prepareStaticSource();
-        $prefix = $this->config['assets-prefix'] ?? defined('SUDA_ASSETS')?\constant('SUDA_ASSETS'):'/assets';
+        if (\array_key_exists('assets-prefix', $this->config)) {
+            $prefix = $this->config['assets-prefix'] ;
+        } elseif (defined('SUDA_ASSETS')) {
+            $prefix = \constant('SUDA_ASSETS');
+        } else {
+            $prefix = '/assets';
+        }
         return $prefix .'/'.$this->getStaticName();
     }
 

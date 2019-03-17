@@ -64,6 +64,9 @@ class ModuleTemplate extends CompilableTemplate
             $this->config = Config::loadConfig($config) ?? [];
         }
         $this->config = [];
+        if (!\array_key_exists('assets-prefix', $this->config)){
+            $this->config['assets-prefix'] = dirname($this->application->getRequest()->getIndex()).'/assets';
+        }
     }
 
     protected function createCompiler():Compiler

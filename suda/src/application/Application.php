@@ -213,7 +213,23 @@ class Application extends ApplicationContext
      */
     public function getUrl(string $name, array $parameter = [], bool $allowQuery = true, ?string $default = null):?string
     {
-        return $this->route->create($this->getFullModuleSource($name, $default), $parameter, $allowQuery);
+        $url = $this->route->create($this->getFullModuleSource($name, $default), $parameter, $allowQuery);
+        return $this->getUrlIndex().'/'.ltrim($url, '/');
+    }
+
+    /**
+     * 获取URL索引
+     *
+     * @return string
+     */
+    protected function getUrlIndex():string
+    {
+        $indexs = $this->conf('indexs') ?? [];
+        $index = $this->request->getIndex();
+        if (!\in_array($index, $indexs)) {
+            return $index;
+        }
+        return dirname($index);
     }
 
     /**
