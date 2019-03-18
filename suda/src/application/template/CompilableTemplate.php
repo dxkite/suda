@@ -129,6 +129,11 @@ class CompilableTemplate extends RawTemplate
         return $this->source;
     }
 
+    /**
+     * 输出
+     * @ignore-dump
+     * @return string
+     */
     public function __toString()
     {
         $source = FileSystem::exist($this->getSourcePath()) ;
@@ -152,9 +157,9 @@ class CompilableTemplate extends RawTemplate
         return $this;
     }
 
-
     /**
      * 获取渲染后的字符串
+     * @ignore-dump
      */
     public function getRenderedString()
     {
@@ -225,11 +230,6 @@ class CompilableTemplate extends RawTemplate
     protected function getStaticName()
     {
         return $this->config['static-name'] ?? substr(md5($this->getStaticPath()), 0, 8);
-    }
-
-    public function parseData($exp)
-    {
-        return "<?php \$this->data{$exp}; ?>";
     }
 
     public function insert(string $name, $callback)

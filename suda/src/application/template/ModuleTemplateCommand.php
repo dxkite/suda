@@ -12,7 +12,7 @@ class ModuleTemplateCommand extends Command
         }
         return '<?php echo $this->getUrl'.$data.'; ?>';
     }
-
+    
     protected function parseStatic($content)
     {
         $content = strlen(trim($content)) === 0 ?'()':$content;

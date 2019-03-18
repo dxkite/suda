@@ -123,4 +123,9 @@ class Command implements EchoValueInterface, CommandInterface
         $content = strlen(trim($content)) === 0 ?'()':$content;
         return '<?php echo $this->getStaticPrefix'.$content.'; ?>';
     }
+
+    public function parseData($exp)
+    {
+        return "<?php \$this->data{$exp}; ?>";
+    }
 }
