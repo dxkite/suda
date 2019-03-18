@@ -16,15 +16,19 @@ trait DirectoryHelper
      *
      * @param string $path
      * @param integer $mode
+     * @param boolean $recursive
      * @return boolean
      */
-    public static function make(string $path, int $mode, bool $recursive = true):bool
+    public static function make(string $path, int $mode =0777, bool $recursive = true):bool
     {
-        $mk = mkdir($path, $mode, $recursive);
-        if ($mk) {
-            chmod($path, $mode);
+        if (!\is_dir($path)) {
+            $mk = mkdir($path, $mode, $recursive);
+            if ($mk) {
+                chmod($path, $mode);
+            }
+            return $mk;
         }
-        return $mk;
+        return true;
     }
 
     /**

@@ -62,13 +62,14 @@ interface FileSystemInterface
 
 
     /**
-     * 递归创建目录
+     * 创建目录
      *
      * @param string $path
      * @param integer $mode
+     * @param boolean $recursive
      * @return boolean
      */
-    public static function make(string $path, int $mode = 0777):bool;
+    public static function make(string $path, int $mode = 0777, bool $recursive = true):bool;
 
     /**
      * 读目录下文件

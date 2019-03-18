@@ -154,7 +154,7 @@ class WriteStatement extends Statement
      */
     protected function arrayWhereCondition(array $where, array $whereParameter)
     {
-        list($this->whereCondition, $wherebinder) = $this->parepareWhere($this->where);
+        list($this->whereCondition, $wherebinder) = $this->parepareWhere($where);
         $this->binder = array_merge($this->binder, $wherebinder);
         foreach ($whereParameter as $key => $value) {
             $this->binder[] = new Binder($key, $value);

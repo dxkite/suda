@@ -11,7 +11,6 @@ use suda\framework\filesystem\DirectoryHelper;
 class FileSystem implements FileSystemInterface
 {
     use DirectoryHelper {
-        make as protected;
         rm as protected;
         rmdirs as protected;
         move as moveDir;

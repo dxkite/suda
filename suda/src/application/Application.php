@@ -122,6 +122,7 @@ class Application extends ApplicationContext
     public function prepare()
     {
         $appLoader = new ApplicationLoader($this);
+        $this->debug->info('===============================');
         $this->debug->time('loading application');
         $appLoader->load();
         $this->event->exec('application:load-config', [ $this->config ,$this]);
@@ -134,6 +135,7 @@ class Application extends ApplicationContext
         $appLoader->loadRoute();
         $this->event->exec('application:load-route', [$this->route , $this]);
         $this->debug->timeEnd('loading route');
+        $this->debug->info('-------------------------------');
     }
 
     /**
@@ -144,7 +146,7 @@ class Application extends ApplicationContext
     public function run(Request $request, Response $response)
     {
         $response->getWrapper()->register(ExceptionContentWrapper::class, [\Throwable::class]);
-        $this->debug->getLogger()->info('{request-time} {remote-ip} {request-method} {request-uri} debug={debug}', [
+        $this->debug->info('{request-time} {remote-ip} {request-method} {request-uri} debug={debug}', [
             'remote-ip' => $request->getRemoteAddr(),
             'debug' => SUDA_DEBUG,
             'request-uri' => $request->getUrl(),

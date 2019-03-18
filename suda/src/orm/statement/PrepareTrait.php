@@ -61,7 +61,7 @@ trait PrepareTrait
      *
      * @param string $name
      * @param \ArrayObject $values
-     * @return void
+     * @return array
      */
     protected function prepareIn(string $name, \ArrayObject $values)
     {
@@ -83,7 +83,7 @@ trait PrepareTrait
      * 准备更新
      *
      * @param array $data
-     * @return arra
+     * @return array
      */
     protected function prepareUpdateSet(array $data)
     {
