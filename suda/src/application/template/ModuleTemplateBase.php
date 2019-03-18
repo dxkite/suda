@@ -94,7 +94,7 @@ class ModuleTemplateBase extends CompilableTemplate
     protected function getModuleStaticOutpath(?string $module)
     {
         $path = $this->getModuleConfig($module)['assets-public'] ?? \constant('SUDA_PUBLIC').'/assets/'. $this->getModuleStaticName($module);
-        FileSystem::makes($path);
+        FileSystem::make($path);
         return $path;
     }
 

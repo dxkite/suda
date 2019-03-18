@@ -68,7 +68,7 @@ interface FileSystemInterface
      * @param integer $mode
      * @return boolean
      */
-    public static function makes(string $path, int $mode = 0777):bool;
+    public static function make(string $path, int $mode = 0777):bool;
 
     /**
      * 读目录下文件

@@ -76,10 +76,10 @@ class Debugger extends Debug
     public static function createDefaultLogger(): LoggerInterface
     {
         $dataPath = SUDA_DATA.'/logs';
-        FileSystem::makes($dataPath);
+        FileSystem::make($dataPath);
         if (\is_writable(dirname($dataPath))) {
-            FileSystem::makes($dataPath.'/zip');
-            FileSystem::makes($dataPath.'/dump');
+            FileSystem::make($dataPath.'/zip');
+            FileSystem::make($dataPath.'/dump');
             return new FileLogger(
             [
                 'log-level' => SUDA_DEBUG_LEVEL,

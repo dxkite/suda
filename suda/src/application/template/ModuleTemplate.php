@@ -30,7 +30,7 @@ class ModuleTemplate extends ModuleTemplateBase
     protected function getPath()
     {
         $output = $this->config['output'] ?? \constant('SUDA_DATA').'/template/'. str_replace([':','/','\\'], '-', $this->module);
-        FileSystem::makes($output);
+        FileSystem::make($output);
         return $output .'/'. $this->name.'.php';
     }
 

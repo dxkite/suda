@@ -113,14 +113,14 @@ class CompilableTemplate extends RawTemplate
     protected function getStaticOutpath()
     {
         $path = $this->config['assets-public'] ?? \constant('SUDA_PUBLIC').'/assets/'. $this->getStaticName();
-        FileSystem::makes($path);
+        FileSystem::make($path);
         return $path;
     }
 
     protected function getPath()
     {
         $output = $this->config['output'] ?? \constant('SUDA_DATA').'/template';
-        FileSystem::makes($output);
+        FileSystem::make($output);
         return $output .'/'. $this->name.'-'.substr(md5_file($this->getSourcePath()), 10, 8).'.php';
     }
 

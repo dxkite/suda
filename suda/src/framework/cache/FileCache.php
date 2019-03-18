@@ -27,7 +27,7 @@ class FileCache implements Cache
     {
         $this->path = $this->getSavePath($config);
         $this->expire = $config['expire'] ?? 86400;
-        FileSystem::makes($this->path);
+        FileSystem::make($this->path);
     }
 
     /**

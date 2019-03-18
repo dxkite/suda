@@ -61,7 +61,7 @@ class PHPSession implements Session
             throw new \Exception('php session save path missing');
         }
         $name = $config['name'] ?? 'php_session';
-        FileSystem::makes($path);
+        FileSystem::make($path);
 
         if (is_string($id = $request->getCookie($name))) {
             session_id($id);
