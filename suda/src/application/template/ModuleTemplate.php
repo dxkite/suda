@@ -69,14 +69,20 @@ class ModuleTemplate extends CompilableTemplate
 
     protected function initConfig()
     {
-        $config = $this->getResource()->getConfigResourcePath($this->getTemplatePath().'/config');
-        if ($config !== null) {
-            $this->config = Config::loadConfig($config) ?? [];
+       
+        $this->config =  $this->getModuleConfig($this->module);
+    }
+
+    protected function getModuleConfig(?string $module) {
+        $configPath = $this->getResource($module)->getConfigResourcePath($this->getTemplatePath().'/config');
+        $config = [];
+        if ($configPath !== null) {
+            $config = Config::loadConfig($configPath) ?? [];
         }
-        $this->config = [];
-        if (!\array_key_exists('assets-prefix', $this->config)) {
-            $this->config['assets-prefix'] = rtrim(str_replace('\\', '/', dirname($this->request->getIndex())), '/').'/assets';
+        if (!\array_key_exists('assets-prefix', $config)) {
+            $config['assets-prefix'] = rtrim(str_replace('\\', '/', dirname($this->request->getIndex())), '/').'/assets';
         }
+        return $config;
     }
 
     protected function createCompiler():Compiler
@@ -103,29 +109,37 @@ class ModuleTemplate extends CompilableTemplate
         return '#'.$defaultName;
     }
 
-    protected function getModuleStaticPath(string $module)
+    protected function getModuleStaticPath(?string $module)
     {
-        $name = $this->config['static'] ?? 'static';
-        return $this->getResource()->getResourcePath($this->getTemplatePath().'/'.$name);
+        $name = $this->getModuleConfig($module)['static'] ?? 'static';
+        return $this->getResource($module)->getResourcePath($this->getTemplatePath().'/'.$name) ?? '';
     }
 
-    protected function getModuleStaticOutpath(string $module)
+    protected function getModuleStaticOutpath(?string $module)
     {
-        $path = $this->config['assets-public'] ?? \constant('SUDA_PUBLIC').'/assets/'. $this->getModuleStaticName($module);
+        $path = $this->getModuleConfig($module)['assets-public'] ?? \constant('SUDA_PUBLIC').'/assets/'. $this->getModuleStaticName($module);
         FileSystem::makes($path);
         return $path;
     }
 
-    protected function getModuleStaticName(string $module)
+    protected function getModuleStaticName(?string $module)
     {
-        return $this->config['static-name'] ?? substr(md5($this->staticPath), 0, 8);
+        $config = $this->getModuleConfig($module);
+        if (is_array($config) && array_key_exists('static-name', $config)) {
+            return $config['static-name'];
+        }
+        $static = $this->getModuleStaticPath($module);
+        if ($static) {
+            return substr(md5($static), 0, 8);
+        }
+        return '#';
     }
 
 
     protected function getSourcePath()
     {
         $subfix = $this->config['subfix'] ?? '.tpl.html';
-        return $this->getResource()->getResourcePath($this->getTemplatePath().'/'.$this->name.$subfix);
+        return $this->getResource($this->module)->getResourcePath($this->getTemplatePath().'/'.$this->name.$subfix);
     }
 
     protected function getPath()
@@ -142,10 +156,10 @@ class ModuleTemplate extends CompilableTemplate
         echo $included->__toString();
     }
 
-    protected function getResource(): Resource
+    protected function getResource(?string $module): Resource
     {
-        if ($this->module !== null && $module = $this->application->find($this->module)) {
-            return $module->getResource();
+        if ($module !== null && ($moduleObj = $this->application->find($module))) {
+            return $moduleObj->getResource();
         }
         return $this->application->getResource();
     }
@@ -155,18 +169,20 @@ class ModuleTemplate extends CompilableTemplate
         return 'template/'.$this->application->getStyle();
     }
 
-    protected function getStaticModulePrefix(string $module = null)
+    protected function getStaticModulePrefix(?string $module = null)
     {
         if ($module === null) {
             $module = $this->module;
         }
         $this->prepareStaticModuleSource($module);
-        return $this->getModuleAssetRoot($module) .'/'.$this->getStaticName($module);
+        return $this->getModuleAssetRoot($module) .'/'.$this->getModuleStaticName($module);
     }
 
-    protected function getModuleAssetRoot(string $module) {
-        if (\array_key_exists('assets-prefix', $this->config)) {
-            $prefix = $this->config['assets-prefix'] ;
+  
+    protected function getModuleAssetRoot(?string $module) {
+        $config = $this->getModuleConfig($module);
+        if (\array_key_exists('assets-prefix', $config)) {
+            $prefix = $config['assets-prefix'] ;
         } elseif (defined('SUDA_ASSETS')) {
             $prefix = \constant('SUDA_ASSETS');
         } else {
@@ -175,18 +191,19 @@ class ModuleTemplate extends CompilableTemplate
         return $prefix;
     }
 
-    protected function prepareStaticModuleSource(string $module)
+    protected function prepareStaticModuleSource(?string $module)
     {
-        if (is_dir($this->getModuleStaticPath($module)) && !\in_array($this->getModuleStaticPath($module), static::$copyedStaticPaths)) {
-            $from = $this->getModuleStaticPath($module);
+        $static = $this->getModuleStaticPath($module);
+        if (is_dir($static) && !\in_array($static, static::$copyedStaticPaths)) {
+            $from = $static;
             $to = $this->getModuleStaticOutpath($module);
             $time = sprintf('copy module template static source %s => %s ', $from, $to);
             $this->application->debug()->time($time);
             if (FileSystem::copyDir($from, $to)){
                 $this->application->debug()->timeEnd($time);
-                static::$copyedStaticPaths[] = $this->getModuleStaticPath($module);
+                static::$copyedStaticPaths[] = $static;
             }else{
-                $this->application->debug()->warnnig('Failed: '.$time);
+                $this->application->debug()->warning('Failed: '.$time);
             }
         }
     }

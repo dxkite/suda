@@ -224,7 +224,7 @@ class CompilableTemplate extends RawTemplate
 
     protected function getStaticName()
     {
-        return $this->config['static-name'] ?? substr(md5($this->staticPath), 0, 8);
+        return $this->config['static-name'] ?? substr(md5($this->getStaticPath()), 0, 8);
     }
 
     public function parseData($exp)
