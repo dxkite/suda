@@ -26,13 +26,6 @@ class WriteStatement extends Statement
     protected $struct;
 
     /**
-     * 条件更新
-     *
-     * @var array|null
-     */
-    protected $where = null;
-
-    /**
      * 数据原始表名
      *
      * @var string
@@ -40,11 +33,18 @@ class WriteStatement extends Statement
     protected $table;
 
     /**
-     * 条件
+     * 模板条件条件
      *
      * @var string|null
      */
     protected $whereCondition = null;
+
+    /**
+     * 是否为删除
+     *
+     * @var bool
+     */
+    protected $delete;
 
     /**
      * 创建写
@@ -83,6 +83,17 @@ class WriteStatement extends Statement
     }
 
     /**
+     * 删除
+     *
+     * @return self
+     */
+    public function delete()
+    {
+        $this->delete = true;
+        return $this;
+    }
+
+    /**
      * 条件查询
      *
      * @param string|array $where
@@ -94,7 +105,7 @@ class WriteStatement extends Statement
         if (\is_string($where)) {
             $this->whereCondition($where, $whereParameter);
         } else {
-            $this->where = $where;
+            $this->arrayWhereCondition($where, $whereParameter);
         }
         return $this;
     }
@@ -106,20 +117,26 @@ class WriteStatement extends Statement
      */
     public function prepare()
     {
-        if ($this->where !== null) {
-            list($updateSet, $upbinder) = $this->prepareUpdateSet($this->data);
-            list($where, $wherebinder) = $this->parepareWhere($this->where);
-            $this->string = "UPDATE {$this->table} SET {$updateSet} WHERE {$where}";
-            $this->binder = array_merge($upbinder, $wherebinder);
-        } elseif ($this->whereCondition !== null) {
-            list($updateSet, $upbinder) = $this->prepareUpdateSet($this->data);
-            $this->binder = array_merge($this->binder, $upbinder);
-            $this->string = "UPDATE {$this->table} SET {$updateSet} WHERE {$this->whereCondition}";
+        if ($this->whereCondition !== null) {
+            if ($this->delete === false) {
+                list($updateSet, $upbinder) = $this->prepareUpdateSet($this->data);
+                $this->binder = array_merge($this->binder, $upbinder);
+                $this->string = "UPDATE {$this->table} SET {$updateSet} WHERE {$this->whereCondition}";
+            } else {
+                $this->string = "DELETE FROM {$this->table} WHERE {$this->whereCondition}";
+            }
         } else {
             $this->parepareInsert($this->data);
         }
     }
 
+    /**
+     * 字符串式绑定
+     *
+     * @param string $where
+     * @param array $whereParameter
+     * @return void
+     */
     protected function whereCondition(string $where, array $whereParameter)
     {
         $this->whereCondition = $where;
@@ -128,19 +145,28 @@ class WriteStatement extends Statement
         }
     }
 
-    protected function prepareUpdateSet(array $data)
+    /**
+     * 数组条件式绑定
+     *
+     * @param array $where
+     * @param array $whereParameter
+     * @return void
+     */
+    protected function arrayWhereCondition(array $where, array $whereParameter)
     {
-        $binders = [];
-        $sets = [];
-        foreach ($data as $name => $value) {
-            $_name = Binder::index($name);
-            $binders[] = new Binder($_name, $value, $name);
-            $sets[] = "`{$name}`=:{$_name}";
+        list($this->whereCondition, $wherebinder) = $this->parepareWhere($this->where);
+        $this->binder = array_merge($this->binder, $wherebinder);
+        foreach ($whereParameter as $key => $value) {
+            $this->binder[] = new Binder($key, $value);
         }
-        return [\implode(',', $sets), $binders];
     }
 
-
+    /**
+     * 准备插入语句
+     *
+     * @param array $data
+     * @return void
+     */
     public function parepareInsert(array $data)
     {
         $names = [];

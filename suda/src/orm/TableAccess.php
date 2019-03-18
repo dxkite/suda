@@ -119,6 +119,18 @@ class TableAccess extends QueryAccess
         return (new WriteStatement($this->source->write()->rawTableName($this->struct->getName()), $this->struct))->write(...$args);
     }
 
+
+    /**
+     * 删
+     *
+     * @param mixed ...$args
+     * @return WriteStatement
+     */
+    public function delete(...$args):WriteStatement
+    {
+        return (new WriteStatement($this->source->write()->rawTableName($this->struct->getName()), $this->struct))->delete()->where(...$args);
+    }
+
     /**
      * 读
      *
