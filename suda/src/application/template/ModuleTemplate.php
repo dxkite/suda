@@ -103,18 +103,24 @@ class ModuleTemplate extends CompilableTemplate
         return '#'.$defaultName;
     }
 
-    protected function getStaticPath()
+    protected function getModuleStaticPath(string $module)
     {
         $name = $this->config['static'] ?? 'static';
         return $this->getResource()->getResourcePath($this->getTemplatePath().'/'.$name);
     }
 
-    protected function getStaticOutpath()
+    protected function getModuleStaticOutpath(string $module)
     {
-        $path = $this->config['assets-public'] ?? \constant('SUDA_PUBLIC').'/assets/'. $this->getStaticName();
+        $path = $this->config['assets-public'] ?? \constant('SUDA_PUBLIC').'/assets/'. $this->getModuleStaticName($module);
         FileSystem::makes($path);
         return $path;
     }
+
+    protected function getModuleStaticName(string $module)
+    {
+        return $this->config['static-name'] ?? substr(md5($this->staticPath), 0, 8);
+    }
+
 
     protected function getSourcePath()
     {
@@ -147,5 +153,41 @@ class ModuleTemplate extends CompilableTemplate
     protected function getTemplatePath()
     {
         return 'template/'.$this->application->getStyle();
+    }
+
+    protected function getStaticModulePrefix(string $module = null)
+    {
+        if ($module === null) {
+            $module = $this->module;
+        }
+        $this->prepareStaticModuleSource($module);
+        return $this->getModuleAssetRoot($module) .'/'.$this->getStaticName($module);
+    }
+
+    protected function getModuleAssetRoot(string $module) {
+        if (\array_key_exists('assets-prefix', $this->config)) {
+            $prefix = $this->config['assets-prefix'] ;
+        } elseif (defined('SUDA_ASSETS')) {
+            $prefix = \constant('SUDA_ASSETS');
+        } else {
+            $prefix = '/assets';
+        }
+        return $prefix;
+    }
+
+    protected function prepareStaticModuleSource(string $module)
+    {
+        if (is_dir($this->getModuleStaticPath($module)) && !\in_array($this->getModuleStaticPath($module), static::$copyedStaticPaths)) {
+            $from = $this->getModuleStaticPath($module);
+            $to = $this->getModuleStaticOutpath($module);
+            $time = sprintf('copy module template static source %s => %s ', $from, $to);
+            $this->application->debug()->time($time);
+            if (FileSystem::copyDir($from, $to)){
+                $this->application->debug()->timeEnd($time);
+                static::$copyedStaticPaths[] = $this->getModuleStaticPath($module);
+            }else{
+                $this->application->debug()->warnnig('Failed: '.$time);
+            }
+        }
     }
 }

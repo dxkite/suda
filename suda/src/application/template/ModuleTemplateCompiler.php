@@ -28,7 +28,6 @@ class ModuleTemplateCompiler extends Compiler
 
     public function __construct()
     {
-        $this->registerCommand(new Command);
         $this->registerCommand(new ModuleTemplateCommand);
         foreach ($this->tag as $name => $value) {
             $this->registerTag(new Tag($name, $value[0], $value[1], $value[2]));

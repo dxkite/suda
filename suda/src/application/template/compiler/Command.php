@@ -117,7 +117,7 @@ class Command implements EchoValueInterface, CommandInterface
     {
         return '<?php $this->extend'.$content.'; ?>';
     }
-
+    
     protected function parseStatic($content)
     {
         $content = strlen(trim($content)) === 0 ?'()':$content;

@@ -50,3 +50,19 @@
 ```
 @PSR2,dir_constant,final_internal_class,is_null,line_ending,lowercase_static_reference,no_empty_statement,no_multiline_whitespace_around_double_arrow,no_unset_cast,single_quote,binary_operator_spaces
 ```
+
+# PHP 特性使用情况
+
+
+| 特性 |  版本 | 项目使用情况 | 备注 | 
+|-----|------|----|---|
+| 允许重写抽象方法 | 7.2 | × | 可能会使用 |
+| PDOStatement::debugDumpParams() | 7.2 | × | 可能会使用 |
+| object 类型 | 7.2 | × | 可能会使用 |
+| 可为空（Nullable）类型 | 7.1  | √ | |
+| Symmetric array destructuring | 7.1 | √ | |
+| list() 支持键名 | 7.1 | √ |  |
+| 短数组声明 | 7.0 | √ |  |
+| 返回值类型声明 |7.0 | √ |  |
+| null合并运算符 |7.0 | √ |  |
+| 匿名类 | 7.0 | √ |  |
