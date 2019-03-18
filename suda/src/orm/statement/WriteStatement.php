@@ -44,7 +44,7 @@ class WriteStatement extends Statement
      *
      * @var bool
      */
-    protected $delete;
+    protected $delete = false;
 
     /**
      * 创建写

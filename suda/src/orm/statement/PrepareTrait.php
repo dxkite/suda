@@ -46,6 +46,7 @@ trait PrepareTrait
                 $binders = array_merge($binders, $in_binder);
             } elseif (\is_array($value)) {
                 list($op, $val) = $value;
+                $op = trim($op);
                 $and[] = "`{$name}` {$op} :{$_name}";
                 $binders[] = new Binder($_name, $val);
             } else {

@@ -79,8 +79,8 @@ class StatementTest extends TestCase
         );
 
         $this->assertEquals(
-            'UPDATE user_table SET `id`=:_5id,`name`=:_6name WHERE name like :name',
-            $table->write('id', '1')->write('name', 'dxkite')->where('name like :name', ['name' => 'dxkite'])->getString()
+            'UPDATE user_table SET `id`=:_5id,`name`=:_6name WHERE `name` like :_4name',
+            $table->write('id', '1')->write('name', 'dxkite')->where(['name' => ['like','dxkite']])->getString()
         );
 
         $this->assertEquals(
@@ -98,8 +98,16 @@ class StatementTest extends TestCase
             (new Statement('hello > :name', ['name' => 'dxkite']))->getString()
         );
 
+        $this->assertEquals(
+            'DELETE FROM user_table WHERE `name` like :_12name',
+            $table->delete(['name' => ['like','dxkite']])->getString()
+        );
+        $this->assertEquals(
+            'DELETE FROM user_table WHERE `id` > :_13id',
+            $table->delete(['id' => ['>', 10]])->getString()
+        );
         if (DIRECTORY_SEPARATOR === '\\') {
-            $this->assertNotNull((new MySQLTableCreator($table->getSource()->write(),$struct->getFields()))->create());
+            $this->assertNotNull((new MySQLTableCreator($table->getSource()->write(), $struct->getFields()))->create());
             
             $this->assertTrue($table->run($table->write(['name' => 'dxkite'])));
 
