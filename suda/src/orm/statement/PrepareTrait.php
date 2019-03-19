@@ -13,7 +13,7 @@ trait PrepareTrait
      * @param string|array $wants
      * @return string
      */
-    public function prepareWants($wants):string
+    protected function prepareWants($wants):string
     {
         if (is_string($wants)) {
             $fields = $wants;
@@ -57,6 +57,7 @@ trait PrepareTrait
         return [\implode(' AND ', $and), $binders];
     }
 
+    
     /**
      * 准备In
      *
@@ -96,5 +97,46 @@ trait PrepareTrait
             $sets[] = "`{$name}`=:{$_name}";
         }
         return [\implode(',', $sets), $binders];
+    }
+
+    /**
+     * 编译 ? 字符
+     *
+     * @param string $sql
+     * @param array $parameter
+     * @return array
+     */
+    protected function prepareQueryMark(string $sql, array $parameter)
+    {
+        $binders = [];
+        $query = \preg_replace_callback('/\?/', function ($match) use  (&$binders, $parameter) {
+            $index = count($binders);
+            if (\array_key_exists($index, $parameter)) {
+                $name = Binder::index($index);
+                $binder = new Binder($name, $parameter[$index]);
+                $binders[] = $binder;
+                return ':'.$binder->getName();
+            }
+            return $match[0];
+        }, $sql);
+        return [$query, $binders];
+    }
+
+    /**
+     * 合并绑定工具
+     *
+     * @param Binder[] $binder
+     * @param array $parameter
+     * @return Binder[]
+     */
+    protected function mergeBinder(array $binder, array $parameter) {
+        foreach ($parameter as $key => $value) {
+            if ($value instanceof Binder) {
+                $binder[] = $value;
+            } else {
+                $binder[] = new Binder($key, $value);
+            }
+        }
+        return $binder;
     }
 }

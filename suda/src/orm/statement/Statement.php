@@ -3,9 +3,12 @@ namespace suda\orm\statement;
 
 use PDOStatement;
 use suda\orm\Binder;
+use suda\orm\statement\PrepareTrait;
 
 class Statement
 {
+    use PrepareTrait;
+    
     const WRITE = 0;
     const READ = 1;
 
@@ -54,18 +57,21 @@ class Statement
      */
     protected $statement = null;
 
-    public function __construct(string $sql, array $parameter = [])
+    public function __construct(string $sql, ...$args)
     {
-        $this->string = $sql;
-        foreach ($parameter as $key => $value) {
-            if ($value instanceof Binder) {
-                $this->binder[] = $value;
-            } else {
-                $this->binder[] = new Binder($key, $value);
-            }
+        if (count($args) === 1 && \is_array($args[0])) {
+            $this->create($sql, $args[0]);
+        } else {
+            list($this->string, $this->binder) = $this->prepareQueryMark($sql, $args);
         }
     }
     
+    protected function create(string $sql, array $parameter)
+    {
+        $this->string = $sql;
+        $this->binder = $this->mergeBinder($this->binder, $parameter);
+    }
+
     public function isRead(bool $set = null):bool
     {
         if ($set !== null) {
@@ -193,5 +199,4 @@ class Statement
 
         return $this;
     }
-    
 }

@@ -59,7 +59,8 @@ class ReadStatement extends Statement
      *
      * @return self
      */
-    public function distinct() {
+    public function distinct()
+    {
         $this->distinct = 'DISTINCT';
         return $this;
     }
@@ -86,14 +87,30 @@ class ReadStatement extends Statement
      * @param array $whereBinder
      * @return self
      */
-    public function where($where, array $whereBinder = [])
+    public function where($where, ...$args)
     {
         if (\is_array($where)) {
-            list($where, $whereBinder) = $this->parepareWhere($where);
+            $this->whereArray($where);
+        } elseif (is_array($args[0])) {
+            $this->whereStringArray($where, $args[0]);
+        } else {
+            list($string, $array) = $this->prepareQueryMark($where, $args);
+            $this->whereStringArray($string, $array);
         }
-        $this->where = ' WHERE '. $where;
-        $this->binder = array_merge($this->binder, $whereBinder);
         return $this;
+    }
+
+    protected function whereArray(array $where)
+    {
+        $whereBinder = [];
+        list($where, $whereBinder) = $this->parepareWhere($where);
+        $this->whereStringArray($where, $whereBinder);
+    }
+
+    protected function whereStringArray(string $where, array $whereBinder)
+    {
+        $this->where = 'WHERE '. $where;
+        $this->binder = $this->mergeBinder($this->binder, $whereBinder);
     }
 
     /**
@@ -115,17 +132,30 @@ class ReadStatement extends Statement
      * @param array $whereBinder
      * @return self
      */
-    public function having($what, array $whereBinder = [])
+    public function having($what, ...$args)
     {
         if (\is_array($what)) {
-            list($having, $binder) = $this->parepareWhere($what);
-            $this->having = 'HAVING '.$having;
-            $this->binder = array_merge($this->binder, $binder);
+            $this->havingArray($what);
+        } elseif (is_array($args[0])) {
+            $this->havingStringArray($what, $args[0]);
         } else {
-            $this->having = 'HAVING '.$what;
-            $this->binder = array_merge($this->binder, $whereBinder);
+            list($string, $array) = $this->prepareQueryMark($what, $args);
+            $this->havingStringArray($string, $array);
         }
         return $this;
+    }
+
+    protected function havingArray(array $want)
+    {
+        $havingBinder = [];
+        list($having, $havingBinder) = $this->parepareWhere($want);
+        $this->havingStringArray($having, $havingBinder);
+    }
+
+    protected function havingStringArray(string $having, array $havingBinder)
+    {
+        $this->having = 'HAVING '. $having;
+        $this->binder = $this->mergeBinder($this->binder, $havingBinder);
     }
 
     /**
@@ -195,7 +225,8 @@ class ReadStatement extends Statement
      * @param string $key
      * @return self
      */
-    public function withKey(string $key) {
+    public function withKey(string $key)
+    {
         $this->withKey = $key;
         $this->fetchAll();
         return $this;
@@ -209,15 +240,15 @@ class ReadStatement extends Statement
     public function prepare()
     {
         $where = [$this->where,$this->groupBy,$this->having,$this->orderBy,$this->limit];
-        $condition = implode(' ',  array_filter(array_map('trim', $where), 'strlen'));
+        $condition = implode(' ', array_filter(array_map('trim', $where), 'strlen'));
         $select = [$this->distinct,$this->select];
-        $selection = implode(' ',  array_filter(array_map('trim', $select), 'strlen'));
+        $selection = implode(' ', array_filter(array_map('trim', $select), 'strlen'));
         $this->string = "SELECT {$selection} FROM {$this->table} {$condition}";
     }
 
     /**
      * Get the value of withKey
-     */ 
+     */
     public function getWithKey()
     {
         return $this->withKey;

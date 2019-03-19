@@ -24,7 +24,7 @@ class StatementTest extends TestCase
         $this->assertTrue($struct->getFields()->hasField('id'));
     }
 
-    public function testMySQLConnection()
+    public function testMySQLBuilder()
     {
         $source = new DataSource;
         $struct = new TableStruct('user_table');
@@ -79,17 +79,17 @@ class StatementTest extends TestCase
         );
 
         $this->assertEquals(
-            'UPDATE user_table SET `id`=:_5id,`name`=:_6name WHERE `name` like :_4name',
+            'UPDATE user_table SET `id`=:_7id,`name`=:_8name WHERE `name` like :_6name',
             $table->write('id', '1')->write('name', 'dxkite')->where(['name' => ['like','dxkite']])->getString()
         );
 
         $this->assertEquals(
-            'INSERT INTO user_table (`id`,`name`) VALUES (:_7id,:_8name)',
+            'INSERT INTO user_table (`id`,`name`) VALUES (:_9id,:_10name)',
             $table->write('id', 1)->write('name', 'dxkite')->getString()
         );
 
         $this->assertEquals(
-            'INSERT INTO user_table (`id`,`name`) VALUES (:_9id,:_10name)',
+            'INSERT INTO user_table (`id`,`name`) VALUES (:_11id,:_12name)',
             $table->write(['id' => 1, 'name' => 'dxkite'])->getString()
         );
 
@@ -99,13 +99,45 @@ class StatementTest extends TestCase
         );
 
         $this->assertEquals(
-            'DELETE FROM user_table WHERE `name` like :_12name',
+            'DELETE FROM user_table WHERE `name` like :_14name',
             $table->delete(['name' => ['like','dxkite']])->getString()
         );
         $this->assertEquals(
-            'DELETE FROM user_table WHERE `id` > :_13id',
+            'DELETE FROM user_table WHERE `id` > :_15id',
             $table->delete(['id' => ['>', 10]])->getString()
         );
+
+        $this->assertEquals(
+            'hello > :_160 and hello < :_171',
+            (new Statement('hello > ? and hello < ?', 1, 3))->getString()
+        );
+
+        $this->assertEquals(
+            'SELECT `id`,`name` FROM user_table WHERE id in (:_180,:_191) HAVING name like :_200 LIMIT 0,10',
+            $table->read('id', 'name')->where('id in (?,?)', 1,2 )->page(1, 10)->having('name like ?', 'dxkite')->getString()
+        );
+    }
+
+
+    public function testMySQLConnectionWindows()
+    {
+        $source = new DataSource;
+        $struct = new TableStruct('user_table');
+
+        $struct->fields([
+            $struct->field('id', 'bigint', 20)->auto()->primary(),
+            $struct->field('name', 'varchar', 80),
+        ]);
+         
+        $source->add(DataSource::new('mysql', [
+            'host' => 'localhost',
+            'name' => 'test',
+            'user' => 'root',
+            'password' => DIRECTORY_SEPARATOR === '/' ?'':'root',
+        ]));
+     
+        $table = new TableAccess($struct, $source);
+
         if (DIRECTORY_SEPARATOR === '\\') {
             $this->assertNotNull((new MySQLTableCreator($table->getSource()->write(), $struct->getFields()))->create());
             
