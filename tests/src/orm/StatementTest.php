@@ -7,6 +7,7 @@ use suda\orm\TableAccess;
 use suda\orm\TableStruct;
 use PHPUnit\Framework\TestCase;
 use suda\orm\statement\Statement;
+use suda\orm\statement\QueryStatement;
 use suda\orm\connection\creator\MySQLTableCreator;
 
 class StatementTest extends TestCase
@@ -95,7 +96,7 @@ class StatementTest extends TestCase
 
         $this->assertEquals(
             'hello > :name',
-            (new Statement('hello > :name', ['name' => 'dxkite']))->getString()
+            (new QueryStatement('hello > :name', ['name' => 'dxkite']))->getString()
         );
 
         $this->assertEquals(
@@ -109,7 +110,7 @@ class StatementTest extends TestCase
 
         $this->assertEquals(
             'hello > :_160 and hello < :_171',
-            (new Statement('hello > ? and hello < ?', 1, 3))->getString()
+            (new QueryStatement('hello > ? and hello < ?', 1, 3))->getString()
         );
 
         $this->assertEquals(

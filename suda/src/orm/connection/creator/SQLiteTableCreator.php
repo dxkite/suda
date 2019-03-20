@@ -8,6 +8,7 @@ use suda\orm\struct\Fields;
 use suda\orm\statement\Statement;
 use suda\orm\connection\Connection;
 use suda\orm\exception\SQLException;
+use suda\orm\statement\QueryStatement;
 
 /**
  * 数据表链接对象
@@ -50,7 +51,7 @@ class SQLiteTableCreator
 
     public function create()
     {
-        $statement = new Statement($this->toSQL());
+        $statement = new QueryStatement($this->toSQL());
         $statement->isWrite(true);
         return $this->connection->query($statement) > 0;
     }

@@ -6,7 +6,7 @@ use suda\orm\statement\Statement;
 use suda\orm\exception\SQLException;
 use suda\orm\statement\PrepareTrait;
 
-class ReadStatement extends Statement
+class ReadStatement extends QueryStatement
 {
     use PrepareTrait;
     
@@ -37,8 +37,6 @@ class ReadStatement extends Statement
     protected $orderBy = '';
 
     protected $limit = '';
-
-    protected $withKey = null;
 
     /**
      * 创建写
@@ -196,41 +194,6 @@ class ReadStatement extends Statement
     }
 
     /**
-     * 取1
-     *
-     * @return self
-     */
-    public function fetch()
-    {
-        $this->fetch = self::FETCH_ONE;
-        return $this;
-    }
-
-    /**
-     * 取全部
-     *
-     * @return self
-     */
-    public function fetchAll()
-    {
-        $this->fetch = self::FETCH_ALL;
-        return $this;
-    }
-
-    /**
-     * 用某段做Key
-     *
-     * @param string $key
-     * @return self
-     */
-    public function withKey(string $key)
-    {
-        $this->withKey = $key;
-        $this->fetchAll();
-        return $this;
-    }
-
-    /**
      * 获取字符串
      *
      * @return void
@@ -242,13 +205,5 @@ class ReadStatement extends Statement
         $select = [$this->distinct,$this->select];
         $selection = implode(' ', array_filter(array_map('trim', $select), 'strlen'));
         $this->string = "SELECT {$selection} FROM {$this->table} {$condition}";
-    }
-
-    /**
-     * Get the value of withKey
-     */
-    public function getWithKey()
-    {
-        return $this->withKey;
     }
 }

@@ -5,7 +5,7 @@ use PDOStatement;
 use suda\orm\Binder;
 use suda\orm\statement\PrepareTrait;
 
-class Statement
+abstract class Statement
 {
     use PrepareTrait;
     
