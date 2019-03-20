@@ -9,7 +9,7 @@ use suda\framework\http\Stream;
 use suda\framework\response\MimeType;
 use suda\framework\http\stream\DataStream;
 use suda\framework\response\ContentWrapper;
-use suda\framework\http\Response as HTTPResponse;
+use suda\framework\http\HTTPResponse;
 
 class Response extends HTTPResponse
 {
@@ -36,7 +36,7 @@ class Response extends HTTPResponse
      */
     public function setType(string $extension)
     {
-        $this->header->add(new Header('content-type', MimeType::getMimeType($extension)), true);
+        $this->header('content-type', MimeType::getMimeType($extension), true);
         return $this;
     }
 
@@ -59,7 +59,7 @@ class Response extends HTTPResponse
      */
     public function setHeader(string $name, string $content, bool $replace = false)
     {
-        $this->header->add(new Header($name, $content), $replace);
+        $this->header($name, $content , $replace);
         return $this;
     }
 
@@ -156,19 +156,8 @@ class Response extends HTTPResponse
     */
     public function setCookie(Cookie $cookie)
     {
-        $this->cookie[$cookie->getName()] = $cookie;
+        $this->cookie($cookie);
         return $this;
-    }
-
-    /**
-     * 获取Cookie
-     *
-     * @param string $name
-     * @return Cookie|null
-     */
-    public function getCookie(string $name):?Cookie
-    {
-        return $this->cookie[$name] ?? null;
     }
 
     /**

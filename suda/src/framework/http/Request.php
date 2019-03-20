@@ -5,120 +5,55 @@ use suda\framework\http\Stream;
 use suda\framework\http\UploadedFile;
 use suda\framework\http\stream\DataStream;
 
-class Request
+interface Request
 {
     /**
-     * 请求头数据
+     * 获取请求头
      *
-     * @var array
+     * @return array
      */
-    public $header = [];
-
+    public function header():array;
+   
     /**
-     * 服务环境数据
+     * 获取服务环境
      *
-     * @var array
+     * @return array
      */
-    public $server = [];
+    public function server():array;
 
     /**
      * GET数据
      *
-     * @var array
+     * @return array
      */
-    public $get = [];
+    public function get():array;
 
     /**
      * POST数据
      *
-     * @var array
+     * @return array
      */
-    public $post = [];
+    public function post():array;
 
     /**
-     * 输出的文件
+     * 获取Cookie
      *
-     * @var UploadedFile[]
+     * @return array
      */
-    public $files = [];
-
-    /**
-     * 输入的Cookie
-     *
-     * @var string[]
-     */
-    public $cookies = [];
-
-    /**
-     * 输入流
-     *
-     * @var \suda\framework\http\Stream
-     */
-    public $input;
+    public function cookies():array;
 
     /**
      * 获取原始输入
      *
      * @return string
      */
-    public function input():string
-    {
-        return $this->input;
-    }
+    public function input():string;
+ 
 
     /**
-     * 创建请求
+     * Get 输出的文件
      *
-     * @return Request
+     * @return  UploadedFile[]
      */
-    public static function create(): Request
-    {
-        $request = new Request;
-        $request->buildEnv();
-        $request->buildData();
-        $request->buildFilesFromEnv();
-        return $request;
-    }
-
-    /**
-     * 构建文件数据
-     *
-     * @return void
-     */
-    protected function buildFilesFromEnv()
-    {
-        foreach ($_FILES as $name => $file) {
-            $this->files[$name] = new UploadedFile($file['tmp_name'], $file['name'], $file['type'], $file['error']);
-        }
-    }
-
-    /**
-     * 构建请求数据
-     *
-     * @return void
-     */
-    protected function buildData()
-    {
-        $this->cookies = $_COOKIE;
-        $this->get = $_GET;
-        $this->post = $_POST;
-        $this->input = new DataStream('php://input');
-    }
-
-    /**
-     * 构建环境数据
-     *
-     * @return void
-     */
-    protected function buildEnv()
-    {
-        foreach ($_SERVER as $key => $value) {
-            $name = \strtolower(\str_replace('_', '-', $key));
-            if (strpos($name, 'http-') === 0) {
-                $name = substr($name, strlen('http-'));
-                $this->header[$name] = $value;
-            }
-            $this->server[$name] = $value;
-        }
-    }
+    public function files():array;
 }

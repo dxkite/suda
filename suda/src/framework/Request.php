@@ -47,7 +47,7 @@ class Request extends RequestWrapper
      */
     public function getUrl():string
     {
-        return $this->request->server['request-uri'] ?? '/';
+        return $this->request->server()['request-uri'] ?? '/';
     }
 
     /**
@@ -156,7 +156,11 @@ class Request extends RequestWrapper
      */
     public function file(string $name): ?UploadedFile
     {
-        return $this->getFile($name);
+        $uploaded = $this->getFile($name);
+        if ($uploaded instanceof UploadedFile) {
+            return $uploaded;
+        }
+        return null;
     }
 
     /**
@@ -282,7 +286,7 @@ class Request extends RequestWrapper
      */
     private function contentIsJson()
     {
-        $header = strtolower($this->request->header['content-type'] ?? '');
+        $header = strtolower($this->request->header()['content-type'] ?? '');
         return null !== $header && strpos($header, 'json') !== false;
     }
 
@@ -299,7 +303,7 @@ class Request extends RequestWrapper
                 $this->setParameter($data);
             }
         } else {
-            $this->setParameter($this->request->post);
+            $this->setParameter($this->request->post());
         }
     }
 }

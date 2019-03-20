@@ -1,9 +1,9 @@
 <?php
+use suda\framework\Request;
 use suda\framework\Response;
 use suda\framework\loader\Path;
-use suda\framework\http\Request as HttpRequest;
-use suda\framework\Request;
 use suda\framework\loader\Loader;
+use suda\framework\http\HTTPRequest;
 use suda\application\builder\ApplicationBuilder;
 
 require_once __DIR__ .'/loader.php';
@@ -16,5 +16,5 @@ $loader->addIncludePath(SUDA_SYSTEM .'/src', 'suda');
 defined('SUDA_DATA') or define('SUDA_DATA', Path::toAbsolutePath('~/data'));
 $application = ApplicationBuilder::build($loader, SUDA_APP);
 $application->prepare();
-$application->run(new Request(HttpRequest::create()), new Response);
+$application->run(new Request(HTTPRequest::create()), new Response);
 exit;

@@ -305,7 +305,7 @@ class RequestWrapper
      */
     public function getFile(?string $name = null)
     {
-        return null === $name ? $this->request->files : $this->request->files[$name] ?? null;
+        return null === $name ? $this->request->files() : $this->request->files()[$name] ?? null;
     }
 
     /**
@@ -317,8 +317,8 @@ class RequestWrapper
      */
     public function getHeader(string $name, $default = null)
     {
-        if (array_key_exists(strtolower($name), $this->request->header)) {
-            return $this->request->header[$name];
+        if (array_key_exists(strtolower($name), $this->request->header())) {
+            return $this->request->header()()[$name];
         }
         return $default;
     }
@@ -341,21 +341,7 @@ class RequestWrapper
      */
     public function getFiles()
     {
-        return $this->request->files;
-    }
-
-    /**
-     * Set 文件包装
-     *
-     * @param  UploadedFile[]  $files  文件包装
-     *
-     * @return  self
-     */
-    public function setFiles(array $files)
-    {
-        $this->request->files = $files;
-
-        return $this;
+        return $this->request->files();
     }
 
     /**
@@ -365,21 +351,7 @@ class RequestWrapper
      */
     public function getHeaders()
     {
-        return $this->request->header;
-    }
-
-    /**
-     * Set 请求头部
-     *
-     * @param  string[]  $headers  请求头部
-     *
-     * @return  self
-     */
-    public function setHeaders(array $headers)
-    {
-        $this->request->header = $headers;
-
-        return $this;
+        return $this->request->header();
     }
 
     /**
@@ -391,8 +363,8 @@ class RequestWrapper
      */
     public function getCookie(string $name = null, $default = null) {
         if ($name === null) {
-            return $this->request->cookies;
+            return $this->request->cookies();
         }
-        return $this->request->cookies[$name] ?? $default;
+        return $this->request->cookies()[$name] ?? $default;
     }
 }

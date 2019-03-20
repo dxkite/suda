@@ -102,7 +102,6 @@ class ReadStatement extends Statement
 
     protected function whereArray(array $where)
     {
-        $whereBinder = [];
         list($where, $whereBinder) = $this->parepareWhere($where);
         $this->whereStringArray($where, $whereBinder);
     }
@@ -147,7 +146,6 @@ class ReadStatement extends Statement
 
     protected function havingArray(array $want)
     {
-        $havingBinder = [];
         list($having, $havingBinder) = $this->parepareWhere($want);
         $this->havingStringArray($having, $havingBinder);
     }

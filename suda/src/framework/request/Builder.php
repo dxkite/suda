@@ -39,7 +39,7 @@ class Builder
     public function build(Request $request)
     {
         $request->setRemoteAddr($this->filterRemoteAddr());
-        $request->setMethod(strtoupper($this->request->server['request-method'] ?? 'GET'));
+        $request->setMethod(strtoupper($this->request->server()['request-method'] ?? 'GET'));
         $request->setHost($this->getHttpHost());
         $request->setSecure($this->getSecure());
         $request->setPort($this->getServerPort());
@@ -62,8 +62,8 @@ class Builder
             'remote-addr',
         ];
         foreach ($ipFrom as $key) {
-            if (array_key_exists($key, $this->request->server)) {
-                foreach (explode(',', $this->request->server[$key]) as $ip) {
+            if (array_key_exists($key, $this->request->server())) {
+                foreach (explode(',', $this->request->server()[$key]) as $ip) {
                     $ip = trim($ip);
                     if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4 | FILTER_FLAG_IPV6 | FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE) !== false) {
                         return $ip;
@@ -81,10 +81,10 @@ class Builder
      */
     private function getHttpHost():string
     {
-        if (array_key_exists('host', $this->request->header)) {
-            return explode(':', $this->request->header['host'])[0];
+        if (array_key_exists('host', $this->request->header())) {
+            return explode(':', $this->request->header()['host'])[0];
         }
-        return $this->request->server['server-name'] ?? 'localhost';
+        return $this->request->server()['server-name'] ?? 'localhost';
     }
 
     /**
@@ -94,8 +94,8 @@ class Builder
      */
     private function getServerPort():int
     {
-        if (array_key_exists('server-port', $this->request->server)) {
-            return $this->request->server['server-port'];
+        if (array_key_exists('server-port', $this->request->server())) {
+            return $this->request->server()['server-port'];
         }
         return $this->getSecure()?443:80;
     }
@@ -107,8 +107,8 @@ class Builder
      */
     private function getSecure():bool
     {
-        $https = array_key_exists('https', $this->request->server) && strcasecmp($this->request->server['https'], 'off') != 0;
-        $scheme = array_key_exists('request-scheme', $this->request->server) && strcasecmp($this->request->server['request-scheme'], 'https') === 0;
+        $https = array_key_exists('https', $this->request->server()) && strcasecmp($this->request->server()['https'], 'off') != 0;
+        $scheme = array_key_exists('request-scheme', $this->request->server()) && strcasecmp($this->request->server()['request-scheme'], 'https') === 0;
         return $https || $scheme;
     }
 
@@ -119,15 +119,14 @@ class Builder
      */
     private function createUri(Request $request)
     {
-        if (\array_key_exists('document-root', $this->request->server)) {
-            $index = (new IndexFinder(null, $this->request->server['document-root']))->getIndexFile();
+        if (\array_key_exists('document-root', $this->request->server())) {
+            $index = (new IndexFinder(null, $this->request->server()['document-root']))->getIndexFile();
         } else {
             $index = '';
         }
         $request->setIndex($index);
-        $url = new UriParser($this->request->server['request-uri'] ?? '/', $index);
+        $url = new UriParser($this->request->server()['request-uri'] ?? '/', $index);
         $request->setQueries($url->getQuery());
         $request->setUri($url->getUri());
-        $this->request->get = $url->getQuery();
     }
 }
