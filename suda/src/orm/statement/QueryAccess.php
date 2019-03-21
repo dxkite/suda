@@ -102,7 +102,7 @@ class QueryAccess
     public function run(Statement $statement)
     {
         $this->runStatement($this->connection, $statement);
-        return $this->resultFrom($statement);
+        return $this->createResult($statement);
     }
 
     /**
@@ -111,7 +111,7 @@ class QueryAccess
      * @param Statement $statement
      * @return mixed
      */
-    protected function resultFrom(Statement $statement)
+    protected function createResult(Statement $statement)
     {
         if ($statement->isWrite()) {
             return $statement->getStatement()->rowCount() > 0;
@@ -140,7 +140,7 @@ class QueryAccess
      * @param Statement $statement
      * @return PDOStatement
      */
-    protected function createStmt(Connection $source, Statement $statement): PDOStatement
+    protected function createPDOStatement(Connection $source, Statement $statement): PDOStatement
     {
         if ($statement->scroll() === true) {
             $stmt = $source->getPdo()->prepare($statement->getString(), [PDO::ATTR_CURSOR => PDO::CURSOR_SCROLL]);
@@ -160,7 +160,7 @@ class QueryAccess
      * @param Statement $statement
      * @return void
      */
-    protected function bindStmt(PDOStatement $stmt, Statement $statement)
+    protected function bindPDOStatementValues(PDOStatement $stmt, Statement $statement)
     {
         foreach ($statement->getBinder() as $binder) {
             if ($binder->getKey() !== null) {
@@ -183,14 +183,14 @@ class QueryAccess
         if ($statement->scroll() && $statement->getStatement() !== null) {
             // noop
         } else {
-            $stmt = $this->createStmt($connection, $statement);
-            $this->bindStmt($stmt, $statement);
+            $stmt = $this->createPDOStatement($connection, $statement);
+            $this->bindPDOStatementValues($stmt, $statement);
             $statement->setStatement($stmt);
             $start = \microtime(true);
             $status = $stmt->execute();
             $connection->getObserver()->observe($statement, \microtime(true) - $start, $status);
             if ($status === false) {
-                throw new SQLException($stmt->errorInfo()[2], intval($stmt->errorCode()));
+                throw new SQLException(implode(':', $stmt->errorInfo()), intval($stmt->errorCode()));
             }
         }
     }

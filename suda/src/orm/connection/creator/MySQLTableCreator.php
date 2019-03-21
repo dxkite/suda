@@ -137,11 +137,11 @@ class MySQLTableCreator
     {
         $type = $field->getLength()? strtoupper($field->getValueType()).'('.$field->getLength().')':strtoupper($field->getValueType());
         $auto = $field->getAuto() ?'AUTO_INCREMENT':'';
-        $null = $field->getNull() ?'NULL':'NOT NULL';
+        $null = $field->isNullable() ?'NULL':'NOT NULL';
         $attr = $field->getAttribute() ?strtoupper($field->getAttribute()):'';
         $comment = $field->getComment() ?('COMMENT \''.addcslashes($field->getComment(), '\'').'\''):'';
         // default设置
-        if ($field->isDefault()) {
+        if ($field->hasDefault()()) {
             if (null === $field->getDefault()) {
                 $default = 'DEFAULT NULL';
             } else {

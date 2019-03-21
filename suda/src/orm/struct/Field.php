@@ -19,9 +19,9 @@ class Field
     protected $type;
     protected $length;
     protected $default;
-    protected $isDefault;
+    protected $hasDefault;
     
-    protected $null; // nullable
+    protected $null; // isNullable
     protected $attribute; // binary unsigned
     protected $collation;
     protected $tableName;
@@ -41,7 +41,7 @@ class Field
         $this->name = $name;
         $this->type = strtoupper($type);
         $this->length = $length;
-        $this->isDefault = false;
+        $this->hasDefault = false;
     }
 
     public function charset(string $charset)
@@ -73,6 +73,7 @@ class Field
         $this->key = self::PRIMARY;
         return $this;
     }
+
     public function index()
     {
         $this->key = self::INDEX;
@@ -117,7 +118,7 @@ class Field
 
     public function default($value)
     {
-        $this->isDefault = true;
+        $this->hasDefault = true;
         $this->default = $value;
         if (null === $value) {
             $this->null = true;
@@ -203,17 +204,26 @@ class Field
     }
 
     /**
-     * Get the value of isDefault
+     * Get the value of hasDefault
      */
-    public function isDefault()
+    public function hasDefault()
     {
-        return $this->isDefault;
+        return $this->hasDefault;
+    }
+
+    /**
+     * 是否为组建
+     *
+     * @return boolean
+     */
+    public function isPrimary():bool {
+        return  $this->key == self::PRIMARY;
     }
 
     /**
      * Get the value of null
      */
-    public function getNull()
+    public function isNullable(): bool
     {
         return $this->null;
     }

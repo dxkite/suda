@@ -39,7 +39,7 @@ class TableAccess extends QueryAccess
      * @param TableStruct $struct
      * @param Middleware $middleware
      */
-    public function __construct(TableStruct $struct, DataSource $source, Middleware $middleware = null)
+    public function __construct(TableStruct $struct, DataSource $source, ?Middleware $middleware = null)
     {
         parent::__construct($source->write(), $middleware);
         $this->source = $source;
