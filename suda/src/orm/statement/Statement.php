@@ -57,6 +57,16 @@ abstract class Statement
      */
     protected $statement = null;
 
+    const RET_ROWS = 1;
+    const RET_LAST_INSERT_ID = 2;
+    const RET_BOOL = 3;
+    /**
+     * 返回类型
+     *
+     * @var int
+     */
+    protected $returnType = Statement::RET_BOOL;
+
     public function __construct(string $sql, ...$args)
     {
         if (count($args) === 1 && \is_array($args[0])) {
@@ -196,6 +206,31 @@ abstract class Statement
     public function setStatement(PDOStatement $statement)
     {
         $this->statement = $statement;
+
+        return $this;
+    }
+
+    
+    /**
+     * Get 返回类型
+     *
+     * @return  int
+     */ 
+    public function getReturnType()
+    {
+        return $this->returnType;
+    }
+
+    /**
+     * Set 返回类型
+     *
+     * @param  int  $returnType  返回类型
+     *
+     * @return  self
+     */ 
+    public function setReturnType(int $returnType)
+    {
+        $this->returnType = $returnType;
 
         return $this;
     }

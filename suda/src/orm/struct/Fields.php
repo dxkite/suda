@@ -5,9 +5,25 @@ use suda\orm\struct\Field;
 
 class Fields
 {
+    /**
+     * 数据表名
+     *
+     * @var string
+     */
     protected $name;
+
+    /**
+     * 字段集合
+     *
+     * @var Field[]
+     */
     protected $fields;
 
+    /**
+     * 创建字段集合
+     *
+     * @param string $table
+     */
     public function __construct(string $table)
     {
         $this->name = $table;

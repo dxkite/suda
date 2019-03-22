@@ -46,6 +46,7 @@ class WriteStatement extends Statement
      */
     protected $delete = false;
 
+
     /**
      * 创建写
      *
@@ -79,6 +80,36 @@ class WriteStatement extends Statement
                 throw new SQLException(\sprintf('table has no fields %s', $this->struct->getName()));
             }
         }
+        return $this;
+    }
+
+    /**
+     * 返回影响行数
+     *
+     * @return self
+     */
+    public function effectRows() {
+        $this->returnType = WriteStatement::RET_ROWS;
+        return $this;
+    }
+
+    /**
+     * 返回影响行数
+     *
+     * @return self
+     */
+    public function isOk() {
+        $this->returnType = WriteStatement::RET_BOOL;
+        return $this;
+    }
+
+    /**
+     * 返回影响行数
+     *
+     * @return self
+     */
+    public function getId() {
+        $this->returnType = WriteStatement::RET_LAST_INSERT_ID;
         return $this;
     }
 
@@ -181,4 +212,7 @@ class WriteStatement extends Statement
         $i_bind = \implode(',', $binds);
         $this->string = "INSERT INTO {$this->table} ({$i_name}) VALUES ({$i_bind})";
     }
+
+
+
 }

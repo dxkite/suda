@@ -15,6 +15,9 @@ use suda\orm\statement\QueryAccess;
 use suda\orm\statement\WriteStatement;
 use suda\orm\middleware\NullMiddleware;
 
+/**
+ * 提供了对数据表的操作
+ */
 class TableAccess extends QueryAccess
 {
 
@@ -152,7 +155,7 @@ class TableAccess extends QueryAccess
     {
         $connection = $statement->isRead() ? $this->source->read() : $this->source->write();
         $this->runStatement($connection, $statement);
-        return $this->resultFrom($statement);
+        return $this->createResult($statement);
     }
 
     /**

@@ -114,11 +114,16 @@ class QueryAccess
     protected function createResult(Statement $statement)
     {
         if ($statement->isWrite()) {
+            if ($statement->getReturnType() === Statement::RET_ROWS) {
+                return $statement->getStatement()->rowCount();
+            }
+            if ($statement->getReturnType() === Statement::RET_LAST_INSERT_ID) {
+                return $this->connection->getPdo()->lastInsertId();
+            }
             return $statement->getStatement()->rowCount() > 0;
         } elseif ($statement->isFetch()) {
             return $this->fetchResult($statement);
         }
-        return null;
     }
 
     /**

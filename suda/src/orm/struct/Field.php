@@ -7,7 +7,11 @@ namespace suda\orm\struct;
  */
 class Field
 {
-    // AUTO_INCREMENT
+    /**
+     * 自增 AUTO_INCREMENT
+     *
+     * @var bool
+     */
     protected $auto;
     // COMMENT
     protected $comment;
@@ -221,13 +225,25 @@ class Field
     }
 
     /**
-     * Get the value of null
+     * 是否为可空
+     *
+     * @return boolean
      */
     public function isNullable(): bool
     {
         return $this->null;
     }
 
+    /**
+     * 是否支持
+     *
+     * @return boolean
+     */
+    public function isAutoIncrement(): bool
+    {
+        return $this->auto === true;
+    }
+    
     /**
      * Get the value of attribute
      */
