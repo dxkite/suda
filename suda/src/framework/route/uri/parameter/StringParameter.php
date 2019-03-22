@@ -12,7 +12,9 @@ class StringParameter extends Parameter
     
     public function __construct(string $extra)
     {
-        $this->default = $this->getCommonDefault($extra);
+        if (strlen($extra) > 0) {
+            $this->default = $this->getCommonDefault($extra);
+        }
     }
  
     public function unpackValue(string $matched)

@@ -55,6 +55,15 @@ class ModuleBag
     }
 
     /**
+     * 获取所有模块
+     *
+     * @return Module[]
+     */
+    public function all():array {
+        return $this->module;
+    }
+    
+    /**
      * 检测模块是否存在
      *
      * @param string $name

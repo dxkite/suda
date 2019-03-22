@@ -15,6 +15,5 @@ $loader->addIncludePath(SUDA_SYSTEM .'/src', 'suda');
 // 初始化数据目录
 defined('SUDA_DATA') or define('SUDA_DATA', Path::toAbsolutePath('~/data'));
 $application = ApplicationBuilder::build($loader, SUDA_APP);
-$application->prepare();
 $application->run(new Request(HTTPRequest::create()), new Response);
 exit;

@@ -48,7 +48,7 @@ class MethodTarget extends FileTarget
      */
     public function __construct($object, ?array $constructParameter = null, string $method, array $parameter = [])
     {
-        $this->object = $object;
+        $this->object = is_object($object)? $object: $this->getPHPClassName($object);
         $this->constructParameter = $constructParameter;
         $this->method = $method;
         $this->parameter = $parameter;
@@ -165,5 +165,16 @@ class MethodTarget extends FileTarget
     public function getConstructParameter()
     {
         return $this->constructParameter;
+    }
+
+    /**
+     * 获取PHP类名
+     *
+     * @param string $className
+     * @return string
+     */
+    protected function getPHPClassName(string $className):string
+    {
+        return \str_replace('.', '\\', $className);
     }
 }

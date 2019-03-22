@@ -54,6 +54,13 @@ class Application extends ApplicationContext
     protected $running;
     
     /**
+     * 系统准备完成
+     *
+     * @var boolean
+     */
+    protected $isPrepared = false;
+
+    /**
      * 创建应用
      *
      * @param string $path
@@ -145,22 +152,26 @@ class Application extends ApplicationContext
      */
     public function run(Request $request, Response $response)
     {
-        $response->getWrapper()->register(ExceptionContentWrapper::class, [\Throwable::class]);
-        $this->debug->info('{request-time} {remote-ip} {request-method} {request-uri} debug={debug}', [
-            'remote-ip' => $request->getRemoteAddr(),
-            'debug' => SUDA_DEBUG,
-            'request-uri' => $request->getUrl(),
-            'request-method' => $request->getMethod(),
-            'request-time' => date('Y-m-d H:i:s', \constant('SUDA_START_TIME')),
-        ]);
-        $this->debug->time('match route');
-        $result = $this->route->match($request);
-        $this->debug->timeEnd('match route');
-        if ($result !== null) {
-            $this->event->exec('application:route:match::after', [$result, $request]);
-        }
-        $this->debug->time('sending response');
         try {
+            $response->getWrapper()->register(ExceptionContentWrapper::class, [\Throwable::class]);
+            $this->debug->info('{request-time} {remote-ip} {request-method} {request-uri} debug={debug}', [
+                'remote-ip' => $request->getRemoteAddr(),
+                'debug' => SUDA_DEBUG,
+                'request-uri' => $request->getUrl(),
+                'request-method' => $request->getMethod(),
+                'request-time' => date('Y-m-d H:i:s', \constant('SUDA_START_TIME')),
+            ]);
+            if ($this->isPrepared === false) {
+                $this->prepare();
+                $this->isPrepared = true;
+            }
+            $this->debug->time('match route');
+            $result = $this->route->match($request);
+            $this->debug->timeEnd('match route');
+            if ($result !== null) {
+                $this->event->exec('application:route:match::after', [$result, $request]);
+            }
+            $this->debug->time('sending response');
             $response = $this->route->run($request, $response, $result);
             if (!$response->isSended()) {
                 $response->sendContent();
@@ -337,6 +348,30 @@ class Application extends ApplicationContext
     public function setRunning(Module $running)
     {
         $this->running = $running;
+
+        return $this;
+    }
+
+    /**
+     * Get 模块集合
+     *
+     * @return  ModuleBag
+     */ 
+    public function getModule():ModuleBag
+    {
+        return $this->module;
+    }
+
+    /**
+     * Set 模块集合
+     *
+     * @param  ModuleBag  $module  模块集合
+     *
+     * @return  self
+     */ 
+    public function setModule(ModuleBag $module)
+    {
+        $this->module = $module;
 
         return $this;
     }
