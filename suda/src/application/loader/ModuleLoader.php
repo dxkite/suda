@@ -186,22 +186,13 @@ class ModuleLoader
     {
         foreach ($routeConfig as $name => $config) {
             $exname = $this->module->getFullName().':'.$name;
-            $runnable = [ $this, 'onRequest'];
             $method = $config['method'] ?? [];
             $attriute = [];
             $attriute['module'] = $this->module->getFullName();
-            $attriute['route-config'] = $config;
+            $attriute['config'] = $config;
             $attriute['route'] = $exname;
-            $this->application->route()->request($method, $exname, $config['url'] ?? '/', $runnable, $attriute);
+            $this->application->request($method, $exname, $config['url'] ?? '/', $attriute);
         }
-    }
-
-    public function onRequest(Request $request, Response $response)
-    {
-        $this->toRunning();
-        // 加载语言
-        LanguageLoader::load($this->application);
-        return $this->application->onRequest($request, $response);
     }
 
     /**
