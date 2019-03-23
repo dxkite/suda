@@ -141,7 +141,7 @@ class MySQLTableCreator
         $attr = $field->getAttribute() ?strtoupper($field->getAttribute()):'';
         $comment = $field->getComment() ?('COMMENT \''.addcslashes($field->getComment(), '\'').'\''):'';
         // default设置
-        if ($field->hasDefault()()) {
+        if ($field->hasDefault()) {
             if (null === $field->getDefault()) {
                 $default = 'DEFAULT NULL';
             } else {

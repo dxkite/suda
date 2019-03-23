@@ -318,7 +318,7 @@ class RequestWrapper
     public function getHeader(string $name, $default = null)
     {
         if (array_key_exists(strtolower($name), $this->request->header())) {
-            return $this->request->header()()[$name];
+            return $this->request->header()[$name];
         }
         return $default;
     }

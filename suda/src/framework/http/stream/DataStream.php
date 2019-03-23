@@ -33,7 +33,7 @@ class DataStream implements Stream
     /**
      * 流描述
      *
-     * @var SplFileObject
+     * @var SplFileObject|string
      */
     protected $stream;
 
@@ -47,7 +47,7 @@ class DataStream implements Stream
      */
     public function __construct($stream, int $offset = 0, ?int $length = null, int $blockSize = 8192)
     {
-        $this->stream = $stream instanceof SplFileObject? $stream : new SplFileObject($stream, 'rb');
+        $this->stream = $stream;
         $this->offset = $offset;
         $this->length = $length;
         $this->blockSize = $blockSize;
@@ -73,12 +73,14 @@ class DataStream implements Stream
     public function echo()
     {
         $remain = $this->length();
-        if ($this->stream->fseek($this->offset) === 0) {
+        $stream = $this->openStream();
+        if ($stream->fseek($this->offset) === 0) {
             // 持续链接则继续发送内容
-            while ($this->stream->eof() === false && $remain > 0 && connection_status() === CONNECTION_NORMAL) {
+            while ($stream->eof() === false && $remain > 0) {
                 $readLength = $remain >= $this->blockSize ? $this->blockSize : $remain;
                 $remain -= $readLength;
-                echo $this->stream->fread($readLength);
+                $data = $stream->fread($readLength);
+                echo $data;
             }
         }
     }
@@ -90,10 +92,20 @@ class DataStream implements Stream
      */
     public function length():int
     {
-        if ($this->length !== null) {
-            return $this->length;
+        if ($this->length === null) {
+            $stream = $this->openStream();
+            $stream->fseek(0, SEEK_END);
+            $this->length = $stream->ftell();
         }
-        $this->stream->fseek(0, \SEEK_END);
-        return $this->stream->ftell();
+        return $this->length;
+    }
+
+    protected function openStream(): SplFileObject
+    {
+        if (is_string($this->stream)) {
+            return new SplFileObject($this->stream);
+        } else {
+            return $this->stream;
+        }
     }
 }

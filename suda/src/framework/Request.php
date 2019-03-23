@@ -286,7 +286,7 @@ class Request extends RequestWrapper
      */
     private function contentIsJson()
     {
-        $header = strtolower($this->request->header()['content-type'] ?? '');
+        $header = strtolower($this->request->server()['content-type'] ?? '');
         return null !== $header && strpos($header, 'json') !== false;
     }
 
