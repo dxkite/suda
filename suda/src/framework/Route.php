@@ -42,7 +42,7 @@ class Route
     {
         $this->routes = new RouteCollection;
         $this->runnable = [];
-        $this->default = $this->createDefaultRunnable();
+        $this->default = new Runnable([__CLASS__ , 'defaultResponse']);
     }
 
     /**
@@ -202,7 +202,7 @@ class Route
     {
         foreach ($this->routes as $name => $matcher) {
             if (($parameter = $matcher->match($request)) !== null) {
-                return new MatchResult($matcher, $name, $parameter);
+                return new MatchResult($matcher, $name, $this->runnable[$name], $parameter);
             }
         }
         return null;
@@ -211,15 +211,15 @@ class Route
     /**
      * 运行结果
      *
-     * @param Request $request
+     * @param \suda\framework\route\MatchResult|null $result
+     * @param \suda\framework\Request $request
      * @param Response $response
-     * @param MatchResult|null $result
      * @return Response
      */
-    public function run(Request $request, Response $response, ?MatchResult $result):Response
+    public function run(?MatchResult $result, Request $request, Response $response):Response
     {
         if ($result !== null) {
-            return $this->buildResponse($request->mergeQueries($result->getParameter())->setAttributes($result->getMatcher()->getAttribute()), $response, $result->getName());
+            return $this->buildResponse($result, $request->mergeQueries($result->getParameter())->setAttributes($result->getMatcher()->getAttribute()), $response);
         }
         return $this->buildDefaultResponse($request, $response);
     }
@@ -232,9 +232,9 @@ class Route
      * @param string $name
      * @return Response
      */
-    protected function buildResponse(Request $request, Response $response, string $name):Response
+    protected function buildResponse(MatchResult $result, Request $request, Response $response):Response
     {
-        $content = $this->runnable[$name]->run($request, $response);
+        $content = $result->getRunnable()->run($request, $response);
         if ($content !== null && !$response->isSended()) {
             $response->setContent($content);
         }
@@ -262,9 +262,9 @@ class Route
      *
      * @return Runnable
      */
-    protected function createDefaultRunnable():Runnable
+    public function getDefaultRunnable():Runnable
     {
-        return new Runnable([ __CLASS__, 'defaultResponse']);
+        return $this->default;
     }
 
     /**
