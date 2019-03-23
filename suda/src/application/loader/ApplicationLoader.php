@@ -42,6 +42,7 @@ class ApplicationLoader
 
     public function load()
     {
+        $this->loadVendorIfExist();
         $this->loadGlobalConfig();
         $this->registerModule();
         $this->prepareModuleLoader();
@@ -64,6 +65,14 @@ class ApplicationLoader
         }
         if ($listenerPath = $resource->getConfigResourcePath('config/listener')) {
             $this->application->loadEvent($listenerPath);
+        }
+    }
+
+    public function loadVendorIfExist()
+    {
+        $vendorAutoload = $this->application->getPath().'/vendor/autoload.php';
+        if (FileSystem::exist($vendorAutoload)) {
+            require_once $vendorAutoload;
         }
     }
 

@@ -7,6 +7,7 @@ use suda\application\Module;
 use suda\framework\Response;
 use suda\application\Resource;
 use suda\application\Application;
+use suda\framework\filesystem\FileSystem;
 use suda\application\builder\ApplicationBuilder;
 use suda\application\processor\RequestProcessor;
 use suda\application\exception\ApplicationException;
@@ -44,6 +45,7 @@ class ModuleLoader
 
     public function toLoaded()
     {
+        $this->loadVendorIfExist();
         $this->loadEventListener();
         $this->loadShareLibrary();
         $this->loadExtraModuleResourceLibrary();
@@ -113,6 +115,14 @@ class ModuleLoader
         $import = $this->module->getConfig('import.src', []);
         if (count($import)) {
             $this->importClassLoader($import, $this->module->getPath());
+        }
+    }
+
+    public function loadVendorIfExist()
+    {
+        $vendorAutoload = $this->module->getPath().'/vendor/autoload.php';
+        if (FileSystem::exist($vendorAutoload)) {
+            require_once $vendorAutoload;
         }
     }
 
