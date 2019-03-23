@@ -71,21 +71,19 @@ class ModuleLoader
     {
         if ($require = $this->module->getConfig('require')) {
             foreach ($require as $module => $version) {
-                $this->checkModuleVersion($module, $version);
+                $this->assertModuleVersion($module, $version);
             }
         }
     }
 
-
-    protected function checkModuleVersion(string $module, string $version)
+    protected function assertModuleVersion(string $module, string $version)
     {
-        try {
-            $target = $this->application->find($module);
-            if ($target === null || static::versionCompire($version, $target->getVersion()) !== true) {
-                throw new ApplicationException(sprintf('%s module need %s version %s', $this->module->getFullName(), $target->getName(), $target->getVersion()), ApplicationException::ERR_MODULE_REQUIREMENTS);
-            }
-        } catch (ApplicationException $e) {
+        $target = $this->application->find($module);
+        if ($target === null) {
             throw new ApplicationException(sprintf('%s module need %s %s but not exist', $this->module->getFullName(), $module, $version), ApplicationException::ERR_MODULE_REQUIREMENTS);
+        }
+        if (static::versionCompire($version, $target->getVersion()) !== true) {
+            throw new ApplicationException(sprintf('%s module need %s version %s', $this->module->getFullName(), $target->getName(), $target->getVersion()), ApplicationException::ERR_MODULE_REQUIREMENTS);
         }
     }
 
