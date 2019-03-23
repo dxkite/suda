@@ -5,6 +5,7 @@ use suda\framework\Config;
 use suda\framework\Request;
 use suda\application\Module;
 use suda\framework\Response;
+use suda\application\Resource;
 use suda\application\Application;
 use suda\application\builder\ApplicationBuilder;
 use suda\application\processor\RequestProcessor;
@@ -45,6 +46,7 @@ class ModuleLoader
     {
         $this->loadEventListener();
         $this->loadShareLibrary();
+        $this->loadExtraModuleResourceLibrary();
     }
 
     public function toReacheable()
@@ -113,6 +115,18 @@ class ModuleLoader
         $import = $this->module->getConfig('import.src', []);
         if (count($import)) {
             $this->importClassLoader($import, $this->module->getPath());
+        }
+    }
+
+    protected function loadExtraModuleResourceLibrary()
+    {
+        $import = $this->module->getConfig('module-resource', []);
+        if (count($import)) {
+            foreach ($import as $name => $path) {
+                if ($module = $this->application->find($name)) {
+                    $module->getResource()->addResourcePath(Resource::getPathByRelativedPath($path, $this->module->getPath()));
+                }
+            }
         }
     }
 
