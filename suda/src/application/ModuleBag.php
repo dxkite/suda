@@ -14,7 +14,7 @@ class ModuleBag
      *
      * @var Module[]
      */
-    protected $module;
+    protected $module = [];
 
     /**
      * 已知全部全名
@@ -40,6 +40,13 @@ class ModuleBag
             uksort($this->knownsFullName[$name], [$this, 'sort']);
         }
         $this->module[$name.':'.$version] = $module;
+    }
+
+    public function merge(ModuleBag $module)
+    {
+        $this->module = array_merge($this->module, $module->module);
+        $this->knownsFullName = array_merge($this->knownsFullName, $module->knownsFullName);
+        $this->cache = array_merge($this->cache, $module->cache);
     }
 
     /**

@@ -4,6 +4,9 @@ namespace suda\application\loader;
 use suda\orm\DataSource;
 use suda\framework\Config;
 use suda\framework\Context;
+use suda\application\Module;
+use suda\application\Resource;
+use suda\application\ModuleBag;
 use suda\application\Application;
 use suda\application\loader\ModuleLoader;
 use suda\framework\filesystem\FileSystem;
@@ -46,11 +49,9 @@ class ApplicationLoader
 
     public function loadRoute()
     {
-        $modules = $this->application->getManifast('reachable');
-        if (\is_array($modules)) {
-            foreach ($modules as $name) {
-                $fullname = $this->application->find($name)->getFullName();
-                $this->moduleLoader[$fullname]->toReacheable();
+        foreach ($this->application->getModule()->all() as $module) {
+            if ($module->getStatus() === Module::REACHABLE) {
+                $this->moduleLoader[$module->getFullName()]->toReacheable();
             }
         }
     }
@@ -96,12 +97,9 @@ class ApplicationLoader
 
     protected function prepareModuleLoader()
     {
-        $modules = $this->application->getManifast('modules');
-        foreach ($modules as $moduleName) {
-            if ($module = $this->application->find($moduleName)) {
-                $this->moduleLoader[$module->getFullName()] = new ModuleLoader($this->application, $module);
-                $this->moduleLoader[$module->getFullName()]->toLoaded();
-            }
+        foreach ($this->application->getModule()->all() as $module) {
+            $this->moduleLoader[$module->getFullName()] = new ModuleLoader($this->application, $module);
+            $this->moduleLoader[$module->getFullName()]->toLoaded();
         }
     }
 
@@ -116,8 +114,40 @@ class ApplicationLoader
 
     protected function registerModuleFrom(string $path, string $extractPath)
     {
+        $modules = new ModuleBag;
         foreach (ModuleBuilder::scan($path, $extractPath) as $module) {
-            $this->application->add($module);
+            $modules->add($module);
+        }
+        $this->assignModuleToApplication($path, $modules);
+    }
+
+    protected function assignModuleToApplication(string $path, ModuleBag $modules)
+    {
+        $resource = new Resource([$path]);
+        $configPath = $resource->getConfigResourcePath('config');
+        $config = null;
+        if ($configPath) {
+            $config = Config::loadConfig($configPath, $this->application->getConfig());
+        }
+        if ($config === null) {
+            $this->application->getModule()->merge($modules);
+        } else {
+            $this->assignModuleWithStatusToApplication($modules, $config['loaded'] ?? [], $config['reachable'] ?? []);
+        }
+    }
+
+    protected function assignModuleWithStatusToApplication(ModuleBag $modules, array $loaded, array $reachable)
+    {
+        foreach ($loaded as $moduleName) {
+            if ($module = $modules->get($moduleName)) {
+                $module->setStatus(Module::LOADED);
+                $this->application->add($module);
+            }
+        }
+        foreach ($reachable as $moduleName) {
+            if ($module = $modules->get($moduleName)) {
+                $module->setStatus(Module::REACHABLE);
+            }
         }
     }
 }

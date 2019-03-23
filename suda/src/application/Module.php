@@ -71,6 +71,7 @@ class Module
         $this->path = $path;
         $this->config = $config;
         $this->resource = new Resource;
+        $this->status = Module::REACHABLE;
     }
 
     /**
@@ -172,5 +173,15 @@ class Module
     public function getPath()
     {
         return $this->path;
+    }
+
+    /**
+     * Get 状态
+     *
+     * @return  int
+     */ 
+    public function getStatus()
+    {
+        return $this->status;
     }
 }
