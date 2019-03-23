@@ -149,7 +149,7 @@ class ModuleTemplateBase extends CompilableTemplate
     protected function prepareStaticModuleSource(?string $module)
     {
         $static = $this->getModuleStaticPath($module);
-        if (is_dir($static) && !\in_array($static, static::$copyedStaticPaths)) {
+        if (SUDA_DEBUG && is_dir($static) && !\in_array($static, static::$copyedStaticPaths)) {
             $from = $static;
             $to = $this->getModuleStaticOutpath($module);
             $time = sprintf('copy template static source %s => %s ', $from, $to);

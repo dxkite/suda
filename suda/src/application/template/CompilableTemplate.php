@@ -137,8 +137,9 @@ class CompilableTemplate extends RawTemplate
     public function __toString()
     {
         $source = FileSystem::exist($this->getSourcePath()) ;
-        // $dest = FileSystem::exist($this->getPath());
-        if ($source === true) {
+        $dest = FileSystem::exist($this->getPath());
+        $notCompiled = $source === true && $dest === false;
+        if ($notCompiled || SUDA_DEBUG) {
             $content = FileSystem::get($this->getSourcePath());
             if ($content !== null) {
                 $compiled = $this->compiler()->compileText($content, $this->config);
@@ -221,7 +222,7 @@ class CompilableTemplate extends RawTemplate
 
     protected function prepareStaticSource()
     {
-        if (is_dir($this->getStaticPath()) && !\in_array($this->getStaticPath(), static::$copyedStaticPaths)) {
+        if (SUDA_DEBUG && is_dir($this->getStaticPath()) && !\in_array($this->getStaticPath(), static::$copyedStaticPaths)) {
             FileSystem::copyDir($this->getStaticPath(), $this->getStaticOutpath());
             static::$copyedStaticPaths[] = $this->getStaticPath();
         }

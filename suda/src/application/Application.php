@@ -52,6 +52,7 @@ class Application extends BaseAppication
      */
     protected function prepare(Request $request, Response $response)
     {
+        $response->setHeader('x-powered-by', 'suda/'.SUDA_VERSION, true);
         $response->getWrapper()->register(ExceptionContentWrapper::class, [\Throwable::class]);
         $this->debug->info('{request-time} {remote-ip} {request-method} {request-uri} debug={debug}', [
             'remote-ip' => $request->getRemoteAddr(),
