@@ -97,7 +97,10 @@ class BaseAppication extends ApplicationContext
     protected function initProperty(array $manifast)
     {
         if (\array_key_exists('module-paths', $manifast)) {
-            $this->modulePaths = $manifast['module-paths'];
+            $modulePaths = $manifast['module-paths'];
+            foreach ($modulePaths as $name => $path) {
+                $this->modulePaths[] = Resource::getPathByRelativedPath($path, $this->path);
+            }
         } else {
             $this->modulePaths = [ Resource::getPathByRelativedPath('modules', $this->path) ];
         }

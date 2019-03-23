@@ -49,11 +49,13 @@ class ModuleLoader
         $this->loadEventListener();
         $this->loadShareLibrary();
         $this->loadExtraModuleResourceLibrary();
+        $this->application->debug()->info('loaded - '.$this->module->getFullName());
     }
 
     public function toReacheable()
     {
         $this->loadRoute();
+        $this->application->debug()->info('reacheable = '.$this->module->getFullName());
     }
 
     public function toRunning()
@@ -62,6 +64,7 @@ class ModuleLoader
         $this->checkRequirements();
         $this->loadPrivateLibrary();
         $this->application->setRunning($this->module);
+        $this->application->debug()->info('run + '.$this->module->getFullName());
     }
 
     /**
