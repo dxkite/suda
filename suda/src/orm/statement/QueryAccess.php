@@ -209,7 +209,7 @@ class QueryAccess
     protected function fetchResult(Statement $statement)
     {
         if ($statement->isFetchOne()) {
-            return $statement->getStatement()->fetch(PDO::FETCH_ASSOC);
+            return $statement->getStatement()->fetch(PDO::FETCH_ASSOC)??null;
         } elseif ($statement->isFetchAll()) {
             return $statement->getStatement()->fetchAll(PDO::FETCH_ASSOC);
         }

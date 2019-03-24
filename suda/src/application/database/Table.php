@@ -2,8 +2,8 @@
 namespace suda\application\database;
 
 use suda\orm\DataSource;
-use suda\orm\TableAccess;
 use suda\orm\TableStruct;
+use suda\orm\TableOperator;
 use suda\orm\middleware\Middleware;
 use suda\application\database\TableMiddlewareTrait;
 
@@ -13,7 +13,7 @@ use suda\application\database\TableMiddlewareTrait;
  * 用于提供对数据表的操作
  *
  */
-abstract class Table extends TableAccess implements Middleware
+abstract class Table extends TableOperator implements Middleware
 {
     use TableMiddlewareTrait;
 

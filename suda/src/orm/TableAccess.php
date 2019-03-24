@@ -9,9 +9,10 @@ use suda\orm\TableStruct;
 use suda\orm\statement\Statement;
 use suda\orm\connection\Connection;
 use suda\orm\middleware\Middleware;
+use suda\orm\statement\QueryAccess;
 use suda\orm\exception\SQLException;
 use suda\orm\statement\ReadStatement;
-use suda\orm\statement\QueryAccess;
+use suda\orm\statement\QueryStatement;
 use suda\orm\statement\WriteStatement;
 use suda\orm\middleware\NullMiddleware;
 
@@ -143,6 +144,17 @@ class TableAccess extends QueryAccess
     public function read(...$args):ReadStatement
     {
         return (new ReadStatement($this->source->write()->rawTableName($this->struct->getName()), $this->struct))->want(...$args);
+    }
+
+    /**
+     * 原始查询
+     *
+     * @param mixed ...$args
+     * @return ReadStatement
+     */
+    public function query(...$args):QueryStatement
+    {
+        return (new QueryStatement(...$args));
     }
 
     /**

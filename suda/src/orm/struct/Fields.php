@@ -3,7 +3,7 @@ namespace suda\orm\struct;
 
 use suda\orm\struct\Field;
 
-class Fields
+class Fields implements IteratorAggregate
 {
     /**
      * 数据表名
@@ -73,7 +73,7 @@ class Fields
 
     /**
      * Get the value of name
-     */ 
+     */
     public function getName()
     {
         return $this->name;
@@ -81,9 +81,14 @@ class Fields
 
     /**
      * Get the value of fields
-     */ 
+     */
     public function all()
     {
         return $this->fields;
+    }
+
+    public function getIterator()
+    {
+        return new ArrayIterator($this->fields);
     }
 }

@@ -88,7 +88,7 @@ class WriteStatement extends Statement
      *
      * @return self
      */
-    public function effectRows() {
+    public function rows() {
         $this->returnType = WriteStatement::RET_ROWS;
         return $this;
     }
@@ -108,7 +108,7 @@ class WriteStatement extends Statement
      *
      * @return self
      */
-    public function getId() {
+    public function id() {
         $this->returnType = WriteStatement::RET_LAST_INSERT_ID;
         return $this;
     }
@@ -212,7 +212,4 @@ class WriteStatement extends Statement
         $i_bind = \implode(',', $binds);
         $this->string = "INSERT INTO {$this->table} ({$i_name}) VALUES ({$i_bind})";
     }
-
-
-
 }

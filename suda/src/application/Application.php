@@ -118,6 +118,8 @@ class Application extends BaseAppication
         } elseif (\array_key_exists('template', $route)) {
             $attributes['template'] = $route['template'];
             $runnable = TemplateRequestProcessor::class.'->onRequest';
+        } elseif (\array_key_exists('runnable', $route)) {
+            $runnable = $route['runnable'];
         } else {
             throw new \Exception('request failed');
         }
