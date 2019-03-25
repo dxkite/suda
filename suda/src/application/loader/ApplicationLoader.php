@@ -78,7 +78,14 @@ class ApplicationLoader
 
     public function loadDataSource()
     {
-        $dataSourceConfigPath = $this->application->getResource()->getConfigResourcePath('config/data-source');
+        $datasource = $this->getDataSourceGroup('default');
+        $this->application->setDataSource($datasource);
+    }
+
+    public function getDataSourceGroup(string $groupName):DataSource
+    {
+        $group = $groupName === 'default' ? '': '-'. $groupName;
+        $dataSourceConfigPath = $this->application->getResource()->getConfigResourcePath('config/data-source'.$group);
         $dataSource = new DataSource;
         $observer = new DebugObserver($this->application->debug());
         if ($dataSourceConfigPath !== null) {
@@ -87,7 +94,7 @@ class ApplicationLoader
                 $this->addDataSource($dataSource, $observer, $name, $config['type'] ?? 'mysql', $config['mode'] ?? 'master', $config);
             }
         }
-        $this->application->setDataSource($dataSource);
+        return $dataSource;
     }
 
     protected function addDataSource(DataSource $source, Observer $observer, string $name, string $type, string $mode, array $config)

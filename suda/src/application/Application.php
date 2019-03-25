@@ -5,6 +5,7 @@ use Throwable;
 use suda\framework\Request;
 use suda\framework\Response;
 use suda\application\BaseAppication;
+use suda\application\database\Table;
 use suda\framework\route\MatchResult;
 use suda\framework\runnable\Runnable;
 use suda\application\loader\ModuleLoader;
@@ -34,6 +35,7 @@ class Application extends BaseAppication
         $this->debug->timeEnd('loading application');
         $this->debug->time('loading datasource');
         $appLoader->loadDataSource();
+        Table::load($this);
         $this->event->exec('application:load-environment', [ $this->config ,$this]);
         $this->debug->timeEnd('loading datasource');
         $this->debug->time('loading route');
