@@ -1,6 +1,7 @@
 <?php
 namespace suda\orm\struct;
 
+use ArrayIterator;
 use IteratorAggregate;
 use suda\orm\struct\Field;
 
@@ -66,7 +67,7 @@ class Fields implements IteratorAggregate
         $name = $field->getName();
         $this->fields[$name] = $field;
     }
-    
+
     public function getFieldsName()
     {
         return array_keys($this->fields);

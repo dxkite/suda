@@ -10,7 +10,7 @@ class TestTable extends Table
 {
     public function __construct(DataSource $datasource)
     {
-        parent::__construct('hello', $datasource);
+        parent::__construct('hello');
         (new MySQLTableCreator($this->access->getSource()->write(),$this->access->getStruct()->getFields()))->create();
     }
 
