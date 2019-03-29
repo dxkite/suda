@@ -132,7 +132,10 @@ class TableAccess extends QueryAccess
      */
     public function delete(...$args):WriteStatement
     {
-        return (new WriteStatement($this->source->write()->rawTableName($this->struct->getName()), $this->struct))->delete()->where(...$args);
+        if (count($args) > 0) {
+            return (new WriteStatement($this->source->write()->rawTableName($this->struct->getName()), $this->struct))->delete()->where(...$args);
+        }
+        return (new WriteStatement($this->source->write()->rawTableName($this->struct->getName()), $this->struct))->delete();
     }
 
     /**

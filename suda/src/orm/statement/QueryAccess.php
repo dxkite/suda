@@ -147,10 +147,11 @@ class QueryAccess
      */
     protected function createPDOStatement(Connection $source, Statement $statement): PDOStatement
     {
+        $query = $this->autoPrefix($statement->getString());
         if ($statement->scroll() === true) {
-            $stmt = $source->getPdo()->prepare($statement->getString(), [PDO::ATTR_CURSOR => PDO::CURSOR_SCROLL]);
+            $stmt = $source->getPdo()->prepare($query, [PDO::ATTR_CURSOR => PDO::CURSOR_SCROLL]);
         } else {
-            $stmt = $source->getPdo()->prepare($statement->getString());
+            $stmt = $source->getPdo()->prepare($query);
         }
         if ($stmt instanceof PDOStatement) {
             return $stmt;
@@ -209,7 +210,7 @@ class QueryAccess
     protected function fetchResult(Statement $statement)
     {
         if ($statement->isFetchOne()) {
-            return $statement->getStatement()->fetch(PDO::FETCH_ASSOC)??null;
+            return $statement->getStatement()->fetch(PDO::FETCH_ASSOC) ?? null;
         } elseif ($statement->isFetchAll()) {
             return $statement->getStatement()->fetchAll(PDO::FETCH_ASSOC);
         }
@@ -223,5 +224,20 @@ class QueryAccess
     public function getMiddleware():Middleware
     {
         return $this->middleware;
+    }
+
+    /**
+     * 自动填充前缀
+     *
+     * @param string $query
+     * @return string
+     */
+    protected function autoPrefix(string $query):string
+    {
+        if ($prefix = $this->connection->getConfig('prefix')) {
+            // _:table 前缀控制
+            return \preg_replace('/_:(\w+)/', $prefix.'$1', $query);
+        }
+        return $query;
     }
 }

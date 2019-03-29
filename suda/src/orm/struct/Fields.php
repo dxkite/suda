@@ -1,6 +1,7 @@
 <?php
 namespace suda\orm\struct;
 
+use IteratorAggregate;
 use suda\orm\struct\Field;
 
 class Fields implements IteratorAggregate
