@@ -35,7 +35,7 @@ trait DumpTrait
                 if (count($methodRef->getParameters()) === 0 && !$ignore) {
                     try {
                         $parameterString.=static::valueToString($method.'()', $object->$method(), $deep);
-                    } catch(\Exception $e){
+                    } catch(\Throwable $e){
                         // noop 
                     }
                 }

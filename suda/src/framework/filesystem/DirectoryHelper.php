@@ -19,7 +19,7 @@ trait DirectoryHelper
      * @param boolean $recursive
      * @return boolean
      */
-    public static function make(string $path, int $mode =0777, bool $recursive = true):bool
+    public static function make(string $path, int $mode = 0777, bool $recursive = true):bool
     {
         if (!\is_dir($path)) {
             $mk = mkdir($path, $mode, $recursive);
@@ -79,9 +79,13 @@ trait DirectoryHelper
     {
         $parent = Path::format($path);
         foreach (static::read($path, $recursive, $regex, false, $mode) as $subpath) {
-            $path = $full?$subpath:$parent.DIRECTORY_SEPARATOR.$subpath;
+            $path = $parent.DIRECTORY_SEPARATOR.$subpath;
             if (is_file($path)) {
-                yield $subpath;
+                if ($full) {
+                    yield $path;
+                } else {
+                    yield $subpath;
+                }
             }
         }
     }
@@ -99,9 +103,13 @@ trait DirectoryHelper
     {
         $parent = Path::format($path);
         foreach (static::read($path, $recursive, $regex, false, $mode) as $subpath) {
-            $path = $full?$subpath:$parent.DIRECTORY_SEPARATOR.$subpath;
-            if (is_dir($path)) {
-                yield $subpath;
+            $path = $parent.DIRECTORY_SEPARATOR.$subpath;
+            if (is_file($path)) {
+                if ($full) {
+                    yield $path;
+                } else {
+                    yield $subpath;
+                }
             }
         }
     }
