@@ -8,9 +8,9 @@ use suda\orm\statement\Statement;
 /**
  * 提供了对数据表的操作
  */
-class TableOperator 
+class TableOperator
 {
-    
+
     /**
      * 数据表操作
      *
@@ -101,11 +101,11 @@ class TableOperator
      */
     public function list(?int $page, int $row = 10, $wants = '*'):array
     {
-        $query = $table->read($wants);
+        $query = $this->access->read($wants);
         if ($page !== null) {
             $query->page($page, $row);
         }
-        return $query;
+        return $this->access->run($query->fetchAll());
     }
 
     protected function preparePrimaryKey() {

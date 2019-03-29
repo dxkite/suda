@@ -28,14 +28,14 @@ class TableAccess extends QueryAccess
      * @var DataSource
      */
     protected $source;
-    
+
     /**
      * 表结构
      *
      * @var TableStruct
      */
     protected $struct;
-    
+
     /**
      * 创建数据表
      *
@@ -229,12 +229,23 @@ class TableAccess extends QueryAccess
 
 
     /**
-     * Get 中间件
+     * 获取数据源
      *
      * @return  DataSource
      */
     public function getSource():DataSource
     {
         return $this->source;
+    }
+
+
+    /**
+     * 设置数据源
+     *
+     * @return  DataSource
+     */
+    public function setSource(DataSource $source)
+    {
+        return $this->source = $source;
     }
 }

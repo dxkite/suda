@@ -2,6 +2,7 @@
 namespace suda\application\database;
 
 use suda\orm\DataSource;
+use suda\orm\TableAccess;
 use suda\orm\TableStruct;
 use suda\orm\TableOperator;
 use suda\application\Application;
@@ -38,7 +39,7 @@ abstract class Table extends TableOperator implements Middleware
 
     public function __construct(string $tableName)
     {
-        parent::__construct($this->initStruct($tableName), static::$application->getDataSource(), $this);
+        parent::__construct(new TableAccess($this->initStruct($tableName), static::$application->getDataSource(), $this));
     }
 
     abstract public function onCreateStruct(TableStruct $table):TableStruct;
