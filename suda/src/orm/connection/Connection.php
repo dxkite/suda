@@ -73,7 +73,7 @@ abstract class Connection
     public function connect()
     {
         // 链接数据库
-        if (null === $this->pdo && ($this->config['enable'] ?? true)) {
+        if (null === $this->pdo && $this->getConfig('enable', true)) {
             try {
                 $this->pdo = $this->createPDO();
                 $this->id = static::$_id;
@@ -96,6 +96,17 @@ abstract class Connection
             throw new SQLException($this->getName().' data source is not connected', SQLException::ERR_NO_CONNECTION);
         }
         return $this->pdo;
+    }
+
+    /**
+     * 获取配置
+     *
+     * @param string $name
+     * @param mixed $default
+     * @return mixed
+     */
+    public function getConfig(string $name, $default = null) {
+        return $this->config[$name] ?? $default;
     }
 
     /**

@@ -101,7 +101,7 @@ class TableStruct implements ArrayAccess, IteratorAggregate
      *
      * @return  string
      */ 
-    public function getName()
+    public function getName():string
     {
         return $this->name;
     }
@@ -111,7 +111,7 @@ class TableStruct implements ArrayAccess, IteratorAggregate
      *
      * @return  Fields
      */ 
-    public function getFields()
+    public function getFields():Fields
     {
         return $this->fields;
     }
