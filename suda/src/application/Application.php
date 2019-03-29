@@ -54,7 +54,7 @@ class Application extends BaseAppication
      */
     protected function prepare(Request $request, Response $response)
     {
-        $response->setHeader('x-powered-by', 'suda/'.SUDA_VERSION, true);
+        $response->setHeader('x-powered-by', 'nebula/'.SUDA_VERSION, true);
         $response->getWrapper()->register(ExceptionContentWrapper::class, [\Throwable::class]);
         $this->debug->info('{request-time} {remote-ip} {request-method} {request-uri} debug={debug}', [
             'remote-ip' => $request->getRemoteAddr(),
@@ -141,6 +141,9 @@ class Application extends BaseAppication
      */
     protected function createResponse(?MatchResult $result, Request $request, Response $response)
     {
+        if (SUDA_DEBUG) {
+            $response->setHeader('x-route', $result->getName());
+        }
         if ($result === null) {
             $content = $this->defaultResponse($this, $request, $response);
         } else {

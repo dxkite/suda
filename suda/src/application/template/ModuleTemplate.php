@@ -38,6 +38,7 @@ class ModuleTemplate extends ModuleTemplateBase
     {
         $included = new self($name, $this->application, $this->request, $this->module);
         $included->parent = $this;
+        $included->value = $this->value;
         echo $included->__toString();
     }
 

@@ -30,8 +30,12 @@ class RawTemplate
     }
 
     /**
-    * 单个设置值
-    */
+     * 单个设置值
+     *
+     * @param string $name
+     * @param mixed $value
+     * @return self
+     */
     public function set(string $name, $value)
     {
         $this->value = ArrayDotAccess::set($this->value, $name, $value);
@@ -39,8 +43,11 @@ class RawTemplate
     }
 
     /**
-    * 直接压入值
-    */
+     * 直接压入值
+     *
+     * @param array $values
+     * @return self
+     */
     public function assign(array $values)
     {
         $this->value = array_merge($this->value, $values);
@@ -50,6 +57,10 @@ class RawTemplate
 
     /**
      * 创建模板获取值
+     *
+     * @param string $name
+     * @param mixed $default
+     * @return mixed
      */
     public function get(string $name = null, $default = null)
     {
@@ -61,6 +72,9 @@ class RawTemplate
 
     /**
      * 检测值
+     *
+     * @param string $name
+     * @return boolean
      */
     public function has(string $name)
     {
