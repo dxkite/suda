@@ -50,9 +50,9 @@ class ApplicationLoader
 
     public function loadRoute()
     {
-        foreach ($this->application->getModule()->all() as $module) {
+        foreach ($this->application->getModules()  as  $name => $module) {
             if ($module->getStatus() === Module::REACHABLE) {
-                $this->moduleLoader[$module->getFullName()]->toReacheable();
+                $this->moduleLoader[$name]->toReacheable();
             }
         }
     }
@@ -113,9 +113,9 @@ class ApplicationLoader
 
     protected function prepareModuleLoader()
     {
-        foreach ($this->application->getModule()->all() as $module) {
-            $this->moduleLoader[$module->getFullName()] = new ModuleLoader($this->application, $module);
-            $this->moduleLoader[$module->getFullName()]->toLoaded();
+        foreach ($this->application->getModules() as $name => $module) {
+            $this->moduleLoader[$name] = new ModuleLoader($this->application, $module);
+            $this->moduleLoader[$name]->toLoaded();
         }
     }
 
@@ -146,7 +146,7 @@ class ApplicationLoader
             $config = Config::loadConfig($configPath, $this->application->getConfig());
         }
         if ($config === null) {
-            $this->application->getModule()->merge($modules);
+            $this->application->getModules()->merge($modules);
         } else {
             $this->assignModuleWithStatusToApplication($modules, $config['loaded'] ?? [], $config['reachable'] ?? []);
         }

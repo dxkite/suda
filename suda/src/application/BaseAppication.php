@@ -264,7 +264,7 @@ class BaseAppication extends ApplicationContext
      *
      * @return  ModuleBag
      */ 
-    public function getModule():ModuleBag
+    public function getModules():ModuleBag
     {
         return $this->module;
     }

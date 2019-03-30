@@ -27,7 +27,7 @@ class TemplateAssetProccesser implements RequestProcessor
      */
     public function onRequest(Application $application, Request $request, Response $response)
     {
-        foreach ($application->getModule() as $name => $module) {
+        foreach ($application->getModules() as $name => $module) {
             $prefix = TemplateUtil::getAssetRoot($application, $name);
             $assetsPrefix = $prefix.'/'.$module->getUriSafeName().'/';
             if (strpos($request->getUri(), $assetsPrefix) === 0) {
