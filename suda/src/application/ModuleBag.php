@@ -70,13 +70,29 @@ class ModuleBag implements IteratorAggregate
      * @param string $path
      * @return \suda\application\Module|null
      */
-    public function guess(string $path):?Module {
+    public function guess(string $path):?Module
+    {
         foreach ($this->module as $module) {
             if (FileSystem::isOverflowPath($path, $module->getPath()) === false) {
                 return $module;
             }
         }
         return null;
+    }
+
+    /**
+     * 根据路径获取所在模块
+     *
+     * @param string $path
+     * @throws ApplicationException
+     * @return \suda\application\Module
+     */
+    public function getModuleFromPath(string $path):Module
+    {
+        if (($module = $this->guess($path)) !== null) {
+            return $module;
+        }
+        throw new ApplicationException(\sprintf('path %s not exist in any module', $path), ApplicationException::ERR_PATH_NOT_EXISTS_IN_MODULE);
     }
 
     /**
@@ -97,7 +113,8 @@ class ModuleBag implements IteratorAggregate
      *
      * @return Module[]
      */
-    public function all():array {
+    public function all():array
+    {
         return $this->module;
     }
 
