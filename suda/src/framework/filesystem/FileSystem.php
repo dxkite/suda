@@ -27,8 +27,8 @@ class FileSystem implements FileSystemInterface
     /**
      * 判断是否溢出路径
      *
-     * @param string $root
-     * @param string $target
+     * @param string $root 根目录
+     * @param string $target 溢出目录
      * @return boolean
      */
     public static function isOverflowPath(string $root, string $target)

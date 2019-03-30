@@ -73,7 +73,7 @@ class ModuleBag implements IteratorAggregate
     public function guess(string $path):?Module
     {
         foreach ($this->module as $module) {
-            if (FileSystem::isOverflowPath($path, $module->getPath()) === false) {
+            if (FileSystem::isOverflowPath($module->getPath(), $path) === false) {
                 return $module;
             }
         }
