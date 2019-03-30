@@ -68,23 +68,35 @@ class FileSystem implements FileSystemInterface
     {
         $writable = false;
         \set_error_handler(null);
-        if (DIRECTORY_SEPARATOR === '/' && ini_get('safe_mode') == false) {
+        if (DIRECTORY_SEPARATOR === '/' && ini_get('safe_mode') === 'On') {
             $writable = is_writable($path);
-        }
-        if (is_dir($path)) {
-            $path = rtrim($path, '/').'/'.md5(mt_rand(1, 100).mt_rand(1, 100));
-            if (($fp = fopen($path, 'ab')) === false) {
-                $writable = false;
-            } else {
-                fclose($fp);
-                chmod($path, 0777);
-                unlink($path);
-                $writable = true;
-            }
-        } elseif (($fp = fopen($path, 'ab')) === false) {
-            $writable = false;
+        } elseif (is_dir($path)) {
+            $writable = static::tryWriteDirectory($path);
+        } else {
+            $writable = static::tryWriteFile($path);
         }
         \restore_error_handler();
         return $writable;
+    }
+
+    protected static function tryWriteFile(string $path): bool
+    {
+        if (($fp = fopen($path, 'ab'))) {
+            fclose($fp);
+            return true;
+        }
+        return false;
+    }
+
+    protected static function tryWriteDirectory(string $path): bool
+    {
+        $path = rtrim($path, '/').'/'.md5(mt_rand(1, 100).mt_rand(1, 100));
+        if (($fp = fopen($path, 'ab')) === false) {
+            return false;
+        }
+        fclose($fp);
+        chmod($path, 0777);
+        unlink($path);
+        return true;
     }
 }

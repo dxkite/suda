@@ -6,10 +6,10 @@ use suda\framework\Request;
 use suda\application\Resource;
 use suda\application\Application;
 use suda\framework\filesystem\FileSystem;
+use suda\application\template\TemplateUtil;
 use suda\application\template\compiler\Compiler;
 use suda\application\template\CompilableTemplate;
 use suda\application\template\ModuleTemplateCompiler;
-use suda\application\processor\TemplateAssetProccesser;
 
 /**
  * 模块模板
@@ -71,13 +71,13 @@ class ModuleTemplateBase extends CompilableTemplate
             $this->module = $defaultModule;
         }
         $this->config = $this->getModuleConfig($this->module);
-        $this->uriName = TemplateAssetProccesser::getSafeUriName($this->application, $this->module);
+        $this->uriName = TemplateUtil::getSafeUriName($this->application, $this->module);
         $this->value = [];
     }
 
     protected function getModuleConfig(?string $module)
     {
-        return TemplateAssetProccesser::getConfig($this->application, $module);
+        return TemplateUtil::getConfig($this->application, $module);
     }
 
     protected function createCompiler():Compiler
@@ -109,12 +109,12 @@ class ModuleTemplateBase extends CompilableTemplate
 
     protected function getResource(?string $module): Resource
     {
-        return TemplateAssetProccesser::getResource($this->application, $this->module);
+        return TemplateUtil::getResource($this->application, $module ?? $this->module);
     }
 
     protected function getTemplatePath()
     {
-        return TemplateAssetProccesser::getTemplatePath($this->application);
+        return TemplateUtil::getTemplatePath($this->application);
     }
 
     protected function getStaticModulePrefix(?string $module = null)
@@ -123,7 +123,7 @@ class ModuleTemplateBase extends CompilableTemplate
             $module = $this->module;
         }
         $this->prepareStaticModuleSource($module);
-        $config = TemplateAssetProccesser::getConfig($this->application, $module);
+        $config = TemplateUtil::getConfig($this->application, $module);
         return $this->getModuleStaticAssetRoot($module) .'/'.$this->getModuleUriName($module). '/'.$config['static'];
     }
 
@@ -137,12 +137,12 @@ class ModuleTemplateBase extends CompilableTemplate
 
     protected function getModuleAssetRoot(?string $module)
     {
-        return TemplateAssetProccesser::getRequestAsset($this->application, $this->request, $module);
+        return TemplateUtil::getRequestAsset($this->application, $this->request, $module);
     }
 
     protected function getModuleStaticAssetRoot(?string $module)
     {
-        return TemplateAssetProccesser::getStaticRequestAsset($this->application, $this->request, $module);
+        return TemplateUtil::getStaticRequestAsset($this->application, $this->request, $module);
     }
 
     protected function prepareStaticModuleSource(?string $module)
