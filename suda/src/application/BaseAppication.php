@@ -9,6 +9,7 @@ use suda\application\LanguageBag;
 use suda\framework\loader\Loader;
 use suda\application\ApplicationContext;
 use suda\application\template\ModuleTemplate;
+use suda\application\exception\ApplicationException;
 
 
 
@@ -86,6 +87,20 @@ class BaseAppication extends ApplicationContext
     public function find(string $name):?Module
     {
         return $this->module->get($name);
+    }
+
+    /**
+     * 获取模块
+     *
+     * @param string $name
+     * @throws ApplicationException
+     * @return \suda\application\Module
+     */
+    public function get(string $name): Module {
+        if (($module = $this->find($name))!== null) {
+            return $module;
+        }
+        throw new ApplicationException(\sprintf('module %s not exist', $name), ApplicationException::ERR_MODULE_NAME);
     }
 
     /**

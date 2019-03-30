@@ -83,6 +83,7 @@ class ModuleBag implements IteratorAggregate
      * 获取模块
      *
      * @param string $name
+     * @throws ApplicationException
      * @return Module|null
      */
     public function get(string $name):?Module
@@ -122,6 +123,7 @@ class ModuleBag implements IteratorAggregate
      *
      * @param string $name
      * @param string|null $default
+     * @throws ApplicationException
      * @return array
      */
     public function info(string $name, ?string $default = null):array
@@ -143,6 +145,7 @@ class ModuleBag implements IteratorAggregate
      * 获取模块全名
      *
      * @param string $name
+     * @throws ApplicationException
      * @return string
      */
     public function getFullName(string $name):string
