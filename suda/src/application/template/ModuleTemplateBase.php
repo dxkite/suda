@@ -62,12 +62,13 @@ class ModuleTemplateBase extends CompilableTemplate
             $this->name = $name;
             $this->module = $defaultModule;
         }
-      
-        $this->config =  $this->getModuleConfig($this->module);
+
+        $this->config = $this->getModuleConfig($this->module);
         $this->value = [];
     }
 
-    protected function getModuleConfig(?string $module) {
+    protected function getModuleConfig(?string $module)
+    {
         $configPath = $this->getResource($module)->getConfigResourcePath($this->getTemplatePath().'/config');
         $config = [];
         if ($configPath !== null) {
@@ -104,11 +105,11 @@ class ModuleTemplateBase extends CompilableTemplate
         if (is_array($config) && array_key_exists('static-name', $config)) {
             return $config['static-name'];
         }
-        $static = $this->getModuleStaticPath($module);
-        if ($static) {
-            return substr(md5($static), 0, 8);
+        $module = $this->application->find($module);
+        if ($module !== null) {
+            return $module->getUriSafeName();
         }
-        return '#';
+        return 'application';
     }
 
     protected function getResource(?string $module): Resource
@@ -133,8 +134,9 @@ class ModuleTemplateBase extends CompilableTemplate
         return $this->getModuleAssetRoot($module) .'/'.$this->getModuleStaticName($module);
     }
 
-  
-    protected function getModuleAssetRoot(?string $module) {
+
+    protected function getModuleAssetRoot(?string $module)
+    {
         $config = $this->getModuleConfig($module);
         if (\array_key_exists('assets-prefix', $config)) {
             $prefix = $config['assets-prefix'] ;
@@ -154,10 +156,10 @@ class ModuleTemplateBase extends CompilableTemplate
             $to = $this->getModuleStaticOutpath($module);
             $time = sprintf('copy template static source %s => %s ', $from, $to);
             $this->application->debug()->time($time);
-            if (FileSystem::copyDir($from, $to)){
+            if (FileSystem::copyDir($from, $to)) {
                 $this->application->debug()->timeEnd($time);
                 static::$copyedStaticPaths[] = $static;
-            }else{
+            } else {
                 $this->application->debug()->warning('Failed: '.$time);
             }
         }

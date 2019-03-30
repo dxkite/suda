@@ -13,7 +13,7 @@ class Module
     const LOADED = 1;
     const REACHABLE = 2;
     const RUNNING = 3;
-    
+
     /**
      * 模块名
      *
@@ -79,7 +79,7 @@ class Module
      *
      * @return  string
      */
-    public function getVersion()
+    public function getVersion():string
     {
         return $this->version;
     }
@@ -89,7 +89,7 @@ class Module
      *
      * @return  string
      */
-    public function getName()
+    public function getName():string
     {
         return $this->name;
     }
@@ -99,9 +99,18 @@ class Module
      *
      * @return string
      */
-    public function getFullName()
+    public function getFullName():string
     {
         return $this->getName().':'.$this->getVersion();
+    }
+
+    /**
+     * 获取链接安全名
+     *
+     * @return string
+     */
+    public function getUriSafeName():string {
+        return $this->getName().'/'.$this->getVersion();
     }
 
     /**
@@ -179,7 +188,7 @@ class Module
      * Get 状态
      *
      * @return  int
-     */ 
+     */
     public function getStatus()
     {
         return $this->status;
