@@ -35,7 +35,7 @@ class FileSystem implements FileSystemInterface
     {
         $abslute = PathTrait::toAbsolutePath($target);
         $root = PathTrait::toAbsolutePath($root);
-        return strpos($abslute, $root) !== 0;
+        return strpos($abslute, $root.DIRECTORY_SEPARATOR) !== 0;
     }
 
     /**

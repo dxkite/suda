@@ -4,6 +4,7 @@ namespace suda\application;
 use ArrayIterator;
 use IteratorAggregate;
 use suda\application\Module;
+use suda\framework\filesystem\FileSystem;
 use suda\application\exception\ApplicationException;
 
 /**
@@ -32,6 +33,12 @@ class ModuleBag implements IteratorAggregate
      */
     protected $cache = [];
 
+    /**
+     * 添加模块
+     *
+     * @param \suda\application\Module $module
+     * @return void
+     */
     public function add(Module $module)
     {
         $name = $module->getName();
@@ -44,11 +51,32 @@ class ModuleBag implements IteratorAggregate
         $this->module[$name.':'.$version] = $module;
     }
 
+    /**
+     * 合并模块包
+     *
+     * @param ModuleBag $module
+     * @return void
+     */
     public function merge(ModuleBag $module)
     {
         $this->module = array_merge($this->module, $module->module);
         $this->knownsFullName = array_merge($this->knownsFullName, $module->knownsFullName);
         $this->cache = array_merge($this->cache, $module->cache);
+    }
+
+    /**
+     * 推测文件所在模块
+     *
+     * @param string $path
+     * @return \suda\application\Module|null
+     */
+    public function guess(string $path):?Module {
+        foreach ($this->module as $module) {
+            if (FileSystem::isOverflowPath($path, $module->getPath()) === false) {
+                return $module;
+            }
+        }
+        return null;
     }
 
     /**
