@@ -11,6 +11,7 @@ use suda\framework\runnable\Runnable;
 use suda\application\loader\ModuleLoader;
 use suda\application\loader\LanguageLoader;
 use suda\application\loader\ApplicationLoader;
+use suda\application\processor\TemplateAssetProccesser;
 use suda\application\processor\FileRequestProcessor;
 use suda\application\processor\TemplateRequestProcessor;
 use suda\application\exception\wrapper\ExceptionContentWrapper;
@@ -133,6 +134,9 @@ class Application extends BaseAppication
      */
     protected function defaultResponse(Application $application, Request $request, Response $response)
     {
+        if ((new TemplateAssetProccesser)->onRequest($application, $request, $response)) {
+            return;
+        }
         return $this->route->getDefaultRunnable()->run($request, $response);
     }
 

@@ -1,13 +1,15 @@
 <?php
 namespace suda\application;
 
+use ArrayIterator;
+use IteratorAggregate;
 use suda\application\Module;
 use suda\application\exception\ApplicationException;
 
 /**
  * 模块名
  */
-class ModuleBag
+class ModuleBag implements IteratorAggregate
 {
     /**
      * 模块
@@ -69,7 +71,12 @@ class ModuleBag
     public function all():array {
         return $this->module;
     }
-    
+
+    public function getIterator()
+    {
+        return new ArrayIterator($this->module);
+    }
+
     /**
      * 检测模块是否存在
      *
@@ -133,7 +140,7 @@ class ModuleBag
         }
         return $hasVersion?$name.':'.$version:end($this->knownsFullName[$name]);
     }
-    
+
     protected function getLikeName(string $name):string
     {
         $names = [];

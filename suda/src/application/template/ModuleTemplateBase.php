@@ -9,6 +9,7 @@ use suda\framework\filesystem\FileSystem;
 use suda\application\template\compiler\Compiler;
 use suda\application\template\CompilableTemplate;
 use suda\application\template\ModuleTemplateCompiler;
+use suda\application\processor\TemplateAssetProccesser;
 
 /**
  * 模块模板
@@ -70,21 +71,13 @@ class ModuleTemplateBase extends CompilableTemplate
             $this->module = $defaultModule;
         }
         $this->config = $this->getModuleConfig($this->module);
-        $this->uriName = $this->getSafeUriName($this->module);
+        $this->uriName = TemplateAssetProccesser::getSafeUriName($this->application, $this->module);
         $this->value = [];
     }
 
     protected function getModuleConfig(?string $module)
     {
-        $configPath = $this->getResource($module)->getConfigResourcePath($this->getTemplatePath().'/config');
-        $config = [];
-        if ($configPath !== null) {
-            $config = Config::loadConfig($configPath) ?? [];
-        }
-        if (!\array_key_exists('assets-prefix', $config)) {
-            $config['assets-prefix'] = rtrim(str_replace('\\', '/', dirname($this->request->getIndex())), '/').'/assets';
-        }
-        return $config;
+        return TemplateAssetProccesser::getConfig($this->application, $module);
     }
 
     protected function createCompiler():Compiler
@@ -95,47 +88,33 @@ class ModuleTemplateBase extends CompilableTemplate
 
     protected function getModuleStaticPath(?string $module)
     {
-        $name = $this->getModuleConfig($module)['static'] ?? 'static';
+        $name = $this->getModuleConfig($module)['static'];
         return $this->getResource($module)->getResourcePath($this->getTemplatePath().'/'.$name) ?? '';
     }
+ 
 
     protected function getModuleStaticOutpath(?string $module)
     {
-        $path = $this->getModuleConfig($module)['assets-public'] ?? \constant('SUDA_PUBLIC').'/assets/'. $this->getModuleStaticName($module);
+        $config = $this->getModuleConfig($module);
+        $path = $config['assets-path'].'/'. $this->getModuleUriName($module) .'/'.$config['static'];
         FileSystem::make($path);
         return $path;
     }
 
-    protected function getModuleStaticName(?string $module)
+    protected function getModuleUriName(?string $module)
     {
         $config = $this->getModuleConfig($module);
-        if (is_array($config) && array_key_exists('static-name', $config)) {
-            return $config['static-name'];
-        }
-        return $this->getSafeUriName($module);
+        return $config['uri-name'];
     }
 
     protected function getResource(?string $module): Resource
     {
-        if ($module !== null && ($moduleObj = $this->application->find($module))) {
-            return $moduleObj->getResource();
-        }
-        return $this->application->getResource();
-    }
-
-    protected function getSafeUriName(?string $module) {
-        if ($module !== null) {
-            $moduleObj = $this->application->find($module);
-            if ($moduleObj !== null) {
-                return $moduleObj->getUriSafeName();
-            }
-        }
-        return 'application';
+        return TemplateAssetProccesser::getResource($this->application, $this->module);
     }
 
     protected function getTemplatePath()
     {
-        return 'template/'.$this->application->getStyle();
+        return TemplateAssetProccesser::getTemplatePath($this->application);
     }
 
     protected function getStaticModulePrefix(?string $module = null)
@@ -144,21 +123,26 @@ class ModuleTemplateBase extends CompilableTemplate
             $module = $this->module;
         }
         $this->prepareStaticModuleSource($module);
-        return $this->getModuleAssetRoot($module) .'/'.$this->getModuleStaticName($module);
+        $config = TemplateAssetProccesser::getConfig($this->application, $module);
+        return $this->getModuleStaticAssetRoot($module) .'/'.$this->getModuleUriName($module). '/'.$config['static'];
     }
 
+    protected function getModulePrefix(?string $module = null)
+    {
+        if ($module === null) {
+            $module = $this->module;
+        }
+        return $this->getModuleAssetRoot($module) .'/'.$this->getModuleUriName($module);
+    }
 
     protected function getModuleAssetRoot(?string $module)
     {
-        $config = $this->getModuleConfig($module);
-        if (\array_key_exists('assets-prefix', $config)) {
-            $prefix = $config['assets-prefix'] ;
-        } elseif (defined('SUDA_ASSETS')) {
-            $prefix = \constant('SUDA_ASSETS');
-        } else {
-            $prefix = '/assets';
-        }
-        return $prefix;
+        return TemplateAssetProccesser::getRequestAsset($this->application, $this->request, $module);
+    }
+
+    protected function getModuleStaticAssetRoot(?string $module)
+    {
+        return TemplateAssetProccesser::getStaticRequestAsset($this->application, $this->request, $module);
     }
 
     protected function prepareStaticModuleSource(?string $module)

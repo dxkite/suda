@@ -17,8 +17,9 @@ class Resource
      * @var array
      */
     protected $resource;
-    
-    public function __construct(array $resource = []) {
+
+    public function __construct(array $resource = [])
+    {
         $this->resource = $resource;
     }
 
@@ -56,13 +57,15 @@ class Resource
      * 获取资源文件路径
      *
      * @param string $path
+     * @param string $limitPath 父级溢出
      * @return string|null
      */
-    public function getResourcePath(string $path):?string
+    public function getResourcePath(string $path, string $limitPath = null):?string
     {
         foreach ($this->resource as $root) {
             $target = $root.'/'.$path;
-            if (FileSystem::exist($target)) {
+            $limitPath = $limitPath ? $root.'/'.$limitPath : $root;
+            if (FileSystem::exist($target) && FileSystem::isOverflowPath($limitPath, $target) === false) {
                 return $target;
             }
         }

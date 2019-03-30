@@ -62,7 +62,7 @@ class CompilableTemplate extends RawTemplate
      * @var array
      */
     protected static $render = [];
-    
+
     /**
      * 编译器
      *

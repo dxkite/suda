@@ -18,4 +18,10 @@ class ModuleTemplateCommand extends Command
         $content = strlen(trim($content)) === 0 ?'()':$content;
         return '<?php echo $this->getStaticModulePrefix'.$content.'; ?>';
     }
+
+    protected function parseFile($content)
+    {
+        $content = strlen(trim($content)) === 0 ?'()':$content;
+        return '<?php echo $this->getModulePrefix'.$content.'; ?>';
+    }
 }
