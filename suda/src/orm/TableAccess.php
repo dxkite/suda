@@ -201,13 +201,15 @@ class TableAccess extends QueryAccess
         foreach ($data as $index => $row) {
             $row = $this->fetchOneProccess($row);
             $row = $this->middleware->outputRow($row);
-            $key = $statement->getWithKey();
-            if ($key === null) {
-                $data[$index] = $row;
-            } else {
-                unset($data[$index]);
-                $data[$row[$key]] = $row;
+
+        }
+        $key = $statement->getWithKey();
+        if ($key !== null) {
+            $target = [];
+            foreach ($data as $key => $value) {
+                $target[$value[$withKey]] = $value;
             }
+            return $target;
         }
         return $data;
     }
