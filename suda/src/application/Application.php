@@ -142,7 +142,7 @@ class Application extends BaseAppication
     protected function createResponse(?MatchResult $result, Request $request, Response $response)
     {
         if (SUDA_DEBUG) {
-            $response->setHeader('x-route', $result->getName());
+            $response->setHeader('x-route', $result === null?'default':$result->getName());
         }
         if ($result === null) {
             $content = $this->defaultResponse($this, $request, $response);

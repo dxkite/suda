@@ -20,7 +20,7 @@ class ModuleTemplate extends ModuleTemplateBase
     {
         parent::__construct($name, $application, $request, $defaultModule);
     }
-    
+
     protected function getSourcePath()
     {
         $subfix = $this->config['subfix'] ?? '.tpl.html';
@@ -29,7 +29,7 @@ class ModuleTemplate extends ModuleTemplateBase
 
     protected function getPath()
     {
-        $output = $this->config['output'] ?? \constant('SUDA_DATA').'/template/'. str_replace([':','/','\\'], '-', $this->module);
+        $output = $this->config['output'] ?? \constant('SUDA_DATA').'/template/'. $this->uriName;
         FileSystem::make($output);
         return $output .'/'. $this->name.'.php';
     }

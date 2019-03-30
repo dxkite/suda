@@ -23,6 +23,13 @@ class ModuleTemplateBase extends CompilableTemplate
     protected $module = null;
 
     /**
+     * 安全URI路径
+     *
+     * @var string
+     */
+    protected $uriName = 'application';
+
+    /**
      * 模板名
      *
      * @var string
@@ -50,7 +57,7 @@ class ModuleTemplateBase extends CompilableTemplate
      */
     protected $request;
 
-    public function __construct(string $name, Application $application, Request $request, ?string $defaultModule = '')
+    public function __construct(string $name, Application $application, Request $request, ?string $defaultModule = null)
     {
         $this->application = $application;
         $this->request = $request;
@@ -62,8 +69,8 @@ class ModuleTemplateBase extends CompilableTemplate
             $this->name = $name;
             $this->module = $defaultModule;
         }
-
         $this->config = $this->getModuleConfig($this->module);
+        $this->uriName = $this->getSafeUriName($this->module);
         $this->value = [];
     }
 
@@ -105,11 +112,7 @@ class ModuleTemplateBase extends CompilableTemplate
         if (is_array($config) && array_key_exists('static-name', $config)) {
             return $config['static-name'];
         }
-        $module = $this->application->find($module);
-        if ($module !== null) {
-            return $module->getUriSafeName();
-        }
-        return 'application';
+        return $this->getSafeUriName($module);
     }
 
     protected function getResource(?string $module): Resource
@@ -118,6 +121,16 @@ class ModuleTemplateBase extends CompilableTemplate
             return $moduleObj->getResource();
         }
         return $this->application->getResource();
+    }
+
+    protected function getSafeUriName(?string $module) {
+        if ($module !== null) {
+            $moduleObj = $this->application->find($module);
+            if ($moduleObj !== null) {
+                return $moduleObj->getUriSafeName();
+            }
+        }
+        return 'application';
     }
 
     protected function getTemplatePath()
