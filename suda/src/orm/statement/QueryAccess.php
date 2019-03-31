@@ -147,7 +147,7 @@ class QueryAccess
      */
     protected function createPDOStatement(Connection $source, Statement $statement): PDOStatement
     {
-        $query = $this->autoPrefix($statement->getString());
+        $query = $this->prefix($statement->getString());
         if ($statement->scroll() === true) {
             $stmt = $source->getPdo()->prepare($query, [PDO::ATTR_CURSOR => PDO::CURSOR_SCROLL]);
         } else {
@@ -194,7 +194,7 @@ class QueryAccess
             $statement->setStatement($stmt);
             $start = \microtime(true);
             $status = $stmt->execute();
-            $connection->getObserver()->observe($statement, \microtime(true) - $start, $status);
+            $connection->getObserver()->observe($this, $statement, \microtime(true) - $start, $status);
             if ($status === false) {
                 throw new SQLException(implode(':', $stmt->errorInfo()), intval($stmt->errorCode()));
             }
@@ -232,7 +232,7 @@ class QueryAccess
      * @param string $query
      * @return string
      */
-    protected function autoPrefix(string $query):string
+    public function prefix(string $query):string
     {
         if ($prefix = $this->connection->getConfig('prefix')) {
             // _:table 前缀控制

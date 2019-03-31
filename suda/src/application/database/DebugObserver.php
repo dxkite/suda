@@ -3,6 +3,7 @@ namespace suda\application\database;
 
 use suda\framework\Debugger;
 use suda\orm\statement\Statement;
+use suda\orm\statement\QueryAccess;
 use suda\orm\connection\observer\Observer;
 
 class DebugObserver implements Observer
@@ -19,11 +20,16 @@ class DebugObserver implements Observer
         $this->debug = $debug;
     }
 
-    public function observe(Statement $statement, $timeSpend, bool $result)
+    public function observe(QueryAccess $access, Statement $statement, $timeSpend, bool $result)
     {
-        $query = $statement->getString();
+        $query = $access->prefix($statement->getString());
         $status = $result ? 'OK' : 'Err';
-        $effect = $statement->getStatement()->rowCount();
-        $this->debug->info('query ['.$status.'] '.$query.' '. number_format($timeSpend, 5).'s and effect '. $effect . ' rows');
+        if ($result) {
+            $effect = $statement->getStatement()->rowCount();
+            $this->debug->info('query ['.$status.'] '.$query.' '. number_format($timeSpend, 5).'s and effect '. $effect . ' rows');
+        } else {
+            $this->debug->error('query ['.$status.'] '.$query.' '. number_format($timeSpend, 5).'s');
+            $this->debug->error('query ['.$status.'] '.\implode(':', $statement->getStatement()->errorInfo()));
+        }
     }
 }

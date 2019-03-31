@@ -72,6 +72,16 @@ class TableAccess extends QueryAccess
     }
 
     /**
+     * 获取表名
+     *
+     * @return string
+     */
+    public function getName():string
+    {
+        return $this->struct->getName();
+    }
+
+    /**
      * 获取最后一次插入的主键ID（用于自增值
      *
      * @param string $name
@@ -229,9 +239,16 @@ class TableAccess extends QueryAccess
             if ($data === false) {
                 return null;
             }
+            if ($statement instanceof QueryStatement) {
+                return $data;
+            }
             return $this->fetchOneProccess($data);
         } elseif ($statement->isFetchAll()) {
-            return $this->fetchAllProccess($statement, $statement->getStatement()->fetchAll(PDO::FETCH_ASSOC));
+            $data = $statement->getStatement()->fetchAll(PDO::FETCH_ASSOC);
+            if ($statement instanceof QueryStatement) {
+                return $data;
+            }
+            return $this->fetchAllProccess($statement, $data);
         }
     }
 
