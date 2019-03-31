@@ -4,6 +4,8 @@ namespace suda\orm;
 use suda\orm\TableAccess;
 use suda\orm\struct\Fields;
 use suda\orm\statement\Statement;
+use suda\orm\statement\ReadStatement;
+use suda\orm\statement\WriteStatement;
 
 /**
  * 提供了对数据表的操作
@@ -89,6 +91,27 @@ class TableOperator
      */
     public function run(Statement $statement) {
         return $this->access->run($statement);
+    }
+    /**
+     * 写
+     *
+     * @param mixed ...$args
+     * @return WriteStatement
+     */
+    public function write(...$args):WriteStatement
+    {
+        return $this->access->write(...$args);
+    }
+
+    /**
+     * 读
+     *
+     * @param mixed ...$args
+     * @return ReadStatement
+     */
+    public function read(...$args):ReadStatement
+    {
+        return $this->access->read(...$args);
     }
 
     /**
