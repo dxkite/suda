@@ -2,7 +2,7 @@
     "master": {
         "enable": true,
         "prefix": "dx_",
-        "mode": "master",
+        "mode": "read+write",
         "host": "127.0.0.1",
         "port": 3306,
         "name": "suda_system",

@@ -4,18 +4,19 @@ namespace suda\orm\struct;
 use suda\orm\TableAccess;
 use suda\orm\TableStruct;
 
-class QueryStatement extends \suda\orm\statement\ReadStatement
+class QueryStatement extends \suda\orm\statement\QueryStatement
 {
+    /**
+     * 访问操作
+     *
+     * @var TableAccess
+     */
     protected $access;
-
-
-    public function __construct(TableAccess $access)
+    
+    public function __construct(TableAccess $access, ...$args)
     {
         $this->access = $access;
-        parent::__construct(
-            $access->getSource()->write()->rawTableName($access->getStruct()->getName()),
-            $access->getStruct()
-        );
+        parent::__construct(...$args);
     }
     
     /**

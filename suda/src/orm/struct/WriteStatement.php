@@ -2,12 +2,15 @@
 namespace suda\orm\struct;
 
 use suda\orm\TableAccess;
-use suda\orm\TableStruct;
 
 class WriteStatement extends \suda\orm\statement\WriteStatement
 {
+    /**
+     * 访问操作
+     *
+     * @var TableAccess
+     */
     protected $access;
-
 
     public function __construct(TableAccess $access)
     {

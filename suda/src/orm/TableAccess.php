@@ -115,25 +115,27 @@ class TableAccess extends QueryAccess
     /**
      * 写
      *
-     * @param mixed ...$args
-     * @return WriteStatement
+     * @param string|array $name
+     * @param mixed $value
+     * @return \suda\orm\struct\WriteStatement
      */
-    public function write(...$args):WriteStatement
+    public function write($name, $value = null):WriteStatement
     {
-        return (new WriteStatement($this))->write(...$args);
+        return (new WriteStatement($this))->write($name, $value);
     }
 
 
     /**
      * 删
      *
-     * @param mixed ...$args
-     * @return WriteStatement
+     * @param string|array $where
+     * @param array $whereParameter
+     * @return \suda\orm\struct\WriteStatement
      */
-    public function delete(...$args):WriteStatement
+    public function delete($where = null, array $whereParameter = []):WriteStatement
     {
-        if (count($args) > 0) {
-            return (new WriteStatement($this))->delete()->where(...$args);
+        if ($where !== null) {
+            return (new WriteStatement($this))->delete()->where($where, $whereParameter);
         }
         return (new WriteStatement($this))->delete();
     }
@@ -157,7 +159,7 @@ class TableAccess extends QueryAccess
      */
     public function query(...$args):QueryStatement
     {
-        return (new QueryStatement(...$args));
+        return (new QueryStatement($this, ...$args));
     }
 
     /**

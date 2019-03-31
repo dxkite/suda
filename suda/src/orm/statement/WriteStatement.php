@@ -64,7 +64,7 @@ class WriteStatement extends Statement
      * 写数据
      *
      * @param string|array $name
-     * @param array $value
+     * @param mixed $value
      * @return self
      */
     public function write($name, $value = null)
