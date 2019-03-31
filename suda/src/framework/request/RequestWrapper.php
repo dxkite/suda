@@ -367,4 +367,18 @@ class RequestWrapper
         }
         return $this->request->cookies()[$name] ?? $default;
     }
+
+    /**
+     * 获取服务器变量
+     *
+     * @param string $name
+     * @param mixed $default
+     * @return mixed
+     */
+    public function getServer(string $name = null, $default = null) {
+        if ($name === null) {
+            return $this->request->server();
+        }
+        return $this->request->server()[$name] ?? $default;
+    }
 }
