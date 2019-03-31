@@ -263,7 +263,7 @@ class Cookie implements \JsonSerializable
 
         if ($this->expire !== 0) {
             $time = $this->fulltime ? $this->expire : time() + $this->expire;
-            $dateTime = \DateTime::createFromFormat('U', $this->expire, new \DateTimeZone('GMT'));
+            $dateTime = \DateTime::createFromFormat('U',  $time , new \DateTimeZone('GMT'));
             $cookie .= '; expires='.str_replace('+0000', '', $dateTime->format('D, d M Y H:i:s T'));
         }
 

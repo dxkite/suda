@@ -23,6 +23,7 @@ class DebugObserver implements Observer
     {
         $query = $statement->getString();
         $status = $result ? 'OK' : 'Err';
-        $this->debug->info('query ['.$status.'] '.$query.' '. number_format($timeSpend, 5).'s');
+        $effect = $statement->getStatement()->rowCount();
+        $this->debug->info('query ['.$status.'] '.$query.' '. number_format($timeSpend, 5).'s and effect '. $effect . ' rows');
     }
 }

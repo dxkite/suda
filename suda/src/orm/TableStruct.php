@@ -15,7 +15,7 @@ class TableStruct implements ArrayAccess, IteratorAggregate
      * @var string
      */
     protected $name;
-
+    
     /**
      * 数据表列
      *
@@ -100,7 +100,7 @@ class TableStruct implements ArrayAccess, IteratorAggregate
      * Get 数据表名
      *
      * @return  string
-     */ 
+     */
     public function getName():string
     {
         return $this->name;
@@ -110,9 +110,14 @@ class TableStruct implements ArrayAccess, IteratorAggregate
      * Get 数据表列
      *
      * @return  Fields
-     */ 
+     */
     public function getFields():Fields
     {
         return $this->fields;
+    }
+
+    public function toArray():array
+    {
+        return $this->data;
     }
 }
