@@ -94,7 +94,7 @@ class WriteStatement extends Statement
     }
 
     /**
-     * 返回影响行数
+     * 返回是否成功
      *
      * @return self
      */
@@ -104,7 +104,7 @@ class WriteStatement extends Statement
     }
 
     /**
-     * 返回影响行数
+     * 返回ID
      *
      * @return self
      */

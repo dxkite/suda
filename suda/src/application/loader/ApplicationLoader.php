@@ -91,7 +91,7 @@ class ApplicationLoader
         if ($dataSourceConfigPath !== null) {
             $dataSourceConfig = Config::loadConfig($dataSourceConfigPath);
             foreach ($dataSourceConfig as $name => $config) {
-                $this->addDataSource($dataSource, $observer, $name, $config['type'] ?? 'mysql', $config['mode'] ?? 'master', $config);
+                $this->addDataSource($dataSource, $observer, $name, $config['type'] ?? 'mysql', $config['mode'] ?? '', $config);
             }
         }
         return $dataSource;
@@ -102,10 +102,13 @@ class ApplicationLoader
         $mode = \strtolower($mode);
         $data = DataSource::new($type, $config, $name);
         $data->setObserver($observer);
-        if (strpos($mode, 'read') !== false || strpos($mode, 'slave') !== false) {
-            $source->addRead($data);
-        } elseif (strpos($mode, 'write') !== false || strpos($mode, 'master') !== false) {
-            $source->addWrite($data);
+        if (strlen($mode) > 0) {
+            if (strpos($mode, 'read') !== false || strpos($mode, 'slave') !== false) {
+                $source->addRead($data);
+            }
+            if (strpos($mode, 'write') !== false || strpos($mode, 'master') !== false) {
+                $source->addWrite($data);
+            }
         } else {
             $source->add($data);
         }

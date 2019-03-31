@@ -188,10 +188,10 @@ class HTTPResponse implements Response
      */
     protected function end()
     {
-        $this->sended = true;
-        $this->sendHeaders();
         $this->sendCookies();
+        $this->sendHeaders();
         $this->sendData();
+        $this->sended = true;
     }
 
     /**
@@ -201,7 +201,7 @@ class HTTPResponse implements Response
      */
     protected function sendHeaders()
     {
-        if (\headers_sent()) {
+        if ($this->sended) {
             return $this;
         }
         foreach ($this->header->all() as $name => $values) {
@@ -220,11 +220,11 @@ class HTTPResponse implements Response
      */
     protected function sendCookies()
     {
-        if (\headers_sent()) {
+        if ($this->sended) {
             return $this;
         }
         foreach ($this->cookie as $cookie) {
-            $cookie->send();
+            $cookie->send($this);
         }
         return $this;
     }

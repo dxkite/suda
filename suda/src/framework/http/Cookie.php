@@ -1,6 +1,8 @@
 <?php
 namespace suda\framework\http;
 
+use suda\framework\http\Response;
+
 class Cookie implements \JsonSerializable
 {
     /**
@@ -244,11 +246,9 @@ class Cookie implements \JsonSerializable
      *
      * @return void
      */
-    public function send()
+    public function send(Response $response)
     {
-        $time = $this->fulltime ? $this->expire : time() + $this->expire;
-        $expire = $this->session ? 0 :  $time;
-        setcookie($this->name, $this->value, $expire, $this->path, $this->domain, $this->secure, $this->httpOnly);
+        $response->header('Set-Cookie', $this);
     }
 
     /**
@@ -256,8 +256,40 @@ class Cookie implements \JsonSerializable
      *
      * @return string
      */
+
     public function __toString()
     {
-        return $this->name .'='.$this->value;
+        $cookie = sprintf('%s=%s', $this->name, $this->value);
+
+        if ($this->expire !== 0) {
+            $time = $this->fulltime ? $this->expire : time() + $this->expire;
+            $dateTime = \DateTime::createFromFormat('U', $this->expire, new \DateTimeZone('GMT'));
+            $cookie .= '; expires='.str_replace('+0000', '', $dateTime->format('D, d M Y H:i:s T'));
+        }
+
+        if ($this->domain !== null) {
+            $cookie .= '; domain='.$this->domain;
+        }
+
+        if ($this->path) {
+            $cookie .= '; path='.$this->path;
+        }
+
+        if ($this->secure) {
+            $cookie .= '; secure';
+        }
+
+        if ($this->httpOnly) {
+            $cookie .= '; httponly';
+        }
+        return $cookie;
+    }
+
+    public function jsonSerialize()
+    {
+        return [
+            'name' => $this->name,
+            'value' => $this->value,
+        ];
     }
 }

@@ -148,16 +148,18 @@ class Response extends HTTPResponse
     }
 
     /**
-    * 设置 Cookie
-    *
-    * @param  Cookie  $cookie  Cookie
-    *
-    * @return  self
-    */
-    public function setCookie(Cookie $cookie)
+     * 设置 Cookie
+     *
+     * @param string $name
+     * @param string $value
+     * @param integer $expire
+     * @return \suda\framework\http\Cookie
+     */
+    public function setCookie(string $name, string $value, int $expire = 0):Cookie
     {
+        $cookie = new Cookie($name, $value, $expire);
         $this->cookie($cookie);
-        return $this;
+        return $cookie;
     }
 
     /**

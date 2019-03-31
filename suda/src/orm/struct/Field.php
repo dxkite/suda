@@ -25,7 +25,7 @@ class Field
     protected $default;
     protected $hasDefault;
     
-    protected $null; // isNullable
+    protected $null = true; // isNullable
     protected $attribute; // binary unsigned
     protected $collation;
     protected $tableName;

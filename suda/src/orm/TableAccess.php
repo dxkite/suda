@@ -223,7 +223,11 @@ class TableAccess extends QueryAccess
     protected function fetchResult(Statement $statement)
     {
         if ($statement->isFetchOne()) {
-            return $this->fetchOneProccess($statement->getStatement()->fetch(PDO::FETCH_ASSOC));
+            $data = $statement->getStatement()->fetch(PDO::FETCH_ASSOC);
+            if ($data === false) {
+                return null;
+            }
+            return $this->fetchOneProccess($data);
         } elseif ($statement->isFetchAll()) {
             return $this->fetchAllProccess($statement, $statement->getStatement()->fetchAll(PDO::FETCH_ASSOC));
         }

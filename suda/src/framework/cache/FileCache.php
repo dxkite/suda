@@ -60,7 +60,8 @@ class FileCache implements Cache
             $path = $this->getFilePath($name);
             $value = FileSystem::get($path);
             list($time, $value) = explode('|', $value, 2);
-            if (time() < intval($time)) {
+            $time = intval($time);
+            if (time() < $time || $time === 0) {
                 return unserialize($value);
             } else {
                 $this->delete($path);

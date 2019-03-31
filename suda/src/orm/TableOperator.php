@@ -133,7 +133,7 @@ class TableOperator
 
     protected function preparePrimaryKey() {
         foreach ($this->access->getStruct()->getFields() as $name => $field) {
-            if ($field->isPrimaryKey()) {
+            if ($field->isPrimary()) {
                 $this->primaryKey[$name] = $field;
             }
         }
