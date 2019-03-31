@@ -88,7 +88,7 @@ class WriteStatement extends Statement
      *
      * @return self
      */
-    public function rows() {
+    public function getRows() {
         $this->returnType = WriteStatement::RET_ROWS;
         return $this;
     }
@@ -98,7 +98,7 @@ class WriteStatement extends Statement
      *
      * @return self
      */
-    public function isOk() {
+    public function getOk() {
         $this->returnType = WriteStatement::RET_BOOL;
         return $this;
     }
@@ -108,7 +108,7 @@ class WriteStatement extends Statement
      *
      * @return self
      */
-    public function id() {
+    public function getId() {
         $this->returnType = WriteStatement::RET_LAST_INSERT_ID;
         return $this;
     }

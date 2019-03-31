@@ -25,29 +25,6 @@ class QueryStatement extends Statement
         $this->fetch = self::FETCH_ONE;
     }
 
-    
-    /**
-     * 取1
-     *
-     * @return self
-     */
-    public function one()
-    {
-        $this->fetch();
-        return $this;
-    }
-
-    /**
-     * 取全部
-     *
-     * @return self
-     */
-    public function all()
-    {
-        $this->fetchAll();
-        return $this;
-    }
-
     /**
      * 取1
      *

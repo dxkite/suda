@@ -45,9 +45,9 @@ class QueryAccess
      * 获取最后一次插入的主键ID（用于自增值
      *
      * @param string $name
-     * @return null|int 则获取失败，整数则获取成功
+     * @return string 则获取失败，整数则获取成功
      */
-    public function lastInsertId(string $name = null):?int
+    public function lastInsertId(string $name = null):string
     {
         return $this->connection->lastInsertId($name);
     }

@@ -7,13 +7,13 @@ use suda\orm\Binder;
 use suda\orm\DataSource;
 use suda\orm\TableStruct;
 use suda\orm\statement\Statement;
+use suda\orm\struct\ReadStatement;
 use suda\orm\connection\Connection;
 use suda\orm\middleware\Middleware;
 use suda\orm\statement\QueryAccess;
+use suda\orm\struct\QueryStatement;
+use suda\orm\struct\WriteStatement;
 use suda\orm\exception\SQLException;
-use suda\orm\statement\ReadStatement;
-use suda\orm\statement\QueryStatement;
-use suda\orm\statement\WriteStatement;
 use suda\orm\middleware\NullMiddleware;
 
 /**
@@ -75,9 +75,9 @@ class TableAccess extends QueryAccess
      * 获取最后一次插入的主键ID（用于自增值
      *
      * @param string $name
-     * @return null|int 则获取失败，整数则获取成功
+     * @return string 则获取失败，整数则获取成功
      */
-    public function lastInsertId(string $name = null):?int
+    public function lastInsertId(string $name = null):string
     {
         return $this->source->write()->lastInsertId($name);
     }
@@ -120,7 +120,7 @@ class TableAccess extends QueryAccess
      */
     public function write(...$args):WriteStatement
     {
-        return (new WriteStatement($this->source->write()->rawTableName($this->struct->getName()), $this->struct))->write(...$args);
+        return (new WriteStatement($this))->write(...$args);
     }
 
 
@@ -133,9 +133,9 @@ class TableAccess extends QueryAccess
     public function delete(...$args):WriteStatement
     {
         if (count($args) > 0) {
-            return (new WriteStatement($this->source->write()->rawTableName($this->struct->getName()), $this->struct))->delete()->where(...$args);
+            return (new WriteStatement($this))->delete()->where(...$args);
         }
-        return (new WriteStatement($this->source->write()->rawTableName($this->struct->getName()), $this->struct))->delete();
+        return (new WriteStatement($this))->delete();
     }
 
     /**
@@ -146,14 +146,14 @@ class TableAccess extends QueryAccess
      */
     public function read(...$args):ReadStatement
     {
-        return (new ReadStatement($this->source->write()->rawTableName($this->struct->getName()), $this->struct))->want(...$args);
+        return (new ReadStatement($this))->want(...$args);
     }
 
     /**
      * 原始查询
      *
      * @param mixed ...$args
-     * @return ReadStatement
+     * @return QueryStatement
      */
     public function query(...$args):QueryStatement
     {

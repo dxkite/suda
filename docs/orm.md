@@ -26,8 +26,8 @@ $table->middleware($middleware); // 数据输入/输出之前处理
 
 try {
     $table->begin();
-    $table->run($table->read('id','name')->where('id = ?', $id)->limit(1, 10)->one());
-    $table->run($table->write('name', 'dxkite')->where('id = ?', $id));
+    $table->read('id','name')->where('name = ?', $name)->limit(1, 10)->all();
+    $table->write('name', 'dxkite')->where('id = ?', $id)->ok();
     $table->commit();
 } catch (SQLException $e) {
     $table->rollBack();

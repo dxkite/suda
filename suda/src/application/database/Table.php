@@ -4,7 +4,6 @@ namespace suda\application\database;
 use suda\orm\DataSource;
 use suda\orm\TableAccess;
 use suda\orm\TableStruct;
-use suda\orm\TableOperator;
 use suda\application\Application;
 use suda\orm\middleware\Middleware;
 use suda\application\database\TableMiddlewareTrait;
@@ -15,7 +14,7 @@ use suda\application\database\TableMiddlewareTrait;
  * 用于提供对数据表的操作
  *
  */
-abstract class Table extends TableOperator implements Middleware
+abstract class Table extends TableAccess implements Middleware
 {
     use TableMiddlewareTrait;
 
@@ -39,7 +38,7 @@ abstract class Table extends TableOperator implements Middleware
 
     public function __construct(string $tableName)
     {
-        parent::__construct(new TableAccess($this->initStruct($tableName), static::$application->getDataSource(), $this));
+        parent::__construct($this->initStruct($tableName), static::$application->getDataSource(), $this);
     }
 
     abstract public function onCreateStruct(TableStruct $table):TableStruct;

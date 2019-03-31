@@ -113,14 +113,14 @@ abstract class Connection
      * 获取最后一次插入的主键ID（用于自增值
      *
      * @param string|null $name
-     * @return null|int
+     * @return string
      */
-    public function lastInsertId(?string $name = null):?int
+    public function lastInsertId(?string $name = null):string
     {
         if (null === $name) {
-            return $this->pdo->lastInsertId()?:null;
+            return $this->pdo->lastInsertId();
         } else {
-            return $this->pdo->lastInsertId($name)?:null;
+            return $this->pdo->lastInsertId($name);
         }
     }
 
