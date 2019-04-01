@@ -11,8 +11,6 @@ use suda\application\ApplicationContext;
 use suda\application\template\ModuleTemplate;
 use suda\application\exception\ApplicationException;
 
-
-
 /**
  * 基础应用程序
  */
@@ -96,8 +94,9 @@ class BaseAppication extends ApplicationContext
      * @throws ApplicationException
      * @return \suda\application\Module
      */
-    public function get(string $name): Module {
-        if (($module = $this->find($name))!== null) {
+    public function get(string $name): Module
+    {
+        if (($module = $this->find($name)) !== null) {
             return $module;
         }
         throw new ApplicationException(\sprintf('module %s not exist', $name), ApplicationException::ERR_MODULE_NAME);
@@ -156,77 +155,6 @@ class BaseAppication extends ApplicationContext
     }
 
     /**
-     * 获取URL
-     *
-     * @param \suda\framework\Request $request
-     * @param string $name
-     * @param array $parameter
-     * @param boolean $allowQuery
-     * @param string|null $default
-     * @return string|null
-     */
-    public function getUrl(Request $request, string $name, array $parameter = [], bool $allowQuery = true, ?string $default = null):?string
-    {
-        $url = $this->route->create($this->getFullModuleSource($name, $default), $parameter, $allowQuery);
-        return $this->getUrlIndex($request).'/'.ltrim($url, '/');
-    }
-
-    /**
-     * 获取URL索引
-     *
-     * @param \suda\framework\Request $request
-     * @return string
-     */
-    protected function getUrlIndex(Request $request):string
-    {
-        $indexs = $this->conf('indexs') ?? [ 'index.php' ];
-        $index = ltrim($request->getIndex(), '/');
-        if (!\in_array($index, $indexs)) {
-            return $index;
-        }
-        return '';
-    }
-
-    /**
-     * 获取模板页面
-     *
-     * @param string $name
-     * @param \suda\framework\Request $request
-     * @param string|null $default
-     * @return \suda\application\template\ModuleTemplate
-     */
-    public function getTemplate(string $name, Request $request, ?string $default = null): ModuleTemplate
-    {
-        if ($default === null && $this->running) {
-            $default = $this->running->getFullName();
-        }
-        return new ModuleTemplate($this->getFullModuleSource($name, $default), $this, $request, $default);
-    }
-
-    /**
-     * 获取模板下的资源名
-     *
-     * @param string $name
-     * @param string|null $default
-     * @return string
-     */
-    protected function getFullModuleSource(string $name, ?string $default = null):string
-    {
-        if (strpos($name, ':') > 0) {
-            $dotpos = \strrpos($name, ':');
-            $module = substr($name, 0, $dotpos);
-            $name = substr($name, $dotpos + 1);
-            if ($moduleObj = $this->find($module)) {
-                return $moduleObj->getFullName().':'.$name;
-            }
-        }
-        if ($default !== null && ($moduleObj = $this->find($default))) {
-            return $moduleObj->getFullName().':'.$name;
-        }
-        return $name;
-    }
-
-    /**
      * Get 字符串包
      *
      * @return  LanguageBag
@@ -278,7 +206,7 @@ class BaseAppication extends ApplicationContext
      * Get 模块集合
      *
      * @return  ModuleBag
-     */ 
+     */
     public function getModules():ModuleBag
     {
         return $this->module;
@@ -290,7 +218,7 @@ class BaseAppication extends ApplicationContext
      * @param  ModuleBag  $module  模块集合
      *
      * @return  self
-     */ 
+     */
     public function setModule(ModuleBag $module)
     {
         $this->module = $module;

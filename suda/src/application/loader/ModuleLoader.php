@@ -189,18 +189,19 @@ class ModuleLoader
             ]);
             if ($routeConfig !== null) {
                 $prefix = $this->module->getConfig('route-prefix.'.$groupName, '');
-                $this->loadRouteConfig($prefix, $routeConfig);
+                $this->loadRouteConfig($prefix, $groupName, $routeConfig);
             }
         }
     }
 
-    protected function loadRouteConfig(string $prefix, array $routeConfig)
+    protected function loadRouteConfig(string $prefix, string $groupName, array $routeConfig)
     {
+        $module =  $this->module->getFullName();
         foreach ($routeConfig as $name => $config) {
-            $exname = $this->module->getFullName().':'.$name;
+            $exname = $this->application->getRouteName($name, $module, $groupName);
             $method = $config['method'] ?? [];
             $attriute = [];
-            $attriute['module'] = $this->module->getFullName();
+            $attriute['module'] = $module;
             $attriute['config'] = $config;
             $attriute['route'] = $exname;
             $uri = $config['url'] ?? '/';
