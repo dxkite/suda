@@ -88,7 +88,7 @@ class ApplicationSource extends AppicationBase
      */
     public function getRouteName(string $name, ?string $default = null, ?string $group = null):string
     {
-        if (strpos($name, ':') > 0) {
+        if (strpos($name, ':') !== false) {
             list($module, $group, $name) = $this->parseRouteName($name, $default, $group);
         } else {
             $module = $default;
@@ -109,14 +109,17 @@ class ApplicationSource extends AppicationBase
      */
     public function parseRouteName(string $name, ?string $default = null, ?string $groupName = null)
     {
-        if (strpos($name, ':') >= 0) {
+        if (strpos($name, ':') !== false) {
             $dotpos = \strrpos($name, ':');
             $module = substr($name, 0, $dotpos);
             $name = substr($name, $dotpos + 1);
+            if (strlen($module) === 0) {
+                $module = $default;
+            }
         } else {
             $module = $default;
         }
-        if ($module !== null && strpos($module, '@') >= 0) {
+        if ($module !== null && strpos($module, '@') !== false) {
             list($module, $groupName) = \explode('@', $module, 2);
             $module = \strlen($module) ? $module : $default;
         }
