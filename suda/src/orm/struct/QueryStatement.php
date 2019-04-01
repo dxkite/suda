@@ -26,7 +26,11 @@ class QueryStatement extends \suda\orm\statement\QueryStatement
      */
     public function one():?array
     {
-        return $this->access->run($this->fetch());
+        $value = $this->access->run($this->fetch());
+        if (is_array($value)) {
+            return $value;
+        }
+        return null;
     }
 
     /**

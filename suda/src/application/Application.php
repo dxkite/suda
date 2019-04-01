@@ -4,6 +4,7 @@ namespace suda\application;
 use Throwable;
 use suda\framework\Request;
 use suda\framework\Response;
+use suda\application\DebugDumpper;
 use suda\application\database\Table;
 use suda\framework\route\MatchResult;
 use suda\framework\runnable\Runnable;
@@ -23,6 +24,7 @@ use suda\application\processor\TemplateRequestProcessor;
  */
 class Application extends ApplicationSource
 {
+
     /**
      * 准备运行环境
      *
@@ -60,6 +62,8 @@ class Application extends ApplicationSource
         $response->setHeader('x-powered-by', 'nebula/'.SUDA_VERSION, true);
         $response->getWrapper()->register(ExceptionContentWrapper::class, [\Throwable::class]);
         $response->getWrapper()->register(TemplateWrapper::class, [RawTemplate::class]);
+        $dumpper = new DebugDumpper($response);
+        $dumpper->register();
         $this->debug->info('{request-time} {remote-ip} {request-method} {request-uri} debug={debug}', [
             'remote-ip' => $request->getRemoteAddr(),
             'debug' => SUDA_DEBUG,

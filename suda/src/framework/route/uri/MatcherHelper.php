@@ -109,7 +109,7 @@ class MatcherHelper
 
     protected static function replaceParameter(string $input, UriMatcher $matcher, array $parameter, array $mapper, bool $ignore = false, ?int &$count = null)
     {
-        return preg_replace_callback('/\{(\w+).+?\}/', function ($match) use ($matcher, $parameter, $mapper, &$count) {
+        return preg_replace_callback('/\{(\w+).+?\}/', function ($match) use ($matcher, $parameter, $mapper, $ignore, &$count) {
             if (\array_key_exists($match[1], $mapper)) {
                 $count ++;
                 return $mapper[$match[1]]->packValue($parameter[$match[1]]);
