@@ -5,3 +5,4 @@ composer.lock
 *.db
 /public/assets/*
 /public/hello/*
+/tests/resource/runtime-data

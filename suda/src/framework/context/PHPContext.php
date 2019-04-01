@@ -17,7 +17,7 @@ class PHPContext
      * @var \suda\framework\loader\Loader
      */
     protected $loader;
-    
+
     /**
      * 全局配置
      *
@@ -42,7 +42,16 @@ class PHPContext
     {
         $this->loader = $loader;
         $this->config = $config;
-        $this->debug = Debugger::create($this)->register();
+        $this->debug = new Debugger;
+    }
+
+    /**
+     * 注册调试器
+     *
+     * @return void
+     */
+    public function registerDebugger() {
+        $this->debug->load($this)->register();
     }
 
     /**
@@ -91,7 +100,7 @@ class PHPContext
      * Get PHP自动加载
      *
      * @return  \suda\framework\loader\Loader
-     */ 
+     */
     public function getLoader()
     {
         return $this->loader;
@@ -103,7 +112,7 @@ class PHPContext
      * @param  \suda\framework\loader\Loader  $loader  PHP自动加载
      *
      * @return  self
-     */ 
+     */
     public function setLoader(\suda\framework\loader\Loader $loader)
     {
         $this->loader = $loader;
@@ -115,7 +124,7 @@ class PHPContext
      * Get 全局配置
      *
      * @return  \suda\framework\Config
-     */ 
+     */
     public function getConfig()
     {
         return $this->config;
@@ -127,7 +136,7 @@ class PHPContext
      * @param  \suda\framework\Config  $config  全局配置
      *
      * @return  self
-     */ 
+     */
     public function setConfig(\suda\framework\Config $config)
     {
         $this->config = $config;
@@ -139,7 +148,7 @@ class PHPContext
      * Get pHP错误调试
      *
      * @return  \suda\framework\Debugger
-     */ 
+     */
     public function getDebug()
     {
         return $this->debug;
@@ -151,7 +160,7 @@ class PHPContext
      * @param  \suda\framework\Debugger  $debug  PHP错误调试
      *
      * @return  self
-     */ 
+     */
     public function setDebug(\suda\framework\Debugger $debug)
     {
         $this->debug = $debug;

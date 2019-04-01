@@ -5,7 +5,6 @@ use suda\orm\DataSource;
 use suda\framework\Config;
 use suda\framework\Context;
 use suda\application\Resource;
-use suda\framework\http\Request;
 use suda\framework\loader\Loader;
 use suda\framework\arrayobject\ArrayDotAccess;
 
@@ -41,7 +40,7 @@ class ApplicationContext extends Context
      * @var string
      */
     protected $style;
-    
+
     /**
      * 路由组
      *
@@ -80,7 +79,7 @@ class ApplicationContext extends Context
         $this->style = $manifast['style'] ?? 'default';
         $this->manifast = $manifast;
     }
-    
+
     /**
      * Get 使用的样式
      *
@@ -128,7 +127,7 @@ class ApplicationContext extends Context
 
         return $this;
     }
-    
+
     /**
      * Get 配置数组
      *

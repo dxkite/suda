@@ -22,7 +22,15 @@ class Debugger extends Debug
      * @var PHPContext
      */
     protected $context;
-    
+
+    /**
+     * 初始化
+     */
+    public function __construct()
+    {
+        $this->setLogger(new NullLogger);
+    }
+
     /**
      * 注册错误处理函数
      * @return self
@@ -34,23 +42,22 @@ class Debugger extends Debug
         set_exception_handler([$this,'uncaughtException']);
         return $this;
     }
-    
+
     /**
      * 创建调式工具
      *
      * @param Context $context
      * @return Debugger
      */
-    public static function create(PHPContext $context): Debugger
+    public function load(PHPContext $context): Debugger
     {
-        $debugger = new Debugger;
-        $debugger->applyConfig([
+        $this->applyConfig([
             'start-time' => \constant('SUDA_START_TIME'),
             'start-memory' => \constant('SUDA_START_MEMORY'),
         ]);
-        $debugger->setLogger(static::createLogger($context));
-        $debugger->context = $context;        
-        return $debugger;
+        $this->setLogger(static::createLogger($context));
+        $this->context = $context;
+        return $this;
     }
 
     /**
@@ -67,7 +74,7 @@ class Debugger extends Debug
             return new NullLogger;
         }
     }
-    
+
     /**
      * 创建默认记录器
      *
@@ -98,10 +105,11 @@ class Debugger extends Debug
      *
      * @return \suda\framework\debug\log\LoggerInterface
      */
-    public function getLogger():LoggerInterface {
+    public function getLogger():LoggerInterface
+    {
         return $this->logger;
     }
- 
+
     /**
      * 末异常处理
      *
@@ -153,7 +161,7 @@ class Debugger extends Debug
             'start-memory' => 0,
         ];
     }
-    
+
     /**
      * 设置忽略前缀
      *

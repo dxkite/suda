@@ -1,20 +1,18 @@
 <?php
 namespace suda\application;
 
-use suda\framework\Request;
 use suda\application\Module;
 use suda\application\Resource;
 use suda\application\ModuleBag;
 use suda\application\LanguageBag;
 use suda\framework\loader\Loader;
 use suda\application\ApplicationContext;
-use suda\application\template\ModuleTemplate;
 use suda\application\exception\ApplicationException;
 
 /**
  * 基础应用程序
  */
-class BaseAppication extends ApplicationContext
+class AppicationBase extends ApplicationContext
 {
     /**
      * 模块集合
@@ -43,7 +41,7 @@ class BaseAppication extends ApplicationContext
      * @var Module
      */
     protected $running;
-    
+
     /**
      * 系统准备完成
      *

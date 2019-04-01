@@ -12,7 +12,7 @@ use suda\framework\http\stream\DataStream;
 /**
  * 原始HTTP响应
  */
-class HTTPResponse implements Response 
+class HTTPResponse implements Response
 {
     /**
      * 头部代码
@@ -212,7 +212,7 @@ class HTTPResponse implements Response
         header(sprintf('HTTP/%s %s %s', $this->version, $this->status, Status::toText($this->status)), true, $this->status);
         return $this;
     }
-    
+
     /**
      * 发送Cookies
      *
