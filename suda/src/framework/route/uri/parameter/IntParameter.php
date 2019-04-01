@@ -13,7 +13,10 @@ class IntParameter extends Parameter
 
     public function __construct(string $extra)
     {
-        $this->default = intval($this->getCommonDefault($extra));
+        $default = $this->getCommonDefault($extra);
+        if (strlen($default) > 0) {
+            $this->default = intval($default);
+        }
     }
  
     public function unpackValue(string $matched)

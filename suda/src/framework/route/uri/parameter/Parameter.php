@@ -56,7 +56,11 @@ abstract class Parameter
 
     public function getDefaultValue()
     {
-        return isset($this->default) ? $this->default : null;
+        return $this->hasDefault() ? $this->default : null;
+    }
+
+    public function hasDefault() {
+        return isset($this->default);
     }
 
     /**

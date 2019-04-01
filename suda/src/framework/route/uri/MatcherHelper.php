@@ -76,7 +76,7 @@ class MatcherHelper
         return preg_replace_callback('/\[(.+?)\]/', function ($match) use ($matcher, $parameter, $mapper) {
             if (preg_match('/\{(\w+).+?\}/', $match[1])) {
                 $count = 0;
-                $subUrl = static::replaceParameter($match[1], $matcher, $parameter, $mapper, $count);
+                $subUrl = static::replaceParameter($match[1], $matcher, $parameter, $mapper, true, $count);
                 if ($count > 0) {
                     return $subUrl;
                 }
@@ -107,16 +107,22 @@ class MatcherHelper
         return [$mapper, $query, $parameter];
     }
 
-    protected static function replaceParameter(string $input, UriMatcher $matcher, array $parameter, array $mapper, ?int &$count = null)
+    protected static function replaceParameter(string $input, UriMatcher $matcher, array $parameter, array $mapper, bool $ignore = false, ?int &$count = null)
     {
-        return preg_replace_callback('/\{(\w+).+?\}/', function ($match) use ($matcher, $parameter, $mapper) {
+        return preg_replace_callback('/\{(\w+).+?\}/', function ($match) use ($matcher, $parameter, $mapper, &$count) {
             if (\array_key_exists($match[1], $mapper)) {
+                $count ++;
                 return $mapper[$match[1]]->packValue($parameter[$match[1]]);
             }
             if ($default = $matcher->getParameter($match[1])) {
-                return $default->getDefaultValue();
+                if ($default ->hasDefault()) {
+                    $count ++;
+                    return $default->getDefaultValue();
+                }
             }
-            throw new InvalidArgumentException(sprintf('unknown parameter %s in %s', $match[1], $matcher->getUri()), 1);
+            if ($ignore === false) {
+                throw new InvalidArgumentException(sprintf('unknown parameter %s in %s', $match[1], $matcher->getUri()), 1);
+            }
         }, $input, -1, $count);
     }
 }

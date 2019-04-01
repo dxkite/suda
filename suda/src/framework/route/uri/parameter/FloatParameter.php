@@ -13,7 +13,10 @@ class FloatParameter extends Parameter
 
     public function __construct(string $extra)
     {
-        $this->default = floatval($this->getCommonDefault($extra));
+        $default = $this->getCommonDefault($extra);
+        if (strlen($default) > 0) {
+            $this->default = floatval($default);
+        }
     }
  
     public function unpackValue(string $matched)
