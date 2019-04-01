@@ -134,8 +134,18 @@ class CompilableTemplate extends RawTemplate
      * @ignore-dump
      * @return string
      */
-    public function __toString()
+    public function getRenderedString()
     {
+        $this->compile();
+        return $this->render();
+    }
+
+    /**
+     * 编译
+     *
+     * @return void
+     */
+    protected function compile(){
         $sourcePath = $this->getSourcePath();
         $destPath = $this->getPath();
         $source = FileSystem::exist($sourcePath);
@@ -149,7 +159,21 @@ class CompilableTemplate extends RawTemplate
                 FileSystem::put($destPath, $compiled);
             }
         }
-        return $this->getRenderedString();
+    }
+
+    /**
+     * 获取渲染后的字符串
+     * @ignore-dump
+     */
+    public function render()
+    {
+        $this->_render_start();
+        echo parent::getRenderedString();
+        if ($this->extend) {
+            $this->include($this->extend);
+        }
+        $content = $this->_render_end();
+        return $content;
     }
 
     /**
@@ -161,20 +185,7 @@ class CompilableTemplate extends RawTemplate
         return $this;
     }
 
-    /**
-     * 获取渲染后的字符串
-     * @ignore-dump
-     */
-    public function getRenderedString()
-    {
-        $this->_render_start();
-        echo parent::getRenderedString();
-        if ($this->extend) {
-            $this->include($this->extend);
-        }
-        $content = $this->_render_end();
-        return $content;
-    }
+    
 
     public function extend(string $name)
     {

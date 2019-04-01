@@ -172,7 +172,7 @@ class Request extends RequestWrapper
     public function hasGet(?string $name = null)
     {
         $get = $this->getQuery();
-        if (null === $name) {
+        if ($name !== null) {
             return \array_key_exists($name, $get);
         }
         return count($get) > 0;
@@ -199,7 +199,7 @@ class Request extends RequestWrapper
     public function hasPost(?string $name = null)
     {
         $post = $this->post();
-        if ($name) {
+        if ($name !== null) {
             return \array_key_exists($name, $post);
         }
         return count($post) > 0;

@@ -22,10 +22,10 @@ class ExceptionTemplate extends RawTemplate
         ];
     }
 
-    public function __toString()
+    public function getRenderedString()
     {
         try {
-            return parent::__toString();
+            return parent::getRenderedString();
         } catch (MissingTemplateException $e) {
             return 'MissingTemplateException:'.$e->getPath();
         } catch (Throwable $e) {
