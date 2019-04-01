@@ -22,9 +22,9 @@ class QueryStatement extends \suda\orm\statement\QueryStatement
     /**
      * 取1
      *
-     * @return TableStruct|null
+     * @return array|null
      */
-    public function one():?TableStruct
+    public function one():?array
     {
         return $this->access->run($this->fetch());
     }
@@ -32,10 +32,20 @@ class QueryStatement extends \suda\orm\statement\QueryStatement
     /**
      * 取全部
      *
-     * @return TableStruct[]
+     * @return array
      */
     public function all():array
     {
         return $this->access->run($this->fetchAll());
+    }
+
+    /**
+     * Get 访问操作
+     *
+     * @return  TableAccess
+     */ 
+    public function getAccess():TableAccess
+    {
+        return $this->access;
     }
 }

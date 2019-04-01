@@ -189,6 +189,9 @@ class ReadStatement extends QueryStatement
      */
     public function page(int $page, int $length)
     {
+        if ($page <= 0) {
+            $page = 1;
+        }
         $this->limit(($page - 1) * $length, $length);
         return $this;
     }

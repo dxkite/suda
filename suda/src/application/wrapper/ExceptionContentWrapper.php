@@ -1,5 +1,5 @@
 <?php
-namespace suda\application\exception\wrapper;
+namespace suda\application\wrapper;
 
 use suda\framework\Request;
 use suda\framework\Response;
@@ -22,6 +22,7 @@ class ExceptionContentWrapper extends AbstractContentWrapper
     public function getContent(Response $response):Stream
     {
         $content = $this->content;
-        return new StringStream(new ExceptionTemplate($content));
+        $template = new ExceptionTemplate($content);
+        return new StringStream($template->getRenderedString());
     }
 }

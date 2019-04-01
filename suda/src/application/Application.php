@@ -8,12 +8,15 @@ use suda\application\database\Table;
 use suda\framework\route\MatchResult;
 use suda\framework\runnable\Runnable;
 use suda\application\loader\ModuleLoader;
+use suda\application\template\RawTemplate;
 use suda\application\loader\LanguageLoader;
+use suda\application\wrapper\TemplateWrapper;
 use suda\application\loader\ApplicationLoader;
 use suda\application\processor\FileRequestProcessor;
+use suda\application\wrapper\ExceptionContentWrapper;
 use suda\application\processor\TemplateAssetProccesser;
 use suda\application\processor\TemplateRequestProcessor;
-use suda\application\exception\wrapper\ExceptionContentWrapper;
+
 
 /**
  * 应用程序
@@ -56,6 +59,7 @@ class Application extends ApplicationSource
     {
         $response->setHeader('x-powered-by', 'nebula/'.SUDA_VERSION, true);
         $response->getWrapper()->register(ExceptionContentWrapper::class, [\Throwable::class]);
+        $response->getWrapper()->register(TemplateWrapper::class, [RawTemplate::class]);
         $this->debug->info('{request-time} {remote-ip} {request-method} {request-uri} debug={debug}', [
             'remote-ip' => $request->getRemoteAddr(),
             'debug' => SUDA_DEBUG,

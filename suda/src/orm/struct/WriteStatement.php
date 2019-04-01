@@ -47,4 +47,14 @@ class WriteStatement extends \suda\orm\statement\WriteStatement
     public function id():string {
         return $this->access->run($this->getId());
     }
+
+    /**
+     * Get 访问操作
+     *
+     * @return  TableAccess
+     */ 
+    public function getAccess():TableAccess
+    {
+        return $this->access;
+    }
 }

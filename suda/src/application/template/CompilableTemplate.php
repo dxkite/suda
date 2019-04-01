@@ -145,6 +145,7 @@ class CompilableTemplate extends RawTemplate
             $content = FileSystem::get($sourcePath);
             if ($content !== null) {
                 $compiled = $this->compiler()->compileText($content, $this->config);
+                FileSystem::make(dirname($destPath));
                 FileSystem::put($destPath, $compiled);
             }
         }
@@ -167,7 +168,7 @@ class CompilableTemplate extends RawTemplate
     public function getRenderedString()
     {
         $this->_render_start();
-        echo parent::__toString();
+        echo parent::getRenderedString();
         if ($this->extend) {
             $this->include($this->extend);
         }
@@ -185,7 +186,7 @@ class CompilableTemplate extends RawTemplate
         $subfix = $this->config['subfix'] ?? '';
         $included = new self(Resource::getPathByRelativedPath($path. $subfix, dirname($this->source)), $this->config);
         $included->parent = $this;
-        echo $included->__toString();
+        echo $included->getRenderedString();
     }
 
     protected function _render_start()

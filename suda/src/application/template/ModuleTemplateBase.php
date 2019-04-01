@@ -162,4 +162,24 @@ class ModuleTemplateBase extends CompilableTemplate
             }
         }
     }
+
+    /**
+     * Get 应用环境
+     *
+     * @return  Application
+     */ 
+    public function getApplication()
+    {
+        return $this->application;
+    }
+
+    /**
+     * Get 请求信息
+     *
+     * @return  Request
+     */ 
+    public function getRequest()
+    {
+        return $this->request;
+    }
 }

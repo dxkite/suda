@@ -4,6 +4,7 @@ namespace suda\orm\struct;
 use suda\orm\TableAccess;
 use suda\orm\TableStruct;
 
+
 class ReadStatement extends \suda\orm\statement\ReadStatement
 {
     /**
@@ -21,7 +22,7 @@ class ReadStatement extends \suda\orm\statement\ReadStatement
             $access->getStruct()
         );
     }
-
+    
     /**
      * 取1
      *
@@ -40,5 +41,15 @@ class ReadStatement extends \suda\orm\statement\ReadStatement
     public function all():array
     {
         return $this->access->run($this->fetchAll());
+    }
+
+    /**
+     * Get 访问操作
+     *
+     * @return  TableAccess
+     */ 
+    public function getAccess():TableAccess
+    {
+        return $this->access;
     }
 }

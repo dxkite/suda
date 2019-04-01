@@ -1,13 +1,14 @@
 <?php
 namespace suda\orm;
 
+use Countable;
 use ArrayAccess;
 use ArrayIterator;
 use IteratorAggregate;
 use suda\orm\struct\Field;
 use suda\orm\struct\Fields;
 
-class TableStruct implements ArrayAccess, IteratorAggregate
+class TableStruct implements ArrayAccess, IteratorAggregate, Countable
 {
     /**
      * 数据表名
@@ -119,5 +120,10 @@ class TableStruct implements ArrayAccess, IteratorAggregate
     public function toArray():array
     {
         return $this->data;
+    }
+
+    public function count()
+    {
+        return count($this->data);
     }
 }
