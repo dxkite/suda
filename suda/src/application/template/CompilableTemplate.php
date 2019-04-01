@@ -136,14 +136,16 @@ class CompilableTemplate extends RawTemplate
      */
     public function __toString()
     {
-        $source = FileSystem::exist($this->getSourcePath()) ;
+        $sourcePath = $this->getSourcePath();
+        $destPath = $this->getPath();
+        $source = FileSystem::exist($sourcePath);
         $dest = FileSystem::exist($this->getPath());
         $notCompiled = $source === true && $dest === false;
         if ($notCompiled || SUDA_DEBUG) {
-            $content = FileSystem::get($this->getSourcePath());
+            $content = FileSystem::get($sourcePath);
             if ($content !== null) {
                 $compiled = $this->compiler()->compileText($content, $this->config);
-                FileSystem::put($this->getPath(), $compiled);
+                FileSystem::put($destPath, $compiled);
             }
         }
         return $this->getRenderedString();

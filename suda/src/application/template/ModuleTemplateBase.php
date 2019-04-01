@@ -24,6 +24,13 @@ class ModuleTemplateBase extends CompilableTemplate
     protected $module = null;
 
     /**
+     * 路由组
+     *
+     * @var string|null
+     */
+    protected $group = null;
+
+    /**
      * 安全URI路径
      *
      * @var string
@@ -62,14 +69,8 @@ class ModuleTemplateBase extends CompilableTemplate
     {
         $this->application = $application;
         $this->request = $request;
-        if (strpos($name, ':') > 0) {
-            $dotpos = \strrpos($name, ':');
-            $this->name = substr($name, $dotpos + 1);
-            $this->module = substr($name, 0, $dotpos);
-        } else {
-            $this->name = $name;
-            $this->module = $defaultModule;
-        }
+        list($this->module, $this->group, $this->name) = $application->parseRouteName($name, $defaultModule, 'default');
+        $this->group = $request->getAttribute('group', $this->group);
         $this->config = $this->getModuleConfig($this->module);
         $this->uriName = TemplateUtil::getSafeUriName($this->application, $this->module);
         $this->value = [];

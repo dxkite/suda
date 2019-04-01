@@ -69,7 +69,7 @@ class ApplicationSource extends AppicationBase
     public function getModuleSourceName(string $name, ?string $default = null):string
     {
         if (strpos($name, ':') > 0) {
-            list($module, $group, $name) = $this->parseRouteName($name);
+            list($module, $group, $name) = $this->parseRouteName($name, $default);
         } else {
             $module = $default;
         }
@@ -89,7 +89,7 @@ class ApplicationSource extends AppicationBase
     public function getRouteName(string $name, ?string $default = null, ?string $group = null):string
     {
         if (strpos($name, ':') > 0) {
-            list($module, $group, $name) = $this->parseRouteName($name, $group);
+            list($module, $group, $name) = $this->parseRouteName($name, $default, $group);
         } else {
             $module = $default;
         }
@@ -107,13 +107,18 @@ class ApplicationSource extends AppicationBase
      * @param string|null $groupName
      * @return array
      */
-    protected function parseRouteName(string $name, ?string $groupName = null)
+    public function parseRouteName(string $name, ?string $default = null, ?string $groupName = null)
     {
-        $dotpos = \strrpos($name, ':');
-        $module = substr($name, 0, $dotpos);
-        $name = substr($name, $dotpos + 1);
-        if (strpos($module, '@')) {
+        if (strpos($name, ':') >= 0) {
+            $dotpos = \strrpos($name, ':');
+            $module = substr($name, 0, $dotpos);
+            $name = substr($name, $dotpos + 1);
+        } else {
+            $module = $default;
+        }
+        if ($module !== null && strpos($module, '@') >= 0) {
             list($module, $groupName) = \explode('@', $module, 2);
+            $module = \strlen($module) ? $module : $default;
         }
         return [$module, $groupName, $name];
     }

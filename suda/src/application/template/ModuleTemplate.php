@@ -51,11 +51,11 @@ class ModuleTemplate extends ModuleTemplateBase
                 array_shift($args);
                 $values = $args;
             }
-            return $this->application->getUrl($this->request, $name, $values ?? [], true, $this->module);
+            return $this->application->getUrl($this->request, $name, $values ?? [], true, $this->module, $this->group);
         } elseif (is_array($name) && \is_string($defaultName)) {
-            return $this->application->getUrl($this->request, $defaultName, $name, true, $this->module);
+            return $this->application->getUrl($this->request, $defaultName, $name, true, $this->module, $this->group);
         } elseif (is_string($defaultName)) {
-            return $this->application->getUrl($this->request, $defaultName, $this->request->get() ?? [], true, $this->module);
+            return $this->application->getUrl($this->request, $defaultName, $this->request->get() ?? [], true, $this->module, $this->group);
         }
         return '#'.$defaultName;
     }
