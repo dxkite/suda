@@ -23,6 +23,8 @@ class ApplicationSource extends AppicationBase
      */
     public function getUrl(Request $request, string $name, array $parameter = [], bool $allowQuery = true, ?string $default = null, ?string $group = null):?string
     {
+        $group = $group ?? $request->getAttribute('group');
+        $default = $default ?? $request->getAttribute('module');
         $url = $this->route->create($this->getRouteName($name, $default, $group), $parameter, $allowQuery);
         return $this->getUrlIndex($request).'/'.ltrim($url, '/');
     }
@@ -53,8 +55,10 @@ class ApplicationSource extends AppicationBase
      */
     public function getTemplate(string $name, Request $request, ?string $default = null): ModuleTemplate
     {
-        if ($default === null && $this->running) {
+        if ($default === null && $this->running !== null) {
             $default = $this->running->getFullName();
+        } else {
+            $default = $default ?? $request->getAttribute('module');
         }
         return new ModuleTemplate($this->getModuleSourceName($name, $default), $this, $request, $default);
     }
