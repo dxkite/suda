@@ -4,11 +4,12 @@ namespace suda\orm;
 use Countable;
 use ArrayAccess;
 use ArrayIterator;
+use JsonSerializable;
 use IteratorAggregate;
 use suda\orm\struct\Field;
 use suda\orm\struct\Fields;
 
-class TableStruct implements ArrayAccess, IteratorAggregate, Countable
+class TableStruct implements ArrayAccess, IteratorAggregate, Countable, JsonSerializable
 {
     /**
      * 数据表名
@@ -125,5 +126,10 @@ class TableStruct implements ArrayAccess, IteratorAggregate, Countable
     public function count()
     {
         return count($this->data);
+    }
+    
+    public function jsonSerialize()
+    {
+        return $this->data;
     }
 }
