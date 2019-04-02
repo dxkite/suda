@@ -62,7 +62,7 @@ class Application extends ApplicationSource
         $response->setHeader('x-powered-by', 'nebula/'.SUDA_VERSION, true);
         $response->getWrapper()->register(ExceptionContentWrapper::class, [\Throwable::class]);
         $response->getWrapper()->register(TemplateWrapper::class, [RawTemplate::class]);
-        $dumpper = new DebugDumpper($response);
+        $dumpper = new DebugDumpper($this, $response);
         $dumpper->register();
         $this->debug->info('{request-time} {remote-ip} {request-method} {request-uri} debug={debug}', [
             'remote-ip' => $request->getRemoteAddr(),

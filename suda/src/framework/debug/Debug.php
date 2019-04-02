@@ -20,6 +20,13 @@ class Debug implements LoggerInterface, LoggerAwareInterface, DumpInterface, Att
     use LoggerTrait,LoggerAwareTrait,DumpTrait,AttachTrait,ConfigTrait;
 
     /**
+     * 忽略堆栈
+     *
+     * @var array
+     */
+    protected $ignoreTraces = [__DIR__];
+
+    /**
      * 时间记录
      *
      * @var array
@@ -45,7 +52,7 @@ class Debug implements LoggerInterface, LoggerAwareInterface, DumpInterface, Att
      * @return array
      */
     public function getIgnoreTraces():array {
-        return [__DIR__];
+        return $this->ignoreTraces;
     }
 
     public function getDefaultConfig():array
@@ -100,5 +107,30 @@ class Debug implements LoggerInterface, LoggerAwareInterface, DumpInterface, Att
             return $pass;
         }
         return 0;
+    }
+
+    /**
+     * Set the value of ignoreTraces
+     *
+     * @return  self
+     */ 
+    public function setIgnoreTraces(array $ignoreTraces)
+    {
+        $this->ignoreTraces = $ignoreTraces;
+
+        return $this;
+    }
+
+
+    /**
+     * Set the value of ignoreTraces
+     *
+     * @return  self
+     */ 
+    public function addIgnoreTraces(string $ignoreTraces)
+    {
+        $this->ignoreTraces[] = $ignoreTraces;
+
+        return $this;
     }
 }

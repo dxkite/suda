@@ -16,11 +16,19 @@ class DebugDumpper
     protected $response;
 
     /**
+     * 应用
+     *
+     * @var Application
+     */
+    protected $application;
+
+    /**
      * 初始化
      */
-    public function __construct(Response $response)
+    public function __construct(Application $application, Response $response)
     {
         $this->response = $response;
+        $this->application = $application;
     }
 
     /**
@@ -61,6 +69,8 @@ class DebugDumpper
      */
     public function uncaughtException($exception)
     {
+        $this->application->debug()->addIgnoreTraces(__FILE__);
+        $this->application->debug()->uncaughtException($exception);
         if ($this->response->isSended() === false) {
             $this->response->sendContent($exception);
         }
