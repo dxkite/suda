@@ -57,13 +57,6 @@ class CompilableTemplate extends RawTemplate
     protected $extend = null;
 
     /**
-     * 渲染堆栈
-     *
-     * @var array
-     */
-    protected static $render = [];
-
-    /**
      * 编译器
      *
      * @var Compiler
@@ -167,12 +160,12 @@ class CompilableTemplate extends RawTemplate
      */
     public function render()
     {
-        $this->_render_start();
+        ob_start();
         echo parent::getRenderedString();
         if ($this->extend) {
             $this->include($this->extend);
         }
-        $content = $this->_render_end();
+        $content = trim(ob_get_clean());
         return $content;
     }
 
@@ -198,19 +191,6 @@ class CompilableTemplate extends RawTemplate
         $included = new self(Resource::getPathByRelativedPath($path. $subfix, dirname($this->source)), $this->config);
         $included->parent = $this;
         echo $included->getRenderedString();
-    }
-
-    protected function _render_start()
-    {
-        array_push(self::$render, $this->name);
-        ob_start();
-    }
-
-    protected function _render_end()
-    {
-        array_pop(self::$render);
-        $content = trim(ob_get_clean());
-        return $content;
     }
 
     public function data(string $name, ...$args)

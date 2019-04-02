@@ -236,10 +236,23 @@ class HTTPResponse implements Response
      */
     protected function sendData()
     {
+        $this->closeOutputBuffer(false);
         if (is_array($this->data)) {
             $this->sendArrayData($this->data);
         } else {
             $this->echoDataContent($this->data);
+        }
+    }
+
+    /**
+     * 关闭所有缓存
+     *
+     * @param boolean $flush
+     * @return void
+     */
+    protected function closeOutputBuffer(bool $flush) {
+        while (ob_get_level() > 0) {
+            $flush?ob_end_flush():ob_end_clean();
         }
     }
 
@@ -271,5 +284,3 @@ class HTTPResponse implements Response
         }
     }
 }
-
-

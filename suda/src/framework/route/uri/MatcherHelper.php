@@ -115,7 +115,7 @@ class MatcherHelper
                 return $mapper[$match[1]]->packValue($parameter[$match[1]]);
             }
             if ($default = $matcher->getParameter($match[1])) {
-                if ($default ->hasDefault()) {
+                if ($default->hasDefault()) {
                     $count ++;
                     return $default->getDefaultValue();
                 }
