@@ -49,7 +49,7 @@ abstract class Parameter
         return $value;
     }
 
-    public function packValue(string $value)
+    public function packValue(?string $value)
     {
         return $value;
     }

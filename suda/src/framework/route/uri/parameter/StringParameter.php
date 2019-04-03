@@ -22,9 +22,9 @@ class StringParameter extends Parameter
         return urldecode($matched);
     }
 
-    public function packValue(string $matched)
+    public function packValue(?string $matched)
     {
-        return urlencode($matched);
+        return $matched ? urlencode($matched): '';
     }
     
     /**
