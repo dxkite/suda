@@ -77,7 +77,7 @@ class WriteStatement extends Statement
             if ($this->struct->getFields()->hasField($name)) {
                 $this->data[$name] = $value;
             } else {
-                throw new SQLException(\sprintf('table has no fields %s', $this->struct->getName()));
+                throw new SQLException(\sprintf('table `%s` has no field `%s`', $this->struct->getName(), $name));
             }
         }
         return $this;
