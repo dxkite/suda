@@ -26,7 +26,7 @@ class ApplicationLoader
      * @var \suda\application\Application
      */
     protected $application;
-    
+
     /**
      * 模块加载器
      *
@@ -34,7 +34,7 @@ class ApplicationLoader
      */
     protected $moduleLoader;
 
-    
+
     public function __construct(Application $application)
     {
         $this->application = $application;
@@ -106,8 +106,11 @@ class ApplicationLoader
             if (strpos($mode, 'read') !== false || strpos($mode, 'slave') !== false) {
                 $source->addRead($data);
             }
-            if (strpos($mode, 'write') !== false || strpos($mode, 'master') !== false) {
+            if (strpos($mode, 'write') !== false) {
                 $source->addWrite($data);
+            }
+            if (strpos($mode, 'master') !== false) {
+                $source->add($data);
             }
         } else {
             $source->add($data);
