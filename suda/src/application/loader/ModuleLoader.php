@@ -194,6 +194,14 @@ class ModuleLoader
         }
     }
 
+    /**
+     * 加载模块路由配置
+     *
+     * @param string $prefix
+     * @param string $groupName
+     * @param array $routeConfig
+     * @return void
+     */
     protected function loadRouteConfig(string $prefix, string $groupName, array $routeConfig)
     {
         $module =  $this->module->getFullName();

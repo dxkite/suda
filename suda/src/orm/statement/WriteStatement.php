@@ -84,31 +84,31 @@ class WriteStatement extends Statement
     }
 
     /**
-     * 返回影响行数
+     * 设置影响行数
      *
      * @return self
      */
-    public function getRows() {
+    public function wantRows() {
         $this->returnType = WriteStatement::RET_ROWS;
         return $this;
     }
 
     /**
-     * 返回是否成功
+     * 设置返回是否成功
      *
      * @return self
      */
-    public function getOk() {
+    public function wantOk() {
         $this->returnType = WriteStatement::RET_BOOL;
         return $this;
     }
 
     /**
-     * 返回ID
+     * 设置返回ID
      *
      * @return self
      */
-    public function getId() {
+    public function wantId() {
         $this->returnType = WriteStatement::RET_LAST_INSERT_ID;
         return $this;
     }

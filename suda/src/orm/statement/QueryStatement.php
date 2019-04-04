@@ -26,29 +26,29 @@ class QueryStatement extends Statement
     }
 
     /**
-     * 取1
+     * 设置取一条记录
      *
      * @return self
      */
-    public function fetch()
+    public function wantOne()
     {
         $this->fetch = self::FETCH_ONE;
         return $this;
     }
 
     /**
-     * 取全部
+     * 设置取全部记录
      *
      * @return self
      */
-    public function fetchAll()
+    public function wantAll()
     {
         $this->fetch = self::FETCH_ALL;
         return $this;
     }
 
     /**
-     * 用某段做Key
+     * 设置使用某个字段做Key
      *
      * @param string $key
      * @return self
@@ -56,7 +56,7 @@ class QueryStatement extends Statement
     public function withKey(string $key)
     {
         $this->withKey = $key;
-        $this->fetchAll();
+        $this->wantAll();
         return $this;
     }
 

@@ -158,7 +158,7 @@ class TableAccess extends QueryAccess
      */
     public function read(...$args):ReadStatement
     {
-        return (new ReadStatement($this))->want(...$args);
+        return (new ReadStatement($this))->read(...$args);
     }
 
     /**

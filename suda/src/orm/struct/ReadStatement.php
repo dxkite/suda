@@ -22,32 +22,52 @@ class ReadStatement extends \suda\orm\statement\ReadStatement
             $access->getStruct()
         );
     }
-    
+
     /**
-     * 取1
+     * 取1条记录
      *
      * @return TableStruct|null
      */
     public function one():?TableStruct
     {
-        return $this->access->run($this->fetch());
+        return $this->access->run($this->wantOne());
     }
 
     /**
-     * 取全部
+     * 取全部记录
      *
      * @return TableStruct[]
      */
     public function all():array
     {
-        return $this->access->run($this->fetchAll());
+        return $this->access->run($this->wantAll());
+    }
+
+    /**
+     * 取1条记录
+     *
+     * @return TableStruct|null
+     */
+    public function fetch():?TableStruct
+    {
+        return $this->one();
+    }
+
+    /**
+     * 取全部记录
+     *
+     * @return array
+     */
+    public function fetchAll():array
+    {
+        return $this->all();
     }
 
     /**
      * Get 访问操作
      *
      * @return  TableAccess
-     */ 
+     */
     public function getAccess():TableAccess
     {
         return $this->access;

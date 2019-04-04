@@ -20,14 +20,14 @@ class WriteStatement extends \suda\orm\statement\WriteStatement
             $access->getStruct()
         );
     }
-    
+
     /**
      * 返回影响行数
      *
      * @return int
      */
     public function rows():int {
-        return $this->access->run($this->getRows());
+        return $this->access->run($this->wantRows());
     }
 
     /**
@@ -36,7 +36,7 @@ class WriteStatement extends \suda\orm\statement\WriteStatement
      * @return boolean
      */
     public function ok():bool {
-        return $this->access->run($this->getOk());
+        return $this->access->run($this->wantOk());
     }
 
     /**
@@ -45,14 +45,14 @@ class WriteStatement extends \suda\orm\statement\WriteStatement
      * @return string
      */
     public function id():string {
-        return $this->access->run($this->getId());
+        return $this->access->run($this->wantId());
     }
 
     /**
      * Get 访问操作
      *
      * @return  TableAccess
-     */ 
+     */
     public function getAccess():TableAccess
     {
         return $this->access;

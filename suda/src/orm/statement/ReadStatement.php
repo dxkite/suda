@@ -9,7 +9,7 @@ use suda\orm\statement\PrepareTrait;
 class ReadStatement extends QueryStatement
 {
     use PrepareTrait;
-    
+
     /**
      * 数据表结构
      *
@@ -66,15 +66,15 @@ class ReadStatement extends QueryStatement
     /**
      * 查询的列
      *
-     * @param array|string $want
+     * @param array|string $fields
      * @return self
      */
-    public function want($want)
+    public function read($fields)
     {
         if (\func_num_args() > 1) {
-            $want = \func_get_args();
+            $fields = \func_get_args();
         }
-        $this->select = $this->prepareWants($want);
+        $this->select = $this->prepareReadFields($fields);
         return $this;
     }
 

@@ -6,20 +6,20 @@ use suda\orm\exception\SQLException;
 
 trait PrepareTrait
 {
-    
+
     /**
      * 准备选择列
      *
-     * @param string|array $wants
+     * @param string|array $reads
      * @return string
      */
-    protected function prepareWants($wants):string
+    protected function prepareReadFields($reads):string
     {
-        if (is_string($wants)) {
-            $fields = $wants;
+        if (is_string($reads)) {
+            $fields = $reads;
         } else {
             $field = [];
-            foreach ($wants as $want) {
+            foreach ($reads as $want) {
                 $field[] = "`$want`";
             }
             $fields = implode(',', $field);
@@ -57,7 +57,7 @@ trait PrepareTrait
         return [\implode(' AND ', $and), $binders];
     }
 
-    
+
     /**
      * 准备In
      *
