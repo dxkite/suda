@@ -1,14 +1,22 @@
 <?php
 namespace suda\framework\arrayobject;
 
+use ArrayAccess;
+use ArrayObject;
+
 /**
  * 数组点获取类
  */
-class ArrayDotAccess implements \ArrayAccess
+class ArrayDotAccess implements ArrayAccess
 {
     protected $value;
 
-    public function __construct(array $array)
+    /**
+     * 创建对象
+     *
+     * @param array|ArrayAccess $array
+     */
+    public function __construct($array)
     {
         $this->value = $array;
     }
@@ -40,16 +48,16 @@ class ArrayDotAccess implements \ArrayAccess
     /**
      * 获取数组元素
      *
-     * @param array $array
+     * @param array|ArrayAccess $array
      * @param string $name 查询列
      * @param mixed $def 查询的默认值
      * @return mixed 查询的值
      */
-    public static function get(array $array, string $name, $def = null)
+    public static function get($array, string $name, $def = null)
     {
         $path = explode('.', $name);
         while ($key = array_shift($path)) {
-            if (is_array($array) && array_key_exists($key, $array)) {
+            if (static::keyExist($key, $array)) {
                 $array = $array[$key];
             } else {
                 return $def;
@@ -61,15 +69,15 @@ class ArrayDotAccess implements \ArrayAccess
     /**
      * 检查元素是否存在
      *
-     * @param array $array
+     * @param array|ArrayAccess $array
      * @param string $name
      * @return boolean
      */
-    public static function exist(array $array, string $name)
+    public static function exist($array, string $name)
     {
         $path = explode('.', $name);
         while ($key = array_shift($path)) {
-            if (array_key_exists($key, $array)) {
+            if (static::keyExist($key, $array)) {
                 $array = $array[$key];
             } else {
                 return false;
@@ -81,47 +89,41 @@ class ArrayDotAccess implements \ArrayAccess
     /**
      * 设置数组的值
      *
-     * @param array $array
+     * @param array|ArrayAccess $array
      * @param string $name
      * @param mixed $value
-     * @param mixed $def
-     * @return array 设置后的数组
+     * @return array|ArrayAccess 设置后的数组
      */
-    public static function set(array &$array, string $name, $value, $def = null):array
+    public static function set(&$array, string $name, $value)
     {
         $path = explode('.', $name);
         $root = &$array;
         while (count($path) > 1) {
             $key = array_shift($path);
-            if (is_array($array)) {
-                if (!array_key_exists($key, $array)) {
-                    $array[$key] = [];
-                }
-            } else {
-                $array = [];
+            if (static::keyExist($key, $array) === false) {
+                $array[$key] = [];
             }
             $array = &$array[$key];
         }
         $key = array_shift($path);
-        if (is_array($array) && array_key_exists($key, $array) && is_array($array[$key]) && is_array($value)) {
-            $array[$key] = array_merge($array[$key], is_array($def) ? $def : [], $value);
-        } else {
-            $array[$key] = null === $value ? $def : $value;
-        }
+        $array[$key] = $value;
         return $root;
     }
 
-    public static function unset(array &$array, string $name)
+    /**
+     * 删除值
+     *
+     * @param array|ArrayAccess $array
+     * @param string $name
+     * @return void
+     */
+    public static function unset(&$array, string $name)
     {
         $path = explode('.', $name);
         while (count($path) > 1) {
             $key = array_shift($path);
-            if (is_array($array)) {
-                if (!array_key_exists($key, $array)) {
-                    $array[$key] = [];
-                }
-            } else {
-                $array = [];
+            if (static::keyExist($key, $array) === false) {
+                $array[$key] = [];
             }
             $array = &$array[$key];
         }
@@ -130,12 +132,31 @@ class ArrayDotAccess implements \ArrayAccess
     }
 
     /**
-     * 转换成正常数组
+     * 判断数组对象是否存在
      *
-     * @return array
+     * @param string $key
+     * @param mixed $value
+     * @return boolean
      */
-    public function toArray():array
+    public static function keyExist(string $key, $value):bool
     {
-        return $this->value;
+        if (\is_array($value) && \array_key_exists($key, $value)) {
+            return true;
+        }
+        if ($value instanceof ArrayAccess) {
+            return $value->offsetExists($key);
+        }
+        return false;
+    }
+
+    /**
+     * 判断是否为可数组访问对象
+     *
+     * @param mixed $value
+     * @return boolean
+     */
+    public static function isArray($value)
+    {
+        return \is_array($value) || $value instanceof ArrayAccess;
     }
 }

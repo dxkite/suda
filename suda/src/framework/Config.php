@@ -86,12 +86,11 @@ class Config
      *
      * @param string $name
      * @param mixed $value
-     * @param mixed $combine 默认参数
      * @return array
      */
-    public function set(string $name, $value, $combine = null)
+    public function set(string $name, $value)
     {
-        return ArrayDotAccess::set($this->config, $name, $value, $combine);
+        return ArrayDotAccess::set($this->config, $name, $value);
     }
 
     /**
