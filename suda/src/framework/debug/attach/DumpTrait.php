@@ -15,9 +15,9 @@ trait DumpTrait
         if ($deep > 0) {
             $vars = get_class_vars($objectName);
             foreach ($vars as $key => $value) {
-                $parameterString.=static::valueToString($key, $value, $deep);
+                $parameterString .= static::valueToString($key, $value, $deep);
             }
-            $parameterString.= static::objectGetter($objectName, $object, $deep);
+            $parameterString .= static::objectGetter($objectName, $object, $deep);
         } else {
             $parameterString = '...';
         }
@@ -26,19 +26,15 @@ trait DumpTrait
 
     protected static function objectGetter(string $objectName, object $object, int $deep)
     {
-        $methods = get_class_methods($objectName);
-        $parameterString ='';
-        foreach ($methods as $method) {
-            if (strpos($method, 'get') === 0) {
-                $methodRef = new \ReflectionMethod($object, $method);
-                $ignore = \preg_match('/@ignore-dump/i', $methodRef->getDocComment()??'') > 0;
-                if (count($methodRef->getParameters()) === 0 && !$ignore) {
-                    try {
-                        $parameterString.=static::valueToString($method.'()', $object->$method(), $deep);
-                    } catch(\Throwable $e){
-                        // noop 
-                    }
-                }
+        $class = new \ReflectionClass($objectName);
+        $properties = $class->getProperties();
+        $parameterString = '';
+        foreach ($properties as $property) {
+            if ($property->getDeclaringClass() === $class->getName()) {
+                $name = $property->getName();
+                $property->setAccessible(true);
+                $value = $property->getValue($object);
+                $parameterString .= static::valueToString($name, $value, $deep);
             }
         }
         return $parameterString;
@@ -49,7 +45,7 @@ trait DumpTrait
         $parameterString = '';
         if ($deep > 0) {
             foreach ($array as $key => $value) {
-                $parameterString.=static::valueToString($key, $value, $deep);
+                $parameterString .= static::valueToString($key, $value, $deep);
             }
         } else {
             $parameterString = '...';
@@ -72,13 +68,13 @@ trait DumpTrait
         } elseif (is_bool($value)) {
             return $key.'='.($value ? 'true' : 'false').' ,';
         } else {
-            return $key.'='.self::parameterToString($value, $deep-1) .' ,';
+            return $key.'='.self::parameterToString($value, $deep - 1) .' ,';
         }
     }
 
-    public static function parameterToString($object, int $deep=2)
+    public static function parameterToString($object, int $deep = 2)
     {
-        if (is_null($object)) {
+        if (null === $object) {
             return 'NULL';
         } elseif ($object instanceof \Throwable) {
             return static::dumpThrowable($object);
@@ -90,16 +86,16 @@ trait DumpTrait
         return $object;
     }
 
-    public static function dumpTrace(array $backtrace, bool $str=true, string $perfix='')
+    public static function dumpTrace(array $backtrace, bool $str = true, string $perfix = '')
     {
-        $tracesConsole=[];
+        $tracesConsole = [];
         foreach ($backtrace as $trace) {
-            $tracesConsole[]=static::buildTraceLine($trace);
+            $tracesConsole[] = static::buildTraceLine($trace);
         }
         if ($str) {
-            $str='';
+            $str = '';
             foreach ($tracesConsole as $trace_info) {
-                $str.=$perfix.preg_replace('/\n/', "\n".$perfix."\t", $trace_info).PHP_EOL;
+                $str .= $perfix.preg_replace('/\n/', "\n".$perfix."\t", $trace_info).PHP_EOL;
             }
             return $str;
         }
@@ -117,22 +113,22 @@ trait DumpTrait
         } else {
             $function = $trace['function'];
         }
-        $argsDump='';
+        $argsDump = '';
         if (!empty($trace['args'])) {
             foreach ($trace['args'] as $arg) {
-                $argsDump.= self::parameterToString($arg) .',';
+                $argsDump .= self::parameterToString($arg) .',';
             }
             $argsDump = rtrim($argsDump, ',');
         }
-        $line.=' '.$function.'('.$argsDump.')';
+        $line .= ' '.$function.'('.$argsDump.')';
         return $line;
     }
 
     public static function dumpThrowable(\Throwable $e)
     {
         $dump = get_class($e).':'. $e->getMessage() .PHP_EOL;
-        $dump.= 'At: ' . $e->getFile().':'.$e->getLine().PHP_EOL;
-        $dump.= static::dumpTrace($e->getTrace());
+        $dump .= 'At: ' . $e->getFile().':'.$e->getLine().PHP_EOL;
+        $dump .= static::dumpTrace($e->getTrace());
         return $dump;
     }
 }
