@@ -80,7 +80,7 @@ class TableStruct implements ArrayAccess, IteratorAggregate, Countable, JsonSeri
 
     public function offsetExists($offset)
     {
-        return isset($this->data[$offset]);
+        return array_key_exists($offset, $this->data);
     }
 
     public function offsetUnset($offset)
@@ -90,7 +90,7 @@ class TableStruct implements ArrayAccess, IteratorAggregate, Countable, JsonSeri
 
     public function offsetGet($offset)
     {
-        return isset($this->data[$offset]) ? $this->data[$offset] : null;
+        return array_key_exists($offset, $this->data) ? $this->data[$offset] : null;
     }
 
     public function getIterator()
