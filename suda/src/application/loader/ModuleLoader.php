@@ -143,13 +143,13 @@ class ModuleLoader
 
     protected function loadEventListener()
     {
-        if ($path = $this->module->getResource()->getConfigResourcePath('config/listener')) {
-            $listener = Config::loadConfig($path, [
+        if ($path = $this->module->getResource()->getConfigResourcePath('config/event')) {
+            $event = Config::loadConfig($path, [
                 'module' => $this->module->getName(),
                 'config' => $this->module->getConfig(),
             ]);
-            if (\is_array($listener)) {
-                $this->application->event()->load($listener);
+            if (\is_array($event)) {
+                $this->application->event()->load($event);
             }
         }
     }
@@ -181,7 +181,7 @@ class ModuleLoader
     protected function loadRouteGroup(string $groupName)
     {
         $group = $groupName === 'default' ? '': '-'. $groupName;
-        if ($path = $this->module->getResource()->getConfigResourcePath('config/router'.$group)) {
+        if ($path = $this->module->getResource()->getConfigResourcePath('config/route'.$group)) {
             $routeConfig = Config::loadConfig($path, [
                 'module' => $this->module->getName(),
                 'group' => $groupName,
