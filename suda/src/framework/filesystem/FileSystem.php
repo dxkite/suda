@@ -74,6 +74,7 @@ class FileSystem implements FileSystemInterface
 
     protected static function tryCheckWritable(string $path):bool
     {
+        $writable = false;
         \set_error_handler(null);
         if (DIRECTORY_SEPARATOR === '/' && ini_get('safe_mode') === 'On') {
             $writable = is_writable($path);

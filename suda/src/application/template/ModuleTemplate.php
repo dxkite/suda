@@ -20,8 +20,7 @@ class ModuleTemplate extends ModuleTemplateBase
     {
         parent::__construct($name, $application, $request, $defaultModule);
     }
-
-    protected function getSourcePath()
+    protected function getSourcePath():?string
     {
         $subfix = $this->config['subfix'] ?? '.tpl.html';
         return $this->getResource($this->module)->getResourcePath($this->getTemplatePath().'/'.$this->name.$subfix);

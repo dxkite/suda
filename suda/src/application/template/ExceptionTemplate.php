@@ -27,7 +27,7 @@ class ExceptionTemplate extends RawTemplate
         try {
             return parent::getRenderedString();
         } catch (MissingTemplateException $e) {
-            return 'MissingTemplateException:'.$e->getPath();
+            return 'MissingTemplateException:'.$e->getTemplateName();
         } catch (Throwable $e) {
             return 'Template Render Exception:'.$e->getMessage();
         }

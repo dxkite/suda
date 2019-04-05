@@ -118,7 +118,7 @@ class CompilableTemplate extends RawTemplate
         return $output .'/'. $this->name.'-'.substr(md5_file($this->getSourcePath()), 10, 8).'.php';
     }
 
-    protected function getSourcePath()
+    protected function getSourcePath():?string
     {
         return $this->source;
     }
