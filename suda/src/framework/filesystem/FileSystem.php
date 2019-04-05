@@ -66,13 +66,20 @@ class FileSystem implements FileSystemInterface
      */
     public static function isWritable(string $path):bool
     {
-        $writable = false;
+        if (static::exist($path) === false) {
+            return static::isWritable(\dirname($path));
+        }
+        return static::tryCheckWritable($path);
+    }
+
+    protected static function tryCheckWritable(string $path):bool
+    {
         \set_error_handler(null);
         if (DIRECTORY_SEPARATOR === '/' && ini_get('safe_mode') === 'On') {
             $writable = is_writable($path);
         } elseif (is_dir($path)) {
             $writable = static::tryWriteDirectory($path);
-        } else {
+        } elseif (is_file($path)) {
             $writable = static::tryWriteFile($path);
         }
         \restore_error_handler();
