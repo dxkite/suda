@@ -13,19 +13,19 @@ class UploadedFile extends SplFileObject
      *
      * @var string
      */
-    private $originalName;
+    protected $originalName;
     /**
      * 文件的Mimetype
      *
      * @var string
      */
-    private $mimeType;
+    protected $mimeType;
     /**
      * 错误码
      *
      * @var int
      */
-    private $error;
+    protected $error;
 
     /**
      * 创建文件
@@ -94,15 +94,7 @@ class UploadedFile extends SplFileObject
     {
         return UPLOAD_ERR_OK === $this->error && is_uploaded_file($this->getPathname());
     }
-
-    public function __destruct()
-    {
-        $path = $this->getPathname();
-        if (file_exists($path) && is_writeable($path)) {
-            unlink($path);
-        }
-    }
-
+    
     /**
      * Get 上传的文件名
      *
