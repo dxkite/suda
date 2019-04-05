@@ -86,13 +86,14 @@ class RawTemplate
         return $this->path;
     }
 
-    public function getRenderedString() {
+    public function getRenderedString()
+    {
         if (file_exists($this->getPath())) {
             ob_start();
             \extract($this->value);
             include $this->getPath();
             return \ob_get_clean();
         }
-        throw new MissingTemplateException($this->getPath());
+        throw new MissingTemplateException($this->getPath(), 1);
     }
 }

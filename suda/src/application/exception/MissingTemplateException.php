@@ -8,19 +8,20 @@ use RuntimeException;
  */
 class MissingTemplateException extends RuntimeException
 {
-    protected $path;
+    protected $name;
 
-    public function __construct($path) {
-        parent::__construct(sprintf('missing template %s', $this->path));
+    public function __construct(string $name, int $type = 0) {
+        $this->name = $name;
+        parent::__construct(sprintf('missing template %s', $name , $type == 0 ? 'source':'dest'));
     }
 
 
     /**
      * Get the value of path
      */ 
-    public function getPath()
+    public function getName()
     {
-        return $this->path;
+        return $this->name;
     }
 
 }

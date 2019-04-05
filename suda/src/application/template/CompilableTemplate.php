@@ -7,6 +7,7 @@ use suda\framework\runnable\Runnable;
 use suda\framework\filesystem\FileSystem;
 use suda\application\template\RawTemplate;
 use suda\application\template\compiler\Compiler;
+use suda\application\exception\MissingTemplateException;
 
 /**
  * 可编译模板
@@ -141,6 +142,9 @@ class CompilableTemplate extends RawTemplate
     protected function compile(){
         $sourcePath = $this->getSourcePath();
         $destPath = $this->getPath();
+        if ($sourcePath === null) {
+            throw new MissingTemplateException($this->name);
+        }
         $source = FileSystem::exist($sourcePath);
         $dest = FileSystem::exist($this->getPath());
         $notCompiled = $source === true && $dest === false;
