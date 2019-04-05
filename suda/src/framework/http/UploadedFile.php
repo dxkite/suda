@@ -6,7 +6,7 @@ use SplFileObject;
 /**
  * HTTP请求文件
  */
-class UploadedFile extends SplFileObject
+class UploadedFile
 {
     /**
      * 上传的文件名
@@ -30,6 +30,13 @@ class UploadedFile extends SplFileObject
     protected $error;
 
     /**
+     * 临时文件名
+     *
+     * @var string
+     */
+    protected $tempname;
+
+    /**
      * 创建文件
      *
      * @param string $path 路径
@@ -42,9 +49,7 @@ class UploadedFile extends SplFileObject
         $this->mimeType = $mimeType ?: 'application/octet-stream';
         $this->error = $error ?: UPLOAD_ERR_OK;
         $this->originalName = pathinfo($name, PATHINFO_BASENAME);
-        if ($this->error === UPLOAD_ERR_OK) {
-            parent::__construct($path);
-        }
+        $this->tempname = $path;
     }
 
     /**
@@ -55,17 +60,6 @@ class UploadedFile extends SplFileObject
         return $this->error;
     }
 
-    /**
-     * Set the value of error
-     *
-     * @return  self
-     */
-    public function setError($error)
-    {
-        $this->error = $error;
-
-        return $this;
-    }
 
     /**
      * Get the value of mimeType
@@ -73,18 +67,6 @@ class UploadedFile extends SplFileObject
     public function getMimeType()
     {
         return $this->mimeType;
-    }
-
-    /**
-     * Set the value of mimeType
-     *
-     * @return  self
-     */
-    public function setMimeType($mimeType)
-    {
-        $this->mimeType = $mimeType;
-
-        return $this;
     }
 
     /**
@@ -107,17 +89,13 @@ class UploadedFile extends SplFileObject
         return $this->originalName;
     }
 
-    /**
-     * Set 上传的文件名
-     *
-     * @param  string  $originalName  上传的文件名
-     *
-     * @return  self
-     */
-    public function setOriginalName(string $originalName)
-    {
-        $this->originalName = $originalName;
 
-        return $this;
+    /**
+     * 获取临时文件名
+     *
+     * @return string
+     */
+    public function getTempname() {
+        return $this->tempname;
     }
 }
