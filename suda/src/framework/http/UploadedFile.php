@@ -14,12 +14,14 @@ class UploadedFile extends SplFileObject
      * @var string
      */
     protected $originalName;
+
     /**
      * 文件的Mimetype
      *
      * @var string
      */
     protected $mimeType;
+
     /**
      * 错误码
      *
@@ -39,7 +41,7 @@ class UploadedFile extends SplFileObject
     {
         $this->mimeType = $mimeType ?: 'application/octet-stream';
         $this->error = $error ?: UPLOAD_ERR_OK;
-        $this->originalName = pathinfo($name, PATHINFO_FILENAME);
+        $this->originalName = pathinfo($name, PATHINFO_BASENAME);
         if ($this->error === UPLOAD_ERR_OK) {
             parent::__construct($path);
         }
