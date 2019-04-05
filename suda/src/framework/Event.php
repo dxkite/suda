@@ -111,52 +111,13 @@ class Event
     }
 
     /**
-     * 运行，遇到返回指定条件则停止并返回true
-     *
-     * @param string $name
-     * @param array $args
-     * @param boolean $condition
-     * @return boolean
-     */
-    public  function execIf(string $name, array $args=[], $condition = true):bool
-    {
-        if (\array_key_exists($name, $this->queue) && is_array($this->queue[$name])) {
-            foreach ($this->queue[$name] as $command) {
-                if ($this->call($command, $args)===$condition) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-    
-    /**
-     * 运行所有命令返回第一个非空值
-     *
-     * @param string $name
-     * @param array $args
-     * @return mixed|null
-     */
-    public  function execNotNull(string $name, array $args=[])
-    {
-        if (\array_key_exists($name, $this->queue) && is_array($this->queue[$name])) {
-            foreach ($this->queue[$name] as $command) {
-                if (!is_null($value=$this->call($command, $args))) {
-                    return $value;
-                }
-            }
-        }
-        return null;
-    }
-
-    /**
      * 运行最先注入的命令
      *
      * @param string $name
      * @param array $args
      * @return mixed|null
      */
-    public  function execTop(string $name, array $args=[])
+    public  function execFirst(string $name, array $args=[])
     {
         if (\array_key_exists($name, $this->queue) && is_array($this->queue[$name])) {
             return  $this->call(array_shift($this->queue[$name]), $args);
@@ -171,7 +132,7 @@ class Event
      * @param array $args
      * @return mixed|null
      */
-    public  function execTail(string $name, array $args=[])
+    public  function execLast(string $name, array $args=[])
     {
         if (\array_key_exists($name, $this->queue) && is_array($this->queue[$name])) {
             return $this->call(array_pop($this->queue[$name]), $args);
