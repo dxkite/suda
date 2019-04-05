@@ -111,16 +111,26 @@ class CompilableTemplate extends RawTemplate
         return $path;
     }
 
-    protected function getPath()
+    /**
+     * 获取编译后的路径
+     *
+     * @return string
+     */
+    public function getPath()
     {
         $output = $this->config['output'] ?? \constant('SUDA_DATA').'/template';
         FileSystem::make($output);
         return $output .'/'. $this->name.'-'.substr(md5_file($this->getSourcePath()), 10, 8).'.php';
     }
 
-    protected function getSourcePath():?string
+    /**
+     * 获取源路径
+     *
+     * @return string|null
+     */
+    public function getSourcePath():?string
     {
-        return $this->source;
+        return $this->source ?? null;
     }
 
     /**

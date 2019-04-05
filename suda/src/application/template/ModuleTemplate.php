@@ -20,19 +20,36 @@ class ModuleTemplate extends ModuleTemplateBase
     {
         parent::__construct($name, $application, $request, $defaultModule);
     }
-    protected function getSourcePath():?string
+
+    /**
+     * 获取模板源路径
+     *
+     * @return string|null
+     */
+    public function getSourcePath():?string
     {
         $subfix = $this->config['subfix'] ?? '.tpl.html';
         return $this->getResource($this->module)->getResourcePath($this->getTemplatePath().'/'.$this->name.$subfix);
     }
 
-    protected function getPath()
+    /**
+     * 获取模板编译后的路径
+     *
+     * @return string
+     */
+    public function getPath()
     {
         $output = $this->config['output'] ?? \constant('SUDA_DATA').'/template/'. $this->uriName;
         FileSystem::make($output);
         return $output .'/'. $this->name.'.php';
     }
 
+    /**
+     * 包含模板
+     *
+     * @param string $name
+     * @return void
+     */
     public function include(string $name)
     {
         $included = new self($name, $this->application, $this->request, $this->module);
@@ -58,4 +75,26 @@ class ModuleTemplate extends ModuleTemplateBase
         }
         return '#'.$defaultName;
     }
+
+    /**
+     * 判断是否是某路由
+     *
+     * @param string $name
+     * @param array $parameter
+     * @return boolean
+     */
+    public function is(string $name, array $parameter = null) {
+        $full = $this->application->getRouteName($name, $this->module, $this->group);
+        if ($this->request->getAttribute('route') === $full) {
+            if (\is_array($parameter)) {
+                foreach ($parameter as $key => $value) {
+                    if ($this->request->getQuery($key) != $value){
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
+        return false;
+    } 
 }
