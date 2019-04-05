@@ -50,20 +50,20 @@ class ArrayDotAccess implements ArrayAccess
      *
      * @param array|ArrayAccess $array
      * @param string $name 查询列
-     * @param mixed $def 查询的默认值
+     * @param mixed $defaultValue 查询的默认值
      * @return mixed 查询的值
      */
-    public static function get($array, string $name, $def = null)
+    public static function get($array, string $name, $defaultValue = null)
     {
         $path = explode('.', $name);
         while ($key = array_shift($path)) {
             if (static::keyExist($key, $array)) {
                 $array = $array[$key];
             } else {
-                return $def;
+                return $defaultValue;
             }
         }
-        return $array;
+        return $array ?? $defaultValue;
     }
 
     /**
