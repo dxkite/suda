@@ -76,7 +76,7 @@ class UploadedFile
      */
     public function isValid()
     {
-        return UPLOAD_ERR_OK === $this->error && is_uploaded_file($this->getPathname());
+        return UPLOAD_ERR_OK === $this->error && is_uploaded_file($this->getTempname());
     }
     
     /**
