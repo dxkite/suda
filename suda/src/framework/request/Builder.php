@@ -44,6 +44,7 @@ class Builder
         $request->setSecure($this->getSecure());
         $request->setPort($this->getServerPort());
         $this->createUri($request);
+        $this->createUribase($request);
     }
     /**
      * 获取IP地址
@@ -128,5 +129,25 @@ class Builder
         $url = new UriParser($this->request->server()['request-uri'] ?? '/', $index);
         $request->setQueries($url->getQuery());
         $request->setUri($url->getUri());
+    }
+
+    /**
+     * 获取URI基础部分
+     *
+     * @return string
+     */
+    private function createUribase(Request $request)
+    {
+        $scheme = $request->isSecure()?'https':'http';
+        $port = $request->getPort();
+        if ($port == 80 && $scheme == 'http') {
+            $port = '';
+        } elseif ($port == 433 && $scheme == 'https') {
+            $port = '';
+        } else {
+            $port = ':'.$port;
+        }
+        $base = $scheme.'://'. $request->getHost().$port;
+        $request->setUribase($base);
     }
 }

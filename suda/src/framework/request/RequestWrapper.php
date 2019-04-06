@@ -75,6 +75,13 @@ class RequestWrapper
     protected $index;
 
     /**
+     * URI基础部分
+     *
+     * @var string
+     */
+    protected $uribase;
+
+    /**
      * 创建请求包装器
      *
      * @param Request $request
@@ -380,5 +387,29 @@ class RequestWrapper
             return $this->request->server();
         }
         return $this->request->server()[$name] ?? $default;
+    }
+
+    /**
+     * Get URI基础部分
+     *
+     * @return  string
+     */ 
+    public function getUribase()
+    {
+        return $this->uribase;
+    }
+
+    /**
+     * Set URI基础部分
+     *
+     * @param  string  $uribase  URI基础部分
+     *
+     * @return  self
+     */ 
+    public function setUribase(string $uribase)
+    {
+        $this->uribase = $uribase;
+
+        return $this;
     }
 }
