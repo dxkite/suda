@@ -73,7 +73,9 @@ class UriMatcher extends MatcherHelper
             } else {
                 $value = $parameter->unpackValue($match);
             }
-            $parameters[$parameter->getIndexName()] = $value;
+            if ($value !== null) {
+                $parameters[$parameter->getIndexName()] = $value;
+            }
         }
         return $parameters;
     }

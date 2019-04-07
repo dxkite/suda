@@ -275,6 +275,12 @@ class RequestWrapper
         return $this;
     }
 
+    /**
+     * 合并参数
+     *
+     * @param array $query
+     * @return self
+     */
     public function mergeQueries(array $query)
     {
         $this->query = array_merge($this->query, $query);

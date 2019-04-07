@@ -44,7 +44,7 @@ class ContentWrapper
      */
     public static function isTypeOf($data, string $type) : bool
     {
-        if (is_object($data) && !\in_array($type, ['boolean', 'bool', 'integer','double', 'string','array','NULL'])) {
+        if (is_object($data) && !\in_array($type, ['boolean', 'bool', 'integer', 'double', 'string','array','NULL'])) {
             $class = new ReflectionClass($data);
             $typeRef = new ReflectionClass($type);
             if ($typeRef->isInterface()) {
@@ -53,11 +53,22 @@ class ContentWrapper
                 return $class->isSubclassOf($type) || $typeRef->isInstance($data);
             }
         } else {
-            if ($type === 'bool') {
-                $type = 'boolean';
-            }
-            return \gettype($data) === $type;
+            return \gettype($data) === static::phpTypeAlias($type);
         }
+    }
+
+    protected static function phpTypeAlias(string $type):string
+    {
+        if ($type === 'bool') {
+            return 'boolean';
+        }
+        if ($type === 'int') {
+            return 'integer';
+        }
+        if ($type === 'float') {
+            return 'double';
+        }
+        return $type;
     }
 
     /**
