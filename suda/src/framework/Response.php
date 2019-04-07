@@ -174,7 +174,6 @@ class Response extends HTTPResponse
             $this->setContent($content);
         }
         $this->sendContentLength($this->data);
-        $this->end();
     }
 
     /**

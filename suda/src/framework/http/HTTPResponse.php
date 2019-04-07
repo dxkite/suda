@@ -147,7 +147,6 @@ class HTTPResponse implements Response
         } else {
             $this->data = $data;
         }
-        $this->end();
     }
 
     /**
@@ -164,7 +163,6 @@ class HTTPResponse implements Response
             throw new \Exception('file no found: '.$filename);
         }
         $this->data = new DataStream($filename, $offset, $length);
-        $this->end();
     }
 
     /**
@@ -178,7 +176,6 @@ class HTTPResponse implements Response
     {
         $this->header('Location', $url);
         $this->status($httpCode);
-        $this->end();
     }
 
     /**
@@ -186,7 +183,7 @@ class HTTPResponse implements Response
      *
      * @return void
      */
-    protected function end()
+    public function end()
     {
         $this->sendCookies();
         $this->sendHeaders();

@@ -95,13 +95,14 @@ class Application extends ApplicationSource
             $this->debug->time('sending response');
             $response = $this->createResponse($result, $request, $response);
             if (!$response->isSended()) {
-                $response->sendContent();
+                $response->end();
             }
             $this->debug->info('resposned with code '. $response->getStatus());
             $this->debug->timeEnd('sending response');
         } catch (\Throwable $e) {
             $this->debug->uncaughtException($e);
             $response->sendContent($e);
+            $response->end();
             $this->debug->timeEnd('sending response');
         }
         $this->debug->info('system shutdown');
