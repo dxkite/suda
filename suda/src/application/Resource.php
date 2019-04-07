@@ -18,9 +18,14 @@ class Resource
      */
     protected $resource;
 
-    public function __construct(array $resource = [])
+    /**
+     * 资源路径
+     *
+     * @param array|string $resource
+     */
+    public function __construct($resource = [])
     {
-        $this->resource = $resource;
+        $this->resource = \is_array($resource)?$resource:[$resource];
     }
 
     /**

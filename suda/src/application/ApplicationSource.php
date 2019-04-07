@@ -40,7 +40,7 @@ class ApplicationSource extends AppicationBase
         $indexs = $this->conf('indexs') ?? [ 'index.php' ];
         $index = ltrim($request->getIndex(), '/');
         if (!\in_array($index, $indexs)) {
-            return $index;
+            return $request->getIndex();
         }
         return '';
     }
@@ -128,6 +128,18 @@ class ApplicationSource extends AppicationBase
             $module = \strlen($module) ? $module : $default;
         }
         return [$module, $groupName, $name];
+    }
+
+    /**
+     * 获取基础URI
+     *
+     * @param \suda\framework\Request $request
+     * @param boolean $beautify
+     * @return string
+     */
+    public function getUribase(Request $request, bool $beautify = true):string {
+        $index = $beautify ? $this->getUrlIndex($request) : $request->getIndex();
+        return $request->getUribase() . $index;
     }
 
     /**
