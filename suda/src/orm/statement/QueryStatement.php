@@ -67,4 +67,14 @@ class QueryStatement extends Statement
     {
         return $this->withKey;
     }
+    
+    /**
+     * 滚动获取
+     *
+     * @return self
+     */
+    public function scroll() {
+        $this->scroll = true;
+        return $this;
+    }
 }

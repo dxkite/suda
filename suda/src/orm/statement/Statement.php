@@ -147,7 +147,7 @@ abstract class Statement
      *
      * @return boolean|null
      */
-    public function scroll(bool $set = null):?bool
+    public function isScroll(bool $set = null):?bool
     {
         if ($set !== null) {
             $this->scroll = true;

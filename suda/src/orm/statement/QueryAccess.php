@@ -150,7 +150,7 @@ class QueryAccess
         $statement->prepare();
         $queryObj = $statement->getQuery();
         $query = $this->prefix($queryObj->getQuery());
-        if ($statement->scroll() === true) {
+        if ($statement->isScroll()) {
             $stmt = $source->getPdo()->prepare($query, [PDO::ATTR_CURSOR => PDO::CURSOR_SCROLL]);
         } else {
             $stmt = $source->getPdo()->prepare($query);
@@ -188,7 +188,7 @@ class QueryAccess
      */
     protected function runStatement(Connection $connection, Statement $statement)
     {
-        if ($statement->scroll() && $statement->getStatement() !== null) {
+        if ($statement->isScroll() && $statement->getStatement() !== null) {
             // noop
         } else {
             $stmt = $this->createPDOStatement($connection, $statement);
