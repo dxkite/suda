@@ -31,8 +31,8 @@ trait DumpTrait
         $parameterString = '';
         foreach ($properties as $property) {
             if ($property->getDeclaringClass() === $class->getName()) {
-                $name = $property->getName();
                 $property->setAccessible(true);
+                $name = $property->getName();
                 $value = $property->getValue($object);
                 $parameterString .= static::valueToString($name, $value, $deep);
             }

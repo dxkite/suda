@@ -73,6 +73,7 @@ class DebugDumpper
         $this->application->debug()->uncaughtException($exception);
         if ($this->response->isSended() === false) {
             $this->response->sendContent($exception);
+            $this->response->end();
         }
     }
 
