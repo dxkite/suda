@@ -84,7 +84,7 @@ class Debug implements LoggerInterface, LoggerAwareInterface, DumpInterface, Att
         return $attribute;
     }
 
-    protected static function formatBytes(int $bytes, int $precision=0)
+    public static function formatBytes(int $bytes, int $precision=0)
     {
         $human= ['B', 'KB', 'MB', 'GB', 'TB'];
         $bytes = max($bytes, 0);

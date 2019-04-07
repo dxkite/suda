@@ -89,8 +89,6 @@ class Response extends HTTPResponse
         $content = new  SplFileObject($filename);
         if ($content->isFile()) {
             $this->setType($content->getExtension());
-            $this->setHeader('Content-Disposition', 'attachment;filename="' . $content->getBasename().'"');
-            $this->setHeader('Cache-Control', 'max-age=0');
             $this->data = new DataStream($content->getRealPath(), $offset, $length);
         } else {
             throw new \Exception('sendFile must be file');
