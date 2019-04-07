@@ -61,16 +61,6 @@ class QueryStatement extends Statement
     }
 
     /**
-     * 获取字符串
-     *
-     * @return void
-     */
-    public function prepare()
-    {
-        // noop
-    }
-
-    /**
      * Get the value of withKey
      */
     public function getWithKey()

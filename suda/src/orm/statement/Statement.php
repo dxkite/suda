@@ -3,6 +3,7 @@ namespace suda\orm\statement;
 
 use PDOStatement;
 use suda\orm\Binder;
+use suda\orm\statement\Query;
 use suda\orm\statement\PrepareTrait;
 
 abstract class Statement
@@ -25,7 +26,7 @@ abstract class Statement
     /**
      * 获取类型
      *
-     * @var int|null
+     * @var int
      */
     protected $fetch = null;
 
@@ -46,9 +47,9 @@ abstract class Statement
     /**
      * SQL语句
      *
-     * @var string|null
+     * @var string
      */
-    protected $string = null;
+    protected $string;
 
     /**
      * PDOStatement
@@ -56,6 +57,13 @@ abstract class Statement
      * @var PDOStatement|null
      */
     protected $statement = null;
+
+    /**
+     * Query
+     *
+     * @var Query
+     */
+    protected $query;
 
     const RET_ROWS = 1;
     const RET_LAST_INSERT_ID = 2;
@@ -154,20 +162,40 @@ abstract class Statement
      */
     public function getString()
     {
-        if ($this->string === null) {
-            $this->prepare();
-        }
-        return trim($this->string);
+        return $this->getQuery()->getQuery();
     }
 
     /**
-     * 获取SQL字符串
+     * 准备查询对象
      *
-     * @return void
+     * @return Query
      */
-    public function prepare()
+    protected function prepareQuery():Query
     {
-        // noop
+        return new Query($this->string, $this->binder);
+    }
+
+    /**
+     * 准备查询对象
+     *
+     * @return Query
+     */
+    public function prepare():Query
+    {
+        return $this->query = $this->prepareQuery();
+    }
+
+    /**
+     * 获取查询对象
+     *
+     * @return \suda\orm\statement\Query
+     */
+    public function getQuery():Query
+    {
+        if ($this->query === null) {
+            $this->query = $this->prepare();
+        }
+        return $this->query;
     }
 
     /**
@@ -215,7 +243,7 @@ abstract class Statement
      * Get 返回类型
      *
      * @return  int
-     */ 
+     */
     public function getReturnType()
     {
         return $this->returnType;
@@ -227,7 +255,7 @@ abstract class Statement
      * @param  int  $returnType  返回类型
      *
      * @return  self
-     */ 
+     */
     public function setReturnType(int $returnType)
     {
         $this->returnType = $returnType;

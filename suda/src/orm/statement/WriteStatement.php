@@ -3,6 +3,7 @@ namespace suda\orm\statement;
 
 use suda\orm\Binder;
 use suda\orm\TableStruct;
+use suda\orm\statement\Query;
 use suda\orm\statement\Statement;
 use suda\orm\exception\SQLException;
 use suda\orm\statement\PrepareTrait;
@@ -88,7 +89,8 @@ class WriteStatement extends Statement
      *
      * @return self
      */
-    public function wantRows() {
+    public function wantRows()
+    {
         $this->returnType = WriteStatement::RET_ROWS;
         return $this;
     }
@@ -98,7 +100,8 @@ class WriteStatement extends Statement
      *
      * @return self
      */
-    public function wantOk() {
+    public function wantOk()
+    {
         $this->returnType = WriteStatement::RET_BOOL;
         return $this;
     }
@@ -108,7 +111,8 @@ class WriteStatement extends Statement
      *
      * @return self
      */
-    public function wantId() {
+    public function wantId()
+    {
         $this->returnType = WriteStatement::RET_LAST_INSERT_ID;
         return $this;
     }
@@ -144,20 +148,22 @@ class WriteStatement extends Statement
     /**
      * 获取字符串
      *
-     * @return void
+     * @return Query
      */
-    public function prepare()
+    protected function prepareQuery():Query
     {
         if ($this->whereCondition !== null) {
             if ($this->delete === false) {
                 list($updateSet, $upbinder) = $this->prepareUpdateSet($this->data);
-                $this->binder = array_merge($this->binder, $upbinder);
-                $this->string = "UPDATE {$this->table} SET {$updateSet} WHERE {$this->whereCondition}";
+                $binder = array_merge($this->binder, $upbinder);
+                $string = "UPDATE {$this->table} SET {$updateSet} WHERE {$this->whereCondition}";
+                return new Query($string, $binder);
             } else {
-                $this->string = "DELETE FROM {$this->table} WHERE {$this->whereCondition}";
+                $string = "DELETE FROM {$this->table} WHERE {$this->whereCondition}";
+                return new Query($string, $this->binder);
             }
         } else {
-            $this->parepareInsert($this->data);
+            return $this->parepareInsert($this->data);
         }
     }
 
@@ -196,20 +202,21 @@ class WriteStatement extends Statement
      * 准备插入语句
      *
      * @param array $data
-     * @return void
+     * @return Query
      */
-    public function parepareInsert(array $data)
+    public function parepareInsert(array $data):Query
     {
         $names = [];
         $binds = [];
+        $binder = $this->binder;
         foreach ($data as $name => $value) {
             $_name = Binder::index($name);
-            $this->binder[] = new Binder($_name, $value, $name);
+            $binder[] = new Binder($_name, $value, $name);
             $names[] = "`{$name}`";
             $binds[] = ":{$_name}";
         }
         $i_name = \implode(',', $names);
         $i_bind = \implode(',', $binds);
-        $this->string = "INSERT INTO {$this->table} ({$i_name}) VALUES ({$i_bind})";
+        return new Query("INSERT INTO {$this->table} ({$i_name}) VALUES ({$i_bind})", $binder);
     }
 }

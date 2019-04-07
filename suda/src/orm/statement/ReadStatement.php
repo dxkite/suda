@@ -2,6 +2,7 @@
 namespace suda\orm\statement;
 
 use suda\orm\TableStruct;
+use suda\orm\statement\Query;
 use suda\orm\statement\Statement;
 use suda\orm\exception\SQLException;
 use suda\orm\statement\PrepareTrait;
@@ -199,14 +200,15 @@ class ReadStatement extends QueryStatement
     /**
      * 获取字符串
      *
-     * @return void
+     * @return Query
      */
-    public function prepare()
+    protected function prepareQuery():Query
     {
         $where = [$this->where,$this->groupBy,$this->having,$this->orderBy,$this->limit];
         $condition = implode(' ', array_filter(array_map('trim', $where), 'strlen'));
         $select = [$this->distinct,$this->select];
         $selection = implode(' ', array_filter(array_map('trim', $select), 'strlen'));
-        $this->string = "SELECT {$selection} FROM {$this->table} {$condition}";
+        $string = "SELECT {$selection} FROM {$this->table} {$condition}";
+        return new Query($string, $this->binder);
     }
 }

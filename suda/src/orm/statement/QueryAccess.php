@@ -147,7 +147,9 @@ class QueryAccess
      */
     protected function createPDOStatement(Connection $source, Statement $statement): PDOStatement
     {
-        $query = $this->prefix($statement->getString());
+        $statement->prepare();
+        $queryObj = $statement->getQuery();
+        $query = $this->prefix($queryObj->getQuery());
         if ($statement->scroll() === true) {
             $stmt = $source->getPdo()->prepare($query, [PDO::ATTR_CURSOR => PDO::CURSOR_SCROLL]);
         } else {
@@ -168,7 +170,7 @@ class QueryAccess
      */
     protected function bindPDOStatementValues(PDOStatement $stmt, Statement $statement)
     {
-        foreach ($statement->getBinder() as $binder) {
+        foreach ($statement->getQuery()->getBinder() as $binder) {
             if ($binder->getKey() !== null) {
                 $value = $this->middleware->input($binder->getKey(), $binder->getValue());
                 $stmt->bindValue($binder->getName(), $value, Binder::build($value));
