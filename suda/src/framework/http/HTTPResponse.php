@@ -36,13 +36,6 @@ class HTTPResponse implements Response
     protected $version = '1.1';
 
     /**
-     * 响应数据
-     *
-     * @var \suda\framework\http\Stream|string|array
-     */
-    protected $data;
-
-    /**
      * Cookie代码
      *
      * @var \suda\framework\http\Cookie[]
@@ -93,7 +86,7 @@ class HTTPResponse implements Response
      */
     public function isSended(): bool
     {
-        return $this->sended;
+        return $this->sended || headers_sent();
     }
 
     /**
@@ -131,7 +124,8 @@ class HTTPResponse implements Response
      */
     public function write($data)
     {
-        $this->data[] = $data;
+        $this->sendHeaders();
+        $this->writeOutput($data);
     }
 
     /**
@@ -142,11 +136,8 @@ class HTTPResponse implements Response
      */
     public function send($data)
     {
-        if (\is_array($this->data)) {
-            $this->data[] = $data;
-        } else {
-            $this->data = $data;
-        }
+        $this->sendHeaders();
+        $this->writeOutput($data);
     }
 
     /**
@@ -162,7 +153,9 @@ class HTTPResponse implements Response
         if (!file_exists($filename)) {
             throw new \Exception('file no found: '.$filename);
         }
-        $this->data = new DataStream($filename, $offset, $length);
+        $data = new DataStream($filename, $offset, $length);
+        $this->sendHeaders();
+        $this->writeOutput($data);
     }
 
     /**
@@ -185,9 +178,17 @@ class HTTPResponse implements Response
      */
     public function end()
     {
-        $this->sendCookies();
         $this->sendHeaders();
-        $this->sendData();
+        $this->sended = true;
+    }
+
+    protected function sendHeaders()
+    {
+        if ($this->isSended()) {
+            return $this;
+        }
+        $this->prepareCookieHeader();
+        $this->sendHeader();
         $this->sended = true;
     }
 
@@ -196,11 +197,8 @@ class HTTPResponse implements Response
      *
      * @return self
      */
-    protected function sendHeaders()
+    private function sendHeader()
     {
-        if ($this->sended) {
-            return $this;
-        }
         foreach ($this->header->all() as $name => $values) {
             foreach ($values as $header) {
                 \header($header, false, $this->status);
@@ -211,34 +209,16 @@ class HTTPResponse implements Response
     }
 
     /**
-     * 发送Cookies
+     * 准备Cookie头
      *
      * @return self
      */
-    protected function sendCookies()
+    private function prepareCookieHeader()
     {
-        if ($this->sended) {
-            return $this;
-        }
         foreach ($this->cookie as $cookie) {
             $cookie->send($this);
         }
         return $this;
-    }
-
-    /**
-     * 发送内容
-     *
-     * @return void
-     */
-    protected function sendData()
-    {
-        $this->closeOutputBuffer(false);
-        if (is_array($this->data)) {
-            $this->sendArrayData($this->data);
-        } else {
-            $this->echoDataContent($this->data);
-        }
     }
 
     /**
@@ -247,22 +227,10 @@ class HTTPResponse implements Response
      * @param boolean $flush
      * @return void
      */
-    protected function closeOutputBuffer(bool $flush) {
+    protected function closeOutputBuffer(bool $flush)
+    {
         while (ob_get_level() > 0) {
             $flush?ob_end_flush():ob_end_clean();
-        }
-    }
-
-    /**
-     * 发送数据
-     *
-     * @param array $data
-     * @return void
-     */
-    protected function sendArrayData(array $data)
-    {
-        foreach ($data as $content) {
-            $this->echoDataContent($content);
         }
     }
 
@@ -272,8 +240,9 @@ class HTTPResponse implements Response
      * @param Stream|string $data
      * @return void
      */
-    protected function echoDataContent($data)
+    protected function writeOutput($data)
     {
+        $this->closeOutputBuffer(false);
         if ($data instanceof Stream) {
             $data->echo();
         } else {

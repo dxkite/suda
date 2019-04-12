@@ -21,13 +21,21 @@ class Response extends HTTPResponse
     protected $wrapper;
 
     /**
+     * 响应数据
+     *
+     * @var \suda\framework\http\Stream|string
+     */
+    protected $data;
+
+    /**
      * 创建响应
      */
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
         $this->wrapper = new ContentWrapper;
     }
-    
+
     /**
      * 设置类型
      *
@@ -45,7 +53,8 @@ class Response extends HTTPResponse
      *
      * @return integer
      */
-    public function getStatus():int {
+    public function getStatus():int
+    {
         return $this->status;
     }
 
@@ -59,7 +68,7 @@ class Response extends HTTPResponse
      */
     public function setHeader(string $name, string $content, bool $replace = false)
     {
-        $this->header($name, $content , $replace);
+        $this->header($name, $content, $replace);
         return $this;
     }
 
@@ -75,7 +84,7 @@ class Response extends HTTPResponse
         $this->data = $wrapper->getContent($this);
         return $this;
     }
-  
+
     /**
      * 发送文件内容
      *
@@ -95,6 +104,17 @@ class Response extends HTTPResponse
         }
         $this->sendContentLength($this->data);
         $this->end();
+    }
+
+
+    /**
+     * 结束请求
+     *
+     * @return void
+     */
+    public function end()
+    {
+        $this->sendContent($this->data);
     }
 
     /**
@@ -172,13 +192,14 @@ class Response extends HTTPResponse
             $this->setContent($content);
         }
         $this->sendContentLength($this->data);
+        $this->send($this->data);
     }
 
     /**
      * Get 包装器
      *
      * @return  ContentWrapper
-     */ 
+     */
     public function getWrapper()
     {
         return $this->wrapper;
@@ -190,7 +211,7 @@ class Response extends HTTPResponse
      * @param  ContentWrapper  $wrapper  包装器
      *
      * @return  self
-     */ 
+     */
     public function setWrapper(ContentWrapper $wrapper)
     {
         $this->wrapper = $wrapper;
