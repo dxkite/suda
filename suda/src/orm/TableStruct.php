@@ -8,6 +8,7 @@ use JsonSerializable;
 use IteratorAggregate;
 use suda\orm\struct\Field;
 use suda\orm\struct\Fields;
+use InvalidArgumentException;
 
 class TableStruct implements ArrayAccess, IteratorAggregate, Countable, JsonSerializable
 {
@@ -32,12 +33,23 @@ class TableStruct implements ArrayAccess, IteratorAggregate, Countable, JsonSeri
      */
     protected $data = [];
 
+    /**
+     * 创建表结构
+     *
+     * @param string $name
+     */
     public function __construct(string $name)
     {
         $this->name = $name;
         $this->fields = new Fields($name);
     }
 
+    /**
+     * 添加表结构字段
+     *
+     * @param array|Field $fields
+     * @return self
+     */
     public function fields($fields)
     {
         if (!is_array($fields) && $fields instanceof Field) {
@@ -66,33 +78,35 @@ class TableStruct implements ArrayAccess, IteratorAggregate, Countable, JsonSeri
     {
         $struct = new self($this->name);
         $struct->data = $data;
+        $struct->fields = $this->fields;
         return $struct;
     }
 
     public function offsetSet($offset, $value)
     {
-        if (null === $offset) {
-            $this->data[] = $value;
-        } else {
-            $this->data[$offset] = $value;
-        }
+        $this->__set($offset, $value);
     }
 
     public function offsetExists($offset)
     {
-        return array_key_exists($offset, $this->data);
+        return $this->__isset($offset);
     }
 
     public function offsetUnset($offset)
     {
-        unset($this->data[$offset]);
+        $this->__unset($offset);
     }
 
     public function offsetGet($offset)
     {
-        return array_key_exists($offset, $this->data) ? $this->data[$offset] : null;
+        return $this->__get($offset);
     }
 
+    /**
+     * 获取迭代器
+     *
+     * @return ArrayIterator
+     */
     public function getIterator()
     {
         return new ArrayIterator($this->data);
@@ -118,16 +132,84 @@ class TableStruct implements ArrayAccess, IteratorAggregate, Countable, JsonSeri
         return $this->fields;
     }
 
+    /**
+     * 转换成原始数组
+     *
+     * @return array
+     */
     public function toArray():array
     {
         return $this->data;
     }
 
+    /**
+     * 计数
+     *
+     * @return int
+     */
     public function count()
     {
         return count($this->data);
     }
     
+    /**
+     * 设置值
+     *
+     * @param string $name
+     * @param mixed $value
+     */
+    public function __set(string $name, $value)
+    {
+        if ($this->fields->hasField($name)) {
+            $this->data[$name] = $value;
+            return;
+        }
+        throw new InvalidArgumentException(sprintf('TableStruct[%s] has no attribute %s', $this->name, $name), 1);
+    }
+
+    /**
+     * 获取参数值
+     *
+     * @param string $name
+     * @return mixed
+     */
+    public function __get(string $name) {
+        if ($this->fields->hasField($name)) {
+            return $this->data[$name] ?? null;
+        }
+        throw new InvalidArgumentException(sprintf('TableStruct[%s] has no attribute %s', $this->name, $name), 2);
+    }
+
+    /**
+     * 判断是否设置
+     *
+     * @param string $name
+     * @return boolean
+     */
+    public function __isset(string $name) {
+        if ($this->fields->hasField($name) === false) {
+            throw new InvalidArgumentException(sprintf('TableStruct[%s] has no attribute %s', $this->name, $name), 3);
+        }
+        return array_key_exists($name, $this->data);
+    }
+
+    /**
+     * 取消设置值
+     *
+     * @param string $name
+     */
+    public function __unset(string $name) {
+        if ($this->fields->hasField($name) === false) {
+            throw new InvalidArgumentException(sprintf('TableStruct[%s] has no attribute %s', $this->name, $name), 4);
+        }
+        unset($this->data[$name]);
+    }
+
+    /**
+     * 获取序列化对象
+     *
+     * @return array
+     */
     public function jsonSerialize()
     {
         return $this->data;

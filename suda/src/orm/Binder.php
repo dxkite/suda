@@ -39,7 +39,13 @@ class Binder implements \JsonSerializable
         return $this->value;
     }
 
-    public static function build($value)
+    /**
+     * 创建值的类型
+     *
+     * @param mixed $value
+     * @return int
+     */
+    public static function typeOf($value)
     {
         if (null === $value) {
             $type = PDO::PARAM_NULL;

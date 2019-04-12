@@ -117,8 +117,47 @@ class StatementTest extends TestCase
             'SELECT `id`,`name` FROM user_table WHERE id in (:_180,:_191) HAVING name like :_200 LIMIT 0,10',
             $table->read('id', 'name')->where('id in (?,?)', 1,2 )->page(1, 10)->having('name like ?', 'dxkite')->getString()
         );
+        $this->assertEquals(
+            'DELETE FROM user_table WHERE `id` is :_21id',
+            $table->delete(['id' => ['is', null]])->getString()
+        );
     }
 
+    public function testStuctSet() {
+        $struct = new TableStruct('user_table');
+        $struct->fields([
+            $struct->field('id', 'bigint', 20)->auto()->primary(),
+            $struct->field('name', 'varchar', 80),
+        ]);
+        $struct->name = 'dxkite';
+        $this->assertEquals('dxkite', $struct->name);
+    }
+
+    /**
+     * @expectedException  InvalidArgumentException
+     * @expectedExceptionCode 1
+     */
+    public function testStuctSetException() {
+        $struct = new TableStruct('user_table');
+        $struct->fields([
+            $struct->field('id', 'bigint', 20)->auto()->primary(),
+            $struct->field('name', 'varchar', 80),
+        ]);
+        $struct->nickname = 'dxkite';
+    }
+
+    /**
+     * @expectedException  InvalidArgumentException
+     * @expectedExceptionCode 2
+     */
+    public function testStuctGetException() {
+        $struct = new TableStruct('user_table');
+        $struct->fields([
+            $struct->field('id', 'bigint', 20)->auto()->primary(),
+            $struct->field('name', 'varchar', 80),
+        ]);
+        $name = $struct->nickname;
+    }
 
     public function testMySQLConnectionWindows()
     {

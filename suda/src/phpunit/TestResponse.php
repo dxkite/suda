@@ -18,8 +18,7 @@ class TestResponse extends Response
      *
      * @return void
      */
-    protected function end() {
-        // noop
+    public function end() {
         $this->sended = true;
     }
 }

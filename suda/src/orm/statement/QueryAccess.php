@@ -173,9 +173,9 @@ class QueryAccess
         foreach ($statement->getQuery()->getBinder() as $binder) {
             if ($binder->getKey() !== null) {
                 $value = $this->middleware->input($binder->getKey(), $binder->getValue());
-                $stmt->bindValue($binder->getName(), $value, Binder::build($value));
+                $stmt->bindValue($binder->getName(), $value, Binder::typeOf($value));
             } else {
-                $stmt->bindValue($binder->getName(), $binder->getValue(), Binder::build($binder->getValue()));
+                $stmt->bindValue($binder->getName(), $binder->getValue(), Binder::typeOf($binder->getValue()));
             }
         }
     }
