@@ -306,4 +306,14 @@ class Route
     {
         return $this->containClourse;
     }
+
+    /**
+     * Get 路由
+     *
+     * @return  RouteCollection
+     */
+    public function getRouteCollection():RouteCollection
+    {
+        return $this->routes;
+    }
 }

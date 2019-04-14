@@ -5,8 +5,7 @@ use suda\framework\route\uri\MatcherHelper;
 use suda\framework\route\uri\parameter\Parameter;
 
 /**
- * 可执行命令表达式
- *
+ * 路由匹配工具
  */
 class UriMatcher extends MatcherHelper
 {

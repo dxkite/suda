@@ -9,8 +9,7 @@ use suda\framework\route\uri\parameter\FloatParameter;
 use suda\framework\route\uri\parameter\StringParameter;
 
 /**
- * 可执行命令表达式
- *
+ * 匹配辅助类
  */
 class MatcherHelper
 {
