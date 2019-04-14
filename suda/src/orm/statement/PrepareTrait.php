@@ -57,28 +57,47 @@ trait PrepareTrait
         return [\implode(' AND ', $and), $binders];
     }
 
+    protected function parepareWhereString(string $where, array $whereBinder)
+    {
+        foreach ($whereBinder as $name => $value) {
+            if (\is_array($value) || $value instanceof \ArrayObject) {
+                list($inSQL, $binders) = $this->prepareInParameter($value, $name);
+                $whereBinder = array_merge($whereBinder, $binders);
+                $name = ltrim($name, ':');
+                $where = \str_replace(':'.$name, $inSQL, $where);
+            }
+        }
+        return [$where, $whereBinder];
+    }
+
 
     /**
      * 准备In
      *
      * @param string $name
-     * @param array|\ArrayObject $values
+     * @param \ArrayObject|array $values
      * @return array
      */
     protected function prepareIn(string $name, $values)
+    {
+        list($inSQL, $binders) = $this->prepareInParameter($values, $name);
+        $sql = $name.' IN ('.$inSQL.')';
+        return [$sql,$binders];
+    }
+
+    protected function prepareInParameter($values, string $name)
     {
         if (count($values) <= 0) {
             throw new SQLException('on field '.$name.' value can\'t be empty array');
         }
         $names = [];
         $binders = [];
-        foreach ($values as $key => $value) {
+        foreach ($values as $value) {
             $_name = Binder::index($name);
             $binders[] = new Binder($_name, $value);
             $names[] = ':'.$_name;
         }
-        $sql = $name.' IN ('.implode(',', $names).')';
-        return [$sql,$binders];
+        return [implode(',', $names), $binders];
     }
 
     /**
@@ -109,13 +128,19 @@ trait PrepareTrait
     protected function prepareQueryMark(string $sql, array $parameter)
     {
         $binders = [];
-        $query = \preg_replace_callback('/\?/', function ($match) use  (&$binders, $parameter) {
+        $query = \preg_replace_callback('/\?/', function ($match) use (&$binders, $parameter) {
             $index = count($binders);
             if (\array_key_exists($index, $parameter)) {
                 $name = Binder::index($index);
-                $binder = new Binder($name, $parameter[$index]);
-                $binders[] = $binder;
-                return ':'.$binder->getName();
+                if (\is_array($parameter[$index]) || $parameter[$index] instanceof \ArrayObject) {
+                    list($inSQL, $inBinders) = $this->prepareInParameter($parameter[$index], $index);
+                    $binders = array_merge($binders, $inBinders);
+                    return $inSQL;
+                } else {
+                    $binder = new Binder($name, $parameter[$index]);
+                    $binders[] = $binder;
+                    return ':'.$binder->getName();
+                }
             }
             return $match[0];
         }, $sql);
@@ -129,7 +154,8 @@ trait PrepareTrait
      * @param array $parameter
      * @return Binder[]
      */
-    protected function mergeBinder(array $binder, array $parameter) {
+    protected function mergeBinder(array $binder, array $parameter)
+    {
         foreach ($parameter as $key => $value) {
             if ($value instanceof Binder) {
                 $binder[] = $value;

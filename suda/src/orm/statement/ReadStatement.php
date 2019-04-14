@@ -89,7 +89,7 @@ class ReadStatement extends QueryStatement
     public function where($where, ...$args)
     {
         if (\is_array($where)) {
-            $this->whereArray($where);
+            $this->whereArray($where, $args[0] ?? []);
         } elseif (is_array($args[0])) {
             $this->whereStringArray($where, $args[0]);
         } else {
@@ -99,14 +99,15 @@ class ReadStatement extends QueryStatement
         return $this;
     }
 
-    protected function whereArray(array $where)
+    protected function whereArray(array $where, array $binders)
     {
         list($where, $whereBinder) = $this->parepareWhere($where);
-        $this->whereStringArray($where, $whereBinder);
+        $this->whereStringArray($where, array_merge($whereBinder, $binders));
     }
 
     protected function whereStringArray(string $where, array $whereBinder)
     {
+        list($where, $whereBinder) = $this->parepareWhereString($where, $whereBinder);
         $this->where = 'WHERE '. $where;
         $this->binder = $this->mergeBinder($this->binder, $whereBinder);
     }
@@ -151,6 +152,8 @@ class ReadStatement extends QueryStatement
 
     protected function havingStringArray(string $having, array $havingBinder)
     {
+        
+        list($having, $havingBinder) = $this->parepareWhereString($having, $havingBinder);
         $this->having = 'HAVING '. $having;
         $this->binder = $this->mergeBinder($this->binder, $havingBinder);
     }

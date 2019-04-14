@@ -2,6 +2,7 @@
 namespace test\orm;
 
 use SQLite3;
+use ArrayObject;
 use suda\orm\DataSource;
 use suda\orm\TableAccess;
 use suda\orm\TableStruct;
@@ -115,15 +116,34 @@ class StatementTest extends TestCase
 
         $this->assertEquals(
             'SELECT `id`,`name` FROM user_table WHERE id in (:_180,:_191) HAVING name like :_200 LIMIT 0,10',
-            $table->read('id', 'name')->where('id in (?,?)', 1,2 )->page(1, 10)->having('name like ?', 'dxkite')->getString()
+            $table->read('id', 'name')->where('id in (?,?)', 1, 2)->page(1, 10)->having('name like ?', 'dxkite')->getString()
         );
+
         $this->assertEquals(
             'DELETE FROM user_table WHERE `id` is :_21id',
             $table->delete(['id' => ['is', null]])->getString()
         );
+        
+        $whereIn = $table->delete('id in (:id)', [ 'id' => new ArrayObject([1, 3, 4])])->getString();
+        $this->assertEquals(
+            'DELETE FROM user_table WHERE id in (:_22id,:_23id,:_24id)',
+            $whereIn
+        );
+
+        $this->assertEquals(
+            'SELECT `id`,`name` FROM user_table WHERE id in (:_250,:_260) HAVING name like :_270 LIMIT 0,10',
+            $table->read('id', 'name')->where('id in (?)', new ArrayObject([ 1, 2]))->page(1, 10)->having('name like ?', 'dxkite')->getString()
+        );
+
+        $whereIn = $table->delete('id in (?)', new ArrayObject([1, 3, 4]));
+        $this->assertEquals(
+            'DELETE FROM user_table WHERE id in (:_280,:_290,:_300)',
+            $whereIn->getString()
+        );
     }
 
-    public function testStuctSet() {
+    public function testStuctSet()
+    {
         $struct = new TableStruct('user_table');
         $struct->fields([
             $struct->field('id', 'bigint', 20)->auto()->primary(),

@@ -142,10 +142,10 @@ class TableAccess extends QueryAccess
      * @param array $whereParameter
      * @return \suda\orm\struct\WriteStatement
      */
-    public function delete($where = null, array $whereParameter = []):WriteStatement
+    public function delete($where = null, ...$whereParameter):WriteStatement
     {
         if ($where !== null) {
-            return (new WriteStatement($this))->delete()->where($where, $whereParameter);
+            return (new WriteStatement($this))->delete()->where($where, ...$whereParameter);
         }
         return (new WriteStatement($this))->delete();
     }

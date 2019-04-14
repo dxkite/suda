@@ -135,12 +135,18 @@ class WriteStatement extends Statement
      * @param array $whereParameter
      * @return self
      */
-    public function where($where, array $whereParameter = [])
+    public function where($where, ...$args)
     {
         if (\is_string($where)) {
-            $this->whereCondition($where, $whereParameter);
+            if (\is_array($args[0])) {
+                $whereParameter = $args[0];
+                $this->whereCondition($where, $whereParameter);
+            } else {
+                list($string, $array) = $this->prepareQueryMark($where, $args);
+                $this->whereCondition($string, $array);
+            }
         } else {
-            $this->arrayWhereCondition($where, $whereParameter);
+            $this->arrayWhereCondition($where, $args[0] ?? []);
         }
         return $this;
     }
@@ -176,10 +182,8 @@ class WriteStatement extends Statement
      */
     protected function whereCondition(string $where, array $whereParameter)
     {
-        $this->whereCondition = $where;
-        foreach ($whereParameter as $key => $value) {
-            $this->binder[] = new Binder($key, $value);
-        }
+        list($this->whereCondition, $wherebinder) = $this->parepareWhereString($where, $whereParameter);
+        $this->binder = array_merge($this->binder, $wherebinder);
     }
 
     /**
