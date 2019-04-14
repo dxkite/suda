@@ -19,6 +19,13 @@ date_default_timezone_set(SUDA_TIMEZONE);
 if (SUDA_DEBUG) {
     error_reporting(E_ALL);
 }
+
+// PHP版本检查
+if (version_compare(PHP_VERSION, '7.2.0', '<')) {
+    require SUDA_RESOURCE.'/suda_panic.php';
+    suda_panic('Kernal Panic', 'your current  php vesion is '.PHP_VERSION.', please use 7.2.0 + to run this program!');
+}
+
 // HOME PAHT GET
 if (!defined('USER_HOME_PATH')) {
     // for linux
