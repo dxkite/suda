@@ -133,32 +133,6 @@ class StatementTest extends TestCase
         $this->assertEquals('dxkite', $struct->name);
     }
 
-    /**
-     * @expectedException  InvalidArgumentException
-     * @expectedExceptionCode 1
-     */
-    public function testStuctSetException() {
-        $struct = new TableStruct('user_table');
-        $struct->fields([
-            $struct->field('id', 'bigint', 20)->auto()->primary(),
-            $struct->field('name', 'varchar', 80),
-        ]);
-        $struct->nickname = 'dxkite';
-    }
-
-    /**
-     * @expectedException  InvalidArgumentException
-     * @expectedExceptionCode 2
-     */
-    public function testStuctGetException() {
-        $struct = new TableStruct('user_table');
-        $struct->fields([
-            $struct->field('id', 'bigint', 20)->auto()->primary(),
-            $struct->field('name', 'varchar', 80),
-        ]);
-        $name = $struct->nickname;
-    }
-
     public function testMySQLConnectionWindows()
     {
         $source = new DataSource;

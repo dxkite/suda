@@ -62,10 +62,10 @@ trait PrepareTrait
      * 准备In
      *
      * @param string $name
-     * @param \ArrayObject $values
+     * @param array|\ArrayObject $values
      * @return array
      */
-    protected function prepareIn(string $name, \ArrayObject $values)
+    protected function prepareIn(string $name, $values)
     {
         if (count($values) <= 0) {
             throw new SQLException('on field '.$name.' value can\'t be empty array');

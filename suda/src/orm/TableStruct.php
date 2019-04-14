@@ -160,11 +160,7 @@ class TableStruct implements ArrayAccess, IteratorAggregate, Countable, JsonSeri
      */
     public function __set(string $name, $value)
     {
-        if ($this->fields->hasField($name)) {
-            $this->data[$name] = $value;
-            return;
-        }
-        throw new InvalidArgumentException(sprintf('TableStruct[%s] has no attribute %s', $this->name, $name), 1);
+        $this->data[$name] = $value;
     }
 
     /**
@@ -173,11 +169,9 @@ class TableStruct implements ArrayAccess, IteratorAggregate, Countable, JsonSeri
      * @param string $name
      * @return mixed
      */
-    public function __get(string $name) {
-        if ($this->fields->hasField($name)) {
-            return $this->data[$name] ?? null;
-        }
-        throw new InvalidArgumentException(sprintf('TableStruct[%s] has no attribute %s', $this->name, $name), 2);
+    public function __get(string $name)
+    {
+        return $this->data[$name];
     }
 
     /**
@@ -186,10 +180,8 @@ class TableStruct implements ArrayAccess, IteratorAggregate, Countable, JsonSeri
      * @param string $name
      * @return boolean
      */
-    public function __isset(string $name) {
-        if ($this->fields->hasField($name) === false) {
-            throw new InvalidArgumentException(sprintf('TableStruct[%s] has no attribute %s', $this->name, $name), 3);
-        }
+    public function __isset(string $name)
+    {
         return array_key_exists($name, $this->data);
     }
 
@@ -198,10 +190,8 @@ class TableStruct implements ArrayAccess, IteratorAggregate, Countable, JsonSeri
      *
      * @param string $name
      */
-    public function __unset(string $name) {
-        if ($this->fields->hasField($name) === false) {
-            throw new InvalidArgumentException(sprintf('TableStruct[%s] has no attribute %s', $this->name, $name), 4);
-        }
+    public function __unset(string $name)
+    {
         unset($this->data[$name]);
     }
 
