@@ -4,8 +4,9 @@ namespace test\orm;
 use test\orm\UserField;
 use suda\orm\TableStruct;
 use PHPUnit\Framework\TestCase;
-use suda\orm\TableStructBuilder;
 use suda\framework\runnable\Runnable;
+use suda\orm\struct\TableStructBuilder;
+use suda\orm\struct\FieldModifierParser;
 
 class ObjectTest extends TestCase
 {
@@ -21,6 +22,20 @@ class ObjectTest extends TestCase
     //     $create = new TableStructBuilder(User::class);
     //     $this->assertEquals($struct, $create->createStruct());
     // }
+
+    public function testToken() {
+        $modifier = (new FieldModifierParser)->parse('unique default(null) decimal(10,2) hello()  default(0) comment("备\"注") #注释');
+        $this->assertEquals([
+            ['unique' , [],],
+            ['default', [null],],
+            ['decimal' , [10,2],],
+            ['hello', [],],
+            ['default' , [0]],
+            ['comment' , ['备"注']],
+        ], $modifier);
+    }
+
+    
 
     public function testCreateNameStruct()
     {

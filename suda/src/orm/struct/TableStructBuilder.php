@@ -1,8 +1,9 @@
 <?php
-namespace suda\orm;
+namespace suda\orm\struct;
 
 use ReflectionClass;
 use ReflectionProperty;
+use suda\orm\TableStruct;
 use suda\orm\struct\Field;
 
 class TableStructBuilder
