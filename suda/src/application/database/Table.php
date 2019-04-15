@@ -54,4 +54,14 @@ abstract class Table extends TableAccess implements Middleware
         $table = new TableStruct($tableName);
         return $this->onCreateStruct($table);
     }
+
+    /**
+     * Get 应用引用
+     *
+     * @return  Application
+     */ 
+    public static function application()
+    {
+        return static::$application;
+    }
 }

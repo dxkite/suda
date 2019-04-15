@@ -38,10 +38,10 @@ trait TableMiddlewareTrait
     /**
      * 对输出列进行处理
      *
-     * @param TableStruct $row
-     * @return TableStruct
+     * @param mixed $row
+     * @return mixed
      */
-    public function outputRow(TableStruct $row){
+    public function outputRow($row) {
         $methodName='_outputDataFilter';
         if (\method_exists($this, $methodName)) {
             return $this->$methodName($row);

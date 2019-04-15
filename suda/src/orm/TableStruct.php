@@ -160,6 +160,7 @@ class TableStruct implements ArrayAccess, IteratorAggregate, Countable, JsonSeri
      */
     public function __set(string $name, $value)
     {
+        $this->assertFieldName($name);
         $this->data[$name] = $value;
     }
 
@@ -171,7 +172,8 @@ class TableStruct implements ArrayAccess, IteratorAggregate, Countable, JsonSeri
      */
     public function __get(string $name)
     {
-        return $this->data[$name];
+        $this->assertFieldName($name);
+        return $this->data[$name] ?? null;
     }
 
     /**
@@ -182,6 +184,7 @@ class TableStruct implements ArrayAccess, IteratorAggregate, Countable, JsonSeri
      */
     public function __isset(string $name)
     {
+        $this->assertFieldName($name);
         return array_key_exists($name, $this->data);
     }
 
@@ -192,7 +195,15 @@ class TableStruct implements ArrayAccess, IteratorAggregate, Countable, JsonSeri
      */
     public function __unset(string $name)
     {
+        $this->assertFieldName($name);
         unset($this->data[$name]);
+    }
+
+    protected function assertFieldName(string $name)
+    {
+        if ($this->fields->hasField($name) === false) {
+            throw new InvalidArgumentException(sprintf('TableStruct[%s] has no attribute %s', $this->name, $name), 0);
+        }
     }
 
     /**

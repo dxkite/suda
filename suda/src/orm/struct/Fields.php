@@ -29,6 +29,7 @@ class Fields implements IteratorAggregate
     public function __construct(string $table)
     {
         $this->name = $table;
+        $this->fields = [];
     }
 
     /**

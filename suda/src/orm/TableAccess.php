@@ -164,12 +164,13 @@ class TableAccess extends QueryAccess
     /**
      * 原始查询
      *
-     * @param mixed ...$args
-     * @return QueryStatement
+     * @param string $query
+     * @param mixed ...$parameter
+     * @return \suda\orm\struct\QueryStatement
      */
-    public function query(...$args):QueryStatement
+    public function query(string $query, ...$parameter):QueryStatement
     {
-        return (new QueryStatement($this, ...$args));
+        return (new QueryStatement($this, $query, ...$parameter));
     }
 
     /**
@@ -184,74 +185,6 @@ class TableAccess extends QueryAccess
         $this->runStatement($connection, $statement);
         return $this->createResult($statement);
     }
-
-    /**
-     * 处理一行数据
-     *
-     * @param array $data
-     * @return TableStruct
-     */
-    protected function fetchOneProccess(array $data):TableStruct
-    {
-        if ($this->middleware !== null) {
-            foreach ($data as $name => $value) {
-                $data[$name] = $this->middleware->output($name, $value);
-            }
-        }
-        return $this->struct->createOne($data);
-    }
-
-    /**
-     * 处理多行数据
-     *
-     * @param ReadStatement $statement
-     * @param array $data
-     * @return array
-     */
-    protected function fetchAllProccess(ReadStatement $statement, array $data): array
-    {
-        foreach ($data as $index => $row) {
-            $row = $this->fetchOneProccess($row);
-            $row = $this->middleware->outputRow($row);
-            $data[$index] = $row;
-        }
-        $withKey = $statement->getWithKey();
-        if ($withKey !== null) {
-            $target = [];
-            foreach ($data as $key => $value) {
-                $target[$value[$withKey]] = $value;
-            }
-            return $target;
-        }
-        return $data;
-    }
-
-    /**
-     * 取结果
-     *
-     * @param Statement $statement
-     * @return mixed
-     */
-    protected function fetchResult(Statement $statement)
-    {
-        if ($statement->isFetchOne()) {
-            $data = $statement->getStatement()->fetch(PDO::FETCH_ASSOC);
-            if ($data === false) {
-                return null;
-            }
-            if ($statement instanceof QueryStatement) {
-                return $data;
-            }
-            return $this->fetchOneProccess($data);
-        } elseif ($statement->isFetchAll()) {
-            $data = $statement->getStatement()->fetchAll(PDO::FETCH_ASSOC);
-            if ($statement instanceof QueryStatement) {
-                return $data;
-            }
-            return $this->fetchAllProccess($statement, $data);
-        }
-    }
-
 
     /**
      * 获取数据源

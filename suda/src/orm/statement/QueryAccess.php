@@ -4,14 +4,13 @@ namespace suda\orm\statement;
 use PDO;
 use PDOStatement;
 use suda\orm\Binder;
-use suda\orm\DataSource;
-use suda\orm\TableStruct;
 use suda\orm\statement\Statement;
 use suda\orm\connection\Connection;
 use suda\orm\middleware\Middleware;
+use suda\orm\statement\QueryResult;
 use suda\orm\exception\SQLException;
-use suda\orm\statement\ReadStatement;
 use suda\orm\middleware\NullMiddleware;
+
 
 class QueryAccess
 {
@@ -105,6 +104,7 @@ class QueryAccess
         return $this->createResult($statement);
     }
 
+
     /**
      * 获取运行结果
      *
@@ -113,17 +113,7 @@ class QueryAccess
      */
     protected function createResult(Statement $statement)
     {
-        if ($statement->isWrite()) {
-            if ($statement->getReturnType() === Statement::RET_ROWS) {
-                return $statement->getStatement()->rowCount();
-            }
-            if ($statement->getReturnType() === Statement::RET_LAST_INSERT_ID) {
-                return $this->connection->getPdo()->lastInsertId();
-            }
-            return $statement->getStatement()->rowCount() > 0;
-        } elseif ($statement->isFetch()) {
-            return $this->fetchResult($statement);
-        }
+        return (new QueryResult($this->connection, $this->middleware))->createResult($statement);
     }
 
     /**
@@ -200,21 +190,6 @@ class QueryAccess
             if ($status === false) {
                 throw new SQLException(implode(':', $stmt->errorInfo()), intval($stmt->errorCode()));
             }
-        }
-    }
-
-    /**
-     * 取结果
-     *
-     * @param Statement $statement
-     * @return mixed
-     */
-    protected function fetchResult(Statement $statement)
-    {
-        if ($statement->isFetchOne()) {
-            return $statement->getStatement()->fetch(PDO::FETCH_ASSOC) ?? null;
-        } elseif ($statement->isFetchAll()) {
-            return $statement->getStatement()->fetchAll(PDO::FETCH_ASSOC);
         }
     }
 

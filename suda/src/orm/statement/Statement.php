@@ -75,6 +75,20 @@ abstract class Statement
      */
     protected $returnType = Statement::RET_BOOL;
 
+    /**
+     * 类
+     *
+     * @var string
+     */
+    protected $fetchClass;
+
+    /**
+     * 参数
+     *
+     * @var array
+     */
+    protected $fetchClassArgs = [];
+
     public function __construct(string $sql, ...$args)
     {
         if (count($args) === 1 && \is_array($args[0])) {
@@ -140,6 +154,30 @@ abstract class Statement
             $this->fetch = self::FETCH_ALL;
         }
         return $this->fetch === self::FETCH_ALL;
+    }
+    
+    /**
+     * 设置记录类
+     *
+     * @param string|null $class
+     * @param array $args
+     * @return self
+     */
+    public function setFetchType(?string $class = null, array $args = [])
+    {
+        $this->fetchClass = $class;
+        $this->fetchClassArgs = $args;
+        return $this;
+    }
+
+    /**
+     * 获取取值类
+     *
+     * @return string|null
+     */
+    public function getFetchClass():?string
+    {
+        return $this->fetchClass ?? null;
     }
 
     /**
@@ -261,5 +299,15 @@ abstract class Statement
         $this->returnType = $returnType;
 
         return $this;
+    }
+
+    /**
+     * Get 参数
+     *
+     * @return  array
+     */
+    public function getFetchClassArgs()
+    {
+        return $this->fetchClassArgs;
     }
 }

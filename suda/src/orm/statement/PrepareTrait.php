@@ -13,14 +13,15 @@ trait PrepareTrait
      * @param string|array $reads
      * @return string
      */
-    protected function prepareReadFields($reads):string
+    protected function prepareReadFields($reads, string $table = ''):string
     {
         if (is_string($reads)) {
             $fields = $reads;
         } else {
             $field = [];
+            $prefix = strlen($table) ?"`{$table}`." :'';
             foreach ($reads as $want) {
-                $field[] = "`$want`";
+                $field[] = $prefix."`$want`";
             }
             $fields = implode(',', $field);
         }

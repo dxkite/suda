@@ -4,7 +4,6 @@ namespace suda\orm\struct;
 use suda\orm\TableAccess;
 use suda\orm\TableStruct;
 
-
 class ReadStatement extends \suda\orm\statement\ReadStatement
 {
     /**
@@ -23,44 +22,53 @@ class ReadStatement extends \suda\orm\statement\ReadStatement
         );
     }
 
-    /**
-     * 取1条记录
-     *
-     * @return TableStruct|null
-     */
-    public function one():?TableStruct
-    {
-        return $this->access->run($this->wantOne());
-    }
 
     /**
-     * 取全部记录
+     * 取1
      *
-     * @return TableStruct[]
+     * @param string|null $class
+     * @param array $args
+     * @return mixed
      */
-    public function all():array
+    public function one(?string $class = null, array $args = [])
     {
-        return $this->access->run($this->wantAll());
+        return $this->access->run($this->wantOne($class, $args));
     }
-
+  
     /**
-     * 取1条记录
+     * 取全部
      *
-     * @return TableStruct|null
-     */
-    public function fetch():?TableStruct
-    {
-        return $this->one();
-    }
-
-    /**
-     * 取全部记录
-     *
+     * @param string|null $class
+     * @param array $args
      * @return array
      */
-    public function fetchAll():array
+    public function all(?string $class = null, array $args = []):array
     {
-        return $this->all();
+        return $this->access->run($this->wantAll($class, $args));
+    }
+  
+    /**
+     * 取1
+     *
+     * @param string|null $class
+     * @param array $args
+     * @return mixed
+     */
+    public function fetch(?string $class = null, array $args = [])
+    {
+        return $this->one($class, $args);
+    }
+  
+    /**
+     * 取全部
+     *
+     * @param string|null $class
+     * @param array $args
+     * @return array
+     */
+    public function fetchAll(?string $class = null, array $args = []):array
+    {
+        return $this->all($class, $args);
     }
 
     /**

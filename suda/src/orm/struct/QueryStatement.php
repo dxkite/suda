@@ -13,20 +13,23 @@ class QueryStatement extends \suda\orm\statement\QueryStatement
      */
     protected $access;
 
-    public function __construct(TableAccess $access, ...$args)
+    public function __construct(TableAccess $access, string $query, ...$parameter)
     {
         $this->access = $access;
-        parent::__construct(...$args);
+        parent::__construct($query, ...$parameter);
     }
 
-    /**
-     * 取1
-     *
-     * @return array|null
-     */
-    public function one():?array
+ 
+     /**
+      * 取1
+      *
+      * @param string|null $class
+      * @param array $args
+      * @return mixed
+      */
+    public function one(?string $class = null, array $args = [])
     {
-        $value = $this->access->run($this->wantOne());
+        $value = $this->access->run($this->wantOne($class, $args));
         if (is_array($value)) {
             return $value;
         }
@@ -36,32 +39,37 @@ class QueryStatement extends \suda\orm\statement\QueryStatement
     /**
      * 取全部
      *
+     * @param string|null $class
+     * @param array $args
      * @return array
      */
-    public function all():array
+    public function all(?string $class = null, array $args = []):array
     {
-        return $this->access->run($this->wantAll());
+        return $this->access->run($this->wantAll($class, $args));
     }
-
 
     /**
      * 取1
      *
-     * @return array|null
+     * @param string|null $class
+     * @param array $args
+     * @return mixed
      */
-    public function fetch():?array
+    public function fetch(?string $class = null, array $args = [])
     {
-        return $this->one();
+        return $this->one($class, $args);
     }
 
     /**
      * 取全部
      *
+     * @param string|null $class
+     * @param array $args
      * @return array
      */
-    public function fetchAll():array
+    public function fetchAll(?string $class = null, array $args = []):array
     {
-        return $this->all();
+        return $this->all($class, $args);
     }
 
     /**

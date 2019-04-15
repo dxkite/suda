@@ -80,8 +80,12 @@ class Response extends HTTPResponse
      */
     public function setContent($content)
     {
-        $wrapper = $this->wrapper->getWrapper($content);
-        $this->data = $wrapper->getContent($this);
+        if (\is_string($content) || $content instanceof Stream) {
+            $this->data = $content;
+        } else {
+            $wrapper = $this->wrapper->getWrapper($content);
+            $this->data = $wrapper->getContent($this);
+        }
         return $this;
     }
 

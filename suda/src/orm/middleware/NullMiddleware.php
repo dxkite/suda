@@ -37,10 +37,10 @@ class NullMiddleware implements Middleware
     /**
      * 对输出列进行处理
      *
-     * @param TableStruct $row
-     * @return TableStruct
+     * @param mixed $row
+     * @return mixed
      */
-    public function outputRow(TableStruct $row)
+    public function outputRow($row)
     {
         return $row;
     }
