@@ -60,8 +60,13 @@ class TableStruct implements ArrayAccess, IteratorAggregate, Countable, JsonSeri
         }
         return $this;
     }
+    
+    public function addField(Field $field)
+    {
+        $this->fields->addField($field);
+    }
 
-    public function field(string $name, string $type, int $length = 0)
+    public function field(string $name, string $type, $length = null)
     {
         return $this->fields->newField($name, $type, $length);
     }

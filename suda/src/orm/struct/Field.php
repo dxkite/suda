@@ -39,7 +39,7 @@ class Field
     const INDEX = 'INDEX';
     const KEY = 'KEY';
 
-    public function __construct(string $tableName, string $name, string $type, int $length = null)
+    public function __construct(string $tableName, string $name, string $type, $length = null)
     {
         $this->tableName = $tableName;
         $this->name = $name;
@@ -60,7 +60,7 @@ class Field
         return $this;
     }
 
-    public function length(int $length)
+    public function length($length)
     {
         $this->length = $length;
         return $this;

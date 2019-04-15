@@ -37,15 +37,15 @@ class Fields implements IteratorAggregate
      *
      * @param string $name
      * @param string $type
-     * @param int $length
+     * @param int|array $length
      * @return Field
      */
-    public function field(string $name, string $type, int $length = null)
+    public function field(string $name, string $type, $length = null)
     {
         return $this->fields[$name] ?? $this->fields[$name] = ($length?new Field($this->name, $name, $type, $length):new Field($this->name, $name, $type));
     }
 
-    public function newField(string $name, string $type, int $length = null)
+    public function newField(string $name, string $type, $length = null)
     {
         return $this->fields[$name] ?? $this->fields[$name] = ($length?new Field($this->name, $name, $type, $length):new Field($this->name, $name, $type));
     }
