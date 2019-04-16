@@ -20,6 +20,14 @@ class ApplicationContext extends Context
      */
     protected $path;
 
+
+    /**
+     * 数据路径
+     *
+     * @var string
+     */
+    protected $dataPath;
+
     /**
      * 配置数组
      *
@@ -69,7 +77,7 @@ class ApplicationContext extends Context
      * @param array $manifast
      * @param \suda\framework\loader\Loader $loader
      */
-    public function __construct(string $path, array $manifast, Loader $loader)
+    public function __construct(string $path, array $manifast, Loader $loader, string $dataPath = null)
     {
         parent::__construct(new Config(['app' => $manifast]), $loader);
         $this->path = $path;
@@ -78,6 +86,7 @@ class ApplicationContext extends Context
         $this->locate = $manifast['locale'] ?? 'zh-cn';
         $this->style = $manifast['style'] ?? 'default';
         $this->manifast = $manifast;
+        $this->dataPath = $dataPath ?? Resource::getPathByRelativedPath($manifast['resource'] ?? './data', $path);
     }
 
     /**
@@ -207,5 +216,29 @@ class ApplicationContext extends Context
     public function getPath()
     {
         return $this->path;
+    }
+
+    /**
+     * Get 数据路径
+     *
+     * @return  string
+     */ 
+    public function getDataPath()
+    {
+        return $this->dataPath;
+    }
+
+    /**
+     * Set 数据路径
+     *
+     * @param  string  $dataPath  数据路径
+     *
+     * @return  self
+     */ 
+    public function setDataPath(string $dataPath)
+    {
+        $this->dataPath = $dataPath;
+
+        return $this;
     }
 }

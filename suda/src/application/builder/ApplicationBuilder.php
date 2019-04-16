@@ -18,12 +18,12 @@ class ApplicationBuilder
     /**
      * 创建应用
      *
-     * @param \suda\framework\http\Request $request
      * @param \suda\framework\loader\Loader $loader
      * @param string $path
+     * @param string $dataPath
      * @return \suda\application\Application
      */
-    public static function build(Loader $loader, string $path):Application
+    public static function build(Loader $loader, string $path, string $dataPath):Application
     {
         $manifast = static::resolveManifastPath($path);
         $manifastConfig = Config::loadConfig($manifast) ?? [];
@@ -31,7 +31,7 @@ class ApplicationBuilder
             static::importClassLoader($loader, $manifastConfig['import'], $path);
         }
         $applicationClass = $manifastConfig['application'] ?? Application::class;
-        $application = new $applicationClass($path, $manifastConfig, $loader);
+        $application = new $applicationClass($path, $manifastConfig, $loader, $dataPath);
         return $application;
     }
     
