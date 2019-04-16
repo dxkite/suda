@@ -22,12 +22,12 @@ class User
     protected $name;
 
     /**
-     * email
+     * money
      *
-     * @field varchar(20)
-     * @var string
+     * @field DECIMAL(10,2) key
+     * @var float
      */
-    protected $email;
+    protected $money;
 
     /**
      * 匿名操作
@@ -37,4 +37,6 @@ class User
      * @var string
      */
     protected $createTime;
+
+    protected $content;
 }

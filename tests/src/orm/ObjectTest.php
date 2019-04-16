@@ -10,21 +10,22 @@ use suda\orm\struct\FieldModifierParser;
 
 class ObjectTest extends TestCase
 {
-    // public function testCreateStruct()
-    // {
-    //     $struct = new TableStruct('user');
-
-    //     $struct->fields([
-    //         $struct->field('id', 'bigint', 20)->auto()->primary(),
-    //         $struct->field('name', 'varchar', 80)->unique(),
-    //     ]);
-
-    //     $create = new TableStructBuilder(User::class);
-    //     $this->assertEquals($struct, $create->createStruct());
-    // }
+    public function testCreateStruct()
+    {
+        $struct = new TableStruct('user');
+        $struct->fields([
+            $struct->field('id', 'bigint', 20)->auto()->primary(),
+            $struct->field('name', 'varchar', 80)->unique(),
+            $struct->field('money', 'DECIMAL', [10,2])->key(),
+            $struct->field('create_time', 'datetime'),
+            $struct->field('content', 'text'),
+        ]);
+        $create = new TableStructBuilder(User::class);
+        $this->assertEquals($struct, $create->createStruct());
+    }
 
     public function testToken() {
-        $modifier = (new FieldModifierParser)->parse('unique default(null) decimal(10,2) hello()  default(0) comment("备\"注") #注释');
+        $modifier = (new FieldModifierParser)->parse('unique default(null) decimal(10,2) hello() default(0) comment("备\"注") #注释')->getModifier();
         $this->assertEquals([
             ['unique' , [],],
             ['default', [null],],

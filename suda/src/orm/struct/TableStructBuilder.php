@@ -72,7 +72,10 @@ class TableStructBuilder
     {
         $name = $this->getFieldName($property);
         list($type, $length, $modifier) = $this->getFieldType($property);
-        return new Field($tableName, $name, $type, $length);
+        $field =  new Field($tableName, $name, $type, $length);
+        $parser = new FieldModifierParser;
+        $parser->parse($modifier)->modify($field);
+        return $field;
     }
 
     /**
