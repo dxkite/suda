@@ -38,5 +38,10 @@ class UserField
      */
     protected $createTime;
 
+    /**
+     * 
+     * @field text
+     * @var string
+     */
     protected $content;
 }

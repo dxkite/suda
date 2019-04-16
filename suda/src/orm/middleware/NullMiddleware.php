@@ -35,6 +35,26 @@ class NullMiddleware implements Middleware
     }
 
     /**
+     * 处理输入字段名
+     */
+    public function inputName(string $name):string
+    {
+        return $name;
+    }
+
+    /**
+     * 处理输出字段名
+     *
+     * @param string $name
+     * @param mixed $data
+     * @return mixed
+     */
+    public function outputName(string $name):string
+    {
+        return $name;
+    }
+
+    /**
      * 对输出列进行处理
      *
      * @param mixed $row

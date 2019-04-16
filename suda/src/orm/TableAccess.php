@@ -153,12 +153,22 @@ class TableAccess extends QueryAccess
     /**
      * 读
      *
-     * @param mixed ...$args
+     * @param mixed $fields
      * @return ReadStatement
      */
-    public function read(...$args):ReadStatement
+    public function read($fields):ReadStatement
     {
-        return (new ReadStatement($this))->read(...$args);
+        if ($fields === null) {
+            $fields = \array_keys($this->getStruct()->getFields()->all());
+        } elseif (\func_num_args() > 1) {
+            $fields = \func_get_args();
+        }
+        if (is_array($fields)) {
+            foreach ($fields as $index => $name) {
+                $fields[$index] = $this->middleware->inputName($name);
+            }
+        }
+        return (new ReadStatement($this))->read($fields);
     }
 
     /**

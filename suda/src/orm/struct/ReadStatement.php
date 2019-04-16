@@ -72,6 +72,43 @@ class ReadStatement extends \suda\orm\statement\ReadStatement
     }
 
     /**
+     * 条件
+     *
+     * @param string|array $where
+     * @param array $whereBinder
+     * @return self
+     */
+    public function where($where, ...$args)
+    {
+        if (\is_array($where)) {
+            $where = $this->aliasKeyField($where);
+            $this->whereArray($where, $args[0] ?? []);
+        } elseif (is_array($args[0])) {
+            $this->whereStringArray($where, $args[0]);
+        } else {
+            list($string, $array) = $this->prepareQueryMark($where, $args);
+            $this->whereStringArray($string, $array);
+        }
+        return $this;
+    }
+
+    /**
+     * 处理输入的键
+     *
+     * @param array $fields
+     * @return array
+     */
+    protected function aliasKeyField(array $fields)
+    {
+        $values = [];
+        foreach ($fields as $name => $value) {
+            $index = $this->access->getMiddleware()->inputName($name);
+            $values[$index] = $value;
+        }
+        return $values;
+    }
+
+    /**
      * Get 访问操作
      *
      * @return  TableAccess

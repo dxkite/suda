@@ -117,13 +117,14 @@ class QueryResult
     {
         foreach ($data as $name => $value) {
             $value = $this->middleware->output($name, $value);
-            if ($reflectClass->hasProperty($name)) {
-                $property = $reflectClass->getProperty($name);
+            $propertyName = $this->middleware->outputName($name);
+            if ($reflectClass->hasProperty($propertyName)) {
+                $property = $reflectClass->getProperty($propertyName);
                 $property->setAccessible(true);
                 $property->setValue($object, $value);
             } else {
                 // 属性不存在则尝试直接赋值
-                $object->$name = $value;
+                $object->$propertyName = $value;
             }
         }
     }
@@ -140,7 +141,8 @@ class QueryResult
     {
         foreach ($data as $name => $value) {
             $value = $this->middleware->output($name, $value);
-            $object->__set($name, $value);
+            $propertyName = $this->middleware->outputName($name); 
+            $object->__set($propertyName, $value);
         }
     }
 

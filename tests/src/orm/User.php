@@ -1,10 +1,12 @@
 <?php
 namespace test\orm;
 
+use test\orm\UserField;
+
 /**
  * @table user
  */
-class User
+class User extends UserField
 {
     /**
      * ID
@@ -28,15 +30,4 @@ class User
      * @var float
      */
     protected $money;
-
-    /**
-     * 匿名操作
-     *
-     * @field-name create_time
-     * @field datetime
-     * @var string
-     */
-    protected $createTime;
-
-    protected $content;
 }

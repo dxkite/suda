@@ -39,9 +39,11 @@ class TableStructBuilder
     {
         $name = $this->getName();
         $struct = new TableStruct($name);
-        foreach ($this->reflectObject->getProperties() as $property) {
-            $field = $this->createField($name, $property);
-            $struct->addField($field);
+        foreach ($this->reflectObject->getProperties(ReflectionProperty::IS_PUBLIC | ReflectionProperty::IS_PROTECTED | ReflectionProperty::IS_PRIVATE) as $property) {
+            if ($this->isTableField($property)) {
+                $field = $this->createField($name, $property);
+                $struct->addField($field);
+            }
         }
         return $struct;
     }
@@ -58,7 +60,7 @@ class TableStructBuilder
                 return $match[1];
             }
         }
-        return $this->createName($this->reflectObject->getShortName());
+        return static::createName($this->reflectObject->getShortName());
     }
 
     /**
@@ -70,9 +72,9 @@ class TableStructBuilder
      */
     protected function createField(string $tableName, ReflectionProperty $property): Field
     {
-        $name = $this->getFieldName($property);
-        list($type, $length, $modifier) = $this->getFieldType($property);
-        $field =  new Field($tableName, $name, $type, $length);
+        $name = static::getFieldName($property);
+        list($type, $length, $modifier) = static::getFieldType($property);
+        $field = new Field($tableName, $name, $type, $length);
         $parser = new FieldModifierParser;
         $parser->parse($modifier)->modify($field);
         return $field;
@@ -84,7 +86,7 @@ class TableStructBuilder
      * @param string $name
      * @return string
      */
-    protected function createName(string $name):string
+    public static function createName(string $name):string
     {
         $name = preg_replace('/([A-Z]+)/', '_$1', $name);
         $name = \preg_replace('/_+/', '_', $name);
@@ -93,28 +95,40 @@ class TableStructBuilder
     }
 
     /**
+     * 获取表字段名
+     *
+     * @param string $object
+     * @param string $name
+     * @return string
+     */
+    public static function getTableFieldName(string $object, string $name) {
+        $property = new ReflectionProperty($object, $name);
+        return static::getFieldName($property);
+    }
+
+    /**
      * 获取字段名
      *
      * @param \ReflectionProperty $property
      * @return string
      */
-    protected function getFieldName(ReflectionProperty $property)
+    public static function getFieldName(ReflectionProperty $property)
     {
         if ($doc = $property->getDocComment()) {
             if (is_string($doc) && preg_match('/@field-?name\s+(\w+)/i', $doc, $match)) {
                 return $match[1];
             }
         }
-        return $this->createName($property->getName());
+        return $property->getName();
     }
 
     /**
      * 获取字段类型
      *
      * @param \ReflectionProperty $property
-     * @return array
+     * @return array|null
      */
-    protected function getFieldType(ReflectionProperty $property)
+    public static function getFieldType(ReflectionProperty $property)
     {
         if ($doc = $property->getDocComment()) {
             if (is_string($doc) && preg_match('/@field\s+(\w+)(?:\((.+?)\))?\s+(.+)?$/im', $doc, $match)) {
@@ -132,5 +146,20 @@ class TableStructBuilder
             }
         }
         return ['text', null, ''];
+    }
+
+    /**
+     * 检查是否为数据库字段
+     *
+     * @param \ReflectionProperty $property
+     * @return boolean
+     */
+    public static function isTableField(ReflectionProperty $property) {
+        if ($doc = $property->getDocComment()) {
+            if (is_string($doc) && stripos($doc, '@field')) {
+                return true;
+            }
+        }
+        return false;
     }
 }
