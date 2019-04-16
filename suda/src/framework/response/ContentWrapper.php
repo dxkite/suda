@@ -44,7 +44,7 @@ class ContentWrapper
      */
     public static function isTypeOf($data, string $type) : bool
     {
-        if (is_object($data) && !\in_array($type, ['boolean', 'bool', 'integer', 'double', 'string','array','NULL'])) {
+        if (is_object($data) && !\in_array($type, ['boolean', 'bool', 'integer', 'int', 'float', 'double', 'string','array','NULL'])) {
             $class = new ReflectionClass($data);
             $typeRef = new ReflectionClass($type);
             if ($typeRef->isInterface()) {
