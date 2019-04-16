@@ -30,7 +30,8 @@ class Field
     protected $collation;
     protected $tableName;
     protected $charset;
-    
+    protected $alias;
+
     const BINARY = 'BINARY';
     const UNSIGNED = 'UNSIGNED';
     
@@ -46,6 +47,10 @@ class Field
         $this->type = strtoupper($type);
         $this->length = $length;
         $this->hasDefault = false;
+    }
+
+    public function alias(string $name) {
+        $this->alias = $name;
     }
 
     public function charset(string $charset)
@@ -274,5 +279,13 @@ class Field
     public function getCharset()
     {
         return $this->charset;
+    }
+
+    /**
+     * Get the value of alias
+     */ 
+    public function getAlias()
+    {
+        return $this->alias ?? $this->name;
     }
 }

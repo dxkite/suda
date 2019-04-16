@@ -22,6 +22,13 @@ class Fields implements IteratorAggregate
     protected $fields;
 
     /**
+     * 键值对映射
+     *
+     * @var array
+     */
+    protected $alias;
+
+    /**
      * 创建字段集合
      *
      * @param string $table
@@ -67,6 +74,21 @@ class Fields implements IteratorAggregate
         }
         $name = $field->getName();
         $this->fields[$name] = $field;
+        $this->alias[$name] = $field->getAlias();
+    }
+
+    public function outputName(string $name):string {
+        if (\array_key_exists($name, $this->nameAlias)) {
+            return $this->nameAlias[$name];
+        }
+        return $name;
+    }
+
+    public function inputName(string $name):string {
+        if ($key = \array_search($name, $this->alias)) {
+            return $key;
+        }
+        return $name;
     }
 
     public function getFieldsName()

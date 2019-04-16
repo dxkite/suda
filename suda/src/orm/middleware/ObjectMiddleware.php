@@ -26,13 +26,6 @@ class ObjectMiddleware extends NullMiddleware
      */
     protected $object;
 
-    /**
-     * 字段映射处理
-     *
-     * @var array
-     */
-    protected $nameAlias;
-
     const RAW = 0;
     const SERIALIZE = 2;
 
@@ -88,47 +81,8 @@ class ObjectMiddleware extends NullMiddleware
         $reflectObject = new ReflectionClass($object);
         $this->processor = [];
         foreach ($reflectObject->getProperties(ReflectionProperty::IS_PUBLIC | ReflectionProperty::IS_PROTECTED | ReflectionProperty::IS_PRIVATE) as $property) {
-            $name = $this->getFieldName($property);
-            $this->processor[$name] = $this->getProcessorType($property);
-            $this->nameAlias[$property->getName()] = $name;
+            $this->processor[$property->getName()] = $this->getProcessorType($property);
         }
-    }
-
-    /**
-     * 获取字段名
-     *
-     * @param ReflectionProperty $property
-     * @return string
-     */
-    protected function getFieldName(ReflectionProperty $property)
-    {
-        return $property->getName();
-    }
-
-    /**
-     * 处理输入字段名
-     */
-    public function inputName(string $name):string
-    {
-        if (\array_key_exists($name, $this->nameAlias)) {
-            return $this->nameAlias[$name];
-        }
-        return $name;
-    }
-
-    /**
-     * 处理输出字段名
-     *
-     * @param string $name
-     * @param mixed $data
-     * @return mixed
-     */
-    public function outputName(string $name):string
-    {
-        if ($key = \array_search($name, $this->nameAlias)) {
-            return $key;
-        }
-        return $name;
     }
 
     /**

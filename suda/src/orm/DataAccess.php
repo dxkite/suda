@@ -9,7 +9,7 @@ use suda\orm\struct\ReadStatement;
 use suda\orm\struct\QueryStatement;
 use suda\orm\struct\WriteStatement;
 use suda\orm\struct\TableStructBuilder;
-use suda\orm\struct\TableStructMiddleware;
+use suda\orm\middleware\ObjectMiddleware;
 use suda\orm\struct\TableStructAwareInterface;
 
 /**
@@ -43,7 +43,7 @@ class DataAccess
     {
         $this->type = $object;
         $struct = $this->createStruct($object);
-        $middleware = $middleware ?? new TableStructMiddleware($object);
+        $middleware = $middleware ?? new ObjectMiddleware($object);
         $this->access = new TableAccess($struct, $source, $middleware);
     }
 
@@ -168,15 +168,15 @@ class DataAccess
         $isset = \method_exists($object, '__isset');
         if ($isset) {
             foreach ($fields as $name => $value) {
-                if ($data->__isset($name)) {
+                if ($object->__isset($name)) {
                     $dataField = $this->access->getMiddleware()->inputName($name);
-                    $data[$dataField] = $data->__get($name);
+                    $data[$dataField] = $object->__get($name);
                 }
             }
         } else {
             foreach ($fields as $name => $value) {
                 $dataField = $this->access->getMiddleware()->inputName($name);
-                $data[$dataField] = $data->__get($name);
+                $data[$dataField] = $object->__get($name);
             }
         }
         return $data;

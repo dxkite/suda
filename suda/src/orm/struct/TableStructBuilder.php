@@ -75,6 +75,7 @@ class TableStructBuilder
         $name = static::getFieldName($property);
         list($type, $length, $modifier) = static::getFieldType($property);
         $field = new Field($tableName, $name, $type, $length);
+        $field->alias($name);
         $parser = new FieldModifierParser;
         $parser->parse($modifier)->modify($field);
         return $field;
