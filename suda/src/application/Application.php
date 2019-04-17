@@ -8,6 +8,7 @@ use suda\application\DebugDumpper;
 use suda\application\database\Table;
 use suda\framework\route\MatchResult;
 use suda\framework\runnable\Runnable;
+use suda\application\database\DataAccess;
 use suda\application\loader\ModuleLoader;
 use suda\application\template\RawTemplate;
 use suda\application\loader\LanguageLoader;
@@ -41,6 +42,7 @@ class Application extends ApplicationSource
         $this->debug->time('loading datasource');
         $appLoader->loadDataSource();
         Table::load($this);
+        DataAccess::load($this);
         $this->event->exec('application:load-environment', [ $this->config ,$this]);
         $this->debug->timeEnd('loading datasource');
         $this->debug->time('loading route');
