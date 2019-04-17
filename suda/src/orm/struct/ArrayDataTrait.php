@@ -1,12 +1,15 @@
 <?php
 namespace suda\orm\struct;
 
+use ArrayIterator;
 use InvalidArgumentException;
 use suda\orm\struct\MagicArrayAccessTrait;
 
 trait ArrayDataTrait  
 {
     use MagicArrayAccessTrait;
+    use SimpleJsonDataTrait;
+
     /**
      * 表数据
      *
@@ -26,8 +29,6 @@ trait ArrayDataTrait
         $this->data[$name] = $value;
     }
 
-    
-    
     /**
      * 获取参数值
      *
@@ -85,5 +86,40 @@ trait ArrayDataTrait
     public function checkFieldExist(string $name)
     {
         return strlen($name) > 0;
+    }
+
+    /**
+     * 获取迭代器
+     *
+     * @return ArrayIterator
+     */
+    public function getIterator()
+    {
+        return new ArrayIterator($this->data);
+    }
+    
+    /**
+     * 转换成原始数组
+     *
+     * @return array
+     */
+    public function toArray():array
+    {
+        return $this->data;
+    }
+
+    /**
+     * 计数
+     *
+     * @return int
+     */
+    public function count()
+    {
+        return count($this->data);
+    }
+
+    public function getExportJsonData()
+    {
+        return $this->data;
     }
 }

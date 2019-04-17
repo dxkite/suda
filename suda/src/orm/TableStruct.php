@@ -1,17 +1,16 @@
 <?php
 namespace suda\orm;
 
-use Countable;
-use ArrayAccess;
-use ArrayIterator;
-use JsonSerializable;
-use IteratorAggregate;
 use suda\orm\struct\Field;
 use suda\orm\struct\Fields;
 use InvalidArgumentException;
+use suda\orm\struct\ArrayDataTrait;
+use suda\orm\struct\ArrayDataInterface;
 
-class TableStruct implements ArrayAccess, IteratorAggregate, Countable, JsonSerializable
+class TableStruct implements ArrayDataInterface
 {
+    use ArrayDataTrait;
+    
     /**
      * 数据表名
      *
@@ -107,15 +106,6 @@ class TableStruct implements ArrayAccess, IteratorAggregate, Countable, JsonSeri
         return $this->__get($offset);
     }
 
-    /**
-     * 获取迭代器
-     *
-     * @return ArrayIterator
-     */
-    public function getIterator()
-    {
-        return new ArrayIterator($this->data);
-    }
 
     /**
      * Get 数据表名
@@ -135,26 +125,6 @@ class TableStruct implements ArrayAccess, IteratorAggregate, Countable, JsonSeri
     public function getFields():Fields
     {
         return $this->fields;
-    }
-
-    /**
-     * 转换成原始数组
-     *
-     * @return array
-     */
-    public function toArray():array
-    {
-        return $this->data;
-    }
-
-    /**
-     * 计数
-     *
-     * @return int
-     */
-    public function count()
-    {
-        return count($this->data);
     }
     
     /**
@@ -209,15 +179,5 @@ class TableStruct implements ArrayAccess, IteratorAggregate, Countable, JsonSeri
         if ($this->fields->hasField($name) === false) {
             throw new InvalidArgumentException(sprintf('TableStruct[%s] has no attribute %s', $this->name, $name), 0);
         }
-    }
-
-    /**
-     * 获取序列化对象
-     *
-     * @return array
-     */
-    public function jsonSerialize()
-    {
-        return $this->data;
     }
 }
