@@ -363,9 +363,10 @@ class RawQuery implements SQLStatement
                 debug()->debug($stmt->queryString .' '. __('effect $0 rows', $stmt->rowCount()), $this->values);
             }
         } else {
-            debug()->warning($stmt->errorInfo()[2].':'.$stmt->queryString, $this->values);
+            $error = implode(':', $stmt->errorInfo());
+            debug()->error($error.':'.$stmt->queryString, $this->values);
             if (!conf('database.ignore-error', false)) {
-                throw (new SQLException($stmt->errorInfo()[2], intval($stmt->errorCode()), E_ERROR, $debug[1]['file'], $debug[1]['line']))->setSql($stmt->queryString)->setBinds($this->values);
+                throw (new SQLException($error, intval($stmt->errorCode()), E_ERROR, $debug[1]['file'], $debug[1]['line']))->setSql($stmt->queryString)->setBinds($this->values);
             }
         }
         $this->stmt=$stmt;

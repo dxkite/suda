@@ -7,9 +7,9 @@ namespace suda\core\request;
  */
 trait RequestParser
 {
-    protected static $query='';
+    protected static $query = '';
     protected static $url;
-    protected static $baseUrl =null;
+    protected static $baseUrl = null;
     protected static $script = null;
 
     /**
@@ -30,26 +30,26 @@ trait RequestParser
      */
     public static function parseUrl(string $url)
     {
-        $queryString='';
+        $queryString = '';
         // for /?/xx
         if (\strpos($url, '/?/') === 0) {
             $url = substr($url, 2);
         }
-        $phpSelf= $indexFile = self::$script;
-        if (\strpos($url, $indexFile) ===0) {
+        $phpSelf = $indexFile = self::$script;
+        if (\strpos($url, $indexFile) === 0) {
             // for /index.php/
             $url = \substr($url, strlen($indexFile));// for /index.php?/
             if (\strpos($url, '?/') === 0) {
                 $url = ltrim($url, '?');
             }
             // for /index.php
-            elseif (\strpos($url, '/')!== 0) {
+            elseif (\strpos($url, '/') !== 0) {
                 $url = '/'.$url;
             }
         }
         $queryStart = \strpos($url, '?');
         if ($queryStart !== false) {
-            $queryString = \substr($url, $queryStart+1);
+            $queryString = \substr($url, $queryStart + 1);
             $url = \substr($url, 0, $queryStart);
         }
         return [$url,$queryString,$phpSelf];
@@ -59,7 +59,7 @@ trait RequestParser
     {
         // 获取主入口文件
         self::$script = str_replace('\\', '/', IN_PHAR?substr(SUDA_ENTRANCE, strlen('phar://'.$_SERVER['DOCUMENT_ROOT'])):substr(SUDA_ENTRANCE, strlen($_SERVER['DOCUMENT_ROOT'])));
-        list(self::$url, $queryString, $phpSelf) = static::parseUrl($_SERVER['REQUEST_URI']??'/');
+        list(self::$url, $queryString, $phpSelf) = static::parseUrl($_SERVER['REQUEST_URI'] ?? '/');
         $_SERVER['PATH_INFO'] = self::$url;
         $_SERVER['SCRIPT_NAME'] = self::$script;
         $_GET = [];
@@ -77,23 +77,23 @@ trait RequestParser
         return self::$url.(self::$query?'?'.self::$query:'');
     }
 
-    public static function baseUrl()
+    public static function baseUrl(bool $withHosts = false)
     {
-        if (is_null(self::$baseUrl)) {
-            self::$baseUrl = self::getBaseUrl();
+        if (null === self::$baseUrl) {
+            self::$baseUrl = self::getBaseUrl($withHosts);
         }
         return self::$baseUrl;
     }
 
-    protected static function getBaseUrl():string
+    protected static function getBaseUrl(bool $withHosts = false):string
     {
-        $index=conf('app.index', 'index.php');
-        $base=self::hostBase();
-        $script= self::$script;
+        $index = conf('app.index', 'index.php');
+        $base = $withHosts? self::hostBase() :'';
+        $script = self::$script;
         // $mode=conf('app.url.mode', 0);
-        $beautifyUrl=conf('app.url.beautify', true);
-        $rewrite=conf('app.url.rewrite', false);
-        $root= substr($script, 1) === $index;
+        $beautifyUrl = conf('app.url.beautify', true);
+        $rewrite = conf('app.url.rewrite', false);
+        $root = substr($script, 1) === $index;
         $isWindows = !IS_LINUX;
         // 如果开启了重写URL
         if ($rewrite && $root) {

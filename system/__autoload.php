@@ -49,8 +49,8 @@ if (IS_CONSOLE) {
 }
 
 /* PHP版本检测 */
-if (version_compare(PHP_VERSION, '7.2.0', '<')) {
-    suda_panic('Kernal Panic', 'your current  php vesion is '.PHP_VERSION.', please use 7.2.0 + to run this program!');
+if (version_compare(PHP_VERSION, '7.1.0', '<')) {
+    suda_panic('Kernal Panic', 'your current  php vesion is '.PHP_VERSION.', please use 7.1.0 + to run this program!');
 }
 
 require_once __DIR__.'/src/suda/core/Autoloader.php';

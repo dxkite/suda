@@ -45,6 +45,7 @@ abstract class TableAccess
      */
     protected $exportBlockSize=2000;
 
+
     public function __construct(string $tableName, Connection $connection =null)
     {
         // 默认ID为表主键
@@ -66,7 +67,7 @@ abstract class TableAccess
     {
         return $this->initFromTable($this->getCreator());
     }
-    
+
     public function getCreateSql():string
     {
         return (string)$this->getCreator();
@@ -82,7 +83,7 @@ abstract class TableAccess
 
 
     abstract protected function onBuildCreator($table);
-    
+
 
     public function begin()
     {
@@ -99,7 +100,7 @@ abstract class TableAccess
         $this->connection->rollBack();
     }
 
-    
+
     /**
      * 清空数据表
      *
@@ -109,7 +110,7 @@ abstract class TableAccess
     {
         return (new RawQuery($this->connection, 'TRUNCATE TABLE `#{'.$this->tableName.'}`;'))->exec();
     }
-  
+
     /**
      * 删除数据表
      *
@@ -166,7 +167,7 @@ abstract class TableAccess
             $this->rollBack();
         }
     }
-    
+
     private function importDataLine(string $dataLine)
     {
         if (strlen($dataLine) < 50) {
@@ -215,7 +216,7 @@ abstract class TableAccess
         }
     }
 
-    
+
     /**
      * 获取主键
      *
@@ -302,7 +303,7 @@ abstract class TableAccess
         $this->fields=$table->getFieldsName();
         return true;
     }
-    
+
     /**
      * 初始化数据表字段
      *
@@ -310,7 +311,7 @@ abstract class TableAccess
      */
     protected function initTableFields()
     {
-        if (file_exists($this->cachePath) && !conf('debug')) {
+        if (file_exists($this->cachePath)) {
             $fieldsinfo=require $this->cachePath;
             $this->setFields($fieldsinfo['fields']);
             $this->setPrimaryKey($fieldsinfo['primaryKey']);
@@ -375,7 +376,7 @@ abstract class TableAccess
         $limitCondition= $this->prepareDataLimitCondition($limit, $offset);
         $key = $this->prepareDataKeyString($table);
         $q=new RawQuery($this->connection, 'SELECT * FROM `#{'.$table.'}` WHERE 1 '. $limitCondition, [], true);
-        
+
 
         $sqlout='INSERT INTO `#{'.$table.'}` '.$key.' VALUES ';
         $first=true;

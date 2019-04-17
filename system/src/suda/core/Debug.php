@@ -15,6 +15,7 @@
  */
 namespace suda\core;
 
+use Throwable;
 use ZipArchive;
 
 defined('APP_LOG') or define('APP_LOG', DATA_DIR.'/logs');
@@ -37,7 +38,7 @@ class Debug
     const WARNING = 'warning'; // 警告消息
     const ERROR = 'error'; // 错误消息
     const LOG_PACK = LOG_TAG;
-    
+
     protected static $level=[
         Debug::TRACE=>1,
         Debug::DEBUG=>2,
@@ -50,7 +51,7 @@ class Debug
     protected static $runInfo;
     protected static $log=[];
     protected static $time=[];
-    
+
     protected static $hash;
     protected static $ip;
 
@@ -219,7 +220,7 @@ class Debug
         return self::displayLog(['line'=>$line,'file'=>$file,'backtrace'=>$backtrace,'name'=>$e->getName(),'level'=>$e->getLevel(),'message'=>$e->getMessage()]);
     }
 
-    protected static function dumpException(Exception $e):string
+    public static function dumpException(Exception $e):string
     {
         $ex= substr(md5($e->getName().'#'.$e->getMessage().'#'.$e->getFile().'#'.$e->getLine()), 0, 8);
         $hash = microtime(true).'-'.$ex.'-'.self::$hash;
@@ -229,7 +230,7 @@ class Debug
         if ($codeDump) {
             storage()->put(APP_LOG.'/dump/'. $hash.'.json', $codeDump);
         } else {
-            storage()->put(APP_LOG.'/dump/'. $hash.'.php', var_export($dump, true));
+            // storage()->put(APP_LOG.'/dump/'. $hash.'.php', var_export($dump, true));
         }
         return $hash;
     }
@@ -288,7 +289,7 @@ class Debug
                 $this->state(500);
                 $this->template=$this->page('suda:error');
             }
-            
+
             public function render()
             {
                 $stack=$this->template->getRenderStack();
@@ -316,7 +317,7 @@ class Debug
         exit;
     }
 
-    public static function writeException(\Exception $e)
+    public static function writeException(\Throwable $e)
     {
         if (!$e instanceof Exception) {
             $e=new Exception($e);
@@ -335,7 +336,7 @@ class Debug
             date('Y-m-d H:i:s'),
             time(),
             $request->method(),
-            $request->virtualUrl()
+            $_SERVER['REQUEST_URI'],
         ], conf('log.header-format', LOG_FORMAT_HEADER));
     }
 
@@ -402,7 +403,7 @@ class Debug
         return fwrite(self::$file, $str);
     }
 
-    protected static function formatBytes(int $bytes, int $precision=0)
+    public static function formatBytes(int $bytes, int $precision=0)
     {
         $human= ['B', 'KB', 'MB', 'GB', 'TB'];
         $bytes = max($bytes, 0);
@@ -488,7 +489,7 @@ class Debug
         self::log('user', $name, $message);
     }
 
-  
+
     protected static function log(string $level, $name =null, $message=null)
     {
         $backtrace = null;
@@ -505,7 +506,7 @@ class Debug
             $message = $name;
             $name=(array_key_exists('class', $backtrace[2])?$backtrace[2]['class'].'#':'').$backtrace[2]['function'];
         }
-       
+
         $traceInfo = null;
         // 获取第一个带位置的信息
         foreach ($backtrace as $trace) {
@@ -557,7 +558,7 @@ class Debug
         } elseif (is_object($object)) {
             $objectName = get_class($object);
             $parameterString = '';
-            
+
             if ($deep > 0) {
                 $vars = get_class_vars($objectName);
                 foreach ($vars as $key => $value) {
@@ -570,7 +571,7 @@ class Debug
             } else {
                 $parameterString = '...';
             }
-            
+
             return $objectName.' {'.trim($parameterString, ',').'}';
         } elseif (is_array($object)) {
             $parameterString = '';
@@ -589,7 +590,7 @@ class Debug
         }
         return $object;
     }
-    
+
     /**
      * 检查日志文件大小
      *

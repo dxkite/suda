@@ -52,7 +52,7 @@ trait RequestAttriubute
     
     public static function referer()
     {
-        return $_SERVER['HTTP_REFERER']??null;
+        return $_SERVER['HTTP_REFERER'] ?? null;
     }
 
     public static function hostBase()

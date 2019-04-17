@@ -35,16 +35,23 @@ abstract class Table extends TableAccess
      * @var array|null
      */
     protected $wants = null;
-    protected $orderField=null;
-    protected $order=null;
+    protected $orderField = null;
+    protected $order = null;
 
-    const ORDER_ASC=0;
-    const ORDER_DESC=1;
+    /**
+     * 分组
+     *
+     * @var string
+     */
+    protected $group = null;
 
-    public function __construct(string $tableName, Connection $connection =null)
+    const ORDER_ASC = 0;
+    const ORDER_DESC = 1;
+
+    public function __construct(string $tableName, Connection $connection = null)
     {
         parent::__construct($tableName, $connection);
-        $this->statement  = new SQLStatementPrepare($this->connection, $this);
+        $this->statement = new SQLStatementPrepare($this->connection, $this);
     }
 
     /**
@@ -87,12 +94,12 @@ abstract class Table extends TableAccess
      */
     public function insertValue($values):int
     {
-        $values=func_get_args();
-        $insert=[];
+        $values = func_get_args();
+        $insert = [];
         foreach ($this->getFields() as $field) {
-            $value=array_shift($values);
-            if (!is_null($value)) {
-                $insert[$field]=$value;
+            $value = array_shift($values);
+            if (null !== $value) {
+                $insert[$field] = $value;
             }
         }
         return $this->statement->insert($this->getTableName(), $insert);
@@ -160,7 +167,7 @@ abstract class Table extends TableAccess
         $this->checkFields(array_keys($values));
         return $this->statement->update($this->getTableName(), $values, $this->checkPrimaryKey($value));
     }
-    
+
     /**
      * 通过主键删除元素
      *
@@ -215,11 +222,11 @@ abstract class Table extends TableAccess
      * @param integer $rows 每页数
      * @return array|null
      */
-    public function search($field, string $search, ?int $page=null, int $rows=10):?array
+    public function search($field, string $search, ?int $page = null, int $rows = 10):?array
     {
         return $this->statement->search($this->getTableName(), $this->getWants(), $field, $search, [$page, $rows])->object($this)->fetchAll();
     }
-    
+
     /**
      * 搜索指定字段
      *
@@ -256,11 +263,11 @@ abstract class Table extends TableAccess
      * @param boolean $offset 是否是偏移
      * @return array|null
      */
-    public function searchWhere($field, string $search, $where, array $bind=[], ?int $page=null, int $rows=10, bool $offset=false):?array
+    public function searchWhere($field, string $search, $where, array $bind = [], ?int $page = null, int $rows = 10, bool $offset = false):?array
     {
         $statment = $this->statement;
-        list($searchStr, $searchBind)=$statment->prepareSearch($field, $search);
-        $whereStr=$statment->prepareWhere($where, $bind);
+        list($searchStr, $searchBind) = $statment->prepareSearch($field, $search);
+        $whereStr = $statment->prepareWhere($where, $bind);
         return $statment->select($this->getTableName(), $this->getWants(), $whereStr . ' AND ('. $searchStr.') '. $this->genOrderBy(), array_merge($searchBind, $bind), [$page,$rows,$offset])->fetchAll();
     }
 
@@ -290,11 +297,11 @@ abstract class Table extends TableAccess
      * @param array $bind
      * @return integer
      */
-    public function searchWhereCount($field, string $search, $where = null, array $bind= []):int
+    public function searchWhereCount($field, string $search, $where = null, array $bind = []):int
     {
         $statment = $this->statement;
-        list($searchStr, $searchBind)=$statment->prepareSearch($field, $search);
-        $whereStr=$statment->prepareWhere($where, $bind);
+        list($searchStr, $searchBind) = $statment->prepareSearch($field, $search);
+        $whereStr = $statment->prepareWhere($where, $bind);
         return $statment->count($this->getTableName(), $whereStr . ' AND ('. $searchStr.') ', array_merge($searchBind, $bind));
     }
 
@@ -315,9 +322,9 @@ abstract class Table extends TableAccess
      * @param boolean $offset 使用Offset
      * @return array|null
      */
-    public function list(?int $page=null, int $rows=10, bool $offset=false):?array
+    public function list(?int $page = null, int $rows = 10, bool $offset = false):?array
     {
-        return $this->statement->where($this->getTableName(), $this->getWants(), '1 '.  $this->genOrderBy(), [], [$page, $rows,$offset])->fetchAll();
+        return $this->statement->where($this->getTableName(), $this->getWants(), '1 '.  $this->genOrderBy().' '. $this->genGroupBy(), [], [$page, $rows,$offset])->fetchAll();
     }
 
     /**
@@ -347,11 +354,14 @@ abstract class Table extends TableAccess
      * @param boolean $offset 使用Offset
      * @return array|null
      */
-    public function listWhere($where, array $binds=[], ?int $page=null, int $rows=10, bool $offset=false):?array
+    public function listWhere($where, array $binds = [], ?int $page = null, int $rows = 10, bool $offset = false):?array
     {
         $statment = $this->statement;
         $where_str = $statment->prepareWhere($where, $binds);
-        $where= $where_str.' '.$this->genOrderBy();
+        $where = $where_str.' '.$this->genOrderBy();
+        if ($this->group !== null) {
+            $where .= ' '. $this->genGroupBy();
+        }
         return $statment->where($this->getTableName(), $this->getWants(), $where, $binds, [$page, $rows,$offset])->fetchAll();
     }
 
@@ -383,7 +393,7 @@ abstract class Table extends TableAccess
      * @param array $bind 扩展条件值
      * @return integer
      */
-    public function update($values, $where, array $bind=[]) :int
+    public function update($values, $where, array $bind = []) :int
     {
         if (is_array($where)) {
             $this->checkFields(array_keys($where));
@@ -427,7 +437,7 @@ abstract class Table extends TableAccess
      * @param boolean $offset 直接偏移
      * @return RawQuery
      */
-    public function select($wants, $where, $whereBinder=[], ?int $page=null, int $row=10, bool $offset=false): RawQuery
+    public function select($wants, $where, $whereBinder = [], ?int $page = null, int $row = 10, bool $offset = false): RawQuery
     {
         if (is_array($where)) {
             $this->checkFields(array_keys($where));
@@ -435,7 +445,18 @@ abstract class Table extends TableAccess
         if (is_array($wants)) {
             $this->checkFields($wants);
         }
-        return $this->statement->where($this->getTableName(), $wants, $where, $whereBinder, [$page,$row,$offset]);
+        if (is_string($where)) {
+            $where = $this->changeTableName($where);
+        } else {
+            $where = $this->statement->prepareWhere($where, $whereBinder);
+        }
+        if ($this->orderField !== null) {
+            $where .= ' '.$this->genOrderBy();
+        }
+        if ($this->group !== null) {
+            $where .= ' '. $this->genGroupBy();
+        }
+        return $this->statement->where($this->getTableName(), $wants, $where, $whereBinder, [$page, $row, $offset], $offset);
     }
 
     /**
@@ -461,9 +482,9 @@ abstract class Table extends TableAccess
      * @param boolean $scroll
      * @return RawQuery
      */
-    public function query(string $query, array $binds=[], bool $scroll=false):RawQuery
+    public function query(string $query, array $binds = [], bool $scroll = false):RawQuery
     {
-        $queryString=preg_replace(['/@table@/i','/%table%/i'], [$this->getTableName(),'#{'.$this->getTableName().'}'], $query);
+        $queryString = $this->changeTableName($query);
         return (new RawQuery($this->connection, $queryString, $binds, $scroll))->object($this);
     }
 
@@ -492,7 +513,7 @@ abstract class Table extends TableAccess
      * @param array $binds 条件值绑定
      * @return integer
      */
-    public function delete($where, array $binds=[]):int
+    public function delete($where, array $binds = []):int
     {
         if (is_array($where)) {
             $this->checkFields(array_keys($where));
@@ -506,9 +527,9 @@ abstract class Table extends TableAccess
      * @param array $fields
      * @return Table
      */
-    public function setWants(array $fields=null)
+    public function setWants(array $fields = null)
     {
-        $this->wants=is_null($fields)?$this->getFields():$fields;
+        $this->wants = null === $fields?$this->getFields():$fields;
         return $this;
     }
 
@@ -520,7 +541,7 @@ abstract class Table extends TableAccess
      */
     public function getWants():array
     {
-        return is_null($this->wants)?$this->getFields():$this->wants;
+        return null === $this->wants?$this->getFields():$this->wants;
     }
 
     /**
@@ -528,9 +549,9 @@ abstract class Table extends TableAccess
      *
      * @return int
      */
-    public function count($where='1', array $binds=[]):int
+    public function count($where = '1', array $binds = [], string $what = '*'):int
     {
-        return $this->statement->count($this->getTableName(), $where, $binds);
+        return $this->statement->count($this->getTableName(), $where, $binds, $what);
     }
 
 
@@ -541,16 +562,21 @@ abstract class Table extends TableAccess
      * @param integer $order
      * @return Table
      */
-    public function order(string $field, int $order=self::ORDER_ASC):Table
+    public function order(string $field, int $order = self::ORDER_ASC):Table
     {
-        $this->orderField=$field;
-        $this->order=$order;
+        $this->orderField = $field;
+        $this->order = $order;
         return $this;
+    }
+
+    protected function changeTableName(string $query)
+    {
+        return preg_replace(['/@table@/i','/%table%/i'], [$this->getTableName(),'#{'.$this->getTableName().'}'], $query);
     }
 
     protected static function strify($object)
     {
-        if (is_null($object)) {
+        if (null === $object) {
             return '[NULL]';
         } elseif (is_object($object)) {
             return serialize($object);
@@ -562,10 +588,25 @@ abstract class Table extends TableAccess
 
     protected function genOrderBy()
     {
-        if (is_null($this->orderField)) {
+        if (null === $this->orderField) {
             return '';
         } else {
-            return ' ORDER BY '. $this->orderField  .' '. ($this->order==self::ORDER_ASC?'ASC':'DESC');
+            return ' ORDER BY `'. $this->orderField  .'` '. ($this->order == self::ORDER_ASC?'ASC':'DESC');
+        }
+    }
+
+    public function groupBy(string $name)
+    {
+        $this->group = $name;
+        return $this;
+    }
+
+    protected function genGroupBy()
+    {
+        if (null === $this->group) {
+            return '';
+        } else {
+            return ' GROUP BY `'. $this->group  .'`';
         }
     }
 }

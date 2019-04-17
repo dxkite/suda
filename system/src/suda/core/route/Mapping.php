@@ -41,16 +41,16 @@ class Mapping implements \JsonSerializable
     protected $host = null;
     protected $port;
     protected $scheme;
- 
+
     protected $antiPrefix=false;
     protected $hidden=false;
     protected $dynamic=false;
     protected $regexpr = null;
 
     const DEFAULT_GROUP = 'default';
- 
+
     protected static $urlType= [ 'int'=>'\d+', 'string'=>'[^\/]+', 'url'=>'.+' ];
-    
+
     public static $current;
 
     public function __construct(string $name, string $url, string $callback, string $module, array $method=[], string $group=Mapping::DEFAULT_GROUP)
@@ -79,12 +79,13 @@ class Mapping implements \JsonSerializable
         // 匹配URL
         $match = false;
         $paramGet=[];
+        $url = rtrim($request->url(), '/');
         if (is_string($this->regexpr)) {
-            if (preg_match($this->regexpr, $request->url(), $paramGet)) {
+            if (preg_match($this->regexpr, $url, $paramGet)) {
                 $match = true;
             }
         } else {
-            if ($this->matchUrlValue($request->url(), $ignoreCase, $paramGet)) {
+            if ($this->matchUrlValue($url, $ignoreCase, $paramGet)) {
                 $match = true;
             }
         }
@@ -138,7 +139,7 @@ class Mapping implements \JsonSerializable
 
         if ($command  = $callback->getRunnableTarget()) {
             $method = null;
-            $ob =$this->buffer;
+            $ob = $this->buffer;
             if (is_string($command)) {
                 $method=new \ReflectionFunction($command);
                 $ob = $this->getResponseObStatus($method);
@@ -223,7 +224,7 @@ class Mapping implements \JsonSerializable
         }
         return $that->getFullName() == $this->getFullName();
     }
-    
+
     /**
      * 判断路由是否为指定模块的路由
      *
@@ -239,12 +240,12 @@ class Mapping implements \JsonSerializable
     {
         return $this->module.':'.$this->name;
     }
-    
+
     public function getSortName()
     {
         return preg_replace('/:.+$/', '', $this->module).':'.$this->name;
     }
-    
+
     public function getName()
     {
         return $this->name;
@@ -271,7 +272,7 @@ class Mapping implements \JsonSerializable
     {
         return $this->value;
     }
-    
+
     public function setCallback(string $callback)
     {
         $this->callback=$callback;
@@ -283,7 +284,7 @@ class Mapping implements \JsonSerializable
         $this->module=$module;
         return $this;
     }
-    
+
     public function setMethod(string $method)
     {
         $this->method=$method;
@@ -294,7 +295,7 @@ class Mapping implements \JsonSerializable
     {
         return $this->dynamic;
     }
-    
+
     public function isHidden()
     {
         return $this->hidden;
@@ -314,13 +315,13 @@ class Mapping implements \JsonSerializable
     {
         return $this->types;
     }
-    
+
     public function setAntiPrefix(bool $set=true)
     {
         $this->antiPrefix=$set;
         return $this;
     }
-    
+
     public function setDynamic(bool $set=true)
     {
         $this->dynamic=$set;
@@ -349,7 +350,7 @@ class Mapping implements \JsonSerializable
         $this->source=$source;
         return $this;
     }
- 
+
     public function getSource()
     {
         return  $this->source;
@@ -360,12 +361,12 @@ class Mapping implements \JsonSerializable
         $this->url=$url;
         return $this;
     }
-    
+
     public function getUrl()
     {
         return  $this->url;
     }
-    
+
     public function getTemplate()
     {
         return  $this->template;
@@ -387,7 +388,7 @@ class Mapping implements \JsonSerializable
     {
         $this->port = $port;
     }
-    
+
     public function getUrlTemplate()
     {
         $url='/'.trim($this->url, '/');
@@ -453,7 +454,7 @@ class Mapping implements \JsonSerializable
         }
         return $this->getBaseUrl(). trim($url, '/'). (count($queryArr)?'?'.http_build_query($queryArr, 'v', '&', PHP_QUERY_RFC3986):'');
     }
-    
+
     public function getBaseUrl()
     {
         if (is_null($this->host) || $this->host == 'localhost') {
@@ -502,12 +503,12 @@ class Mapping implements \JsonSerializable
         } else {
             throw new \suda\core\Exception(new \Exception(__('$0 router $1 require infomation: class or template or source', $module, $name)), 'RouterError');
         }
-        
+
         if (array_key_exists('url', $json) || array_key_exists('regexpr', $json)) {
         } else {
             throw new \suda\core\Exception(new \Exception(__('$0 router $1 require infomation: url or regexpr to match url', $module, $name)), 'RouterError');
         }
-        
+
         $mapping= new self($name, $json['url'] ?? '', $callback, $module, $json['method']??[], $group);
 
         $mapping->antiPrefix=isset($json['anti-prefix'])?$json['anti-prefix']:false;
