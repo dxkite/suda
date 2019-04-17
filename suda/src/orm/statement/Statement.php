@@ -4,6 +4,7 @@ namespace suda\orm\statement;
 use PDOStatement;
 use suda\orm\Binder;
 use suda\orm\statement\Query;
+use suda\orm\middleware\Middleware;
 use suda\orm\statement\PrepareTrait;
 
 abstract class Statement
@@ -88,6 +89,13 @@ abstract class Statement
      * @var array
      */
     protected $fetchClassArgs = [];
+
+    /**
+     * 数据处理中间件
+     *
+     * @var Middleware
+     */
+    protected $middleware;
 
     public function __construct(string $sql, ...$args)
     {
@@ -309,5 +317,29 @@ abstract class Statement
     public function getFetchClassArgs()
     {
         return $this->fetchClassArgs;
+    }
+
+    /**
+     * Get 数据处理中间件
+     *
+     * @return  Middleware
+     */ 
+    public function getMiddleware()
+    {
+        return $this->middleware;
+    }
+
+    /**
+     * Set 数据处理中间件
+     *
+     * @param  Middleware  $middleware  数据处理中间件
+     *
+     * @return  self
+     */ 
+    public function setMiddleware(Middleware $middleware)
+    {
+        $this->middleware = $middleware;
+
+        return $this;
     }
 }

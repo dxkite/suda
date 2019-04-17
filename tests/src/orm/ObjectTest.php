@@ -17,7 +17,7 @@ class ObjectTest extends TestCase
             $struct->field('id', 'bigint', 20)->auto()->primary(),
             $struct->field('name', 'varchar', 80)->unique(),
             $struct->field('money', 'DECIMAL', [10,2])->key(),
-            $struct->field('create_time', 'datetime'),
+            $struct->field('create_time', 'datetime')->alias('createTime'),
             $struct->field('content', 'text'),
         ]);
         $create = new TableStructBuilder(User::class);
@@ -45,7 +45,7 @@ class ObjectTest extends TestCase
             $struct->field('id', 'bigint', 20),
             $struct->field('name', 'varchar', 80),
             $struct->field('money', 'DECIMAL', [10,2]),
-            $struct->field('create_time', 'datetime'),
+            $struct->field('create_time', 'datetime')->alias('createTime'),
             $struct->field('content', 'text'),
         ]);
         $create = new TableStructBuilder(UserField::class);

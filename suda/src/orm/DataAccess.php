@@ -9,7 +9,7 @@ use suda\orm\struct\ReadStatement;
 use suda\orm\struct\QueryStatement;
 use suda\orm\struct\WriteStatement;
 use suda\orm\struct\TableStructBuilder;
-use suda\orm\middleware\ObjectMiddleware;
+use suda\orm\struct\TableStructMiddleware;
 use suda\orm\struct\TableStructAwareInterface;
 
 /**
@@ -43,7 +43,7 @@ class DataAccess
     {
         $this->type = $object;
         $struct = $this->createStruct($object);
-        $middleware = $middleware ?? new ObjectMiddleware($object);
+        $middleware = $middleware ?? new TableStructMiddleware($object, $struct);
         $this->access = new TableAccess($struct, $source, $middleware);
     }
 

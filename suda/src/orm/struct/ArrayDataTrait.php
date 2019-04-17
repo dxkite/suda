@@ -1,36 +1,18 @@
 <?php
 namespace suda\orm\struct;
 
+use InvalidArgumentException;
+use suda\orm\struct\MagicArrayAccessTrait;
+
 trait ArrayDataTrait  
 {
-    use PropertyDataTrait;
+    use MagicArrayAccessTrait;
     /**
      * 表数据
      *
      * @var array
      */
     protected $data = [];
-
-    
-    public function offsetSet($offset, $value)
-    {
-        $this->__set($offset, $value);
-    }
-
-    public function offsetExists($offset)
-    {
-        return $this->__isset($offset);
-    }
-
-    public function offsetUnset($offset)
-    {
-        $this->__unset($offset);
-    }
-
-    public function offsetGet($offset)
-    {
-        return $this->__get($offset);
-    }
 
     /**
      * 设置值
@@ -102,6 +84,6 @@ trait ArrayDataTrait
      */
     public function checkFieldExist(string $name)
     {
-        return true;
+        return strlen($name) > 0;
     }
 }

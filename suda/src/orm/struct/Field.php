@@ -47,10 +47,12 @@ class Field
         $this->type = strtoupper($type);
         $this->length = $length;
         $this->hasDefault = false;
+        $this->alias = $name;
     }
 
     public function alias(string $name) {
         $this->alias = $name;
+        return $this;
     }
 
     public function charset(string $charset)

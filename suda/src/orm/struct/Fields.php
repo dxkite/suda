@@ -78,8 +78,8 @@ class Fields implements IteratorAggregate
     }
 
     public function outputName(string $name):string {
-        if (\array_key_exists($name, $this->nameAlias)) {
-            return $this->nameAlias[$name];
+        if (\array_key_exists($name, $this->alias)) {
+            return $this->alias[$name];
         }
         return $name;
     }

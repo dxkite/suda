@@ -163,11 +163,6 @@ class TableAccess extends QueryAccess
         } elseif (\func_num_args() > 1) {
             $fields = \func_get_args();
         }
-        if (is_array($fields)) {
-            foreach ($fields as $index => $name) {
-                $fields[$index] = $this->middleware->inputName($name);
-            }
-        }
         return (new ReadStatement($this))->read($fields);
     }
 

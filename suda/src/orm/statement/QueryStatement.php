@@ -5,6 +5,7 @@ use suda\orm\TableStruct;
 use suda\orm\statement\Statement;
 use suda\orm\exception\SQLException;
 use suda\orm\statement\PrepareTrait;
+use suda\orm\middleware\NullMiddleware;
 
 class QueryStatement extends Statement
 {
@@ -23,6 +24,7 @@ class QueryStatement extends Statement
         parent::__construct($query, ...$args);
         $this->type = self::READ;
         $this->fetch = self::FETCH_ONE;
+        $this->middleware = new NullMiddleware;
     }
 
     /**

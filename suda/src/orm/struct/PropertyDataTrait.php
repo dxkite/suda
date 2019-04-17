@@ -1,29 +1,11 @@
 <?php
 namespace suda\orm\struct;
 
+use suda\orm\struct\MagicArrayAccessTrait;
+
 trait PropertyDataTrait
 {
-    
-    public function offsetSet($offset, $value)
-    {
-        $this->__set($offset, $value);
-    }
-
-    public function offsetExists($offset)
-    {
-        return $this->__isset($offset);
-    }
-
-    public function offsetUnset($offset)
-    {
-        $this->__unset($offset);
-    }
-
-    public function offsetGet($offset)
-    {
-        return $this->__get($offset);
-    }
-    
+    use MagicArrayAccessTrait;
     /**
      * 设置值
      *

@@ -5,6 +5,7 @@ use suda\orm\Binder;
 use suda\orm\TableStruct;
 use suda\orm\statement\Query;
 use suda\orm\statement\Statement;
+use suda\orm\middleware\Middleware;
 use suda\orm\exception\SQLException;
 use suda\orm\statement\PrepareTrait;
 
@@ -54,11 +55,12 @@ class WriteStatement extends Statement
      * @param string $rawTableName
      * @param TableStruct $struct
      */
-    public function __construct(string $rawTableName, TableStruct $struct)
+    public function __construct(string $rawTableName, TableStruct $struct, Middleware $middleware)
     {
         $this->type = self::WRITE;
         $this->struct = $struct;
         $this->table = $rawTableName;
+        $this->middleware = $middleware;
     }
 
     /**
@@ -75,6 +77,7 @@ class WriteStatement extends Statement
                 $this->write($key, $value);
             }
         } else {
+            $name = $this->middleware->inputName($name);
             if ($this->struct->getFields()->hasField($name)) {
                 $this->data[$name] = $value;
             } else {
@@ -146,11 +149,27 @@ class WriteStatement extends Statement
                 $this->whereCondition($string, $array);
             }
         } else {
+            $this->aliasKeyField($where);
             $this->arrayWhereCondition($where, $args[0] ?? []);
         }
         return $this;
     }
 
+    /**
+     * 处理输入的键
+     *
+     * @param array $fields
+     * @return array
+     */
+    protected function aliasKeyField(array $fields)
+    {
+        $values = [];
+        foreach ($fields as $name => $value) {
+            $index = $this->middleware->inputName($name);
+            $values[$index] = $value;
+        }
+        return $values;
+    }
     /**
      * 获取字符串
      *

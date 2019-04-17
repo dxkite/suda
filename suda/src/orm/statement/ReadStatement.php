@@ -4,6 +4,7 @@ namespace suda\orm\statement;
 use suda\orm\TableStruct;
 use suda\orm\statement\Query;
 use suda\orm\statement\Statement;
+use suda\orm\middleware\Middleware;
 use suda\orm\exception\SQLException;
 use suda\orm\statement\PrepareTrait;
 
@@ -45,12 +46,13 @@ class ReadStatement extends QueryStatement
      * @param string $rawTableName
      * @param TableStruct $struct
      */
-    public function __construct(string $rawTableName, TableStruct $struct)
+    public function __construct(string $rawTableName, TableStruct $struct, Middleware $middleware)
     {
         $this->struct = $struct;
         $this->table = $rawTableName;
         $this->type = self::READ;
         $this->fetch = self::FETCH_ONE;
+        $this->middleware = $middleware;
     }
 
     /**
@@ -75,6 +77,11 @@ class ReadStatement extends QueryStatement
         if (\func_num_args() > 1) {
             $fields = \func_get_args();
         }
+        if (is_array($fields)) {
+            foreach ($fields as $index => $name) {
+                $fields[$index] = $this->middleware->inputName($name);
+            }
+        }
         $this->select = $this->prepareReadFields($fields);
         return $this;
     }
@@ -89,6 +96,7 @@ class ReadStatement extends QueryStatement
     public function where($where, ...$args)
     {
         if (\is_array($where)) {
+            $where = $this->aliasKeyField($where);
             $this->whereArray($where, $args[0] ?? []);
         } elseif (is_array($args[0])) {
             $this->whereStringArray($where, $args[0]);
@@ -97,6 +105,22 @@ class ReadStatement extends QueryStatement
             $this->whereStringArray($string, $array);
         }
         return $this;
+    }
+
+    /**
+     * 处理输入的键
+     *
+     * @param array $fields
+     * @return array
+     */
+    protected function aliasKeyField(array $fields)
+    {
+        $values = [];
+        foreach ($fields as $name => $value) {
+            $index = $this->middleware->inputName($name);
+            $values[$index] = $value;
+        }
+        return $values;
     }
 
     protected function whereArray(array $where, array $binders)
