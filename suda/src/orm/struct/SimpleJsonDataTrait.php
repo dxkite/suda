@@ -3,8 +3,8 @@ namespace suda\orm\struct;
 
 trait SimpleJsonDataTrait  
 {
-    abstract public function getJsonExportData();
-    
+    abstract public function getJsonData();
+
     /**
      * 获取序列化对象
      *
@@ -12,6 +12,6 @@ trait SimpleJsonDataTrait
      */
     public function jsonSerialize()
     {
-        return $this->getJsonExportData();
+        return $this->getJsonData();
     }
 }

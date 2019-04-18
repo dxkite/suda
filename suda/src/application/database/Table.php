@@ -17,7 +17,7 @@ use suda\application\database\TableMiddlewareTrait;
 abstract class Table extends TableAccess implements Middleware
 {
     use TableMiddlewareTrait;
-
+    
     /**
      * 应用引用
      *

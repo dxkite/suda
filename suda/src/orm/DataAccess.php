@@ -6,6 +6,7 @@ use ReflectionProperty;
 use suda\orm\DataSource;
 use suda\orm\TableAccess;
 use suda\orm\struct\ReadStatement;
+use suda\orm\middleware\Middleware;
 use suda\orm\struct\QueryStatement;
 use suda\orm\struct\WriteStatement;
 use suda\orm\struct\TableStructBuilder;
@@ -75,12 +76,15 @@ class DataAccess
     /**
      * 统计计数
      *
-     * @param string|array $where
+     * @param string|array|object $where
      * @param array $whereBinder
      * @return integer
      */
-    public function count($where, array $whereBinder):int
+    public function count($where, array $whereBinder = []):int
     {
+        if (\is_object($where)) {
+            $where = $this->createDataFromObject($where);
+        }
         $fields = $this->access->getStruct()->getFields()->all();
         $field = \array_shift($fields);
         $total = $this->access->read([$field->getName()])->where($where, $whereBinder);

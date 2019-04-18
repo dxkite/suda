@@ -26,13 +26,6 @@ class TableStruct implements ArrayDataInterface
     protected $fields;
 
     /**
-     * 表数据
-     *
-     * @var array
-     */
-    protected $data = [];
-
-    /**
      * 创建表结构
      *
      * @param string $name

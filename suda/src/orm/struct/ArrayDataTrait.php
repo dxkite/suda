@@ -118,7 +118,7 @@ trait ArrayDataTrait
         return count($this->data);
     }
 
-    public function getExportJsonData()
+    public function getJsonData()
     {
         return $this->data;
     }

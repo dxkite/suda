@@ -5,6 +5,6 @@ use JsonSerializable;
 
 interface JsonDataTransferInterface extends JsonSerializable
 {
-    public function getExportJsonData();
+    public function getJsonData();
     public function jsonSerialize();
 }

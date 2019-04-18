@@ -35,6 +35,21 @@ class DataAccess extends \suda\orm\DataAccess
     }
 
     /**
+     * 从变量创建中间件
+     *
+     * @param object $object
+     * @return DataAccess
+     */
+    public static function create($object):DataAccess
+    {
+        $middleware = null;
+        if ($object instanceof Middleware) {
+            $middleware = $object;
+        }
+        return new self(get_class($object), $middleware);
+    }
+
+    /**
      * 从应用创建表
      *
      * @param \suda\application\Application $application
