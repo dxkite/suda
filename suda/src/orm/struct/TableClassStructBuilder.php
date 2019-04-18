@@ -49,10 +49,24 @@ class TableClassStructBuilder extends TableStructBuilder
      */
     public function createStruct():TableStruct
     {
-        if (preg_match_all('/@field\s+(\w+)\s+(\w+)(?:\((.+?)\))?\s+(.+)?$/im', $this->classDoc, $match)) {
+        if (($match = static::readClassDocField($this->classDoc)) !== null) {
             return $this->createClassTableStruct($match);
         }
         return parent::createStruct();
+    }
+
+    /**
+     * 判断类文档注释是否包含字段
+     *
+     * @param strring $classDoc
+     * @return array|null
+     */
+    public static function readClassDocField(string $classDoc):?array
+    {
+        if (preg_match_all('/@field\s+(\w+)\s+(\w+)(?:\((.+?)\))?\s+(.+)?$/im', $classDoc, $match)) {
+            return $match;
+        }
+        return null;
     }
 
  

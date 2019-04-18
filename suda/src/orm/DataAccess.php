@@ -238,6 +238,23 @@ class DataAccess
         if (is_subclass_of($object, MiddlewareAwareInterface::class)) {
             return $object::getMiddleware($struct);
         }
+        return $this->createDefaultMiddleware($object, $struct);
+    }
+
+    /**
+     * 创建默认中间件
+     *
+     * @param string $object
+     * @param TableStruct $struct
+     * @return Middleware
+     */
+    protected function createDefaultMiddleware(string $object, TableStruct $struct)
+    {
+        $reflectObject = new ReflectionClass($object);
+        $classDoc = $reflectObject->getDocComment()?:'';
+        if (\preg_match('/@field-serialize\s+(\w+)/i', $classDoc, $matchs)) {
+            return new TableStructMiddleware($object, $struct);
+        }
         return new NullMiddleware;
     }
 
