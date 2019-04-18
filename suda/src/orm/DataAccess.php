@@ -12,6 +12,7 @@ use suda\orm\struct\WriteStatement;
 use suda\orm\middleware\NullMiddleware;
 use suda\orm\struct\TableStructBuilder;
 use suda\orm\struct\TableStructMiddleware;
+use suda\orm\struct\TableClassStructBuilder;
 use suda\orm\struct\TableStructAwareInterface;
 use suda\orm\middleware\MiddlewareAwareInterface;
 
@@ -222,7 +223,7 @@ class DataAccess
         if (is_subclass_of($object, TableStructAwareInterface::class)) {
             return $object::getTableStruct();
         }
-        return (new TableStructBuilder($object))->createStruct();
+        return (new TableClassStructBuilder($object))->createStruct();
     }
 
     /**

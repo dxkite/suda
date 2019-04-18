@@ -49,7 +49,7 @@ class ObjectMiddleware extends NullMiddleware
      */
     public function input(string $name, $data)
     {
-        if ($this->processor[$name] === ObjectMiddleware::SERIALIZE) {
+        if (array_key_exists($name, $this->processor) && $this->processor[$name] === ObjectMiddleware::SERIALIZE) {
             return $data === null? $data : \serialize($data);
         }
         return $data;
@@ -64,7 +64,7 @@ class ObjectMiddleware extends NullMiddleware
      */
     public function output(string $name, $data)
     {
-        if ($this->processor[$name] === ObjectMiddleware::SERIALIZE) {
+        if (array_key_exists($name, $this->processor) && $this->processor[$name] === ObjectMiddleware::SERIALIZE) {
             return \unserialize($data) ?: null;
         }
         return $data;

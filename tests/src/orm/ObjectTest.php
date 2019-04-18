@@ -1,12 +1,14 @@
 <?php
 namespace test\orm;
 
+use test\orm\User2;
 use test\orm\UserField;
 use suda\orm\TableStruct;
 use PHPUnit\Framework\TestCase;
 use suda\framework\runnable\Runnable;
 use suda\orm\struct\TableStructBuilder;
 use suda\orm\struct\FieldModifierParser;
+use suda\orm\struct\TableClassStructBuilder;
 
 class ObjectTest extends TestCase
 {
@@ -24,6 +26,19 @@ class ObjectTest extends TestCase
         $this->assertEquals($struct, $create->createStruct());
     }
 
+    public function testCreateClassStruct()
+    {
+        $struct = new TableStruct('user');
+        $struct->fields([
+            $struct->field('id', 'bigint', 20)->auto()->primary(),
+            $struct->field('name', 'varchar', 80)->unique(),
+            $struct->field('money', 'DECIMAL', [10,2])->key(),
+            $struct->field('content', 'text'),
+        ]);
+        $create = new TableClassStructBuilder(User2::class);
+        $this->assertEquals($struct, $create->createStruct());
+    }
+
     public function testToken() {
         $modifier = (new FieldModifierParser)->parse('unique default(null) decimal(10,2) hello() default(0) comment("备\"注") #注释')->getModifier();
         $this->assertEquals([
@@ -35,8 +50,6 @@ class ObjectTest extends TestCase
             ['comment' , ['备"注']],
         ], $modifier);
     }
-
-    
 
     public function testCreateNameStruct()
     {

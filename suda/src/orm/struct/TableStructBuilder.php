@@ -6,6 +6,9 @@ use ReflectionProperty;
 use suda\orm\TableStruct;
 use suda\orm\struct\Field;
 
+/**
+ * 数据表构建
+ */
 class TableStructBuilder
 {
     /**
@@ -102,7 +105,8 @@ class TableStructBuilder
      * @param string $name
      * @return string
      */
-    public static function getTableFieldName(string $object, string $name) {
+    public static function getTableFieldName(string $object, string $name)
+    {
         $property = new ReflectionProperty($object, $name);
         return static::getFieldName($property);
     }
@@ -134,19 +138,30 @@ class TableStructBuilder
         if ($doc = $property->getDocComment()) {
             if (is_string($doc) && preg_match('/@field\s+(\w+)(?:\((.+?)\))?\s+(.+)?$/im', $doc, $match)) {
                 $type = strtoupper($match[1]);
-                $length = $match[2] ?? '';
-                if (strlen($length)) {
-                    $length = \explode(',', $length);
-                    if (count($length) === 1) {
-                        $length = $length[0];
-                    }
-                } else {
-                    $length = null;
-                }
+                $length = static::parseLength($match[2] ?? '');
                 return [$type, $length , trim($match[3] ?? '')];
             }
         }
         return ['text', null, ''];
+    }
+
+    /**
+     * 解析字符串
+     *
+     * @param string $length
+     * @return string|array|null
+     */
+    protected static function parseLength(string $length)
+    {
+        if (strlen($length)) {
+            $length = \explode(',', $length);
+            if (count($length) === 1) {
+                $length = $length[0];
+            }
+        } else {
+            $length = null;
+        }
+        return $length;
     }
 
     /**
@@ -155,7 +170,8 @@ class TableStructBuilder
      * @param \ReflectionProperty $property
      * @return boolean
      */
-    public static function isTableField(ReflectionProperty $property) {
+    public static function isTableField(ReflectionProperty $property)
+    {
         if ($doc = $property->getDocComment()) {
             if (is_string($doc) && stripos($doc, '@field')) {
                 return true;
