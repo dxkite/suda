@@ -8,7 +8,6 @@ use suda\orm\struct\MagicArrayAccessTrait;
 trait ArrayDataTrait  
 {
     use MagicArrayAccessTrait;
-    use SimpleJsonDataTrait;
 
     /**
      * 表数据

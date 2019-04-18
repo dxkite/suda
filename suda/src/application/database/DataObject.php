@@ -32,4 +32,14 @@ abstract class DataObject implements TableStructAwareInterface, ArrayDataInterfa
     {
         return static::getTableStruct()->getFields()->hasField($name);
     }
+
+    /**
+     * 获取序列化对象
+     *
+     * @return array
+     */
+    public function jsonSerialize()
+    {
+        return $this->data;
+    }
 }

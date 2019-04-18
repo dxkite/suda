@@ -10,7 +10,6 @@ use suda\orm\struct\ArrayDataInterface;
 class TableStruct implements ArrayDataInterface
 {
     use ArrayDataTrait;
-    
     /**
      * 数据表名
      *
