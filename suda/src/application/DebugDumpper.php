@@ -88,6 +88,6 @@ class DebugDumpper
      */
     public function uncaughtError($errno, $errstr, $errfile, $errline)
     {
-        $this->uncaughtException(new \ErrorException($errstr, 0, $errno, $errfile, $errline));
+        throw new \ErrorException($errstr, 0, $errno, $errfile, $errline);
     }
 }

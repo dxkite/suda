@@ -150,7 +150,7 @@ class Debugger extends Debug
      */
     public function uncaughtError($errno, $errstr, $errfile, $errline)
     {
-        $this->uncaughtException(new \ErrorException($errstr, 0, $errno, $errfile, $errline));
+        throw new \ErrorException($errstr, 0, $errno, $errfile, $errline);
     }
 
     public function getDefaultConfig():array
