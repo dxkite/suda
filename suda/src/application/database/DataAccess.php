@@ -50,6 +50,18 @@ class DataAccess extends \suda\orm\DataAccess
     }
 
     /**
+     * 创建访问工具
+     *
+     * @param string $object
+     * @param \suda\orm\middleware\Middleware|null $middleware
+     * @return DataAccess
+     */
+    public static function new(string $object, ?Middleware $middleware = null):DataAccess
+    {
+        return new self($object, $middleware);
+    }
+
+    /**
      * 从应用创建表
      *
      * @param \suda\application\Application $application

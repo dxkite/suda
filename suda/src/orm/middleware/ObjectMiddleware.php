@@ -50,7 +50,7 @@ class ObjectMiddleware extends NullMiddleware
     public function input(string $name, $data)
     {
         if ($this->processor[$name] === ObjectMiddleware::SERIALIZE) {
-            return \serialize($data);
+            return $data === null? $data : \serialize($data);
         }
         return $data;
     }

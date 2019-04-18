@@ -9,9 +9,11 @@ use suda\orm\struct\ReadStatement;
 use suda\orm\middleware\Middleware;
 use suda\orm\struct\QueryStatement;
 use suda\orm\struct\WriteStatement;
+use suda\orm\middleware\NullMiddleware;
 use suda\orm\struct\TableStructBuilder;
 use suda\orm\struct\TableStructMiddleware;
 use suda\orm\struct\TableStructAwareInterface;
+use suda\orm\middleware\MiddlewareAwareInterface;
 
 /**
  * 数据访问
@@ -44,7 +46,7 @@ class DataAccess
     {
         $this->type = $object;
         $struct = $this->createStruct($object);
-        $middleware = $middleware ?? new TableStructMiddleware($object, $struct);
+        $middleware = $middleware ?? $this->createMiddleware($object, $struct);
         $this->access = new TableAccess($struct, $source, $middleware);
     }
 
@@ -217,12 +219,25 @@ class DataAccess
      */
     protected function createStruct(string $object)
     {
-        $reflection = new ReflectionClass($object);
-        $hasMethod = $reflection->implementsInterface(TableStructAwareInterface::class) || \method_exists($object, 'getTableStruct');
-        if ($hasMethod) {
-            return $reflection->getMethod('getTableStruct')->invoke(null);
+        if (is_subclass_of($object, TableStructAwareInterface::class)) {
+            return $object::getTableStruct();
         }
         return (new TableStructBuilder($object))->createStruct();
+    }
+
+    /**
+     * 创建中间件
+     *
+     * @param string $object
+     * @param TableStruct $struct
+     * @return Middleware
+     */
+    protected function createMiddleware(string $object, TableStruct $struct)
+    {
+        if (is_subclass_of($object, MiddlewareAwareInterface::class)) {
+            return $object::getMiddleware($struct);
+        }
+        return new NullMiddleware;
     }
 
     /**
