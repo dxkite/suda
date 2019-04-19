@@ -27,6 +27,7 @@ class ObjectMiddleware extends NullMiddleware
     protected $object;
 
     const RAW = 0;
+    const JSON = 1;
     const SERIALIZE = 2;
 
     /**
@@ -49,8 +50,13 @@ class ObjectMiddleware extends NullMiddleware
      */
     public function input(string $name, $data)
     {
-        if (array_key_exists($name, $this->processor) && $this->processor[$name] === ObjectMiddleware::SERIALIZE) {
-            return $data === null? $data : \serialize($data);
+        if (array_key_exists($name, $this->processor)) {
+            if ($this->processor[$name] === ObjectMiddleware::SERIALIZE){
+                return $data === null? $data : \serialize($data);
+            }
+            if ($this->processor[$name] === ObjectMiddleware::JSON){
+                return \json_encode($data);
+            }
         }
         return $data;
     }
@@ -64,8 +70,13 @@ class ObjectMiddleware extends NullMiddleware
      */
     public function output(string $name, $data)
     {
-        if (array_key_exists($name, $this->processor) && $this->processor[$name] === ObjectMiddleware::SERIALIZE) {
-            return \unserialize($data) ?: null;
+        if (array_key_exists($name, $this->processor)) {
+            if ($this->processor[$name] === ObjectMiddleware::SERIALIZE){
+                return \unserialize($data) ?: null;
+            }
+            if ($this->processor[$name] === ObjectMiddleware::JSON){
+                return \json_decode($data);
+            }
         }
         return $data;
     }

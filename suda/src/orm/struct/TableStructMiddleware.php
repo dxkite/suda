@@ -60,12 +60,12 @@ class TableStructMiddleware extends ObjectMiddleware
     protected function prepareProcessorSet(string $object)
     {
         $reflectObject = new ReflectionClass($object);
-        $classDoc = $reflectObject->getDocComment()?:'';
+        $classDoc = is_string($reflectObject->getDocComment())?$reflectObject->getDocComment():'';
         $field = TableClassStructBuilder::readClassDocField($classDoc);
         if ($field !== null) {
             $this->createProccorFromStruct();
         } else {
-            $this->createProccorFromClass();
+            $this->createProccorFromClass($reflectObject);
         }
         $this->rewriteFromClassDoc($classDoc);
     }
@@ -81,16 +81,16 @@ class TableStructMiddleware extends ObjectMiddleware
 
     protected function rewriteFromClassDoc(string $classDoc)
     {
-        if (\preg_match_all('/@field-serialize\s+(\w+)/i', $classDoc, $matchs)) {
+        if (\preg_match_all('/@field-(serialize|json)\s+(\w+)/i', $classDoc, $matchs) > 0) {
             foreach ($matchs[0] as $index => $value) {
                 $match = \array_column($matchs, $index);
-                list($comment, $name) = $match;
-                $this->processor[$name] = ObjectMiddleware::SERIALIZE;
+                list($comment, $type, $name) = $match;
+                $this->processor[$name] = strtolower($type) === 'json' ? ObjectMiddleware::JSON : ObjectMiddleware::SERIALIZE;
             }
         }
     }
 
-    protected function createProccorFromClass()
+    protected function createProccorFromClass(ReflectionClass $reflectObject)
     {
         $this->processor = [];
         foreach ($reflectObject->getProperties(ReflectionProperty::IS_PUBLIC | ReflectionProperty::IS_PROTECTED | ReflectionProperty::IS_PRIVATE) as $property) {

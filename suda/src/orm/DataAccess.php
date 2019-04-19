@@ -251,8 +251,8 @@ class DataAccess
     protected function createDefaultMiddleware(string $object, TableStruct $struct)
     {
         $reflectObject = new ReflectionClass($object);
-        $classDoc = $reflectObject->getDocComment()?:'';
-        if (\preg_match('/@field-serialize\s+(\w+)/i', $classDoc, $matchs)) {
+        $classDoc = is_string($reflectObject->getDocComment())?$reflectObject->getDocComment():'';
+        if (\preg_match('/@field-(serialize|json)\s+(\w+)/i', $classDoc, $matchs)) {
             return new TableStructMiddleware($object, $struct);
         }
         return new NullMiddleware;

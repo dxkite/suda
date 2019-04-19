@@ -38,7 +38,7 @@ class TableClassStructBuilder extends TableStructBuilder
     {
         $this->object = $object;
         $this->reflectObject = new ReflectionClass($object);
-        $this->classDoc = $this->reflectObject->getDocComment() ?: '';
+        $this->classDoc = is_string($this->reflectObject->getDocComment())?$this->reflectObject->getDocComment():'';
     }
 
 
@@ -58,13 +58,13 @@ class TableClassStructBuilder extends TableStructBuilder
     /**
      * 判断类文档注释是否包含字段
      *
-     * @param strring $classDoc
+     * @param string $classDoc
      * @return array|null
      */
     public static function readClassDocField(string $classDoc):?array
     {
-        if (preg_match_all('/@field\s+(\w+)\s+(\w+)(?:\((.+?)\))?\s+(.+)?$/im', $classDoc, $match)) {
-            return $match;
+        if (preg_match_all('/^.+\s+\@field(?:\-(?:serialize|json))?\s+(\w+)\s+(\w+)(?:\((.+?)\))?(.+?)$/im', $classDoc, $match) > 0) {
+            return is_array($match)?$match:null;
         }
         return null;
     }
