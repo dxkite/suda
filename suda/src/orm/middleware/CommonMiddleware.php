@@ -31,6 +31,19 @@ class CommonMiddleware extends NullMiddleware
     }
 
     /**
+     * 设置某参数序列化
+     *
+     * @param string $name
+     * @return CommonMiddleware
+     */
+    public function jsonIt(string $name): CommonMiddleware
+    {
+        $this->registerInput($name, [$this, 'inputJson']);
+        $this->registerOutput($name, [$this, 'outputJson']);
+        return $this;
+    }
+
+    /**
      * 注册输入处理
      *
      * @param string $name
@@ -190,5 +203,27 @@ class CommonMiddleware extends NullMiddleware
     private function outputUnserialize($data)
     {
         return \unserialize($data) ?: null;
+    }
+
+    /**
+     * 序列化
+     *
+     * @param mixed $data
+     * @return string
+     */
+    private function inputJson($data)
+    {
+        return $data === null? $data : \json_encode($data);
+    }
+
+    /**
+     * 序列化
+     *
+     * @param mixed $data
+     * @return mixed
+     */
+    private function outputJson($data)
+    {
+        return \json_decode($data) ?: null;
     }
 }
