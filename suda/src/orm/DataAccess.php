@@ -65,7 +65,7 @@ class DataAccess
     /**
      * 写数据
      *
-     * @param array|object $object
+     * @param array|object|string $object
      * @return \suda\orm\struct\WriteStatement
      */
     public function write($object): WriteStatement
