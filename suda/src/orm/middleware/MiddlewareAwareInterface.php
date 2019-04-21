@@ -9,6 +9,5 @@ use suda\orm\middleware\Middleware;
  */
 interface MiddlewareAwareInterface
 {
-    public static function createMiddleware(TableStruct $struc):Middleware;
     public static function getMiddleware(TableStruct $struct):Middleware;
 }

@@ -6,9 +6,7 @@ use suda\orm\struct\ArrayDataTrait;
 use suda\orm\struct\WriteStatement;
 use suda\orm\struct\ArrayDataInterface;
 use suda\application\database\DataAccess;
-use suda\orm\struct\TableStructAwareTrait;
 use suda\orm\middleware\NullMiddlewareTrait;
-use suda\orm\middleware\MiddlewareAwareTrait;
 use suda\orm\struct\TableStructAwareInterface;
 use suda\orm\middleware\MiddlewareAwareInterface;
 use suda\application\database\TableMiddlewareTrait;
@@ -19,13 +17,10 @@ use suda\application\database\TableMiddlewareTrait;
  * 用于提供对数据表的操作
  *
  */
-abstract class DataObject implements TableStructAwareInterface, ArrayDataInterface, MiddlewareAwareInterface
+abstract class DataObject implements ArrayDataInterface
 {
     use ArrayDataTrait;
-    use TableStructAwareTrait;
-    use MiddlewareAwareTrait;
-    use NullMiddlewareTrait;
-    
+
     /**
      * 检查字段是否存在
      *
@@ -34,7 +29,7 @@ abstract class DataObject implements TableStructAwareInterface, ArrayDataInterfa
      */
     public function checkFieldExist(string $name)
     {
-        return static::getTableStruct()->getFields()->hasField($name);
+        return DataAccess::createStruct(static::class)->getFields()->hasField($name);
     }
 
     /**

@@ -9,5 +9,4 @@ use suda\orm\TableStruct;
 interface TableStructAwareInterface
 {
     public static function getTableStruct():TableStruct;
-    public static function createStruct():TableStruct;
 }

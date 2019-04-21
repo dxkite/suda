@@ -218,7 +218,7 @@ class DataAccess
      * @param string $object
      * @return TableStruct
      */
-    protected function createStruct(string $object)
+    public static function createStruct(string $object)
     {
         if (is_subclass_of($object, TableStructAwareInterface::class)) {
             return $object::getTableStruct();
@@ -233,12 +233,12 @@ class DataAccess
      * @param TableStruct $struct
      * @return Middleware
      */
-    protected function createMiddleware(string $object, TableStruct $struct)
+    public static function createMiddleware(string $object, TableStruct $struct)
     {
         if (is_subclass_of($object, MiddlewareAwareInterface::class)) {
             return $object::getMiddleware($struct);
         }
-        return $this->createDefaultMiddleware($object, $struct);
+        return static::createDefaultMiddleware($object, $struct);
     }
 
     /**
@@ -248,7 +248,7 @@ class DataAccess
      * @param TableStruct $struct
      * @return Middleware
      */
-    protected function createDefaultMiddleware(string $object, TableStruct $struct)
+    protected static function createDefaultMiddleware(string $object, TableStruct $struct)
     {
         $reflectObject = new ReflectionClass($object);
         $classDoc = is_string($reflectObject->getDocComment())?$reflectObject->getDocComment():'';

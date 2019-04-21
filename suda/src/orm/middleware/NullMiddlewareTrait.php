@@ -9,7 +9,7 @@ use suda\orm\middleware\Middleware;
  */
 trait NullMiddlewareTrait
 {
-    public static function createMiddleware(TableStruct $struct):Middleware
+    public static function getMiddleware(TableStruct $struct):Middleware
     {
         return new NullMiddleware;
     }
