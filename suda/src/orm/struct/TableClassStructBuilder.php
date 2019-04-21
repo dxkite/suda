@@ -63,7 +63,7 @@ class TableClassStructBuilder extends TableStructBuilder
      */
     public static function readClassDocField(string $classDoc):?array
     {
-        if (preg_match_all('/^.+\s+\@field(?:\-(?:serialize|json))?\s+(\w+)\s+(\w+)(?:\((.+?)\))?(.+?)$/im', $classDoc, $match) > 0) {
+        if (preg_match_all('/^.+\s+\@field(?:\-(?:serialize|json))?\s+(\w+)\s+(\w+)(?:\((.+?)\))?(.*?)$/im', $classDoc, $match) > 0) {
             return is_array($match)?$match:null;
         }
         return null;
