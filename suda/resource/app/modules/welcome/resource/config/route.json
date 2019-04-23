@@ -1,14 +1,14 @@
 {
     "index": {
         "template": "welcome",
-        "url": "\/"
+        "uri": "\/"
     },
     "hello": {
         "template": "helloworld",
-        "url": "\/helloworld"
+        "uri": "\/helloworld"
     },
     "simple": {
         "class": "suda.welcome.response.SimpleResponse",
-        "url": "\/simple"
+        "uri": "\/simple"
     }
 }

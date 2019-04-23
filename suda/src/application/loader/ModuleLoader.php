@@ -213,7 +213,7 @@ class ModuleLoader
             $attriute['config'] = $config;
             $attriute['group'] = $groupName;
             $attriute['route'] = $exname;
-            $uri = $config['url'] ?? '/';
+            $uri = $config['uri'] ?? '/';
             $anti = array_key_exists('anti-prefix', $config) && $config['anti-prefix'];
             if ($anti) {
                 $uri = '/'.trim($uri, '/');
