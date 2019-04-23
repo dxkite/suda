@@ -5,6 +5,7 @@ use ReflectionClass;
 use ReflectionProperty;
 use suda\orm\DataSource;
 use suda\orm\TableAccess;
+use suda\orm\statement\Statement;
 use suda\orm\struct\ReadStatement;
 use suda\orm\middleware\Middleware;
 use suda\orm\struct\QueryStatement;
@@ -77,6 +78,21 @@ class DataAccess
     }
 
     /**
+     * 删
+     *
+     * @param string|array $where
+     * @param array $whereParameter
+     * @return \suda\orm\struct\WriteStatement
+     */
+    public function delete($where = null, ...$whereParameter):WriteStatement
+    {
+        if ($where !== null) {
+            return (new WriteStatement($this))->delete()->where($where, ...$whereParameter);
+        }
+        return (new WriteStatement($this))->delete();
+    }
+
+    /**
      * 统计计数
      *
      * @param string|array|object $where
@@ -107,6 +123,18 @@ class DataAccess
         return $this->access->query($query, ...$parameter);
     }
 
+
+    /**
+     * 运行SQL语句
+     *
+     * @param Statement $statement
+     * @return mixed
+     */
+    public function run(Statement $statement)
+    {
+        return $this->access->run($statement);
+    }
+    
     /**
      * 获取最后一次插入的主键ID（用于自增值
      *
