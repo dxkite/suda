@@ -167,7 +167,6 @@ class HTTPRequest implements Request
         return $this->files;
     }
 
-
     /**
      * 获取原始输入
      *

@@ -100,6 +100,19 @@ class DataStream implements Stream
         return $this->length;
     }
 
+    /**
+     * 获取流名称
+     *
+     * @return string
+     */
+    public function getStreamName() {
+        if (is_string($this->stream)) {
+            return $this->stream;
+        } else {
+            return $this->stream->getPathname();
+        }
+    }
+
     protected function openStream(): SplFileObject
     {
         if (is_string($this->stream)) {
