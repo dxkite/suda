@@ -87,9 +87,9 @@ class DataAccess
     public function delete($where = null, ...$whereParameter):WriteStatement
     {
         if ($where !== null) {
-            return (new WriteStatement($this))->delete()->where($where, ...$whereParameter);
+            return $this->access->delete($where, ...$whereParameter);
         }
-        return (new WriteStatement($this))->delete();
+        return $this->access->delete();
     }
 
     /**
