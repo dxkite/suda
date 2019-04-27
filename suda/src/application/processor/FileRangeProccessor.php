@@ -91,7 +91,8 @@ class FileRangeProccessor implements RequestProcessor
      */
     protected function sendFileByRange(Response $response, array $range)
     {
-        $response->write(new DataStream($this->file, $range['start'], $range['end'] -  $range['start'] + 1));
+        // [start,end] = $end - $start + 1
+        $response->write(new DataStream($this->file, $range['start'], $range['end'] - $range['start'] + 1));
     }
 
     /**
@@ -190,6 +191,10 @@ class FileRangeProccessor implements RequestProcessor
             ];
         } elseif (\strpos($range, '-') !== false) {
             list($start, $end) = \explode('-', $range, 2);
+            $length = intval($end - $start);
+            if ($length <= 0) {
+                return ['start' => intval($start) , 'end' => $this->file->getSize() - 1 ];
+            }
             return ['start' => intval($start) , 'end' => intval($end) ];
         }
         return null;

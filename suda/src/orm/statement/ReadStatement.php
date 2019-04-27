@@ -88,10 +88,9 @@ class ReadStatement extends QueryStatement
 
     /**
      * 条件
-     *
-     * @param string|array $where
-     * @param array $whereBinder
-     * @return self
+     * @param $where
+     * @param mixed ...$args
+     * @return $this
      */
     public function where($where, ...$args)
     {
