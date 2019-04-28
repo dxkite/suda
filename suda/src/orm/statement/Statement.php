@@ -169,7 +169,7 @@ abstract class Statement
      *
      * @param string|null $class
      * @param array $args
-     * @return self
+     * @return $this
      */
     public function setFetchType(?string $class = null, array $args = [])
     {

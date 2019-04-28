@@ -32,7 +32,7 @@ class QueryStatement extends Statement
      *
      * @param string|null $class
      * @param array $args
-     * @return self
+     * @return $this
      */
     public function wantOne(?string $class = null, array $args = [])
     {
@@ -48,7 +48,7 @@ class QueryStatement extends Statement
      *
      * @param string|null $class
      * @param array $args
-     * @return self
+     * @return $this
      */
     public function wantAll(?string $class = null, array $args = [])
     {
@@ -64,7 +64,7 @@ class QueryStatement extends Statement
      *
      * @param string|null $class
      * @param array $args
-     * @return self
+     * @return $this
      */
     public function wantType(?string $class = null, array $args = [])
     {
@@ -76,7 +76,7 @@ class QueryStatement extends Statement
      * 设置使用某个字段做Key
      *
      * @param string $key
-     * @return self
+     * @return $this
      */
     public function withKey(string $key)
     {
@@ -96,7 +96,7 @@ class QueryStatement extends Statement
     /**
      * 滚动获取
      *
-     * @return self
+     * @return $this
      */
     public function scroll()
     {

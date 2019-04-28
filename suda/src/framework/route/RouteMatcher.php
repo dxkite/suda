@@ -85,7 +85,7 @@ class RouteMatcher
      *
      * @param string $name
      * @param mixed $attribute
-     * @return self
+     * @return $this
      */
     public function addAttribute(string $name, $attribute)
     {

@@ -120,7 +120,7 @@ class QueryAccess
      * 设置中间件
      *
      * @param Middleware $middleware
-     * @return self
+     * @return $this
      */
     public function setMiddleware(Middleware $middleware)
     {

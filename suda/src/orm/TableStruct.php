@@ -39,7 +39,7 @@ class TableStruct implements ArrayDataInterface
      * 添加表结构字段
      *
      * @param array|Field $fields
-     * @return self
+     * @return $this
      */
     public function fields($fields)
     {

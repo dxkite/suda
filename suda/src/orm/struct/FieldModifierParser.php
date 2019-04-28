@@ -41,7 +41,7 @@ class FieldModifierParser
      * 解析
      *
      * @param string $modifier
-     * @return self
+     * @return $this
      */
     public function parse(string $modifier)
     {

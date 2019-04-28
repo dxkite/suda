@@ -68,7 +68,7 @@ class WriteStatement extends Statement
      *
      * @param string|array $name
      * @param mixed $value
-     * @return self
+     * @return $this
      */
     public function write($name, $value = null)
     {
@@ -90,7 +90,7 @@ class WriteStatement extends Statement
     /**
      * 设置影响行数
      *
-     * @return self
+     * @return $this
      */
     public function wantRows()
     {
@@ -101,7 +101,7 @@ class WriteStatement extends Statement
     /**
      * 设置返回是否成功
      *
-     * @return self
+     * @return $this
      */
     public function wantOk()
     {
@@ -112,7 +112,7 @@ class WriteStatement extends Statement
     /**
      * 设置返回ID
      *
-     * @return self
+     * @return $this
      */
     public function wantId()
     {
@@ -123,7 +123,7 @@ class WriteStatement extends Statement
     /**
      * 删除
      *
-     * @return self
+     * @return $this
      */
     public function delete()
     {
@@ -136,7 +136,7 @@ class WriteStatement extends Statement
      *
      * @param string|array $where
      * @param array $whereParameter
-     * @return self
+     * @return $this
      */
     public function where($where, ...$args)
     {

@@ -253,7 +253,7 @@ class RequestWrapper
      *
      * @param string $name
      * @param mixed $parameter
-     * @return self
+     * @return $this
      */
     public function setQuery(string $name, $query)
     {
@@ -266,7 +266,7 @@ class RequestWrapper
      * 设置查询参数
      *
      * @param array $query
-     * @return self
+     * @return $this
      */
     public function setQueries(array $query)
     {
@@ -279,7 +279,7 @@ class RequestWrapper
      * 合并参数
      *
      * @param array $query
-     * @return self
+     * @return $this
      */
     public function mergeQueries(array $query)
     {

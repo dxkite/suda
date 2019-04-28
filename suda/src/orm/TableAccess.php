@@ -54,7 +54,7 @@ class TableAccess extends QueryAccess
      * 设置中间件
      *
      * @param Middleware $middleware
-     * @return self
+     * @return $this
      */
     public function middleware(Middleware $middleware)
     {

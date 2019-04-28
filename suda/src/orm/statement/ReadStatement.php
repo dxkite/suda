@@ -58,7 +58,7 @@ class ReadStatement extends QueryStatement
     /**
      * 单独去重复
      *
-     * @return self
+     * @return $this
      */
     public function distinct()
     {
@@ -70,7 +70,7 @@ class ReadStatement extends QueryStatement
      * 查询的列
      *
      * @param array|string $fields
-     * @return self
+     * @return $this
      */
     public function read($fields)
     {
@@ -139,7 +139,7 @@ class ReadStatement extends QueryStatement
      * 分组
      *
      * @param string $what
-     * @return self
+     * @return $this
      */
     public function groupBy(string $what)
     {
@@ -152,7 +152,7 @@ class ReadStatement extends QueryStatement
      *
      * @param string|array $what
      * @param array $whereBinder
-     * @return self
+     * @return $this
      */
     public function having($what, ...$args)
     {
@@ -186,7 +186,7 @@ class ReadStatement extends QueryStatement
      *
      * @param string $what
      * @param string $order
-     * @return self
+     * @return $this
      */
     public function orderBy(string $what, string $order = 'ASC')
     {
@@ -199,7 +199,7 @@ class ReadStatement extends QueryStatement
      *
      * @param int $start
      * @param integer $length
-     * @return self
+     * @return $this
      */
     public function limit(int $start, int $length = null)
     {
@@ -212,7 +212,7 @@ class ReadStatement extends QueryStatement
      *
      * @param integer $page
      * @param integer $length
-     * @return self
+     * @return $this
      */
     public function page(int $page, int $length)
     {

@@ -20,7 +20,7 @@ class HeaderContainer
      *
      * @param \suda\framework\http\Header $header
      * @param boolean $replace
-     * @return self
+     * @return $this
      */
     public function add(Header $header, bool $replace = false)
     {
@@ -64,7 +64,7 @@ class HeaderContainer
      * 删除头部
      *
      * @param string $key
-     * @return self
+     * @return $this
      */
     public function remove(string $name)
     {

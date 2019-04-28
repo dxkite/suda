@@ -45,7 +45,7 @@ class DataSource
      * 添加连接
      *
      * @param Connection $connection
-     * @return self
+     * @return $this
      */
     public function add(Connection $connection)
     {
@@ -58,7 +58,7 @@ class DataSource
      * 添加读连接
      *
      * @param Connection $connection
-     * @return self
+     * @return $this
      */
     public function addRead(Connection $connection)
     {
@@ -73,7 +73,7 @@ class DataSource
      * 添加写连接
      *
      * @param Connection $connection
-     * @return self
+     * @return $this
      */
     public function addWrite(Connection $connection)
     {

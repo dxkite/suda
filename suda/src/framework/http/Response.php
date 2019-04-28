@@ -17,7 +17,7 @@ interface Response
      * 设置状态码
      *
      * @param integer $statusCode
-     * @return self
+     * @return $this
      */
     public function status(int $statusCode);
 
@@ -25,7 +25,7 @@ interface Response
      * 设置响应版本
      *
      * @param string $version
-     * @return self
+     * @return $this
      */
     public function version(string $version);
 
@@ -43,7 +43,7 @@ interface Response
      * @param string $value
      * @param boolean $replace
      * @param boolean $ucfirst
-     * @return self
+     * @return $this
      */
     public function header(string $name, string $value, bool $replace = false, bool $ucfirst = true);
     
@@ -51,7 +51,7 @@ interface Response
      * 设置Cookie信息
      *
      * @param Cookie $cookie
-     * @return self
+     * @return $this
      */
     public function cookie(Cookie $cookie);
 

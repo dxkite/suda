@@ -33,7 +33,7 @@ class DebugDumpper
 
     /**
      * 注册错误处理函数
-     * @return self
+     * @return $this
      */
     public function register()
     {

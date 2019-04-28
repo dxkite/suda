@@ -52,7 +52,7 @@ class Route
      * @param string $url
      * @param \suda\framework\runnable\Runnable|\Closure|array|string $runnable
      * @param array $attributes
-     * @return self
+     * @return $this
      */
     public function get(string $name, string $url, $runnable, array $attributes = [])
     {
@@ -66,7 +66,7 @@ class Route
      * @param string $url
      * @param \suda\framework\runnable\Runnable|\Closure|array|string $runnable
      * @param array $attributes
-     * @return self
+     * @return $this
      */
     public function post(string $name, string $url, $runnable, array $attributes = [])
     {
@@ -80,7 +80,7 @@ class Route
      * @param string $url
      * @param \suda\framework\runnable\Runnable|\Closure|array|string $runnable
      * @param array $attributes
-     * @return self
+     * @return $this
      */
     public function delete(string $name, string $url, $runnable, array $attributes = [])
     {
@@ -94,7 +94,7 @@ class Route
      * @param string $url
      * @param \suda\framework\runnable\Runnable|\Closure|array|string $runnable
      * @param array $attributes
-     * @return self
+     * @return $this
      */
     public function head(string $name, string $url, $runnable, array $attributes = [])
     {
@@ -109,7 +109,7 @@ class Route
      * @param string $url
      * @param \suda\framework\runnable\Runnable|\Closure|array|string $runnable
      * @param array $attributes
-     * @return self
+     * @return $this
      */
     public function options(string $name, string $url, $runnable, array $attributes = [])
     {
@@ -123,7 +123,7 @@ class Route
      * @param string $url
      * @param \suda\framework\runnable\Runnable|\Closure|array|string $runnable
      * @param array $attributes
-     * @return self
+     * @return $this
      */
     public function put(string $name, string $url, $runnable, array $attributes = [])
     {
@@ -137,7 +137,7 @@ class Route
      * @param string $url
      * @param \suda\framework\runnable\Runnable|\Closure|array|string $runnable
      * @param array $attributes
-     * @return self
+     * @return $this
      */
     public function trace(string $name, string $url, $runnable, array $attributes = [])
     {
@@ -151,7 +151,7 @@ class Route
      * @param string $url
      * @param \suda\framework\runnable\Runnable|\Closure|array|string $runnable
      * @param array $attributes
-     * @return self
+     * @return $this
      */
     public function any(string $name, string $url, $runnable, array $attributes = [])
     {
@@ -166,7 +166,7 @@ class Route
      * @param string $url
      * @param \suda\framework\runnable\Runnable|\Closure|array|string $runnable
      * @param array $attributes
-     * @return self
+     * @return $this
      */
     public function request(array $method, string $name, string $url, $runnable, array $attributes = [])
     {
@@ -184,7 +184,7 @@ class Route
      * 设置默认运行器
      *
      * @param \suda\framework\runnable\Runnable|\Closure|array|string $runnable
-     * @return self
+     * @return $this
      */
     public function default($runnable)
     {
