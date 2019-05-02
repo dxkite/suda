@@ -10,5 +10,11 @@ use suda\application\Application;
  */
 interface RequestProcessor
 {
+    /**
+     * @param Application $application
+     * @param Request $request
+     * @param Response $response
+     * @return mixed
+     */
     public function onRequest(Application $application, Request $request, Response $response);
 }
