@@ -20,8 +20,8 @@ class NullContentWrapper extends AbstractContentWrapper
     /**
      * 获取内容
      *
-     * @param \suda\framework\Response $response
-     * @return \suda\framework\http\Stream
+     * @param Response $response
+     * @return Stream
      */
     public function getContent(Response $response): Stream
     {

@@ -1,6 +1,7 @@
 <?php
 namespace suda\framework\arrayobject;
 
+use function is_array;
 use suda\framework\arrayobject\ArrayDotAccess;
 
 /**
@@ -11,7 +12,7 @@ class RecursiveArrayDocAccess extends ArrayDotAccess
     public function offsetGet($offset)
     {
         $value = parent::offsetGet($offset);
-        if (\is_array($value)) {
+        if (is_array($value)) {
             return new self($value);
         }
         return $value;

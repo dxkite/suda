@@ -19,5 +19,9 @@
             "email": "DXkite@163.com"
         }
     ],
-    "require": {}
+    "require": {
+      "ext-zip": "*",
+      "ext-json": "*",
+      "ext-pdo": "*"
+    }
 }

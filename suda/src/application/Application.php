@@ -1,6 +1,10 @@
 <?php
 namespace suda\application;
 
+use function array_key_exists;
+use Closure;
+use function constant;
+use Exception;
 use Throwable;
 use suda\framework\Request;
 use suda\framework\Response;
@@ -55,14 +59,14 @@ class Application extends ApplicationSource
     /**
      * 准备环境
      *
-     * @param \suda\framework\Request $request
-     * @param \suda\framework\Response $response
+     * @param Request $request
+     * @param Response $response
      * @return void
      */
     protected function prepare(Request $request, Response $response)
     {
         $response->setHeader('x-powered-by', 'nebula/'.SUDA_VERSION, true);
-        $response->getWrapper()->register(ExceptionContentWrapper::class, [\Throwable::class]);
+        $response->getWrapper()->register(ExceptionContentWrapper::class, [Throwable::class]);
         $response->getWrapper()->register(TemplateWrapper::class, [RawTemplate::class]);
         $dumpper = new DebugDumpper($this, $response);
         $dumpper->register();
@@ -71,7 +75,7 @@ class Application extends ApplicationSource
             'debug' => SUDA_DEBUG,
             'request-uri' => $request->getUrl(),
             'request-method' => $request->getMethod(),
-            'request-time' => date('Y-m-d H:i:s', \constant('SUDA_START_TIME')),
+            'request-time' => date('Y-m-d H:i:s', constant('SUDA_START_TIME')),
         ]);
         if ($this->isPrepared === false) {
             $this->load();
@@ -101,7 +105,7 @@ class Application extends ApplicationSource
             }
             $this->debug->info('resposned with code '. $response->getStatus());
             $this->debug->timeEnd('sending response');
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             $this->debug->uncaughtException($e);
             $response->sendContent($e);
             $response->end();
@@ -116,7 +120,7 @@ class Application extends ApplicationSource
      * @param array $method
      * @param string $name
      * @param string $url
-     * @param \suda\framework\runnable\Runnable|\Closure|array|string $runnable
+     * @param Runnable|Closure|array|string $runnable
      * @param array $attributes
      * @return self
      */
@@ -124,18 +128,18 @@ class Application extends ApplicationSource
     {
         $route = $attributes['config'] ?? [];
         $runnable = null;
-        if (\array_key_exists('class', $route)) {
+        if (array_key_exists('class', $route)) {
             $runnable = $this->className($route['class']).'->onRequest';
-        } elseif (\array_key_exists('source', $route)) {
+        } elseif (array_key_exists('source', $route)) {
             $attributes['source'] = $route['source'];
             $runnable = FileRequestProcessor::class.'->onRequest';
-        } elseif (\array_key_exists('template', $route)) {
+        } elseif (array_key_exists('template', $route)) {
             $attributes['template'] = $route['template'];
             $runnable = TemplateRequestProcessor::class.'->onRequest';
-        } elseif (\array_key_exists('runnable', $route)) {
+        } elseif (array_key_exists('runnable', $route)) {
             $runnable = $route['runnable'];
         } else {
-            throw new \Exception('request failed');
+            throw new Exception('request failed');
         }
         $this->route->request($method, $name, $url, $runnable, $attributes);
     }
@@ -174,8 +178,8 @@ class Application extends ApplicationSource
      * 运行结果
      *
      * @param MatchResult $result
-     * @param \suda\framework\Request $request
-     * @param \suda\framework\Response $response
+     * @param Request $request
+     * @param Response $response
      * @return mixed
      */
     protected function runResult(MatchResult $result, Request $request, Response $response)

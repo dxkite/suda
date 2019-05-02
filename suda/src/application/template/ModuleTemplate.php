@@ -1,6 +1,9 @@
 <?php
 namespace suda\application\template;
 
+use function constant;
+use function is_array;
+use function is_string;
 use suda\framework\Config;
 use suda\framework\Request;
 use suda\application\Resource;
@@ -39,7 +42,7 @@ class ModuleTemplate extends ModuleTemplateBase
      */
     public function getPath()
     {
-        $output = $this->config['output'] ?? \constant('SUDA_DATA').'/template/'. $this->uriName;
+        $output = $this->config['output'] ?? constant('SUDA_DATA').'/template/'. $this->uriName;
         FileSystem::make($output);
         return $output .'/'. $this->name.'.php';
     }
@@ -68,7 +71,7 @@ class ModuleTemplate extends ModuleTemplateBase
                 $values = $args;
             }
             return $this->application->getUrl($this->request, $name, $values ?? [], true, $this->module, $this->group);
-        } elseif (is_array($name) && \is_string($defaultName)) {
+        } elseif (is_array($name) && is_string($defaultName)) {
             return $this->application->getUrl($this->request, $defaultName, array_merge($this->request->get() ?? [], $name) , true, $this->module, $this->group);
         } elseif (is_string($defaultName)) {
             return $this->application->getUrl($this->request, $defaultName, $this->request->get() ?? [], true, $this->module, $this->group);
@@ -86,7 +89,7 @@ class ModuleTemplate extends ModuleTemplateBase
     public function is(string $name, array $parameter = null) {
         $full = $this->application->getRouteName($name, $this->module, $this->group);
         if ($this->request->getAttribute('route') === $full) {
-            if (\is_array($parameter)) {
+            if (is_array($parameter)) {
                 foreach ($parameter as $key => $value) {
                     if ($this->request->getQuery($key) != $value){
                         return false;

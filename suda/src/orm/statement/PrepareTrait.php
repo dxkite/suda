@@ -1,6 +1,12 @@
 <?php
 namespace suda\orm\statement;
 
+use function array_key_exists;
+use ArrayObject;
+use function implode;
+use function is_array;
+use function preg_replace_callback;
+use function str_replace;
 use suda\orm\Binder;
 use suda\orm\exception\SQLException;
 
@@ -41,11 +47,11 @@ trait PrepareTrait
         foreach ($where as $name => $value) {
             $_name = Binder::index($name);
             // in cause
-            if ($value instanceof \ArrayObject) {
+            if ($value instanceof ArrayObject) {
                 list($sql, $in_binder) = $this->prepareIn($name, $value);
                 $and[] = $sql;
                 $binders = array_merge($binders, $in_binder);
-            } elseif (\is_array($value)) {
+            } elseif (is_array($value)) {
                 list($op, $val) = $value;
                 $op = trim($op);
                 $and[] = "`{$name}` {$op} :{$_name}";
@@ -55,17 +61,17 @@ trait PrepareTrait
                 $binders[] = new Binder($_name, $value);
             }
         }
-        return [\implode(' AND ', $and), $binders];
+        return [implode(' AND ', $and), $binders];
     }
 
     protected function parepareWhereString(string $where, array $whereBinder)
     {
         foreach ($whereBinder as $name => $value) {
-            if (\is_array($value) || $value instanceof \ArrayObject) {
+            if (is_array($value) || $value instanceof ArrayObject) {
                 list($inSQL, $binders) = $this->prepareInParameter($value, $name);
                 $whereBinder = array_merge($whereBinder, $binders);
                 $name = ltrim($name, ':');
-                $where = \str_replace(':'.$name, $inSQL, $where);
+                $where = str_replace(':'.$name, $inSQL, $where);
             }
         }
         return [$where, $whereBinder];
@@ -76,7 +82,7 @@ trait PrepareTrait
      * 准备In
      *
      * @param string $name
-     * @param \ArrayObject|array $values
+     * @param ArrayObject|array $values
      * @return array
      */
     protected function prepareIn(string $name, $values)
@@ -116,7 +122,7 @@ trait PrepareTrait
             $binders[] = new Binder($_name, $value, $name);
             $sets[] = "`{$name}`=:{$_name}";
         }
-        return [\implode(',', $sets), $binders];
+        return [implode(',', $sets), $binders];
     }
 
     /**
@@ -129,11 +135,11 @@ trait PrepareTrait
     protected function prepareQueryMark(string $sql, array $parameter)
     {
         $binders = [];
-        $query = \preg_replace_callback('/\?/', function ($match) use (&$binders, $parameter) {
+        $query = preg_replace_callback('/\?/', function ($match) use (&$binders, $parameter) {
             $index = count($binders);
-            if (\array_key_exists($index, $parameter)) {
+            if (array_key_exists($index, $parameter)) {
                 $name = Binder::index($index);
-                if (\is_array($parameter[$index]) || $parameter[$index] instanceof \ArrayObject) {
+                if (is_array($parameter[$index]) || $parameter[$index] instanceof ArrayObject) {
                     list($inSQL, $inBinders) = $this->prepareInParameter($parameter[$index], $index);
                     $binders = array_merge($binders, $inBinders);
                     return $inSQL;

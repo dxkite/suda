@@ -1,6 +1,7 @@
 <?php
 namespace suda\application\template;
 
+use function in_array;
 use suda\framework\Config;
 use suda\framework\Request;
 use suda\application\Resource;
@@ -149,7 +150,7 @@ class ModuleTemplateBase extends CompilableTemplate
     protected function prepareStaticModuleSource(?string $module)
     {
         $static = $this->getModuleStaticPath($module);
-        if (SUDA_DEBUG && is_dir($static) && !\in_array($static, static::$copyedStaticPaths)) {
+        if (SUDA_DEBUG && is_dir($static) && !in_array($static, static::$copyedStaticPaths)) {
             $from = $static;
             $to = $this->getModuleStaticOutpath($module);
             $time = sprintf('copy template static source %s => %s ', $from, $to);

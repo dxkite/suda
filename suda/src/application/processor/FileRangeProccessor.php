@@ -1,13 +1,20 @@
 <?php
 namespace suda\application\processor;
 
+use function explode;
+use function is_array;
+use function md5;
+use function rtrim;
 use SplFileObject;
+use function strpos;
+use function substr;
 use suda\framework\Request;
 use suda\framework\Response;
 use suda\application\Application;
 use suda\framework\response\MimeType;
 use suda\framework\http\stream\DataStream;
 use suda\application\processor\RequestProcessor;
+use function uniqid;
 
 /**
  * 响应
@@ -37,9 +44,9 @@ class FileRangeProccessor implements RequestProcessor
     /**
      * 处理文件请求
      *
-     * @param \suda\application\Application $application
-     * @param \suda\framework\Request $request
-     * @param \suda\framework\Response $response
+     * @param Application $application
+     * @param Request $request
+     * @param Response $response
      * @return void
      */
     public function onRequest(Application $application, Request $request, Response $response)
@@ -65,13 +72,13 @@ class FileRangeProccessor implements RequestProcessor
     /**
      * 发送多Range
      *
-     * @param \suda\framework\Response $response
+     * @param Response $response
      * @param array $ranges
      * @return void
      */
     protected function sendMultipleFileByRange(Response $response, array $ranges)
     {
-        $separates = 'multiple_range_'.base64_encode(\md5(\uniqid(), true));
+        $separates = 'multiple_range_'.base64_encode(md5(uniqid(), true));
         $response->setHeader('content-type', 'multipart/byteranges; boundary='.$separates);
         foreach ($ranges as $range) {
             $response->write('--'.$separates."\r\n");
@@ -85,7 +92,7 @@ class FileRangeProccessor implements RequestProcessor
     /**
      * 发送范围数据
      *
-     * @param \suda\framework\Response $response
+     * @param Response $response
      * @param array $range
      * @return void
      */
@@ -98,13 +105,13 @@ class FileRangeProccessor implements RequestProcessor
     /**
      * 获取Range描述
      *
-     * @param \suda\framework\Request $request
+     * @param Request $request
      * @return array|bool|null
      */
     protected function getRanges(Request $request)
     {
         $ranges = $this->parseRangeHeader($request);
-        if (\is_array($ranges)) {
+        if (is_array($ranges)) {
             return $this->parseRanges($ranges);
         } elseif ($ranges === false) {
             return false;
@@ -115,7 +122,7 @@ class FileRangeProccessor implements RequestProcessor
     /**
      * 写Range头
      *
-     * @param \suda\framework\Response $response
+     * @param Response $response
      * @param array $range
      * @return void
      */
@@ -139,7 +146,7 @@ class FileRangeProccessor implements RequestProcessor
     /**
      * 获取Range描述
      *
-     * @param \suda\framework\Request $request
+     * @param Request $request
      * @return array|bool|null
      */
     protected function parseRangeHeader(Request $request)
@@ -147,11 +154,11 @@ class FileRangeProccessor implements RequestProcessor
         $range = $request->getHeader('range', null);
         if (is_string($range)) {
             $range = trim($range);
-            if (\strpos($range, 'bytes=') !== 0) {
+            if (strpos($range, 'bytes=') !== 0) {
                 return false;
             }
-            $rangesFrom = \substr($range, strlen('bytes='));
-            return \explode(',', $rangesFrom);
+            $rangesFrom = substr($range, strlen('bytes='));
+            return explode(',', $rangesFrom);
         }
         return null;
     }
@@ -186,11 +193,11 @@ class FileRangeProccessor implements RequestProcessor
         $range = trim($range);
         if (strrpos($range, '-') === strlen($range) - 1) {
             return [
-                'start' => intval(\rtrim($range, '-')),
+                'start' => intval(rtrim($range, '-')),
                 'end' => $this->file->getSize() - 1,
             ];
-        } elseif (\strpos($range, '-') !== false) {
-            list($start, $end) = \explode('-', $range, 2);
+        } elseif (strpos($range, '-') !== false) {
+            list($start, $end) = explode('-', $range, 2);
             $length = intval($end - $start);
             if ($length <= 0) {
                 return ['start' => intval($start) , 'end' => $this->file->getSize() - 1 ];

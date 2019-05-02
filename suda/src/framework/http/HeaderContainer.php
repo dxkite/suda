@@ -1,6 +1,7 @@
 <?php
 namespace suda\framework\http;
 
+use function array_key_exists;
 use suda\framework\http\Header;
 
 /**
@@ -56,7 +57,7 @@ class HeaderContainer
      */
     public function has(string $name) : bool
     {
-        return \array_key_exists($name, $this->header);
+        return array_key_exists($name, $this->header);
     }
 
 

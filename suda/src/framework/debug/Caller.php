@@ -1,6 +1,8 @@
 <?php
 namespace suda\framework\debug;
 
+use function array_merge;
+
 /**
  * 回溯调用者
  */
@@ -11,7 +13,7 @@ class Caller
 
     public function __construct(array $backtrace, array $ignorePath =[])
     {
-        $this->ignorePath = \array_merge($this->ignorePath, $ignorePath);
+        $this->ignorePath = array_merge($this->ignorePath, $ignorePath);
         $this->backtrace = $backtrace;
     }
 

@@ -1,6 +1,9 @@
 <?php
 namespace suda\framework\debug\attach;
 
+use ReflectionClass;
+use Throwable;
+
 /**
  * 打印
  */
@@ -26,7 +29,7 @@ trait DumpTrait
 
     protected static function objectGetter(string $objectName, object $object, int $deep)
     {
-        $class = new \ReflectionClass($objectName);
+        $class = new ReflectionClass($objectName);
         $properties = $class->getProperties();
         $parameterString = '';
         foreach ($properties as $property) {
@@ -76,7 +79,7 @@ trait DumpTrait
     {
         if (null === $object) {
             return 'NULL';
-        } elseif ($object instanceof \Throwable) {
+        } elseif ($object instanceof Throwable) {
             return static::dumpThrowable($object);
         } elseif (is_object($object)) {
             return static::objectToString($object, $deep);
@@ -124,7 +127,7 @@ trait DumpTrait
         return $line;
     }
 
-    public static function dumpThrowable(\Throwable $e)
+    public static function dumpThrowable(Throwable $e)
     {
         $dump = get_class($e).':'. $e->getMessage() .PHP_EOL;
         $dump .= 'At: ' . $e->getFile().':'.$e->getLine().PHP_EOL;

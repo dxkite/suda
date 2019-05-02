@@ -1,11 +1,10 @@
 <?php
 namespace suda\orm\statement;
 
+use function is_array;
 use PDOStatement;
 use suda\orm\Binder;
-use suda\orm\statement\Query;
 use suda\orm\middleware\Middleware;
-use suda\orm\statement\PrepareTrait;
 
 abstract class Statement
 {
@@ -97,9 +96,14 @@ abstract class Statement
      */
     protected $middleware;
 
+    /**
+     * Statement constructor.
+     * @param string $sql
+     * @param mixed ...$args
+     */
     public function __construct(string $sql, ...$args)
     {
-        if (count($args) === 1 && \is_array($args[0])) {
+        if (count($args) === 1 && is_array($args[0])) {
             $this->create($sql, $args[0]);
         } else {
             list($this->string, $this->binder) = $this->prepareQueryMark($sql, $args);
@@ -234,7 +238,7 @@ abstract class Statement
     /**
      * 获取查询对象
      *
-     * @return \suda\orm\statement\Query
+     * @return Query
      */
     public function getQuery():Query
     {

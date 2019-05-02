@@ -1,12 +1,10 @@
 <?php
 namespace suda\application\database;
 
-use suda\orm\DataSource;
 use suda\orm\TableAccess;
 use suda\orm\TableStruct;
 use suda\application\Application;
 use suda\orm\middleware\Middleware;
-use suda\application\database\TableMiddlewareTrait;
 
 /**
  * 数据表抽象对象
@@ -28,7 +26,7 @@ abstract class Table extends TableAccess implements Middleware
     /**
      * 从应用创建表
      *
-     * @param \suda\application\Application $application
+     * @param Application $application
      * @return void
      */
     public static function load(Application $application)

@@ -1,6 +1,7 @@
 <?php
 namespace suda\framework\debug;
 
+use function array_key_exists;
 use suda\framework\debug\Caller;
 use suda\framework\debug\ConfigTrait;
 use suda\framework\debug\log\LogLevel;
@@ -101,7 +102,7 @@ class Debug implements LoggerInterface, LoggerAwareInterface, DumpInterface, Att
 
     public function timeEnd(string $name)
     {
-        if (\array_key_exists($name, $this->timeRecord)) {
+        if (array_key_exists($name, $this->timeRecord)) {
             $pass=microtime(true)-$this->timeRecord[$name]['time'];
             $this->log($this->timeRecord[$name]['level'], 'process '. $name.' cost '. number_format($pass, 5).'s');
             return $pass;

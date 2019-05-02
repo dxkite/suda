@@ -14,29 +14,29 @@ class PHPContext
     /**
      * PHP自动加载
      *
-     * @var \suda\framework\loader\Loader
+     * @var Loader
      */
     protected $loader;
 
     /**
      * 全局配置
      *
-     * @var \suda\framework\Config
+     * @var Config
      */
     protected $config;
 
     /**
      * PHP错误调试
      *
-     * @var \suda\framework\Debugger
+     * @var Debugger
      */
     protected $debug;
 
     /**
      * 创建PHP环境
      *
-     * @param \suda\framework\Config $config
-     * @param \suda\framework\loader\Loader $loader
+     * @param Config $config
+     * @param Loader $loader
      */
     public function __construct(Config $config, Loader $loader)
     {
@@ -57,7 +57,7 @@ class PHPContext
     /**
      * 获取加载器
      *
-     * @return \suda\framework\loader\Loader
+     * @return Loader
      */
     public function loader():Loader
     {
@@ -67,7 +67,7 @@ class PHPContext
     /**
      * 获取配置
      *
-     * @return \suda\framework\Config
+     * @return Config
      */
     public function config():Config
     {
@@ -77,7 +77,7 @@ class PHPContext
     /**
      * 获取调试工具
      *
-     * @return \suda\framework\Debugger
+     * @return Debugger
      */
     public function debug(): Debugger
     {
@@ -99,7 +99,7 @@ class PHPContext
     /**
      * Get PHP自动加载
      *
-     * @return  \suda\framework\loader\Loader
+     * @return  Loader
      */
     public function getLoader()
     {
@@ -109,11 +109,11 @@ class PHPContext
     /**
      * Set PHP自动加载
      *
-     * @param  \suda\framework\loader\Loader  $loader  PHP自动加载
+     * @param Loader $loader  PHP自动加载
      *
      * @return  self
      */
-    public function setLoader(\suda\framework\loader\Loader $loader)
+    public function setLoader(Loader $loader)
     {
         $this->loader = $loader;
 
@@ -123,7 +123,7 @@ class PHPContext
     /**
      * Get 全局配置
      *
-     * @return  \suda\framework\Config
+     * @return  Config
      */
     public function getConfig()
     {
@@ -133,11 +133,11 @@ class PHPContext
     /**
      * Set 全局配置
      *
-     * @param  \suda\framework\Config  $config  全局配置
+     * @param Config $config  全局配置
      *
      * @return  self
      */
-    public function setConfig(\suda\framework\Config $config)
+    public function setConfig(Config $config)
     {
         $this->config = $config;
 
@@ -147,7 +147,7 @@ class PHPContext
     /**
      * Get pHP错误调试
      *
-     * @return  \suda\framework\Debugger
+     * @return  Debugger
      */
     public function getDebug()
     {
@@ -157,11 +157,11 @@ class PHPContext
     /**
      * Set PHP错误调试
      *
-     * @param  \suda\framework\Debugger  $debug  PHP错误调试
+     * @param Debugger $debug  PHP错误调试
      *
      * @return  self
      */
-    public function setDebug(\suda\framework\Debugger $debug)
+    public function setDebug(Debugger $debug)
     {
         $this->debug = $debug;
 

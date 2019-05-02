@@ -1,9 +1,6 @@
 <?php
 namespace suda\framework;
 
-use suda\framework\Request;
-use suda\framework\Response;
-
 /**
  *  Cache 接口
  */
@@ -14,6 +11,7 @@ interface Cache
      *
      * @param string $name
      * @param mixed $value
+     * @param int $expire
      * @return bool
      */
     public function set(string $name, $value, int $expire):bool;

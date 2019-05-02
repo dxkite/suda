@@ -1,11 +1,24 @@
 <?php
 namespace suda\framework\debug\log\logger;
 
+use function class_exists;
+use function file_exists;
+use function fwrite;
+use function is_bool;
+use function is_dir;
+use function is_file;
+use function is_resource;
+use function microtime;
+use RecursiveDirectoryIterator;
+use RecursiveIteratorIterator;
+use function register_shutdown_function;
+use function strtr;
 use suda\framework\debug\ConfigTrait;
 use suda\framework\debug\log\LogLevel;
 use suda\framework\debug\ConfigInterface;
 use suda\framework\debug\log\AbstractLogger;
 use suda\framework\debug\log\logger\exception\FileLoggerException;
+use ZipArchive;
 
 class FileLogger extends AbstractLogger implements ConfigInterface
 {
@@ -52,7 +65,7 @@ class FileLogger extends AbstractLogger implements ConfigInterface
 
     public function getAviailbleWrite()
     {
-        if (\is_resource($this->temp)) {
+        if (is_resource($this->temp)) {
             return $this->temp;
         }
         $this->prepareWrite();
@@ -61,7 +74,7 @@ class FileLogger extends AbstractLogger implements ConfigInterface
 
     protected function prepareWrite()
     {
-        $msec = explode('.', \microtime(true))[1];
+        $msec = explode('.', microtime(true))[1];
         $this->tempname = $this->getConfig('save-path').'/'.date('YmdHis').'.'.$msec.'.log';
         $temp = fopen($this->tempname, 'w+');
         if ($temp !== false) {
@@ -70,7 +83,7 @@ class FileLogger extends AbstractLogger implements ConfigInterface
             throw new FileLoggerException(__CLASS__.':'.sprintf('cannot create log file'));
         }
         $this->latest = $this->getConfig('save-path').'/'.$this->getConfig('file-name');
-        \register_shutdown_function([$this,'save']);
+        register_shutdown_function([$this,'save']);
     }
 
     public function getDefaultConfig():array
@@ -95,8 +108,8 @@ class FileLogger extends AbstractLogger implements ConfigInterface
             if ($zip->addFile($logFile, date('Y-m-d'). '-'. $zip->numFiles .'.log')) {
                 array_push($this->removeFiles, $logFile);
             }
-            if (\is_dir($this->getConfig('save-pack-path'))) {
-                $it = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($this->getConfig('save-pack-path'), \RecursiveDirectoryIterator::SKIP_DOTS));
+            if (is_dir($this->getConfig('save-pack-path'))) {
+                $it = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($this->getConfig('save-pack-path'), RecursiveDirectoryIterator::SKIP_DOTS));
                 foreach ($it as $dumpLog) {
                     if ($zip->addFile($dumpLog, 'pack/'.basename($dumpLog))) {
                         array_push($this->removeFiles, $dumpLog);
@@ -115,13 +128,13 @@ class FileLogger extends AbstractLogger implements ConfigInterface
      * 获取压缩
      *
      * @param string $path
-     * @return \ZipArchive|null
+     * @return ZipArchive|null
      */
     protected function getZipArchive(string $path)
     {
-        if (\class_exists('ZipArchive')) {
-            $zip = new \ZipArchive;
-            $res = $zip->open($path, \ZipArchive::CREATE);
+        if (class_exists('ZipArchive')) {
+            $zip = new ZipArchive;
+            $res = $zip->open($path, ZipArchive::CREATE);
             if ($res === true) {
                 return $zip;
             }
@@ -153,8 +166,8 @@ class FileLogger extends AbstractLogger implements ConfigInterface
             $message = $this->interpolate($message, $context);
             $replace['%level%'] = $level;
             $replace['%message%'] = $message;
-            $write = \strtr($this->getConfig('log-format'), $replace);
-            \fwrite($this->getAviailbleWrite(), $write.PHP_EOL);
+            $write = strtr($this->getConfig('log-format'), $replace);
+            fwrite($this->getAviailbleWrite(), $write.PHP_EOL);
         }
     }
 
@@ -177,7 +190,7 @@ class FileLogger extends AbstractLogger implements ConfigInterface
     protected function removePackFiles()
     {
         foreach ($this->removeFiles as $file) {
-            if (\is_file($file) && \file_exists($file)) {
+            if (is_file($file) && file_exists($file)) {
                 unlink($file);
             }
         }
@@ -199,7 +212,7 @@ class FileLogger extends AbstractLogger implements ConfigInterface
     {
         $replace = [];
         foreach ($context as $key => $val) {
-            if (\is_bool($val)) {
+            if (is_bool($val)) {
                 $val = $val ? 'true' : 'false';
             } elseif (null === $val) {
                 $val = 'null';

@@ -1,6 +1,7 @@
 <?php
 namespace suda\framework;
 
+use function is_array;
 use suda\framework\Cache;
 use suda\framework\Event;
 use suda\framework\Route;
@@ -40,7 +41,7 @@ class Context extends PHPContext
      * 创建PHP环境
      *
      * @param \suda\framework\Config $config
-     * @param \suda\framework\loader\Loader $loader
+     * @param Loader $loader
      */
     public function __construct(Config $config, Loader $loader)
     {
@@ -161,7 +162,7 @@ class Context extends PHPContext
     public function loadEvent(string $path)
     {
         $listener = Config::loadConfig($path, $this->config);
-        if (\is_array($listener)) {
+        if (is_array($listener)) {
             $this->event->load($listener);
         }
     }

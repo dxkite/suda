@@ -1,8 +1,10 @@
 <?php
 namespace suda\framework\arrayobject;
 
+use function array_key_exists;
 use ArrayAccess;
 use ArrayObject;
+use function is_array;
 
 /**
  * 数组点获取类
@@ -140,7 +142,7 @@ class ArrayDotAccess implements ArrayAccess
      */
     public static function keyExist(string $key, $value):bool
     {
-        if (\is_array($value) && \array_key_exists($key, $value)) {
+        if (is_array($value) && array_key_exists($key, $value)) {
             return true;
         }
         if ($value instanceof ArrayAccess) {
@@ -157,6 +159,6 @@ class ArrayDotAccess implements ArrayAccess
      */
     public static function isArray($value)
     {
-        return \is_array($value) || $value instanceof ArrayAccess;
+        return is_array($value) || $value instanceof ArrayAccess;
     }
 }

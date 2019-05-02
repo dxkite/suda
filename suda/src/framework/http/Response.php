@@ -1,13 +1,6 @@
 <?php
 namespace suda\framework\http;
 
-use suda\framework\http\Cookie;
-use suda\framework\http\Header;
-use suda\framework\http\Status;
-use suda\framework\http\Stream;
-use suda\framework\http\HeaderContainer;
-use suda\framework\http\stream\DataStream;
-
 /**
  * 原始HTTP响应
  */
@@ -38,12 +31,11 @@ interface Response
 
     /**
      * 设置头部信息
-     *
      * @param string $name
      * @param string $value
-     * @param boolean $replace
-     * @param boolean $ucfirst
-     * @return self
+     * @param bool $replace
+     * @param bool $ucfirst
+     * @return mixed
      */
     public function header(string $name, string $value, bool $replace = false, bool $ucfirst = true);
     

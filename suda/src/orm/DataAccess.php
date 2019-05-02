@@ -1,10 +1,13 @@
 <?php
 namespace suda\orm;
 
+use function array_shift;
+use function is_object;
+use function method_exists;
+use function preg_match;
 use ReflectionClass;
+use ReflectionException;
 use ReflectionProperty;
-use suda\orm\DataSource;
-use suda\orm\TableAccess;
 use suda\orm\statement\Statement;
 use suda\orm\struct\ReadStatement;
 use suda\orm\middleware\Middleware;
@@ -41,8 +44,9 @@ class DataAccess
      * 创建对数据的操作
      *
      * @param string $object
-     * @param \suda\orm\DataSource $source
+     * @param DataSource $source
      * @param Middleware|null $middleware
+     * @throws ReflectionException
      */
     public function __construct(string $object, DataSource $source, ?Middleware $middleware = null)
     {
@@ -56,22 +60,23 @@ class DataAccess
      * 读取数据
      *
      * @param array|string $fields
-     * @return \suda\orm\struct\ReadStatement
+     * @return ReadStatement
      */
     public function read(...$fields): ReadStatement
     {
         return $this->access->read(...$fields)->wantType($this->type);
     }
-    
+
     /**
      * 写数据
      *
      * @param array|object|string $object
-     * @return \suda\orm\struct\WriteStatement
+     * @return WriteStatement
+     * @throws ReflectionException
      */
     public function write($object): WriteStatement
     {
-        if (\is_object($object)) {
+        if (is_object($object)) {
             $object = $this->createDataFromObject($object);
         }
         return $this->access->write($object);
@@ -82,7 +87,7 @@ class DataAccess
      *
      * @param string|array $where
      * @param array $whereParameter
-     * @return \suda\orm\struct\WriteStatement
+     * @return WriteStatement
      */
     public function delete($where = null, ...$whereParameter):WriteStatement
     {
@@ -98,16 +103,17 @@ class DataAccess
      * @param string|array|object $where
      * @param array $whereBinder
      * @return integer
+     * @throws ReflectionException
      */
     public function count($where, array $whereBinder = []):int
     {
-        if (\is_object($where)) {
+        if (is_object($where)) {
             $where = $this->createDataFromObject($where);
         }
         $fields = $this->access->getStruct()->getFields()->all();
-        $field = \array_shift($fields);
+        $field = array_shift($fields);
         $total = $this->access->read([$field->getName()])->where($where, $whereBinder);
-        $data = $this->access->query('SELECT count(*) as `count` from ('.$total.') as total', $total->getBinder())->one();
+        $data = $this->access->query(sprintf("SELECT count(*) as `count` from (%s) as total", $total), $total->getBinder())->one();
         return intval($data['count']);
     }
 
@@ -181,10 +187,11 @@ class DataAccess
      *
      * @param object $object
      * @return array
+     * @throws ReflectionException
      */
     protected function createDataFromObject($object)
     {
-        if (\method_exists($object, '__get')) {
+        if (method_exists($object, '__get')) {
             return $this->createDataViaMagicGet($object);
         }
         return $this->createDataViaReflection($object);
@@ -200,7 +207,7 @@ class DataAccess
     {
         $fields = $this->access->getStruct()->getFields();
         $data = [];
-        $isset = \method_exists($object, '__isset');
+        $isset = method_exists($object, '__isset');
         if ($isset) {
             foreach ($fields as $name => $value) {
                 if ($object->__isset($name)) {
@@ -222,6 +229,7 @@ class DataAccess
      *
      * @param object $object
      * @return array
+     * @throws ReflectionException
      */
     protected function createDataViaReflection($object)
     {
@@ -245,6 +253,7 @@ class DataAccess
      *
      * @param string $object
      * @return TableStruct
+     * @throws ReflectionException
      */
     public static function createStruct(string $object)
     {
@@ -260,6 +269,7 @@ class DataAccess
      * @param string $object
      * @param TableStruct $struct
      * @return Middleware
+     * @throws ReflectionException
      */
     public static function createMiddleware(string $object, TableStruct $struct)
     {
@@ -275,12 +285,13 @@ class DataAccess
      * @param string $object
      * @param TableStruct $struct
      * @return Middleware
+     * @throws ReflectionException
      */
     protected static function createDefaultMiddleware(string $object, TableStruct $struct)
     {
         $reflectObject = new ReflectionClass($object);
         $classDoc = is_string($reflectObject->getDocComment())?$reflectObject->getDocComment():'';
-        if (\preg_match('/@field-(serialize|json)\s+(\w+)/i', $classDoc, $matchs)) {
+        if (preg_match('/@field-(serialize|json)\s+(\w+)/i', $classDoc, $matchs)) {
             return new TableStructMiddleware($object, $struct);
         }
         return new NullMiddleware;
@@ -289,7 +300,7 @@ class DataAccess
     /**
      * 获取表结构
      *
-     * @return \suda\orm\TableStruct
+     * @return TableStruct
      */
     public function getStruct():TableStruct
     {

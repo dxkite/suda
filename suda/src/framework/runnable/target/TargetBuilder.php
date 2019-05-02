@@ -2,8 +2,11 @@
 namespace suda\framework\runnable\target;
 
 use Closure;
+use function is_array;
 use ReflectionClass;
 use InvalidArgumentException;
+use function sprintf;
+use function strrpos;
 use suda\framework\runnable\target\FileTarget;
 use suda\framework\runnable\target\MethodTarget;
 use suda\framework\runnable\target\ClosureTarget;
@@ -28,7 +31,7 @@ class TargetBuilder
         if ($runnable instanceof Closure) {
             return new ClosureTarget($runnable, $parameter);
         }
-        if (\is_array($runnable)) {
+        if (is_array($runnable)) {
             return new MethodTarget($runnable[0], null, $runnable[1], $parameter);
         }
         $target = self::buildWithString($runnable);
@@ -46,7 +49,7 @@ class TargetBuilder
      */
     protected static function buildWithString(string $command):RunnableTarget
     {
-        $fileStart = \strrpos($command, '@');
+        $fileStart = strrpos($command, '@');
         if ($fileStart === 0) {
             return new FileTarget(substr($command, 1));
         }
@@ -94,7 +97,7 @@ class TargetBuilder
     private static function buildName(string $name)
     {
         if (preg_match('/^[\w\\\\\/.]+$/', $name) !== 1) {
-            throw new InvalidNameException(\sprintf('invaild name: %s ', $name));
+            throw new InvalidNameException(sprintf('invaild name: %s ', $name));
         }
         return  str_replace(['.','/'], '\\', $name);
     }

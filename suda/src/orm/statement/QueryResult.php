@@ -1,7 +1,9 @@
 <?php
 namespace suda\orm\statement;
 
+use function method_exists;
 use PDO;
+use ReflectionClass;
 use suda\orm\statement\Statement;
 use suda\orm\connection\Connection;
 use suda\orm\middleware\Middleware;
@@ -26,8 +28,8 @@ class QueryResult
     /**
      * 创建运行器
      *
-     * @param \suda\orm\connection\Connection $connection
-     * @param \suda\orm\middleware\Middleware $middleware
+     * @param Connection $connection
+     * @param Middleware $middleware
      */
     public function __construct(Connection $connection, Middleware $middleware)
     {
@@ -93,9 +95,9 @@ class QueryResult
     protected function fetchOneProccess($statement, array $data)
     {
         if ($statement->getFetchClass() !== null) {
-            $reflectClass = new \ReflectionClass($statement->getFetchClass());
+            $reflectClass = new ReflectionClass($statement->getFetchClass());
             $object = $reflectClass->newInstanceArgs($statement->getFetchClassArgs());
-            if (\method_exists($object, '__set')) {
+            if (method_exists($object, '__set')) {
                 $this->setValueWithMagicSet($object, $data);
             } else {
                 $this->setValueWithReflection($reflectClass, $object, $data);
@@ -108,12 +110,12 @@ class QueryResult
     /**
      * 通过反射方法设置值
      *
-     * @param \ReflectionClass $reflectClass
+     * @param ReflectionClass $reflectClass
      * @param mixed $object
      * @param array $data
      * @return void
      */
-    protected function setValueWithReflection(\ReflectionClass $reflectClass, $object, array $data)
+    protected function setValueWithReflection(ReflectionClass $reflectClass, $object, array $data)
     {
         foreach ($data as $name => $value) {
             $value = $this->middleware->output($name, $value);
@@ -132,7 +134,7 @@ class QueryResult
     /**
      * 通过魔术方法设置值
      *
-     * @param \ReflectionClass $reflectClass
+     * @param ReflectionClass $reflectClass
      * @param mixed $object
      * @param array $data
      * @return void

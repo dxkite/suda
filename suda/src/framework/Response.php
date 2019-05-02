@@ -1,10 +1,10 @@
 <?php
 namespace suda\framework;
 
+use Exception;
+use function is_string;
 use SplFileObject;
-use suda\framework\Request;
 use suda\framework\http\Cookie;
-use suda\framework\http\Header;
 use suda\framework\http\Stream;
 use suda\framework\response\MimeType;
 use suda\framework\http\stream\DataStream;
@@ -23,7 +23,7 @@ class Response extends HTTPResponse
     /**
      * 响应数据
      *
-     * @var \suda\framework\http\Stream|string
+     * @var Stream|string
      */
     protected $data;
 
@@ -77,10 +77,11 @@ class Response extends HTTPResponse
      *
      * @param mixed $content
      * @return self
+     * @throws Exception
      */
     public function setContent($content)
     {
-        if (\is_string($content) || $content instanceof Stream) {
+        if (is_string($content) || $content instanceof Stream) {
             $this->data = $content;
         } else {
             $wrapper = $this->wrapper->getWrapper($content);
@@ -96,6 +97,7 @@ class Response extends HTTPResponse
      * @param integer $offset
      * @param integer $length
      * @return void
+     * @throws Exception
      */
     public function sendFile(string $filename, int $offset = 0, int $length = null)
     {
@@ -104,7 +106,7 @@ class Response extends HTTPResponse
             $this->setType($content->getExtension());
             $this->data = new DataStream($content->getRealPath(), $offset, $length);
         } else {
-            throw new \Exception('sendFile must be file');
+            throw new Exception('sendFile must be file');
         }
         $this->sendContentLength($this->data);
         $this->end();
@@ -115,6 +117,7 @@ class Response extends HTTPResponse
      * 结束请求
      *
      * @return void
+     * @throws Exception
      */
     public function end()
     {
@@ -175,7 +178,7 @@ class Response extends HTTPResponse
      * @param string $name
      * @param string $value
      * @param integer $expire
-     * @return \suda\framework\http\Cookie
+     * @return Cookie
      */
     public function setCookie(string $name, string $value, int $expire = 0):Cookie
     {
@@ -189,6 +192,7 @@ class Response extends HTTPResponse
      *
      * @param mixed $content
      * @return void
+     * @throws Exception
      */
     public function sendContent($content = null)
     {

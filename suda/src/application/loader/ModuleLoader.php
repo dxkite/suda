@@ -1,15 +1,14 @@
 <?php
 namespace suda\application\loader;
 
+use Exception;
+use function is_array;
 use suda\framework\Config;
-use suda\framework\Request;
 use suda\application\Module;
-use suda\framework\Response;
 use suda\application\Resource;
 use suda\application\Application;
 use suda\framework\filesystem\FileSystem;
 use suda\application\builder\ApplicationBuilder;
-use suda\application\processor\RequestProcessor;
 use suda\application\exception\ApplicationException;
 
 /**
@@ -34,8 +33,8 @@ class ModuleLoader
     /**
      * 模块加载器
      *
-     * @param \suda\application\Application $application
-     * @param \suda\application\Module $module
+     * @param Application $application
+     * @param Module $module
      */
     public function __construct(Application $application, Module $module)
     {
@@ -135,7 +134,7 @@ class ModuleLoader
         if (count($import)) {
             foreach ($import as $name => $path) {
                 if ($module = $this->application->find($name)) {
-                    $module->getResource()->addResourcePath(Resource::getPathByRelativedPath($path, $this->module->getPath()));
+                    $module->getResource()->addResourcePath(Resource::getPathByRelativePath($path, $this->module->getPath()));
                 }
             }
         }
@@ -148,7 +147,7 @@ class ModuleLoader
                 'module' => $this->module->getName(),
                 'config' => $this->module->getConfig(),
             ]);
-            if (\is_array($event)) {
+            if (is_array($event)) {
                 $this->application->event()->load($event);
             }
         }
@@ -201,6 +200,7 @@ class ModuleLoader
      * @param string $groupName
      * @param array $routeConfig
      * @return void
+     * @throws Exception
      */
     protected function loadRouteConfig(string $prefix, string $groupName, array $routeConfig)
     {

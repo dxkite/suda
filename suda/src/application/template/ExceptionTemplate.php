@@ -1,6 +1,8 @@
 <?php
 namespace suda\application\template;
 
+use function strrpos;
+use function substr;
 use Throwable;
 use suda\application\template\RawTemplate;
 use suda\application\exception\MissingTemplateException;
@@ -16,7 +18,7 @@ class ExceptionTemplate extends RawTemplate
         $type = get_class($exception);
         $this->value = [
             'error_type' => $type ,
-            'error_sort_type' => strpos($type, '\\') === false ? $type : \substr($type, \strrpos($type, '\\') + 1),
+            'error_sort_type' => strpos($type, '\\') === false ? $type : substr($type, strrpos($type, '\\') + 1),
             'error_code' => $exception->getCode(),
             'error_message' => $exception->getMessage(),
         ];

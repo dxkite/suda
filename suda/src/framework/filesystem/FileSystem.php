@@ -1,6 +1,9 @@
 <?php
 namespace suda\framework\filesystem;
 
+use function dirname;
+use function restore_error_handler;
+use function set_error_handler;
 use suda\framework\loader\Path;
 use suda\framework\loader\PathTrait;
 use suda\framework\filesystem\FileHelper;
@@ -67,7 +70,7 @@ class FileSystem implements FileSystemInterface
     public static function isWritable(string $path):bool
     {
         if (static::exist($path) === false) {
-            return static::isWritable(\dirname($path));
+            return static::isWritable(dirname($path));
         }
         return static::tryCheckWritable($path);
     }
@@ -75,7 +78,7 @@ class FileSystem implements FileSystemInterface
     protected static function tryCheckWritable(string $path):bool
     {
         $writable = false;
-        \set_error_handler(null);
+        set_error_handler(null);
         if (DIRECTORY_SEPARATOR === '/' && ini_get('safe_mode') === 'On') {
             $writable = is_writable($path);
         } elseif (is_dir($path)) {
@@ -83,7 +86,7 @@ class FileSystem implements FileSystemInterface
         } elseif (is_file($path)) {
             $writable = static::tryWriteFile($path);
         }
-        \restore_error_handler();
+        restore_error_handler();
         return $writable;
     }
 

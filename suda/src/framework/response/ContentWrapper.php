@@ -1,11 +1,15 @@
 <?php
 namespace suda\framework\response;
 
+use Exception;
+use function get_class;
+use function gettype;
+use function in_array;
+use function method_exists;
+use ReflectionException;
 use SplFileObject;
 use ReflectionClass;
 use JsonSerializable;
-use suda\framework\Response;
-use suda\framework\response\AbstractContentWrapper;
 use suda\framework\response\wrapper\FileContentWrapper;
 use suda\framework\response\wrapper\HtmlContentWrapper;
 use suda\framework\response\wrapper\JsonContentWrapper;
@@ -41,10 +45,11 @@ class ContentWrapper
      * @param mixed $data
      * @param string $type
      * @return boolean
+     * @throws ReflectionException
      */
     public static function isTypeOf($data, string $type) : bool
     {
-        if (is_object($data) && !\in_array($type, ['boolean', 'bool', 'integer', 'int', 'float', 'double', 'string','array','NULL'])) {
+        if (is_object($data) && !in_array($type, ['boolean', 'bool', 'integer', 'int', 'float', 'double', 'string','array','NULL'])) {
             $class = new ReflectionClass($data);
             $typeRef = new ReflectionClass($type);
             if ($typeRef->isInterface()) {
@@ -53,7 +58,7 @@ class ContentWrapper
                 return $class->isSubclassOf($type) || $typeRef->isInstance($data);
             }
         } else {
-            return \gettype($data) === static::phpTypeAlias($type);
+            return gettype($data) === static::phpTypeAlias($type);
         }
     }
 
@@ -76,6 +81,7 @@ class ContentWrapper
      *
      * @param mixed $content
      * @return AbstractContentWrapper
+     * @throws Exception
      */
     public function getWrapper($content): AbstractContentWrapper
     {
@@ -87,9 +93,9 @@ class ContentWrapper
                 }
             }
         }
-        if (\method_exists($content, '__toString')) {
+        if (method_exists($content, '__toString')) {
             return new HtmlContentWrapper($content, 'string');
         }
-        throw new \Exception(sprintf('no wrapper for type %s', \get_class($content)));
+        throw new Exception(sprintf('no wrapper for type %s', get_class($content)));
     }
 }

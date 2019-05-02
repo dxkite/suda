@@ -1,15 +1,9 @@
 <?php
 namespace suda\application\database;
 
-use suda\orm\middleware\Middleware;
+use ReflectionException;
 use suda\orm\struct\ArrayDataTrait;
-use suda\orm\struct\WriteStatement;
 use suda\orm\struct\ArrayDataInterface;
-use suda\application\database\DataAccess;
-use suda\orm\middleware\NullMiddlewareTrait;
-use suda\orm\struct\TableStructAwareInterface;
-use suda\orm\middleware\MiddlewareAwareInterface;
-use suda\application\database\TableMiddlewareTrait;
 
 /**
  * 数据表抽象对象
@@ -26,6 +20,7 @@ abstract class DataObject implements ArrayDataInterface
      *
      * @param string $name
      * @return boolean
+     * @throws ReflectionException
      */
     public function checkFieldExist(string $name)
     {

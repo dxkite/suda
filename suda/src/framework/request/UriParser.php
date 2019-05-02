@@ -1,6 +1,9 @@
 <?php
 namespace suda\framework\request;
 
+use function strpos;
+use function substr;
+
 /**
  * HTTP URI处理
  */
@@ -50,17 +53,17 @@ class UriParser
 
     private function clearIndex(string $url, string $indexFile)
     {
-        if (\strpos($url, '/?/') === 0) {
+        if (strpos($url, '/?/') === 0) {
             $url = substr($url, 2);
         }
-        if (\strpos($url, $indexFile) === 0) {
+        if (strpos($url, $indexFile) === 0) {
             // for /index.php/
-            $url = \substr($url, strlen($indexFile));// for /index.php?/
-            if (\strpos($url, '?/') === 0) {
+            $url = substr($url, strlen($indexFile));// for /index.php?/
+            if (strpos($url, '?/') === 0) {
                 $url = ltrim($url, '?');
             }
             // for /index.php
-            elseif (\strpos($url, '/') !== 0) {
+            elseif (strpos($url, '/') !== 0) {
                 $url = '/'.$url;
             }
         }

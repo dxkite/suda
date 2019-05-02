@@ -7,11 +7,20 @@ namespace suda\framework\loader;
  */
 trait PathTrait
 {
+    /**
+     * @param string $path
+     * @return string
+     */
     public static function formatSeparator(string $path):string
     {
         return str_replace(['\\','/'], DIRECTORY_SEPARATOR, $path);
     }
 
+    /**
+     * @param string $path
+     * @param string $separator
+     * @return string
+     */
     public static function toAbsolutePath(string $path, string $separator = DIRECTORY_SEPARATOR):string
     {
         list($scheme, $path) = static::parsePathSchemeSubpath($path);
@@ -20,6 +29,10 @@ trait PathTrait
         return $scheme.$root.$path;
     }
 
+    /**
+     * @param string $path
+     * @return array
+     */
     protected static function parsePathRootSubpath(string $path):array
     {
         $subpath = str_replace(['/', '\\'], '/', $path);
@@ -40,6 +53,11 @@ trait PathTrait
         return [$root, $subpath];
     }
 
+    /**
+     * @param string $path
+     * @param string $separator
+     * @return string
+     */
     protected static function parsePathRelativePath(string $path, string $separator = DIRECTORY_SEPARATOR):string
     {
         $subpathArr = explode('/', $path);
@@ -57,6 +75,10 @@ trait PathTrait
         return implode($separator, $absulotePaths);
     }
 
+    /**
+     * @param string $path
+     * @return array
+     */
     protected static function parsePathSchemeSubpath(string $path):array
     {
         if (static::getHomePath() !== null && strpos($path, '~') === 0) {
@@ -73,6 +95,9 @@ trait PathTrait
     }
 
 
+    /**
+     * @return string|null
+     */
     public static function getHomePath():?string
     {
         if (defined('USER_HOME_PATH')) {

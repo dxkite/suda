@@ -1,10 +1,11 @@
 <?php
 namespace suda\application;
 
+use function in_array;
+use function is_array;
 use suda\framework\loader\Path;
 use suda\framework\config\PathResolver;
 use suda\framework\filesystem\FileSystem;
-use suda\framework\loader\IncludeManager;
 
 /**
  * 资源管理器
@@ -25,7 +26,7 @@ class Resource
      */
     public function __construct($resource = [])
     {
-        $this->resource = \is_array($resource)?$resource:[$resource];
+        $this->resource = is_array($resource)?$resource:[$resource];
     }
 
     /**
@@ -35,7 +36,7 @@ class Resource
      * @param string $relative
      * @return string
      */
-    public static function getPathByRelativedPath(string $source, string $relative):string
+    public static function getPathByRelativePath(string $source, string $relative):string
     {
         $path = $source;
         if (Path::isRelativePath($source)) {
@@ -53,7 +54,7 @@ class Resource
     public function addResourcePath(string $path)
     {
         $path = Path::toAbsolutePath($path);
-        if (!\in_array($path, $this->resource)) {
+        if (!in_array($path, $this->resource)) {
             array_unshift($this->resource, $path);
         }
     }

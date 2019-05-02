@@ -1,6 +1,10 @@
 <?php
 namespace suda\orm\statement;
 
+use function implode;
+use function is_array;
+use function is_string;
+use function sprintf;
 use suda\orm\Binder;
 use suda\orm\TableStruct;
 use suda\orm\statement\Query;
@@ -81,7 +85,7 @@ class WriteStatement extends Statement
             if ($this->struct->getFields()->hasField($name)) {
                 $this->data[$name] = $value;
             } else {
-                throw new SQLException(\sprintf('table `%s` has no field `%s`', $this->struct->getName(), $name));
+                throw new SQLException(sprintf('table `%s` has no field `%s`', $this->struct->getName(), $name));
             }
         }
         return $this;
@@ -140,8 +144,8 @@ class WriteStatement extends Statement
      */
     public function where($where, ...$args)
     {
-        if (\is_string($where)) {
-            if (\is_array($args[0])) {
+        if (is_string($where)) {
+            if (is_array($args[0])) {
                 $whereParameter = $args[0];
                 $this->whereCondition($where, $whereParameter);
             } else {
@@ -238,8 +242,8 @@ class WriteStatement extends Statement
             $names[] = "`{$name}`";
             $binds[] = ":{$_name}";
         }
-        $i_name = \implode(',', $names);
-        $i_bind = \implode(',', $binds);
+        $i_name = implode(',', $names);
+        $i_bind = implode(',', $binds);
         return new Query("INSERT INTO {$this->table} ({$i_name}) VALUES ({$i_bind})", $binder);
     }
 }

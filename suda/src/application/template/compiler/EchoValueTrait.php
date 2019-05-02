@@ -1,6 +1,8 @@
 <?php
 namespace suda\application\template\compiler;
 
+use Exception;
+
 trait EchoValueTrait
 {
     public function parseEchoValue($var):string
@@ -9,7 +11,7 @@ trait EchoValueTrait
         $code = preg_replace_callback('/\B[$](\?)?[:]([.\w\x{4e00}-\x{9aff}]+)(\s*)(\( ( (?>[^()]+) | (?4) )* \) )?/ux', [$this,'echoValueCallback'], $var);
         $error = preg_last_error();
         if ($error !== PREG_NO_ERROR) {
-            throw new \Exception($error);
+            throw new Exception($error);
         }
         return $code;
     }

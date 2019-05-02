@@ -1,7 +1,13 @@
 <?php
 namespace suda\framework;
 
-use suda\framework\Debugger;
+use function constant;
+use ErrorException;
+use function is_writable;
+use function restore_error_handler;
+use function restore_exception_handler;
+use function set_error_handler;
+use function set_exception_handler;
 
 use suda\framework\debug\Debug;
 use suda\framework\runnable\Runnable;
@@ -10,6 +16,7 @@ use suda\framework\filesystem\FileSystem;
 use suda\framework\debug\log\LoggerInterface;
 use suda\framework\debug\log\logger\FileLogger;
 use suda\framework\debug\log\logger\NullLogger;
+use Throwable;
 
 /**
  * 调试器
@@ -52,8 +59,8 @@ class Debugger extends Debug
     public function load(PHPContext $context): Debugger
     {
         $this->applyConfig([
-            'start-time' => \constant('SUDA_START_TIME'),
-            'start-memory' => \constant('SUDA_START_MEMORY'),
+            'start-time' => constant('SUDA_START_TIME'),
+            'start-memory' => constant('SUDA_START_MEMORY'),
         ]);
         $this->setLogger(static::createLogger($context));
         $this->context = $context;
@@ -84,7 +91,7 @@ class Debugger extends Debug
     {
         $dataPath = SUDA_DATA.'/logs';
         FileSystem::make($dataPath);
-        if (\is_writable(dirname($dataPath))) {
+        if (is_writable(dirname($dataPath))) {
             FileSystem::make($dataPath.'/zip');
             FileSystem::make($dataPath.'/dump');
             return new FileLogger(
@@ -103,7 +110,7 @@ class Debugger extends Debug
     /**
      * 获取原始记录器
      *
-     * @return \suda\framework\debug\log\LoggerInterface
+     * @return LoggerInterface
      */
     public function getLogger():LoggerInterface
     {
@@ -123,11 +130,11 @@ class Debugger extends Debug
         if ($e = error_get_last()) {
             $isFatalError = E_ERROR | E_PARSE | E_CORE_ERROR | E_CORE_WARNING | E_COMPILE_ERROR | E_COMPILE_WARNING;
             if ($e['type'] === ($e['type'] & $isFatalError)) {
-                $errorHander = \set_error_handler(null);
+                $errorHander = set_error_handler(null);
                 if ($errorHander !== null) {
                     $errorHander($e['type'], $e['message'], $e['file'], $e['line']);
                 }
-                \restore_error_handler();
+                restore_error_handler();
             }
         }
     }
@@ -135,7 +142,7 @@ class Debugger extends Debug
     /**
      * 异常托管
      *
-     * @param \Throwable $exception
+     * @param Throwable $exception
      * @return void
      */
     public function uncaughtException($exception)
@@ -170,15 +177,15 @@ class Debugger extends Debug
         0 * E_RECOVERABLE_ERROR |
         0 * E_DEPRECATED |
         0 * E_USER_DEPRECATED;
-        $exception = new \ErrorException($errstr, 0, $errno, $errfile, $errline);
+        $exception = new ErrorException($errstr, 0, $errno, $errfile, $errline);
         if ($exception->getSeverity() & $severity === 0) {
             throw $exception;
         } else {
-            $exceptionHandler = \set_exception_handler(null);
+            $exceptionHandler = set_exception_handler(null);
             if ($exceptionHandler !== null) {
                 $exceptionHandler($exception);
             }
-            \restore_exception_handler();
+            restore_exception_handler();
         }
     }
 

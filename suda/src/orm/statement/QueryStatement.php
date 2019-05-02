@@ -2,9 +2,6 @@
 namespace suda\orm\statement;
 
 use suda\orm\TableStruct;
-use suda\orm\statement\Statement;
-use suda\orm\exception\SQLException;
-use suda\orm\statement\PrepareTrait;
 use suda\orm\middleware\NullMiddleware;
 
 class QueryStatement extends Statement
@@ -64,7 +61,7 @@ class QueryStatement extends Statement
      *
      * @param string|null $class
      * @param array $args
-     * @return self
+     * @return $this
      */
     public function wantType(?string $class = null, array $args = [])
     {

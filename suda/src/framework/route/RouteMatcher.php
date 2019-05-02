@@ -1,6 +1,7 @@
 <?php
 namespace suda\framework\route;
 
+use function in_array;
 use suda\framework\Request;
 use suda\framework\route\uri\UriMatcher;
 
@@ -160,7 +161,7 @@ class RouteMatcher
      */
     public function match(Request $request):?array
     {
-        if (count($this->methods) > 0 && !\in_array($request->getMethod(), $this->methods)) {
+        if (count($this->methods) > 0 && !in_array($request->getMethod(), $this->methods)) {
             return null;
         }
         if (($parameter = $this->matcher->match($request->getUri())) !== null) {

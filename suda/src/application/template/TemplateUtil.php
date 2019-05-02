@@ -1,6 +1,8 @@
 <?php
 namespace suda\application\template;
 
+use function array_key_exists;
+use function constant;
 use suda\framework\Config;
 use suda\framework\Request;
 use suda\framework\Response;
@@ -17,7 +19,7 @@ class TemplateUtil
     /**
      * 获取配置
      *
-     * @param \suda\application\Application $application
+     * @param Application $application
      * @param string|null $module
      * @return mixed
      */
@@ -35,19 +37,19 @@ class TemplateUtil
     /**
      * 修正配置
      *
-     * @param \suda\application\Application $application
+     * @param Application $application
      * @param string|null $module
      * @return array
      */
     protected static function fixConfig(Application $application, ?string $module, array $config)
     {
-        if (!\array_key_exists('assets-prefix', $config)) {
-            $config['assets-prefix'] = defined('SUDA_ASSETS') ? \constant('SUDA_ASSETS'): 'assets';
+        if (!array_key_exists('assets-prefix', $config)) {
+            $config['assets-prefix'] = defined('SUDA_ASSETS') ? constant('SUDA_ASSETS'): 'assets';
         }
-        if (!\array_key_exists('static', $config)) {
+        if (!array_key_exists('static', $config)) {
             $config['static'] = 'static';
         }
-        if (!\array_key_exists('assets-path', $config)) {
+        if (!array_key_exists('assets-path', $config)) {
             $config['assets-path'] = SUDA_PUBLIC. '/'.$config['assets-prefix'];
         }
         if (!array_key_exists('static-name', $config)) {
@@ -59,7 +61,7 @@ class TemplateUtil
     /**
      * 获取安全路径名
      *
-     * @param \suda\application\Application $application
+     * @param Application $application
      * @param string|null $module
      * @return string
      */
@@ -101,8 +103,8 @@ class TemplateUtil
     /**
      * 获取请求资源头
      *
-     * @param \suda\application\Application $application
-     * @param \suda\framework\Request $request
+     * @param Application $application
+     * @param Request $request
      * @param string|null $module
      * @return string
      */
@@ -119,7 +121,7 @@ class TemplateUtil
     /**
      * 是否写入资源文件
      *
-     * @param \suda\application\Application $application
+     * @param Application $application
      * @param string|null $module
      * @return boolean
      */
@@ -135,8 +137,8 @@ class TemplateUtil
     /**
      * 获取请求资源头
      *
-     * @param \suda\application\Application $application
-     * @param \suda\framework\Request $request
+     * @param Application $application
+     * @param Request $request
      * @param string|null $module
      * @return string
      */
@@ -150,7 +152,7 @@ class TemplateUtil
     /**
      * 获取模板资源
      *
-     * @param \suda\application\Application $application
+     * @param Application $application
      * @param string|null $module
      * @return Resource
      */
@@ -165,7 +167,7 @@ class TemplateUtil
     /**
      * 获取模板路径
      *
-     * @param \suda\application\Application $application
+     * @param Application $application
      * @return string
      */
     public static function getTemplatePath(Application $application)

@@ -1,6 +1,7 @@
 <?php
 namespace suda\framework;
 
+use Closure;
 use suda\framework\Request;
 use suda\framework\route\MatchResult;
 use suda\framework\runnable\Runnable;
@@ -50,7 +51,7 @@ class Route
      *
      * @param string $name
      * @param string $url
-     * @param \suda\framework\runnable\Runnable|\Closure|array|string $runnable
+     * @param Runnable|Closure|array|string $runnable
      * @param array $attributes
      * @return self
      */
@@ -64,7 +65,7 @@ class Route
      *
      * @param string $name
      * @param string $url
-     * @param \suda\framework\runnable\Runnable|\Closure|array|string $runnable
+     * @param Runnable|Closure|array|string $runnable
      * @param array $attributes
      * @return self
      */
@@ -78,7 +79,7 @@ class Route
      *
      * @param string $name
      * @param string $url
-     * @param \suda\framework\runnable\Runnable|\Closure|array|string $runnable
+     * @param Runnable|Closure|array|string $runnable
      * @param array $attributes
      * @return self
      */
@@ -92,7 +93,7 @@ class Route
      *
      * @param string $name
      * @param string $url
-     * @param \suda\framework\runnable\Runnable|\Closure|array|string $runnable
+     * @param Runnable|Closure|array|string $runnable
      * @param array $attributes
      * @return self
      */
@@ -107,7 +108,7 @@ class Route
      *
      * @param string $name
      * @param string $url
-     * @param \suda\framework\runnable\Runnable|\Closure|array|string $runnable
+     * @param Runnable|Closure|array|string $runnable
      * @param array $attributes
      * @return self
      */
@@ -121,7 +122,7 @@ class Route
      *
      * @param string $name
      * @param string $url
-     * @param \suda\framework\runnable\Runnable|\Closure|array|string $runnable
+     * @param Runnable|Closure|array|string $runnable
      * @param array $attributes
      * @return self
      */
@@ -135,7 +136,7 @@ class Route
      *
      * @param string $name
      * @param string $url
-     * @param \suda\framework\runnable\Runnable|\Closure|array|string $runnable
+     * @param Runnable|Closure|array|string $runnable
      * @param array $attributes
      * @return self
      */
@@ -149,7 +150,7 @@ class Route
      *
      * @param string $name
      * @param string $url
-     * @param \suda\framework\runnable\Runnable|\Closure|array|string $runnable
+     * @param Runnable|Closure|array|string $runnable
      * @param array $attributes
      * @return self
      */
@@ -164,7 +165,7 @@ class Route
      * @param array $method
      * @param string $name
      * @param string $url
-     * @param \suda\framework\runnable\Runnable|\Closure|array|string $runnable
+     * @param Runnable|Closure|array|string $runnable
      * @param array $attributes
      * @return self
      */
@@ -183,7 +184,7 @@ class Route
     /**
      * 设置默认运行器
      *
-     * @param \suda\framework\runnable\Runnable|\Closure|array|string $runnable
+     * @param Runnable|Closure|array|string $runnable
      * @return self
      */
     public function default($runnable)
@@ -211,7 +212,7 @@ class Route
     /**
      * 运行结果
      *
-     * @param \suda\framework\route\MatchResult|null $result
+     * @param MatchResult|null $result
      * @param \suda\framework\Request $request
      * @param Response $response
      * @return Response

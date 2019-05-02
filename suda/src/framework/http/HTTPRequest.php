@@ -1,6 +1,8 @@
 <?php
 namespace suda\framework\http;
 
+use function str_replace;
+use function strtolower;
 use suda\framework\http\Stream;
 use suda\framework\http\Request;
 use suda\framework\http\UploadedFile;
@@ -104,7 +106,7 @@ class HTTPRequest implements Request
     protected function buildEnv()
     {
         foreach ($_SERVER as $key => $value) {
-            $name = \strtolower(\str_replace('_', '-', $key));
+            $name = strtolower(str_replace('_', '-', $key));
             if (strpos($name, 'http-') === 0) {
                 $name = substr($name, strlen('http-'));
                 $this->header[$name] = $value;

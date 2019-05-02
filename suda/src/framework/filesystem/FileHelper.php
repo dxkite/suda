@@ -11,6 +11,7 @@ trait FileHelper
     /**
      * 判断文件是否存在
      *
+     * @param string $path
      * @return boolean
      */
     public static function exist(string $path):bool
@@ -21,6 +22,7 @@ trait FileHelper
     /**
      * 删除文件
      *
+     * @param string $filename
      * @return boolean
      */
     public static function delete(string $filename):bool
@@ -40,7 +42,7 @@ trait FileHelper
      * @param string $src
      * @param string $dest
      * @return boolean
-     */    
+     */
     public static function move(string $src, string $dest):bool
     {
         if (($path=Path::format($src)) !== null && is_writable(dirname($dest))) {
@@ -83,7 +85,7 @@ trait FileHelper
     /**
      * 读取文件
      *
-     * @param string $name
+     * @param string $filename
      * @return string|null
      */
     public static function get(string $filename):?string

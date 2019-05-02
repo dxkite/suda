@@ -1,8 +1,10 @@
 <?php
 namespace suda\orm\statement;
 
+use function microtime;
 use PDO;
 use PDOStatement;
+use function preg_replace;
 use suda\orm\Binder;
 use suda\orm\statement\Statement;
 use suda\orm\connection\Connection;
@@ -31,8 +33,8 @@ class QueryAccess
     /**
      * 创建运行器
      *
-     * @param \suda\orm\connection\Connection $connection
-     * @param \suda\orm\middleware\Middleware $middleware
+     * @param Connection $connection
+     * @param Middleware $middleware
      */
     public function __construct(Connection $connection, Middleware $middleware = null)
     {
@@ -120,7 +122,7 @@ class QueryAccess
      * 设置中间件
      *
      * @param Middleware $middleware
-     * @return self
+     * @return $this
      */
     public function setMiddleware(Middleware $middleware)
     {
@@ -134,6 +136,7 @@ class QueryAccess
      * @param Connection $source
      * @param Statement $statement
      * @return PDOStatement
+     * @throws SQLException
      */
     protected function createPDOStatement(Connection $source, Statement $statement): PDOStatement
     {
@@ -184,9 +187,9 @@ class QueryAccess
             $stmt = $this->createPDOStatement($connection, $statement);
             $this->bindPDOStatementValues($stmt, $statement);
             $statement->setStatement($stmt);
-            $start = \microtime(true);
+            $start = microtime(true);
             $status = $stmt->execute();
-            $connection->getObserver()->observe($this, $statement, \microtime(true) - $start, $status);
+            $connection->getObserver()->observe($this, $statement, microtime(true) - $start, $status);
             if ($status === false) {
                 throw new SQLException(implode(':', $stmt->errorInfo()), intval($stmt->errorCode()));
             }
@@ -213,7 +216,7 @@ class QueryAccess
     {
         if ($prefix = $this->connection->getConfig('prefix')) {
             // _:table 前缀控制
-            return \preg_replace('/_:(\w+)/', $prefix.'$1', $query);
+            return preg_replace('/_:(\w+)/', $prefix.'$1', $query);
         }
         return $query;
     }

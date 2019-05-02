@@ -33,7 +33,7 @@ class ApplicationContext extends Context
      *
      * @var array
      */
-    protected $manifast;
+    protected $manifest;
 
     /**
      * 语言
@@ -74,19 +74,19 @@ class ApplicationContext extends Context
      * 创建应用
      *
      * @param string $path
-     * @param array $manifast
-     * @param \suda\framework\loader\Loader $loader
+     * @param array $manifest
+     * @param Loader $loader
      */
-    public function __construct(string $path, array $manifast, Loader $loader, string $dataPath = null)
+    public function __construct(string $path, array $manifest, Loader $loader, string $dataPath = null)
     {
-        parent::__construct(new Config(['app' => $manifast]), $loader);
+        parent::__construct(new Config(['app' => $manifest]), $loader);
         $this->path = $path;
-        $this->routeGroup = $manifast['route-group'] ?? ['default'];
-        $this->resource = new Resource([Resource::getPathByRelativedPath($manifast['resource'] ?? './resource', $path)]);
-        $this->locate = $manifast['locale'] ?? 'zh-cn';
-        $this->style = $manifast['style'] ?? 'default';
-        $this->manifast = $manifast;
-        $this->dataPath = $dataPath ?? Resource::getPathByRelativedPath($manifast['resource'] ?? './data', $path);
+        $this->routeGroup = $manifest['route-group'] ?? ['default'];
+        $this->resource = new Resource([Resource::getPathByRelativePath($manifest['resource'] ?? './resource', $path)]);
+        $this->locate = $manifest['locale'] ?? 'zh-cn';
+        $this->style = $manifest['style'] ?? 'default';
+        $this->manifest = $manifest;
+        $this->dataPath = $dataPath ?? Resource::getPathByRelativePath($manifest['resource'] ?? './data', $path);
     }
 
     /**
@@ -140,14 +140,16 @@ class ApplicationContext extends Context
     /**
      * Get 配置数组
      *
+     * @param string|null $name
+     * @param null $default
      * @return  mixed
      */
-    public function getManifast(string $name = null, $default = null)
+    public function getManifest(string $name = null, $default = null)
     {
         if ($name !== null) {
-            return ArrayDotAccess::get($this->manifast, $name, $default);
+            return ArrayDotAccess::get($this->manifest, $name, $default);
         }
-        return $this->manifast;
+        return $this->manifest;
     }
 
     /**

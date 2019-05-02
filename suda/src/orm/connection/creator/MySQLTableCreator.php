@@ -1,6 +1,7 @@
 <?php
 namespace suda\orm\connection\creator;
 
+use function implode;
 use PDO;
 use PDOException;
 use suda\orm\struct\Field;
@@ -86,7 +87,7 @@ class MySQLTableCreator
             }
         }
         if (count($primary)) {
-            return 'PRIMARY KEY ('.\implode(',', $primary).')';
+            return 'PRIMARY KEY ('. implode(',', $primary).')';
         }
     }
 

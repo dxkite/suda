@@ -1,7 +1,7 @@
 <?php
 namespace suda\application\database;
 
-use suda\orm\DataSource;
+use ReflectionException;
 use suda\application\Application;
 use suda\orm\middleware\Middleware;
 
@@ -28,6 +28,7 @@ class DataAccess extends \suda\orm\DataAccess
      *
      * @param string $object
      * @param Middleware|null $middleware
+     * @throws ReflectionException
      */
     public function __construct(string $object, ?Middleware $middleware = null)
     {
@@ -39,6 +40,7 @@ class DataAccess extends \suda\orm\DataAccess
      *
      * @param object $object
      * @return DataAccess
+     * @throws ReflectionException
      */
     public static function create($object):DataAccess
     {
@@ -53,8 +55,9 @@ class DataAccess extends \suda\orm\DataAccess
      * 创建访问工具
      *
      * @param string $object
-     * @param \suda\orm\middleware\Middleware|null $middleware
+     * @param Middleware|null $middleware
      * @return DataAccess
+     * @throws ReflectionException
      */
     public static function new(string $object, ?Middleware $middleware = null):DataAccess
     {
@@ -64,7 +67,7 @@ class DataAccess extends \suda\orm\DataAccess
     /**
      * 从应用创建表
      *
-     * @param \suda\application\Application $application
+     * @param Application $application
      * @return void
      */
     public static function load(Application $application)

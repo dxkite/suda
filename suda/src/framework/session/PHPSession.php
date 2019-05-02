@@ -1,6 +1,9 @@
 <?php
 namespace suda\framework\session;
 
+use function array_key_exists;
+use function defined;
+use Exception;
 use suda\framework\Request;
 use suda\framework\Session;
 use suda\framework\Response;
@@ -28,15 +31,15 @@ class PHPSession implements Session
     /**
      * 请求
      *
-     * @var \suda\framework\Request
+     * @var Request
      */
     protected $request;
 
     /**
      * 创建Session
      *
-     * @param \suda\framework\Request $request 请求
-     * @param \suda\framework\Response $response 响应
+     * @param Request $request 请求
+     * @param Response $response 响应
      * @param array $config 配置属性
      */
     public function __construct(Request $request, Response $response, array $config = [])
@@ -55,10 +58,10 @@ class PHPSession implements Session
         $path = './session';
         if (array_key_exists('path', $config)) {
             $path = $config['path'];
-        } elseif (\defined('SUDA_DATA')) {
+        } elseif (defined('SUDA_DATA')) {
             $path = constant('SUDA_DATA').'/session';
         } else {
-            throw new \Exception('php session save path missing');
+            throw new Exception('php session save path missing');
         }
         $name = $config['name'] ?? 'php_session';
         FileSystem::make($path);
@@ -130,7 +133,7 @@ class PHPSession implements Session
      */
     public function has(string $name):bool
     {
-        return \array_key_exists($name, $_SESSION);
+        return array_key_exists($name, $_SESSION);
     }
 
     /**

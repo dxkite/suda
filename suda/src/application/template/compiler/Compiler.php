@@ -1,6 +1,9 @@
 <?php
 namespace suda\application\template\compiler;
 
+use Exception;
+use function preg_replace_callback;
+use function str_replace;
 use suda\application\template\compiler\Tag;
 
 
@@ -106,7 +109,7 @@ class Compiler
     {
         foreach ($this->tags as $tag) {
             $pregExp = sprintf('/(!)?%s\s*(.+?)\s*%s/', preg_quote($tag->getOpen()), preg_quote($tag->getClose()));
-            $text = \preg_replace_callback($pregExp, function ($match) use ($tag) {
+            $text = preg_replace_callback($pregExp, function ($match) use ($tag) {
                 if ($match[1] === '!') {
                     return substr($match[0], 1);
                 } else {
@@ -123,7 +126,7 @@ class Compiler
         $code = preg_replace_callback($pregExp, [$this,'doMatchCommand'], $text);
         $error = preg_last_error();
         if ($error !== PREG_NO_ERROR) {
-            throw new \Exception($error);
+            throw new Exception($error);
         }
         return $code;
     }
@@ -137,7 +140,7 @@ class Compiler
             $params = '';
         }
         if ($ignore ==='!') {
-            return \str_replace('@!', '@', $input);
+            return str_replace('@!', '@', $input);
         } else {
             foreach ($this->commands as $command) {
                 if ($command->has($name)) {

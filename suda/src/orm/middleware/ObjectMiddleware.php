@@ -1,11 +1,17 @@
 <?php
 namespace suda\orm\middleware;
 
+use function in_array;
+use function json_decode;
+use function json_encode;
 use ReflectionClass;
 use ReflectionProperty;
+use function serialize;
+use function strtolower;
 use suda\orm\TableStruct;
 use suda\orm\middleware\NullMiddleware;
 use suda\orm\struct\TableStructBuilder;
+use function unserialize;
 
 /**
  * 结构中间件
@@ -52,10 +58,10 @@ class ObjectMiddleware extends NullMiddleware
     {
         if (array_key_exists($name, $this->processor)) {
             if ($this->processor[$name] === ObjectMiddleware::SERIALIZE){
-                return $data === null? $data : \serialize($data);
+                return $data === null? $data : serialize($data);
             }
             if ($this->processor[$name] === ObjectMiddleware::JSON){
-                return \json_encode($data);
+                return json_encode($data);
             }
         }
         return $data;
@@ -72,10 +78,10 @@ class ObjectMiddleware extends NullMiddleware
     {
         if (array_key_exists($name, $this->processor)) {
             if ($this->processor[$name] === ObjectMiddleware::SERIALIZE){
-                return \unserialize($data) ?: null;
+                return unserialize($data) ?: null;
             }
             if ($this->processor[$name] === ObjectMiddleware::JSON){
-                return \json_decode($data);
+                return json_decode($data);
             }
         }
         return $data;
@@ -106,8 +112,8 @@ class ObjectMiddleware extends NullMiddleware
     {
         if ($doc = $property->getDocComment()) {
             if (is_string($doc) && preg_match('/@var\s+(\w+)/i', $doc, $match)) {
-                $type = \strtolower($match[1]);
-                if (\in_array($type, ['boolean', 'bool', 'integer', 'int' , 'float' , 'double', 'string'])) {
+                $type = strtolower($match[1]);
+                if (in_array($type, ['boolean', 'bool', 'integer', 'int' , 'float' , 'double', 'string'])) {
                     return ObjectMiddleware::RAW;
                 }
             }

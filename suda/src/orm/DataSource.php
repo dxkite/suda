@@ -1,6 +1,7 @@
 <?php
 namespace suda\orm;
 
+use function in_array;
 use suda\orm\connection\Connection;
 use suda\orm\exception\SQLException;
 use suda\orm\connection\MySQLConnection;
@@ -62,7 +63,7 @@ class DataSource
      */
     public function addRead(Connection $connection)
     {
-        if (!\in_array($connection, $this->read)) {
+        if (!in_array($connection, $this->read)) {
             $this->read[] = $connection;
         }
         return $this;
@@ -77,7 +78,7 @@ class DataSource
      */
     public function addWrite(Connection $connection)
     {
-        if (!\in_array($connection, $this->write)) {
+        if (!in_array($connection, $this->write)) {
             $this->write[] = $connection;
         }
         return $this;

@@ -4,6 +4,7 @@ namespace suda\orm\connection;
 use PDO;
 use PDOException;
 use PDOStatement;
+use function register_shutdown_function;
 use suda\orm\struct\Fields;
 use suda\orm\statement\Statement;
 use suda\orm\statement\QueryAccess;
@@ -56,7 +57,7 @@ abstract class Connection
         $this->config = $config;
         $this->name = $name ?? 'anonymous';
         $this->observer = new NullObserver;
-        \register_shutdown_function(function () {
+        register_shutdown_function(function () {
             $this->onBeforeSystemShutdown();
         });
     }
@@ -200,7 +201,7 @@ abstract class Connection
     /**
      * 查询SQL
      *
-     * @param \suda\orm\statement\Statement $statement
+     * @param Statement $statement
      * @return mixed
      */
     public function query(Statement $statement)

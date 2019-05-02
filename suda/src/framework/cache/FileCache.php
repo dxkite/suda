@@ -1,6 +1,8 @@
 <?php
 namespace suda\framework\cache;
 
+use function defined;
+use Exception;
 use suda\framework\Cache;
 use suda\framework\filesystem\FileSystem;
 
@@ -115,10 +117,10 @@ class FileCache implements Cache
     {
         if (array_key_exists('path', $config)) {
             return $config['path'];
-        } elseif (\defined('SUDA_DATA')) {
+        } elseif (defined('SUDA_DATA')) {
             return constant('SUDA_DATA').'/cache';
         } else {
-            throw new \Exception('file cache save path missing');
+            throw new Exception('file cache save path missing');
         }
     }
     

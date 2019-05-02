@@ -7,6 +7,10 @@ namespace suda\framework\config;
  */
 class PathResolver
 {
+    /**
+     * @param string $path
+     * @return string|null
+     */
     public static function resolve(string $path):?string
     {
         if (file_exists($path)) {
@@ -17,6 +21,10 @@ class PathResolver
         return static::resolveYaml($basepath) ?? static::resolveExtensions($basepath, ['json','php','ini']);
     }
 
+    /**
+     * @param string $basepath
+     * @return string|null
+     */
     protected static function resolveYaml(string $basepath):?string
     {
         if (file_exists($conf = $basepath.'.yml') || file_exists($conf = $basepath.'.yaml')) {

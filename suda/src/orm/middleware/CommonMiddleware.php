@@ -1,8 +1,12 @@
 <?php
 namespace suda\orm\middleware;
 
+use Closure;
+use function json_decode;
+use function json_encode;
+use function serialize;
 use suda\framework\runnable\Runnable;
-use suda\orm\middleware\NullMiddleware;
+use function unserialize;
 
 /**
  * 通用中间件
@@ -47,7 +51,7 @@ class CommonMiddleware extends NullMiddleware
      * 注册输入处理
      *
      * @param string $name
-     * @param \suda\framework\runnable\Runnable|\Closure|array|string $runnable
+     * @param Runnable|Closure|array|string $runnable
      * @return CommonMiddleware
      */
     public function registerInput(string $name, $runnable): CommonMiddleware
@@ -60,7 +64,7 @@ class CommonMiddleware extends NullMiddleware
      * 输出数据处理
      *
      * @param string $name
-     * @param \suda\framework\runnable\Runnable|\Closure|array|string $runnable
+     * @param Runnable|Closure|array|string $runnable
      * @return \suda\orm\middleware\NullMiddleware
      */
     public function registerOutput(string $name, $runnable): CommonMiddleware
@@ -72,7 +76,7 @@ class CommonMiddleware extends NullMiddleware
     /**
      * 输入名处理
      *
-     * @param \suda\framework\runnable\Runnable|\Closure|array|string $runnable
+     * @param Runnable|Closure|array|string $runnable
      * @return \suda\orm\middleware\NullMiddleware
      */
     public function registerInputName($runnable): CommonMiddleware
@@ -84,7 +88,7 @@ class CommonMiddleware extends NullMiddleware
     /**
      * 输出名处理
      *
-     * @param \suda\framework\runnable\Runnable|\Closure|array|string $runnable
+     * @param Runnable|Closure|array|string $runnable
      * @return \suda\orm\middleware\NullMiddleware
      */
     public function registerOutputName($runnable): CommonMiddleware
@@ -96,7 +100,7 @@ class CommonMiddleware extends NullMiddleware
     /**
      * 输出字段处理
      *
-     * @param \suda\framework\runnable\Runnable|\Closure|array|string $runnable
+     * @param Runnable|Closure|array|string $runnable
      * @return \suda\orm\middleware\NullMiddleware
      */
     public function registerRow($runnable): CommonMiddleware
@@ -191,7 +195,7 @@ class CommonMiddleware extends NullMiddleware
      */
     private function inputSerialize($data)
     {
-        return $data === null? $data : \serialize($data);
+        return $data === null? $data : serialize($data);
     }
 
     /**
@@ -202,7 +206,7 @@ class CommonMiddleware extends NullMiddleware
      */
     private function outputUnserialize($data)
     {
-        return \unserialize($data) ?: null;
+        return unserialize($data) ?: null;
     }
 
     /**
@@ -213,7 +217,7 @@ class CommonMiddleware extends NullMiddleware
      */
     private function inputJson($data)
     {
-        return $data === null? $data : \json_encode($data);
+        return $data === null? $data : json_encode($data);
     }
 
     /**
@@ -224,6 +228,6 @@ class CommonMiddleware extends NullMiddleware
      */
     private function outputJson($data)
     {
-        return \json_decode($data) ?: null;
+        return json_decode($data) ?: null;
     }
 }

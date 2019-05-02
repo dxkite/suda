@@ -1,6 +1,9 @@
 <?php
 namespace suda\framework\loader;
 
+use function file_exists;
+use function str_replace;
+
 /**
  * 文件路径推测
  * 包括非UTF-8路径以及大小写敏感
@@ -17,7 +20,12 @@ class Path
     {
         return static::existCharset($path, ['GBK','GB2312','BIG5']);
     }
- 
+
+    /**
+     * @param string $path
+     * @param array $charset
+     * @return string|null
+     */
     public static function existCharset(string $path, array $charset):?string
     {
         $abspath = static::toAbsolutePath($path);
@@ -47,7 +55,7 @@ class Path
             return true;
         }
         // 虚拟文件系统
-        if (\file_exists($abspath)) {
+        if (file_exists($abspath)) {
             foreach (stream_get_wrappers() as $wrapper) {
                 if (strpos($abspath, $wrapper.'://') === 0) {
                     return true;
@@ -57,6 +65,10 @@ class Path
         return false;
     }
 
+    /**
+     * @param string $path
+     * @return string
+     */
     public static function toAbsolutePath(string $path)
     {
         return PathTrait::toAbsolutePath($path);
@@ -70,7 +82,7 @@ class Path
      */
     public static function isRelativePath(string $path):bool
     {
-        $path = \str_replace('\\', '/', $path);
+        $path = str_replace('\\', '/', $path);
         return !(strpos($path, ':/') > 0 || strpos($path, '/') === 0);
     }
 }

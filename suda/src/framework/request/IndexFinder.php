@@ -1,6 +1,8 @@
 <?php
 namespace suda\framework\request;
 
+use function get_included_files;
+
 /**
  * HTTP 入口解析查找
  */
@@ -29,7 +31,7 @@ class IndexFinder
 
     public function __construct(?string $entranceFile = null, string $documentRoot)
     {
-        $this->entranceFile = $entranceFile ?? \get_included_files()[0];
+        $this->entranceFile = $entranceFile ?? get_included_files()[0];
         $this->documentRoot = $documentRoot;
     }
 

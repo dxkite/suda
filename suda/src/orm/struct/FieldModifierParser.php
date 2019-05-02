@@ -1,7 +1,11 @@
 <?php
 namespace suda\orm\struct;
 
+use function call_user_func_array;
+use function is_array;
+use function method_exists;
 use suda\orm\struct\Field;
+use function token_get_all;
 
 /**
  * 字段修饰符解析
@@ -45,13 +49,13 @@ class FieldModifierParser
      */
     public function parse(string $modifier)
     {
-        $this->tokens = \token_get_all('<?php '. $modifier);
+        $this->tokens = token_get_all('<?php '. $modifier);
         $this->length = count($this->tokens);
         $this->pos = 1;
         $this->modifier = [];
         while ($this->isNotEnd()) {
             $token = $this->tokens[$this->pos];
-            if (\is_array($token)) {
+            if (is_array($token)) {
                 if ($token[0] === T_STRING || $token[0] === T_DEFAULT) {
                     $name = $token[1];
                     $parameter = $this->getParameter();
@@ -73,8 +77,8 @@ class FieldModifierParser
     {
         foreach ($this->modifier as $value) {
             list($name, $parameter) = $value;
-            if (\method_exists($field, $name)) {
-                \call_user_func_array([$field, $name], $parameter);
+            if (method_exists($field, $name)) {
+                call_user_func_array([$field, $name], $parameter);
             }
         }
     }

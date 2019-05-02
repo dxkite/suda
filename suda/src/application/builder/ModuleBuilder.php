@@ -18,6 +18,7 @@ class ModuleBuilder
      * 从配置文件构建模块
      *
      * @param string $path
+     * @param string $configPath
      * @return Module
      */
     public static function build(string $path, string $configPath):Module
@@ -38,7 +39,7 @@ class ModuleBuilder
             }
         }
         $module = new Module($name, $version, $path, $config);
-        $module->getResource()->addResourcePath(Resource::getPathByRelativedPath($resource, $path));
+        $module->getResource()->addResourcePath(Resource::getPathByRelativePath($resource, $path));
         return $module;
     }
     
@@ -81,14 +82,13 @@ class ModuleBuilder
     /**
      * 扫描模块
      *
-     * @param string $scanPaths
+     * @param string $modulesPath
      * @param string $extractPath
      * @return Iterator
      */
     public static function scan(string $modulesPath, string $extractPath): Iterator
     {
-        $enabledPack = \class_exists('ZipArchive');
-         
+        $enabledPack = class_exists('ZipArchive');
         foreach (FileSystem::read($modulesPath) as $path) {
             if (is_file($path) && $enabledPack) {
                 if ($configPath = static::checkPack($path, $extractPath)) {

@@ -1,20 +1,15 @@
 <?php
 namespace suda\orm;
 
-use PDO;
-use PDOStatement;
-use suda\orm\Binder;
-use suda\orm\DataSource;
-use suda\orm\TableStruct;
+use function array_keys;
+use function func_get_args;
+use function func_num_args;
 use suda\orm\statement\Statement;
 use suda\orm\struct\ReadStatement;
-use suda\orm\connection\Connection;
 use suda\orm\middleware\Middleware;
 use suda\orm\statement\QueryAccess;
 use suda\orm\struct\QueryStatement;
 use suda\orm\struct\WriteStatement;
-use suda\orm\exception\SQLException;
-use suda\orm\middleware\NullMiddleware;
 
 /**
  * 提供了对数据表的操作
@@ -127,7 +122,7 @@ class TableAccess extends QueryAccess
      *
      * @param string|array $name
      * @param mixed $value
-     * @return \suda\orm\struct\WriteStatement
+     * @return WriteStatement
      */
     public function write($name, $value = null):WriteStatement
     {
@@ -140,7 +135,7 @@ class TableAccess extends QueryAccess
      *
      * @param string|array $where
      * @param array $whereParameter
-     * @return \suda\orm\struct\WriteStatement
+     * @return WriteStatement
      */
     public function delete($where = null, ...$whereParameter):WriteStatement
     {
@@ -159,9 +154,9 @@ class TableAccess extends QueryAccess
     public function read($fields):ReadStatement
     {
         if ($fields === null) {
-            $fields = \array_keys($this->getStruct()->getFields()->all());
-        } elseif (\func_num_args() > 1) {
-            $fields = \func_get_args();
+            $fields = array_keys($this->getStruct()->getFields()->all());
+        } elseif (func_num_args() > 1) {
+            $fields = func_get_args();
         }
         return (new ReadStatement($this))->read($fields);
     }
@@ -171,7 +166,7 @@ class TableAccess extends QueryAccess
      *
      * @param string $query
      * @param mixed ...$parameter
-     * @return \suda\orm\struct\QueryStatement
+     * @return QueryStatement
      */
     public function query(string $query, ...$parameter):QueryStatement
     {

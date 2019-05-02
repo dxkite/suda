@@ -1,6 +1,8 @@
 <?php
 namespace suda\orm\struct;
 
+use function array_column;
+use function preg_match_all;
 use ReflectionClass;
 use ReflectionProperty;
 use suda\orm\TableStruct;
@@ -81,9 +83,9 @@ class TableStructMiddleware extends ObjectMiddleware
 
     protected function rewriteFromClassDoc(string $classDoc)
     {
-        if (\preg_match_all('/@field-(serialize|json)\s+(\w+)/i', $classDoc, $matchs) > 0) {
+        if (preg_match_all('/@field-(serialize|json)\s+(\w+)/i', $classDoc, $matchs) > 0) {
             foreach ($matchs[0] as $index => $value) {
-                $match = \array_column($matchs, $index);
+                $match = array_column($matchs, $index);
                 list($comment, $type, $name) = $match;
                 $this->processor[$name] = strtolower($type) === 'json' ? ObjectMiddleware::JSON : ObjectMiddleware::SERIALIZE;
             }

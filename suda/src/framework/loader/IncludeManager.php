@@ -1,8 +1,7 @@
 <?php
 namespace suda\framework\loader;
 
-use suda\framework\loader\Path;
-use suda\framework\loader\PathTrait;
+use function in_array;
 
 /**
  * 包含管理器
@@ -47,12 +46,16 @@ class IncludeManager implements PathInterface
         return Path::format($name);
     }
 
+    /**
+     * @param string $path
+     * @param string|null $namespace
+     */
     public function addIncludePath(string $path, ?string $namespace = null)
     {
         if ($path = static::realPath($path)) {
             $namespace = $namespace ?? 0;
             if (array_key_exists($namespace, $this->includePath)) {
-                if (!\in_array($path, $this->includePath[$namespace])) {
+                if (!in_array($path, $this->includePath[$namespace])) {
                     $this->includePath[$namespace][] = $path;
                 }
             } else {
@@ -71,6 +74,9 @@ class IncludeManager implements PathInterface
         return $this->namespace;
     }
 
+    /**
+     * @param string $namespace
+     */
     public function setNamespace(string $namespace)
     {
         if (!in_array($namespace, $this->namespace)) {

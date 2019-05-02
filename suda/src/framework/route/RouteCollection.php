@@ -1,10 +1,12 @@
 <?php
 namespace suda\framework\route;
 
+use function file_get_contents;
 use Iterator;
 use ArrayIterator;
 use IteratorAggregate;
 use suda\framework\route\RouteMatcher;
+use function unserialize;
 
 /**
  * 路由集合
@@ -92,7 +94,7 @@ class RouteCollection implements IteratorAggregate
      */
     public static function fromFile(string $path)
     {
-        $collection = \unserialize(\file_get_contents($path));
+        $collection = unserialize(file_get_contents($path));
         return new static($collection);
     }
 

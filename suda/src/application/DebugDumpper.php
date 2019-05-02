@@ -2,6 +2,7 @@
 namespace suda\application;
 
 use suda\framework\Response;
+use Throwable;
 
 /**
  * 错误Dumpper
@@ -44,7 +45,7 @@ class DebugDumpper
     /**
      * 异常托管
      *
-     * @param \Throwable $exception
+     * @param Throwable $exception
      * @return void
      */
     public function uncaughtException($exception)

@@ -1,6 +1,7 @@
 <?php
 namespace suda\framework;
 
+use function array_key_exists;
 use suda\framework\Config;
 use suda\framework\runnable\Runnable;
 
@@ -64,7 +65,7 @@ class Event
      */
     public function addTop(string $name, $command)
     {
-        if (\array_key_exists($name, $this->queue) && is_array($this->queue[$name])) {
+        if (array_key_exists($name, $this->queue) && is_array($this->queue[$name])) {
             array_unshift($this->queue[$name], $command);
         } else {
             $this->add($name, $command);
@@ -80,7 +81,7 @@ class Event
      */
     public function remove(string $name, $remove)
     {
-        if (\array_key_exists($name, $this->queue) && is_array($this->queue[$name])) {
+        if (array_key_exists($name, $this->queue) && is_array($this->queue[$name])) {
             foreach ($this->queue[$name] as $key => $command) {
                 if ($command === $remove) {
                     unset($this->queue[$name][$key]);
@@ -177,6 +178,6 @@ class Event
      */
     public function hasListenEvent(string $name):bool
     {
-        return \array_key_exists($name, $this->queue) && is_array($this->queue[$name]);
+        return array_key_exists($name, $this->queue) && is_array($this->queue[$name]);
     }
 }

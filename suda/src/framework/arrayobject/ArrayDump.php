@@ -1,6 +1,8 @@
 <?php
 namespace suda\framework\arrayobject;
 
+use function file_put_contents;
+
 /**
  * 数组导出
  */
@@ -32,7 +34,7 @@ class ArrayDump
      */
     public static function export(string $path, string $name, array $array)
     {
-        return \file_put_contents($path, static::dump($name, $array));
+        return file_put_contents($path, static::dump($name, $array));
     }
 
     protected static function arr2string($arrname, $array)

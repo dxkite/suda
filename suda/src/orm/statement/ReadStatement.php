@@ -1,6 +1,9 @@
 <?php
 namespace suda\orm\statement;
 
+use function func_get_args;
+use function func_num_args;
+use function is_array;
 use suda\orm\TableStruct;
 use suda\orm\statement\Query;
 use suda\orm\statement\Statement;
@@ -74,8 +77,8 @@ class ReadStatement extends QueryStatement
      */
     public function read($fields)
     {
-        if (\func_num_args() > 1) {
-            $fields = \func_get_args();
+        if (func_num_args() > 1) {
+            $fields = func_get_args();
         }
         if (is_array($fields)) {
             foreach ($fields as $index => $name) {
@@ -94,7 +97,7 @@ class ReadStatement extends QueryStatement
      */
     public function where($where, ...$args)
     {
-        if (\is_array($where)) {
+        if (is_array($where)) {
             $where = $this->aliasKeyField($where);
             $this->whereArray($where, $args[0] ?? []);
         } elseif (is_array($args[0])) {
@@ -156,7 +159,7 @@ class ReadStatement extends QueryStatement
      */
     public function having($what, ...$args)
     {
-        if (\is_array($what)) {
+        if (is_array($what)) {
             $this->havingArray($what);
         } elseif (is_array($args[0])) {
             $this->havingStringArray($what, $args[0]);

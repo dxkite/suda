@@ -36,6 +36,8 @@ class NullMiddleware implements Middleware
 
     /**
      * 处理输入字段名
+     * @param string $name
+     * @return string
      */
     public function inputName(string $name):string
     {
@@ -46,7 +48,6 @@ class NullMiddleware implements Middleware
      * 处理输出字段名
      *
      * @param string $name
-     * @param mixed $data
      * @return mixed
      */
     public function outputName(string $name):string

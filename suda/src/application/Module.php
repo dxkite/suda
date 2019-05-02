@@ -1,8 +1,6 @@
 <?php
 namespace suda\application;
 
-use suda\framework\Config;
-use suda\application\Resource;
 use suda\framework\arrayobject\ArrayDotAccess;
 
 /**
@@ -59,12 +57,12 @@ class Module
 
     /**
      * 创建模块
-     *
      * @param string $name
      * @param string $version
+     * @param string $path
      * @param array $config
      */
-    public function __construct(string $name, string $version = '1.0.0', string $path, array $config)
+    public function __construct(string $name, string $version, string $path, array $config)
     {
         $this->name = $name;
         $this->version = $version;
@@ -126,9 +124,9 @@ class Module
     /**
      * Set 资源路径
      *
-     * @param  Resource  $resource  资源路径
+     * @param Resource $resource 资源路径
      *
-     * @return  self
+     * @return  $this
      */
     public function setResource(Resource $resource)
     {
@@ -150,6 +148,8 @@ class Module
     /**
      * Get 模块配置
      *
+     * @param string|null $name
+     * @param null $default
      * @return  mixed
      */
     public function getConfig(string $name = null, $default = null)

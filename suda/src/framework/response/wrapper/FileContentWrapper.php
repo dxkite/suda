@@ -16,7 +16,7 @@ class FileContentWrapper extends AbstractContentWrapper
      * 获取内容
      *
      * @param Response $response
-     * @return \suda\framework\http\Stream
+     * @return Stream
      */
     public function getContent(Response $response): Stream
     {

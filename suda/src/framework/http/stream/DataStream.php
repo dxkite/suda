@@ -1,6 +1,8 @@
 <?php
 namespace suda\framework\http\stream;
 
+use function ob_get_clean;
+use function ob_start;
 use SplFileObject;
 use suda\framework\http\Stream;
 
@@ -60,9 +62,9 @@ class DataStream implements Stream
      */
     public function __toString()
     {
-        \ob_start();
+        ob_start();
         $this->echo();
-        return \ob_get_clean();
+        return ob_get_clean();
     }
 
     /**

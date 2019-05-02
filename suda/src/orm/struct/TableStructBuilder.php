@@ -1,10 +1,14 @@
 <?php
 namespace suda\orm\struct;
 
+use function explode;
+use function preg_match;
+use function preg_replace;
 use ReflectionClass;
+use ReflectionException;
 use ReflectionProperty;
+use function strtolower;
 use suda\orm\TableStruct;
-use suda\orm\struct\Field;
 
 /**
  * 数据表构建
@@ -26,6 +30,11 @@ class TableStructBuilder
      */
     protected $reflectObject;
 
+    /**
+     * TableStructBuilder constructor.
+     * @param string $object
+     * @throws ReflectionException
+     */
     public function __construct(string $object)
     {
         $this->object = $object;
@@ -59,7 +68,7 @@ class TableStructBuilder
     protected function getName()
     {
         if ($doc = $this->reflectObject->getDocComment()) {
-            if (is_string($doc) && \preg_match('/\@table\s+(\w+)/', $doc, $match)) {
+            if (is_string($doc) && preg_match('/\@table\s+(\w+)/', $doc, $match)) {
                 return $match[1];
             }
         }
@@ -70,8 +79,8 @@ class TableStructBuilder
      * 创建字段
      *
      * @param string $tableName
-     * @param \ReflectionProperty $property
-     * @return \suda\orm\struct\Field
+     * @param ReflectionProperty $property
+     * @return Field
      */
     protected function createField(string $tableName, ReflectionProperty $property): Field
     {
@@ -93,9 +102,9 @@ class TableStructBuilder
     public static function createName(string $name):string
     {
         $name = preg_replace('/([A-Z]+)/', '_$1', $name);
-        $name = \preg_replace('/_+/', '_', $name);
+        $name = preg_replace('/_+/', '_', $name);
         $name = trim($name, '_');
-        return \strtolower($name);
+        return strtolower($name);
     }
 
     /**
@@ -104,6 +113,7 @@ class TableStructBuilder
      * @param string $object
      * @param string $name
      * @return string
+     * @throws ReflectionException
      */
     public static function getTableFieldName(string $object, string $name)
     {
@@ -114,7 +124,7 @@ class TableStructBuilder
     /**
      * 获取字段名
      *
-     * @param \ReflectionProperty $property
+     * @param ReflectionProperty $property
      * @return string
      */
     public static function getFieldName(ReflectionProperty $property)
@@ -130,7 +140,7 @@ class TableStructBuilder
     /**
      * 获取字段类型
      *
-     * @param \ReflectionProperty $property
+     * @param ReflectionProperty $property
      * @return array|null
      */
     public static function getFieldType(ReflectionProperty $property)
@@ -154,7 +164,7 @@ class TableStructBuilder
     protected static function parseLength(string $length)
     {
         if (strlen($length)) {
-            $length = \explode(',', $length);
+            $length = explode(',', $length);
             if (count($length) === 1) {
                 $length = $length[0];
             }
@@ -167,7 +177,7 @@ class TableStructBuilder
     /**
      * 检查是否为数据库字段
      *
-     * @param \ReflectionProperty $property
+     * @param ReflectionProperty $property
      * @return boolean
      */
     public static function isTableField(ReflectionProperty $property)

@@ -20,9 +20,9 @@ class TemplateAssetProccesser implements RequestProcessor
     /**
      * 处理文件请求
      *
-     * @param \suda\application\Application $application
-     * @param \suda\framework\Request $request
-     * @param \suda\framework\Response $response
+     * @param Application $application
+     * @param Request $request
+     * @param Response $response
      * @return bool
      */
     public function onRequest(Application $application, Request $request, Response $response)

@@ -14,32 +14,99 @@ class Field
      */
     protected $auto;
     // COMMENT
+    /**
+     * @var
+     */
     protected $comment;
+    /**
+     * @var
+     */
     protected $key; //primary unique index
     // foreign key
+    /**
+     * @var
+     */
     protected $foreign;
- 
+
+    /**
+     * @var string
+     */
     protected $name;
+    /**
+     * @var string
+     */
     protected $type;
+    /**
+     * @var null
+     */
     protected $length;
+    /**
+     * @var
+     */
     protected $default;
+    /**
+     * @var bool
+     */
     protected $hasDefault;
-    
+
+    /**
+     * @var bool
+     */
     protected $null = true; // isNullable
+    /**
+     * @var
+     */
     protected $attribute; // binary unsigned
+    /**
+     * @var
+     */
     protected $collation;
+    /**
+     * @var string
+     */
     protected $tableName;
+    /**
+     * @var
+     */
     protected $charset;
+    /**
+     * @var string
+     */
     protected $alias;
 
+    /**
+     *
+     */
     const BINARY = 'BINARY';
+    /**
+     *
+     */
     const UNSIGNED = 'UNSIGNED';
-    
+
+    /**
+     *
+     */
     const UNIQUE = 'UNIQUE';
+    /**
+     *
+     */
     const PRIMARY = 'PRIMARY';
+    /**
+     *
+     */
     const INDEX = 'INDEX';
+    /**
+     *
+     */
     const KEY = 'KEY';
 
+    /**
+     * Field constructor.
+     * @param string $tableName
+     * @param string $name
+     * @param string $type
+     * @param null $length
+     */
     public function __construct(string $tableName, string $name, string $type, $length = null)
     {
         $this->tableName = $tableName;
@@ -50,65 +117,104 @@ class Field
         $this->alias = $name;
     }
 
+    /**
+     * @param string $name
+     * @return $this
+     */
     public function alias(string $name) {
         $this->alias = $name;
         return $this;
     }
 
+    /**
+     * @param string $charset
+     * @return $this
+     */
     public function charset(string $charset)
     {
         $this->charset = 'CHARACTER SET ' . $charset;
         return $this;
     }
 
+    /**
+     * @param string $comment
+     * @return $this
+     */
     public function comment(string $comment)
     {
         $this->comment = $comment;
         return $this;
     }
 
+    /**
+     * @param $length
+     * @return $this
+     */
     public function length($length)
     {
         $this->length = $length;
         return $this;
     }
-    
+
+    /**
+     * @return $this
+     */
     public function key()
     {
         $this->key = self::KEY;
         return $this;
     }
 
+    /**
+     * @return $this
+     */
     public function primary()
     {
         $this->key = self::PRIMARY;
         return $this;
     }
 
+    /**
+     * @return $this
+     */
     public function index()
     {
         $this->key = self::INDEX;
         return $this;
     }
-    
+
+    /**
+     * @return $this
+     */
     public function unique()
     {
         $this->key = self::UNIQUE;
         return $this;
     }
 
+    /**
+     * @param string $collate
+     * @return $this
+     */
     public function collate(string $collate)
     {
         $this->collation = $collate;
         return $this;
     }
-    
+
+    /**
+     * @return $this
+     */
     public function auto()
     {
         $this->auto = true;
         return $this;
     }
 
+    /**
+     * @param Field $field
+     * @return $this
+     */
     public function foreign(Field $field)
     {
         $this->foreign = $field;
@@ -121,12 +227,20 @@ class Field
         return $this;
     }
 
+    /**
+     * @param bool $set
+     * @return $this
+     */
     public function null(bool $set = true)
     {
         $this->null = $set;
         return $this;
     }
 
+    /**
+     * @param $value
+     * @return $this
+     */
     public function default($value)
     {
         $this->hasDefault = true;
@@ -137,12 +251,18 @@ class Field
         return $this;
     }
 
+    /**
+     * @return $this
+     */
     public function binary()
     {
         $this->attribute = self::BINARY;
         return $this;
     }
 
+    /**
+     * @return $this
+     */
     public function unsigned()
     {
         $this->attribute = self::UNSIGNED;

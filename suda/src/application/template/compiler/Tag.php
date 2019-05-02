@@ -1,6 +1,7 @@
 <?php
 namespace suda\application\template\compiler;
 
+use function str_replace;
 use suda\application\template\compiler\EchoValueInterface;
 
 class Tag implements EchoValueInterface
@@ -44,7 +45,7 @@ class Tag implements EchoValueInterface
 
     public function compile(string $content):string
     {
-        return $this->parseEchoValue(\str_replace('$code', $content, $this->content));
+        return $this->parseEchoValue(str_replace('$code', $content, $this->content));
     }
 
     /**

@@ -1,6 +1,7 @@
 <?php
 namespace suda\framework\filesystem;
 
+use Iterator;
 use RecursiveIteratorIterator;
 
 
@@ -78,9 +79,9 @@ interface FileSystemInterface
      * @param boolean $recursive
      * @param string|null $regex
      * @param boolean $full
-     * @return \Iterator
+     * @return Iterator
      */
-    public static function readFiles(string $path, bool $recursive=false, ?string $regex=null, bool $full=true, int $mode = RecursiveIteratorIterator::LEAVES_ONLY) : \Iterator;
+    public static function readFiles(string $path, bool $recursive=false, ?string $regex=null, bool $full=true, int $mode = RecursiveIteratorIterator::LEAVES_ONLY) : Iterator;
     
     /**
      * 读目录下文件夹
@@ -89,9 +90,9 @@ interface FileSystemInterface
      * @param boolean $recursive
      * @param string|null $regex
      * @param boolean $full
-     * @return \Iterator
+     * @return Iterator
      */
-    public static function readDirs(string $path, bool $recursive=false, ?string $regex=null, bool $full=false, int $mode = RecursiveIteratorIterator::LEAVES_ONLY): \Iterator;
+    public static function readDirs(string $path, bool $recursive=false, ?string $regex=null, bool $full=false, int $mode = RecursiveIteratorIterator::LEAVES_ONLY): Iterator;
     
     /**
      * 读目录，包括文件，文件夹
@@ -100,9 +101,9 @@ interface FileSystemInterface
      * @param boolean $recursive
      * @param string|null $regex
      * @param boolean $full
-     * @return \Iterator
+     * @return Iterator
      */
-    public static function read(string $path, bool $recursive=false, ?string $regex=null, bool $full=true, int $mode = RecursiveIteratorIterator::LEAVES_ONLY): \Iterator;
+    public static function read(string $path, bool $recursive=false, ?string $regex=null, bool $full=true, int $mode = RecursiveIteratorIterator::LEAVES_ONLY): Iterator;
 
     /**
      * 截断部分目录

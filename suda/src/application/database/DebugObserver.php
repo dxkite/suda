@@ -1,6 +1,7 @@
 <?php
 namespace suda\application\database;
 
+use function implode;
 use suda\framework\Debugger;
 use suda\orm\statement\Statement;
 use suda\orm\statement\QueryAccess;
@@ -20,6 +21,12 @@ class DebugObserver implements Observer
         $this->debug = $debug;
     }
 
+    /**
+     * @param QueryAccess $access
+     * @param Statement $statement
+     * @param $timeSpend
+     * @param bool $result
+     */
     public function observe(QueryAccess $access, Statement $statement, $timeSpend, bool $result)
     {
         $query = $access->prefix($statement->getString());
@@ -29,7 +36,7 @@ class DebugObserver implements Observer
             $this->debug->info('query ['.$status.'] '.$query.' '. number_format($timeSpend, 5).'s and effect '. $effect . ' rows');
         } else {
             $this->debug->error('query ['.$status.'] '.$query.' '. number_format($timeSpend, 5).'s');
-            $this->debug->error('query ['.$status.'] '.\implode(':', $statement->getStatement()->errorInfo()));
+            $this->debug->error('query ['.$status.'] '. implode(':', $statement->getStatement()->errorInfo()));
         }
     }
 }

@@ -1,12 +1,10 @@
 <?php
 namespace suda\orm\struct;
 
+use function array_column;
 use ReflectionClass;
-use ReflectionProperty;
+use ReflectionException;
 use suda\orm\TableStruct;
-use suda\orm\struct\Field;
-use suda\orm\struct\TableStructBuilder;
-use suda\orm\struct\FieldModifierParser;
 
 /**
  * 从类的类注释构建对象
@@ -34,10 +32,14 @@ class TableClassStructBuilder extends TableStructBuilder
      */
     protected $classDoc;
 
+    /**
+     * TableClassStructBuilder constructor.
+     * @param string $object
+     * @throws ReflectionException
+     */
     public function __construct(string $object)
     {
-        $this->object = $object;
-        $this->reflectObject = new ReflectionClass($object);
+        parent::__construct($object);
         $this->classDoc = is_string($this->reflectObject->getDocComment())?$this->reflectObject->getDocComment():'';
     }
 
@@ -74,14 +76,14 @@ class TableClassStructBuilder extends TableStructBuilder
      * 创建表结构
      *
      * @param array $fields
-     * @return \suda\orm\TableStruct
+     * @return TableStruct
      */
     protected function createClassTableStruct(array $fields): TableStruct
     {
         $name = $this->getName();
         $struct = new TableStruct($name);
         foreach ($fields[0] as $index => $value) {
-            $match = \array_column($fields, $index);
+            $match = array_column($fields, $index);
             list($comment, $field, $type, $length, $modifier) = $match;
             $fieldObj = $this->createClassField($name, trim($field), trim($type), static::parseLength($length), trim($modifier));
             $struct->addField($fieldObj);
@@ -97,7 +99,7 @@ class TableClassStructBuilder extends TableStructBuilder
      * @param string $type
      * @param string|array|null $length
      * @param string $modifier
-     * @return \suda\orm\struct\Field
+     * @return Field
      */
     protected function createClassField(string $tableName, string $name, string $type, $length, string $modifier): Field
     {

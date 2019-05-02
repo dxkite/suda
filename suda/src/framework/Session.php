@@ -1,9 +1,6 @@
 <?php
 namespace suda\framework;
 
-use suda\framework\Request;
-use suda\framework\Response;
-
 /**
  * Session 接口
  */
@@ -12,8 +9,8 @@ interface Session
     /**
      * 创建Session
      *
-     * @param \suda\framework\Request $request 请求
-     * @param \suda\framework\Response $response 响应
+     * @param Request $request 请求
+     * @param Response $response 响应
      * @param array $config 配置属性
      */
     public function __construct(Request $request, Response $response, array $config = []);

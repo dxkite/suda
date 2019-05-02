@@ -1,20 +1,24 @@
 <?php
 namespace suda\application;
 
+use function explode;
+use function in_array;
+use function strlen;
+use function strrpos;
 use suda\framework\Request;
-use suda\application\AppicationBase;
+use suda\application\ApplicationBase;
 use suda\application\template\ModuleTemplate;
 
 /**
  * 应用源处理
  */
-class ApplicationSource extends AppicationBase
+class ApplicationSource extends ApplicationBase
 {
 
     /**
      * 获取URL
      *
-     * @param \suda\framework\Request $request
+     * @param Request $request
      * @param string $name
      * @param array $parameter
      * @param boolean $allowQuery
@@ -32,14 +36,14 @@ class ApplicationSource extends AppicationBase
     /**
      * 获取URL索引
      *
-     * @param \suda\framework\Request $request
+     * @param Request $request
      * @return string
      */
     protected function getUrlIndex(Request $request):string
     {
         $indexs = $this->conf('indexs') ?? [ 'index.php' ];
         $index = ltrim($request->getIndex(), '/');
-        if (!\in_array($index, $indexs)) {
+        if (!in_array($index, $indexs)) {
             return $request->getIndex();
         }
         return '';
@@ -49,9 +53,9 @@ class ApplicationSource extends AppicationBase
      * 获取模板页面
      *
      * @param string $name
-     * @param \suda\framework\Request $request
+     * @param Request $request
      * @param string|null $default
-     * @return \suda\application\template\ModuleTemplate
+     * @return ModuleTemplate
      */
     public function getTemplate(string $name, Request $request, ?string $default = null): ModuleTemplate
     {
@@ -114,7 +118,7 @@ class ApplicationSource extends AppicationBase
     public function parseRouteName(string $name, ?string $default = null, ?string $groupName = null)
     {
         if (strpos($name, ':') !== false) {
-            $dotpos = \strrpos($name, ':');
+            $dotpos = strrpos($name, ':');
             $module = substr($name, 0, $dotpos);
             $name = substr($name, $dotpos + 1);
             if (strlen($module) === 0) {
@@ -124,8 +128,8 @@ class ApplicationSource extends AppicationBase
             $module = $default;
         }
         if ($module !== null && strpos($module, '@') !== false) {
-            list($module, $groupName) = \explode('@', $module, 2);
-            $module = \strlen($module) ? $module : $default;
+            list($module, $groupName) = explode('@', $module, 2);
+            $module = strlen($module) ? $module : $default;
         }
         return [$module, $groupName, $name];
     }
@@ -133,7 +137,7 @@ class ApplicationSource extends AppicationBase
     /**
      * 获取基础URI
      *
-     * @param \suda\framework\Request $request
+     * @param Request $request
      * @param boolean $beautify
      * @return string
      */

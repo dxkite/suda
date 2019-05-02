@@ -1,18 +1,15 @@
 <?php
 namespace suda\application;
 
-use suda\application\Module;
-use suda\application\Resource;
-use suda\application\ModuleBag;
-use suda\application\LanguageBag;
+use function array_key_exists;
+use function sprintf;
 use suda\framework\loader\Loader;
-use suda\application\ApplicationContext;
 use suda\application\exception\ApplicationException;
 
 /**
  * 基础应用程序
  */
-class AppicationBase extends ApplicationContext
+class ApplicationBase extends ApplicationContext
 {
     /**
      * 模块集合
@@ -53,20 +50,20 @@ class AppicationBase extends ApplicationContext
      * 创建应用
      *
      * @param string $path
-     * @param array $manifast
-     * @param \suda\framework\loader\Loader $loader
+     * @param array $manifest
+     * @param Loader $loader
      */
-    public function __construct(string $path, array $manifast, Loader $loader)
+    public function __construct(string $path, array $manifest, Loader $loader)
     {
-        parent::__construct($path, $manifast, $loader);
+        parent::__construct($path, $manifest, $loader);
         $this->module = new ModuleBag;
-        $this->initProperty($manifast);
+        $this->initProperty($manifest);
     }
 
     /**
      * 添加模块
      *
-     * @param \suda\application\Module $module
+     * @param Module $module
      * @return void
      */
     public function add(Module $module)
@@ -78,7 +75,7 @@ class AppicationBase extends ApplicationContext
      * 查找模块
      *
      * @param string $name
-     * @return \suda\application\Module|null
+     * @return Module|null
      */
     public function find(string $name):?Module
     {
@@ -89,32 +86,32 @@ class AppicationBase extends ApplicationContext
      * 获取模块
      *
      * @param string $name
-     * @throws ApplicationException
-     * @return \suda\application\Module
+     * @return Module
+     *@throws ApplicationException
      */
     public function get(string $name): Module
     {
         if (($module = $this->find($name)) !== null) {
             return $module;
         }
-        throw new ApplicationException(\sprintf('module %s not exist', $name), ApplicationException::ERR_MODULE_NAME);
+        throw new ApplicationException(sprintf('module %s not exist', $name), ApplicationException::ERR_MODULE_NAME);
     }
 
     /**
      * 初始化属性
      *
-     * @param array $manifast
+     * @param array $manifest
      * @return void
      */
-    protected function initProperty(array $manifast)
+    protected function initProperty(array $manifest)
     {
-        if (\array_key_exists('module-paths', $manifast)) {
-            $modulePaths = $manifast['module-paths'];
+        if (array_key_exists('module-paths', $manifest)) {
+            $modulePaths = $manifest['module-paths'];
             foreach ($modulePaths as $name => $path) {
-                $this->modulePaths[] = Resource::getPathByRelativedPath($path, $this->path);
+                $this->modulePaths[] = Resource::getPathByRelativePath($path, $this->path);
             }
         } else {
-            $this->modulePaths = [ Resource::getPathByRelativedPath('modules', $this->path) ];
+            $this->modulePaths = [ Resource::getPathByRelativePath('modules', $this->path) ];
         }
     }
 

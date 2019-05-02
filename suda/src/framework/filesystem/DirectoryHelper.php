@@ -1,7 +1,13 @@
 <?php
 namespace suda\framework\filesystem;
 
+use function is_dir;
+use function is_writable;
+use Iterator;
+use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
+use RecursiveRegexIterator;
+use function strlen;
 use suda\framework\loader\Path;
 use suda\framework\loader\PathTrait;
 use suda\framework\filesystem\FileHelper;
@@ -21,7 +27,7 @@ trait DirectoryHelper
      */
     public static function make(string $path, int $mode = 0777, bool $recursive = true):bool
     {
-        if (!\is_dir($path)) {
+        if (!is_dir($path)) {
             $mk = mkdir($path, $mode, $recursive);
             if ($mk) {
                 chmod($path, $mode);
@@ -55,7 +61,7 @@ trait DirectoryHelper
     public static function rmdirs(string $path, ?string $regex = null):bool
     {
         foreach (static::read($path, false, $regex, true) as $subpath) {
-            if (\is_dir($subpath)) {
+            if (is_dir($subpath)) {
                 static::rmdirs($subpath, $regex);
             } elseif (is_file($subpath)) {
                 FileHelper::delete($subpath);
@@ -73,9 +79,9 @@ trait DirectoryHelper
      * @param boolean $recursive
      * @param string|null $regex
      * @param boolean $full
-     * @return \Iterator
+     * @return Iterator
      */
-    public static function readFiles(string $path, bool $recursive = false, ?string $regex = null, bool $full = true, int $mode = RecursiveIteratorIterator::LEAVES_ONLY) : \Iterator
+    public static function readFiles(string $path, bool $recursive = false, ?string $regex = null, bool $full = true, int $mode = RecursiveIteratorIterator::LEAVES_ONLY) : Iterator
     {
         $parent = Path::format($path);
         foreach (static::read($path, $recursive, $regex, false, $mode) as $subpath) {
@@ -97,9 +103,9 @@ trait DirectoryHelper
      * @param boolean $recursive
      * @param string|null $regex
      * @param boolean $full
-     * @return \Iterator
+     * @return Iterator
      */
-    public static function readDirs(string $path, bool $recursive = false, ?string $regex = null, bool $full = false, int $mode = RecursiveIteratorIterator::LEAVES_ONLY): \Iterator
+    public static function readDirs(string $path, bool $recursive = false, ?string $regex = null, bool $full = false, int $mode = RecursiveIteratorIterator::LEAVES_ONLY): Iterator
     {
         $parent = Path::format($path);
         foreach (static::read($path, $recursive, $regex, false, $mode) as $subpath) {
@@ -121,12 +127,12 @@ trait DirectoryHelper
      * @param boolean $recursive
      * @param string|null $regex
      * @param boolean $full
-     * @return \Iterator
+     * @return Iterator
      */
-    public static function read(string $path, bool $recursive = false, ?string $regex = null, bool $full = true, int $mode = RecursiveIteratorIterator::LEAVES_ONLY): \Iterator
+    public static function read(string $path, bool $recursive = false, ?string $regex = null, bool $full = true, int $mode = RecursiveIteratorIterator::LEAVES_ONLY): Iterator
     {
         $directory = Path::format($path);
-        if ($directory && \is_dir($directory)) {
+        if ($directory && is_dir($directory)) {
             $it = static::buildIterator($directory, $recursive, $regex, $mode);
             foreach ($it as $key => $item) {
                 if ($full) {
@@ -139,14 +145,14 @@ trait DirectoryHelper
     }
     
 
-    protected static function buildIterator(string $directory, bool $recursive = false, ?string $regex = null, int $mode): \Iterator
+    protected static function buildIterator(string $directory, bool $recursive = false, ?string $regex = null, int $mode): Iterator
     {
-        $it = new \RecursiveDirectoryIterator($directory, \RecursiveDirectoryIterator::SKIP_DOTS);
+        $it = new RecursiveDirectoryIterator($directory, RecursiveDirectoryIterator::SKIP_DOTS);
         if ($regex !== null) {
-            $it = new \RecursiveRegexIterator($it, $regex);
+            $it = new RecursiveRegexIterator($it, $regex);
         }
         if ($recursive) {
-            $it = new \RecursiveIteratorIterator($it, $mode);
+            $it = new RecursiveIteratorIterator($it, $mode);
         }
         return $it;
     }
@@ -163,7 +169,7 @@ trait DirectoryHelper
         $path = PathTrait::toAbsolutePath($path);
         $basepath = PathTrait::toAbsolutePath($basepath);
         if (strpos($path, $basepath.DIRECTORY_SEPARATOR) === 0) {
-            return substr($path, \strlen($basepath) + 1);
+            return substr($path, strlen($basepath) + 1);
         }
         return $path;
     }
@@ -181,7 +187,7 @@ trait DirectoryHelper
     {
         $directory = Path::format($path);
         static::make($toPath);
-        if ($directory && \is_writable($toPath)) {
+        if ($directory && is_writable($toPath)) {
             foreach (static::read($directory, true, $regex, false, RecursiveIteratorIterator::CHILD_FIRST) as $subpath) {
                 $srcpath = $directory.DIRECTORY_SEPARATOR.$subpath;
                 $destpath = $toPath.DIRECTORY_SEPARATOR.$subpath;

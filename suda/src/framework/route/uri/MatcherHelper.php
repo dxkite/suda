@@ -1,7 +1,12 @@
 <?php
 namespace suda\framework\route\uri;
 
+use function array_key_exists;
+use function explode;
+use function in_array;
 use InvalidArgumentException;
+use function is_numeric;
+use function str_replace;
 use suda\framework\route\uri\UriMatcher;
 use suda\framework\route\uri\parameter\IntParameter;
 use suda\framework\route\uri\parameter\UrlParameter;
@@ -37,12 +42,12 @@ class MatcherHelper
             $extra = '';
             if (isset($match[2])) {
                 if (strpos($match[2], '=') !== false) {
-                    list($type, $extra) = \explode('=', $match[2]);
+                    list($type, $extra) = explode('=', $match[2]);
                 } else {
                     $type = $match[2];
                 }
             }
-            if (!\in_array($type, array_keys(static::$parameters))) {
+            if (!in_array($type, array_keys(static::$parameters))) {
                 throw new InvalidArgumentException(sprintf('unknown parameter type %s', $type), 1);
             }
             $index = count($parameters);
@@ -60,7 +65,7 @@ class MatcherHelper
         // 拆分参数
         list($mapper, $query, $parameter) = static::analyseParameter($matcher, $parameter);
         // for * ?
-        $url = \str_replace(['*','?'], ['','-'], $uri);
+        $url = str_replace(['*','?'], ['','-'], $uri);
         // for ignore value
         $url = static::parseIgnoreableParameter($url, $matcher, $parameter, $mapper);
         $url = static::replaceParameter($url, $matcher, $parameter, $mapper);
@@ -89,7 +94,7 @@ class MatcherHelper
         $query = [];
         $mapper = [];
         foreach ($parameter as $key => $value) {
-            if (\is_numeric($key)) {
+            if (is_numeric($key)) {
                 $mp = $matcher->getParameterByIndex($key);
                 unset($parameter[$key]);
                 $key = $mp->getIndexName();
@@ -109,7 +114,7 @@ class MatcherHelper
     protected static function replaceParameter(string $input, UriMatcher $matcher, array $parameter, array $mapper, bool $ignore = false, ?int &$count = null)
     {
         return preg_replace_callback('/\{(\w+).+?\}/', function ($match) use ($matcher, $parameter, $mapper, $ignore, &$count) {
-            if (\array_key_exists($match[1], $mapper)) {
+            if (array_key_exists($match[1], $mapper)) {
                 $count ++;
                 return $mapper[$match[1]]->packValue($parameter[$match[1]]);
             }

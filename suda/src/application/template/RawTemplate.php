@@ -1,6 +1,8 @@
 <?php
 namespace suda\application\template;
 
+use function extract;
+use function ob_get_clean;
 use suda\framework\arrayobject\ArrayDotAccess;
 use suda\application\exception\MissingTemplateException;
 
@@ -90,9 +92,9 @@ class RawTemplate
     {
         if (file_exists($this->getPath())) {
             ob_start();
-            \extract($this->value);
+            extract($this->value);
             include $this->getPath();
-            return \ob_get_clean();
+            return ob_get_clean();
         }
         throw new MissingTemplateException($this->getPath(), 1);
     }

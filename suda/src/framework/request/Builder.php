@@ -1,6 +1,7 @@
 <?php
 namespace suda\framework\request;
 
+use function array_key_exists;
 use suda\framework\Request;
 use suda\framework\http\UploadedFile;
 use suda\framework\request\IndexFinder;
@@ -16,14 +17,14 @@ class Builder
     /**
      * HTTP请求
      *
-     * @var \suda\framework\http\Request
+     * @var RawRequest
      */
     protected $request;
     
     /**
      * 创建请求包装器
      *
-     * @param \suda\framework\http\Request $request
+     * @param RawRequest $request
      */
     public function __construct(RawRequest $request)
     {
@@ -120,7 +121,7 @@ class Builder
      */
     private function createUri(Request $request)
     {
-        if (\array_key_exists('document-root', $this->request->server())) {
+        if (array_key_exists('document-root', $this->request->server())) {
             $index = (new IndexFinder(null, $this->request->server()['document-root']))->getIndexFile();
         } else {
             $index = '';

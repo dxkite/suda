@@ -1,7 +1,12 @@
 <?php
 namespace suda\framework\runnable\target;
 
+use function class_exists;
+use function get_class;
+use function is_object;
 use ReflectionClass;
+use ReflectionMethod;
+use function str_replace;
 use suda\framework\runnable\target\FileTarget;
 
 /**
@@ -53,7 +58,7 @@ class MethodTarget extends FileTarget
         $this->method = $method;
         $this->parameter = $parameter;
         $static = $this->isStatic() ? '->' : '::';
-        $name = \is_object($object)? \get_class($object) : $object;
+        $name = is_object($object)? get_class($object) : $object;
         $this->name = $name.$static.$method;
     }
 
@@ -64,13 +69,13 @@ class MethodTarget extends FileTarget
      */
     public function getObjectInstance():?object
     {
-        if (\is_object($this->object)) {
+        if (is_object($this->object)) {
             return $this->object;
         }
         if (null === $this->constructParameter) {
             return null;
         }
-        if (null !== $this->requireFile && !\class_exists($this->object)) {
+        if (null !== $this->requireFile && !class_exists($this->object)) {
             require_once $this->requireFile;
         }
         $classRef = new ReflectionClass($this->object);
@@ -80,7 +85,7 @@ class MethodTarget extends FileTarget
     public function getRunnableTarget()
     {
         if (null === $this->runnableTarget) {
-            if ($this->isStatic() || \is_object($this->object)) {
+            if ($this->isStatic() || is_object($this->object)) {
                 $this->runnableTarget = [$this->object, $this->method];
             }
             $this->runnableTarget = [$this->getObjectInstance() ?? $this->object, $this->method];
@@ -95,7 +100,7 @@ class MethodTarget extends FileTarget
      */
     public function isStatic():bool
     {
-        return !\is_object($this->object) && null === $this->constructParameter;
+        return !is_object($this->object) && null === $this->constructParameter;
     }
 
     /**
@@ -121,7 +126,7 @@ class MethodTarget extends FileTarget
      */
     public function isValid():bool
     {
-        return is_object($this->object) || \class_exists($this->object) || parent::isValid();
+        return is_object($this->object) || class_exists($this->object) || parent::isValid();
     }
 
     /**
@@ -133,7 +138,7 @@ class MethodTarget extends FileTarget
     public function apply(array $parameter)
     {
         $runnable = $this->getRunnableTarget();
-        $method = new \ReflectionMethod($runnable[0], $runnable[1]);
+        $method = new ReflectionMethod($runnable[0], $runnable[1]);
         if (!$method->isPublic()) {
             $method->setAccessible(true);
         }
@@ -175,6 +180,6 @@ class MethodTarget extends FileTarget
      */
     protected function getPHPClassName(string $className):string
     {
-        return \str_replace('.', '\\', $className);
+        return str_replace('.', '\\', $className);
     }
 }

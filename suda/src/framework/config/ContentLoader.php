@@ -1,6 +1,8 @@
 <?php
 namespace suda\framework\config;
 
+use function call_user_func_array;
+use function parse_ini_string;
 use suda\framework\exception\JsonException;
 use suda\framework\exception\YamlException;
 use suda\framework\arrayobject\ArrayDotAccess;
@@ -32,7 +34,7 @@ class ContentLoader
     {
         $content = file_get_contents($path);
         $content = static::parseValue($content, $extra);
-        return \parse_ini_string($content, true) ?: [];
+        return parse_ini_string($content, true) ?: [];
     }
     
     public static function loadYml(string $path, array $extra = []):array
@@ -51,7 +53,7 @@ class ContentLoader
         }
         $content = file_get_contents($path);
         $content = static::parseValue($content, $extra);
-        return \call_user_func_array($name, [$content]);
+        return call_user_func_array($name, [$content]);
     }
 
     protected static function parseValue(string $content, array $extra = []):string

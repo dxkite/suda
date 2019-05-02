@@ -1,6 +1,8 @@
 <?php
 namespace suda\framework\debug\attach;
 
+use Throwable;
+
 /**
  * 多行附加属性
  */
@@ -34,7 +36,7 @@ trait AttachTrait
 
     protected function isReplacedObj($val) : bool
     {
-        return !is_array($val) && (!is_object($val) || method_exists($val, '__toString')) && ! $val instanceof \Throwable;
+        return !is_array($val) && (!is_object($val) || method_exists($val, '__toString')) && ! $val instanceof Throwable;
     }
 
     public function interpolate(string $message, array $context, array $attribute)

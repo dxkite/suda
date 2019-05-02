@@ -1,6 +1,13 @@
 <?php
 namespace suda\framework\http;
 
+use function array_map;
+use function explode;
+use function implode;
+use function sprintf;
+use function str_replace;
+use function strtolower;
+
 /**
  * 响应头
  */
@@ -26,14 +33,18 @@ class Header
      */
     protected $ucfirst;
 
+    /**
+     * Header constructor.
+     * @param string $name
+     * @param string $value
+     * @param bool $ucfirst
+     */
     public function __construct(string $name, string $value, bool $ucfirst = true)
     {
-        $this->name = \str_replace('_', '-', \strtolower($name));
+        $this->name = str_replace('_', '-', strtolower($name));
         $this->value = $value;
         $this->ucfirst = $ucfirst;
     }
-
-    
 
     /**
      * Get 头部名
@@ -64,9 +75,9 @@ class Header
     {
         $name = $this->name;
         if ($this->ucfirst) {
-            $names = \explode('-', $name);
-            $name = \implode('-', \array_map('ucfirst', $names));
+            $names = explode('-', $name);
+            $name = implode('-', array_map('ucfirst', $names));
         }
-        return \sprintf('%s: %s', $name, $this->value);
+        return sprintf('%s: %s', $name, $this->value);
     }
 }

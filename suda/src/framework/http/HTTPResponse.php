@@ -1,12 +1,8 @@
 <?php
 namespace suda\framework\http;
 
-use suda\framework\http\Cookie;
-use suda\framework\http\Header;
-use suda\framework\http\Status;
-use suda\framework\http\Stream;
-use suda\framework\http\Response;
-use suda\framework\http\HeaderContainer;
+use Exception;
+use function header;
 use suda\framework\http\stream\DataStream;
 
 /**
@@ -17,7 +13,7 @@ class HTTPResponse implements Response
     /**
      * 头部代码
      *
-     * @var \suda\framework\http\HeaderContainer
+     * @var HeaderContainer
      */
     protected $header;
 
@@ -38,7 +34,7 @@ class HTTPResponse implements Response
     /**
      * Cookie代码
      *
-     * @var \suda\framework\http\Cookie[]
+     * @var Cookie[]
      */
     protected $cookie;
 
@@ -91,12 +87,11 @@ class HTTPResponse implements Response
 
     /**
      * 设置头部信息
-     *
      * @param string $name
      * @param string $value
-     * @param boolean $replace
-     * @param boolean $ucfirst
-     * @return self
+     * @param bool $replace
+     * @param bool $ucfirst
+     * @return $this|Response
      */
     public function header(string $name, string $value, bool $replace = false, bool $ucfirst = true)
     {
@@ -147,11 +142,12 @@ class HTTPResponse implements Response
      * @param integer $offset
      * @param integer $length
      * @return void
+     * @throws Exception
      */
     public function sendFile(string $filename, int $offset = 0, int $length = null)
     {
         if (!file_exists($filename)) {
-            throw new \Exception('file no found: '.$filename);
+            throw new Exception('file no found: '.$filename);
         }
         $data = new DataStream($filename, $offset, $length);
         $this->sendHeaders();
@@ -182,6 +178,9 @@ class HTTPResponse implements Response
         $this->sended = true;
     }
 
+    /**
+     * @return $this
+     */
     protected function sendHeaders()
     {
         if ($this->isSended()) {
@@ -190,18 +189,19 @@ class HTTPResponse implements Response
         $this->prepareCookieHeader();
         $this->sendHeader();
         $this->sended = true;
+        return $this;
     }
 
     /**
      * 发送头部信息
      *
-     * @return self
+     * @return $this
      */
     private function sendHeader()
     {
         foreach ($this->header->all() as $name => $values) {
             foreach ($values as $header) {
-                \header($header, false, $this->status);
+                header($header, false, $this->status);
             }
         }
         header(sprintf('HTTP/%s %s %s', $this->version, $this->status, Status::toText($this->status)), true, $this->status);
@@ -211,7 +211,7 @@ class HTTPResponse implements Response
     /**
      * 准备Cookie头
      *
-     * @return self
+     * @return $this
      */
     private function prepareCookieHeader()
     {

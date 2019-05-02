@@ -1,9 +1,15 @@
 <?php
 namespace suda\framework\http;
 
-use suda\framework\http\Response;
+use DateTime;
+use DateTimeZone;
+use JsonSerializable;
 
-class Cookie implements \JsonSerializable
+/**
+ * Class Cookie
+ * @package suda\framework\http
+ */
+class Cookie implements JsonSerializable
 {
     /**
      * 名称
@@ -61,8 +67,18 @@ class Cookie implements \JsonSerializable
      */
     protected $session = false;
 
+    /**
+     * @var bool
+     */
     private $fulltime = true;
 
+
+    /**
+     * Cookie constructor.
+     * @param string $name
+     * @param string $value
+     * @param int $expire
+     */
     public function __construct(string $name, string $value, int $expire = 0)
     {
         $this->name = $name;
@@ -263,7 +279,7 @@ class Cookie implements \JsonSerializable
 
         if ($this->expire !== 0) {
             $time = $this->fulltime ? $this->expire : time() + $this->expire;
-            $dateTime = \DateTime::createFromFormat('U',  $time , new \DateTimeZone('GMT'));
+            $dateTime = DateTime::createFromFormat('U',  $time , new DateTimeZone('GMT'));
             $cookie .= '; expires='.str_replace('+0000', '', $dateTime->format('D, d M Y H:i:s T'));
         }
 
@@ -285,6 +301,9 @@ class Cookie implements \JsonSerializable
         return $cookie;
     }
 
+    /**
+     * @return array|mixed
+     */
     public function jsonSerialize()
     {
         return [

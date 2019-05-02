@@ -1,6 +1,7 @@
 <?php
 namespace suda\framework\response\wrapper;
 
+use function json_encode;
 use suda\framework\Request;
 use suda\framework\Response;
 use suda\framework\http\Stream;
@@ -15,12 +16,12 @@ class JsonContentWrapper extends AbstractContentWrapper
     /**
      * 获取内容
      *
-     * @param \suda\framework\Response $response
-     * @return \suda\framework\http\Stream
+     * @param Response $response
+     * @return Stream
      */
     public function getContent(Response $response): Stream
     {
         $response->setType('json');
-        return new StringStream(\json_encode($this->content));
+        return new StringStream(json_encode($this->content));
     }
 }

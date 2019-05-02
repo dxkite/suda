@@ -1,10 +1,16 @@
 <?php
 namespace suda\orm\struct;
 
+use function array_key_exists;
+use function array_search;
 use ArrayIterator;
 use IteratorAggregate;
-use suda\orm\struct\Field;
+use Traversable;
 
+/**
+ * Class Fields
+ * @package suda\orm\struct
+ */
 class Fields implements IteratorAggregate
 {
     /**
@@ -52,21 +58,38 @@ class Fields implements IteratorAggregate
         return $this->fields[$name] ?? $this->fields[$name] = ($length?new Field($this->name, $name, $type, $length):new Field($this->name, $name, $type));
     }
 
+    /**
+     * @param string $name
+     * @param string $type
+     * @param null $length
+     * @return mixed|Field
+     */
     public function newField(string $name, string $type, $length = null)
     {
         return $this->fields[$name] ?? $this->fields[$name] = ($length?new Field($this->name, $name, $type, $length):new Field($this->name, $name, $type));
     }
 
+    /**
+     * @param string $name
+     * @return mixed|Field|null
+     */
     public function getField(string $name)
     {
         return $this->fields[$name] ?? null;
     }
 
+    /**
+     * @param string $name
+     * @return bool
+     */
     public function hasField(string $name)
     {
         return array_key_exists($name, $this->fields);
     }
 
+    /**
+     * @param Field $field
+     */
     public function addField(Field $field)
     {
         if ($field->getTableName() != $this->name) {
@@ -77,20 +100,31 @@ class Fields implements IteratorAggregate
         $this->alias[$name] = $field->getAlias();
     }
 
+    /**
+     * @param string $name
+     * @return string
+     */
     public function outputName(string $name):string {
-        if (\array_key_exists($name, $this->alias)) {
+        if (array_key_exists($name, $this->alias)) {
             return $this->alias[$name];
         }
         return $name;
     }
 
+    /**
+     * @param string $name
+     * @return string
+     */
     public function inputName(string $name):string {
-        if ($key = \array_search($name, $this->alias)) {
+        if ($key = array_search($name, $this->alias)) {
             return $key;
         }
         return $name;
     }
 
+    /**
+     * @return array
+     */
     public function getFieldsName()
     {
         return array_keys($this->fields);
@@ -112,6 +146,9 @@ class Fields implements IteratorAggregate
         return $this->fields;
     }
 
+    /**
+     * @return ArrayIterator|Traversable
+     */
     public function getIterator()
     {
         return new ArrayIterator($this->fields);

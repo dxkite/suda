@@ -1,6 +1,7 @@
 <?php
 namespace suda\application\loader;
 
+use function strtolower;
 use suda\orm\DataSource;
 use suda\framework\Config;
 use suda\framework\Context;
@@ -23,7 +24,7 @@ class ApplicationLoader
     /**
      * 应用程序
      *
-     * @var \suda\application\Application
+     * @var Application
      */
     protected $application;
 
@@ -99,7 +100,7 @@ class ApplicationLoader
 
     protected function addDataSource(DataSource $source, Observer $observer, string $name, string $type, string $mode, array $config)
     {
-        $mode = \strtolower($mode);
+        $mode = strtolower($mode);
         $data = DataSource::new($type, $config, $name);
         $data->setObserver($observer);
         if (strlen($mode) > 0) {

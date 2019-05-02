@@ -1,7 +1,9 @@
 <?php
 namespace suda\orm\exception;
 
-class SQLException extends \ErrorException
+use ErrorException;
+
+class SQLException extends ErrorException
 {
     const ERR_QUERY = 1;
     const ERR_PREPARE = 2;

@@ -1,6 +1,7 @@
 <?php
 namespace suda\framework;
 
+use function array_key_exists;
 use suda\framework\http\UploadedFile;
 use suda\framework\request\RequestWrapper;
 use suda\framework\http\Request as HTTPRequest;
@@ -31,7 +32,7 @@ class Request extends RequestWrapper
     /**
      * 创建请求
      *
-     * @param \suda\framework\http\Request $request
+     * @param HTTPRequest $request
      */
     public function __construct(HTTPRequest $request)
     {
@@ -173,7 +174,7 @@ class Request extends RequestWrapper
     {
         $get = $this->getQuery();
         if ($name !== null) {
-            return \array_key_exists($name, $get);
+            return array_key_exists($name, $get);
         }
         return count($get) > 0;
     }
@@ -200,7 +201,7 @@ class Request extends RequestWrapper
     {
         $post = $this->post();
         if ($name !== null) {
-            return \array_key_exists($name, $post);
+            return array_key_exists($name, $post);
         }
         return count($post) > 0;
     }

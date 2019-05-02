@@ -1,6 +1,7 @@
 <?php
 namespace suda\framework\response\wrapper;
 
+use function is_object;
 use suda\framework\Request;
 use suda\framework\Response;
 use suda\framework\http\Stream;
@@ -15,13 +16,13 @@ class HtmlContentWrapper extends AbstractContentWrapper
     /**
      * 获取内容
      *
-     * @param \suda\framework\Response $response
-     * @return \suda\framework\http\Stream
+     * @param Response $response
+     * @return Stream
      */
     public function getContent(Response $response): Stream
     {
         $response->setType('html');
-        if (\is_object($this->content)) {
+        if (is_object($this->content)) {
             if ($this->content instanceof Stream) {
                 return $this->content;
             }

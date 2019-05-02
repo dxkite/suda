@@ -1,8 +1,6 @@
 <?php
 namespace suda\application\database;
 
-use suda\orm\TableStruct;
-
 trait TableMiddlewareTrait
 {
     /**
@@ -15,7 +13,7 @@ trait TableMiddlewareTrait
     public function input(string $name, $data)
     {
         $methodName = '_input'.ucfirst($name).'Field';
-        if (\method_exists($this, $methodName)) {
+        if (method_exists($this, $methodName)) {
             return $this->$methodName($data);
         }
         return $data;
@@ -31,7 +29,7 @@ trait TableMiddlewareTrait
     public function output(string $name, $data)
     {
         $methodName = '_output'.ucfirst($name).'Field';
-        if (\method_exists($this, $methodName)) {
+        if (method_exists($this, $methodName)) {
             return $this->$methodName($data);
         }
         return $data;
@@ -46,7 +44,7 @@ trait TableMiddlewareTrait
     public function outputRow($row)
     {
         $methodName = '_outputDataFilter';
-        if (\method_exists($this, $methodName)) {
+        if (method_exists($this, $methodName)) {
             return $this->$methodName($row);
         }
         return $row;

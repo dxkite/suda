@@ -108,7 +108,7 @@ class Config
      * 从文本载入配置项
      *
      * @param string $path
-     * @param array|\suda\framework\Config $extra
+     * @param array|Config $extra
      * @return array|null
      */
     public static function loadConfig(string $path, $extra = []):?array

@@ -1,11 +1,21 @@
 <?php
 namespace suda\application;
 
+use function array_key_exists;
 use ArrayIterator;
+use function explode;
+use function implode;
+use function in_array;
 use IteratorAggregate;
+use function sprintf;
+use function strpos;
+use function strrpos;
+use function strtolower;
+use function substr;
 use suda\application\Module;
 use suda\framework\filesystem\FileSystem;
 use suda\application\exception\ApplicationException;
+use function version_compare;
 
 /**
  * 模块名
@@ -44,7 +54,7 @@ class ModuleBag implements IteratorAggregate
         $name = $module->getName();
         $version = $module->getVersion();
         $version = $this->formatVersion($version);
-        if (!\in_array($name, $this->knownsFullName)) {
+        if (!in_array($name, $this->knownsFullName)) {
             $this->knownsFullName[$name][$version] = $name.':'.$version;
             uksort($this->knownsFullName[$name], [$this, 'sort']);
         }
@@ -92,7 +102,7 @@ class ModuleBag implements IteratorAggregate
         if (($module = $this->guess($path)) !== null) {
             return $module;
         }
-        throw new ApplicationException(\sprintf('path %s not exist in any module', $path), ApplicationException::ERR_PATH_NOT_EXISTS_IN_MODULE);
+        throw new ApplicationException(sprintf('path %s not exist in any module', $path), ApplicationException::ERR_PATH_NOT_EXISTS_IN_MODULE);
     }
 
     /**
@@ -145,10 +155,10 @@ class ModuleBag implements IteratorAggregate
      */
     public function info(string $name, ?string $default = null):array
     {
-        $rpos = \strrpos($name, ':');
+        $rpos = strrpos($name, ':');
         if ($rpos > 0) {
             $module = substr($name, 0, $rpos);
-            $name = \substr($name, $rpos + 1);
+            $name = substr($name, $rpos + 1);
             $moduleFull = $this->getFullName($module);
             return [$moduleFull, $name];
         }
@@ -167,7 +177,7 @@ class ModuleBag implements IteratorAggregate
      */
     public function getFullName(string $name):string
     {
-        if (\array_key_exists($name, $this->cache)) {
+        if (array_key_exists($name, $this->cache)) {
             return  $this->cache[$name];
         }
         $fullname = $this->createFullName($name);
@@ -178,12 +188,12 @@ class ModuleBag implements IteratorAggregate
     {
         $version = null;
         $hasVersion = false;
-        if (\strpos($name, ':')) {
+        if (strpos($name, ':')) {
             $hasVersion = true;
-            list($name, $version) = \explode(':', $name, 2);
+            list($name, $version) = explode(':', $name, 2);
         }
         $name = $this->getLikeName($name);
-        if (\array_key_exists($version, $this->knownsFullName[$name])) {
+        if (array_key_exists($version, $this->knownsFullName[$name])) {
             return $this->knownsFullName[$name][$version];
         }
         return $hasVersion?$name.':'.$version:end($this->knownsFullName[$name]);
@@ -193,28 +203,28 @@ class ModuleBag implements IteratorAggregate
     {
         $names = [];
         foreach (array_keys($this->knownsFullName) as $keyName) {
-            if (\strpos($keyName, $name) !== false) {
+            if (strpos($keyName, $name) !== false) {
                 $names[] = $keyName;
             }
         }
         if (count($names) === 0) {
-            throw new ApplicationException(\sprintf('module %s not exist', $name), ApplicationException::ERR_MODULE_NAME);
+            throw new ApplicationException(sprintf('module %s not exist', $name), ApplicationException::ERR_MODULE_NAME);
         }
         if (count($names) > 1) {
-            throw new ApplicationException(\sprintf('conflict module name %s in %s', $name, \implode(',', $names)), ApplicationException::ERR_CONFLICT_MODULE_NAME);
+            throw new ApplicationException(sprintf('conflict module name %s in %s', $name, implode(',', $names)), ApplicationException::ERR_CONFLICT_MODULE_NAME);
         }
         return $names[0];
     }
 
     protected function sort(string $a, string $b)
     {
-        return \version_compare($a, $b);
+        return version_compare($a, $b);
     }
 
     protected function formatVersion(string $version)
     {
-        $version = \strtolower($version);
-        if (\strpos($version, 'v') === 0) {
+        $version = strtolower($version);
+        if (strpos($version, 'v') === 0) {
             return substr($version, 1);
         }
         return $version;
