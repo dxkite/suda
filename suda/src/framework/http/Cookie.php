@@ -90,7 +90,7 @@ class Cookie implements JsonSerializable
      * 设置 HTTP Only
      *
      * @param boolean $set
-     * @return self
+     * @return $this
      */
     public function httpOnly(bool $set = true)
     {
@@ -102,7 +102,7 @@ class Cookie implements JsonSerializable
      * 时长全部
      *
      * @param boolean $set
-     * @return self
+     * @return $this
      */
     public function full(bool $set = true)
     {
@@ -114,7 +114,7 @@ class Cookie implements JsonSerializable
      * 设置安全模式
      *
      * @param boolean $set
-     * @return self
+     * @return $this
      */
     public function secure(bool $set = true)
     {
@@ -126,7 +126,7 @@ class Cookie implements JsonSerializable
      * 设置路径
      *
      * @param string $set
-     * @return self
+     * @return $this
      */
     public function path(string $set = '/')
     {
@@ -138,7 +138,7 @@ class Cookie implements JsonSerializable
      * 设置过期时间
      *
      * @param integer $time
-     * @return self
+     * @return $this
      */
     public function expire(int $time = 1440)
     {
@@ -150,7 +150,7 @@ class Cookie implements JsonSerializable
      * 设置cookie域
      *
      * @param string $set
-     * @return self
+     * @return $this
      *
      */
     public function domain(string $set)
@@ -249,7 +249,7 @@ class Cookie implements JsonSerializable
      * 设置Session
      *
      * @param boolean $session
-     * @return self
+     * @return $this
      */
     public function session(bool $session = true)
     {

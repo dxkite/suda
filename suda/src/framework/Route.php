@@ -2,7 +2,6 @@
 namespace suda\framework;
 
 use Closure;
-use suda\framework\Request;
 use suda\framework\route\MatchResult;
 use suda\framework\runnable\Runnable;
 use suda\framework\route\RouteMatcher;
@@ -53,7 +52,7 @@ class Route
      * @param string $url
      * @param Runnable|Closure|array|string $runnable
      * @param array $attributes
-     * @return self
+     * @return $this
      */
     public function get(string $name, string $url, $runnable, array $attributes = [])
     {
@@ -67,7 +66,7 @@ class Route
      * @param string $url
      * @param Runnable|Closure|array|string $runnable
      * @param array $attributes
-     * @return self
+     * @return $this
      */
     public function post(string $name, string $url, $runnable, array $attributes = [])
     {
@@ -81,7 +80,7 @@ class Route
      * @param string $url
      * @param Runnable|Closure|array|string $runnable
      * @param array $attributes
-     * @return self
+     * @return $this
      */
     public function delete(string $name, string $url, $runnable, array $attributes = [])
     {
@@ -95,7 +94,7 @@ class Route
      * @param string $url
      * @param Runnable|Closure|array|string $runnable
      * @param array $attributes
-     * @return self
+     * @return $this
      */
     public function head(string $name, string $url, $runnable, array $attributes = [])
     {
@@ -110,7 +109,7 @@ class Route
      * @param string $url
      * @param Runnable|Closure|array|string $runnable
      * @param array $attributes
-     * @return self
+     * @return $this
      */
     public function options(string $name, string $url, $runnable, array $attributes = [])
     {
@@ -124,7 +123,7 @@ class Route
      * @param string $url
      * @param Runnable|Closure|array|string $runnable
      * @param array $attributes
-     * @return self
+     * @return $this
      */
     public function put(string $name, string $url, $runnable, array $attributes = [])
     {
@@ -138,7 +137,7 @@ class Route
      * @param string $url
      * @param Runnable|Closure|array|string $runnable
      * @param array $attributes
-     * @return self
+     * @return $this
      */
     public function trace(string $name, string $url, $runnable, array $attributes = [])
     {
@@ -152,7 +151,7 @@ class Route
      * @param string $url
      * @param Runnable|Closure|array|string $runnable
      * @param array $attributes
-     * @return self
+     * @return $this
      */
     public function any(string $name, string $url, $runnable, array $attributes = [])
     {
@@ -167,7 +166,7 @@ class Route
      * @param string $url
      * @param Runnable|Closure|array|string $runnable
      * @param array $attributes
-     * @return self
+     * @return $this
      */
     public function request(array $method, string $name, string $url, $runnable, array $attributes = [])
     {
@@ -185,7 +184,7 @@ class Route
      * 设置默认运行器
      *
      * @param Runnable|Closure|array|string $runnable
-     * @return self
+     * @return $this
      */
     public function default($runnable)
     {
@@ -213,9 +212,10 @@ class Route
      * 运行结果
      *
      * @param MatchResult|null $result
-     * @param \suda\framework\Request $request
+     * @param Request $request
      * @param Response $response
      * @return Response
+     * @throws \Exception
      */
     public function run(?MatchResult $result, Request $request, Response $response):Response
     {
@@ -228,10 +228,11 @@ class Route
     /**
      * 构建响应
      *
+     * @param MatchResult $result
      * @param Request $request
      * @param Response $response
-     * @param string $name
      * @return Response
+     * @throws \Exception
      */
     protected function buildResponse(MatchResult $result, Request $request, Response $response):Response
     {
@@ -248,6 +249,7 @@ class Route
      * @param Request $request
      * @param Response $response
      * @return Response
+     * @throws \Exception
      */
     protected function buildDefaultResponse(Request $request, Response $response):Response
     {
@@ -271,7 +273,7 @@ class Route
     /**
      * 默认响应
      *
-     * @param \suda\framework\Request $request
+     * @param Request $request
      * @param Response $response
      * @return mixed
      */

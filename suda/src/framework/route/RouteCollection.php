@@ -90,7 +90,7 @@ class RouteCollection implements IteratorAggregate
      * 从文件创建
      *
      * @param string $path
-     * @return self
+     * @return $this
      */
     public static function fromFile(string $path)
     {

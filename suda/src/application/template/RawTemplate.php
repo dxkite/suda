@@ -36,7 +36,7 @@ class RawTemplate
      *
      * @param string $name
      * @param mixed $value
-     * @return self
+     * @return $this
      */
     public function set(string $name, $value)
     {
@@ -48,7 +48,7 @@ class RawTemplate
      * 直接压入值
      *
      * @param array $values
-     * @return self
+     * @return $this
      */
     public function assign(array $values)
     {

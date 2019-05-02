@@ -66,7 +66,7 @@ class Request extends RequestWrapper
      *
      * @param string $name
      * @param mixed $attribute
-     * @return self
+     * @return $this
      */
     public function setAttribute(string $name, $attribute)
     {

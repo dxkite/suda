@@ -122,7 +122,7 @@ class Application extends ApplicationSource
      * @param string $url
      * @param Runnable|Closure|array|string $runnable
      * @param array $attributes
-     * @return self
+     * @return $this
      */
     public function request(array $method, string $name, string $url, array $attributes = [])
     {

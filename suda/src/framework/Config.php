@@ -33,7 +33,7 @@ class Config
      *
      * @param string $path
      * @param array $extra
-     * @return self
+     * @return $this
      */
     public function load(string $path, array $extra = null)
     {

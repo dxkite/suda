@@ -40,7 +40,7 @@ class Response extends HTTPResponse
      * 设置类型
      *
      * @param string $extension
-     * @return self
+     * @return $this
      */
     public function setType(string $extension)
     {
@@ -64,7 +64,7 @@ class Response extends HTTPResponse
      * @param string $name
      * @param string $content
      * @param boolean $replace
-     * @return self
+     * @return $this
      */
     public function setHeader(string $name, string $content, bool $replace = false)
     {
@@ -76,7 +76,7 @@ class Response extends HTTPResponse
      * 设置请求内容
      *
      * @param mixed $content
-     * @return self
+     * @return $this
      * @throws Exception
      */
     public function setContent($content)
@@ -128,7 +128,7 @@ class Response extends HTTPResponse
      * 发送内容数据
      *
      * @param array|string|Stream|null $data
-     * @return self
+     * @return $this
      */
     protected function sendContentLength($data)
     {

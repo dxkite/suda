@@ -55,7 +55,7 @@ class HTTPResponse implements Response
      * 设置状态码
      *
      * @param integer $statusCode
-     * @return self
+     * @return $this
      */
     public function status(int $statusCode)
     {
@@ -67,7 +67,7 @@ class HTTPResponse implements Response
      * 设置响应版本
      *
      * @param string $version
-     * @return self
+     * @return $this
      */
     public function version(string $version)
     {
@@ -87,11 +87,12 @@ class HTTPResponse implements Response
 
     /**
      * 设置头部信息
+     *
      * @param string $name
      * @param string $value
      * @param bool $replace
      * @param bool $ucfirst
-     * @return $this|Response
+     * @return $this
      */
     public function header(string $name, string $value, bool $replace = false, bool $ucfirst = true)
     {
@@ -103,7 +104,7 @@ class HTTPResponse implements Response
      * 设置Cookie信息
      *
      * @param Cookie $cookie
-     * @return self
+     * @return $this
      */
     public function cookie(Cookie $cookie)
     {
