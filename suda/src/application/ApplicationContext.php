@@ -141,7 +141,7 @@ class ApplicationContext extends Context
      * Get 配置数组
      *
      * @param string|null $name
-     * @param null $default
+     * @param mixed $default
      * @return  mixed
      */
     public function getManifest(string $name = null, $default = null)

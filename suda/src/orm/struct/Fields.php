@@ -61,8 +61,8 @@ class Fields implements IteratorAggregate
     /**
      * @param string $name
      * @param string $type
-     * @param null $length
-     * @return mixed|Field
+     * @param mixed $length
+     * @return Field
      */
     public function newField(string $name, string $type, $length = null)
     {
@@ -71,7 +71,7 @@ class Fields implements IteratorAggregate
 
     /**
      * @param string $name
-     * @return mixed|Field|null
+     * @return Field|null
      */
     public function getField(string $name)
     {

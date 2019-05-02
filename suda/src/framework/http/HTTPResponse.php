@@ -2,7 +2,7 @@
 namespace suda\framework\http;
 
 use Exception;
-use function header;
+use function header as send_header;
 use suda\framework\http\stream\DataStream;
 
 /**
@@ -202,10 +202,10 @@ class HTTPResponse implements Response
     {
         foreach ($this->header->all() as $name => $values) {
             foreach ($values as $header) {
-                header($header, false, $this->status);
+                send_header($header, false, $this->status);
             }
         }
-        header(sprintf('HTTP/%s %s %s', $this->version, $this->status, Status::toText($this->status)), true, $this->status);
+        send_header(sprintf('HTTP/%s %s %s', $this->version, $this->status, Status::toText($this->status)), true, $this->status);
         return $this;
     }
 

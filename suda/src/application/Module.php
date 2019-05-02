@@ -1,6 +1,7 @@
 <?php
 namespace suda\application;
 
+use suda\application\Resource;
 use suda\framework\arrayobject\ArrayDotAccess;
 
 /**
@@ -149,7 +150,7 @@ class Module
      * Get 模块配置
      *
      * @param string|null $name
-     * @param null $default
+     * @param mixed $default
      * @return  mixed
      */
     public function getConfig(string $name = null, $default = null)

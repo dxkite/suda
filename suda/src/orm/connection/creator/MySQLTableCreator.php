@@ -89,6 +89,7 @@ class MySQLTableCreator
         if (count($primary)) {
             return 'PRIMARY KEY ('. implode(',', $primary).')';
         }
+        return  '';
     }
 
 
@@ -134,9 +135,25 @@ class MySQLTableCreator
         return $content;
     }
 
+    /**
+     * @param $length
+     * @return string
+     */
+    protected function parseLength($length) {
+        if ($length !== null) {
+            if (is_string($length) || is_int($length)) {
+                return '('.$length.')';
+            }
+            if (is_array($length)) {
+                return '('.implode(',',$length).')';
+            }
+        }
+        return  '';
+    }
+
     protected function createField(Field $field)
     {
-        $type = $field->getLength()? strtoupper($field->getValueType()).'('.$field->getLength().')':strtoupper($field->getValueType());
+        $type = strtoupper($field->getValueType()).$this->parseLength($field->getLength());
         $auto = $field->getAuto() ?'AUTO_INCREMENT':'';
         $null = $field->isNullable() ?'NULL':'NOT NULL';
         $attr = $field->getAttribute() ?strtoupper($field->getAttribute()):'';

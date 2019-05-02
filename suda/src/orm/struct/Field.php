@@ -37,7 +37,7 @@ class Field
      */
     protected $type;
     /**
-     * @var null
+     * @var int|string|array|null
      */
     protected $length;
     /**
@@ -105,7 +105,7 @@ class Field
      * @param string $tableName
      * @param string $name
      * @param string $type
-     * @param null $length
+     * @param int|string|array|null $length
      */
     public function __construct(string $tableName, string $name, string $type, $length = null)
     {
