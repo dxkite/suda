@@ -6,7 +6,6 @@ use function in_array;
 use function strlen;
 use function strrpos;
 use suda\framework\Request;
-use suda\application\ApplicationBase;
 use suda\application\template\ModuleTemplate;
 
 /**
@@ -23,6 +22,7 @@ class ApplicationSource extends ApplicationBase
      * @param array $parameter
      * @param boolean $allowQuery
      * @param string|null $default
+     * @param string|null $group
      * @return string|null
      */
     public function getUrl(Request $request, string $name, array $parameter = [], bool $allowQuery = true, ?string $default = null, ?string $group = null):?string
@@ -92,6 +92,7 @@ class ApplicationSource extends ApplicationBase
      *
      * @param string $name
      * @param string|null $default
+     * @param string|null $group
      * @return string
      */
     public function getRouteName(string $name, ?string $default = null, ?string $group = null):string
@@ -112,6 +113,7 @@ class ApplicationSource extends ApplicationBase
      * 拆分路由名
      *
      * @param string $name
+     * @param string|null $default
      * @param string|null $groupName
      * @return array
      */

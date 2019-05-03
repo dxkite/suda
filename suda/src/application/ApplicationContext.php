@@ -4,9 +4,9 @@ namespace suda\application;
 use suda\orm\DataSource;
 use suda\framework\Config;
 use suda\framework\Context;
-use suda\application\Resource;
 use suda\framework\loader\Loader;
 use suda\framework\arrayobject\ArrayDotAccess;
+use suda\application\Resource as ApplicationResource;
 
 /**
  * 应用程序环境
@@ -59,7 +59,7 @@ class ApplicationContext extends Context
     /**
      * 资源目录
      *
-     * @var Resource
+     * @var ApplicationResource
      */
     protected $resource;
 
@@ -76,6 +76,7 @@ class ApplicationContext extends Context
      * @param string $path
      * @param array $manifest
      * @param Loader $loader
+     * @param string|null $dataPath
      */
     public function __construct(string $path, array $manifest, Loader $loader, string $dataPath = null)
     {
@@ -165,9 +166,9 @@ class ApplicationContext extends Context
     /**
      * Get 数据源
      *
-     * @return  Resource
+     * @return  ApplicationResource
      */
-    public function getResource(): Resource
+    public function getResource(): ApplicationResource
     {
         return $this->resource;
     }
@@ -175,11 +176,11 @@ class ApplicationContext extends Context
     /**
      * Set 数据源
      *
-     * @param  Resource  $resource  数据源
+     * @param ApplicationResource $resource 数据源
      *
      * @return  self
      */
-    public function setResource(Resource $resource)
+    public function setResource(ApplicationResource $resource)
     {
         $this->resource = $resource;
 
@@ -224,7 +225,7 @@ class ApplicationContext extends Context
      * Get 数据路径
      *
      * @return  string
-     */ 
+     */
     public function getDataPath()
     {
         return $this->dataPath;
@@ -236,7 +237,7 @@ class ApplicationContext extends Context
      * @param  string  $dataPath  数据路径
      *
      * @return  self
-     */ 
+     */
     public function setDataPath(string $dataPath)
     {
         $this->dataPath = $dataPath;

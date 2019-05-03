@@ -1,8 +1,6 @@
 <?php
 namespace suda\application\template\compiler;
 
-use suda\application\template\compiler\CommandInterface;
-
 class Command implements EchoValueInterface, CommandInterface
 {
     use EchoValueTrait;

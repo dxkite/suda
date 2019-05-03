@@ -14,6 +14,7 @@ interface FileSystemInterface
     /**
      * 判断文件是否存在
      *
+     * @param string $path
      * @return boolean
      */
     public static function exist(string $path):bool;
@@ -21,6 +22,7 @@ interface FileSystemInterface
     /**
      * 删除文件或者目录
      *
+     * @param string $filename
      * @return boolean
      */
     public static function delete(string $filename):bool;
@@ -56,7 +58,7 @@ interface FileSystemInterface
     /**
      * 读取文件
      *
-     * @param string $name
+     * @param string $filename
      * @return string|null
      */
     public static function get(string $filename):?string;
@@ -79,10 +81,11 @@ interface FileSystemInterface
      * @param boolean $recursive
      * @param string|null $regex
      * @param boolean $full
+     * @param int $mode
      * @return Iterator
      */
     public static function readFiles(string $path, bool $recursive=false, ?string $regex=null, bool $full=true, int $mode = RecursiveIteratorIterator::LEAVES_ONLY) : Iterator;
-    
+
     /**
      * 读目录下文件夹
      *
@@ -90,10 +93,11 @@ interface FileSystemInterface
      * @param boolean $recursive
      * @param string|null $regex
      * @param boolean $full
+     * @param int $mode
      * @return Iterator
      */
     public static function readDirs(string $path, bool $recursive=false, ?string $regex=null, bool $full=false, int $mode = RecursiveIteratorIterator::LEAVES_ONLY): Iterator;
-    
+
     /**
      * 读目录，包括文件，文件夹
      *
@@ -101,6 +105,7 @@ interface FileSystemInterface
      * @param boolean $recursive
      * @param string|null $regex
      * @param boolean $full
+     * @param int $mode
      * @return Iterator
      */
     public static function read(string $path, bool $recursive=false, ?string $regex=null, bool $full=true, int $mode = RecursiveIteratorIterator::LEAVES_ONLY): Iterator;

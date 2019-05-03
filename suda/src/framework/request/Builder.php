@@ -3,8 +3,6 @@ namespace suda\framework\request;
 
 use function array_key_exists;
 use suda\framework\Request;
-use suda\framework\http\UploadedFile;
-use suda\framework\request\IndexFinder;
 use suda\framework\http\Request as RawRequest;
 
 /**
@@ -117,6 +115,7 @@ class Builder
     /**
      * 创建URI
      *
+     * @param Request $request
      * @return void
      */
     private function createUri(Request $request)
@@ -135,7 +134,8 @@ class Builder
     /**
      * 获取URI基础部分
      *
-     * @return string
+     * @param Request $request
+     * @return void
      */
     private function createUribase(Request $request)
     {

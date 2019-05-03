@@ -1,10 +1,6 @@
 <?php
 namespace suda\framework\http;
 
-use suda\framework\http\Stream;
-use suda\framework\http\UploadedFile;
-use suda\framework\http\stream\DataStream;
-
 interface Request
 {
     /**

@@ -2,7 +2,6 @@
 namespace suda\framework\response\wrapper;
 
 use function json_encode;
-use suda\framework\Request;
 use suda\framework\Response;
 use suda\framework\http\Stream;
 use suda\framework\http\stream\StringStream;

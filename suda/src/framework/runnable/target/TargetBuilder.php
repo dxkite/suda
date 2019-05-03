@@ -5,13 +5,9 @@ use Closure;
 use function is_array;
 use ReflectionClass;
 use InvalidArgumentException;
+use ReflectionException;
 use function sprintf;
 use function strrpos;
-use suda\framework\runnable\target\FileTarget;
-use suda\framework\runnable\target\MethodTarget;
-use suda\framework\runnable\target\ClosureTarget;
-use suda\framework\runnable\target\FunctionTarget;
-use suda\framework\runnable\target\RunnableTarget;
 use suda\framework\runnable\exception\InvalidNameException;
 
 /**
@@ -64,7 +60,6 @@ class TargetBuilder
         $dynmicsMethod = strpos($command, '->');
         $splitLength = strpos($command, '#');
         $methodStart = $splitLength ?: strpos($command, '::') ?: $dynmicsMethod;
-        $dynmicsMethod;
         $parameter = self::buildParameter($parameter);
         if ($methodStart > 0) {
             $splitLength = $splitLength > 0 ? 1:2;
@@ -82,6 +77,11 @@ class TargetBuilder
         return $target;
     }
 
+    /**
+     * @param string $class
+     * @return object
+     * @throws ReflectionException
+     */
     public static function newClassInstance(string $class)
     {
         list($className, $parameter) = self::splitParameter($class);

@@ -4,17 +4,15 @@ namespace suda\application\loader;
 use function strtolower;
 use suda\orm\DataSource;
 use suda\framework\Config;
-use suda\framework\Context;
 use suda\application\Module;
 use suda\application\Resource;
 use suda\application\ModuleBag;
 use suda\application\Application;
-use suda\application\loader\ModuleLoader;
 use suda\framework\filesystem\FileSystem;
 use suda\orm\connection\observer\Observer;
 use suda\application\builder\ModuleBuilder;
-use suda\framework\response\ContentWrapper;
 use suda\application\database\DebugObserver;
+use suda\orm\exception\SQLException;
 
 /**
  * 应用程序
@@ -31,7 +29,7 @@ class ApplicationLoader
     /**
      * 模块加载器
      *
-     * @var \suda\application\loader\ModuleLoader[]
+     * @var ModuleLoader[]
      */
     protected $moduleLoader;
 
@@ -49,14 +47,16 @@ class ApplicationLoader
         $this->prepareModuleLoader();
     }
 
+
     public function loadRoute()
     {
-        foreach ($this->application->getModules()  as  $name => $module) {
+        foreach ($this->application->getModules() as $name => $module) {
             if ($module->getStatus() === Module::REACHABLE) {
-                $this->moduleLoader[$name]->toReacheable();
+                call_user_func([$this->moduleLoader[$name],'toReachable']);
             }
         }
     }
+
 
     public function loadGlobalConfig()
     {
@@ -77,12 +77,20 @@ class ApplicationLoader
         }
     }
 
+    /**
+     * @throws SQLException
+     */
     public function loadDataSource()
     {
-        $datasource = $this->getDataSourceGroup('default');
-        $this->application->setDataSource($datasource);
+        $dataSource = $this->getDataSourceGroup('default');
+        $this->application->setDataSource($dataSource);
     }
 
+    /**
+     * @param string $groupName
+     * @return DataSource
+     * @throws SQLException
+     */
     public function getDataSourceGroup(string $groupName):DataSource
     {
         $group = $groupName === 'default' ? '': '-'. $groupName;
@@ -92,14 +100,36 @@ class ApplicationLoader
         if ($dataSourceConfigPath !== null) {
             $dataSourceConfig = Config::loadConfig($dataSourceConfigPath);
             foreach ($dataSourceConfig as $name => $config) {
-                $this->addDataSource($dataSource, $observer, $name, $config['type'] ?? 'mysql', $config['mode'] ?? '', $config);
+                $this->addDataSource(
+                    $dataSource,
+                    $observer,
+                    $name,
+                    $config['type'] ?? 'mysql',
+                    $config['mode'] ?? '',
+                    $config
+                );
             }
         }
         return $dataSource;
     }
 
-    protected function addDataSource(DataSource $source, Observer $observer, string $name, string $type, string $mode, array $config)
-    {
+    /**
+     * @param DataSource $source
+     * @param Observer $observer
+     * @param string $name
+     * @param string $type
+     * @param string $mode
+     * @param array $config
+     * @throws SQLException
+     */
+    protected function addDataSource(
+        DataSource $source,
+        Observer $observer,
+        string $name,
+        string $type,
+        string $mode,
+        array $config
+    ) {
         $mode = strtolower($mode);
         $data = DataSource::new($type, $config, $name);
         $data->setObserver($observer);
@@ -130,7 +160,7 @@ class ApplicationLoader
     {
         $extractPath = SUDA_DATA .'/extract-module';
         FileSystem::make($extractPath);
-        foreach ($this->application->getModulePaths() as  $path) {
+        foreach ($this->application->getModulePaths() as $path) {
             $this->registerModuleFrom($path, $extractPath);
         }
     }

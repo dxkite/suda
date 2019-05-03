@@ -1,6 +1,7 @@
 <?php
 namespace suda\orm\struct;
 
+use suda\orm\exception\SQLException;
 use suda\orm\TableAccess;
 
 class WriteStatement extends \suda\orm\statement\WriteStatement
@@ -26,6 +27,7 @@ class WriteStatement extends \suda\orm\statement\WriteStatement
      * 返回影响行数
      *
      * @return int
+     * @throws SQLException
      */
     public function rows():int {
         return $this->access->run($this->wantRows());
@@ -35,6 +37,7 @@ class WriteStatement extends \suda\orm\statement\WriteStatement
      * 返回是否成功
      *
      * @return boolean
+     * @throws SQLException
      */
     public function ok():bool {
         return $this->access->run($this->wantOk());
@@ -44,6 +47,7 @@ class WriteStatement extends \suda\orm\statement\WriteStatement
      * 返回ID
      *
      * @return string
+     * @throws SQLException
      */
     public function id():string {
         return $this->access->run($this->wantId());

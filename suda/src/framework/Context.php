@@ -2,11 +2,6 @@
 namespace suda\framework;
 
 use function is_array;
-use suda\framework\Cache;
-use suda\framework\Event;
-use suda\framework\Route;
-use suda\framework\Config;
-use suda\framework\http\Request;
 use suda\framework\loader\Loader;
 use suda\framework\cache\FileCache;
 use suda\framework\context\PHPContext;
@@ -40,7 +35,7 @@ class Context extends PHPContext
     /**
      * 创建PHP环境
      *
-     * @param \suda\framework\Config $config
+     * @param Config $config
      * @param Loader $loader
      */
     public function __construct(Config $config, Loader $loader)
@@ -53,7 +48,7 @@ class Context extends PHPContext
     /**
      * 获取路由
      *
-     * @return \suda\framework\Route
+     * @return Route
      */
     public function route():Route
     {
@@ -63,7 +58,7 @@ class Context extends PHPContext
     /**
      * 获取缓存
      *
-     * @return \suda\framework\Cache
+     * @return Cache
      */
     public function cache(): Cache
     {
@@ -76,7 +71,7 @@ class Context extends PHPContext
     /**
      * 获取事件
      *
-     * @return \suda\framework\Event
+     * @return Event
      */
     public function event():Event
     {
@@ -88,7 +83,7 @@ class Context extends PHPContext
      *
      * @param string $cacheName
      * @param array $cacheConfig
-     * @return \suda\framework\Cache
+     * @return Cache
      */
     protected function createCacheFrom(string $cacheName, array $cacheConfig):Cache
     {
@@ -98,7 +93,7 @@ class Context extends PHPContext
     /**
      * 获取默认缓存
      *
-     * @return \suda\framework\Cache
+     * @return Cache
      */
     protected function getDefaultCache():Cache
     {

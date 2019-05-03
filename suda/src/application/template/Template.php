@@ -1,9 +1,6 @@
 <?php
 namespace suda\application\template;
 
-use suda\application\template\ModuleTemplate;
-
-
 
 /**
  * 异常显示模板

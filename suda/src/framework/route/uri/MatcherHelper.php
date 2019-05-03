@@ -1,4 +1,5 @@
 <?php
+
 namespace suda\framework\route\uri;
 
 use function array_key_exists;
@@ -7,7 +8,6 @@ use function in_array;
 use InvalidArgumentException;
 use function is_numeric;
 use function str_replace;
-use suda\framework\route\uri\UriMatcher;
 use suda\framework\route\uri\parameter\IntParameter;
 use suda\framework\route\uri\parameter\UrlParameter;
 use suda\framework\route\uri\parameter\FloatParameter;
@@ -25,7 +25,7 @@ class MatcherHelper
         'url' => UrlParameter::class,
     ];
 
-    public static function build(string $uri):UriMatcher
+    public static function build(string $uri): UriMatcher
     {
         // 参数
         $parameters = [];
@@ -34,7 +34,7 @@ class MatcherHelper
         // 添加忽略
         $url = preg_replace('/(\[)([^\[\]]+)(?(1)\])/', '(?:$2)?', $url);
         // 添加 * ? 匹配
-        $url = str_replace(['\*','\?'], ['[^/]*?','[^/]'], $url);
+        $url = str_replace(['\*', '\?'], ['[^/]*?', '[^/]'], $url);
         // 编译页面参数
         $url = preg_replace_callback('/\{(\w+)(?:\:([^}]+?))?\}/', function ($match) use (&$parameters) {
             $name = $match[1];
@@ -51,7 +51,7 @@ class MatcherHelper
                 throw new InvalidArgumentException(sprintf('unknown parameter type %s', $type), 1);
             }
             $index = count($parameters);
-            $parameter = static::$parameters[$type]::build($index, $name, $extra);
+            $parameter = forward_static_call_array([static::$parameters[$type], 'build'], [$index, $name, $extra]);
             $parameters[] = $parameter;
             return $parameter->getMatch();
         }, $url);
@@ -59,24 +59,35 @@ class MatcherHelper
         return new UriMatcher($uri, $url, $parameters);
     }
 
-    public static function buildUri(UriMatcher $matcher, array $parameter, bool $allowQuery = true):string
+    public static function buildUri(UriMatcher $matcher, array $parameter, bool $allowQuery = true): string
     {
         $uri = $matcher->getUri();
         // 拆分参数
         list($mapper, $query, $parameter) = static::analyseParameter($matcher, $parameter);
         // for * ?
-        $url = str_replace(['*','?'], ['','-'], $uri);
+        $url = str_replace(['*', '?'], ['', '-'], $uri);
         // for ignore value
-        $url = static::parseIgnoreableParameter($url, $matcher, $parameter, $mapper);
+        $url = static::parseIgnorableParameter($url, $matcher, $parameter, $mapper);
         $url = static::replaceParameter($url, $matcher, $parameter, $mapper);
         if (count($query) && $allowQuery) {
-            return $url.'?'.http_build_query($query, 'v', '&', PHP_QUERY_RFC3986);
+            return $url . '?' . http_build_query($query, 'v', '&', PHP_QUERY_RFC3986);
         }
         return $url;
     }
 
-    protected static function parseIgnoreableParameter(string $url, UriMatcher  $matcher, array $parameter, array $mapper):string
-    {
+    /**
+     * @param string $url
+     * @param UriMatcher $matcher
+     * @param array $parameter
+     * @param array $mapper
+     * @return string
+     */
+    protected static function parseIgnorableParameter(
+        string $url,
+        UriMatcher $matcher,
+        array $parameter,
+        array $mapper
+    ): string {
         return preg_replace_callback('/\[(.+?)\]/', function ($match) use ($matcher, $parameter, $mapper) {
             if (preg_match('/\{(\w+).+?\}/', $match[1])) {
                 $count = 0;
@@ -89,7 +100,7 @@ class MatcherHelper
         }, $url);
     }
 
-    protected static function analyseParameter(UriMatcher $matcher, array $parameter):array
+    protected static function analyseParameter(UriMatcher $matcher, array $parameter): array
     {
         $query = [];
         $mapper = [];
@@ -111,22 +122,47 @@ class MatcherHelper
         return [$mapper, $query, $parameter];
     }
 
-    protected static function replaceParameter(string $input, UriMatcher $matcher, array $parameter, array $mapper, bool $ignore = false, ?int &$count = null)
-    {
-        return preg_replace_callback('/\{(\w+).+?\}/', function ($match) use ($matcher, $parameter, $mapper, $ignore, &$count) {
-            if (array_key_exists($match[1], $mapper)) {
-                $count ++;
-                return $mapper[$match[1]]->packValue($parameter[$match[1]]);
-            }
-            if ($default = $matcher->getParameter($match[1])) {
-                if ($default->hasDefault()) {
-                    $count ++;
-                    return $default->getDefaultValue();
+    /**
+     * @param string $input
+     * @param UriMatcher $matcher
+     * @param array $parameter
+     * @param array $mapper
+     * @param bool $ignore
+     * @param int|null $count
+     * @return string|string[]|null
+     */
+    protected static function replaceParameter(
+        string $input,
+        UriMatcher $matcher,
+        array $parameter,
+        array $mapper,
+        bool $ignore = false,
+        ?int &$count = null
+    ) {
+        return preg_replace_callback(
+            '/\{(\w+).+?\}/',
+            function ($match) use ($matcher, $parameter, $mapper, $ignore, &$count) {
+                if (array_key_exists($match[1], $mapper)) {
+                    $count++;
+                    return $mapper[$match[1]]->packValue($parameter[$match[1]]);
                 }
-            }
-            if ($ignore === false) {
-                throw new InvalidArgumentException(sprintf('unknown parameter %s in %s', $match[1], $matcher->getUri()), 1);
-            }
-        }, $input, -1, $count);
+                if ($default = $matcher->getParameter($match[1])) {
+                    if ($default->hasDefault()) {
+                        $count++;
+                        return $default->getDefaultValue();
+                    }
+                }
+                if ($ignore === false) {
+                    throw new InvalidArgumentException(
+                        sprintf('unknown parameter %s in %s', $match[1], $matcher->getUri()),
+                        1
+                    );
+                }
+                return '';
+            },
+            $input,
+            -1,
+            $count
+        );
     }
 }

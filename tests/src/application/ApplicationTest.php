@@ -1,19 +1,17 @@
 <?php
 namespace test\arrayobject;
 
-use suda\framework\Request;
-use suda\framework\Debugger;
 use suda\phpunit\TestRequest;
-use suda\phpunit\TestResponse;
 use PHPUnit\Framework\TestCase;
 use suda\framework\loader\Loader;
-use suda\framework\arrayobject\ArrayDotAccess;
 use suda\application\builder\ApplicationBuilder;
 
 class ApplicationTest extends TestCase
 {
     /**
      * @dataProvider getRoute
+     * @param $expected
+     * @param $parameter
      */
     public function testRouteParse($expected, $parameter)
     {
@@ -25,6 +23,8 @@ class ApplicationTest extends TestCase
 
     /**
      * @dataProvider getRouteName
+     * @param $expected
+     * @param $parameter
      */
     public function testGetRouteName($expected, $parameter)
     {

@@ -135,6 +135,7 @@ abstract class Statement
     /**
      * 判断是否为一条
      *
+     * @param bool|null $set
      * @return boolean
      */
     public function isFetchOne(bool $set = null):bool
@@ -158,6 +159,7 @@ abstract class Statement
     /**
      * 判断是否获取多条
      *
+     * @param bool|null $set
      * @return boolean
      */
     public function isFetchAll(bool $set = null):bool
@@ -195,6 +197,7 @@ abstract class Statement
     /**
      * 是否滚动
      *
+     * @param bool|null $set
      * @return boolean|null
      */
     public function isScroll(bool $set = null):?bool

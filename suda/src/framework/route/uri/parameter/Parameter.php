@@ -59,7 +59,8 @@ abstract class Parameter
         return $this->hasDefault() ? $this->default : null;
     }
 
-    public function hasDefault() {
+    public function hasDefault()
+    {
         return isset($this->default);
     }
 
@@ -103,7 +104,7 @@ abstract class Parameter
      * Get 参数出现的索引
      *
      * @return  int
-     */ 
+     */
     public function getIndex()
     {
         return $this->index;
@@ -115,7 +116,7 @@ abstract class Parameter
      * @param  int  $index  参数出现的索引
      *
      * @return  self
-     */ 
+     */
     public function setIndex(int $index)
     {
         $this->index = $index;

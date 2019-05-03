@@ -5,12 +5,10 @@ use function in_array;
 use function json_decode;
 use function json_encode;
 use ReflectionClass;
+use ReflectionException;
 use ReflectionProperty;
 use function serialize;
 use function strtolower;
-use suda\orm\TableStruct;
-use suda\orm\middleware\NullMiddleware;
-use suda\orm\struct\TableStructBuilder;
 use function unserialize;
 
 /**
@@ -40,6 +38,7 @@ class ObjectMiddleware extends NullMiddleware
      * 创建中间件
      *
      * @param string $object
+     * @throws ReflectionException
      */
     public function __construct(string $object)
     {
@@ -92,6 +91,7 @@ class ObjectMiddleware extends NullMiddleware
      *
      * @param string $object
      * @return void
+     * @throws ReflectionException
      */
     protected function prepareProcessorSet(string $object)
     {

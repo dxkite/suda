@@ -51,10 +51,13 @@ class ModuleLoader
         $this->application->debug()->info('loaded - '.$this->module->getFullName());
     }
 
-    public function toReacheable()
+    /**
+     * @throws Exception
+     */
+    public function toReachable()
     {
         $this->loadRoute();
-        $this->application->debug()->info('reacheable = '.$this->module->getFullName());
+        $this->application->debug()->info('reachable = '.$this->module->getFullName());
     }
 
     public function toRunning()
@@ -84,10 +87,21 @@ class ModuleLoader
     {
         $target = $this->application->find($module);
         if ($target === null) {
-            throw new ApplicationException(sprintf('%s module need %s %s but not exist', $this->module->getFullName(), $module, $version), ApplicationException::ERR_MODULE_REQUIREMENTS);
+            throw new ApplicationException(
+                sprintf('%s module need %s %s but not exist', $this->module->getFullName(), $module, $version),
+                ApplicationException::ERR_MODULE_REQUIREMENTS
+            );
         }
-        if (static::versionCompire($version, $target->getVersion()) !== true) {
-            throw new ApplicationException(sprintf('%s module need %s version %s', $this->module->getFullName(), $target->getName(), $target->getVersion()), ApplicationException::ERR_MODULE_REQUIREMENTS);
+        if (static::versionCompare($version, $target->getVersion()) !== true) {
+            throw new ApplicationException(
+                sprintf(
+                    '%s module need %s version %s',
+                    $this->module->getFullName(),
+                    $target->getName(),
+                    $target->getVersion()
+                ),
+                ApplicationException::ERR_MODULE_REQUIREMENTS
+            );
         }
     }
 
@@ -99,8 +113,11 @@ class ModuleLoader
     protected function checkFrameworkVersion()
     {
         if ($sudaVersion = $this->module->getConfig('suda')) {
-            if (static::versionCompire($sudaVersion, SUDA_VERSION) !== true) {
-                throw new ApplicationException(sprintf('%s module need suda version %s', $this->module->getFullName(), $sudaVersion), ApplicationException::ERR_FRAMEWORK_VERSION);
+            if (static::versionCompare($sudaVersion, SUDA_VERSION) !== true) {
+                throw new ApplicationException(
+                    sprintf('%s module need suda version %s', $this->module->getFullName(), $sudaVersion),
+                    ApplicationException::ERR_FRAMEWORK_VERSION
+                );
             }
         }
     }
@@ -134,7 +151,9 @@ class ModuleLoader
         if (count($import)) {
             foreach ($import as $name => $path) {
                 if ($module = $this->application->find($name)) {
-                    $module->getResource()->addResourcePath(Resource::getPathByRelativePath($path, $this->module->getPath()));
+                    $module->getResource()->addResourcePath(
+                        Resource::getPathByRelativePath($path, $this->module->getPath())
+                    );
                 }
             }
         }
@@ -153,9 +172,12 @@ class ModuleLoader
         }
     }
 
+    /**
+     * @throws Exception
+     */
     protected function loadRoute()
     {
-        foreach ($this->application->getRouteGroup() as  $group) {
+        foreach ($this->application->getRouteGroup() as $group) {
             $this->loadRouteGroup($group);
         }
     }
@@ -164,6 +186,7 @@ class ModuleLoader
      * 导入 ClassLoader 配置
      *
      * @param array $import
+     * @param string $relativePath
      * @return void
      */
     protected function importClassLoader(array $import, string $relativePath)
@@ -176,6 +199,7 @@ class ModuleLoader
      *
      * @param string $groupName
      * @return void
+     * @throws Exception
      */
     protected function loadRouteGroup(string $groupName)
     {
@@ -231,7 +255,7 @@ class ModuleLoader
      * @param string $compire 对比的版本
      * @return bool
      */
-    protected static function versionCompire(string $version, string $compire)
+    protected static function versionCompare(string $version, string $compire)
     {
         if (preg_match('/^(<=?|>=?|<>|!=)(.+)$/i', $version, $match)) {
             list($s, $op, $ver) = $match;

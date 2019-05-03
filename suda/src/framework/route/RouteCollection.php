@@ -5,7 +5,6 @@ use function file_get_contents;
 use Iterator;
 use ArrayIterator;
 use IteratorAggregate;
-use suda\framework\route\RouteMatcher;
 use function unserialize;
 
 /**
@@ -45,7 +44,7 @@ class RouteCollection implements IteratorAggregate
     /**
      * 合并
      *
-     * @param array $route
+     * @param RouteCollection $route
      * @return void
      */
     public function merge(RouteCollection $route)

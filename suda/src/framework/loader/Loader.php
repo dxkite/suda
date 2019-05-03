@@ -1,12 +1,7 @@
 <?php
 namespace suda\framework\loader;
 
-require_once __DIR__ .'/Path.php';
-require_once __DIR__ .'/PathTrait.php';
-require_once __DIR__ .'/PathInterface.php';
-require_once __DIR__ .'/IncludeManager.php';
 
-use suda\framework\loader\IncludeManager;
 
 /**
  * 类自动加载器

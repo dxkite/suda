@@ -73,6 +73,7 @@ class DataAccess
      * @param array|object|string $object
      * @return WriteStatement
      * @throws ReflectionException
+     * @throws exception\SQLException
      */
     public function write($object): WriteStatement
     {
@@ -88,6 +89,7 @@ class DataAccess
      * @param string|array $where
      * @param array $whereParameter
      * @return WriteStatement
+     * @throws exception\SQLException
      */
     public function delete($where = null, ...$whereParameter):WriteStatement
     {
@@ -104,6 +106,7 @@ class DataAccess
      * @param array $whereBinder
      * @return integer
      * @throws ReflectionException
+     * @throws exception\SQLException
      */
     public function count($where, array $whereBinder = []):int
     {
@@ -135,6 +138,7 @@ class DataAccess
      *
      * @param Statement $statement
      * @return mixed
+     * @throws exception\SQLException
      */
     public function run(Statement $statement)
     {
@@ -258,7 +262,7 @@ class DataAccess
     public static function createStruct(string $object)
     {
         if (is_subclass_of($object, TableStructAwareInterface::class)) {
-            return $object::getTableStruct();
+            return forward_static_call([$object, 'getTableStruct']);
         }
         return (new TableClassStructBuilder($object))->createStruct();
     }
@@ -274,7 +278,7 @@ class DataAccess
     public static function createMiddleware(string $object, TableStruct $struct)
     {
         if (is_subclass_of($object, MiddlewareAwareInterface::class)) {
-            return $object::getMiddleware($struct);
+            return forward_static_call([$object, 'getMiddleware']);
         }
         return static::createDefaultMiddleware($object, $struct);
     }

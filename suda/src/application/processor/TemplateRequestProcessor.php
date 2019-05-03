@@ -4,7 +4,6 @@ namespace suda\application\processor;
 use suda\framework\Request;
 use suda\framework\Response;
 use suda\application\Application;
-use suda\application\processor\RequestProcessor;
 
 /**
  * 响应
@@ -18,6 +17,7 @@ class TemplateRequestProcessor implements RequestProcessor
             return $application->getTemplate($template, $request, $application->getRunning()->getFullName());
         } else {
             $response->status(404);
+            return null;
         }
     }
 }

@@ -12,7 +12,6 @@ use function strpos;
 use function strrpos;
 use function strtolower;
 use function substr;
-use suda\application\Module;
 use suda\framework\filesystem\FileSystem;
 use suda\application\exception\ApplicationException;
 use function version_compare;
@@ -46,7 +45,7 @@ class ModuleBag implements IteratorAggregate
     /**
      * 添加模块
      *
-     * @param \suda\application\Module $module
+     * @param Module $module
      * @return void
      */
     public function add(Module $module)
@@ -78,7 +77,7 @@ class ModuleBag implements IteratorAggregate
      * 推测文件所在模块
      *
      * @param string $path
-     * @return \suda\application\Module|null
+     * @return Module|null
      */
     public function guess(string $path):?Module
     {
@@ -94,8 +93,8 @@ class ModuleBag implements IteratorAggregate
      * 根据路径获取所在模块
      *
      * @param string $path
-     * @throws ApplicationException
-     * @return \suda\application\Module
+     * @return Module
+     *@throws ApplicationException
      */
     public function getModuleFromPath(string $path):Module
     {

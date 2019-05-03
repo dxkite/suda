@@ -113,6 +113,7 @@ class DataSource
      * @param array $config
      * @param string|null $name
      * @return Connection
+     * @throws SQLException
      */
     public static function new(string $type, array $config, ?string $name = null): Connection
     {
@@ -142,8 +143,8 @@ class DataSource
     protected function selectWriteConnection()
     {
         if ($this->master === null) {
-            $postion = mt_rand(0, count($this->write) - 1);
-            $this->master = $this->write[$postion];
+            $position = mt_rand(0, count($this->write) - 1);
+            $this->master = $this->write[$position];
         }
     }
 }

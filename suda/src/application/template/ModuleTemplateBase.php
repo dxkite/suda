@@ -2,15 +2,11 @@
 namespace suda\application\template;
 
 use function in_array;
-use suda\framework\Config;
 use suda\framework\Request;
 use suda\application\Resource;
 use suda\application\Application;
 use suda\framework\filesystem\FileSystem;
-use suda\application\template\TemplateUtil;
 use suda\application\template\compiler\Compiler;
-use suda\application\template\CompilableTemplate;
-use suda\application\template\ModuleTemplateCompiler;
 
 /**
  * 模块模板

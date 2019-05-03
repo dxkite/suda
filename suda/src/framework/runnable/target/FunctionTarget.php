@@ -1,8 +1,6 @@
 <?php
 namespace suda\framework\runnable\target;
 
-use suda\framework\runnable\target\FileTarget;
-
 /**
  * 可执行命令：函数名
  *
@@ -16,13 +14,21 @@ class FunctionTarget extends FileTarget
      * @var string
      */
     protected $function;
- 
+
+    /**
+     * FunctionTarget constructor.
+     * @param string $name
+     * @param array $parameter
+     */
     public function __construct(string $name, array $parameter = [])
     {
-        $this->setParameter($parameter);
+        parent::__construct(null, $parameter);
         $this->function = $name;
     }
-    
+
+    /**
+     * @return mixed|string|null
+     */
     public function getRunnableTarget()
     {
         return $this->function;

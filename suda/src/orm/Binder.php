@@ -1,4 +1,5 @@
 <?php
+
 namespace suda\orm;
 
 use JsonSerializable;
@@ -10,31 +11,59 @@ use PDO;
  */
 class Binder implements JsonSerializable
 {
+    /**
+     * @var string
+     */
     private $key;
+    /**
+     * @var string
+     */
     private $name;
+    /**
+     * @var mixed
+     */
     private $value;
 
+    /**
+     * @var int
+     */
     protected static $index = 0;
 
+    /**
+     * Binder constructor.
+     * @param string $name
+     * @param $value
+     * @param string|null $key
+     */
     public function __construct(string $name, $value, string $key = null)
     {
         $this->name = $name;
         $this->value = $value;
         $this->key = $key;
-        static::$index ++;
+        static::$index++;
     }
 
-    public static function index(string $name):string
+    /**
+     * @param string $name
+     * @return string
+     */
+    public static function index(string $name): string
     {
-        return '_'.static::$index.$name;
+        return '_' . static::$index . $name;
     }
 
-    public function getName():string
+    /**
+     * @return string
+     */
+    public function getName(): string
     {
         return $this->name;
     }
 
 
+    /**
+     * @return mixed
+     */
     public function getValue()
     {
         return $this->value;
@@ -60,11 +89,17 @@ class Binder implements JsonSerializable
         return $type;
     }
 
+    /**
+     * @return string|null
+     */
     public function getKey()
     {
         return $this->key;
     }
-    
+
+    /**
+     * @return array|mixed
+     */
     public function jsonSerialize()
     {
         return [
@@ -74,6 +109,9 @@ class Binder implements JsonSerializable
         ];
     }
 
+    /**
+     * @return false|string
+     */
     public function __toString()
     {
         return json_encode($this->jsonSerialize(), JSON_UNESCAPED_UNICODE);

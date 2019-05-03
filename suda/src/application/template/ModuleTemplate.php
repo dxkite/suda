@@ -4,15 +4,9 @@ namespace suda\application\template;
 use function constant;
 use function is_array;
 use function is_string;
-use suda\framework\Config;
 use suda\framework\Request;
-use suda\application\Resource;
 use suda\application\Application;
 use suda\framework\filesystem\FileSystem;
-use suda\application\template\compiler\Compiler;
-use suda\application\template\CompilableTemplate;
-use suda\application\template\ModuleTemplateBase;
-use suda\application\template\ModuleTemplateCompiler;
 
 /**
  * 模块模板

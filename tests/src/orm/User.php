@@ -1,8 +1,6 @@
 <?php
 namespace test\orm;
 
-use test\orm\UserField;
-
 /**
  * @table user
  */

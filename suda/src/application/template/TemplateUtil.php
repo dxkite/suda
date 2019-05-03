@@ -5,11 +5,9 @@ use function array_key_exists;
 use function constant;
 use suda\framework\Config;
 use suda\framework\Request;
-use suda\framework\Response;
 use suda\application\Resource;
 use suda\application\Application;
 use suda\framework\filesystem\FileSystem;
-use suda\application\template\ModuleTemplate;
 
 /**
  * 模板
@@ -39,6 +37,7 @@ class TemplateUtil
      *
      * @param Application $application
      * @param string|null $module
+     * @param array $config
      * @return array
      */
     protected static function fixConfig(Application $application, ?string $module, array $config)
@@ -79,6 +78,7 @@ class TemplateUtil
     /**
      * 获取资源静态前缀
      *
+     * @param Application $application
      * @param string|null $module
      * @return string
      */
@@ -91,6 +91,7 @@ class TemplateUtil
     /**
      * 获取资源前缀
      *
+     * @param Application $application
      * @param string|null $module
      * @return string
      */

@@ -4,7 +4,6 @@ namespace suda\orm\struct;
 use function call_user_func_array;
 use function is_array;
 use function method_exists;
-use suda\orm\struct\Field;
 use function token_get_all;
 
 /**
@@ -70,7 +69,7 @@ class FieldModifierParser
     /**
      * 修改
      *
-     * @param \suda\orm\struct\Field $field
+     * @param Field $field
      * @return void
      */
     public function modify(Field $field)
@@ -174,7 +173,6 @@ class FieldModifierParser
     protected function nextIsNotEnd()
     {
         $this->skipWhiteComment();
-
         $token = $this->tokens[$this->pos];
         if (is_array($token)) {
             return false;
@@ -189,5 +187,6 @@ class FieldModifierParser
             $this->skipWhiteComment();
             return true;
         }
+        return false;
     }
 }

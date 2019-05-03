@@ -1,13 +1,11 @@
 <?php
 namespace test\orm;
 
-use SQLite3;
 use ArrayObject;
 use suda\orm\DataSource;
 use suda\orm\TableAccess;
 use suda\orm\TableStruct;
 use PHPUnit\Framework\TestCase;
-use suda\orm\statement\Statement;
 use suda\orm\statement\QueryStatement;
 use suda\orm\connection\creator\MySQLTableCreator;
 

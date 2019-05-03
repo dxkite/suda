@@ -1,8 +1,8 @@
 <?php
 namespace suda\orm\struct;
 
+use suda\orm\exception\SQLException;
 use suda\orm\TableAccess;
-use suda\orm\TableStruct;
 
 class QueryStatement extends \suda\orm\statement\QueryStatement
 {
@@ -19,14 +19,15 @@ class QueryStatement extends \suda\orm\statement\QueryStatement
         parent::__construct($query, ...$parameter);
     }
 
- 
-     /**
-      * 取1
-      *
-      * @param string|null $class
-      * @param array $args
-      * @return mixed
-      */
+
+    /**
+     * 取1
+     *
+     * @param string|null $class
+     * @param array $args
+     * @return mixed
+     * @throws SQLException
+     */
     public function one(?string $class = null, array $args = [])
     {
         $value = $this->access->run($this->wantOne($class, $args));
@@ -42,6 +43,7 @@ class QueryStatement extends \suda\orm\statement\QueryStatement
      * @param string|null $class
      * @param array $args
      * @return array
+     * @throws SQLException
      */
     public function all(?string $class = null, array $args = []):array
     {

@@ -7,11 +7,8 @@ use function is_string;
 use function sprintf;
 use suda\orm\Binder;
 use suda\orm\TableStruct;
-use suda\orm\statement\Query;
-use suda\orm\statement\Statement;
 use suda\orm\middleware\Middleware;
 use suda\orm\exception\SQLException;
-use suda\orm\statement\PrepareTrait;
 
 class WriteStatement extends Statement
 {
@@ -58,9 +55,11 @@ class WriteStatement extends Statement
      *
      * @param string $rawTableName
      * @param TableStruct $struct
+     * @param Middleware $middleware
      */
     public function __construct(string $rawTableName, TableStruct $struct, Middleware $middleware)
     {
+        parent::__construct('');
         $this->type = self::WRITE;
         $this->struct = $struct;
         $this->table = $rawTableName;
@@ -73,6 +72,7 @@ class WriteStatement extends Statement
      * @param string|array $name
      * @param mixed $value
      * @return $this
+     * @throws SQLException
      */
     public function write($name, $value = null)
     {
@@ -139,8 +139,9 @@ class WriteStatement extends Statement
      * 条件查询
      *
      * @param string|array $where
-     * @param array $whereParameter
+     * @param array $args
      * @return $this
+     * @throws SQLException
      */
     public function where($where, ...$args)
     {
@@ -202,11 +203,12 @@ class WriteStatement extends Statement
      * @param string $where
      * @param array $whereParameter
      * @return void
+     * @throws SQLException
      */
     protected function whereCondition(string $where, array $whereParameter)
     {
-        list($this->whereCondition, $wherebinder) = $this->parepareWhereString($where, $whereParameter);
-        $this->binder = array_merge($this->binder, $wherebinder);
+        list($this->whereCondition, $whereBinder) = $this->parepareWhereString($where, $whereParameter);
+        $this->binder = array_merge($this->binder, $whereBinder);
     }
 
     /**
@@ -215,6 +217,7 @@ class WriteStatement extends Statement
      * @param array $where
      * @param array $whereParameter
      * @return void
+     * @throws SQLException
      */
     protected function arrayWhereCondition(array $where, array $whereParameter)
     {
@@ -244,6 +247,6 @@ class WriteStatement extends Statement
         }
         $i_name = implode(',', $names);
         $i_bind = implode(',', $binds);
-        return new Query("INSERT INTO {$this->table} ({$i_name}) VALUES ({$i_bind})", $binder);
+        return new Query(sprintf("INSERT INTO %s (%s) VALUES (%s)", $this->table, $i_name, $i_bind), $binder);
     }
 }

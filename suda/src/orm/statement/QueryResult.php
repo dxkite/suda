@@ -4,10 +4,10 @@ namespace suda\orm\statement;
 use function method_exists;
 use PDO;
 use ReflectionClass;
-use suda\orm\statement\Statement;
+use ReflectionException;
+use suda\orm\exception\SQLException;
 use suda\orm\connection\Connection;
 use suda\orm\middleware\Middleware;
-use suda\orm\middleware\NullMiddleware;
 
 class QueryResult
 {
@@ -36,12 +36,14 @@ class QueryResult
         $this->connection = $connection;
         $this->middleware = $middleware;
     }
-    
+
     /**
      * 获取运行结果
      *
      * @param Statement $statement
      * @return mixed
+     * @throws SQLException
+     * @throws ReflectionException
      */
     public function createResult(Statement $statement)
     {
@@ -56,15 +58,17 @@ class QueryResult
         } elseif ($statement->isFetch()) {
             return $this->fetchResult($statement);
         }
+        return null;
     }
 
     /**
      * 取结果
      *
-     * @param \suda\orm\statement\Statement $statement
+     * @param QueryStatement|ReadStatement|Statement $statement
      * @param string|null $class
      * @param array $ctor_args
      * @return mixed
+     * @throws ReflectionException
      */
     protected function fetchResult(Statement $statement, ?string $class = null, array $ctor_args = [])
     {
@@ -81,6 +85,7 @@ class QueryResult
             $data = $statement->getStatement()->fetchAll(PDO::FETCH_ASSOC);
             return $this->fetchAllProccess($statement, $data);
         }
+        return null;
     }
 
     /**
@@ -91,6 +96,7 @@ class QueryResult
      * @param ReadStatement|QueryStatement $statement
      * @param array $data
      * @return mixed
+     * @throws ReflectionException
      */
     protected function fetchOneProccess($statement, array $data)
     {
@@ -114,6 +120,7 @@ class QueryResult
      * @param mixed $object
      * @param array $data
      * @return void
+     * @throws ReflectionException
      */
     protected function setValueWithReflection(ReflectionClass $reflectClass, $object, array $data)
     {
@@ -134,7 +141,6 @@ class QueryResult
     /**
      * 通过魔术方法设置值
      *
-     * @param ReflectionClass $reflectClass
      * @param mixed $object
      * @param array $data
      * @return void
@@ -154,6 +160,7 @@ class QueryResult
      * @param ReadStatement|QueryStatement $statement
      * @param array $data
      * @return array
+     * @throws ReflectionException
      */
     protected function fetchAllProccess($statement, array $data): array
     {

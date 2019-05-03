@@ -3,10 +3,9 @@ namespace suda\orm\connection;
 
 use PDO;
 use PDOException;
-use suda\orm\struct\Fields;
-use suda\orm\statement\Statement;
-use suda\orm\connection\Connection;
 use suda\orm\exception\SQLException;
+use suda\orm\statement\QueryStatement;
+
 
 /**
  * 数据表链接对象
@@ -14,8 +13,15 @@ use suda\orm\exception\SQLException;
  */
 class SQLiteConnection extends Connection
 {
+    /**
+     * @var string
+     */
     public static $type = 'sqlite';
 
+    /**
+     * @return mixed|string
+     * @throws SQLException
+     */
     public function getDsn()
     {
         if (!array_key_exists('path', $this->config)) {
@@ -24,7 +30,11 @@ class SQLiteConnection extends Connection
         $path = $this->config['path'];
         return static::$type.':'.$path;
     }
-    
+
+    /**
+     * @return PDO
+     * @throws SQLException
+     */
     public function createPDO(): PDO
     {
         try {
@@ -36,12 +46,20 @@ class SQLiteConnection extends Connection
             throw new SQLException($this->__toString().' connect database error:'.$e->getMessage(), $e->getCode(), E_ERROR, __FILE__, __LINE__, $e);
         }
     }
-    
+
+    /**
+     * @param string $database
+     * @return mixed
+     */
     public function switchDatabase(string $database)
     {
-        return $this->query(new Statement('USE `' . $database.'`'));
+        return $this->query(new QueryStatement('USE `' . $database.'`'));
     }
 
+    /**
+     * @param string $name
+     * @return mixed|string
+     */
     public function rawTableName(string $name)
     {
         $prefix = $this->config['prefix'] ?? '';

@@ -54,6 +54,8 @@ class Request extends RequestWrapper
     /**
      * 获取请求属性
      *
+     * @param string $name
+     * @param mixed $default
      * @return  mixed
      */
     public function getAttribute(string $name, $default = null)
@@ -195,6 +197,7 @@ class Request extends RequestWrapper
     /**
      * 判断是否有POST数据请求
      *
+     * @param string|null $name
      * @return boolean
      */
     public function hasPost(?string $name = null)
@@ -245,6 +248,8 @@ class Request extends RequestWrapper
     /**
      * Get 参数
      *
+     * @param string|null $name
+     * @param mixed $default
      * @return  array
      */
     public function getParameter(?string $name = null, $default = null)

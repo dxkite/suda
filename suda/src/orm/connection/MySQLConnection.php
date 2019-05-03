@@ -3,9 +3,7 @@ namespace suda\orm\connection;
 
 use PDO;
 use PDOException;
-use suda\orm\struct\Fields;
-use suda\orm\statement\Statement;
-use suda\orm\connection\Connection;
+use suda\orm\statement\QueryStatement;
 use suda\orm\exception\SQLException;
 
 /**
@@ -16,6 +14,10 @@ class MySQLConnection extends Connection
 {
     public static $type = 'mysql';
 
+    /**
+     * @return mixed|string
+     * @throws SQLException
+     */
     public function getDsn()
     {
         if (!array_key_exists('host', $this->config)) {
@@ -30,7 +32,11 @@ class MySQLConnection extends Connection
         }
         return static::$type.':host='.$host.';charset='.$charset.';port='.$port;
     }
-    
+
+    /**
+     * @return PDO
+     * @throws SQLException
+     */
     public function createPDO(): PDO
     {
         try {
@@ -41,13 +47,22 @@ class MySQLConnection extends Connection
             static::$_id ++;
             return $pdo;
         } catch (PDOException $e) {
-            throw new SQLException($this->__toString().' connect database error:'.$e->getMessage(), $e->getCode(), E_ERROR, __FILE__, __LINE__, $e);
+            throw new SQLException(sprintf(
+                "%s connect database error:%s",
+                $this->__toString(),
+                $e->getMessage()
+            ), $e->getCode(), E_ERROR, __FILE__, __LINE__, $e);
         }
     }
 
+    /**
+     * @param string $database
+     * @return mixed
+     * @throws SQLException
+     */
     public function switchDatabase(string $database)
     {
-        return $this->query(new Statement('USE `' . $database.'`'));
+        return $this->query(new QueryStatement('USE `' . $database.'`'));
     }
 
     public function rawTableName(string $name)

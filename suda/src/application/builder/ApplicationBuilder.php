@@ -49,7 +49,10 @@ class ApplicationBuilder
             $manifest = PathResolver::resolve($path.'/manifest');
         }
         if ($manifest === null) {
-            throw new ApplicationException(sprintf('missing manifest in %s', $path), ApplicationException::ERR_MANIFAST_IS_EMPTY);
+            throw new ApplicationException(
+                sprintf('missing manifest in %s', $path),
+                ApplicationException::ERR_MANIFAST_IS_EMPTY
+            );
         } else {
             return $manifest;
         }

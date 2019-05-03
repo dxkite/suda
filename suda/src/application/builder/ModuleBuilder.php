@@ -64,9 +64,7 @@ class ModuleBuilder
     public static function checkPack(string $path, string $unpackPath): ?string
     {
         $extension = pathinfo($path, PATHINFO_EXTENSION);
-        if (
-            $extension !== 'mod' &&
-            $extension !== 'module') {
+        if ($extension !== 'mod' && $extension !== 'module') {
             return null;
         }
         $zip = new ZipArchive;

@@ -15,6 +15,7 @@ class LanguageBag
 
     /**
      * 包含本地化语言数组
+     * @param array $locales
      */
     public function assign(array $locales)
     {

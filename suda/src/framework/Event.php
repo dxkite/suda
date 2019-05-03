@@ -2,7 +2,6 @@
 namespace suda\framework;
 
 use function array_key_exists;
-use suda\framework\Config;
 use suda\framework\runnable\Runnable;
 
 class Event

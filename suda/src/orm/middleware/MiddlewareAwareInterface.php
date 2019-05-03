@@ -2,12 +2,15 @@
 namespace suda\orm\middleware;
 
 use suda\orm\TableStruct;
-use suda\orm\middleware\Middleware;
 
 /**
  * 感知表结构
  */
 interface MiddlewareAwareInterface
 {
+    /**
+     * @param TableStruct $struct
+     * @return Middleware
+     */
     public static function getMiddleware(TableStruct $struct):Middleware;
 }

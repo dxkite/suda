@@ -59,7 +59,7 @@ class TableAccess extends QueryAccess
     /**
      * 获取表结构
      *
-     * @return \suda\orm\TableStruct
+     * @return TableStruct
      */
     public function getStruct():TableStruct
     {
@@ -123,6 +123,7 @@ class TableAccess extends QueryAccess
      * @param string|array $name
      * @param mixed $value
      * @return WriteStatement
+     * @throws exception\SQLException
      */
     public function write($name, $value = null):WriteStatement
     {
@@ -136,6 +137,7 @@ class TableAccess extends QueryAccess
      * @param string|array $where
      * @param array $whereParameter
      * @return WriteStatement
+     * @throws exception\SQLException
      */
     public function delete($where = null, ...$whereParameter):WriteStatement
     {
@@ -178,6 +180,7 @@ class TableAccess extends QueryAccess
      *
      * @param Statement $statement
      * @return mixed
+     * @throws exception\SQLException
      */
     public function run(Statement $statement)
     {
@@ -200,6 +203,7 @@ class TableAccess extends QueryAccess
     /**
      * 设置数据源
      *
+     * @param DataSource $source
      * @return  DataSource
      */
     public function setSource(DataSource $source)

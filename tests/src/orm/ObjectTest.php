@@ -1,8 +1,7 @@
 <?php
 namespace test\orm;
 
-use test\orm\User2;
-use test\orm\UserField;
+use ReflectionException;
 use suda\orm\TableStruct;
 use PHPUnit\Framework\TestCase;
 use suda\framework\runnable\Runnable;
@@ -65,10 +64,12 @@ class ObjectTest extends TestCase
         $this->assertEquals($struct, $create->createStruct());
     }
 
-  
 
     /**
      * @dataProvider buildNameData
+     * @param $expected
+     * @param $value
+     * @throws ReflectionException
      */
     public function testName($expected, $value)
     {

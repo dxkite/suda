@@ -3,9 +3,6 @@ namespace suda\framework\http;
 
 use function str_replace;
 use function strtolower;
-use suda\framework\http\Stream;
-use suda\framework\http\Request;
-use suda\framework\http\UploadedFile;
 use suda\framework\http\stream\DataStream;
 
 class HTTPRequest implements Request
@@ -55,7 +52,7 @@ class HTTPRequest implements Request
     /**
      * 输入流
      *
-     * @var \suda\framework\http\Stream
+     * @var Stream
      */
     protected $input;
     

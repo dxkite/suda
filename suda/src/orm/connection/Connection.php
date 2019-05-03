@@ -3,9 +3,7 @@ namespace suda\orm\connection;
 
 use PDO;
 use PDOException;
-use PDOStatement;
 use function register_shutdown_function;
-use suda\orm\struct\Fields;
 use suda\orm\statement\Statement;
 use suda\orm\statement\QueryAccess;
 use suda\orm\exception\SQLException;
@@ -18,6 +16,9 @@ use suda\orm\connection\observer\NullObserver;
  */
 abstract class Connection
 {
+    /**
+     * @var string
+     */
     public static $type = 'mysql';
 
     /**
@@ -27,12 +28,29 @@ abstract class Connection
      */
     protected $config;
 
+    /**
+     * @var int
+     */
     protected $queryCount = 0;
-    protected $pdo = null;
+
+    /**
+     * @var PDO
+     */
+    protected $pdo;
+
+    /**
+     * @var int
+     */
     protected $transaction = 0;
+    /**
+     * @var
+     */
     protected $id;
+    /**
+     * @var int
+     */
     protected static $_id = 0;
-    protected static $defaultConnection = null;
+
     /**
      * 链接别名
      *
@@ -46,11 +64,12 @@ abstract class Connection
      * @var Observer
      */
     protected $observer;
-    
+
     /**
      * 创建连接
      *
      * @param array $config
+     * @param string|null $name
      */
     public function __construct(array $config, string $name = null)
     {
@@ -62,14 +81,21 @@ abstract class Connection
         });
     }
 
+    /**
+     * @return mixed
+     */
     abstract public function getDsn();
-    
+
+    /**
+     * @return PDO
+     */
     abstract public function createPDO(): PDO;
 
     /**
      * 连接服务器
      *
      * @return bool
+     * @throws SQLException
      */
     public function connect()
     {
@@ -90,6 +116,7 @@ abstract class Connection
      * 获取PDO
      * @ignore-dump
      * @return PDO
+     * @throws SQLException
      */
     public function getPdo()
     {
@@ -190,6 +217,7 @@ abstract class Connection
      * 事务关闭检测
      *
      * @return void
+     * @throws SQLException
      */
     protected function onBeforeSystemShutdown()
     {
@@ -203,6 +231,7 @@ abstract class Connection
      *
      * @param Statement $statement
      * @return mixed
+     * @throws SQLException
      */
     public function query(Statement $statement)
     {
@@ -212,8 +241,9 @@ abstract class Connection
     /**
      * 转义字符
      *
-     * @param array $array
+     * @param $string
      * @return string
+     * @throws SQLException
      */
     public function quote($string)
     {
@@ -225,6 +255,7 @@ abstract class Connection
      *
      * @param array $array
      * @return string
+     * @throws SQLException
      */
     public function arrayQuote(array $array)
     {
@@ -245,12 +276,24 @@ abstract class Connection
         $this->queryCount++;
     }
 
+    /**
+     * @return string
+     */
     public function __toString()
     {
         return $this->getName();
     }
 
+    /**
+     * @param string $name
+     * @return mixed
+     */
     abstract public function switchDatabase(string $name);
+
+    /**
+     * @param string $name
+     * @return mixed
+     */
     abstract public function rawTableName(string $name);
 
     /**

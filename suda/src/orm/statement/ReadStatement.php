@@ -5,11 +5,8 @@ use function func_get_args;
 use function func_num_args;
 use function is_array;
 use suda\orm\TableStruct;
-use suda\orm\statement\Query;
-use suda\orm\statement\Statement;
 use suda\orm\middleware\Middleware;
 use suda\orm\exception\SQLException;
-use suda\orm\statement\PrepareTrait;
 
 class ReadStatement extends QueryStatement
 {
@@ -48,9 +45,11 @@ class ReadStatement extends QueryStatement
      *
      * @param string $rawTableName
      * @param TableStruct $struct
+     * @param Middleware $middleware
      */
     public function __construct(string $rawTableName, TableStruct $struct, Middleware $middleware)
     {
+        parent::__construct('');
         $this->struct = $struct;
         $this->table = $rawTableName;
         $this->type = self::READ;
@@ -94,6 +93,7 @@ class ReadStatement extends QueryStatement
      * @param $where
      * @param mixed ...$args
      * @return $this
+     * @throws SQLException
      */
     public function where($where, ...$args)
     {
@@ -125,12 +125,22 @@ class ReadStatement extends QueryStatement
         return $values;
     }
 
+    /**
+     * @param array $where
+     * @param array $binders
+     * @throws SQLException
+     */
     protected function whereArray(array $where, array $binders)
     {
         list($where, $whereBinder) = $this->parepareWhere($where);
         $this->whereStringArray($where, array_merge($whereBinder, $binders));
     }
 
+    /**
+     * @param string $where
+     * @param array $whereBinder
+     * @throws SQLException
+     */
     protected function whereStringArray(string $where, array $whereBinder)
     {
         list($where, $whereBinder) = $this->parepareWhereString($where, $whereBinder);
@@ -154,8 +164,9 @@ class ReadStatement extends QueryStatement
      * 含
      *
      * @param string|array $what
-     * @param array $whereBinder
+     * @param array $args
      * @return $this
+     * @throws SQLException
      */
     public function having($what, ...$args)
     {
@@ -170,12 +181,21 @@ class ReadStatement extends QueryStatement
         return $this;
     }
 
+    /**
+     * @param array $want
+     * @throws SQLException
+     */
     protected function havingArray(array $want)
     {
         list($having, $havingBinder) = $this->parepareWhere($want);
         $this->havingStringArray($having, $havingBinder);
     }
 
+    /**
+     * @param string $having
+     * @param array $havingBinder
+     * @throws SQLException
+     */
     protected function havingStringArray(string $having, array $havingBinder)
     {
         

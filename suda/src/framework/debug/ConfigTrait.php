@@ -20,7 +20,7 @@ trait ConfigTrait
     }
     public function getConfig(string $name) {
         $defaultConfig = $this->getDefaultConfig();
-        return $this->config[$name] ?? $defaultConfig[$name];;
+        return $this->config[$name] ?? $defaultConfig[$name];
     }
 
     abstract public function getDefaultConfig():array;

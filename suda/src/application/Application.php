@@ -2,16 +2,14 @@
 namespace suda\application;
 
 use function array_key_exists;
-use Closure;
 use function constant;
 use Exception;
+use suda\orm\exception\SQLException;
 use Throwable;
 use suda\framework\Request;
 use suda\framework\Response;
-use suda\application\DebugDumpper;
 use suda\application\database\Table;
 use suda\framework\route\MatchResult;
-use suda\framework\runnable\Runnable;
 use suda\application\database\DataAccess;
 use suda\application\loader\ModuleLoader;
 use suda\application\template\RawTemplate;
@@ -23,7 +21,6 @@ use suda\application\wrapper\ExceptionContentWrapper;
 use suda\application\processor\TemplateAssetProccesser;
 use suda\application\processor\TemplateRequestProcessor;
 
-
 /**
  * 应用程序
  */
@@ -34,6 +31,7 @@ class Application extends ApplicationSource
      * 准备运行环境
      *
      * @return void
+     * @throws SQLException
      */
     public function load()
     {
@@ -62,6 +60,7 @@ class Application extends ApplicationSource
      * @param Request $request
      * @param Response $response
      * @return void
+     * @throws SQLException
      */
     protected function prepare(Request $request, Response $response)
     {
@@ -86,7 +85,10 @@ class Application extends ApplicationSource
     /**
      * 运行程序
      *
+     * @param Request $request
+     * @param Response $response
      * @return void
+     * @throws Exception
      */
     public function run(Request $request, Response $response)
     {
@@ -120,9 +122,9 @@ class Application extends ApplicationSource
      * @param array $method
      * @param string $name
      * @param string $url
-     * @param Runnable|Closure|array|string $runnable
      * @param array $attributes
-     * @return $this
+     * @return void
+     * @throws Exception
      */
     public function request(array $method, string $name, string $url, array $attributes = [])
     {
@@ -146,6 +148,11 @@ class Application extends ApplicationSource
 
     /**
      * 运行默认请求
+     * @param Application $application
+     * @param Request $request
+     * @param Response $response
+     * @return mixed|void
+     * @throws Exception
      */
     protected function defaultResponse(Application $application, Request $request, Response $response)
     {
@@ -157,6 +164,11 @@ class Application extends ApplicationSource
 
     /**
      * 运行请求
+     * @param MatchResult|null $result
+     * @param Request $request
+     * @param Response $response
+     * @return Response
+     * @throws Exception
      */
     protected function createResponse(?MatchResult $result, Request $request, Response $response)
     {

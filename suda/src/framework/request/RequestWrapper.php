@@ -3,7 +3,6 @@ namespace suda\framework\request;
 
 use suda\framework\http\Request;
 use suda\framework\http\UploadedFile;
-use suda\framework\request\IndexFinder;
 
 /**
  * 请求包装器
@@ -252,7 +251,7 @@ class RequestWrapper
      * 设置查询参数
      *
      * @param string $name
-     * @param mixed $parameter
+     * @param $query
      * @return $this
      */
     public function setQuery(string $name, $query)
@@ -314,6 +313,7 @@ class RequestWrapper
     /**
      * 获取文件
      *
+     * @param string|null $name
      * @return  UploadedFile[]|UploadedFile|null
      */
     public function getFile(?string $name = null)

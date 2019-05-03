@@ -3,7 +3,6 @@ namespace suda\framework\context;
 
 use suda\framework\Config;
 use suda\framework\Debugger;
-use suda\framework\http\Request;
 use suda\framework\loader\Loader;
 
 /**

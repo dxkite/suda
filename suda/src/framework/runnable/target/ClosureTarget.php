@@ -2,7 +2,6 @@
 namespace suda\framework\runnable\target;
 
 use Closure;
-use suda\framework\runnable\target\RunnableTarget;
 
 /**
  * 可执行命令：文件类型
@@ -44,7 +43,7 @@ class ClosureTarget extends RunnableTarget
     /**
      * 执行代码
      *
-     * @param array $args
+     * @param array $parameter
      * @return mixed
      */
     public function apply(array $parameter)

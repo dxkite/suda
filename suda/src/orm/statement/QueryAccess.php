@@ -5,14 +5,12 @@ use function microtime;
 use PDO;
 use PDOStatement;
 use function preg_replace;
+use ReflectionException;
 use suda\orm\Binder;
-use suda\orm\statement\Statement;
 use suda\orm\connection\Connection;
 use suda\orm\middleware\Middleware;
-use suda\orm\statement\QueryResult;
 use suda\orm\exception\SQLException;
 use suda\orm\middleware\NullMiddleware;
-
 
 class QueryAccess
 {
@@ -99,6 +97,8 @@ class QueryAccess
      *
      * @param Statement $statement
      * @return mixed
+     * @throws SQLException
+     * @throws ReflectionException
      */
     public function run(Statement $statement)
     {
@@ -112,6 +112,8 @@ class QueryAccess
      *
      * @param Statement $statement
      * @return mixed
+     * @throws SQLException
+     * @throws ReflectionException
      */
     protected function createResult(Statement $statement)
     {
@@ -176,8 +178,10 @@ class QueryAccess
     /**
      * 运行语句
      *
+     * @param Connection $connection
      * @param Statement $statement
      * @return void
+     * @throws SQLException
      */
     protected function runStatement(Connection $connection, Statement $statement)
     {

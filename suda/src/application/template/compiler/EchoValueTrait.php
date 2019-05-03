@@ -5,10 +5,19 @@ use Exception;
 
 trait EchoValueTrait
 {
+    /**
+     * @param $var
+     * @return string
+     * @throws Exception
+     */
     public function parseEchoValue($var):string
     {
         // 任意变量名: 中文点下划线英文数字
-        $code = preg_replace_callback('/\B[$](\?)?[:]([.\w\x{4e00}-\x{9aff}]+)(\s*)(\( ( (?>[^()]+) | (?4) )* \) )?/ux', [$this,'echoValueCallback'], $var);
+        $code = preg_replace_callback(
+            '/\B[$](\?)?[:]([.\w\x{4e00}-\x{9aff}]+)(\s*)(\( ( (?>[^()]+) | (?4) )* \) )?/ux',
+            [$this,'echoValueCallback'],
+            $var
+        );
         $error = preg_last_error();
         if ($error !== PREG_NO_ERROR) {
             throw new Exception($error);

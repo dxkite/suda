@@ -2,12 +2,12 @@
 <project version="4">
   <component name="PhpCSFixer">
     <phpcsfixer_settings>
-      <PhpCSFixerConfiguration tool_path="E:/software/php-cs-fixer/php-cs-fixer" />
+      <PhpCSFixerConfiguration standards="PSR1;PSR2;Symfony;DoctrineAnnotation;PHP70Migration;PHP71Migration" tool_path="E:/software/php-cs-fixer/php-cs-fixer" />
     </phpcsfixer_settings>
   </component>
   <component name="PhpCodeSniffer">
     <phpcs_settings>
-      <PhpCSConfiguration tool_path="$USER_HOME$/AppData/Roaming/Composer/vendor/bin/phpcs" />
+      <PhpCSConfiguration standards="MySource;PEAR;PSR1;PSR12;PSR2;Squiz;Zend" tool_path="$USER_HOME$/AppData/Roaming/Composer/vendor/bin/phpcs" />
     </phpcs_settings>
   </component>
   <component name="PhpIncludePathManager">
