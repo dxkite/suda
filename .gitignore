@@ -7,3 +7,4 @@ composer.lock
 /public/hello/*
 /tests/resource/runtime-data
 .php_cs.cache
+.idea/workspace.xml
