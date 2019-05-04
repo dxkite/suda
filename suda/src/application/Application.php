@@ -4,6 +4,8 @@ namespace suda\application;
 use function array_key_exists;
 use function constant;
 use Exception;
+use ReflectionException;
+use suda\application\template\ModuleTemplate;
 use suda\orm\exception\SQLException;
 use Throwable;
 use suda\framework\Request;
@@ -41,12 +43,12 @@ class Application extends ApplicationSource
         $appLoader->load();
         $this->event->exec('application:load-config', [ $this->config ,$this]);
         $this->debug->timeEnd('loading application');
-        $this->debug->time('loading datasource');
+        $this->debug->time('loading data-source');
         $appLoader->loadDataSource();
         Table::load($this);
         DataAccess::load($this);
         $this->event->exec('application:load-environment', [ $this->config ,$this]);
-        $this->debug->timeEnd('loading datasource');
+        $this->debug->timeEnd('loading data-source');
         $this->debug->time('loading route');
         $appLoader->loadRoute();
         $this->event->exec('application:load-route', [$this->route , $this]);
@@ -193,6 +195,7 @@ class Application extends ApplicationSource
      * @param Request $request
      * @param Response $response
      * @return mixed
+     * @throws ReflectionException
      */
     protected function runResult(MatchResult $result, Request $request, Response $response)
     {
@@ -205,5 +208,23 @@ class Application extends ApplicationSource
         }
         LanguageLoader::load($this);
         return ($result->getRunnable())($this, $request, $response);
+    }
+
+    /**
+     * 获取模板页面
+     *
+     * @param string $name
+     * @param Request $request
+     * @param string|null $default
+     * @return ModuleTemplate
+     */
+    public function getTemplate(string $name, Request $request, ?string $default = null): ModuleTemplate
+    {
+        if ($default === null && $this->running !== null) {
+            $default = $this->running->getFullName();
+        } else {
+            $default = $default ?? $request->getAttribute('module');
+        }
+        return new ModuleTemplate($this->getModuleSourceName($name, $default), $this, $request, $default);
     }
 }

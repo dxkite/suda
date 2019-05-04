@@ -59,6 +59,29 @@ class SimpleResponse implements RequestProcessor
 > 说明： 语句 `$application->getTemplate('simple', $request)` 含义为获取 `simple` 资源，这里为获取 `simple` 模板，由于没有指定全部的信息，suda会尝试自动推导为 `suda/welcome:1.0:simple` 模板，即为 `suda/welcome` 的 `1.0` 版本下的模板文件 `simple.tpl.html`
 
 
-## 引用路由
+## 反向路由
 
-路由的引用同样采用模块资源标识来应用，如可以使用 `welcome:index` 表示  `index` 路由。 
+路由的引用同样采用模块资源标识来应用，如：
+
+可以使用 `welcome:index` 表示  `index` 路由，构建路由的URL可以参考如下代码：
+
+```php
+return [
+    $application->getUrl($request, 'welcome:index'),
+    $application->getUrl($request, 'welcome:hello', ['name' => 'dxkite', 'version' => SUDA_VERSION]),
+    $application->getUribase($request).$application->getUrl($request, 'welcome:simple', ['name' => 'dxkite', 'version' => SUDA_VERSION]),
+];
+```
+
+生成的结果如下：
+
+```json
+[
+    "/",
+    "/helloworld?name=dxkite&version=3.0.0",
+    "http://suda.dev.dx/simple?name=dxkite&version=3.0.0"
+]
+```
+
+如果需要生成跳转URL，**推荐使用反向路由构建URL**，以免配置文件修改导致URL失效出错
+

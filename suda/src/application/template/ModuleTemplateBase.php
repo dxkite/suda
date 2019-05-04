@@ -3,7 +3,7 @@ namespace suda\application\template;
 
 use function in_array;
 use suda\framework\Request;
-use suda\application\Resource;
+use suda\application\Resource as ApplicationResource;
 use suda\application\Application;
 use suda\framework\filesystem\FileSystem;
 use suda\application\template\compiler\Compiler;
@@ -64,6 +64,7 @@ class ModuleTemplateBase extends CompilableTemplate
 
     public function __construct(string $name, Application $application, Request $request, ?string $defaultModule = null)
     {
+        parent::__construct('', []);
         $this->application = $application;
         $this->request = $request;
         list($this->module, $this->group, $this->name) = $application->parseRouteName($name, $defaultModule, 'default');
@@ -105,7 +106,7 @@ class ModuleTemplateBase extends CompilableTemplate
         return $config['uri-name'];
     }
 
-    protected function getResource(?string $module): Resource
+    protected function getResource(?string $module): ApplicationResource
     {
         return TemplateUtil::getResource($this->application, $module ?? $this->module);
     }
@@ -164,7 +165,7 @@ class ModuleTemplateBase extends CompilableTemplate
      * Get 应用环境
      *
      * @return  Application
-     */ 
+     */
     public function getApplication()
     {
         return $this->application;
@@ -174,7 +175,7 @@ class ModuleTemplateBase extends CompilableTemplate
      * Get 请求信息
      *
      * @return  Request
-     */ 
+     */
     public function getRequest()
     {
         return $this->request;

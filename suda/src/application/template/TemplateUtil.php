@@ -5,14 +5,14 @@ use function array_key_exists;
 use function constant;
 use suda\framework\Config;
 use suda\framework\Request;
-use suda\application\Resource;
+use suda\application\Resource as ApplicationResource;
 use suda\application\Application;
 use suda\framework\filesystem\FileSystem;
 
 /**
  * 模板
  */
-class TemplateUtil  
+class TemplateUtil
 {
     /**
      * 获取配置
@@ -23,7 +23,8 @@ class TemplateUtil
      */
     public static function getConfig(Application $application, ?string $module)
     {
-        $configPath = static::getResource($application, $module)->getConfigResourcePath(static::getTemplatePath($application).'/config');
+        $configPath = static::getResource($application, $module)
+            ->getConfigResourcePath(static::getTemplatePath($application).'/config');
         $config = [];
         if ($configPath !== null) {
             $config = Config::loadConfig($configPath) ?? [];
@@ -143,8 +144,11 @@ class TemplateUtil
      * @param string|null $module
      * @return string
      */
-    public static function getStaticRequestAsset(Application $application, Request $request, ?string $module = null):string
-    {
+    public static function getStaticRequestAsset(
+        Application $application,
+        Request $request,
+        ?string $module = null
+    ):string {
         $assetRoot = static::getAssetRoot($application, $module);
         $name = static::writableAssets($application, $module) ? dirname($request->getIndex()):$request->getIndex();
         return rtrim(str_replace('\\', '/', $name), '/').$assetRoot;
@@ -155,9 +159,9 @@ class TemplateUtil
      *
      * @param Application $application
      * @param string|null $module
-     * @return Resource
+     * @return ApplicationResource
      */
-    public static function getResource(Application $application, ?string $module): Resource
+    public static function getResource(Application $application, ?string $module): ApplicationResource
     {
         if ($module !== null && ($moduleObj = $application->find($module))) {
             return $moduleObj->getResource();
