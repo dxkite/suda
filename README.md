@@ -6,7 +6,7 @@
 [![Total Downloads](https://poser.pugx.org/dxkite/suda/downloads)](https://packagist.org/packages/dxkite/suda) 
 [![License](https://poser.pugx.org/dxkite/suda/license)](https://packagist.org/packages/dxkite/suda)
 
-高性能、轻量化Web框架
+高性能、轻量化Web框架，文档 [dxkite.github.io/suda](https://dxkite.github.io/suda/)
 
 ## 特性
 
