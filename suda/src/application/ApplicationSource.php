@@ -46,9 +46,9 @@ class ApplicationSource extends ApplicationBase
      */
     protected function getUrlIndex(Request $request):string
     {
-        $indexs = $this->conf('indexs') ?? [ 'index.php' ];
+        $indexArray = $this->conf('index') ?? [ 'index.php' ];
         $index = ltrim($request->getIndex(), '/');
-        if (!in_array($index, $indexs)) {
+        if (!in_array($index, $indexArray)) {
             return $request->getIndex();
         }
         return '';
@@ -130,10 +130,10 @@ class ApplicationSource extends ApplicationBase
      * @param boolean $beautify
      * @return string
      */
-    public function getUribase(Request $request, bool $beautify = true):string
+    public function getUriBase(Request $request, bool $beautify = true):string
     {
         $index = $beautify ? $this->getUrlIndex($request) : $request->getIndex();
-        return $request->getUribase() . $index;
+        return $request->getUriBase() . $index;
     }
 
     /**

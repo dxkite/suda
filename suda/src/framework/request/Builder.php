@@ -2,7 +2,6 @@
 namespace suda\framework\request;
 
 use function array_key_exists;
-use suda\framework\Request;
 use suda\framework\http\Request as RawRequest;
 
 /**
@@ -32,10 +31,10 @@ class Builder
     /**
      * 构建对象
      *
-     * @param Request $request
+     * @param RequestWrapper $request
      * @return void
      */
-    public function build(Request $request)
+    public function build(RequestWrapper $request)
     {
         $request->setRemoteAddr($this->filterRemoteAddr());
         $request->setMethod(strtoupper($this->request->server()['request-method'] ?? 'GET'));
@@ -45,6 +44,7 @@ class Builder
         $this->createUri($request);
         $this->createUribase($request);
     }
+
     /**
      * 获取IP地址
      *
@@ -65,7 +65,14 @@ class Builder
             if (array_key_exists($key, $this->request->server())) {
                 foreach (explode(',', $this->request->server()[$key]) as $ip) {
                     $ip = trim($ip);
-                    if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4 | FILTER_FLAG_IPV6 | FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE) !== false) {
+                    if (filter_var(
+                        $ip,
+                        FILTER_VALIDATE_IP,
+                        FILTER_FLAG_IPV4
+                        | FILTER_FLAG_IPV6
+                        | FILTER_FLAG_NO_PRIV_RANGE
+                        | FILTER_FLAG_NO_RES_RANGE
+                    ) !== false) {
                         return $ip;
                     }
                 }
@@ -107,18 +114,20 @@ class Builder
      */
     private function getSecure():bool
     {
-        $https = array_key_exists('https', $this->request->server()) && strcasecmp($this->request->server()['https'], 'off') != 0;
-        $scheme = array_key_exists('request-scheme', $this->request->server()) && strcasecmp($this->request->server()['request-scheme'], 'https') === 0;
+        $https = array_key_exists('https', $this->request->server())
+            && strcasecmp($this->request->server()['https'], 'off') != 0;
+        $scheme = array_key_exists('request-scheme', $this->request->server())
+            && strcasecmp($this->request->server()['request-scheme'], 'https') === 0;
         return $https || $scheme;
     }
 
     /**
      * 创建URI
      *
-     * @param Request $request
+     * @param RequestWrapper $request
      * @return void
      */
-    private function createUri(Request $request)
+    private function createUri(RequestWrapper $request)
     {
         if (array_key_exists('document-root', $this->request->server())) {
             $index = (new IndexFinder(null, $this->request->server()['document-root']))->getIndexFile();
@@ -134,10 +143,10 @@ class Builder
     /**
      * 获取URI基础部分
      *
-     * @param Request $request
+     * @param RequestWrapper $request
      * @return void
      */
-    private function createUribase(Request $request)
+    private function createUribase(RequestWrapper $request)
     {
         $scheme = $request->isSecure()?'https':'http';
         $port = $request->getPort();
@@ -149,6 +158,6 @@ class Builder
             $port = ':'.$port;
         }
         $base = $scheme.'://'. $request->getHost().$port;
-        $request->setUribase($base);
+        $request->setUriBase($base);
     }
 }
