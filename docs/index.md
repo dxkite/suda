@@ -11,8 +11,8 @@ suda 是一款轻量化、模块化的Web框架，基于 `PHP7.2` 开发。
 
 ## 内容
 
-- [项目介绍](#项目介绍)
-- [项目特性](feature.html)
-- [如何运行项目](01-run-suda.html)
-- [应用程序结构](02-application.html)
-- [路由说明](03-route.html)
+- [介绍](#项目介绍)
+- [特性](feature.html)
+- [运行应用](01-run-suda.html)
+- [应用结构](02-application.html)
+- [模块路由](03-route.html)
