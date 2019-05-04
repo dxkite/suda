@@ -3,6 +3,7 @@ namespace suda\orm\connection;
 
 use PDO;
 use PDOException;
+use ReflectionException;
 use function register_shutdown_function;
 use suda\orm\statement\Statement;
 use suda\orm\statement\QueryAccess;
@@ -19,7 +20,7 @@ abstract class Connection
     /**
      * @var string
      */
-    public static $type = 'mysql';
+    protected $type = 'mysql';
 
     /**
      * Config
@@ -42,14 +43,16 @@ abstract class Connection
      * @var int
      */
     protected $transaction = 0;
+
     /**
      * @var
      */
     protected $id;
+
     /**
      * @var int
      */
-    protected static $_id = 0;
+    protected static $connectionCount = 0;
 
     /**
      * 链接别名
@@ -103,10 +106,14 @@ abstract class Connection
         if (null === $this->pdo && $this->getConfig('enable', true)) {
             try {
                 $this->pdo = $this->createPDO();
-                $this->id = static::$_id;
-                static::$_id ++;
+                $this->id = static::$connectionCount;
+                static::$connectionCount ++;
             } catch (PDOException $e) {
-                throw new SQLException($this->getName().'connect database error:'.$e->getMessage(), $e->getCode(), E_ERROR, __FILE__, __LINE__, $e);
+                throw new SQLException(sprintf(
+                    "%s connect database error:%s",
+                    $this->getName(),
+                    $e->getMessage()
+                ), $e->getCode(), E_ERROR, __FILE__, __LINE__, $e);
             }
         }
         return $this->isConnected();
@@ -121,7 +128,10 @@ abstract class Connection
     public function getPdo()
     {
         if (!$this->connect()) {
-            throw new SQLException($this->getName().' data source is not connected', SQLException::ERR_NO_CONNECTION);
+            throw new SQLException(sprintf(
+                "%s data source is not connected",
+                $this->getName()
+            ), SQLException::ERR_NO_CONNECTION);
         }
         return $this->pdo;
     }
@@ -133,7 +143,8 @@ abstract class Connection
      * @param mixed $default
      * @return mixed
      */
-    public function getConfig(string $name, $default = null) {
+    public function getConfig(string $name, $default = null)
+    {
         return $this->config[$name] ?? $default;
     }
 
@@ -222,7 +233,11 @@ abstract class Connection
     protected function onBeforeSystemShutdown()
     {
         if ($this->pdo && ($this->transaction > 0 || $this->pdo->inTransaction())) {
-            throw new SQLException('SQL transaction is open (' . $this->transaction.') in connection '.$this->__toString(), SQLException::ERR_TRANSACTION);
+            throw new SQLException(sprintf(
+                "SQL transaction is open (%d) in connection %s",
+                $this->transaction,
+                $this->__toString()
+            ), SQLException::ERR_TRANSACTION);
         }
     }
 
@@ -232,6 +247,7 @@ abstract class Connection
      * @param Statement $statement
      * @return mixed
      * @throws SQLException
+     * @throws ReflectionException
      */
     public function query(Statement $statement)
     {
@@ -328,5 +344,22 @@ abstract class Connection
         $this->observer = $observer;
 
         return $this;
+    }
+
+
+    /**
+     * @return string
+     */
+    public function getType(): string
+    {
+        return $this->type;
+    }
+
+    /**
+     * @param string $type
+     */
+    public function setType(string $type): void
+    {
+        $this->type = $type;
     }
 }

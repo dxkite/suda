@@ -3,6 +3,7 @@ namespace suda\orm\connection;
 
 use PDO;
 use PDOException;
+use ReflectionException;
 use suda\orm\statement\QueryStatement;
 use suda\orm\exception\SQLException;
 
@@ -12,7 +13,7 @@ use suda\orm\exception\SQLException;
  */
 class MySQLConnection extends Connection
 {
-    public static $type = 'mysql';
+    protected $type = 'mysql';
 
     /**
      * @return mixed|string
@@ -28,9 +29,9 @@ class MySQLConnection extends Connection
         $charset = $this->config['charset'] ?? 'utf8mb4';
         $port = $this->config['charset'] ?? 3306;
         if (array_key_exists('name', $this->config)) {
-            return static::$type.':host='.$host.';dbname='.$this->config['name'].';charset='.$charset.';port='.$port;
+            return $this->type.':host='.$host.';dbname='.$this->config['name'].';charset='.$charset.';port='.$port;
         }
-        return static::$type.':host='.$host.';charset='.$charset.';port='.$port;
+        return $this->type.':host='.$host.';charset='.$charset.';port='.$port;
     }
 
     /**
@@ -43,8 +44,8 @@ class MySQLConnection extends Connection
             $user = $this->config['user'] ?? 'root';
             $password = $this->config['password'] ?? '';
             $pdo = new PDO($this->getDsn(), $user, $password);
-            $this->id = static::$_id;
-            static::$_id ++;
+            $this->id = static::$connectionCount;
+            static::$connectionCount ++;
             return $pdo;
         } catch (PDOException $e) {
             throw new SQLException(sprintf(
@@ -59,6 +60,7 @@ class MySQLConnection extends Connection
      * @param string $database
      * @return mixed
      * @throws SQLException
+     * @throws ReflectionException
      */
     public function switchDatabase(string $database)
     {

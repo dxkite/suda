@@ -31,9 +31,9 @@ class Binder implements JsonSerializable
 
     /**
      * Binder constructor.
-     * @param string $name
-     * @param $value
-     * @param string|null $key
+     * @param string $name 绑定名
+     * @param mixed $value 绑定值
+     * @param string|null $key SQL键名
      */
     public function __construct(string $name, $value, string $key = null)
     {

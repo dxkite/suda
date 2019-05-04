@@ -211,6 +211,14 @@ class QueryAccess
     }
 
     /**
+     * @return Connection
+     */
+    public function getConnection(): Connection
+    {
+        return $this->connection;
+    }
+
+    /**
      * 自动填充前缀
      *
      * @param string $query

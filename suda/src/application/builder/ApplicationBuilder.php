@@ -51,7 +51,7 @@ class ApplicationBuilder
         if ($manifest === null) {
             throw new ApplicationException(
                 sprintf('missing manifest in %s', $path),
-                ApplicationException::ERR_MANIFAST_IS_EMPTY
+                ApplicationException::ERR_MANIFEST_IS_EMPTY
             );
         } else {
             return $manifest;

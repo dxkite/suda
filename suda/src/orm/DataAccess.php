@@ -116,7 +116,10 @@ class DataAccess
         $fields = $this->access->getStruct()->getFields()->all();
         $field = array_shift($fields);
         $total = $this->access->read([$field->getName()])->where($where, $whereBinder);
-        $data = $this->access->query(sprintf("SELECT count(*) as `count` from (%s) as total", $total), $total->getBinder())->one();
+        $data = $this->access->query(
+            sprintf("SELECT count(*) as `count` from (%s) as total", $total),
+            $total->getBinder()
+        )->one();
         return intval($data['count']);
     }
 
@@ -239,7 +242,11 @@ class DataAccess
     {
         $reflection = new ReflectionClass($object);
         $data = [];
-        foreach ($reflection->getProperties(ReflectionProperty::IS_PUBLIC | ReflectionProperty::IS_PROTECTED | ReflectionProperty::IS_PRIVATE) as $property) {
+        foreach ($reflection->getProperties(
+            ReflectionProperty::IS_PUBLIC
+            | ReflectionProperty::IS_PROTECTED
+            | ReflectionProperty::IS_PRIVATE
+        ) as $property) {
             if (TableStructBuilder::isTableField($property)) {
                 $property->setAccessible(true);
                 $value = $property->getValue($object);

@@ -1,5 +1,5 @@
 <?php
-namespace suda\orm\connection\creator;
+namespace suda\application\database\creator;
 
 use function implode;
 use suda\orm\exception\SQLException;
