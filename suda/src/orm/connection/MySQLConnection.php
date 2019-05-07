@@ -27,7 +27,7 @@ class MySQLConnection extends Connection
         
         $host = $this->config['host'];
         $charset = $this->config['charset'] ?? 'utf8mb4';
-        $port = $this->config['charset'] ?? 3306;
+        $port = $this->config['port'] ?? 3306;
         if (array_key_exists('name', $this->config)) {
             return $this->type.':host='.$host.';dbname='.$this->config['name'].';charset='.$charset.';port='.$port;
         }
