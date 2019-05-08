@@ -2,9 +2,10 @@
     "name": "suda-demo-app",
     "version": "1.0-dev",
     "language": "zh-CN",
-    "url": {
-        "mode": 0,
-        "beautify": true,
-        "rewrite": true
-    }
+    "module-paths" : [
+        "modules"
+    ],
+    "route-group": [
+        "default"
+    ]
 }

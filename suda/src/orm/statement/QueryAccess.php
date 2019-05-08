@@ -39,7 +39,7 @@ class QueryAccess
         $this->connection = $connection;
         $this->middleware = $middleware ?: new NullMiddleware;
     }
-    
+
     /**
      * 获取最后一次插入的主键ID（用于自增值
      *
@@ -226,10 +226,8 @@ class QueryAccess
      */
     public function prefix(string $query):string
     {
-        if ($prefix = $this->connection->getConfig('prefix')) {
-            // _:table 前缀控制
-            return preg_replace('/_:(\w+)/', $prefix.'$1', $query);
-        }
-        return $query;
+        // _:table 前缀控制
+        $prefix = $this->connection->getConfig('prefix', '');
+        return preg_replace('/_:(\w+)/', $prefix.'$1', $query);
     }
 }
