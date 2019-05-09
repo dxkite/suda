@@ -3,7 +3,6 @@ namespace suda\framework\arrayobject;
 
 use function array_key_exists;
 use ArrayAccess;
-use ArrayObject;
 use function is_array;
 
 /**

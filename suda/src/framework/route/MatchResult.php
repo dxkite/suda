@@ -3,8 +3,6 @@ namespace suda\framework\route;
 
 use suda\framework\runnable\Runnable;
 
-
-
 /**
  * 匹配结果
  *
@@ -44,9 +42,11 @@ class MatchResult
      *
      * @param RouteMatcher $matcher
      * @param string $name
+     * @param Runnable $runnable
      * @param array $parameter
      */
-    public function __construct(RouteMatcher $matcher, string $name, Runnable $runnable, array  $parameter) {
+    public function __construct(RouteMatcher $matcher, string $name, Runnable $runnable, array  $parameter)
+    {
         $this->matcher = $matcher;
         $this->name = $name;
         $this->runnable = $runnable;
@@ -57,7 +57,7 @@ class MatchResult
      * Get 路由参数
      *
      * @return  array
-     */ 
+     */
     public function getParameter()
     {
         return $this->parameter;
@@ -67,7 +67,7 @@ class MatchResult
      * Get 路由名
      *
      * @return  string
-     */ 
+     */
     public function getName()
     {
         return $this->name;
@@ -77,7 +77,7 @@ class MatchResult
      * Get 匹配工具
      *
      * @return  RouteMatcher
-     */ 
+     */
     public function getMatcher()
     {
         return $this->matcher;
@@ -87,7 +87,7 @@ class MatchResult
      * Get 可执行对象
      *
      * @return  Runnable
-     */ 
+     */
     public function getRunnable()
     {
         return $this->runnable;
@@ -99,7 +99,7 @@ class MatchResult
      * @param  Runnable  $runnable  可执行对象
      *
      * @return  self
-     */ 
+     */
     public function setRunnable(Runnable $runnable)
     {
         $this->runnable = $runnable;

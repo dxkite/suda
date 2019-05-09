@@ -13,7 +13,7 @@ class MissingTemplateException extends RuntimeException
     public function __construct(string $name, int $type = 0)
     {
         $this->name = $name;
-        parent::__construct(sprintf('missing template %s', $name, $type == 0 ? 'source':'dest'));
+        parent::__construct(sprintf('missing %s template %s', $type == 0 ? 'source':'dest', $name));
     }
 
 

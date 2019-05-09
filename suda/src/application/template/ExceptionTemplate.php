@@ -4,7 +4,6 @@ namespace suda\application\template;
 use function strrpos;
 use function substr;
 use Throwable;
-use suda\application\template\RawTemplate;
 use suda\application\exception\MissingTemplateException;
 
 /**

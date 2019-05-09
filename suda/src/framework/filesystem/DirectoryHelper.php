@@ -10,7 +10,6 @@ use RecursiveRegexIterator;
 use function strlen;
 use suda\framework\loader\Path;
 use suda\framework\loader\PathTrait;
-use suda\framework\filesystem\FileHelper;
 
 /**
  * 文件夹辅助
@@ -79,6 +78,7 @@ trait DirectoryHelper
      * @param boolean $recursive
      * @param string|null $regex
      * @param boolean $full
+     * @param int $mode
      * @return Iterator
      */
     public static function readFiles(string $path, bool $recursive = false, ?string $regex = null, bool $full = true, int $mode = RecursiveIteratorIterator::LEAVES_ONLY) : Iterator
@@ -103,6 +103,7 @@ trait DirectoryHelper
      * @param boolean $recursive
      * @param string|null $regex
      * @param boolean $full
+     * @param int $mode
      * @return Iterator
      */
     public static function readDirs(string $path, bool $recursive = false, ?string $regex = null, bool $full = false, int $mode = RecursiveIteratorIterator::LEAVES_ONLY): Iterator
@@ -127,6 +128,7 @@ trait DirectoryHelper
      * @param boolean $recursive
      * @param string|null $regex
      * @param boolean $full
+     * @param int $mode
      * @return Iterator
      */
     public static function read(string $path, bool $recursive = false, ?string $regex = null, bool $full = true, int $mode = RecursiveIteratorIterator::LEAVES_ONLY): Iterator

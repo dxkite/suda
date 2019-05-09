@@ -1,13 +1,14 @@
 <?php
+
 namespace suda\framework\runnable\target;
 
 use function class_exists;
 use function get_class;
 use function is_object;
 use ReflectionClass;
+use ReflectionException;
 use ReflectionMethod;
 use function str_replace;
-use suda\framework\runnable\target\FileTarget;
 
 /**
  * 可执行命令：类方法
@@ -51,23 +52,24 @@ class MethodTarget extends FileTarget
      * @param string $method
      * @param array $parameter
      */
-    public function __construct($object, ?array $constructParameter = null, string $method, array $parameter = [])
+    public function __construct($object, ?array $constructParameter, string $method, array $parameter = [])
     {
-        $this->object = is_object($object)? $object: $this->getPHPClassName($object);
+        parent::__construct(null, $parameter);
+        $this->object = is_object($object) ? $object : $this->getPHPClassName($object);
         $this->constructParameter = $constructParameter;
         $this->method = $method;
-        $this->parameter = $parameter;
         $static = $this->isStatic() ? '->' : '::';
-        $name = is_object($object)? get_class($object) : $object;
-        $this->name = $name.$static.$method;
+        $name = is_object($object) ? get_class($object) : $object;
+        $this->name = $name . $static . $method;
     }
 
     /**
      * 获取对象实例
      *
      * @return object|null 动态类可获取
+     * @throws ReflectionException
      */
-    public function getObjectInstance():?object
+    public function getObjectInstance(): ?object
     {
         if (is_object($this->object)) {
             return $this->object;
@@ -82,6 +84,10 @@ class MethodTarget extends FileTarget
         return $classRef->newInstanceArgs($this->constructParameter);
     }
 
+    /**
+     * @return array|mixed|null
+     * @throws ReflectionException
+     */
     public function getRunnableTarget()
     {
         if (null === $this->runnableTarget) {
@@ -98,7 +104,7 @@ class MethodTarget extends FileTarget
      *
      * @return boolean
      */
-    public function isStatic():bool
+    public function isStatic(): bool
     {
         return !is_object($this->object) && null === $this->constructParameter;
     }
@@ -106,7 +112,7 @@ class MethodTarget extends FileTarget
     /**
      * Set 需要的文件
      *
-     * @param  string|null  $requireFile  需要的文件
+     * @param string|null $requireFile 需要的文件
      *
      * @return  self
      */
@@ -114,7 +120,7 @@ class MethodTarget extends FileTarget
     {
         if (null === $this->requireFile) {
             $this->requireFile = $requireFile;
-            $this->name = $this->name.'@'.$requireFile;
+            $this->name = $this->name . '@' . $requireFile;
         }
         return $this;
     }
@@ -124,7 +130,7 @@ class MethodTarget extends FileTarget
      *
      * @return boolean
      */
-    public function isValid():bool
+    public function isValid(): bool
     {
         return is_object($this->object) || class_exists($this->object) || parent::isValid();
     }
@@ -132,8 +138,9 @@ class MethodTarget extends FileTarget
     /**
      * 执行代码
      *
-     * @param array $args
+     * @param array $parameter
      * @return mixed
+     * @throws ReflectionException
      */
     public function apply(array $parameter)
     {
@@ -178,7 +185,7 @@ class MethodTarget extends FileTarget
      * @param string $className
      * @return string
      */
-    protected function getPHPClassName(string $className):string
+    protected function getPHPClassName(string $className): string
     {
         return str_replace('.', '\\', $className);
     }

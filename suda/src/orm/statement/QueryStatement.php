@@ -1,7 +1,6 @@
 <?php
 namespace suda\orm\statement;
 
-use suda\orm\TableStruct;
 use suda\orm\middleware\NullMiddleware;
 
 class QueryStatement extends Statement
@@ -13,8 +12,8 @@ class QueryStatement extends Statement
     /**
      * 创建写
      *
-     * @param string $rawTableName
-     * @param TableStruct $struct
+     * @param string $query
+     * @param array $args
      */
     public function __construct(string $query, ...$args)
     {

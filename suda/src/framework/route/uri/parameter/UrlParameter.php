@@ -1,8 +1,6 @@
 <?php
 namespace suda\framework\route\uri\parameter;
 
-use suda\framework\route\uri\parameter\Parameter;
-
 /**
  * 匹配 string 参数
  */

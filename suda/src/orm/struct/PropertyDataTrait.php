@@ -1,8 +1,6 @@
 <?php
 namespace suda\orm\struct;
 
-use suda\orm\struct\MagicArrayAccessTrait;
-
 trait PropertyDataTrait
 {
     use MagicArrayAccessTrait;

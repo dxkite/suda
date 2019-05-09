@@ -2,7 +2,6 @@
 namespace suda\framework\arrayobject;
 
 use function is_array;
-use suda\framework\arrayobject\ArrayDotAccess;
 
 /**
  * 递归数组点获取类

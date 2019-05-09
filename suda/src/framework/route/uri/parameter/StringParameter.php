@@ -1,8 +1,6 @@
 <?php
 namespace suda\framework\route\uri\parameter;
 
-use suda\framework\route\uri\parameter\Parameter;
-
 /**
  * 匹配 string 参数
  */
@@ -12,6 +10,7 @@ class StringParameter extends Parameter
     
     public function __construct(string $extra)
     {
+        parent::__construct($extra);
         if (strlen($extra) > 0) {
             $this->default = $this->getCommonDefault($extra);
         }

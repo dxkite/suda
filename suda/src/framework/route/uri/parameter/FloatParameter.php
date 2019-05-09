@@ -1,8 +1,6 @@
 <?php
 namespace suda\framework\route\uri\parameter;
 
-use suda\framework\route\uri\parameter\Parameter;
-
 /**
  * 匹配float参数
  */
@@ -13,6 +11,7 @@ class FloatParameter extends Parameter
 
     public function __construct(string $extra)
     {
+        parent::__construct($extra);
         $default = $this->getCommonDefault($extra);
         if (strlen($default) > 0) {
             $this->default = floatval($default);

@@ -25,6 +25,11 @@ class FileCache implements Cache
      */
     protected $expire;
 
+    /**
+     * FileCache constructor.
+     * @param array $config
+     * @throws Exception
+     */
     public function __construct(array $config = [])
     {
         $this->path = $this->getSavePath($config);
@@ -37,6 +42,7 @@ class FileCache implements Cache
      *
      * @param string $name
      * @param mixed $value
+     * @param int|null $expire
      * @return bool
      */
     public function set(string $name, $value, int $expire = null):bool
@@ -112,6 +118,7 @@ class FileCache implements Cache
      *
      * @param array $config
      * @return string
+     * @throws Exception
      */
     protected function getSavePath(array $config):string
     {

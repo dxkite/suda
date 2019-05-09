@@ -1,6 +1,7 @@
 <?php
 namespace suda\application\processor;
 
+use Exception;
 use function explode;
 use function is_array;
 use function md5;
@@ -13,7 +14,6 @@ use suda\framework\Response;
 use suda\application\Application;
 use suda\framework\response\MimeType;
 use suda\framework\http\stream\DataStream;
-use suda\application\processor\RequestProcessor;
 use function uniqid;
 
 /**
@@ -48,6 +48,7 @@ class FileRangeProccessor implements RequestProcessor
      * @param Request $request
      * @param Response $response
      * @return void
+     * @throws Exception
      */
     public function onRequest(Application $application, Request $request, Response $response)
     {

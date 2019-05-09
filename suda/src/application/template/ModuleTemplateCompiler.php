@@ -2,9 +2,7 @@
 namespace suda\application\template;
 
 use suda\application\template\compiler\Tag;
-use suda\application\template\compiler\Command;
 use suda\application\template\compiler\Compiler;
-use suda\application\template\ModuleTemplateCommand;
 
 /**
  * 可执行命令表达式

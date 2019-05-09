@@ -26,7 +26,7 @@ class PHPSession implements Session
      *
      * @var array
      */
-    protected $conifg;
+    protected $config;
 
     /**
      * 请求
@@ -41,10 +41,11 @@ class PHPSession implements Session
      * @param Request $request 请求
      * @param Response $response 响应
      * @param array $config 配置属性
+     * @throws Exception
      */
     public function __construct(Request $request, Response $response, array $config = [])
     {
-        $this->conifg = $config;
+        $this->config = $config;
         $this->request = $request;
         if (session_status() === PHP_SESSION_NONE) {
             $this->init($request, $config);
@@ -53,9 +54,13 @@ class PHPSession implements Session
         }
     }
 
+    /**
+     * @param Request $request
+     * @param array $config
+     * @throws Exception
+     */
     protected function init(Request $request, array $config)
     {
-        $path = './session';
         if (array_key_exists('path', $config)) {
             $path = $config['path'];
         } elseif (defined('SUDA_DATA')) {
@@ -162,11 +167,12 @@ class PHPSession implements Session
      * 更新SessionId
      *
      * @return boolean
+     * @throws Exception
      */
     public function update():bool
     {
         $this->destory();
-        $this->init($this->request, $this->conifg);
+        $this->init($this->request, $this->config);
         return true;
     }
 }

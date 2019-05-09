@@ -2,7 +2,6 @@
 namespace suda\framework\http;
 
 use function array_key_exists;
-use suda\framework\http\Header;
 
 /**
  * 响应头
@@ -19,7 +18,7 @@ class HeaderContainer
     /**
      * 添加请求头
      *
-     * @param \suda\framework\http\Header $header
+     * @param Header $header
      * @param boolean $replace
      * @return $this
      */
@@ -64,7 +63,7 @@ class HeaderContainer
     /**
      * 删除头部
      *
-     * @param string $key
+     * @param string $name
      * @return $this
      */
     public function remove(string $name)

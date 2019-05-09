@@ -1,12 +1,12 @@
 <?php
 namespace suda\framework\runnable;
 
+use ReflectionException;
 use suda\framework\runnable\target\FileTarget;
 use suda\framework\runnable\target\MethodTarget;
 use suda\framework\runnable\target\ClosureTarget;
 use suda\framework\runnable\target\TargetBuilder;
 use suda\framework\runnable\target\FunctionTarget;
-use suda\framework\runnable\target\RunnableTarget;
 
 /**
  * 可执行命令表达式
@@ -76,6 +76,7 @@ class Runnable
      *
      * @param mixed ...$args
      * @return mixed
+     * @throws ReflectionException
      */
     public function run(...$args)
     {
@@ -87,6 +88,7 @@ class Runnable
      *
      * @param array $parameter
      * @return mixed
+     * @throws ReflectionException
      */
     public function apply(array $parameter)
     {
@@ -98,12 +100,18 @@ class Runnable
      *
      * @param mixed ...$args
      * @return mixed
+     * @throws ReflectionException
      */
     public function __invoke(...$args)
     {
         return $this->apply($args);
     }
 
+    /**
+     * @param string $class
+     * @return object
+     * @throws ReflectionException
+     */
     public static function newClassInstance(string $class)
     {
         return TargetBuilder::newClassInstance($class);

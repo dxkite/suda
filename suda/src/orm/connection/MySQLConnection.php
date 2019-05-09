@@ -3,9 +3,8 @@ namespace suda\orm\connection;
 
 use PDO;
 use PDOException;
-use suda\orm\struct\Fields;
-use suda\orm\statement\Statement;
-use suda\orm\connection\Connection;
+use ReflectionException;
+use suda\orm\statement\QueryStatement;
 use suda\orm\exception\SQLException;
 
 /**
@@ -14,8 +13,12 @@ use suda\orm\exception\SQLException;
  */
 class MySQLConnection extends Connection
 {
-    public static $type = 'mysql';
+    protected $type = 'mysql';
 
+    /**
+     * @return mixed|string
+     * @throws SQLException
+     */
     public function getDsn()
     {
         if (!array_key_exists('host', $this->config)) {
@@ -24,30 +27,44 @@ class MySQLConnection extends Connection
         
         $host = $this->config['host'];
         $charset = $this->config['charset'] ?? 'utf8mb4';
-        $port = $this->config['charset'] ?? 3306;
+        $port = $this->config['port'] ?? 3306;
         if (array_key_exists('name', $this->config)) {
-            return static::$type.':host='.$host.';dbname='.$this->config['name'].';charset='.$charset.';port='.$port;
+            return $this->type.':host='.$host.';dbname='.$this->config['name'].';charset='.$charset.';port='.$port;
         }
-        return static::$type.':host='.$host.';charset='.$charset.';port='.$port;
+        return $this->type.':host='.$host.';charset='.$charset.';port='.$port;
     }
-    
+
+    /**
+     * @return PDO
+     * @throws SQLException
+     */
     public function createPDO(): PDO
     {
         try {
             $user = $this->config['user'] ?? 'root';
             $password = $this->config['password'] ?? '';
             $pdo = new PDO($this->getDsn(), $user, $password);
-            $this->id = static::$_id;
-            static::$_id ++;
+            $this->id = static::$connectionCount;
+            static::$connectionCount ++;
             return $pdo;
         } catch (PDOException $e) {
-            throw new SQLException($this->__toString().' connect database error:'.$e->getMessage(), $e->getCode(), E_ERROR, __FILE__, __LINE__, $e);
+            throw new SQLException(sprintf(
+                "%s connect database error:%s",
+                $this->__toString(),
+                $e->getMessage()
+            ), $e->getCode(), E_ERROR, __FILE__, __LINE__, $e);
         }
     }
 
+    /**
+     * @param string $database
+     * @return mixed
+     * @throws SQLException
+     * @throws ReflectionException
+     */
     public function switchDatabase(string $database)
     {
-        return $this->query(new Statement('USE `' . $database.'`'));
+        return $this->query(new QueryStatement('USE `' . $database.'`'));
     }
 
     public function rawTableName(string $name)

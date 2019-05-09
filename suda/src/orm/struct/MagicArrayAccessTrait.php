@@ -1,23 +1,42 @@
 <?php
 namespace suda\orm\struct;
 
+/**
+ * Trait MagicArrayAccessTrait
+ * @package suda\orm\struct
+ */
 trait MagicArrayAccessTrait
 {
+    /**
+     * @param $offset
+     * @param $value
+     */
     public function offsetSet($offset, $value)
     {
         $this->__set($offset, $value);
     }
 
+    /**
+     * @param $offset
+     * @return bool
+     */
     public function offsetExists($offset)
     {
         return $this->__isset($offset);
     }
 
+    /**
+     * @param $offset
+     */
     public function offsetUnset($offset)
     {
         $this->__unset($offset);
     }
 
+    /**
+     * @param $offset
+     * @return mixed
+     */
     public function offsetGet($offset)
     {
         return $this->__get($offset);

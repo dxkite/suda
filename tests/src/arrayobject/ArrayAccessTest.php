@@ -9,6 +9,9 @@ class ArrayAccessTest extends TestCase
 {
     /**
      * @dataProvider arrayGetData
+     * @param $data
+     * @param $getName
+     * @param $expected
      */
     public function testGet($data, $getName, $expected)
     {
@@ -18,6 +21,9 @@ class ArrayAccessTest extends TestCase
 
     /**
      * @dataProvider arrayGetData
+     * @param $data
+     * @param $getName
+     * @param $expected
      */
     public function testStaticGet($data, $getName, $expected)
     {
@@ -48,6 +54,9 @@ class ArrayAccessTest extends TestCase
     /**
      *
      * @dataProvider arrayExistData
+     * @param $data
+     * @param $name
+     * @param $expected
      */
     public function testExist($data, $name, $expected)
     {
@@ -56,8 +65,11 @@ class ArrayAccessTest extends TestCase
     }
 
     /**
-     * @depends testExist
+     * @depends      testExist
      * @dataProvider arrayUnsetData
+     * @param $data
+     * @param $name
+     * @param $expected
      */
     public function testUnset($data, $name, $expected)
     {
@@ -68,6 +80,9 @@ class ArrayAccessTest extends TestCase
 
     /**
      * @dataProvider arrayAccessUnsetData
+     * @param $data
+     * @param $name
+     * @param $expected
      */
     public function testArrayAccessUnset($data, $name, $expected)
     {
@@ -79,6 +94,9 @@ class ArrayAccessTest extends TestCase
     /**
      *
      * @dataProvider arrayAccessExistData
+     * @param $data
+     * @param $name
+     * @param $expected
      */
     public function testArrayAccessExist($data, $name, $expected)
     {

@@ -42,4 +42,8 @@ if (!defined('USER_HOME_PATH')) {
     }
 }
 // 加载器
+require_once SUDA_SYSTEM .'/src/framework/loader/Path.php';
+require_once SUDA_SYSTEM .'/src/framework/loader/PathTrait.php';
+require_once SUDA_SYSTEM .'/src/framework/loader/PathInterface.php';
+require_once SUDA_SYSTEM .'/src/framework/loader/IncludeManager.php';
 require_once SUDA_SYSTEM .'/src/framework/loader/Loader.php';

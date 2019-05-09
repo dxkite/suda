@@ -5,14 +5,12 @@ use function microtime;
 use PDO;
 use PDOStatement;
 use function preg_replace;
+use ReflectionException;
 use suda\orm\Binder;
-use suda\orm\statement\Statement;
 use suda\orm\connection\Connection;
 use suda\orm\middleware\Middleware;
-use suda\orm\statement\QueryResult;
 use suda\orm\exception\SQLException;
 use suda\orm\middleware\NullMiddleware;
-
 
 class QueryAccess
 {
@@ -41,7 +39,7 @@ class QueryAccess
         $this->connection = $connection;
         $this->middleware = $middleware ?: new NullMiddleware;
     }
-    
+
     /**
      * 获取最后一次插入的主键ID（用于自增值
      *
@@ -99,6 +97,8 @@ class QueryAccess
      *
      * @param Statement $statement
      * @return mixed
+     * @throws SQLException
+     * @throws ReflectionException
      */
     public function run(Statement $statement)
     {
@@ -112,6 +112,8 @@ class QueryAccess
      *
      * @param Statement $statement
      * @return mixed
+     * @throws SQLException
+     * @throws ReflectionException
      */
     protected function createResult(Statement $statement)
     {
@@ -176,8 +178,10 @@ class QueryAccess
     /**
      * 运行语句
      *
+     * @param Connection $connection
      * @param Statement $statement
      * @return void
+     * @throws SQLException
      */
     protected function runStatement(Connection $connection, Statement $statement)
     {
@@ -207,6 +211,14 @@ class QueryAccess
     }
 
     /**
+     * @return Connection
+     */
+    public function getConnection(): Connection
+    {
+        return $this->connection;
+    }
+
+    /**
      * 自动填充前缀
      *
      * @param string $query
@@ -214,10 +226,8 @@ class QueryAccess
      */
     public function prefix(string $query):string
     {
-        if ($prefix = $this->connection->getConfig('prefix')) {
-            // _:table 前缀控制
-            return preg_replace('/_:(\w+)/', $prefix.'$1', $query);
-        }
-        return $query;
+        // _:table 前缀控制
+        $prefix = $this->connection->getConfig('prefix', '');
+        return preg_replace('/_:(\w+)/', $prefix.'$1', $query);
     }
 }

@@ -1,13 +1,10 @@
 <?php
-namespace suda\orm\connection\creator;
+namespace suda\application\database\creator;
 
-use PDO;
-use PDOException;
+use suda\orm\exception\SQLException;
 use suda\orm\struct\Field;
 use suda\orm\struct\Fields;
-use suda\orm\statement\Statement;
 use suda\orm\connection\Connection;
-use suda\orm\exception\SQLException;
 use suda\orm\statement\QueryStatement;
 
 /**
@@ -38,10 +35,11 @@ class SQLiteTableCreator
     protected $comment;
 
     protected $collate;
-    protected $charset = 'utf8';
+    protected $charset = 'utf8mb4';
     
     protected $auto;
     protected $foreignKeys;
+
     public function __construct(Connection $connection, Fields $fields)
     {
         $this->name = $fields->getName();
@@ -49,6 +47,10 @@ class SQLiteTableCreator
         $this->connection = $connection;
     }
 
+    /**
+     * @return bool
+     * @throws SQLException
+     */
     public function create()
     {
         $statement = new QueryStatement($this->toSQL());

@@ -2,17 +2,13 @@
 namespace suda\framework\debug;
 
 use function array_key_exists;
-use suda\framework\debug\Caller;
-use suda\framework\debug\ConfigTrait;
 use suda\framework\debug\log\LogLevel;
-use suda\framework\debug\ConfigInterface;
 use suda\framework\debug\log\LoggerTrait;
 use suda\framework\debug\attach\DumpTrait;
 use suda\framework\debug\attach\AttachTrait;
 use suda\framework\debug\log\LoggerInterface;
 use suda\framework\debug\attach\DumpInterface;
 use suda\framework\debug\log\LoggerAwareTrait;
-use suda\framework\debug\log\logger\NullLogger;
 use suda\framework\debug\attach\AttachInterface;
 use suda\framework\debug\log\LoggerAwareInterface;
 
@@ -113,8 +109,9 @@ class Debug implements LoggerInterface, LoggerAwareInterface, DumpInterface, Att
     /**
      * Set the value of ignoreTraces
      *
+     * @param array $ignoreTraces
      * @return  self
-     */ 
+     */
     public function setIgnoreTraces(array $ignoreTraces)
     {
         $this->ignoreTraces = $ignoreTraces;
@@ -126,8 +123,9 @@ class Debug implements LoggerInterface, LoggerAwareInterface, DumpInterface, Att
     /**
      * Set the value of ignoreTraces
      *
+     * @param string $ignoreTraces
      * @return  self
-     */ 
+     */
     public function addIgnoreTraces(string $ignoreTraces)
     {
         $this->ignoreTraces[] = $ignoreTraces;

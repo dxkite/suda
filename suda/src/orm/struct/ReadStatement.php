@@ -1,8 +1,8 @@
 <?php
 namespace suda\orm\struct;
 
+use suda\orm\exception\SQLException;
 use suda\orm\TableAccess;
-use suda\orm\TableStruct;
 
 class ReadStatement extends \suda\orm\statement\ReadStatement
 {
@@ -29,42 +29,46 @@ class ReadStatement extends \suda\orm\statement\ReadStatement
      * @param string|null $class
      * @param array $args
      * @return mixed
+     * @throws SQLException
      */
     public function one(?string $class = null, array $args = [])
     {
         return $this->access->run($this->wantOne($class, $args));
     }
-  
+
     /**
      * 取全部
      *
      * @param string|null $class
      * @param array $args
      * @return array
+     * @throws SQLException
      */
     public function all(?string $class = null, array $args = []):array
     {
         return $this->access->run($this->wantAll($class, $args));
     }
-  
+
     /**
      * 取1
      *
      * @param string|null $class
      * @param array $args
      * @return mixed
+     * @throws SQLException
      */
     public function fetch(?string $class = null, array $args = [])
     {
         return $this->one($class, $args);
     }
-  
+
     /**
      * 取全部
      *
      * @param string|null $class
      * @param array $args
      * @return array
+     * @throws SQLException
      */
     public function fetchAll(?string $class = null, array $args = []):array
     {

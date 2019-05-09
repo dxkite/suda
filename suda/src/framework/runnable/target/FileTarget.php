@@ -1,8 +1,6 @@
 <?php
 namespace suda\framework\runnable\target;
 
-use suda\framework\runnable\target\RunnableTarget;
-
 /**
  * 可执行命令：文件类型
  *
@@ -16,8 +14,13 @@ class FileTarget extends RunnableTarget
      * @var string|null
      */
     protected $requireFile = null;
-    
-    public function __construct(string $path, array $parameter = [])
+
+    /**
+     * FileTarget constructor.
+     * @param string|null $path
+     * @param array $parameter
+     */
+    public function __construct(?string $path, array $parameter = [])
     {
         $this->setRequireFile($path);
         $this->setParameter($parameter);

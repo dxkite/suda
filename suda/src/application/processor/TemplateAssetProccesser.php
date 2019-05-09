@@ -1,16 +1,11 @@
 <?php
 namespace suda\application\processor;
 
-use suda\framework\Config;
+use Exception;
 use suda\framework\Request;
 use suda\framework\Response;
-use suda\application\Resource;
 use suda\application\Application;
-use suda\framework\response\MimeType;
-use suda\framework\filesystem\FileSystem;
-use suda\framework\http\stream\DataStream;
 use suda\application\template\TemplateUtil;
-use suda\application\processor\RequestProcessor;
 
 /**
  * 模块资源处理响应
@@ -24,6 +19,7 @@ class TemplateAssetProccesser implements RequestProcessor
      * @param Request $request
      * @param Response $response
      * @return bool
+     * @throws Exception
      */
     public function onRequest(Application $application, Request $request, Response $response)
     {

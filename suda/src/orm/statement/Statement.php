@@ -1,4 +1,5 @@
 <?php
+
 namespace suda\orm\statement;
 
 use function is_array;
@@ -9,7 +10,7 @@ use suda\orm\middleware\Middleware;
 abstract class Statement
 {
     use PrepareTrait;
-    
+
     const WRITE = 0;
     const READ = 1;
 
@@ -68,6 +69,7 @@ abstract class Statement
     const RET_ROWS = 1;
     const RET_LAST_INSERT_ID = 2;
     const RET_BOOL = 3;
+
     /**
      * 返回类型
      *
@@ -109,14 +111,14 @@ abstract class Statement
             list($this->string, $this->binder) = $this->prepareQueryMark($sql, $args);
         }
     }
-    
+
     protected function create(string $sql, array $parameter)
     {
         $this->string = $sql;
         $this->binder = $this->mergeBinder($this->binder, $parameter);
     }
 
-    public function isRead(bool $set = null):bool
+    public function isRead(bool $set = null): bool
     {
         if ($set !== null) {
             $this->type = self::READ;
@@ -124,7 +126,7 @@ abstract class Statement
         return $this->type === self::READ;
     }
 
-    public function isWrite(bool $set = null):bool
+    public function isWrite(bool $set = null): bool
     {
         if ($set !== null) {
             $this->type = self::WRITE;
@@ -135,9 +137,10 @@ abstract class Statement
     /**
      * 判断是否为一条
      *
+     * @param bool|null $set
      * @return boolean
      */
-    public function isFetchOne(bool $set = null):bool
+    public function isFetchOne(bool $set = null): bool
     {
         if ($set !== null) {
             $this->fetch = self::FETCH_ONE;
@@ -150,24 +153,33 @@ abstract class Statement
      *
      * @return boolean
      */
-    public function isFetch():bool
+    public function isFetch(): bool
     {
         return $this->fetch !== null;
     }
 
     /**
+     * @param bool|null $scroll
+     */
+    public function setScroll(?bool $scroll): void
+    {
+        $this->scroll = $scroll;
+    }
+
+    /**
      * 判断是否获取多条
      *
+     * @param bool|null $set
      * @return boolean
      */
-    public function isFetchAll(bool $set = null):bool
+    public function isFetchAll(bool $set = null): bool
     {
         if ($set !== null) {
             $this->fetch = self::FETCH_ALL;
         }
         return $this->fetch === self::FETCH_ALL;
     }
-    
+
     /**
      * 设置记录类
      *
@@ -187,7 +199,7 @@ abstract class Statement
      *
      * @return string|null
      */
-    public function getFetchClass():?string
+    public function getFetchClass(): ?string
     {
         return $this->fetchClass ?? null;
     }
@@ -195,9 +207,10 @@ abstract class Statement
     /**
      * 是否滚动
      *
+     * @param bool|null $set
      * @return boolean|null
      */
-    public function isScroll(bool $set = null):?bool
+    public function isScroll(bool $set = null): ?bool
     {
         if ($set !== null) {
             $this->scroll = true;
@@ -220,7 +233,7 @@ abstract class Statement
      *
      * @return Query
      */
-    protected function prepareQuery():Query
+    protected function prepareQuery(): Query
     {
         return new Query($this->string, $this->binder);
     }
@@ -230,7 +243,7 @@ abstract class Statement
      *
      * @return Query
      */
-    public function prepare():Query
+    public function prepare(): Query
     {
         return $this->query = $this->prepareQuery();
     }
@@ -240,7 +253,7 @@ abstract class Statement
      *
      * @return Query
      */
-    public function getQuery():Query
+    public function getQuery(): Query
     {
         if ($this->query === null) {
             $this->query = $this->prepare();
@@ -258,18 +271,21 @@ abstract class Statement
         return $this->binder;
     }
 
+    /**
+     * @return string
+     */
     public function __toString()
     {
         return $this->getString();
     }
-    
+
 
     /**
      * Get PDOStatement
      *
      * @return  PDOStatement
      */
-    public function getStatement():?PDOStatement
+    public function getStatement(): ?PDOStatement
     {
         return $this->statement;
     }
@@ -277,9 +293,9 @@ abstract class Statement
     /**
      * Set PDOStatement
      *
-     * @param  PDOStatement  $statement  PDOStatement
+     * @param PDOStatement $statement PDOStatement
      *
-     * @return  self
+     * @return  $this
      */
     public function setStatement(PDOStatement $statement)
     {
@@ -288,7 +304,7 @@ abstract class Statement
         return $this;
     }
 
-    
+
     /**
      * Get 返回类型
      *
@@ -302,14 +318,12 @@ abstract class Statement
     /**
      * Set 返回类型
      *
-     * @param  int  $returnType  返回类型
-     *
-     * @return  self
+     * @param int $returnType 返回类型
+     * @return  $this
      */
     public function setReturnType(int $returnType)
     {
         $this->returnType = $returnType;
-
         return $this;
     }
 
@@ -325,9 +339,8 @@ abstract class Statement
 
     /**
      * Get 数据处理中间件
-     *
      * @return  Middleware
-     */ 
+     */
     public function getMiddleware()
     {
         return $this->middleware;
@@ -336,14 +349,69 @@ abstract class Statement
     /**
      * Set 数据处理中间件
      *
-     * @param  Middleware  $middleware  数据处理中间件
-     *
-     * @return  self
-     */ 
+     * @param Middleware $middleware 数据处理中间件
+     * @return  $this
+     */
     public function setMiddleware(Middleware $middleware)
     {
         $this->middleware = $middleware;
-
         return $this;
+    }
+
+    /**
+     * @param Binder $binder
+     * @return $this
+     */
+    public function addBinder(Binder $binder)
+    {
+        if (!in_array($binder, $this->binder)) {
+            $this->binder[] = $binder;
+        }
+        return $this;
+    }
+
+    /**
+     * 添加参数
+     *
+     * @param string $name
+     * @param mixed $value
+     * @param string|null $key
+     * @return $this
+     */
+    public function addValue(string $name, $value, ?string $key = null)
+    {
+        return $this->addBinder(new Binder($name, $value, $key));
+    }
+
+    /**
+     * @param int|null $type
+     */
+    public function setType(?int $type): void
+    {
+        $this->type = $type;
+    }
+
+    /**
+     * @return int
+     */
+    public function getFetch(): int
+    {
+        return $this->fetch;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getType(): ?int
+    {
+        return $this->type;
+    }
+
+    /**
+     * @param int $fetch
+     */
+    public function setFetch(int $fetch): void
+    {
+        $this->fetch = $fetch;
     }
 }

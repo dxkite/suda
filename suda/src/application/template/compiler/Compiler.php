@@ -4,8 +4,6 @@ namespace suda\application\template\compiler;
 use Exception;
 use function preg_replace_callback;
 use function str_replace;
-use suda\application\template\compiler\Tag;
-
 
 /**
  * 可执行命令表达式
@@ -73,6 +71,7 @@ class Compiler
      * @param string $text 代码文本
      * @param array $tagConfig 标签配置
      * @return string
+     * @throws Exception
      */
     public function compileText(string $text, array $tagConfig = []):string
     {
@@ -85,7 +84,7 @@ class Compiler
                 // 跳过各种的PHP
                 if ($tag == T_INLINE_HTML) {
                     $content=$this->proccesTags($content);
-                    $content=$this->proccesCommands($content);
+                    $content=$this->processCommands($content);
                 }
                 $result .= $content;
             } else {
@@ -97,9 +96,9 @@ class Compiler
 
     protected function applyTagConfig(array $config)
     {
-        foreach ($config as $name => $config) {
+        foreach ($config as $name => $tagConfig) {
             if (array_key_exists($name, $this->tags)) {
-                $this->tags[$name]->setConfig($config);
+                $this->tags[$name]->setConfig($tagConfig);
             }
         }
     }
@@ -120,7 +119,12 @@ class Compiler
         return $text;
     }
 
-    protected function proccesCommands(string $text):string
+    /**
+     * @param string $text
+     * @return string
+     * @throws Exception
+     */
+    protected function processCommands(string $text):string
     {
         $pregExp ='/\B\@(\!)?([\w\x{4e00}-\x{9aff}]+)(\s*)(\( ( (?>[^()]+) | (?4) )* \) )? /ux';
         $code = preg_replace_callback($pregExp, [$this,'doMatchCommand'], $text);

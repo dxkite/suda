@@ -1,4 +1,5 @@
-<?php
+<?php /** @noinspection ALL */
+
 namespace suda\framework\response;
 
 use suda\framework\Request;

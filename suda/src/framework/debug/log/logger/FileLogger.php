@@ -55,7 +55,6 @@ class FileLogger extends AbstractLogger implements ConfigInterface
     /**
      * 构建文件日志
      *
-     * @throws FileLoggerException
      * @param array $config
      */
     public function __construct(array $config = [])
@@ -63,7 +62,11 @@ class FileLogger extends AbstractLogger implements ConfigInterface
         $this->applyConfig($config);
     }
 
-    public function getAviailbleWrite()
+    /**
+     * @return resource
+     * @throws FileLoggerException
+     */
+    public function getAvailableWrite()
     {
         if (is_resource($this->temp)) {
             return $this->temp;
@@ -72,6 +75,9 @@ class FileLogger extends AbstractLogger implements ConfigInterface
         return $this->temp;
     }
 
+    /**
+     * @throws FileLoggerException
+     */
     protected function prepareWrite()
     {
         $msec = explode('.', microtime(true))[1];
@@ -159,6 +165,13 @@ class FileLogger extends AbstractLogger implements ConfigInterface
     }
 
 
+    /**
+     * @param string $level
+     * @param string $message
+     * @param array $context
+     * @return mixed|void
+     * @throws FileLoggerException
+     */
     public function log($level, string $message, array $context = [])
     {
         if (LogLevel::compare($level, $this->getConfig('log-level')) >= 0) {
@@ -167,7 +180,7 @@ class FileLogger extends AbstractLogger implements ConfigInterface
             $replace['%level%'] = $level;
             $replace['%message%'] = $message;
             $write = strtr($this->getConfig('log-format'), $replace);
-            fwrite($this->getAviailbleWrite(), $write.PHP_EOL);
+            fwrite($this->getAvailableWrite(), $write.PHP_EOL);
         }
     }
 

@@ -6,8 +6,6 @@ use function in_array;
 use function strlen;
 use function strrpos;
 use suda\framework\Request;
-use suda\application\ApplicationBase;
-use suda\application\template\ModuleTemplate;
 
 /**
  * 应用源处理
@@ -23,10 +21,17 @@ class ApplicationSource extends ApplicationBase
      * @param array $parameter
      * @param boolean $allowQuery
      * @param string|null $default
+     * @param string|null $group
      * @return string|null
      */
-    public function getUrl(Request $request, string $name, array $parameter = [], bool $allowQuery = true, ?string $default = null, ?string $group = null):?string
-    {
+    public function getUrl(
+        Request $request,
+        string $name,
+        array $parameter = [],
+        bool $allowQuery = true,
+        ?string $default = null,
+        ?string $group = null
+    ):?string {
         $group = $group ?? $request->getAttribute('group');
         $default = $default ?? $request->getAttribute('module');
         $url = $this->route->create($this->getRouteName($name, $default, $group), $parameter, $allowQuery);
@@ -41,30 +46,12 @@ class ApplicationSource extends ApplicationBase
      */
     protected function getUrlIndex(Request $request):string
     {
-        $indexs = $this->conf('indexs') ?? [ 'index.php' ];
+        $indexArray = $this->conf('index') ?? [ 'index.php' ];
         $index = ltrim($request->getIndex(), '/');
-        if (!in_array($index, $indexs)) {
+        if (!in_array($index, $indexArray)) {
             return $request->getIndex();
         }
         return '';
-    }
-
-    /**
-     * 获取模板页面
-     *
-     * @param string $name
-     * @param Request $request
-     * @param string|null $default
-     * @return ModuleTemplate
-     */
-    public function getTemplate(string $name, Request $request, ?string $default = null): ModuleTemplate
-    {
-        if ($default === null && $this->running !== null) {
-            $default = $this->running->getFullName();
-        } else {
-            $default = $default ?? $request->getAttribute('module');
-        }
-        return new ModuleTemplate($this->getModuleSourceName($name, $default), $this, $request, $default);
     }
 
     /**
@@ -92,6 +79,7 @@ class ApplicationSource extends ApplicationBase
      *
      * @param string $name
      * @param string|null $default
+     * @param string|null $group
      * @return string
      */
     public function getRouteName(string $name, ?string $default = null, ?string $group = null):string
@@ -112,6 +100,7 @@ class ApplicationSource extends ApplicationBase
      * 拆分路由名
      *
      * @param string $name
+     * @param string|null $default
      * @param string|null $groupName
      * @return array
      */
@@ -141,9 +130,10 @@ class ApplicationSource extends ApplicationBase
      * @param boolean $beautify
      * @return string
      */
-    public function getUribase(Request $request, bool $beautify = true):string {
+    public function getUriBase(Request $request, bool $beautify = true):string
+    {
         $index = $beautify ? $this->getUrlIndex($request) : $request->getIndex();
-        return $request->getUribase() . $index;
+        return $request->getUriBase() . $index;
     }
 
     /**

@@ -1,7 +1,7 @@
 <?php
 namespace suda\application;
 
-use suda\application\Resource;
+use suda\application\Resource as ApplicationResource;
 use suda\framework\arrayobject\ArrayDotAccess;
 
 /**
@@ -30,7 +30,7 @@ class Module
     /**
      * 资源路径
      *
-     * @var Resource
+     * @var ApplicationResource
      */
     protected $resource;
 
@@ -69,7 +69,7 @@ class Module
         $this->version = $version;
         $this->path = $path;
         $this->config = $config;
-        $this->resource = new Resource;
+        $this->resource = new ApplicationResource;
         $this->status = Module::REACHABLE;
     }
 
@@ -108,16 +108,17 @@ class Module
      *
      * @return string
      */
-    public function getUriSafeName():string {
+    public function getUriSafeName():string
+    {
         return $this->getName().'/'.$this->getVersion();
     }
 
     /**
      * Get 资源路径
      *
-     * @return  Resource
+     * @return ApplicationResource
      */
-    public function getResource():Resource
+    public function getResource():ApplicationResource
     {
         return $this->resource;
     }
@@ -125,11 +126,11 @@ class Module
     /**
      * Set 资源路径
      *
-     * @param Resource $resource 资源路径
+     * @param ApplicationResource $resource 资源路径
      *
      * @return  $this
      */
-    public function setResource(Resource $resource)
+    public function setResource(ApplicationResource $resource)
     {
         $this->resource = $resource;
         return $this;

@@ -4,10 +4,10 @@ namespace suda\orm\struct;
 use function array_column;
 use function preg_match_all;
 use ReflectionClass;
+use ReflectionException;
 use ReflectionProperty;
 use suda\orm\TableStruct;
 use suda\orm\middleware\ObjectMiddleware;
-use suda\orm\struct\TableClassStructBuilder;
 
 /**
  * 结构中间件
@@ -25,16 +25,19 @@ class TableStructMiddleware extends ObjectMiddleware
      * 创建中间件
      *
      * @param string $object
+     * @param TableStruct $struct
+     * @throws ReflectionException
      */
     public function __construct(string $object, TableStruct $struct)
     {
-        $this->object = $object;
         $this->struct = $struct;
-        $this->prepareProcessorSet($object);
+        parent::__construct($object);
     }
 
     /**
      * 处理输入字段名
+     * @param string $name
+     * @return string
      */
     public function inputName(string $name):string
     {
@@ -45,19 +48,19 @@ class TableStructMiddleware extends ObjectMiddleware
      * 处理输出字段名
      *
      * @param string $name
-     * @param mixed $data
      * @return mixed
      */
     public function outputName(string $name):string
     {
         return $this->struct->getFields()->outputName($name);
     }
-    
+
     /**
      * 创建处理集合
      *
      * @param string $object
      * @return void
+     * @throws ReflectionException
      */
     protected function prepareProcessorSet(string $object)
     {

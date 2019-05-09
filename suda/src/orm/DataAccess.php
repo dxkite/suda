@@ -73,6 +73,7 @@ class DataAccess
      * @param array|object|string $object
      * @return WriteStatement
      * @throws ReflectionException
+     * @throws exception\SQLException
      */
     public function write($object): WriteStatement
     {
@@ -88,6 +89,7 @@ class DataAccess
      * @param string|array $where
      * @param array $whereParameter
      * @return WriteStatement
+     * @throws exception\SQLException
      */
     public function delete($where = null, ...$whereParameter):WriteStatement
     {
@@ -104,6 +106,7 @@ class DataAccess
      * @param array $whereBinder
      * @return integer
      * @throws ReflectionException
+     * @throws exception\SQLException
      */
     public function count($where, array $whereBinder = []):int
     {
@@ -113,7 +116,10 @@ class DataAccess
         $fields = $this->access->getStruct()->getFields()->all();
         $field = array_shift($fields);
         $total = $this->access->read([$field->getName()])->where($where, $whereBinder);
-        $data = $this->access->query(sprintf("SELECT count(*) as `count` from (%s) as total", $total), $total->getBinder())->one();
+        $data = $this->access->query(
+            sprintf("SELECT count(*) as `count` from (%s) as total", $total),
+            $total->getBinder()
+        )->one();
         return intval($data['count']);
     }
 
@@ -135,6 +141,7 @@ class DataAccess
      *
      * @param Statement $statement
      * @return mixed
+     * @throws exception\SQLException
      */
     public function run(Statement $statement)
     {
@@ -235,7 +242,11 @@ class DataAccess
     {
         $reflection = new ReflectionClass($object);
         $data = [];
-        foreach ($reflection->getProperties(ReflectionProperty::IS_PUBLIC | ReflectionProperty::IS_PROTECTED | ReflectionProperty::IS_PRIVATE) as $property) {
+        foreach ($reflection->getProperties(
+            ReflectionProperty::IS_PUBLIC
+            | ReflectionProperty::IS_PROTECTED
+            | ReflectionProperty::IS_PRIVATE
+        ) as $property) {
             if (TableStructBuilder::isTableField($property)) {
                 $property->setAccessible(true);
                 $value = $property->getValue($object);
@@ -258,7 +269,7 @@ class DataAccess
     public static function createStruct(string $object)
     {
         if (is_subclass_of($object, TableStructAwareInterface::class)) {
-            return $object::getTableStruct();
+            return forward_static_call([$object, 'getTableStruct']);
         }
         return (new TableClassStructBuilder($object))->createStruct();
     }
@@ -274,7 +285,7 @@ class DataAccess
     public static function createMiddleware(string $object, TableStruct $struct)
     {
         if (is_subclass_of($object, MiddlewareAwareInterface::class)) {
-            return $object::getMiddleware($struct);
+            return forward_static_call([$object, 'getMiddleware']);
         }
         return static::createDefaultMiddleware($object, $struct);
     }

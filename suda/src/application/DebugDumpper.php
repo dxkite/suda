@@ -1,6 +1,7 @@
 <?php
 namespace suda\application;
 
+use Exception;
 use suda\framework\Response;
 use Throwable;
 
@@ -25,6 +26,8 @@ class DebugDumpper
 
     /**
      * 初始化
+     * @param Application $application
+     * @param Response $response
      */
     public function __construct(Application $application, Response $response)
     {
@@ -47,6 +50,7 @@ class DebugDumpper
      *
      * @param Throwable $exception
      * @return void
+     * @throws Exception
      */
     public function uncaughtException($exception)
     {

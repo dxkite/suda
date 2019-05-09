@@ -1,14 +1,11 @@
 <?php
-namespace suda\orm\connection\creator;
+namespace suda\application\database\creator;
 
 use function implode;
-use PDO;
-use PDOException;
+use suda\orm\exception\SQLException;
 use suda\orm\struct\Field;
 use suda\orm\struct\Fields;
-use suda\orm\statement\Statement;
 use suda\orm\connection\Connection;
-use suda\orm\exception\SQLException;
 use suda\orm\statement\QueryStatement;
 
 /**
@@ -31,18 +28,48 @@ class MySQLTableCreator
      */
     protected $fields;
 
-    const ENGINE_MyISAM = 'MyISAM';
-    const ENGINE_InnoDB = 'InnoDB';
+    /**
+     *
+     */
+    const ENGINE_MYISAM = 'MyISAM';
 
+    /**
+     *
+     */
+    const ENGINE_INNODB = 'InnoDB';
+
+    /**
+     * @var string
+     */
     protected $name;
-    protected $engine = self::ENGINE_InnoDB;
+    /**
+     * @var string
+     */
+    protected $engine = self::ENGINE_INNODB;
+    /**
+     * @var
+     */
     protected $comment;
 
+    /**
+     * @var
+     */
     protected $collate;
-    protected $charset = 'utf8';
-    
+    /**
+     * @var string
+     */
+    protected $charset = 'utf8mb4';
+
+    /**
+     * @var
+     */
     protected $auto;
 
+    /**
+     * MySQLTableCreator constructor.
+     * @param Connection $connection
+     * @param Fields $fields
+     */
     public function __construct(Connection $connection, Fields $fields)
     {
         $this->name = $fields->getName();
@@ -50,6 +77,10 @@ class MySQLTableCreator
         $this->connection = $connection;
     }
 
+    /**
+     * @return bool
+     * @throws SQLException
+     */
     public function create()
     {
         $statement = new QueryStatement($this->toSQL());
@@ -57,6 +88,9 @@ class MySQLTableCreator
         return $this->connection->query($statement) > 0;
     }
 
+    /**
+     * @return string
+     */
     protected function toSQL()
     {
         $content = [];
@@ -78,10 +112,13 @@ class MySQLTableCreator
     }
 
 
+    /**
+     * @return string
+     */
     protected function parsePrimaryKeys()
     {
         $primary = [];
-        foreach ($this->fields->all() as  $field) {
+        foreach ($this->fields->all() as $field) {
             if ($field->getType() === Field::PRIMARY) {
                 $primary[] = '`'.$field->getName().'`';
             }
@@ -93,9 +130,13 @@ class MySQLTableCreator
     }
 
 
+    /**
+     * @param array $content
+     * @return array
+     */
     protected function parseUniqueKeys(array $content)
     {
-        foreach ($this->fields->all() as  $field) {
+        foreach ($this->fields->all() as $field) {
             if ($field->getType() === Field::UNIQUE) {
                 $content[] = 'UNIQUE KEY `'.$field->getName().'` (`'.$field->getName().'`)';
             }
@@ -104,9 +145,13 @@ class MySQLTableCreator
     }
 
 
+    /**
+     * @param array $content
+     * @return array
+     */
     protected function parseIndexKeys(array $content)
     {
-        foreach ($this->fields->all() as  $field) {
+        foreach ($this->fields->all() as $field) {
             if ($field->getType() === Field::INDEX) {
                 $content[] = 'INDEX (`'.$field->getName().'`)';
             }
@@ -114,9 +159,13 @@ class MySQLTableCreator
         return $content;
     }
 
+    /**
+     * @param array $content
+     * @return array
+     */
     protected function parseKeys(array $content)
     {
-        foreach ($this->fields->all() as  $field) {
+        foreach ($this->fields->all() as $field) {
             if ($field->getType() === Field::INDEX) {
                 $content[] = 'KEY `'.$field->getName().'` (`'.$field->getName().'`)';
             }
@@ -125,11 +174,20 @@ class MySQLTableCreator
     }
 
 
+    /**
+     * @param array $content
+     * @return array
+     */
     protected function parseForeignKeys(array $content)
     {
         foreach ($this->fields->all() as $field) {
             if ($field->getForeignKey() !== null) {
-                $content[] = 'FOREIGN KEY (`'.$field->getName().'`) REFERENCES  `#{'.$field->getTableName().'}` (`'.$field->getName().'`)';
+                $content[] = sprintf(
+                    "FOREIGN KEY (`%s`) REFERENCES  `_:%s` (`%s`)",
+                    $field->getName(),
+                    $field->getTableName(),
+                    $field->getName()
+                );
             }
         }
         return $content;
@@ -139,18 +197,23 @@ class MySQLTableCreator
      * @param $length
      * @return string
      */
-    protected function parseLength($length) {
+    protected function parseLength($length)
+    {
         if ($length !== null) {
             if (is_string($length) || is_int($length)) {
                 return '('.$length.')';
             }
             if (is_array($length)) {
-                return '('.implode(',',$length).')';
+                return '('.implode(',', $length).')';
             }
         }
         return  '';
     }
 
+    /**
+     * @param Field $field
+     * @return string
+     */
     protected function createField(Field $field)
     {
         $type = strtoupper($field->getValueType()).$this->parseLength($field->getLength());

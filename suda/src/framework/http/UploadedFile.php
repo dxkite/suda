@@ -1,8 +1,6 @@
 <?php
 namespace suda\framework\http;
 
-use SplFileObject;
-
 /**
  * HTTP请求文件
  */

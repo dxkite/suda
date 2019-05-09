@@ -1,4 +1,5 @@
 <?php
+
 namespace suda\framework;
 
 use function constant;
@@ -44,16 +45,16 @@ class Debugger extends Debug
      */
     public function register()
     {
-        register_shutdown_function([$this,'uncaughtFatalError']);
-        set_error_handler([$this,'uncaughtError']);
-        set_exception_handler([$this,'uncaughtException']);
+        register_shutdown_function([$this, 'uncaughtFatalError']);
+        set_error_handler([$this, 'uncaughtError']);
+        set_exception_handler([$this, 'uncaughtException']);
         return $this;
     }
 
     /**
      * 创建调式工具
      *
-     * @param Context $context
+     * @param PHPContext $context
      * @return Debugger
      */
     public function load(PHPContext $context): Debugger
@@ -70,6 +71,7 @@ class Debugger extends Debug
     /**
      * 创建日志记录器
      *
+     * @param PHPContext $context
      * @return LoggerInterface
      */
     protected static function createLogger(PHPContext $context): LoggerInterface
@@ -89,20 +91,20 @@ class Debugger extends Debug
      */
     public static function createDefaultLogger(): LoggerInterface
     {
-        $dataPath = SUDA_DATA.'/logs';
+        $dataPath = SUDA_DATA . '/logs';
         FileSystem::make($dataPath);
         if (is_writable(dirname($dataPath))) {
-            FileSystem::make($dataPath.'/zip');
-            FileSystem::make($dataPath.'/dump');
+            FileSystem::make($dataPath . '/zip');
+            FileSystem::make($dataPath . '/dump');
             return new FileLogger(
-            [
-                'log-level' => SUDA_DEBUG_LEVEL,
-                'save-path' => $dataPath,
-                'save-zip-path' => $dataPath.'/zip',
-                'log-format' => '%message%',
-                'save-pack-path' => $dataPath.'/dump',
-            ]
-        );
+                [
+                    'log-level' => SUDA_DEBUG_LEVEL,
+                    'save-path' => $dataPath,
+                    'save-zip-path' => $dataPath . '/zip',
+                    'log-format' => '%message%',
+                    'save-pack-path' => $dataPath . '/dump',
+                ]
+            );
         }
         return new NullLogger;
     }
@@ -112,7 +114,7 @@ class Debugger extends Debug
      *
      * @return LoggerInterface
      */
-    public function getLogger():LoggerInterface
+    public function getLogger(): LoggerInterface
     {
         return $this->logger;
     }
@@ -158,25 +160,26 @@ class Debugger extends Debug
      * @param string $errfile
      * @param int $errline
      * @return void
+     * @throws ErrorException
      */
     public function uncaughtError($errno, $errstr, $errfile, $errline)
     {
         $severity =
-        1 * E_ERROR |
-        1 * E_WARNING |
-        0 * E_PARSE |
-        1 * E_NOTICE |
-        0 * E_CORE_ERROR |
-        1 * E_CORE_WARNING |
-        0 * E_COMPILE_ERROR |
-        1 * E_COMPILE_WARNING |
-        0 * E_USER_ERROR |
-        1 * E_USER_WARNING |
-        1 * E_USER_NOTICE |
-        0 * E_STRICT |
-        0 * E_RECOVERABLE_ERROR |
-        0 * E_DEPRECATED |
-        0 * E_USER_DEPRECATED;
+            1 * E_ERROR |
+            1 * E_WARNING |
+            0 * E_PARSE |
+            1 * E_NOTICE |
+            0 * E_CORE_ERROR |
+            1 * E_CORE_WARNING |
+            0 * E_COMPILE_ERROR |
+            1 * E_COMPILE_WARNING |
+            0 * E_USER_ERROR |
+            1 * E_USER_WARNING |
+            1 * E_USER_NOTICE |
+            0 * E_STRICT |
+            0 * E_RECOVERABLE_ERROR |
+            0 * E_DEPRECATED |
+            0 * E_USER_DEPRECATED;
         $exception = new ErrorException($errstr, 0, $errno, $errfile, $errline);
         if ($exception->getSeverity() & $severity === 0) {
             throw $exception;
@@ -189,7 +192,7 @@ class Debugger extends Debug
         }
     }
 
-    public function getDefaultConfig():array
+    public function getDefaultConfig(): array
     {
         return [
             'log-format' => '%time-format% - %memory-format% [%level%] %file%:%line% %message%',
@@ -203,7 +206,7 @@ class Debugger extends Debug
      *
      * @return array
      */
-    public function getIgnoreTraces():array
+    public function getIgnoreTraces(): array
     {
         $trace = parent::getIgnoreTraces();
         $trace[] = __FILE__;

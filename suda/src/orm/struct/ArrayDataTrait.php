@@ -3,7 +3,6 @@ namespace suda\orm\struct;
 
 use ArrayIterator;
 use InvalidArgumentException;
-use suda\orm\struct\MagicArrayAccessTrait;
 
 trait ArrayDataTrait  
 {

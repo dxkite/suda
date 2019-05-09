@@ -4,7 +4,6 @@ namespace suda\application\processor;
 use suda\framework\Request;
 use suda\framework\Response;
 use suda\application\Application;
-use suda\application\processor\RequestProcessor;
 
 /**
  * 响应
@@ -16,7 +15,11 @@ class FileRequestProcessor implements RequestProcessor
         $filename = $request->getAttribute('source');
         if (is_string($filename)) {
             $processor = new FileRangeProccessor($filename);
-            $processor->onRequest($application, $request, $response);
+            try {
+                $processor->onRequest($application, $request, $response);
+            } catch (\Exception $e) {
+                $response->status(500);
+            }
         } else {
             $response->status(404);
         }

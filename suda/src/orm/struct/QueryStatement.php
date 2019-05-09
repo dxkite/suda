@@ -1,32 +1,34 @@
 <?php
 namespace suda\orm\struct;
 
-use suda\orm\TableAccess;
-use suda\orm\TableStruct;
+use ReflectionException;
+use suda\orm\exception\SQLException;
+use suda\orm\statement\QueryAccess;
 
 class QueryStatement extends \suda\orm\statement\QueryStatement
 {
     /**
      * 访问操作
      *
-     * @var TableAccess
+     * @var QueryAccess
      */
     protected $access;
 
-    public function __construct(TableAccess $access, string $query, ...$parameter)
+    public function __construct(QueryAccess $access, string $query, ...$parameter)
     {
         $this->access = $access;
         parent::__construct($query, ...$parameter);
     }
 
- 
-     /**
-      * 取1
-      *
-      * @param string|null $class
-      * @param array $args
-      * @return mixed
-      */
+    /**
+     * 取1
+     *
+     * @param string|null $class
+     * @param array $args
+     * @return mixed
+     * @throws SQLException
+     * @throws ReflectionException
+     */
     public function one(?string $class = null, array $args = [])
     {
         $value = $this->access->run($this->wantOne($class, $args));
@@ -42,6 +44,8 @@ class QueryStatement extends \suda\orm\statement\QueryStatement
      * @param string|null $class
      * @param array $args
      * @return array
+     * @throws SQLException
+     * @throws ReflectionException
      */
     public function all(?string $class = null, array $args = []):array
     {
@@ -54,6 +58,8 @@ class QueryStatement extends \suda\orm\statement\QueryStatement
      * @param string|null $class
      * @param array $args
      * @return mixed
+     * @throws SQLException
+     * @throws ReflectionException
      */
     public function fetch(?string $class = null, array $args = [])
     {
@@ -66,6 +72,8 @@ class QueryStatement extends \suda\orm\statement\QueryStatement
      * @param string|null $class
      * @param array $args
      * @return array
+     * @throws SQLException
+     * @throws ReflectionException
      */
     public function fetchAll(?string $class = null, array $args = []):array
     {
@@ -75,9 +83,9 @@ class QueryStatement extends \suda\orm\statement\QueryStatement
     /**
      * Get 访问操作
      *
-     * @return  TableAccess
+     * @return  QueryAccess
      */
-    public function getAccess():TableAccess
+    public function getAccess():QueryAccess
     {
         return $this->access;
     }

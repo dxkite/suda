@@ -10,6 +10,10 @@ use function str_replace;
 use suda\orm\Binder;
 use suda\orm\exception\SQLException;
 
+/**
+ * Trait PrepareTrait
+ * @package suda\orm\statement
+ */
 trait PrepareTrait
 {
 
@@ -17,6 +21,7 @@ trait PrepareTrait
      * 准备选择列
      *
      * @param string|array $reads
+     * @param string $table
      * @return string
      */
     protected function prepareReadFields($reads, string $table = ''):string
@@ -39,6 +44,7 @@ trait PrepareTrait
      *
      * @param array $where
      * @return array
+     * @throws SQLException
      */
     protected function parepareWhere(array $where)
     {
@@ -64,6 +70,12 @@ trait PrepareTrait
         return [implode(' AND ', $and), $binders];
     }
 
+    /**
+     * @param string $where
+     * @param array $whereBinder
+     * @return array
+     * @throws SQLException
+     */
     protected function parepareWhereString(string $where, array $whereBinder)
     {
         foreach ($whereBinder as $name => $value) {
@@ -84,6 +96,7 @@ trait PrepareTrait
      * @param string $name
      * @param ArrayObject|array $values
      * @return array
+     * @throws SQLException
      */
     protected function prepareIn(string $name, $values)
     {
@@ -92,6 +105,12 @@ trait PrepareTrait
         return [$sql,$binders];
     }
 
+    /**
+     * @param $values
+     * @param string $name
+     * @return array
+     * @throws SQLException
+     */
     protected function prepareInParameter($values, string $name)
     {
         if (count($values) <= 0) {

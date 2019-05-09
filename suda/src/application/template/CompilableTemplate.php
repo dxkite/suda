@@ -188,6 +188,8 @@ class CompilableTemplate extends RawTemplate
 
     /**
      * 创建模板
+     * @param $template
+     * @return CompilableTemplate
      */
     public function parent($template)
     {

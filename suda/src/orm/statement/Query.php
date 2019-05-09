@@ -1,4 +1,5 @@
 <?php
+
 namespace suda\orm\statement;
 
 use suda\orm\Binder;
@@ -12,7 +13,7 @@ class Query
      * @var string
      */
     protected $query;
-  
+
     /**
      * 绑定
      *
@@ -20,7 +21,7 @@ class Query
      */
     protected $binder;
 
-    public function __construct(string $query, array  $binder = [])
+    public function __construct(string $query, array $binder = [])
     {
         $this->query = trim($query);
         $this->binder = $binder;
@@ -29,7 +30,7 @@ class Query
     /**
      * Get 绑定
      *
-     * @return  array
+     * @return  Binder[]
      */
     public function getBinder()
     {
@@ -39,9 +40,9 @@ class Query
     /**
      * Set 绑定
      *
-     * @param  array  $binder  绑定
+     * @param Binder[] $binder 绑定
      *
-     * @return  self
+     * @return  $this
      */
     public function setBinder(array $binder)
     {
@@ -63,9 +64,9 @@ class Query
     /**
      * Set sQL语句
      *
-     * @param  string  $query  SQL语句
+     * @param string $query SQL语句
      *
-     * @return  self
+     * @return  $this
      */
     public function setQuery(string $query)
     {

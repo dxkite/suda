@@ -3,7 +3,6 @@ namespace suda\framework\request;
 
 use suda\framework\http\Request;
 use suda\framework\http\UploadedFile;
-use suda\framework\request\IndexFinder;
 
 /**
  * 请求包装器
@@ -79,7 +78,7 @@ class RequestWrapper
      *
      * @var string
      */
-    protected $uribase;
+    protected $uriBase;
 
     /**
      * 创建请求包装器
@@ -107,7 +106,7 @@ class RequestWrapper
      *
      * @param  string  $remoteAddr  远程地址
      *
-     * @return  self
+     * @return  $this
      */
     public function setRemoteAddr(string $remoteAddr)
     {
@@ -131,7 +130,7 @@ class RequestWrapper
      *
      * @param  string  $host  获取本地HOST
      *
-     * @return  self
+     * @return  $this
      */
     public function setHost(string $host)
     {
@@ -155,7 +154,7 @@ class RequestWrapper
      *
      * @param  int  $port  获取本地端口
      *
-     * @return  self
+     * @return  $this
      */
     public function setPort(int $port)
     {
@@ -178,13 +177,11 @@ class RequestWrapper
      * Set 是否为安全模式
      *
      * @param  bool  $secure  是否为安全模式
-     *
-     * @return  self
+     * @return  $this
      */
     public function setSecure(bool $secure)
     {
         $this->secure = $secure;
-
         return $this;
     }
 
@@ -202,13 +199,11 @@ class RequestWrapper
      * Set 请求URI
      *
      * @param  string  $uri  请求URI
-     *
-     * @return  self
+     * @return  $this
      */
     public function setUri(string $uri)
     {
         $this->uri = $uri;
-
         return $this;
     }
 
@@ -226,13 +221,11 @@ class RequestWrapper
      * Set 请求参数
      *
      * @param  string  $method  请求参数
-     *
-     * @return  self
+     * @return  $this
      */
     public function setMethod(string $method)
     {
         $this->method = $method;
-
         return $this;
     }
 
@@ -252,7 +245,7 @@ class RequestWrapper
      * 设置查询参数
      *
      * @param string $name
-     * @param mixed $parameter
+     * @param $query
      * @return $this
      */
     public function setQuery(string $name, $query)
@@ -301,8 +294,7 @@ class RequestWrapper
      * Set 请求索引
      *
      * @param  string  $index  请求索引
-     *
-     * @return  self
+     * @return $this
      */
     public function setIndex(string $index)
     {
@@ -314,6 +306,7 @@ class RequestWrapper
     /**
      * 获取文件
      *
+     * @param string|null $name
      * @return  UploadedFile[]|UploadedFile|null
      */
     public function getFile(?string $name = null)
@@ -374,7 +367,8 @@ class RequestWrapper
      * @param mixed $default
      * @return mixed
      */
-    public function getCookie(string $name = null, $default = null) {
+    public function getCookie(string $name = null, $default = null)
+    {
         if ($name === null) {
             return $this->request->cookies();
         }
@@ -388,7 +382,8 @@ class RequestWrapper
      * @param mixed $default
      * @return mixed
      */
-    public function getServer(string $name = null, $default = null) {
+    public function getServer(string $name = null, $default = null)
+    {
         if ($name === null) {
             return $this->request->server();
         }
@@ -397,25 +392,22 @@ class RequestWrapper
 
     /**
      * Get URI基础部分
-     *
      * @return  string
-     */ 
-    public function getUribase()
+     */
+    public function getUriBase()
     {
-        return $this->uribase;
+        return $this->uriBase;
     }
 
     /**
      * Set URI基础部分
      *
-     * @param  string  $uribase  URI基础部分
-     *
-     * @return  self
-     */ 
-    public function setUribase(string $uribase)
+     * @param  string  $uriBase  URI基础部分
+     * @return  $this
+     */
+    public function setUriBase(string $uriBase)
     {
-        $this->uribase = $uribase;
-
+        $this->uriBase = $uriBase;
         return $this;
     }
 }

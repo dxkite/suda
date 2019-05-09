@@ -2,6 +2,7 @@
 namespace suda\framework;
 
 use Closure;
+use Exception;
 use suda\framework\route\MatchResult;
 use suda\framework\runnable\Runnable;
 use suda\framework\route\RouteMatcher;
@@ -215,7 +216,7 @@ class Route
      * @param Request $request
      * @param Response $response
      * @return Response
-     * @throws \Exception
+     * @throws Exception
      */
     public function run(?MatchResult $result, Request $request, Response $response):Response
     {
@@ -232,7 +233,7 @@ class Route
      * @param Request $request
      * @param Response $response
      * @return Response
-     * @throws \Exception
+     * @throws Exception
      */
     protected function buildResponse(MatchResult $result, Request $request, Response $response):Response
     {
@@ -249,7 +250,7 @@ class Route
      * @param Request $request
      * @param Response $response
      * @return Response
-     * @throws \Exception
+     * @throws Exception
      */
     protected function buildDefaultResponse(Request $request, Response $response):Response
     {

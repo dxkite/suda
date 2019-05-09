@@ -13,7 +13,6 @@ use suda\orm\middleware\Middleware;
  */
 class DataAccess extends \suda\orm\DataAccess
 {
-    
 
     /**
      * 应用引用

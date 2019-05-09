@@ -65,7 +65,7 @@ class CommonMiddleware extends NullMiddleware
      *
      * @param string $name
      * @param Runnable|Closure|array|string $runnable
-     * @return \suda\orm\middleware\NullMiddleware
+     * @return CommonMiddleware
      */
     public function registerOutput(string $name, $runnable): CommonMiddleware
     {
@@ -77,19 +77,19 @@ class CommonMiddleware extends NullMiddleware
      * 输入名处理
      *
      * @param Runnable|Closure|array|string $runnable
-     * @return \suda\orm\middleware\NullMiddleware
+     * @return CommonMiddleware
      */
     public function registerInputName($runnable): CommonMiddleware
     {
         $this->processor['input-name'] = $runnable;
         return $this;
     }
- 
+
     /**
      * 输出名处理
      *
      * @param Runnable|Closure|array|string $runnable
-     * @return \suda\orm\middleware\NullMiddleware
+     * @return CommonMiddleware
      */
     public function registerOutputName($runnable): CommonMiddleware
     {
@@ -101,7 +101,7 @@ class CommonMiddleware extends NullMiddleware
      * 输出字段处理
      *
      * @param Runnable|Closure|array|string $runnable
-     * @return \suda\orm\middleware\NullMiddleware
+     * @return CommonMiddleware
      */
     public function registerRow($runnable): CommonMiddleware
     {
