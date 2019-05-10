@@ -23,6 +23,7 @@
       "ext-zip": "*",
       "ext-json": "*",
       "ext-pdo": "*",
-      "ext-iconv": "*"
+      "ext-iconv": "*",
+      "ext-mbstring": "*"
     }
 }

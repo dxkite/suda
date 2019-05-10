@@ -52,7 +52,7 @@ class MySQLConnection extends Connection
                 "%s connect database error:%s",
                 $this->__toString(),
                 $e->getMessage()
-            ), $e->getCode(), E_ERROR, __FILE__, __LINE__, $e);
+            ), $e->getCode(), $e);
         }
     }
 

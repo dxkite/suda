@@ -113,7 +113,7 @@ abstract class Connection
                     "%s connect database error:%s",
                     $this->getName(),
                     $e->getMessage()
-                ), $e->getCode(), E_ERROR, __FILE__, __LINE__, $e);
+                ), $e->getCode(), $e);
             }
         }
         return $this->isConnected();

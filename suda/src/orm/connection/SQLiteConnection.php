@@ -46,9 +46,6 @@ class SQLiteConnection extends Connection
             throw new SQLException(
                 sprintf("%s connect database error:%s", $this->__toString(), $e->getMessage()),
                 $e->getCode(),
-                E_ERROR,
-                __FILE__,
-                __LINE__,
                 $e
             );
         }

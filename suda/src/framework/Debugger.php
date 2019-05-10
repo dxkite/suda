@@ -5,6 +5,7 @@ namespace suda\framework;
 use function constant;
 use ErrorException;
 use function is_writable;
+use ReflectionException;
 use function restore_error_handler;
 use function restore_exception_handler;
 use function set_error_handler;
@@ -56,6 +57,7 @@ class Debugger extends Debug
      *
      * @param PHPContext $context
      * @return Debugger
+     * @throws ReflectionException
      */
     public function load(PHPContext $context): Debugger
     {
@@ -73,6 +75,7 @@ class Debugger extends Debug
      *
      * @param PHPContext $context
      * @return LoggerInterface
+     * @throws ReflectionException
      */
     protected static function createLogger(PHPContext $context): LoggerInterface
     {
@@ -180,7 +183,7 @@ class Debugger extends Debug
             0 * E_RECOVERABLE_ERROR |
             0 * E_DEPRECATED |
             0 * E_USER_DEPRECATED;
-        $exception = new ErrorException($errstr, 0, $errno, $errfile, $errline);
+        $exception = new ErrorException($errstr, $errno, $errno, $errfile, $errline);
         if ($exception->getSeverity() & $severity === 0) {
             throw $exception;
         } else {
