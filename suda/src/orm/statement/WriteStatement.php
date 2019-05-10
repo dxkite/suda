@@ -185,9 +185,9 @@ class WriteStatement extends Statement
         if ($this->whereCondition !== null) {
             if ($this->delete === false) {
                 list($updateSet, $upbinder) = $this->prepareUpdateSet($this->data);
-                $binder = array_merge($this->binder, $upbinder);
+                $this->binder = array_merge($this->binder, $upbinder);
                 $string = "UPDATE {$this->table} SET {$updateSet} WHERE {$this->whereCondition}";
-                return new Query($string, $binder);
+                return new Query($string, $this->binder);
             } else {
                 $string = "DELETE FROM {$this->table} WHERE {$this->whereCondition}";
                 return new Query($string, $this->binder);
@@ -238,15 +238,15 @@ class WriteStatement extends Statement
     {
         $names = [];
         $binds = [];
-        $binder = $this->binder;
+        $this->binder;
         foreach ($data as $name => $value) {
             $_name = Binder::index($name);
-            $binder[] = new Binder($_name, $value, $name);
+            $this->binder[] = new Binder($_name, $value, $name);
             $names[] = "`{$name}`";
             $binds[] = ":{$_name}";
         }
         $i_name = implode(',', $names);
         $i_bind = implode(',', $binds);
-        return new Query(sprintf("INSERT INTO %s (%s) VALUES (%s)", $this->table, $i_name, $i_bind), $binder);
+        return new Query(sprintf("INSERT INTO %s (%s) VALUES (%s)", $this->table, $i_name, $i_bind), $this->binder);
     }
 }

@@ -49,7 +49,7 @@ class Binder implements JsonSerializable
      */
     public static function index(string $name): string
     {
-        return '_' . static::$index . $name;
+        return '_' . $name . '_' . static::$index;
     }
 
     /**

@@ -104,11 +104,11 @@ class HTTPRequest implements Request
     {
         foreach ($_SERVER as $key => $value) {
             $name = strtolower(str_replace('_', '-', $key));
+            $this->server[$name] = $value;
             if (strpos($name, 'http-') === 0) {
                 $name = substr($name, strlen('http-'));
                 $this->header[$name] = $value;
             }
-            $this->server[$name] = $value;
         }
     }
 

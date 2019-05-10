@@ -66,7 +66,7 @@ class Application extends ApplicationSource
      */
     protected function prepare(Request $request, Response $response)
     {
-        $response->setHeader('x-powered-by', 'nebula/'.SUDA_VERSION, true);
+        $response->setHeader('x-powered-by', 'suda/'.SUDA_VERSION, true);
         $response->getWrapper()->register(ExceptionContentWrapper::class, [Throwable::class]);
         $response->getWrapper()->register(TemplateWrapper::class, [RawTemplate::class]);
         $dumpper = new DebugDumpper($this, $response);
