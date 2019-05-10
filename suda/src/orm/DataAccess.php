@@ -269,9 +269,24 @@ class DataAccess
     public static function createStruct(string $object)
     {
         if (is_subclass_of($object, TableStructAwareInterface::class)) {
-            return forward_static_call([$object, 'getTableStruct']);
+            $struct = new TableStruct(static::createTableName($object));
+            return forward_static_call([$object, 'createTableStruct'], $struct);
         }
         return (new TableClassStructBuilder($object))->createStruct();
+    }
+
+
+    /**
+     * @param string $object
+     * @return string
+     */
+    public static function createTableName(string $object)
+    {
+        $pos = strrpos($object, '\\');
+        if ($pos !== false && $pos >= 0) {
+            $object = substr($object, $pos + 1);
+        }
+        return TableStructBuilder::createName($object);
     }
 
     /**

@@ -8,5 +8,11 @@ use suda\orm\TableStruct;
  */
 interface TableStructAwareInterface
 {
-    public static function getTableStruct():TableStruct;
+    /**
+     * 创建数据表结构
+     *
+     * @param TableStruct $struct 父级或初始数据表结构
+     * @return TableStruct
+     */
+    public static function createTableStruct(TableStruct $struct):TableStruct;
 }

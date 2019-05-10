@@ -51,7 +51,11 @@ class TableStructBuilder
     {
         $name = $this->getName();
         $struct = new TableStruct($name);
-        foreach ($this->reflectObject->getProperties(ReflectionProperty::IS_PUBLIC | ReflectionProperty::IS_PROTECTED | ReflectionProperty::IS_PRIVATE) as $property) {
+        foreach ($this->reflectObject->getProperties(
+            ReflectionProperty::IS_PUBLIC
+            | ReflectionProperty::IS_PROTECTED
+            | ReflectionProperty::IS_PRIVATE
+        ) as $property) {
             if ($this->isTableField($property)) {
                 $field = $this->createField($name, $property);
                 $struct->addField($field);

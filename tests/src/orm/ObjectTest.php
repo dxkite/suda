@@ -2,6 +2,7 @@
 namespace test\orm;
 
 use ReflectionException;
+use suda\orm\DataAccess;
 use suda\orm\TableStruct;
 use PHPUnit\Framework\TestCase;
 use suda\framework\runnable\Runnable;
@@ -23,6 +24,11 @@ class ObjectTest extends TestCase
         ]);
         $create = new TableStructBuilder(User::class);
         $this->assertEquals($struct, $create->createStruct());
+    }
+
+    public function testTableNameCreate() {
+        $this->assertEquals('object_test', DataAccess::createTableName(__CLASS__));
+        $this->assertEquals('object_test', DataAccess::createTableName('ObjectTest'));
     }
 
     public function testCreateClassStruct()

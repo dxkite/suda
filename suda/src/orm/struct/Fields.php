@@ -104,7 +104,8 @@ class Fields implements IteratorAggregate
      * @param string $name
      * @return string
      */
-    public function outputName(string $name):string {
+    public function outputName(string $name):string
+    {
         if (array_key_exists($name, $this->alias)) {
             return $this->alias[$name];
         }
@@ -115,7 +116,8 @@ class Fields implements IteratorAggregate
      * @param string $name
      * @return string
      */
-    public function inputName(string $name):string {
+    public function inputName(string $name):string
+    {
         if ($key = array_search($name, $this->alias)) {
             return $key;
         }
@@ -136,6 +138,14 @@ class Fields implements IteratorAggregate
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * @param string $name
+     */
+    public function setName(string $name): void
+    {
+        $this->name = $name;
     }
 
     /**

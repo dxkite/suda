@@ -65,7 +65,11 @@ class TableClassStructBuilder extends TableStructBuilder
      */
     public static function readClassDocField(string $classDoc):?array
     {
-        if (preg_match_all('/^.+\s+\@field(?:\-(?:serialize|json))?\s+(\w+)\s+(\w+)(?:\((.+?)\))?(.*?)$/im', $classDoc, $match) > 0) {
+        if (preg_match_all(
+            '/^.+\s+\@field(?:\-(?:serialize|json))?\s+(\w+)\s+(\w+)(?:\((.+?)\))?(.*?)$/im',
+            $classDoc,
+            $match
+        ) > 0) {
             return is_array($match)?$match:null;
         }
         return null;
@@ -85,7 +89,13 @@ class TableClassStructBuilder extends TableStructBuilder
         foreach ($fields[0] as $index => $value) {
             $match = array_column($fields, $index);
             list($comment, $field, $type, $length, $modifier) = $match;
-            $fieldObj = $this->createClassField($name, trim($field), trim($type), static::parseLength($length), trim($modifier));
+            $fieldObj = $this->createClassField(
+                $name,
+                trim($field),
+                trim($type),
+                static::parseLength($length),
+                trim($modifier)
+            );
             $struct->addField($fieldObj);
         }
         return $struct;

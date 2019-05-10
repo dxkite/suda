@@ -110,6 +110,15 @@ class TableStruct implements ArrayDataInterface
     }
 
     /**
+     * @param string $name
+     */
+    public function setName(string $name): void
+    {
+        $this->name = $name;
+        $this->fields->setName($name);
+    }
+
+    /**
      * Get 数据表列
      *
      * @return  Fields
