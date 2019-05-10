@@ -2,12 +2,12 @@
 namespace suda\orm;
 
 use suda\orm\struct\Field;
-use suda\orm\struct\Fields;
+use suda\orm\struct\TableStruct;
 use InvalidArgumentException;
 use suda\orm\struct\ArrayDataTrait;
 use suda\orm\struct\ArrayDataInterface;
 
-class TableStruct implements ArrayDataInterface
+class TableData implements ArrayDataInterface
 {
     use ArrayDataTrait;
     /**
@@ -20,9 +20,9 @@ class TableStruct implements ArrayDataInterface
     /**
      * 数据表列
      *
-     * @var Fields
+     * @var TableStruct
      */
-    protected $fields;
+    protected $struct;
 
     /**
      * 创建表结构
@@ -32,34 +32,7 @@ class TableStruct implements ArrayDataInterface
     public function __construct(string $name)
     {
         $this->name = $name;
-        $this->fields = new Fields($name);
-    }
-
-    /**
-     * 添加表结构字段
-     *
-     * @param array|Field $fields
-     * @return $this
-     */
-    public function fields($fields)
-    {
-        if (!is_array($fields) && $fields instanceof Field) {
-            $fields = func_get_args();
-        }
-        foreach ($fields as $field) {
-            $this->fields->addField($field);
-        }
-        return $this;
-    }
-    
-    public function addField(Field $field)
-    {
-        $this->fields->addField($field);
-    }
-
-    public function field(string $name, string $type, $length = null)
-    {
-        return $this->fields->newField($name, $type, $length);
+        $this->struct = new TableStruct($name);
     }
 
     public function createAll(array $data)
@@ -74,7 +47,7 @@ class TableStruct implements ArrayDataInterface
     {
         $struct = new self($this->name);
         $struct->data = $data;
-        $struct->fields = $this->fields;
+        $struct->struct = $this->struct;
         return $struct;
     }
 
@@ -115,17 +88,17 @@ class TableStruct implements ArrayDataInterface
     public function setName(string $name): void
     {
         $this->name = $name;
-        $this->fields->setName($name);
+        $this->struct->setName($name);
     }
 
     /**
      * Get 数据表列
      *
-     * @return  Fields
+     * @return  TableStruct
      */
-    public function getFields():Fields
+    public function getStruct():TableStruct
     {
-        return $this->fields;
+        return $this->struct;
     }
     
     /**
@@ -177,7 +150,7 @@ class TableStruct implements ArrayDataInterface
 
     protected function assertFieldName(string $name)
     {
-        if ($this->fields->hasField($name) === false) {
+        if ($this->struct->hasField($name) === false) {
             throw new InvalidArgumentException(sprintf('TableStruct[%s] has no attribute %s', $this->name, $name), 0);
         }
     }

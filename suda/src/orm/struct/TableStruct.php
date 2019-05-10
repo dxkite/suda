@@ -8,10 +8,10 @@ use IteratorAggregate;
 use Traversable;
 
 /**
- * Class Fields
+ * Class TableStruct
  * @package suda\orm\struct
  */
-class Fields implements IteratorAggregate
+class TableStruct implements IteratorAggregate
 {
     /**
      * 数据表名
@@ -76,6 +76,23 @@ class Fields implements IteratorAggregate
     public function getField(string $name)
     {
         return $this->fields[$name] ?? null;
+    }
+
+    /**
+     * 添加表结构字段
+     *
+     * @param array|Field $fields
+     * @return $this
+     */
+    public function fields($fields)
+    {
+        if (!is_array($fields) && $fields instanceof Field) {
+            $fields = func_get_args();
+        }
+        foreach ($fields as $field) {
+            $this->addField($field);
+        }
+        return $this;
     }
 
     /**

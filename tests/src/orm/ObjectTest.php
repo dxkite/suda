@@ -3,7 +3,7 @@ namespace test\orm;
 
 use ReflectionException;
 use suda\orm\DataAccess;
-use suda\orm\TableStruct;
+use suda\orm\struct\TableStruct;
 use PHPUnit\Framework\TestCase;
 use suda\framework\runnable\Runnable;
 use suda\orm\struct\TableStructBuilder;

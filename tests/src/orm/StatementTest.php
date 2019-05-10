@@ -5,9 +5,10 @@ use ArrayObject;
 use suda\application\database\creator\MySQLTableCreator;
 use suda\orm\DataSource;
 use suda\orm\TableAccess;
-use suda\orm\TableStruct;
+use suda\orm\struct\TableStruct;
 use PHPUnit\Framework\TestCase;
 use suda\orm\statement\QueryStatement;
+use suda\orm\TableData;
 
 class StatementTest extends TestCase
 {
@@ -20,8 +21,8 @@ class StatementTest extends TestCase
             $struct->field('name', 'varchar', 80),
         ]);
 
-        $this->assertTrue($struct->getFields()->hasField('name'));
-        $this->assertTrue($struct->getFields()->hasField('id'));
+        $this->assertTrue($struct->hasField('name'));
+        $this->assertTrue($struct->hasField('id'));
     }
 
     public function testMySQLBuilder()
@@ -34,19 +35,19 @@ class StatementTest extends TestCase
             $struct->field('name', 'varchar', 80),
         ]);
 
-     
-         
+
+
         $source->add(DataSource::new('mysql', [
             'host' => 'localhost',
             'name' => 'test',
             'user' => 'root',
             'password' => DIRECTORY_SEPARATOR === '/' ?'':'root',
         ]));
-     
+
 
         $table = new TableAccess($struct, $source);
 
-        
+
 
         $this->assertEquals(
             'SELECT `id`,`name` FROM user_table',
@@ -121,7 +122,7 @@ class StatementTest extends TestCase
             'DELETE FROM user_table WHERE `id` is :_21id',
             $table->delete(['id' => ['is', null]])->getString()
         );
-        
+
         $whereIn = $table->delete('id in (:id)', [ 'id' => new ArrayObject([1, 3, 4])])->getString();
         $this->assertEquals(
             'DELETE FROM user_table WHERE id in (:_22id,:_23id,:_24id)',
@@ -142,13 +143,13 @@ class StatementTest extends TestCase
 
     public function testStuctSet()
     {
-        $struct = new TableStruct('user_table');
-        $struct->fields([
-            $struct->field('id', 'bigint', 20)->auto()->primary(),
-            $struct->field('name', 'varchar', 80),
+        $tableData = new TableData('user_table');
+        $tableData->getStruct()->fields([
+            $tableData->getStruct()->field('id', 'bigint', 20)->auto()->primary(),
+            $tableData->getStruct()->field('name', 'varchar', 80),
         ]);
-        $struct->name = 'dxkite';
-        $this->assertEquals('dxkite', $struct->name);
+        $tableData->name = 'dxkite';
+        $this->assertEquals('dxkite', $tableData->name);
     }
 
     public function testMySQLConnectionWindows()
@@ -160,27 +161,27 @@ class StatementTest extends TestCase
             $struct->field('id', 'bigint', 20)->auto()->primary(),
             $struct->field('name', 'varchar', 80),
         ]);
-         
+
         $source->add(DataSource::new('mysql', [
             'host' => 'localhost',
             'name' => 'test',
             'user' => 'root',
             'password' => DIRECTORY_SEPARATOR === '/' ?'':'root',
         ]));
-     
+
         $table = new TableAccess($struct, $source);
 
         if (DIRECTORY_SEPARATOR === '\\') {
-            $this->assertNotNull((new MySQLTableCreator($table->getSource()->write(), $struct->getFields()))->create());
-            
+            $this->assertNotNull((new MySQLTableCreator($table->getSource()->write(), $struct))->create());
+
             $this->assertTrue($table->run($table->write(['name' => 'dxkite'])));
 
             $data = $table->run($table->read('name')->where(['id' => 1]));
-    
+
             $this->assertEquals('dxkite', $data['name']);
-    
+
             $data = $table->run($table->read('id', 'name')->where(['id' => 1])->withKey('id'));
-    
+
             $this->assertEquals('dxkite', $data[1]['name']);
         }
     }

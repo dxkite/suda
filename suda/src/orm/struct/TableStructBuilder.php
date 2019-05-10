@@ -8,7 +8,6 @@ use ReflectionClass;
 use ReflectionException;
 use ReflectionProperty;
 use function strtolower;
-use suda\orm\TableStruct;
 
 /**
  * 数据表构建

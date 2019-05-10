@@ -24,7 +24,7 @@ abstract class DataObject implements ArrayDataInterface
      */
     public function checkFieldExist(string $name)
     {
-        return DataAccess::createStruct(static::class)->getFields()->hasField($name);
+        return DataAccess::createStruct(static::class)->hasField($name);
     }
 
     /**

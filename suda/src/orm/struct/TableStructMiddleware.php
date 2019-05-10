@@ -6,7 +6,6 @@ use function preg_match_all;
 use ReflectionClass;
 use ReflectionException;
 use ReflectionProperty;
-use suda\orm\TableStruct;
 use suda\orm\middleware\ObjectMiddleware;
 
 /**
@@ -41,7 +40,7 @@ class TableStructMiddleware extends ObjectMiddleware
      */
     public function inputName(string $name):string
     {
-        return $this->struct->getFields()->inputName($name);
+        return $this->struct->inputName($name);
     }
 
     /**
@@ -52,7 +51,7 @@ class TableStructMiddleware extends ObjectMiddleware
      */
     public function outputName(string $name):string
     {
-        return $this->struct->getFields()->outputName($name);
+        return $this->struct->outputName($name);
     }
 
     /**
@@ -78,7 +77,7 @@ class TableStructMiddleware extends ObjectMiddleware
     protected function createProccorFromStruct()
     {
         $this->processor = [];
-        $fields = $this->struct->getFields();
+        $fields = $this->struct;
         foreach ($fields as $key => $value) {
             $this->processor[$key] = ObjectMiddleware::RAW;
         }

@@ -12,6 +12,7 @@ use suda\orm\statement\Statement;
 use suda\orm\struct\ReadStatement;
 use suda\orm\middleware\Middleware;
 use suda\orm\struct\QueryStatement;
+use suda\orm\struct\TableStruct;
 use suda\orm\struct\WriteStatement;
 use suda\orm\middleware\NullMiddleware;
 use suda\orm\struct\TableStructBuilder;
@@ -113,7 +114,7 @@ class DataAccess
         if (is_object($where)) {
             $where = $this->createDataFromObject($where);
         }
-        $fields = $this->access->getStruct()->getFields()->all();
+        $fields = $this->access->getStruct()->all();
         $field = array_shift($fields);
         $total = $this->access->read([$field->getName()])->where($where, $whereBinder);
         $data = $this->access->query(
@@ -212,7 +213,7 @@ class DataAccess
      */
     protected function createDataViaMagicGet($object)
     {
-        $fields = $this->access->getStruct()->getFields();
+        $fields = $this->access->getStruct();
         $data = [];
         $isset = method_exists($object, '__isset');
         if ($isset) {

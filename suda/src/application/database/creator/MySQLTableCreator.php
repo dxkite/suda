@@ -4,7 +4,7 @@ namespace suda\application\database\creator;
 use function implode;
 use suda\orm\exception\SQLException;
 use suda\orm\struct\Field;
-use suda\orm\struct\Fields;
+use suda\orm\struct\TableStruct;
 use suda\orm\connection\Connection;
 use suda\orm\statement\QueryStatement;
 
@@ -24,7 +24,7 @@ class MySQLTableCreator
     /**
      * 字段
      *
-     * @var Fields
+     * @var TableStruct
      */
     protected $fields;
 
@@ -68,9 +68,9 @@ class MySQLTableCreator
     /**
      * MySQLTableCreator constructor.
      * @param Connection $connection
-     * @param Fields $fields
+     * @param TableStruct $fields
      */
-    public function __construct(Connection $connection, Fields $fields)
+    public function __construct(Connection $connection, TableStruct $fields)
     {
         $this->name = $fields->getName();
         $this->fields = $fields;

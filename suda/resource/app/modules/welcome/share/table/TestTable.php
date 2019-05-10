@@ -3,7 +3,7 @@ namespace suda\welcome\table;
 
 use suda\application\database\creator\MySQLTableCreator;
 use suda\orm\DataSource;
-use suda\orm\TableStruct;
+use suda\orm\struct\TableStruct;
 use suda\application\database\Table;
 
 class TestTable extends Table
@@ -11,7 +11,7 @@ class TestTable extends Table
     public function __construct(DataSource $datasource)
     {
         parent::__construct('hello');
-        (new MySQLTableCreator($this->getSource()->write(), $this->getStruct()->getFields()))->create();
+        (new MySQLTableCreator($this->getSource()->write(), $this->getStruct()))->create();
     }
 
     public function onCreateStruct(TableStruct $struct):TableStruct

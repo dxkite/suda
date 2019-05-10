@@ -4,7 +4,7 @@ namespace suda\orm\statement;
 use function func_get_args;
 use function func_num_args;
 use function is_array;
-use suda\orm\TableStruct;
+use suda\orm\struct\TableStruct;
 use suda\orm\middleware\Middleware;
 use suda\orm\exception\SQLException;
 
@@ -198,7 +198,7 @@ class ReadStatement extends QueryStatement
      */
     protected function havingStringArray(string $having, array $havingBinder)
     {
-        
+
         list($having, $havingBinder) = $this->parepareWhereString($having, $havingBinder);
         $this->having = 'HAVING '. $having;
         $this->binder = $this->mergeBinder($this->binder, $havingBinder);

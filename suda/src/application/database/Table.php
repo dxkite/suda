@@ -2,7 +2,7 @@
 namespace suda\application\database;
 
 use suda\orm\TableAccess;
-use suda\orm\TableStruct;
+use suda\orm\struct\TableStruct;
 use suda\application\Application;
 use suda\orm\middleware\Middleware;
 
@@ -15,7 +15,7 @@ use suda\orm\middleware\Middleware;
 abstract class Table extends TableAccess implements Middleware
 {
     use TableMiddlewareTrait;
-    
+
     /**
      * 应用引用
      *
@@ -57,7 +57,7 @@ abstract class Table extends TableAccess implements Middleware
      * Get 应用引用
      *
      * @return  Application
-     */ 
+     */
     public static function application()
     {
         return static::$application;

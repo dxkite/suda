@@ -6,7 +6,7 @@ use function is_array;
 use function is_string;
 use function sprintf;
 use suda\orm\Binder;
-use suda\orm\TableStruct;
+use suda\orm\struct\TableStruct;
 use suda\orm\middleware\Middleware;
 use suda\orm\exception\SQLException;
 
@@ -82,7 +82,7 @@ class WriteStatement extends Statement
             }
         } else {
             $name = $this->middleware->inputName($name);
-            if ($this->struct->getFields()->hasField($name)) {
+            if ($this->struct->hasField($name)) {
                 $this->data[$name] = $value;
             } else {
                 throw new SQLException(sprintf('table `%s` has no field `%s`', $this->struct->getName(), $name));

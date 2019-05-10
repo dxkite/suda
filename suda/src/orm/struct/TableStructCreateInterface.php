@@ -1,7 +1,6 @@
 <?php
 namespace suda\orm\struct;
 
-use suda\orm\TableStruct;
 
 /**
  * 感知表结构

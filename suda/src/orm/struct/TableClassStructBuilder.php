@@ -4,7 +4,7 @@ namespace suda\orm\struct;
 use function array_column;
 use ReflectionClass;
 use ReflectionException;
-use suda\orm\TableStruct;
+use suda\orm\struct\TableStruct;
 
 /**
  * 从类的类注释构建对象
@@ -75,7 +75,7 @@ class TableClassStructBuilder extends TableStructBuilder
         return null;
     }
 
- 
+
     /**
      * 创建表结构
      *

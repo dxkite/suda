@@ -9,6 +9,7 @@ use suda\orm\struct\ReadStatement;
 use suda\orm\middleware\Middleware;
 use suda\orm\statement\QueryAccess;
 use suda\orm\struct\QueryStatement;
+use suda\orm\struct\TableStruct;
 use suda\orm\struct\WriteStatement;
 
 /**
@@ -47,7 +48,7 @@ class TableAccess extends QueryAccess
 
     /**
      * 设置中间件
-     *
+     *F
      * @param Middleware $middleware
      * @return $this
      */
@@ -156,7 +157,7 @@ class TableAccess extends QueryAccess
     public function read($fields):ReadStatement
     {
         if ($fields === null) {
-            $fields = array_keys($this->getStruct()->getFields()->all());
+            $fields = array_keys($this->getStruct()->all());
         } elseif (func_num_args() > 1) {
             $fields = func_get_args();
         }

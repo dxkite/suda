@@ -2,7 +2,7 @@
 namespace suda\orm\middleware;
 
 use ReflectionException;
-use suda\orm\TableStruct;
+use suda\orm\struct\TableStruct;
 
 /**
  * 感知表结构
