@@ -6,7 +6,7 @@ use suda\orm\TableStruct;
 /**
  * 感知表结构
  */
-interface TableStructAwareInterface
+interface TableStructCreateInterface
 {
     /**
      * 创建数据表结构
