@@ -96,10 +96,10 @@ class CompilableTemplate extends RawTemplate
      */
     public function __construct(string $source, array $config = [])
     {
+        parent::__construct('',[]);
         $this->source = $source;
         $this->name = pathinfo($source, PATHINFO_FILENAME);
         $this->config = $config;
-        $this->value = [];
     }
 
     protected function getStaticPath()
@@ -140,6 +140,7 @@ class CompilableTemplate extends RawTemplate
      * 输出
      * @ignore-dump
      * @return string
+     * @throws Exception
      */
     public function getRenderedString()
     {
@@ -151,6 +152,7 @@ class CompilableTemplate extends RawTemplate
      * 编译
      *
      * @return void
+     * @throws Exception
      */
     protected function compile(){
         $sourcePath = $this->getSourcePath();
@@ -174,6 +176,7 @@ class CompilableTemplate extends RawTemplate
     /**
      * 获取渲染后的字符串
      * @ignore-dump
+     * @throws Exception
      */
     public function render()
     {
@@ -204,6 +207,10 @@ class CompilableTemplate extends RawTemplate
         $this->extend = $name;
     }
 
+    /**
+     * @param string $path
+     * @throws Exception
+     */
     public function include(string $path)
     {
         $subfix = $this->config['subfix'] ?? '';

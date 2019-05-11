@@ -64,8 +64,8 @@ class FileCache implements Cache
      */
     public function get(string $name, $default = null)
     {
-        if ($this->has($name)) {
-            $path = $this->getFilePath($name);
+        $path = $this->getFilePath($name);
+        if (FileSystem::exist($path)) {
             $value = FileSystem::get($path);
             list($time, $value) = explode('|', $value, 2);
             $time = intval($time);
@@ -100,7 +100,7 @@ class FileCache implements Cache
      */
     public function has(string $name):bool
     {
-        return FileSystem::exist($this->getFilePath($name));
+        return $this->get($name) !== null;
     }
 
     /**
@@ -130,7 +130,7 @@ class FileCache implements Cache
             throw new Exception('file cache save path missing');
         }
     }
-    
+
     protected function getFilePath(string $name)
     {
         return $this->path.'/'.md5($name).'.cache';

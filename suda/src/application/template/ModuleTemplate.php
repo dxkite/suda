@@ -2,6 +2,7 @@
 namespace suda\application\template;
 
 use function constant;
+use Exception;
 use function is_array;
 use function is_string;
 use suda\framework\Request;
@@ -46,6 +47,7 @@ class ModuleTemplate extends ModuleTemplateBase
      *
      * @param string $name
      * @return void
+     * @throws Exception
      */
     public function include(string $name)
     {
@@ -53,6 +55,14 @@ class ModuleTemplate extends ModuleTemplateBase
         $included->parent = $this;
         $included->value = $this->value;
         echo $included->getRenderedString();
+    }
+
+    public function getRenderedString()
+    {
+        $this->application->debug()->time('render '.$this->name);
+        $code =  parent::getRenderedString();
+        $this->application->debug()->timeEnd('render '.$this->name);
+        return $code;
     }
 
     public function getUrl($name = null, $values = null)
