@@ -18,7 +18,7 @@ use suda\orm\middleware\NullMiddleware;
 use suda\orm\struct\TableStructBuilder;
 use suda\orm\struct\TableStructMiddleware;
 use suda\orm\struct\TableClassStructBuilder;
-use suda\orm\struct\TableStructCreateInterface;
+use suda\orm\struct\TableStructAwareInterface;
 use suda\orm\middleware\MiddlewareAwareInterface;
 
 /**
@@ -269,8 +269,8 @@ class DataAccess
      */
     public static function createStruct(string $object)
     {
-        if (is_subclass_of($object, TableStructCreateInterface::class)) {
-            return forward_static_call([$object, 'createTableStruct']);
+        if (is_subclass_of($object, TableStructAwareInterface::class)) {
+            return forward_static_call([$object, 'getTableStruct']);
         }
         return (new TableClassStructBuilder($object))->createStruct();
     }
