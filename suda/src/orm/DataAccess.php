@@ -270,8 +270,7 @@ class DataAccess
     public static function createStruct(string $object)
     {
         if (is_subclass_of($object, TableStructCreateInterface::class)) {
-            $struct = new TableStruct(static::createTableName($object));
-            return forward_static_call([$object, 'createTableStruct'], $struct);
+            return forward_static_call([$object, 'createTableStruct']);
         }
         return (new TableClassStructBuilder($object))->createStruct();
     }

@@ -1,6 +1,7 @@
 <?php
 namespace suda\application\database\creator;
 
+use ReflectionException;
 use suda\orm\exception\SQLException;
 use suda\orm\struct\Field;
 use suda\orm\struct\TableStruct;
@@ -50,6 +51,7 @@ class SQLiteTableCreator
     /**
      * @return bool
      * @throws SQLException
+     * @throws ReflectionException
      */
     public function create()
     {

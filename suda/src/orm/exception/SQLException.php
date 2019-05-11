@@ -2,9 +2,9 @@
 namespace suda\orm\exception;
 
 
-use RuntimeException;
+use Exception;
 
-class SQLException extends RuntimeException
+class SQLException extends Exception
 {
     const ERR_QUERY = 1;
     const ERR_PREPARE = 2;

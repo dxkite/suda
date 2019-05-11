@@ -4,6 +4,7 @@ namespace suda\orm;
 use function array_keys;
 use function func_get_args;
 use function func_num_args;
+use ReflectionException;
 use suda\orm\statement\Statement;
 use suda\orm\struct\ReadStatement;
 use suda\orm\middleware\Middleware;
@@ -181,7 +182,7 @@ class TableAccess extends QueryAccess
      *
      * @param Statement $statement
      * @return mixed
-     * @throws exception\SQLException
+     * @throws ReflectionException
      */
     public function run(Statement $statement)
     {
