@@ -50,6 +50,11 @@ class Module
 
 
     /**
+     * @var array
+     */
+    protected $property;
+
+    /**
      * 路径
      *
      * @var string
@@ -61,14 +66,16 @@ class Module
      * @param string $name
      * @param string $version
      * @param string $path
+     * @param string $property
      * @param array $config
      */
-    public function __construct(string $name, string $version, string $path, array $config)
+    public function __construct(string $name, string $version, string $path, array $property, array $config = [])
     {
         $this->name = $name;
         $this->version = $version;
         $this->path = $path;
         $this->config = $config;
+        $this->property = $property;
         $this->resource = new ApplicationResource;
         $this->status = Module::REACHABLE;
     }
@@ -163,36 +170,71 @@ class Module
     }
 
     /**
-     * Set 模块配置
-     *
-     * @param  array  $config  模块配置
-     *
-     * @return  self
+     * @param string|null $name
+     * @param null $default
+     * @return mixed
      */
-    public function setConfig(array $config)
+    public function getProperty(string $name = null, $default = null)
+    {
+        if ($name !== null) {
+            return ArrayDotAccess::get($this->property, $name, $default);
+        }
+        return $this->property;
+    }
+
+    /**
+     * @param string $name
+     */
+    public function setName(string $name): void
+    {
+        $this->name = $name;
+    }
+
+    /**
+     * @param string $version
+     */
+    public function setVersion(string $version): void
+    {
+        $this->version = $version;
+    }
+
+    /**
+     * @param array $config
+     */
+    public function setConfig(array $config): void
     {
         $this->config = $config;
-
-        return $this;
     }
 
     /**
-     * Get 路径
-     *
-     * @return  string
+     * @param array $property
      */
-    public function getPath()
+    public function setProperty(array $property): void
     {
-        return $this->path;
+        $this->property = $property;
     }
 
     /**
-     * Get 状态
-     *
-     * @return  int
+     * @param string $path
      */
-    public function getStatus()
+    public function setPath(string $path): void
+    {
+        $this->path = $path;
+    }
+
+    /**
+     * @return int
+     */
+    public function getStatus(): int
     {
         return $this->status;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPath(): string
+    {
+        return $this->path;
     }
 }

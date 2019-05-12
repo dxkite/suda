@@ -2,7 +2,6 @@
 namespace suda\application\loader;
 
 use Exception;
-use function is_array;
 use suda\framework\Config;
 use suda\application\Module;
 use suda\application\Resource;
@@ -76,7 +75,7 @@ class ModuleLoader
      */
     protected function checkRequirements()
     {
-        if ($require = $this->module->getConfig('require')) {
+        if ($require = $this->module->getProperty('require')) {
             foreach ($require as $module => $version) {
                 $this->assertModuleVersion($module, $version);
             }
@@ -112,7 +111,7 @@ class ModuleLoader
      */
     protected function checkFrameworkVersion()
     {
-        if ($sudaVersion = $this->module->getConfig('suda')) {
+        if ($sudaVersion = $this->module->getProperty('suda')) {
             if (static::versionCompare($sudaVersion, SUDA_VERSION) !== true) {
                 throw new ApplicationException(
                     sprintf('%s module need suda version %s', $this->module->getFullName(), $sudaVersion),
@@ -123,7 +122,7 @@ class ModuleLoader
     }
     protected function loadShareLibrary()
     {
-        $import = $this->module->getConfig('import.share', []);
+        $import = $this->module->getProperty('import.share', []);
         if (count($import)) {
             $this->importClassLoader($import, $this->module->getPath());
         }
@@ -131,7 +130,7 @@ class ModuleLoader
 
     protected function loadPrivateLibrary()
     {
-        $import = $this->module->getConfig('import.src', []);
+        $import = $this->module->getProperty('import.src', []);
         if (count($import)) {
             $this->importClassLoader($import, $this->module->getPath());
         }
@@ -164,6 +163,7 @@ class ModuleLoader
         if ($path = $this->module->getResource()->getConfigResourcePath('config/event')) {
             $event = Config::loadConfig($path, [
                 'module' => $this->module->getName(),
+                'property' => $this->module->getProperty(),
                 'config' => $this->module->getConfig(),
             ]);
             if (is_array($event)) {
@@ -208,6 +208,7 @@ class ModuleLoader
             $routeConfig = Config::loadConfig($path, [
                 'module' => $this->module->getName(),
                 'group' => $groupName,
+                'property' => $this->module->getProperty(),
                 'config' => $this->module->getConfig(),
             ]);
             if ($routeConfig !== null) {
@@ -232,11 +233,11 @@ class ModuleLoader
         foreach ($routeConfig as $name => $config) {
             $exname = $this->application->getRouteName($name, $module, $groupName);
             $method = $config['method'] ?? [];
-            $attriute = [];
-            $attriute['module'] = $module;
-            $attriute['config'] = $config;
-            $attriute['group'] = $groupName;
-            $attriute['route'] = $exname;
+            $attributes = [];
+            $attributes['module'] = $module;
+            $attributes['config'] = $config;
+            $attributes['group'] = $groupName;
+            $attributes['route'] = $exname;
             $uri = $config['uri'] ?? '/';
             $anti = array_key_exists('anti-prefix', $config) && $config['anti-prefix'];
             if ($anti) {
@@ -244,7 +245,7 @@ class ModuleLoader
             } else {
                 $uri = '/'.trim($prefix . $uri, '/');
             }
-            $this->application->request($method, $exname, $uri, $attriute);
+            $this->application->request($method, $exname, $uri, $attributes);
         }
     }
 

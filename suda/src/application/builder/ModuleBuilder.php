@@ -18,28 +18,33 @@ class ModuleBuilder
      * 从配置文件构建模块
      *
      * @param string $path
-     * @param string $configPath
+     * @param string $propertyPath
      * @return Module
      */
-    public static function build(string $path, string $configPath):Module
+    public static function build(string $path, string $propertyPath):Module
     {
-        $config = Config::loadConfig($configPath, ['path' => $path]) ?? [];
+        $property = Config::loadConfig($propertyPath, ['path' => $path]) ?? [];
         $name = dirname($path);
         $version = '1.0.0';
         $resource = './resource';
-        if ($config) {
-            if (array_key_exists('name', $config)) {
-                $name = $config['name'];
+        if ($property) {
+            if (array_key_exists('name', $property)) {
+                $name = $property['name'];
             }
-            if (array_key_exists('version', $config)) {
-                $version = $config['version'];
+            if (array_key_exists('version', $property)) {
+                $version = $property['version'];
             }
-            if (array_key_exists('resource', $config)) {
-                $resource = $config['resource'];
+            if (array_key_exists('resource', $property)) {
+                $resource = $property['resource'];
             }
         }
-        $module = new Module($name, $version, $path, $config);
+        $module = new Module($name, $version, $path, $property);
         $module->getResource()->addResourcePath(Resource::getPathByRelativePath($resource, $path));
+        $path = $module->getResource()->getConfigResourcePath('config/config');
+        if ($path !== null) {
+            $config = Config::loadConfig($path, $property);
+            $module->setConfig($config);
+        }
         return $module;
     }
     

@@ -11,7 +11,7 @@ class EventTest extends TestCase
     public function testProcess()
     {
         $event = new Event();
-        $event->add('test',function ($value, & $data){
+        $event->add('test', function ($value, & $data) {
             $data = true;
             return $value.' - processed';
         });
