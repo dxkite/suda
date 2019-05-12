@@ -77,7 +77,6 @@ class Response extends HTTPResponse
      *
      * @param mixed $content
      * @return $this
-     * @throws Exception
      */
     public function setContent($content)
     {
@@ -117,7 +116,6 @@ class Response extends HTTPResponse
      * 结束请求
      *
      * @return void
-     * @throws Exception
      */
     public function end()
     {
@@ -192,7 +190,6 @@ class Response extends HTTPResponse
      *
      * @param mixed $content
      * @return void
-     * @throws Exception
      */
     public function sendContent($content = null)
     {

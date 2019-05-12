@@ -1,10 +1,11 @@
 <?php
+
 namespace suda\application\template;
 
 use function extract;
 use function ob_get_clean;
 use suda\framework\arrayobject\ArrayDotAccess;
-use suda\application\exception\MissingTemplateException;
+use suda\application\exception\NoTemplateFoundException;
 
 /**
  * 应用程序
@@ -96,6 +97,11 @@ class RawTemplate
             include $this->getPath();
             return ob_get_clean();
         }
-        throw new MissingTemplateException($this->getPath(), 1);
+        throw new NoTemplateFoundException(
+            'missing dest at ' . $this->getPath(),
+            E_USER_ERROR,
+            $this->getPath(),
+            1
+        );
     }
 }

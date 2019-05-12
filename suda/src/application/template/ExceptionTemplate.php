@@ -4,7 +4,7 @@ namespace suda\application\template;
 use function strrpos;
 use function substr;
 use Throwable;
-use suda\application\exception\MissingTemplateException;
+use suda\application\exception\NoTemplateFoundException;
 
 /**
  * 异常显示模板
@@ -28,8 +28,8 @@ class ExceptionTemplate extends RawTemplate
     {
         try {
             return parent::getRenderedString();
-        } catch (MissingTemplateException $e) {
-            return 'MissingTemplateException:'.$e->getTemplateName();
+        } catch (NoTemplateFoundException $e) {
+            return 'NoTemplateFoundException:'.$e->getTemplateName();
         } catch (Throwable $e) {
             return 'Template Render Exception:'.$e->getMessage();
         }

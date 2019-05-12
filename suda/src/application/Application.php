@@ -5,6 +5,8 @@ use function array_key_exists;
 use function constant;
 use Exception;
 use ReflectionException;
+use suda\application\exception\ApplicationException;
+use suda\application\exception\ConfigurationException;
 use suda\application\template\ModuleTemplate;
 use suda\orm\exception\SQLException;
 use Throwable;
@@ -92,7 +94,6 @@ class Application extends ApplicationSource
      * @param Request $request
      * @param Response $response
      * @return void
-     * @throws Exception
      */
     public function run(Request $request, Response $response)
     {
@@ -128,7 +129,6 @@ class Application extends ApplicationSource
      * @param string $url
      * @param array $attributes
      * @return void
-     * @throws Exception
      */
     public function request(array $method, string $name, string $url, array $attributes = [])
     {
@@ -145,7 +145,7 @@ class Application extends ApplicationSource
         } elseif (array_key_exists('runnable', $route)) {
             $runnable = $route['runnable'];
         } else {
-            throw new Exception('request failed');
+            throw new ConfigurationException('request config error', ConfigurationException::ERR_CONFIG_SET);
         }
         $this->route->request($method, $name, $url, $runnable, $attributes);
     }
