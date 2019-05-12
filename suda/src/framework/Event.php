@@ -2,6 +2,8 @@
 namespace suda\framework;
 
 use function array_key_exists;
+use ReflectionException;
+use suda\framework\event\EventFilter;
 use suda\framework\runnable\Runnable;
 
 class Event
@@ -95,6 +97,7 @@ class Event
      * @param string $name
      * @param array $args
      * @return void
+     * @throws ReflectionException
      */
     public function exec(string $name, array $args = [])
     {
@@ -109,11 +112,33 @@ class Event
      * 继续执行
      *
      * @param string $name
+     * @param mixed $value
+     * @param array $args
+     * @return mixed
+     * @throws ReflectionException
+     */
+    public function process(string $name, $value, array $args = [])
+    {
+        if ($this->hasListenEvent($name)) {
+            array_unshift($args, $value);
+            foreach ($this->queue[$name] as $command) {
+                $args[0] = $value;
+                $value = $this->call($command, $args);
+            }
+        }
+        return $value;
+    }
+
+    /**
+     * 继续执行
+     *
+     * @param string $name
      * @param array $args
      * @param mixed $condition
      * @return boolean
+     * @throws ReflectionException
      */
-    public function execNext(string $name, array $args = [], $condition = true):bool
+    public function next(string $name, array $args = [], $condition = true):bool
     {
         if ($this->hasListenEvent($name)) {
             foreach ($this->queue[$name] as $command) {
@@ -133,6 +158,7 @@ class Event
      * @param string $name
      * @param array $args
      * @return mixed
+     * @throws ReflectionException
      */
     public function execFirst(string $name, array $args = [])
     {
@@ -148,6 +174,7 @@ class Event
      * @param string $name
      * @param array $args
      * @return mixed
+     * @throws ReflectionException
      */
     public function execLast(string $name, array $args = [])
     {
@@ -163,6 +190,7 @@ class Event
      * @param mixed $command
      * @param array $args
      * @return mixed
+     * @throws ReflectionException
      */
     protected function call($command, array &$args)
     {
