@@ -41,13 +41,18 @@ class ModuleLoader
         $this->application = $application;
     }
 
-    public function toLoaded()
+    public function toLoad()
     {
         $this->loadVendorIfExist();
-        $this->loadEventListener();
         $this->loadShareLibrary();
-        $this->loadExtraModuleResourceLibrary();
         $this->application->debug()->info('loaded - '.$this->module->getFullName());
+    }
+
+    public function toActive()
+    {
+        $this->loadEventListener();
+        $this->loadExtraModuleResourceLibrary();
+        $this->application->debug()->info('active = '.$this->module->getFullName());
     }
 
     /**
@@ -56,7 +61,7 @@ class ModuleLoader
     public function toReachable()
     {
         $this->loadRoute();
-        $this->application->debug()->info('reachable = '.$this->module->getFullName());
+        $this->application->debug()->info('reachable # '.$this->module->getFullName());
     }
 
     public function toRunning()

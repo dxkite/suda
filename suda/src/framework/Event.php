@@ -1,9 +1,7 @@
 <?php
 namespace suda\framework;
 
-use function array_key_exists;
 use ReflectionException;
-use suda\framework\event\EventFilter;
 use suda\framework\runnable\Runnable;
 
 class Event

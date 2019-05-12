@@ -101,7 +101,10 @@ class ModuleBag implements IteratorAggregate
         if (($module = $this->guess($path)) !== null) {
             return $module;
         }
-        throw new ApplicationException(sprintf('path %s not exist in any module', $path), ApplicationException::ERR_PATH_NOT_EXISTS_IN_MODULE);
+        throw new ApplicationException(
+            sprintf('path %s not exist in any module', $path),
+            ApplicationException::ERR_PATH_NOT_EXISTS_IN_MODULE
+        );
     }
 
     /**

@@ -23,6 +23,25 @@ class ModuleBuilder
      */
     public static function build(string $path, string $propertyPath):Module
     {
+        list($name, $version, $resource, $property) = static::getModuleProperty($path, $propertyPath);
+        $module = new Module($name, $version, $path, $property);
+        $module->getResource()->addResourcePath(Resource::getPathByRelativePath($resource, $path));
+        $path = $module->getResource()->getConfigResourcePath('config/config');
+        if ($path !== null && ($config = Config::loadConfig($path, $property)) !== null) {
+            $module->setConfig($config);
+        }
+        return $module;
+    }
+
+    /**
+     * 获取模块属性
+     *
+     * @param string $path
+     * @param string $propertyPath
+     * @return array
+     */
+    protected static function getModuleProperty(string $path, string $propertyPath)
+    {
         $property = Config::loadConfig($propertyPath, ['path' => $path]) ?? [];
         $name = dirname($path);
         $version = '1.0.0';
@@ -38,16 +57,9 @@ class ModuleBuilder
                 $resource = $property['resource'];
             }
         }
-        $module = new Module($name, $version, $path, $property);
-        $module->getResource()->addResourcePath(Resource::getPathByRelativePath($resource, $path));
-        $path = $module->getResource()->getConfigResourcePath('config/config');
-        if ($path !== null) {
-            $config = Config::loadConfig($path, $property);
-            $module->setConfig($config);
-        }
-        return $module;
+        return [$name, $version, $resource, $property];
     }
-    
+
     /**
      * 检查模块配置
      *

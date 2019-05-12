@@ -1,4 +1,5 @@
 <?php
+
 namespace suda\application;
 
 use suda\application\Resource as ApplicationResource;
@@ -10,8 +11,9 @@ use suda\framework\arrayobject\ArrayDotAccess;
 class Module
 {
     const LOADED = 1;
-    const REACHABLE = 2;
-    const RUNNING = 3;
+    const ACTIVE = 2;
+    const REACHABLE = 3;
+    const RUNNING = 4;
 
     /**
      * 模块名
@@ -85,7 +87,7 @@ class Module
      *
      * @return  string
      */
-    public function getVersion():string
+    public function getVersion(): string
     {
         return $this->version;
     }
@@ -95,7 +97,7 @@ class Module
      *
      * @return  string
      */
-    public function getName():string
+    public function getName(): string
     {
         return $this->name;
     }
@@ -105,9 +107,9 @@ class Module
      *
      * @return string
      */
-    public function getFullName():string
+    public function getFullName(): string
     {
-        return $this->getName().':'.$this->getVersion();
+        return $this->getName() . ':' . $this->getVersion();
     }
 
     /**
@@ -115,9 +117,9 @@ class Module
      *
      * @return string
      */
-    public function getUriSafeName():string
+    public function getUriSafeName(): string
     {
-        return $this->getName().'/'.$this->getVersion();
+        return $this->getName() . '/' . $this->getVersion();
     }
 
     /**
@@ -125,7 +127,7 @@ class Module
      *
      * @return ApplicationResource
      */
-    public function getResource():ApplicationResource
+    public function getResource(): ApplicationResource
     {
         return $this->resource;
     }
@@ -171,7 +173,7 @@ class Module
 
     /**
      * @param string|null $name
-     * @param null $default
+     * @param mixed $default
      * @return mixed
      */
     public function getProperty(string $name = null, $default = null)

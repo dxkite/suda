@@ -150,9 +150,12 @@ class ApplicationLoader
 
     protected function prepareModuleLoader()
     {
-        foreach ($this->application->getModules() as $name => $module) {
+        foreach ($this->application->getModules()->all() as $name => $module) {
             $this->moduleLoader[$name] = new ModuleLoader($this->application, $module);
-            $this->moduleLoader[$name]->toLoaded();
+            $this->moduleLoader[$name]->toLoad();
+            if ($module->getStatus() !== Module::LOADED) {
+                $this->moduleLoader[$name]->toActive();
+            }
         }
     }
 
@@ -182,23 +185,37 @@ class ApplicationLoader
         if ($configPath) {
             $config = Config::loadConfig($configPath, $this->application->getConfig());
         }
-        if ($config === null) {
-            $this->application->getModules()->merge($modules);
-        } else {
-            $this->assignModuleWithStatusToApplication($modules, $config['loaded'] ?? [], $config['reachable'] ?? []);
-        }
+        $config = $config ?? [];
+        $moduleNames = array_keys($modules->all());
+        $load  = $config['load'] ?? $moduleNames;
+        $this->loadModules($modules, $load);
+        $this->setModuleActive($modules, $config['active'] ?? $load);
+        $this->setModuleReachable($modules, $config['reachable'] ?? $load);
     }
 
-    protected function assignModuleWithStatusToApplication(ModuleBag $modules, array $loaded, array $reachable)
+    protected function loadModules(ModuleBag $bag, array $load)
     {
-        foreach ($loaded as $moduleName) {
-            if ($module = $modules->get($moduleName)) {
+        foreach ($load as $moduleName) {
+            if ($module = $bag->get($moduleName)) {
                 $module->setStatus(Module::LOADED);
                 $this->application->add($module);
             }
         }
+    }
+
+    protected function setModuleActive(ModuleBag $bag, array $reachable)
+    {
         foreach ($reachable as $moduleName) {
-            if ($module = $modules->get($moduleName)) {
+            if ($module = $bag->get($moduleName)) {
+                $module->setStatus(Module::ACTIVE);
+            }
+        }
+    }
+
+    protected function setModuleReachable(ModuleBag $bag, array $reachable)
+    {
+        foreach ($reachable as $moduleName) {
+            if ($module = $bag->get($moduleName)) {
                 $module->setStatus(Module::REACHABLE);
             }
         }
