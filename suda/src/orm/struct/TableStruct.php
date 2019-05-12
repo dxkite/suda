@@ -1,4 +1,5 @@
 <?php
+
 namespace suda\orm\struct;
 
 use function array_key_exists;
@@ -37,11 +38,11 @@ class TableStruct implements IteratorAggregate
     /**
      * 创建字段集合
      *
-     * @param string $table
+     * @param string $name
      */
-    public function __construct(string $table)
+    public function __construct(string $name)
     {
-        $this->name = $table;
+        $this->name = $name;
         $this->fields = [];
     }
 
@@ -55,7 +56,12 @@ class TableStruct implements IteratorAggregate
      */
     public function field(string $name, string $type, $length = null)
     {
-        return $this->fields[$name] ?? $this->fields[$name] = ($length?new Field($this->name, $name, $type, $length):new Field($this->name, $name, $type));
+        if ($length === null) {
+            $this->fields[$name] = new Field($this->name, $name, $type);
+        } else {
+            $this->fields[$name] = new Field($this->name, $name, $type, $length);
+        }
+        return $this->fields[$name];
     }
 
     /**
@@ -66,7 +72,7 @@ class TableStruct implements IteratorAggregate
      */
     public function newField(string $name, string $type, $length = null)
     {
-        return $this->fields[$name] ?? $this->fields[$name] = ($length?new Field($this->name, $name, $type, $length):new Field($this->name, $name, $type));
+        return $this->field($name, $type, $length);
     }
 
     /**
@@ -121,7 +127,7 @@ class TableStruct implements IteratorAggregate
      * @param string $name
      * @return string
      */
-    public function outputName(string $name):string
+    public function outputName(string $name): string
     {
         if (array_key_exists($name, $this->alias)) {
             return $this->alias[$name];
@@ -133,7 +139,7 @@ class TableStruct implements IteratorAggregate
      * @param string $name
      * @return string
      */
-    public function inputName(string $name):string
+    public function inputName(string $name): string
     {
         if ($key = array_search($name, $this->alias)) {
             return $key;

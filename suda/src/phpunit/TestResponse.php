@@ -11,6 +11,6 @@ class TestResponse extends Response
      * @return void
      */
     public function end() {
-        $this->sended = true;
+        $this->send = true;
     }
 }

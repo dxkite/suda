@@ -238,7 +238,7 @@ class Route
     protected function buildResponse(MatchResult $result, Request $request, Response $response):Response
     {
         $content = $result->getRunnable()->run($request, $response);
-        if ($content !== null && !$response->isSended()) {
+        if ($content !== null && !$response->isSend()) {
             $response->setContent($content);
         }
         return $response;
@@ -255,7 +255,7 @@ class Route
     protected function buildDefaultResponse(Request $request, Response $response):Response
     {
         $content = $this->default->run($request, $response);
-        if ($content !== null && !$response->isSended()) {
+        if ($content !== null && !$response->isSend()) {
             $response->setContent($content);
         }
         return $response;

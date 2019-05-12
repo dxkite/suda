@@ -43,7 +43,7 @@ class HTTPResponse implements Response
      *
      * @var boolean
      */
-    protected $sended = false;
+    protected $send = false;
 
     public function __construct()
     {
@@ -80,9 +80,9 @@ class HTTPResponse implements Response
      *
      * @return boolean
      */
-    public function isSended(): bool
+    public function isSend(): bool
     {
-        return $this->sended || headers_sent();
+        return $this->send || headers_sent();
     }
 
     /**
@@ -176,7 +176,7 @@ class HTTPResponse implements Response
     public function end()
     {
         $this->sendHeaders();
-        $this->sended = true;
+        $this->send = true;
     }
 
     /**
@@ -184,12 +184,12 @@ class HTTPResponse implements Response
      */
     protected function sendHeaders()
     {
-        if ($this->isSended()) {
+        if ($this->isSend()) {
             return $this;
         }
         $this->prepareCookieHeader();
         $this->sendHeader();
-        $this->sended = true;
+        $this->send = true;
         return $this;
     }
 
@@ -205,7 +205,12 @@ class HTTPResponse implements Response
                 send_header($header, false, $this->status);
             }
         }
-        send_header(sprintf('HTTP/%s %s %s', $this->version, $this->status, Status::toText($this->status)), true, $this->status);
+        send_header(sprintf(
+            'HTTP/%s %s %s',
+            $this->version,
+            $this->status,
+            Status::toText($this->status)
+        ), true, $this->status);
         return $this;
     }
 

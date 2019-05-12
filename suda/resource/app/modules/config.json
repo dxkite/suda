@@ -1,5 +1,8 @@
 {
-    "loaded": [
+    "load": [
+        "welcome"
+    ],
+    "active": [
         "welcome"
     ],
     "reachable": [

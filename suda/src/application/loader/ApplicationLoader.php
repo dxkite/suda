@@ -189,8 +189,9 @@ class ApplicationLoader
         $moduleNames = array_keys($modules->all());
         $load  = $config['load'] ?? $moduleNames;
         $this->loadModules($modules, $load);
-        $this->setModuleActive($modules, $config['active'] ?? $load);
-        $this->setModuleReachable($modules, $config['reachable'] ?? $load);
+        $active = $config['active'] ?? $load;
+        $this->setModuleActive($modules, $active);
+        $this->setModuleReachable($modules, $config['reachable'] ?? $active);
     }
 
     protected function loadModules(ModuleBag $bag, array $load)
@@ -203,9 +204,9 @@ class ApplicationLoader
         }
     }
 
-    protected function setModuleActive(ModuleBag $bag, array $reachable)
+    protected function setModuleActive(ModuleBag $bag, array $active)
     {
-        foreach ($reachable as $moduleName) {
+        foreach ($active as $moduleName) {
             if ($module = $bag->get($moduleName)) {
                 $module->setStatus(Module::ACTIVE);
             }

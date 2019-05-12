@@ -34,6 +34,7 @@ class Application extends ApplicationSource
      *
      * @return void
      * @throws SQLException
+     * @throws ReflectionException
      */
     public function load()
     {
@@ -45,10 +46,10 @@ class Application extends ApplicationSource
         $this->debug->timeEnd('loading application');
         $this->debug->time('loading data-source');
         $appLoader->loadDataSource();
+        $this->debug->timeEnd('loading data-source');
         Table::load($this);
         DataAccess::load($this);
         $this->event->exec('application:load-environment', [ $this->config ,$this]);
-        $this->debug->timeEnd('loading data-source');
         $this->debug->time('loading route');
         $appLoader->loadRoute();
         $this->event->exec('application:load-route', [$this->route , $this]);
@@ -63,6 +64,7 @@ class Application extends ApplicationSource
      * @param Response $response
      * @return void
      * @throws SQLException
+     * @throws ReflectionException
      */
     protected function prepare(Request $request, Response $response)
     {
@@ -104,10 +106,10 @@ class Application extends ApplicationSource
             }
             $this->debug->time('sending response');
             $response = $this->createResponse($result, $request, $response);
-            if (!$response->isSended()) {
+            if (!$response->isSend()) {
                 $response->end();
             }
-            $this->debug->info('resposned with code '. $response->getStatus());
+            $this->debug->info('responded with code '. $response->getStatus());
             $this->debug->timeEnd('sending response');
         } catch (Throwable $e) {
             $this->debug->uncaughtException($e);
@@ -182,7 +184,7 @@ class Application extends ApplicationSource
         } else {
             $content = $this->runResult($result, $request, $response);
         }
-        if ($content !== null && !$response->isSended()) {
+        if ($content !== null && !$response->isSend()) {
             $response->setContent($content);
         }
         return $response;

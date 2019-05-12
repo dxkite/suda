@@ -4,7 +4,7 @@
 
 ## 路由配置文件
 
-Demo应用的 `suda/welcome` 模块路由配置如下：
+Demo应用的 `suda/welcome` 模块路由配置如下（路径：`app/modules/welcome/resource/config/route.json`，以下写作 `@resource/config/route`）：
 
 ```json
 {
@@ -22,6 +22,7 @@ Demo应用的 `suda/welcome` 模块路由配置如下：
     }
 }
 ```
+
 ### 模板路由
 
 这里的路由包括了两种路由，一种是 `模板路由`， 访问后不处理页面，直接渲染页面的模板。如 `index` 和 `hello` 为键名的两个路由，都是模板路由，其中参数说明如下：

@@ -31,6 +31,7 @@ class ApplicationTest extends TestCase
         $request = new TestRequest;
         $loader = new Loader;
         $application = ApplicationBuilder::build($loader, SUDA_APP, SUDA_DATA);
+        $application->loader()->register();
         $application->load();
         $this->assertEquals($expected, $application->getRouteName(...$parameter));
     }

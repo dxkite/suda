@@ -1,0 +1,5 @@
+{
+    "application:load-environment": [
+        "suda.welcome.event.LoadEnvironment::handle"
+    ]
+}

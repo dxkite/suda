@@ -27,7 +27,7 @@ interface Response
      *
      * @return boolean
      */
-    public function isSended(): bool;
+    public function isSend(): bool;
 
     /**
      * 设置头部信息

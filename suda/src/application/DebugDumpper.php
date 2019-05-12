@@ -54,9 +54,9 @@ class DebugDumpper
      */
     public function uncaughtException($exception)
     {
-        $this->application->debug()->addIgnoreTraces(__FILE__);
+        $this->application->debug()->addIgnorePath(__FILE__);
         $this->application->debug()->uncaughtException($exception);
-        if ($this->response->isSended() === false) {
+        if ($this->response->isSend() === false) {
             $this->response->sendContent($exception);
             $this->response->end();
         }
