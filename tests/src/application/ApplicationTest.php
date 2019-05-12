@@ -25,6 +25,8 @@ class ApplicationTest extends TestCase
      * @dataProvider getRouteName
      * @param $expected
      * @param $parameter
+     * @throws \ReflectionException
+     * @throws \suda\orm\exception\SQLException
      */
     public function testGetRouteName($expected, $parameter)
     {

@@ -1,4 +1,5 @@
 <?php
+
 namespace suda\application\template;
 
 use function array_key_exists;
@@ -96,7 +97,7 @@ class CompilableTemplate extends RawTemplate
      */
     public function __construct(string $source, array $config = [])
     {
-        parent::__construct('',[]);
+        parent::__construct('', []);
         $this->source = $source;
         $this->name = pathinfo($source, PATHINFO_FILENAME);
         $this->config = $config;
@@ -109,7 +110,7 @@ class CompilableTemplate extends RawTemplate
 
     protected function getStaticOutpath()
     {
-        $path = $this->config['assets-public'] ?? constant('SUDA_PUBLIC').'/assets/'. $this->getStaticName();
+        $path = $this->config['assets-public'] ?? constant('SUDA_PUBLIC') . '/assets/' . $this->getStaticName();
         FileSystem::make($path);
         return $path;
     }
@@ -121,9 +122,9 @@ class CompilableTemplate extends RawTemplate
      */
     public function getPath()
     {
-        $output = $this->config['output'] ?? constant('SUDA_DATA').'/template';
+        $output = $this->config['output'] ?? constant('SUDA_DATA') . '/template';
         FileSystem::make($output);
-        return $output .'/'. $this->name.'-'.substr(md5_file($this->getSourcePath()), 10, 8).'.php';
+        return $output . '/' . $this->name . '-' . substr(md5_file($this->getSourcePath()), 10, 8) . '.php';
     }
 
     /**
@@ -131,7 +132,7 @@ class CompilableTemplate extends RawTemplate
      *
      * @return string|null
      */
-    public function getSourcePath():?string
+    public function getSourcePath(): ?string
     {
         return $this->source ?? null;
     }
@@ -151,26 +152,38 @@ class CompilableTemplate extends RawTemplate
     /**
      * 编译
      *
-     * @return void
+     * @return bool
      * @throws Exception
      */
-    protected function compile(){
-        $sourcePath = $this->getSourcePath();
-        $destPath = $this->getPath();
-        if ($sourcePath === null) {
-            throw new MissingTemplateException($this->name);
-        }
-        $source = FileSystem::exist($sourcePath);
-        $dest = FileSystem::exist($this->getPath());
-        $notCompiled = $source === true && $dest === false;
-        if ($notCompiled || SUDA_DEBUG) {
+    protected function compile()
+    {
+        if ($this->isCompiled() === false && ($sourcePath = $this->getSourcePath()) !== null) {
+            $destPath = $this->getPath();
             $content = FileSystem::get($sourcePath);
             if ($content !== null) {
                 $compiled = $this->compiler()->compileText($content, $this->config);
                 FileSystem::make(dirname($destPath));
                 FileSystem::put($destPath, $compiled);
             }
+            return true;
         }
+        return false;
+    }
+
+    /**
+     * 检查是否编译过
+     * @return bool
+     */
+    protected function isCompiled()
+    {
+        $sourcePath = $this->getSourcePath();
+        if ($sourcePath === null) {
+            throw new MissingTemplateException($this->name);
+        }
+        $source = FileSystem::exist($sourcePath);
+        $dest = FileSystem::exist($this->getPath());
+        $notCompiled = $source === true && $dest === false;
+        return ($notCompiled || SUDA_DEBUG) === false;
     }
 
     /**
@@ -200,7 +213,6 @@ class CompilableTemplate extends RawTemplate
         return $this;
     }
 
-    
 
     public function extend(string $name)
     {
@@ -214,7 +226,7 @@ class CompilableTemplate extends RawTemplate
     public function include(string $path)
     {
         $subfix = $this->config['subfix'] ?? '';
-        $included = new self(Resource::getPathByRelativePath($path. $subfix, dirname($this->source)), $this->config);
+        $included = new self(Resource::getPathByRelativePath($path . $subfix, dirname($this->source)), $this->config);
         $included->parent = $this;
         echo $included->getRenderedString();
     }
@@ -231,13 +243,13 @@ class CompilableTemplate extends RawTemplate
     {
         $this->prepareStaticSource();
         if (array_key_exists('assets-prefix', $this->config)) {
-            $prefix = $this->config['assets-prefix'] ;
+            $prefix = $this->config['assets-prefix'];
         } elseif (defined('SUDA_ASSETS')) {
             $prefix = constant('SUDA_ASSETS');
         } else {
             $prefix = '/assets';
         }
-        return $prefix .'/'.$this->getStaticName();
+        return $prefix . '/' . $this->getStaticName();
     }
 
     protected function prepareStaticSource()
@@ -276,7 +288,7 @@ class CompilableTemplate extends RawTemplate
                 }
             }
         } catch (Exception $e) {
-            echo '<div style="color:red">'.$e->getMessage().'</div>';
+            echo '<div style="color:red">' . $e->getMessage() . '</div>';
             return;
         }
     }
@@ -289,7 +301,7 @@ class CompilableTemplate extends RawTemplate
         return static::$compiler;
     }
 
-    protected function createCompiler():Compiler
+    protected function createCompiler(): Compiler
     {
         return new Compiler;
     }

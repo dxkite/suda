@@ -1,10 +1,12 @@
 <?php
+
 namespace suda\application\template;
 
 use function constant;
 use Exception;
 use function is_array;
 use function is_string;
+use suda\application\template\compiler\Compiler;
 use suda\framework\Request;
 use suda\application\Application;
 use suda\framework\filesystem\FileSystem;
@@ -14,20 +16,15 @@ use suda\framework\filesystem\FileSystem;
  */
 class ModuleTemplate extends ModuleTemplateBase
 {
-    public function __construct(string $name, Application $application, Request $request, ?string $defaultModule = '')
-    {
-        parent::__construct($name, $application, $request, $defaultModule);
-    }
-
     /**
      * 获取模板源路径
      *
      * @return string|null
      */
-    public function getSourcePath():?string
+    public function getSourcePath(): ?string
     {
         $subfix = $this->config['subfix'] ?? '.tpl.html';
-        return $this->getResource($this->module)->getResourcePath($this->getTemplatePath().'/'.$this->name.$subfix);
+        return $this->getResource($this->module)->getResourcePath($this->getTemplatePath() . '/' . $this->name . $subfix);
     }
 
     /**
@@ -37,9 +34,9 @@ class ModuleTemplate extends ModuleTemplateBase
      */
     public function getPath()
     {
-        $output = $this->config['output'] ?? constant('SUDA_DATA').'/template/'. $this->uriName;
+        $output = $this->config['output'] ?? $this->application->getDataPath() . '/template/' . $this->uriName;
         FileSystem::make($output);
-        return $output .'/'. $this->name.'.php';
+        return $output . '/' . $this->name . '.php';
     }
 
     /**
@@ -59,15 +56,47 @@ class ModuleTemplate extends ModuleTemplateBase
 
     public function getRenderedString()
     {
-        $this->application->debug()->time('render '.$this->name);
-        $code =  parent::getRenderedString();
-        $this->application->debug()->timeEnd('render '.$this->name);
+        $this->application->debug()->time('render ' . $this->name);
+        $code = parent::getRenderedString();
+        $this->application->debug()->timeEnd('render ' . $this->name);
         return $code;
     }
 
+    protected function compile()
+    {
+        if ($this->isCompiled() === false) {
+            $this->application->debug()->time('compile ' . $this->name);
+            $result = parent::compile();
+            $this->application->debug()->timeEnd('compile ' . $this->name);
+            return $result;
+        }
+        return true;
+    }
+
+
+    /**
+     * @return Compiler
+     * @throws \ReflectionException
+     */
+    protected function createCompiler(): Compiler
+    {
+        $compiler = parent::createCompiler();
+        $this->application->event()->exec(
+            'application:template:compile::create',
+            [$compiler, $this->config, $this->application]
+        );
+        return $compiler;
+    }
+
+    /**
+     * @param string|array|null $name
+     * @param mixed $values
+     * @return string
+     */
     public function getUrl($name = null, $values = null)
     {
         $defaultName = $this->request->getAttribute('route');
+        $query = $this->request->get() ?? [];
         if (is_string($name)) {
             if (!is_array($values)) {
                 $args = func_get_args();
@@ -75,13 +104,20 @@ class ModuleTemplate extends ModuleTemplateBase
                 $values = $args;
             }
             return $this->application->getUrl($this->request, $name, $values ?? [], true, $this->module, $this->group);
-        } elseif (is_array($name) && is_string($defaultName)) {
-            return $this->application->getUrl($this->request, $defaultName, array_merge($this->request->get() ?? [], $name) , true, $this->module, $this->group);
         } elseif (is_string($defaultName)) {
-            return $this->application->getUrl($this->request, $defaultName, $this->request->get() ?? [], true, $this->module, $this->group);
+            $parameter = is_array($name)?array_merge($query, $name):$query;
+            return $this->application->getUrl(
+                $this->request,
+                $defaultName,
+                $parameter,
+                true,
+                $this->module,
+                $this->group
+            );
         }
-        return '#'.$defaultName;
+        return '#' . $defaultName;
     }
+
 
     /**
      * 判断是否是某路由
@@ -90,12 +126,13 @@ class ModuleTemplate extends ModuleTemplateBase
      * @param array $parameter
      * @return boolean
      */
-    public function is(string $name, array $parameter = null) {
+    public function is(string $name, array $parameter = null)
+    {
         $full = $this->application->getRouteName($name, $this->module, $this->group);
         if ($this->request->getAttribute('route') === $full) {
             if (is_array($parameter)) {
                 foreach ($parameter as $key => $value) {
-                    if ($this->request->getQuery($key) != $value){
+                    if ($this->request->getQuery($key) != $value) {
                         return false;
                     }
                 }
@@ -103,5 +140,5 @@ class ModuleTemplate extends ModuleTemplateBase
             return true;
         }
         return false;
-    } 
+    }
 }

@@ -13,7 +13,7 @@ class ExceptionTemplate extends RawTemplate
 {
     public function __construct(Throwable $exception)
     {
-        parent::__construct('',[]);
+        parent::__construct('', []);
         $this->path = SUDA_RESOURCE. '/error.php';
         $type = get_class($exception);
         $this->value = [

@@ -12,6 +12,8 @@
 | `application:load-environment` | 框架加载完成数据库配置之后 |  `\suda\framework\Config`, `\suda\application\Application` |
 | `application:load-route` | 框架加载完固定的路由文件之后 | `\suda\framework\Route`, `\suda\application\Application` |
 | `application:route:match::after` | 框架匹配完成请求 `URI` 之后 | `\suda\framework\route\MatchResult`, `\suda\framework\Request` |
+| `application:template:compile::create` | 模板编译之前，可以用于自定义编译器参数 | `\suda\application\template\compiler\Compiler`, `array`, `\suda\application\Application` |
+
 
 ## 监控事件
 
