@@ -53,9 +53,9 @@ class ApplicationBase extends ApplicationContext
      * @param array $manifest
      * @param Loader $loader
      */
-    public function __construct(string $path, array $manifest, Loader $loader)
+    public function __construct(string $path, array $manifest, Loader $loader, ?string $dataPath = null)
     {
-        parent::__construct($path, $manifest, $loader);
+        parent::__construct($path, $manifest, $loader, $dataPath);
         $this->module = new ModuleBag;
         $this->initProperty($manifest);
     }

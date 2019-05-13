@@ -78,7 +78,7 @@ class ApplicationContext extends Context
      * @param Loader $loader
      * @param string|null $dataPath
      */
-    public function __construct(string $path, array $manifest, Loader $loader, string $dataPath = null)
+    public function __construct(string $path, array $manifest, Loader $loader, ?string $dataPath = null)
     {
         parent::__construct(new Config(['app' => $manifest]), $loader);
         $this->path = $path;
