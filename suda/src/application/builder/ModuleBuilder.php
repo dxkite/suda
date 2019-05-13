@@ -26,10 +26,6 @@ class ModuleBuilder
         list($name, $version, $resource, $property) = static::getModuleProperty($path, $propertyPath);
         $module = new Module($name, $version, $path, $property);
         $module->getResource()->addResourcePath(Resource::getPathByRelativePath($resource, $path));
-        $path = $module->getResource()->getConfigResourcePath('config/config');
-        if ($path !== null && ($config = Config::loadConfig($path, $property)) !== null) {
-            $module->setConfig($config);
-        }
         return $module;
     }
 

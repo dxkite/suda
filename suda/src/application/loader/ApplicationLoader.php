@@ -44,7 +44,8 @@ class ApplicationLoader
         $this->loadVendorIfExist();
         $this->loadGlobalConfig();
         $this->registerModule();
-        $this->prepareModuleLoader();
+        $this->prepareModule();
+        $this->activeModule();
     }
 
 
@@ -148,11 +149,18 @@ class ApplicationLoader
         }
     }
 
-    protected function prepareModuleLoader()
+    protected function prepareModule()
     {
         foreach ($this->application->getModules()->all() as $name => $module) {
             $this->moduleLoader[$name] = new ModuleLoader($this->application, $module);
             $this->moduleLoader[$name]->toLoad();
+            $this->moduleLoader[$name]->loadExtraModuleResourceLibrary();
+        }
+    }
+
+    protected function activeModule()
+    {
+        foreach ($this->application->getModules()->all() as $name => $module) {
             if ($module->getStatus() !== Module::LOADED) {
                 $this->moduleLoader[$name]->toActive();
             }
@@ -193,6 +201,8 @@ class ApplicationLoader
         $this->setModuleActive($modules, $active);
         $this->setModuleReachable($modules, $config['reachable'] ?? $active);
     }
+
+
 
     protected function loadModules(ModuleBag $bag, array $load)
     {

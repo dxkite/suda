@@ -70,8 +70,8 @@ class Resource
     {
         foreach ($this->resource as $root) {
             $target = $root.'/'.$path;
-            $limitPath = $limitPath ? $root.'/'.$limitPath : $root;
-            if (FileSystem::exist($target) && FileSystem::isOverflowPath($limitPath, $target) === false) {
+            $templateLimitPath = $limitPath ? $root.'/'.$limitPath : $root;
+            if (FileSystem::exist($target) && FileSystem::isOverflowPath($templateLimitPath, $target) === false) {
                 return $target;
             }
         }

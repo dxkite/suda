@@ -50,8 +50,7 @@ class ModuleLoader
 
     public function toActive()
     {
-        $this->loadEventListener();
-        $this->loadExtraModuleResourceLibrary();
+        $this->loadConfig();
         $this->application->debug()->info('active = '.$this->module->getFullName());
     }
 
@@ -125,6 +124,24 @@ class ModuleLoader
             }
         }
     }
+
+    /**
+     * 加载模块额外资源
+     */
+    public function loadExtraModuleResourceLibrary()
+    {
+        $resource = $this->module->getProperty('module-resource', []);
+        if (count($resource)) {
+            foreach ($resource as $name => $path) {
+                if ($find = $this->application->find($name)) {
+                    $find->getResource()->addResourcePath(
+                        Resource::getPathByRelativePath($path, $this->module->getPath())
+                    );
+                }
+            }
+        }
+    }
+
     protected function loadShareLibrary()
     {
         $import = $this->module->getProperty('import.share', []);
@@ -149,23 +166,25 @@ class ModuleLoader
         }
     }
 
-    protected function loadExtraModuleResourceLibrary()
-    {
-        $import = $this->module->getConfig('module-resource', []);
-        if (count($import)) {
-            foreach ($import as $name => $path) {
-                if ($module = $this->application->find($name)) {
-                    $module->getResource()->addResourcePath(
-                        Resource::getPathByRelativePath($path, $this->module->getPath())
-                    );
-                }
-            }
+    protected function loadConfig() {
+        $this->loadModuleConfig($this->module);
+    }
+
+    protected function loadModuleConfig(Module $module) {
+        $this->loadBaseConfig($module);
+        $this->loadEventListener($module);
+    }
+
+    protected function loadBaseConfig(Module $module) {
+        $path = $module->getResource()->getConfigResourcePath('config/config');
+        if ($path !== null && ($config = Config::loadConfig($path, $module->getProperty())) !== null) {
+            $module->setConfig($config);
         }
     }
 
-    protected function loadEventListener()
+    protected function loadEventListener(Module $module)
     {
-        if ($path = $this->module->getResource()->getConfigResourcePath('config/event')) {
+        if ($path = $module->getResource()->getConfigResourcePath('config/event')) {
             $event = Config::loadConfig($path, [
                 'module' => $this->module->getName(),
                 'property' => $this->module->getProperty(),
