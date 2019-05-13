@@ -143,6 +143,7 @@ class DataAccess
      * @param Statement $statement
      * @return mixed
      * @throws exception\SQLException
+     * @throws ReflectionException
      */
     public function run(Statement $statement)
     {
@@ -321,6 +322,14 @@ class DataAccess
             return new TableStructMiddleware($object, $struct);
         }
         return new NullMiddleware;
+    }
+
+    /**
+     * @return TableAccess
+     */
+    public function getAccess(): TableAccess
+    {
+        return $this->access;
     }
 
     /**

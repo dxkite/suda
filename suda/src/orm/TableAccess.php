@@ -183,6 +183,7 @@ class TableAccess extends QueryAccess
      * @param Statement $statement
      * @return mixed
      * @throws ReflectionException
+     * @throws exception\SQLException
      */
     public function run(Statement $statement)
     {

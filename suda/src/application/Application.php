@@ -5,7 +5,6 @@ use function array_key_exists;
 use function constant;
 use Exception;
 use ReflectionException;
-use suda\application\exception\ApplicationException;
 use suda\application\exception\ConfigurationException;
 use suda\application\template\ModuleTemplate;
 use suda\orm\exception\SQLException;
@@ -50,7 +49,7 @@ class Application extends ApplicationSource
         $appLoader->loadDataSource();
         $this->debug->timeEnd('loading data-source');
         Table::load($this);
-        DataAccess::load($this);
+        DataAccess::loadApplication($this);
         $this->event->exec('application:load-environment', [ $this->config ,$this]);
         $this->debug->time('loading route');
         $appLoader->loadRoute();
