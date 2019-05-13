@@ -202,8 +202,6 @@ class ApplicationLoader
         $this->setModuleReachable($modules, $config['reachable'] ?? $active);
     }
 
-
-
     protected function loadModules(ModuleBag $bag, array $load)
     {
         foreach ($load as $moduleName) {

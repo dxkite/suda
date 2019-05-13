@@ -2,6 +2,7 @@
 namespace suda\framework\context;
 
 use suda\framework\Config;
+use suda\framework\debug\log\LoggerInterface;
 use suda\framework\Debugger;
 use suda\framework\loader\Loader;
 
@@ -47,9 +48,11 @@ class PHPContext
     /**
      * 注册调试器
      *
+     * @param LoggerInterface $logger
      * @return void
      */
-    public function registerDebugger() {
+    public function registerDebugger()
+    {
         $this->debug->load($this)->register();
     }
 

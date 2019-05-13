@@ -57,7 +57,6 @@ class Debugger extends Debug
      *
      * @param PHPContext $context
      * @return Debugger
-     * @throws ReflectionException
      */
     public function load(PHPContext $context): Debugger
     {
@@ -65,51 +64,8 @@ class Debugger extends Debug
             'start-time' => constant('SUDA_START_TIME'),
             'start-memory' => constant('SUDA_START_MEMORY'),
         ]);
-        $this->setLogger(static::createLogger($context));
         $this->context = $context;
         return $this;
-    }
-
-    /**
-     * 创建日志记录器
-     *
-     * @param PHPContext $context
-     * @return LoggerInterface
-     * @throws ReflectionException
-     */
-    protected static function createLogger(PHPContext $context): LoggerInterface
-    {
-        $logger = (new Runnable($context->conf('app.logger-build', [__CLASS__, 'createDefaultLogger'])))->run();
-        if ($logger instanceof LoggerInterface) {
-            return $logger;
-        } else {
-            return new NullLogger;
-        }
-    }
-
-    /**
-     * 创建默认记录器
-     *
-     * @return LoggerInterface
-     */
-    public static function createDefaultLogger(): LoggerInterface
-    {
-        $dataPath = SUDA_DATA . '/logs';
-        FileSystem::make($dataPath);
-        if (is_writable(dirname($dataPath))) {
-            FileSystem::make($dataPath . '/zip');
-            FileSystem::make($dataPath . '/dump');
-            return new FileLogger(
-                [
-                    'log-level' => SUDA_DEBUG_LEVEL,
-                    'save-path' => $dataPath,
-                    'save-zip-path' => $dataPath . '/zip',
-                    'log-format' => '%message%',
-                    'save-pack-path' => $dataPath . '/dump',
-                ]
-            );
-        }
-        return new NullLogger;
     }
 
     /**
