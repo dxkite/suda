@@ -42,8 +42,7 @@ class TableAccess extends QueryAccess
      */
     public function __construct(TableStruct $struct, DataSource $source, ?Middleware $middleware = null)
     {
-        parent::__construct($source->write(), $middleware);
-        $this->source = $source;
+        parent::__construct($source, $middleware);
         $this->struct = $struct;
     }
 
@@ -76,47 +75,6 @@ class TableAccess extends QueryAccess
     public function getName():string
     {
         return $this->struct->getName();
-    }
-
-    /**
-     * 获取最后一次插入的主键ID（用于自增值
-     *
-     * @param string $name
-     * @return string 则获取失败，整数则获取成功
-     */
-    public function lastInsertId(string $name = null):string
-    {
-        return $this->source->write()->lastInsertId($name);
-    }
-
-    /**
-     * 事务系列，开启事务
-     *
-     * @return void
-     */
-    public function beginTransaction()
-    {
-        $this->source->write()->beginTransaction();
-    }
-
-    /**
-     * 事务系列，提交事务
-     *
-     * @return void
-     */
-    public function commit()
-    {
-        $this->source->write()->commit();
-    }
-
-    /**
-     * 事务系列，撤销事务
-     *
-     * @return void
-     */
-    public function rollBack()
-    {
-        $this->source->write()->rollBack();
     }
 
     /**
@@ -175,21 +133,6 @@ class TableAccess extends QueryAccess
     public function query(string $query, ...$parameter):QueryStatement
     {
         return (new QueryStatement($this, $query, ...$parameter));
-    }
-
-    /**
-     * 运行SQL语句
-     *
-     * @param Statement $statement
-     * @return mixed
-     * @throws ReflectionException
-     * @throws exception\SQLException
-     */
-    public function run(Statement $statement)
-    {
-        $connection = $statement->isRead() ? $this->source->read() : $this->source->write();
-        $this->runStatement($connection, $statement);
-        return $this->createResult($statement);
     }
 
     /**

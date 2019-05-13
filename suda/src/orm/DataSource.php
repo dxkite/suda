@@ -1,4 +1,5 @@
 <?php
+
 namespace suda\orm;
 
 use function in_array;
@@ -83,13 +84,13 @@ class DataSource
         }
         return $this;
     }
-    
+
     /**
      * 获取写连接
      *
      * @return Connection
      */
-    public function read():Connection
+    public function read(): Connection
     {
         $this->selectReadConnection();
         return $this->slave;
@@ -100,7 +101,7 @@ class DataSource
      *
      * @return Connection
      */
-    public function write():Connection
+    public function write(): Connection
     {
         $this->selectWriteConnection();
         return $this->master;

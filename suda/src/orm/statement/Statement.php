@@ -262,6 +262,16 @@ abstract class Statement
     }
 
     /**
+     * @param Query $query
+     */
+    public function setQuery(Query $query): void
+    {
+        $this->query = $query;
+        $this->string = $query->getQuery();
+        $this->binder = $query->getBinder();
+    }
+
+    /**
      * 获取绑定信息
      *
      * @return Binder[]

@@ -1,12 +1,13 @@
 <?php
 namespace suda\orm\statement;
 
-use function microtime;
 use PDO;
 use PDOStatement;
-use function preg_replace;
-use ReflectionException;
 use suda\orm\Binder;
+use function microtime;
+use ReflectionException;
+use suda\orm\DataSource;
+use function preg_replace;
 use suda\orm\connection\Connection;
 use suda\orm\middleware\Middleware;
 use suda\orm\exception\SQLException;
@@ -17,9 +18,9 @@ class QueryAccess
     /**
      * 数据源
      *
-     * @var Connection
+     * @var DataSource
      */
-    protected $connection;
+    protected $source;
 
     /**
      * 中间件
@@ -31,14 +32,15 @@ class QueryAccess
     /**
      * 创建运行器
      *
-     * @param Connection $connection
+     * @param DataSource $source
      * @param Middleware $middleware
      */
-    public function __construct(Connection $connection, Middleware $middleware = null)
+    public function __construct(DataSource $source, Middleware $middleware = null)
     {
-        $this->connection = $connection;
+        $this->source = $source;
         $this->middleware = $middleware ?: new NullMiddleware;
     }
+
 
     /**
      * 获取最后一次插入的主键ID（用于自增值
@@ -48,17 +50,7 @@ class QueryAccess
      */
     public function lastInsertId(string $name = null):string
     {
-        return $this->connection->lastInsertId($name);
-    }
-
-    /**
-     * 事务系列，开启事务
-     *
-     * @return void
-     */
-    public function begin()
-    {
-        $this->beginTransaction();
+        return $this->source->write()->lastInsertId($name);
     }
 
     /**
@@ -68,7 +60,7 @@ class QueryAccess
      */
     public function beginTransaction()
     {
-        $this->connection->beginTransaction();
+        $this->source->write()->beginTransaction();
     }
 
     /**
@@ -78,7 +70,7 @@ class QueryAccess
      */
     public function commit()
     {
-        $this->connection->commit();
+        $this->source->write()->commit();
     }
 
     /**
@@ -88,36 +80,37 @@ class QueryAccess
      */
     public function rollBack()
     {
-        $this->connection->rollBack();
+        $this->source->write()->rollBack();
     }
-
 
     /**
      * 运行SQL语句
      *
      * @param Statement $statement
      * @return mixed
-     * @throws SQLException
      * @throws ReflectionException
+     * @throws SQLException
      */
     public function run(Statement $statement)
     {
-        $this->runStatement($this->connection, $statement);
-        return $this->createResult($statement);
+        $connection = $statement->isRead() ? $this->source->read() : $this->source->write();
+        $this->runStatement($connection, $statement);
+        return $this->createResult($connection, $statement);
     }
 
 
     /**
      * 获取运行结果
      *
+     * @param $connection
      * @param Statement $statement
      * @return mixed
-     * @throws SQLException
      * @throws ReflectionException
+     * @throws SQLException
      */
-    protected function createResult(Statement $statement)
+    protected function createResult(Connection $connection, Statement $statement)
     {
-        return (new QueryResult($this->connection, $this->middleware))->createResult($statement);
+        return (new QueryResult($connection, $this->middleware))->createResult($statement);
     }
 
     /**
@@ -135,20 +128,20 @@ class QueryAccess
     /**
      * 创建SQL语句
      *
-     * @param Connection $source
+     * @param Connection $connection
      * @param Statement $statement
      * @return PDOStatement
      * @throws SQLException
      */
-    protected function createPDOStatement(Connection $source, Statement $statement): PDOStatement
+    protected function createPDOStatement(Connection $connection, Statement $statement): PDOStatement
     {
         $statement->prepare();
         $queryObj = $statement->getQuery();
-        $query = $this->prefix($queryObj->getQuery());
+        $query = $connection->prefix($queryObj->getQuery());
         if ($statement->isScroll()) {
-            $stmt = $source->getPdo()->prepare($query, [PDO::ATTR_CURSOR => PDO::CURSOR_SCROLL]);
+            $stmt = $connection->getPdo()->prepare($query, [PDO::ATTR_CURSOR => PDO::CURSOR_SCROLL]);
         } else {
-            $stmt = $source->getPdo()->prepare($query);
+            $stmt = $connection->getPdo()->prepare($query);
         }
         if ($stmt instanceof PDOStatement) {
             return $stmt;
@@ -193,7 +186,7 @@ class QueryAccess
             $statement->setStatement($stmt);
             $start = microtime(true);
             $status = $stmt->execute();
-            $connection->getObserver()->observe($this, $statement, microtime(true) - $start, $status);
+            $connection->getObserver()->observe($this, $connection, $statement, microtime(true) - $start, $status);
             if ($status === false) {
                 throw new SQLException(implode(':', $stmt->errorInfo()), intval($stmt->errorCode()));
             }
@@ -208,26 +201,5 @@ class QueryAccess
     public function getMiddleware():Middleware
     {
         return $this->middleware;
-    }
-
-    /**
-     * @return Connection
-     */
-    public function getConnection(): Connection
-    {
-        return $this->connection;
-    }
-
-    /**
-     * 自动填充前缀
-     *
-     * @param string $query
-     * @return string
-     */
-    public function prefix(string $query):string
-    {
-        // _:table 前缀控制
-        $prefix = $this->connection->getConfig('prefix', '');
-        return preg_replace('/_:(\w+)/', $prefix.'$1', $query);
     }
 }

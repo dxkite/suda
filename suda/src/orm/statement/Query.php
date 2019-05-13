@@ -52,26 +52,18 @@ class Query
     }
 
     /**
-     * Get sQL语句
-     *
-     * @return  string
+     * @return string
      */
-    public function getQuery()
+    public function getQuery(): string
     {
         return $this->query;
     }
 
     /**
-     * Set sQL语句
-     *
-     * @param string $query SQL语句
-     *
-     * @return  $this
+     * @param string $query
      */
-    public function setQuery(string $query)
+    public function setQuery(string $query): void
     {
         $this->query = $query;
-
-        return $this;
     }
 }

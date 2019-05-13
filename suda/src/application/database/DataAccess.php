@@ -22,11 +22,6 @@ class DataAccess extends \suda\orm\DataAccess
     protected static $application;
 
     /**
-     * @var StatementSet
-     */
-    protected $statement;
-
-    /**
      * 创建对数据的操作
      *
      * @param string $object
@@ -36,18 +31,6 @@ class DataAccess extends \suda\orm\DataAccess
     public function __construct(string $object, ?Middleware $middleware = null)
     {
         parent::__construct($object, static::$application->getDataSource(), $middleware);
-    }
-
-    /**
-     * 加载语句集合
-     * @param string $statement
-     * @return $this
-     */
-    public function load(string $statement)
-    {
-        $this->statement = new StatementSet($this->access, $statement);
-        $this->statement->load(static::$application);
-        return $this;
     }
 
     /**
@@ -77,14 +60,6 @@ class DataAccess extends \suda\orm\DataAccess
     public static function new(string $object, ?Middleware $middleware = null):DataAccess
     {
         return new self($object, $middleware);
-    }
-
-    /**
-     * @return StatementSet
-     */
-    public function getStatement(): StatementSet
-    {
-        return $this->statement;
     }
 
     /**

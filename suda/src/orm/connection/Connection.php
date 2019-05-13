@@ -5,6 +5,7 @@ use PDO;
 use PDOException;
 use ReflectionException;
 use function register_shutdown_function;
+use suda\orm\DataSource;
 use suda\orm\statement\Statement;
 use suda\orm\statement\QueryAccess;
 use suda\orm\exception\SQLException;
@@ -251,7 +252,9 @@ abstract class Connection
      */
     public function query(Statement $statement)
     {
-        return (new QueryAccess($this))->run($statement);
+        $source = new DataSource();
+        $source->add($this);
+        return (new QueryAccess($source))->run($statement);
     }
 
     /**
@@ -361,5 +364,19 @@ abstract class Connection
     public function setType(string $type): void
     {
         $this->type = $type;
+    }
+
+
+    /**
+     * 自动填充前缀
+     *
+     * @param string $query
+     * @return string
+     */
+    public function prefix( string $query):string
+    {
+        // _:table 前缀控制
+        $prefix = $this->getConfig('prefix', '');
+        return preg_replace('/_:(\w+)/', $prefix.'$1', $query);
     }
 }
