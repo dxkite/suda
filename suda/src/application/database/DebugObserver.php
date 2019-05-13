@@ -62,7 +62,7 @@ class DebugObserver implements Observer
             } else {
                 $value = $item->getValue();
             }
-            $this->debug->info(sprintf("query value :%s = %s", $item->getName(), json_encode($value)));
+            $this->debug->debug(sprintf("query value :%s = %s", $item->getName(), json_encode($value)));
         }
     }
 }

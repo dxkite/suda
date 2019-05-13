@@ -39,7 +39,7 @@ class ModuleBuilder
     protected static function getModuleProperty(string $path, string $propertyPath)
     {
         $property = Config::loadConfig($propertyPath, ['path' => $path]) ?? [];
-        $name = dirname($path);
+        $name = basename($path);
         $version = '1.0.0';
         $resource = './resource';
         if ($property) {
