@@ -13,34 +13,8 @@ use suda\application\exception\ApplicationException;
 /**
  * 应用程序
  */
-class ModuleLoader
+class ModuleLoader extends ModuleLoaderUtil
 {
-    /**
-     * 应用程序
-     *
-     * @var Application
-     */
-    protected $application;
-
-    /**
-     * 运行环境
-     *
-     * @var Module
-     */
-    protected $module;
-
-    /**
-     * 模块加载器
-     *
-     * @param Application $application
-     * @param Module $module
-     */
-    public function __construct(Application $application, Module $module)
-    {
-        $this->module = $module;
-        $this->application = $application;
-    }
-
     public function toLoad()
     {
         $this->loadVendorIfExist();
@@ -65,64 +39,10 @@ class ModuleLoader
 
     public function toRunning()
     {
-        $this->checkFrameworkVersion();
         $this->checkRequirements();
         $this->loadPrivateLibrary();
         $this->application->setRunning($this->module);
         $this->application->debug()->info('run + '.$this->module->getFullName());
-    }
-
-    /**
-     * 检查框架依赖
-     *
-     * @return void
-     */
-    protected function checkRequirements()
-    {
-        if ($require = $this->module->getProperty('require')) {
-            foreach ($require as $module => $version) {
-                $this->assertModuleVersion($module, $version);
-            }
-        }
-    }
-
-    protected function assertModuleVersion(string $module, string $version)
-    {
-        $target = $this->application->find($module);
-        if ($target === null) {
-            throw new ApplicationException(
-                sprintf('%s module need %s %s but not exist', $this->module->getFullName(), $module, $version),
-                ApplicationException::ERR_MODULE_REQUIREMENTS
-            );
-        }
-        if (static::versionCompare($version, $target->getVersion()) !== true) {
-            throw new ApplicationException(
-                sprintf(
-                    '%s module need %s version %s',
-                    $this->module->getFullName(),
-                    $target->getName(),
-                    $target->getVersion()
-                ),
-                ApplicationException::ERR_MODULE_REQUIREMENTS
-            );
-        }
-    }
-
-    /**
-     * 检查模块需求
-     *
-     * @return void
-     */
-    protected function checkFrameworkVersion()
-    {
-        if ($sudaVersion = $this->module->getProperty('suda')) {
-            if (static::versionCompare($sudaVersion, SUDA_VERSION) !== true) {
-                throw new ApplicationException(
-                    sprintf('%s module need suda version %s', $this->module->getFullName(), $sudaVersion),
-                    ApplicationException::ERR_FRAMEWORK_VERSION
-                );
-            }
-        }
     }
 
     /**
@@ -197,7 +117,7 @@ class ModuleLoader
     }
 
     /**
-     * @throws Exception
+     * 加载路由
      */
     protected function loadRoute()
     {
@@ -207,23 +127,10 @@ class ModuleLoader
     }
 
     /**
-     * 导入 ClassLoader 配置
-     *
-     * @param array $import
-     * @param string $relativePath
-     * @return void
-     */
-    protected function importClassLoader(array $import, string $relativePath)
-    {
-        ApplicationBuilder::importClassLoader($this->application->loader(), $import, $relativePath);
-    }
-
-    /**
      * 加载路由组
      *
      * @param string $groupName
      * @return void
-     * @throws Exception
      */
     protected function loadRouteGroup(string $groupName)
     {
@@ -249,7 +156,6 @@ class ModuleLoader
      * @param string $groupName
      * @param array $routeConfig
      * @return void
-     * @throws Exception
      */
     protected function loadRouteConfig(string $prefix, string $groupName, array $routeConfig)
     {
@@ -271,21 +177,5 @@ class ModuleLoader
             }
             $this->application->request($method, $exname, $uri, $attributes);
         }
-    }
-
-    /**
-     * 比较版本
-     *
-     * @param string $version 比较用的版本，包含比较符号
-     * @param string $compire 对比的版本
-     * @return bool
-     */
-    protected static function versionCompare(string $version, string $compire)
-    {
-        if (preg_match('/^(<=?|>=?|<>|!=)(.+)$/i', $version, $match)) {
-            list($s, $op, $ver) = $match;
-            return  version_compare($compire, $ver, $op);
-        }
-        return version_compare($compire, $version, '>=');
     }
 }

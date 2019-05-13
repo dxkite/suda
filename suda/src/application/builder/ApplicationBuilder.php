@@ -16,6 +16,7 @@ use suda\application\exception\ApplicationException;
  */
 class ApplicationBuilder
 {
+
     /**
      * 创建应用
      * @param Loader $loader
