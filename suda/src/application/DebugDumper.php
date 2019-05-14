@@ -2,21 +2,16 @@
 namespace suda\application;
 
 use Exception;
+use suda\framework\Request;
 use suda\framework\Response;
 use Throwable;
 
 /**
- * 错误Dumpper
+ * Class DebugDumper
+ * @package suda\application
  */
-class DebugDumpper
+class DebugDumper
 {
-    /**
-     * 环境内容
-     *
-     * @var Response
-     */
-    protected $response;
-
     /**
      * 应用
      *
@@ -25,14 +20,26 @@ class DebugDumpper
     protected $application;
 
     /**
-     * 初始化
+     * @var Request
+     */
+    protected $request;
+
+    /**
+     * @var Response
+     */
+    protected $response;
+
+    /**
+     * DebugDumper constructor.
      * @param Application $application
+     * @param Request $request
      * @param Response $response
      */
-    public function __construct(Application $application, Response $response)
+    public function __construct(Application $application, Request $request, Response $response)
     {
-        $this->response = $response;
         $this->application = $application;
+        $this->request = $request;
+        $this->response = $response;
     }
 
     /**

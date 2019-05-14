@@ -207,7 +207,7 @@ class WriteStatement extends Statement
      */
     protected function whereCondition(string $where, array $whereParameter)
     {
-        list($this->whereCondition, $whereBinder) = $this->parepareWhereString($where, $whereParameter);
+        list($this->whereCondition, $whereBinder) = $this->prepareWhereString($where, $whereParameter);
         $this->binder = array_merge($this->binder, $whereBinder);
     }
 

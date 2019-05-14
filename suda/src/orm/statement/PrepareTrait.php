@@ -1,12 +1,7 @@
 <?php
 namespace suda\orm\statement;
 
-use function array_key_exists;
 use ArrayObject;
-use function implode;
-use function is_array;
-use function preg_replace_callback;
-use function str_replace;
 use suda\orm\Binder;
 use suda\orm\exception\SQLException;
 
@@ -76,7 +71,7 @@ trait PrepareTrait
      * @return array
      * @throws SQLException
      */
-    protected function parepareWhereString(string $where, array $whereBinder)
+    protected function prepareWhereString(string $where, array $whereBinder)
     {
         foreach ($whereBinder as $name => $value) {
             if (is_array($value) || $value instanceof ArrayObject) {

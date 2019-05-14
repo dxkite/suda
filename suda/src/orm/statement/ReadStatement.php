@@ -143,7 +143,7 @@ class ReadStatement extends QueryStatement
      */
     protected function whereStringArray(string $where, array $whereBinder)
     {
-        list($where, $whereBinder) = $this->parepareWhereString($where, $whereBinder);
+        list($where, $whereBinder) = $this->prepareWhereString($where, $whereBinder);
         $this->where = 'WHERE '. $where;
         $this->binder = $this->mergeBinder($this->binder, $whereBinder);
     }
@@ -199,7 +199,7 @@ class ReadStatement extends QueryStatement
     protected function havingStringArray(string $having, array $havingBinder)
     {
 
-        list($having, $havingBinder) = $this->parepareWhereString($having, $havingBinder);
+        list($having, $havingBinder) = $this->prepareWhereString($having, $havingBinder);
         $this->having = 'HAVING '. $having;
         $this->binder = $this->mergeBinder($this->binder, $havingBinder);
     }
@@ -257,7 +257,7 @@ class ReadStatement extends QueryStatement
         $condition = implode(' ', array_filter(array_map('trim', $where), 'strlen'));
         $select = [$this->distinct,$this->select];
         $selection = implode(' ', array_filter(array_map('trim', $select), 'strlen'));
-        $string = "SELECT {$selection} FROM {$this->table} {$condition}";
+        $string = sprintf("SELECT %s FROM %s %s", $selection, $this->table, $condition);
         return new Query($string, $this->binder);
     }
 }

@@ -86,16 +86,19 @@ class ModuleLoader extends ModuleLoaderUtil
         }
     }
 
-    protected function loadConfig() {
+    protected function loadConfig()
+    {
         $this->loadModuleConfig($this->module);
     }
 
-    protected function loadModuleConfig(Module $module) {
+    protected function loadModuleConfig(Module $module)
+    {
         $this->loadBaseConfig($module);
         $this->loadEventListener($module);
     }
 
-    protected function loadBaseConfig(Module $module) {
+    protected function loadBaseConfig(Module $module)
+    {
         $path = $module->getResource()->getConfigResourcePath('config/config');
         if ($path !== null && ($config = Config::loadConfig($path, $module->getProperty())) !== null) {
             $module->setConfig($config);

@@ -63,7 +63,6 @@ class Application extends ApplicationSource
      *
      * @param Request $request
      * @param Response $response
-     * @return void
      * @throws SQLException
      * @throws ReflectionException
      */
@@ -72,8 +71,10 @@ class Application extends ApplicationSource
         $response->setHeader('x-powered-by', 'suda/'.SUDA_VERSION, true);
         $response->getWrapper()->register(ExceptionContentWrapper::class, [Throwable::class]);
         $response->getWrapper()->register(TemplateWrapper::class, [RawTemplate::class]);
-        $dumpper = new DebugDumpper($this, $response);
-        $dumpper->register();
+
+        $debugDumper = new DebugDumper($this, $request, $response);
+        $debugDumper->register();
+
         $this->debug->info('{request-time} {remote-ip} {request-method} {request-uri} debug={debug}', [
             'remote-ip' => $request->getRemoteAddr(),
             'debug' => SUDA_DEBUG,
@@ -81,6 +82,7 @@ class Application extends ApplicationSource
             'request-method' => $request->getMethod(),
             'request-time' => date('Y-m-d H:i:s', constant('SUDA_START_TIME')),
         ]);
+
         if ($this->isPrepared === false) {
             $this->load();
             $this->isPrepared = true;
@@ -92,7 +94,6 @@ class Application extends ApplicationSource
      *
      * @param Request $request
      * @param Response $response
-     * @return void
      */
     public function run(Request $request, Response $response)
     {
