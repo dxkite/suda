@@ -1,26 +1,23 @@
 <?php
 namespace suda\application;
 
-use function array_key_exists;
-use function constant;
 use Exception;
-use ReflectionException;
-use suda\application\exception\ConfigurationException;
-use suda\application\template\ModuleTemplate;
-use suda\orm\exception\SQLException;
 use Throwable;
+use ReflectionException;
 use suda\framework\Request;
 use suda\framework\Response;
-use suda\application\database\Table;
+use suda\orm\exception\SQLException;
 use suda\framework\route\MatchResult;
-use suda\application\database\DataAccess;
+use suda\application\database\Database;
 use suda\application\loader\ModuleLoader;
 use suda\application\template\RawTemplate;
 use suda\application\loader\LanguageLoader;
+use suda\application\template\ModuleTemplate;
 use suda\application\wrapper\TemplateWrapper;
 use suda\application\loader\ApplicationLoader;
 use suda\application\processor\FileRequestProcessor;
 use suda\application\wrapper\ExceptionContentWrapper;
+use suda\application\exception\ConfigurationException;
 use suda\application\processor\TemplateAssetProccesser;
 use suda\application\processor\TemplateRequestProcessor;
 
@@ -48,8 +45,7 @@ class Application extends ApplicationSource
         $this->debug->time('loading data-source');
         $appLoader->loadDataSource();
         $this->debug->timeEnd('loading data-source');
-        Table::load($this);
-        DataAccess::loadApplication($this);
+        Database::loadApplication($this);
         $this->event->exec('application:load-environment', [ $this->config ,$this]);
         $this->debug->time('loading route');
         $appLoader->loadRoute();

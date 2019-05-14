@@ -2,12 +2,10 @@
 
 namespace suda\application\database;
 
-use suda\orm\Binder;
-use function implode;
 use suda\framework\Debugger;
 use suda\orm\statement\Statement;
 use suda\orm\connection\Connection;
-use suda\orm\statement\QueryAccess;
+use suda\orm\statement\QueryAccess as StatementQueryAccess;
 use suda\orm\connection\observer\Observer;
 
 class DebugObserver implements Observer
@@ -25,13 +23,13 @@ class DebugObserver implements Observer
     }
 
     /**
-     * @param QueryAccess $access
+     * @param StatementQueryAccess $access
      * @param Connection $connection
      * @param Statement $statement
      * @param $timeSpend
      * @param bool $result
      */
-    public function observe(QueryAccess $access, Connection $connection, Statement $statement, $timeSpend, bool $result)
+    public function observe(StatementQueryAccess $access, Connection $connection, Statement $statement, $timeSpend, bool $result)
     {
         $query = $connection->prefix($statement->getString());
         $status = $result ? 'OK' : 'Err';

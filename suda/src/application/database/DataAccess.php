@@ -14,12 +14,6 @@ use suda\orm\middleware\Middleware;
 class DataAccess extends \suda\orm\DataAccess
 {
 
-    /**
-     * 应用引用
-     *
-     * @var Application
-     */
-    protected static $application;
 
     /**
      * 创建对数据的操作
@@ -30,7 +24,7 @@ class DataAccess extends \suda\orm\DataAccess
      */
     public function __construct(string $object, ?Middleware $middleware = null)
     {
-        parent::__construct($object, static::$application->getDataSource(), $middleware);
+        parent::__construct($object, Database::application()->getDataSource(), $middleware);
     }
 
     /**
@@ -60,26 +54,5 @@ class DataAccess extends \suda\orm\DataAccess
     public static function new(string $object, ?Middleware $middleware = null):DataAccess
     {
         return new self($object, $middleware);
-    }
-
-    /**
-     * 从应用创建表
-     *
-     * @param Application $application
-     * @return void
-     */
-    public static function loadApplication(Application $application)
-    {
-        static::$application = $application;
-    }
-
-    /**
-     * Get 应用引用
-     *
-     * @return  Application
-     */
-    public static function application()
-    {
-        return static::$application;
     }
 }
