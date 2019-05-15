@@ -58,11 +58,11 @@ class DebugObserver implements Observer
         $binder = $statement->getBinder();
         foreach ($binder as $item) {
             if ($item->getKey() !== null) {
-                $value = $access->getMiddleware()->input($item->getName(), $item->getValue());
+                $value = $access->getMiddleware()->input($item->getKey(), $item->getValue());
             } else {
                 $value = $item->getValue();
             }
-            $this->debug->debug(sprintf("query value :%s = %s", $item->getName(), json_encode($value)));
+            $this->debug->debug(sprintf("query value :%s = %s", $item->getName(), json_encode($value, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)));
         }
     }
 }
