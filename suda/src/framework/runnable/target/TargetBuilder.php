@@ -97,7 +97,7 @@ class TargetBuilder
     private static function buildName(string $name)
     {
         if (preg_match('/^[\w\\\\\/.]+$/', $name) !== 1) {
-            throw new InvalidNameException(sprintf('invaild name: %s ', $name));
+            throw new InvalidNameException(sprintf('invalid name: %s ', $name));
         }
         return  str_replace(['.','/'], '\\', $name);
     }
