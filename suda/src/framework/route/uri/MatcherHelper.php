@@ -107,14 +107,16 @@ class MatcherHelper
         foreach ($parameter as $key => $value) {
             if (is_numeric($key)) {
                 $mp = $matcher->getParameterByIndex($key);
-                unset($parameter[$key]);
-                $key = $mp->getIndexName();
-                $parameter[$key] = $value;
+                if ($mp  !== null) {
+                    unset($parameter[$key]);
+                    $key = $mp->getIndexName();
+                    $parameter[$key] = $value;
+                }
             } else {
                 $mp = $matcher->getParameter($key);
             }
             // 多余参数
-            if (null === $mp) {
+            if ($mp === null) {
                 $query[$key] = $value;
             }
             $mapper[$key] = $mp;
