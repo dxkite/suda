@@ -13,7 +13,7 @@ class PathResolver
      */
     public static function resolve(string $path):?string
     {
-        if (file_exists($path)) {
+        if (file_exists($path) && is_file($path)) {
             return $path;
         }
         $basepath = dirname($path).'/'.pathinfo($path, PATHINFO_FILENAME);
@@ -38,7 +38,8 @@ class PathResolver
     protected static function resolveExtensions(string $basepath, array $extensions):?string
     {
         foreach ($extensions as $ext) {
-            if (file_exists($conf = $basepath.'.'.$ext)) {
+            $conf = $basepath.'.'.$ext;
+            if (file_exists($conf) && is_file($conf)) {
                 return $conf;
             }
         }

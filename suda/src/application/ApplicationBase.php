@@ -52,6 +52,7 @@ class ApplicationBase extends ApplicationContext
      * @param string $path
      * @param array $manifest
      * @param Loader $loader
+     * @param string|null $dataPath
      */
     public function __construct(string $path, array $manifest, Loader $loader, ?string $dataPath = null)
     {

@@ -93,4 +93,12 @@ class Resource
         }
         return null;
     }
+
+    /**
+     * @return array
+     */
+    public function getResource(): array
+    {
+        return $this->resource;
+    }
 }
