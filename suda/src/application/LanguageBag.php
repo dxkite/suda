@@ -25,11 +25,11 @@ class LanguageBag
     /**
      * 翻译语言
      *
-     * @param string $message
+     * @param string|null $message
      * @param mixed ...$args
      * @return string
      */
-    public  function interpolate(string $message, ...$args)
+    public  function interpolate(?string $message, ...$args)
     {
         $message = trim($message);
         if (array_key_exists($message, $this->locales)) {

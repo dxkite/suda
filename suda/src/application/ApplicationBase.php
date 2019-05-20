@@ -141,11 +141,11 @@ class ApplicationBase extends ApplicationContext
     /**
      * 语言翻译
      *
-     * @param string $message
+     * @param string|null $message
      * @param mixed  ...$args
      * @return string
      */
-    public function _(string $message, ...$args):string
+    public function _(?string $message, ...$args):string
     {
         return $this->language->interpolate($message, ...$args);
     }
