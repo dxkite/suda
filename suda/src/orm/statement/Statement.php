@@ -99,6 +99,13 @@ abstract class Statement
     protected $middleware;
 
     /**
+     * 运行结果
+     *
+     * @var bool
+     */
+    protected $success;
+
+    /**
      * Statement constructor.
      * @param string $sql
      * @param mixed ...$args
@@ -423,5 +430,21 @@ abstract class Statement
     public function setFetch(int $fetch): void
     {
         $this->fetch = $fetch;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isSuccess(): bool
+    {
+        return $this->success;
+    }
+
+    /**
+     * @param bool $success
+     */
+    public function setSuccess(bool $success): void
+    {
+        $this->success = $success;
     }
 }

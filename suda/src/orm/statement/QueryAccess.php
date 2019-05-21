@@ -184,6 +184,7 @@ class QueryAccess
             $statement->setStatement($stmt);
             $start = microtime(true);
             $status = $stmt->execute();
+            $statement->setSuccess($status);
             $connection->getObserver()->observe($this, $connection, $statement, microtime(true) - $start, $status);
             if ($status === false) {
                 throw new SQLException(implode(':', $stmt->errorInfo()), intval($stmt->errorCode()));

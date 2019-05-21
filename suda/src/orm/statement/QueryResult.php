@@ -54,7 +54,7 @@ class QueryResult
             if ($statement->getReturnType() === Statement::RET_LAST_INSERT_ID) {
                 return $this->connection->getPdo()->lastInsertId();
             }
-            return $statement->getStatement()->rowCount() > 0;
+            return $statement->isSuccess();
         } elseif ($statement->isFetch()) {
             return $this->fetchResult($statement);
         }
