@@ -109,6 +109,7 @@ abstract class Statement
      * Statement constructor.
      * @param string $sql
      * @param mixed ...$args
+     * @throws \suda\orm\exception\SQLException
      */
     public function __construct(string $sql, ...$args)
     {
@@ -119,10 +120,15 @@ abstract class Statement
         }
     }
 
+    /**
+     * @param string $sql
+     * @param array $parameter
+     * @throws \suda\orm\exception\SQLException
+     */
     protected function create(string $sql, array $parameter)
     {
-        $this->string = $sql;
-        $this->binder = $this->mergeBinder($this->binder, $parameter);
+        list($this->string, $binder) = $this->prepareWhereString($sql, $parameter);
+        $this->binder = $this->mergeBinder($this->binder, $binder);
     }
 
     public function isRead(bool $set = null): bool
