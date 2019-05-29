@@ -18,6 +18,7 @@ use suda\framework\debug\log\LogLevel;
 use suda\framework\debug\ConfigInterface;
 use suda\framework\debug\log\AbstractLogger;
 use suda\framework\debug\log\logger\exception\FileLoggerException;
+use suda\framework\filesystem\FileSystem;
 use ZipArchive;
 
 class FileLogger extends AbstractLogger implements ConfigInterface
@@ -60,6 +61,9 @@ class FileLogger extends AbstractLogger implements ConfigInterface
     public function __construct(array $config = [])
     {
         $this->applyConfig($config);
+        FileSystem::make($this->getConfig('save-path'));
+        FileSystem::make($this->getConfig('save-pack-path'));
+        FileSystem::make($this->getConfig('save-zip-path'));
     }
 
     /**
@@ -81,14 +85,15 @@ class FileLogger extends AbstractLogger implements ConfigInterface
     protected function prepareWrite()
     {
         $msec = explode('.', microtime(true))[1];
-        $this->tempname = $this->getConfig('save-path').'/'.date('YmdHis').'.'.$msec.'.log';
+        $save = $this->getConfig('save-path');
+        $this->tempname = $save.'/'.date('YmdHis').'.'.$msec.'.log';
         $temp = fopen($this->tempname, 'w+');
         if ($temp !== false) {
             $this->temp = $temp;
         } else {
             throw new FileLoggerException(__CLASS__.':'.sprintf('cannot create log file'));
         }
-        $this->latest = $this->getConfig('save-path').'/'.$this->getConfig('file-name');
+        $this->latest = $save.'/'.$this->getConfig('file-name');
         register_shutdown_function([$this,'save']);
     }
 
