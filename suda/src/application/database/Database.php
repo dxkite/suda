@@ -3,8 +3,12 @@
 
 namespace suda\application\database;
 
-
+use suda\framework\Config;
+use suda\database\DataSource;
 use suda\application\Application;
+use suda\database\exception\SQLException;
+use suda\database\connection\observer\Observer;
+use suda\application\Resource as ApplicationResource;
 
 class Database
 {
@@ -34,5 +38,89 @@ class Database
     public static function application()
     {
         return static::$application;
+    }
+
+    /**
+     * 获取默认的数据源
+     * @return DataSource
+     * @throws SQLException
+     */
+    public static function getDefaultDataSource():DataSource
+    {
+        return static::getDataSource('default');
+    }
+    
+    /**
+     * @param string $name
+     * @return DataSource
+     * @throws SQLException
+     */
+    public static function getDataSource(string $name)
+    {
+        return static::getDataSourceFrom(static::$application->getResource(), $name);
+    }
+
+    /**
+     * @param ApplicationResource $resource
+     * @param string $groupName
+     * @return DataSource
+     * @throws SQLException
+     */
+    public static function getDataSourceFrom(ApplicationResource $resource, string $groupName)
+    {
+        $group = $groupName === 'default' ? '': '-'. $groupName;
+        $dataSourceConfigPath = $resource->getConfigResourcePath('config/data-source'.$group);
+        $dataSource = new DataSource;
+        $observer = new DebugObserver(static::$application->debug());
+        if ($dataSourceConfigPath !== null) {
+            $dataSourceConfig = Config::loadConfig($dataSourceConfigPath);
+            foreach ($dataSourceConfig as $name => $config) {
+                static::applyDataSource(
+                    $dataSource,
+                    $observer,
+                    $name,
+                    $config['type'] ?? 'mysql',
+                    $config['mode'] ?? '',
+                    $config
+                );
+            }
+        }
+        return $dataSource;
+    }
+
+
+    /**
+     * @param DataSource $source
+     * @param Observer $observer
+     * @param string $name
+     * @param string $type
+     * @param string $mode
+     * @param array $config
+     * @throws SQLException
+     */
+    protected static function applyDataSource(
+        DataSource $source,
+        Observer $observer,
+        string $name,
+        string $type,
+        string $mode,
+        array $config
+    ) {
+        $mode = strtolower($mode);
+        $data = DataSource::new($type, $config, $name);
+        $data->setObserver($observer);
+        if (strlen($mode) > 0) {
+            if (strpos($mode, 'read') !== false || strpos($mode, 'slave') !== false) {
+                $source->addRead($data);
+            }
+            if (strpos($mode, 'write') !== false) {
+                $source->addWrite($data);
+            }
+            if (strpos($mode, 'master') !== false) {
+                $source->add($data);
+            }
+        } else {
+            $source->add($data);
+        }
     }
 }

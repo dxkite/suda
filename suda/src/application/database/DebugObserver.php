@@ -3,10 +3,10 @@
 namespace suda\application\database;
 
 use suda\framework\Debugger;
-use suda\orm\statement\Statement;
-use suda\orm\connection\Connection;
-use suda\orm\statement\QueryAccess as StatementQueryAccess;
-use suda\orm\connection\observer\Observer;
+use suda\database\statement\Statement;
+use suda\database\connection\Connection;
+use suda\database\statement\QueryAccess as StatementQueryAccess;
+use suda\database\connection\observer\Observer;
 
 class DebugObserver implements Observer
 {

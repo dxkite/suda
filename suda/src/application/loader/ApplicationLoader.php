@@ -2,17 +2,18 @@
 namespace suda\application\loader;
 
 use function strtolower;
-use suda\orm\DataSource;
 use suda\framework\Config;
 use suda\application\Module;
+use suda\database\DataSource;
 use suda\application\Resource;
 use suda\application\ModuleBag;
 use suda\application\Application;
+use suda\application\database\Database;
+use suda\database\exception\SQLException;
 use suda\framework\filesystem\FileSystem;
-use suda\orm\connection\observer\Observer;
 use suda\application\builder\ModuleBuilder;
 use suda\application\database\DebugObserver;
-use suda\orm\exception\SQLException;
+use suda\database\connection\observer\Observer;
 
 /**
  * 应用程序
@@ -83,71 +84,12 @@ class ApplicationLoader
      */
     public function loadDataSource()
     {
-        $dataSource = $this->getDataSourceGroup('default');
+        Database::loadApplication($this->application);
+        $dataSource = Database::getDefaultDataSource();
         $this->application->setDataSource($dataSource);
     }
 
-    /**
-     * @param string $groupName
-     * @return DataSource
-     * @throws SQLException
-     */
-    public function getDataSourceGroup(string $groupName):DataSource
-    {
-        $group = $groupName === 'default' ? '': '-'. $groupName;
-        $dataSourceConfigPath = $this->application->getResource()->getConfigResourcePath('config/data-source'.$group);
-        $dataSource = new DataSource;
-        $observer = new DebugObserver($this->application->debug());
-        if ($dataSourceConfigPath !== null) {
-            $dataSourceConfig = Config::loadConfig($dataSourceConfigPath);
-            foreach ($dataSourceConfig as $name => $config) {
-                $this->addDataSource(
-                    $dataSource,
-                    $observer,
-                    $name,
-                    $config['type'] ?? 'mysql',
-                    $config['mode'] ?? '',
-                    $config
-                );
-            }
-        }
-        return $dataSource;
-    }
 
-    /**
-     * @param DataSource $source
-     * @param Observer $observer
-     * @param string $name
-     * @param string $type
-     * @param string $mode
-     * @param array $config
-     * @throws SQLException
-     */
-    protected function addDataSource(
-        DataSource $source,
-        Observer $observer,
-        string $name,
-        string $type,
-        string $mode,
-        array $config
-    ) {
-        $mode = strtolower($mode);
-        $data = DataSource::new($type, $config, $name);
-        $data->setObserver($observer);
-        if (strlen($mode) > 0) {
-            if (strpos($mode, 'read') !== false || strpos($mode, 'slave') !== false) {
-                $source->addRead($data);
-            }
-            if (strpos($mode, 'write') !== false) {
-                $source->addWrite($data);
-            }
-            if (strpos($mode, 'master') !== false) {
-                $source->add($data);
-            }
-        } else {
-            $source->add($data);
-        }
-    }
 
     protected function prepareModule()
     {

@@ -4,9 +4,9 @@
 namespace suda\application\database;
 
 
-use suda\orm\middleware\Middleware;
+use suda\database\middleware\Middleware;
 
-class QueryAccess extends \suda\orm\statement\QueryAccess
+class QueryAccess extends \suda\database\statement\QueryAccess
 {
     public function __construct(Middleware $middleware = null)
     {

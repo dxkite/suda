@@ -2,11 +2,11 @@
 namespace suda\application\database\creator;
 
 use function implode;
-use suda\orm\exception\SQLException;
-use suda\orm\struct\Field;
-use suda\orm\struct\TableStruct;
-use suda\orm\connection\Connection;
-use suda\orm\statement\QueryStatement;
+use suda\database\exception\SQLException;
+use suda\database\struct\Field;
+use suda\database\struct\TableStruct;
+use suda\database\connection\Connection;
+use suda\database\statement\QueryStatement;
 
 /**
  * 数据表链接对象
@@ -80,11 +80,12 @@ class MySQLTableCreator
     /**
      * @return bool
      * @throws SQLException
+     * @throws \ReflectionException
      */
     public function create()
     {
         $statement = new QueryStatement($this->toSQL());
-        $statement->isWrite(true);
+        $statement->setType(QueryStatement::WRITE);
         return $this->connection->query($statement) > 0;
     }
 

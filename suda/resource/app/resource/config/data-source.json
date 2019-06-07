@@ -1,5 +1,6 @@
 {
     "master": {
+        "type": "mysql",
         "enable": true,
         "prefix": "dx_",
         "mode": "read+write",
@@ -8,6 +9,6 @@
         "name": "suda_system",
         "user": "root",
         "password": "root",
-        "charset": "utf8"
+        "charset": "utf8mb4"
     }
 }

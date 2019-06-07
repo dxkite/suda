@@ -2,13 +2,13 @@
 namespace test\orm;
 
 use ReflectionException;
-use suda\orm\DataAccess;
-use suda\orm\struct\TableStruct;
+use suda\database\DataAccess;
+use suda\database\struct\TableStruct;
 use PHPUnit\Framework\TestCase;
 use suda\framework\runnable\Runnable;
-use suda\orm\struct\TableStructBuilder;
-use suda\orm\struct\FieldModifierParser;
-use suda\orm\struct\TableClassStructBuilder;
+use suda\database\struct\TableStructBuilder;
+use suda\database\struct\FieldModifierParser;
+use suda\database\struct\TableClassStructBuilder;
 
 class ObjectTest extends TestCase
 {

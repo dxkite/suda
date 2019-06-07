@@ -3,12 +3,12 @@ namespace test\orm;
 
 use ArrayObject;
 use suda\application\database\creator\MySQLTableCreator;
-use suda\orm\DataSource;
-use suda\orm\TableAccess;
-use suda\orm\struct\TableStruct;
+use suda\database\DataSource;
+use suda\database\TableAccess;
+use suda\database\struct\TableStruct;
 use PHPUnit\Framework\TestCase;
-use suda\orm\statement\QueryStatement;
-use suda\orm\TableData;
+use suda\database\statement\QueryStatement;
+use suda\database\TableData;
 
 class StatementTest extends TestCase
 {

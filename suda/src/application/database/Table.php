@@ -1,10 +1,10 @@
 <?php
 namespace suda\application\database;
 
-use suda\orm\TableAccess;
-use suda\orm\struct\TableStruct;
+use suda\database\TableAccess;
 use suda\application\Application;
-use suda\orm\middleware\Middleware;
+use suda\database\struct\TableStruct;
+use suda\database\middleware\Middleware;
 
 /**
  * 数据表抽象对象
@@ -21,6 +21,11 @@ abstract class Table extends TableAccess implements Middleware
         parent::__construct($this->initStruct($tableName), Database::application()->getDataSource(), $this);
     }
 
+    /**
+     * 构建数据表
+     * @param TableStruct $table
+     * @return TableStruct
+     */
     abstract public function onCreateStruct(TableStruct $table):TableStruct;
 
     /**

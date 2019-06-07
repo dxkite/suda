@@ -2,8 +2,8 @@
 namespace suda\application\database;
 
 use ReflectionException;
-use suda\orm\struct\ArrayDataTrait;
-use suda\orm\struct\ArrayDataInterface;
+use suda\database\struct\ArrayDataTrait;
+use suda\database\struct\ArrayDataInterface;
 
 /**
  * 数据表抽象对象

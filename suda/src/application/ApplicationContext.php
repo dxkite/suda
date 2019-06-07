@@ -1,7 +1,7 @@
 <?php
 namespace suda\application;
 
-use suda\orm\DataSource;
+use suda\database\DataSource;
 use suda\framework\Config;
 use suda\framework\Context;
 use suda\framework\loader\Loader;

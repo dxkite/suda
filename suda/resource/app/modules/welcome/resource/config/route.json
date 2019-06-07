@@ -10,5 +10,9 @@
     "simple": {
         "class": "suda.welcome.response.SimpleResponse",
         "uri": "\/simple"
+    },
+    "db": {
+        "class": "suda.welcome.response.DbDemoResponse",
+        "uri": "\/db"
     }
 }

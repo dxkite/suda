@@ -1,4 +1,5 @@
 <?php
+
 namespace suda\application;
 
 use Exception;
@@ -6,7 +7,7 @@ use Throwable;
 use ReflectionException;
 use suda\framework\Request;
 use suda\framework\Response;
-use suda\orm\exception\SQLException;
+use suda\database\exception\SQLException;
 use suda\framework\route\MatchResult;
 use suda\application\database\Database;
 use suda\application\loader\ModuleLoader;
@@ -40,16 +41,15 @@ class Application extends ApplicationSource
         $this->debug->info('===============================');
         $this->debug->time('loading application');
         $appLoader->load();
-        $this->event->exec('application:load-config', [ $this->config ,$this]);
+        $this->event->exec('application:load-config', [$this->config, $this]);
         $this->debug->timeEnd('loading application');
         $this->debug->time('loading data-source');
         $appLoader->loadDataSource();
         $this->debug->timeEnd('loading data-source');
-        Database::loadApplication($this);
-        $this->event->exec('application:load-environment', [ $this->config ,$this]);
+        $this->event->exec('application:load-environment', [$this->config, $this]);
         $this->debug->time('loading route');
         $appLoader->loadRoute();
-        $this->event->exec('application:load-route', [$this->route , $this]);
+        $this->event->exec('application:load-route', [$this->route, $this]);
         $this->debug->timeEnd('loading route');
         $this->debug->info('-------------------------------');
     }
@@ -64,7 +64,7 @@ class Application extends ApplicationSource
      */
     protected function prepare(Request $request, Response $response)
     {
-        $response->setHeader('x-powered-by', 'suda/'.SUDA_VERSION, true);
+        $response->setHeader('x-powered-by', 'suda/' . SUDA_VERSION, true);
         $response->getWrapper()->register(ExceptionContentWrapper::class, [Throwable::class]);
         $response->getWrapper()->register(TemplateWrapper::class, [RawTemplate::class]);
 
@@ -106,7 +106,7 @@ class Application extends ApplicationSource
             if (!$response->isSend()) {
                 $response->end();
             }
-            $this->debug->info('responded with code '. $response->getStatus());
+            $this->debug->info('responded with code ' . $response->getStatus());
             $this->debug->timeEnd('sending response');
         } catch (Throwable $e) {
             $this->debug->uncaughtException($e);
@@ -131,13 +131,13 @@ class Application extends ApplicationSource
         $route = $attributes['config'] ?? [];
         $runnable = null;
         if (array_key_exists('class', $route)) {
-            $runnable = $this->className($route['class']).'->onRequest';
+            $runnable = $this->className($route['class']) . '->onRequest';
         } elseif (array_key_exists('source', $route)) {
             $attributes['source'] = $route['source'];
-            $runnable = FileRequestProcessor::class.'->onRequest';
+            $runnable = FileRequestProcessor::class . '->onRequest';
         } elseif (array_key_exists('template', $route)) {
             $attributes['template'] = $route['template'];
-            $runnable = TemplateRequestProcessor::class.'->onRequest';
+            $runnable = TemplateRequestProcessor::class . '->onRequest';
         } elseif (array_key_exists('runnable', $route)) {
             $runnable = $route['runnable'];
         } else {
@@ -173,7 +173,7 @@ class Application extends ApplicationSource
     protected function createResponse(?MatchResult $result, Request $request, Response $response)
     {
         if (SUDA_DEBUG) {
-            $response->setHeader('x-route', $result === null?'default':$result->getName());
+            $response->setHeader('x-route', $result === null ? 'default' : $result->getName());
         }
         if ($result === null) {
             $content = $this->defaultResponse($this, $request, $response);

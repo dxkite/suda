@@ -3,7 +3,7 @@ namespace suda\application\database;
 
 use ReflectionException;
 use suda\application\Application;
-use suda\orm\middleware\Middleware;
+use suda\database\middleware\Middleware;
 
 /**
  * 数据表抽象对象
@@ -11,7 +11,7 @@ use suda\orm\middleware\Middleware;
  * 用于提供对数据表的操作
  *
  */
-class DataAccess extends \suda\orm\DataAccess
+class DataAccess extends \suda\database\DataAccess
 {
 
 
