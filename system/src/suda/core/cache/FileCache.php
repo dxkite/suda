@@ -83,13 +83,15 @@ class FileCache implements Cache
         $path=self::getPath($name);
         if (Storage::exist($path)) {
             $value=Storage::get($path);
-            list($time, $value)=explode('|', $value, 2);
-            if (time()<intval($time)) {
-                // 未过期则返回
-                return unserialize($value);
-            } else {
-                // 过期则删除
-                $this->delete($path);
+            if (strpos($value, '|')) {
+                list($time, $value)=explode('|', $value, 2);
+                if (time()<intval($time)) {
+                    // 未过期则返回
+                    return unserialize($value);
+                } else {
+                    // 过期则删除
+                    $this->delete($path);
+                }
             }
         }
         // 返回默认值

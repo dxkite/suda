@@ -29,27 +29,27 @@ class Field
     protected $key; //primary unique index
     // foreign key
     protected $foreign;
-     
+
     protected $name;
     protected $type;
     protected $length;
     protected $default;
     protected $isDefault;
-        
+
     protected $null; // nullable
-        protected $attribute; // binary unsigned
-        protected $collation;
+    protected $attribute; // binary unsigned
+    protected $collation;
     protected $tableName;
     protected $charset;
-        
+
     const BINARY = 'BINARY';
     const UNSIGNED = 'UNSIGNED';
-        
+
     const UNIQUE = 'UNIQUE';
     const PRIMARY = 'PRIMARY';
     const INDEX = 'INDEX';
     const KEY = 'KEY';
-    
+
     public function __construct(string $tableName, string $name, string $type, int $length = null)
     {
         $this->tableName = $tableName;
@@ -58,31 +58,31 @@ class Field
         $this->length = $length;
         $this->isDefault = false;
     }
-    
+
     public function charset(string $charset)
     {
         $this->charset = 'CHARACTER SET ' . $charset;
         return $this;
     }
-    
+
     public function comment(string $comment)
     {
         $this->comment = $comment;
         return $this;
     }
-    
+
     public function length(int $length)
     {
         $this->length = $length;
         return $this;
     }
-        
+
     public function key()
     {
         $this->key = self::KEY;
         return $this;
     }
-    
+
     public function primary()
     {
         $this->key = self::PRIMARY;
@@ -93,25 +93,25 @@ class Field
         $this->key = self::INDEX;
         return $this;
     }
-        
+
     public function unique()
     {
         $this->key = self::UNIQUE;
         return $this;
     }
-    
+
     public function collate(string $collate)
     {
         $this->collation = $collate;
         return $this;
     }
-        
+
     public function auto()
     {
         $this->auto = true;
         return $this;
     }
-    
+
     public function foreign(Field $field)
     {
         $this->foreign = $field;
@@ -123,13 +123,13 @@ class Field
         }
         return $this;
     }
-    
+
     public function null(bool $set = true)
     {
         $this->null = $set;
         return $this;
     }
-    
+
     public function default($value)
     {
         $this->isDefault = true;
@@ -139,19 +139,19 @@ class Field
         }
         return $this;
     }
-    
+
     public function binary()
     {
         $this->attribute = self::BINARY;
         return $this;
     }
-    
+
     public function unsigned()
     {
         $this->attribute = self::UNSIGNED;
         return $this;
     }
-    
+
     public function getFieldSQL()
     {
         $type = $this->length?strtoupper($this->type).'('.$this->length.')':strtoupper($this->type);
@@ -169,45 +169,45 @@ class Field
         } else {
             $default = '';
         }
-            
+
         $list = [$type, $attr, $this->charset, $null, $default, $auto, $comment];
-        
-    
+
+
         $data = implode(' ', array_filter(array_map('trim', $list), 'strlen'));
-    
+
         return trim("`{$this->name}` {$data}");
     }
-    
+
     public function getKeyType()
     {
         return $this->key;
     }
-    
+
     public function getName()
     {
         return $this->name;
     }
-        
+
     public function getType()
     {
         return $this->type;
     }
-    
+
     public function getTableName()
     {
         return $this->tableName;
     }
-    
+
     public function getForeignKey()
     {
         return $this->foreign;
     }
-    
+
     public function getAutoIncrement()
     {
         return $this->auto;
     }
-    
+
     public function getComment()
     {
         return $this->comment;

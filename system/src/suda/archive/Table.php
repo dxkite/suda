@@ -358,16 +358,21 @@ abstract class Table extends TableAccess
     {
         $statment = $this->statement;
         $where_str = $statment->prepareWhere($where, $binds);
-        $where = $where_str.' '.$this->genOrderBy();
         if ($this->group !== null) {
-            $where .= ' '. $this->genGroupBy();
+            $where_str .= ' '. $this->genGroupBy();
         }
+        $where = $where_str.' '.$this->genOrderBy();
         return $statment->where($this->getTableName(), $this->getWants(), $where, $binds, [$page, $rows,$offset])->fetchAll();
     }
 
     /**
      * 根据条件更新列
      *
+     * @param string|array $values 更新的列
+     * @param string|array $where 条件区域
+     * @param array $bind 扩展条件值
+     * @return integer
+     * @throws \suda\exception\TableException
      * @example
      *
      * 条件可以为键值对也可以为特殊条件
@@ -388,10 +393,6 @@ abstract class Table extends TableAccess
      * $table->update(['name'=>$name],'id > :id ',['id'=>3]);
      * ```
      *
-     * @param string|array $values 更新的列
-     * @param string|array $where 条件区域
-     * @param array $bind 扩展条件值
-     * @return integer
      */
     public function update($values, $where, array $bind = []) :int
     {
@@ -407,6 +408,14 @@ abstract class Table extends TableAccess
     /**
      * 选择列
      *
+     * @param string|array $wants 想要查询的列
+     * @param string|array $where 查询条件
+     * @param array $whereBinder 查询条件的值
+     * @param integer|null $page 分页页码
+     * @param integer $row 分页行
+     * @param boolean $offset 直接偏移
+     * @return RawQuery
+     * @throws \suda\exception\TableException
      * @example
      *
      * 相当于 select 语句，返回一个 SQLQuery类
@@ -429,13 +438,6 @@ abstract class Table extends TableAccess
      * $table->select(['name'],'id > :id',['id'=>2])->fetchAll();
      * ```
      *
-     * @param string|array $wants 想要查询的列
-     * @param string|array $where 查询条件
-     * @param array $whereBinder 查询条件的值
-     * @param integer|null $page 分页页码
-     * @param integer $row 分页行
-     * @param boolean $offset 直接偏移
-     * @return RawQuery
      */
     public function select($wants, $where, $whereBinder = [], ?int $page = null, int $row = 10, bool $offset = false): RawQuery
     {
@@ -450,11 +452,11 @@ abstract class Table extends TableAccess
         } else {
             $where = $this->statement->prepareWhere($where, $whereBinder);
         }
-        if ($this->orderField !== null) {
-            $where .= ' '.$this->genOrderBy();
-        }
         if ($this->group !== null) {
             $where .= ' '. $this->genGroupBy();
+        }
+        if ($this->orderField !== null) {
+            $where .= ' '.$this->genOrderBy();
         }
         return $this->statement->where($this->getTableName(), $wants, $where, $whereBinder, [$page, $row, $offset], $offset);
     }

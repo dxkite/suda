@@ -81,7 +81,10 @@ abstract class TableAccess
         return $this->creator;
     }
 
-
+    /**
+     * @param \suda\archive\creator\Table $table
+     * @return mixed
+     */
     abstract protected function onBuildCreator($table);
 
 
@@ -265,7 +268,7 @@ abstract class TableAccess
      * 设置表列
      *
      * @param array|null $fields
-     * @return TableAccess
+     * @return $this
      */
     public function setFields(?array $fields=null)
     {

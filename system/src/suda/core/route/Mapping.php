@@ -51,6 +51,9 @@ class Mapping implements \JsonSerializable
 
     protected static $urlType= [ 'int'=>'\d+', 'string'=>'[^\/]+', 'url'=>'.+' ];
 
+    /**
+     * @var Mapping
+     */
     public static $current;
 
     public function __construct(string $name, string $url, string $callback, string $module, array $method=[], string $group=Mapping::DEFAULT_GROUP)
@@ -501,12 +504,12 @@ class Mapping implements \JsonSerializable
         } elseif (array_key_exists('source', $json)) {
             $callback =   __CLASS__.'::sourceResponse';
         } else {
-            throw new \suda\core\Exception(new \Exception(__('$0 router $1 require infomation: class or template or source', $module, $name)), 'RouterError');
+            throw new \suda\core\Exception(new \Exception(__('$0 router $1 require information: class or template or source', $module, $name)), 'RouterError');
         }
 
         if (array_key_exists('url', $json) || array_key_exists('regexpr', $json)) {
         } else {
-            throw new \suda\core\Exception(new \Exception(__('$0 router $1 require infomation: url or regexpr to match url', $module, $name)), 'RouterError');
+            throw new \suda\core\Exception(new \Exception(__('$0 router $1 require information: url or regexpr to match url', $module, $name)), 'RouterError');
         }
 
         $mapping= new self($name, $json['url'] ?? '', $callback, $module, $json['method']??[], $group);

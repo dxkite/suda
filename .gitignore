@@ -15,3 +15,4 @@
 .suda
 *.phar
 script/docme/template/*.tpl.php
+.idea/workspace.xml
