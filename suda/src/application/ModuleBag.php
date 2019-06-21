@@ -212,10 +212,10 @@ class ModuleBag implements IteratorAggregate
         if (count($names) === 0) {
             throw new ApplicationException(sprintf('module %s not exist', $name), ApplicationException::ERR_MODULE_NAME);
         }
-        if (count($names) > 1) {
+        if (count($names) > 1 && in_array($name, $names) === false) {
             throw new ApplicationException(sprintf('conflict module name %s in %s', $name, implode(',', $names)), ApplicationException::ERR_CONFLICT_MODULE_NAME);
         }
-        return $names[0];
+        return $names[array_search($name, $names)];
     }
 
     protected function sort(string $a, string $b)
