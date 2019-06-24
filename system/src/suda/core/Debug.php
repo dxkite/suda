@@ -626,7 +626,7 @@ class Debug
     {
         $logFile = APP_LOG . '/' . date('Y-m-d') . '-' . substr(md5_file(self::$latest), 0, 8) . '.log';
         // 移动文件
-        rename(self::$latest, APP_LOG . '/' . date('Y-m-d') . '-' . substr(md5_file($logFile), 0, 8) . '.log');
+        rename(self::$latest, $logFile);
         // ZIP包
         $path = preg_replace('/[\\\\]+/', '/', storage()->path(APP_LOG . '/zip') . '/' . date('Y-m-d') . '.zip');
         $zip = new ZipArchive;
