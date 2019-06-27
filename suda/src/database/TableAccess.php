@@ -129,6 +129,7 @@ class TableAccess extends QueryAccess
      * @param string $query
      * @param mixed ...$parameter
      * @return QueryStatement
+     * @throws exception\SQLException
      */
     public function query(string $query, ...$parameter):QueryStatement
     {

@@ -20,12 +20,13 @@ trait AttachTrait
         $this->attribute[$name] = $value;
     }
 
-    protected function analyse(array $context)
+    protected function analyse(string $message, array $context)
     {
         $replace = [];
         $attach = [] ;
         foreach ($context as $key => $val) {
-            if ($this->isReplacedObj($val)) {
+            $replaceKey = '{' . $key . '}';
+            if ($this->isReplacedObj($val) && strpos($message, $replaceKey) !== false) {
                 $replace['{' . $key . '}'] = $val;
             } else {
                 $attach[$key] = $val;
@@ -36,12 +37,12 @@ trait AttachTrait
 
     protected function isReplacedObj($val) : bool
     {
-        return !is_array($val) && (!is_object($val) || method_exists($val, '__toString')) && ! $val instanceof Throwable;
+        return !is_array($val) && (!is_object($val) || method_exists($val, '__toString')) && (! $val instanceof Throwable);
     }
 
     public function interpolate(string $message, array $context, array $attribute)
     {
-        list($attach, $replace) = $this->analyse($context);
+        list($attach, $replace) = $this->analyse($message, $context);
         $attribute = array_merge($this->attribute, $attribute);
         foreach ($attribute as $key => $val) {
             $replace['%' . $key . '%'] = $val;
@@ -49,7 +50,7 @@ trait AttachTrait
         $message = strtr($message, $replace);
         $attachInfo = '';
         foreach ($attach as $name => $value) {
-            $attachInfo = $name.' = ';
+            $attachInfo .= $name.' = ';
             if ($value instanceof AttachValueInterface) {
                 $attachInfo .= $value->getLogAttach().PHP_EOL;
             } else {

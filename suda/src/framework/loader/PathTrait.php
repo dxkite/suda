@@ -9,11 +9,12 @@ trait PathTrait
 {
     /**
      * @param string $path
+     * @param string $separator
      * @return string
      */
-    public static function formatSeparator(string $path):string
+    public static function formatSeparator(string $path, string $separator = DIRECTORY_SEPARATOR):string
     {
-        return str_replace(['\\','/'], DIRECTORY_SEPARATOR, $path);
+        return str_replace(['\\','/'], $separator, $path);
     }
 
     /**
