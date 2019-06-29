@@ -1,7 +1,6 @@
 <?php
 namespace suda\database;
 
-use suda\database\struct\Field;
 use suda\database\struct\TableStruct;
 use InvalidArgumentException;
 use suda\database\struct\ArrayDataTrait;

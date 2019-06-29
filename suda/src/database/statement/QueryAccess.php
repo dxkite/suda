@@ -103,7 +103,6 @@ class QueryAccess
      * @param $connection
      * @param Statement $statement
      * @return mixed
-     * @throws ReflectionException
      * @throws SQLException
      */
     protected function createResult(Connection $connection, Statement $statement)

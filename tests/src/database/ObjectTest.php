@@ -1,5 +1,5 @@
 <?php
-namespace test\orm;
+namespace test\database;
 
 use ReflectionException;
 use suda\database\DataAccess;

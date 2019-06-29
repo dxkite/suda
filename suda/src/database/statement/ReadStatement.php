@@ -46,6 +46,7 @@ class ReadStatement extends QueryStatement
      * @param string $rawTableName
      * @param TableStruct $struct
      * @param Middleware $middleware
+     * @throws SQLException
      */
     public function __construct(string $rawTableName, TableStruct $struct, Middleware $middleware)
     {

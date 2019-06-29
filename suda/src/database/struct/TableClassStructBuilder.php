@@ -4,7 +4,6 @@ namespace suda\database\struct;
 use function array_column;
 use ReflectionClass;
 use ReflectionException;
-use suda\database\struct\TableStruct;
 
 /**
  * 从类的类注释构建对象

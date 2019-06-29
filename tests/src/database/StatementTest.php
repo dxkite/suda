@@ -1,5 +1,5 @@
 <?php
-namespace test\orm;
+namespace test\database;
 
 use ArrayObject;
 use suda\application\database\creator\MySQLTableCreator;
@@ -137,6 +137,12 @@ class StatementTest extends TestCase
         $whereIn = $table->delete('id in (?)', new ArrayObject([1, 3, 4]));
         $this->assertEquals(
             'DELETE FROM user_table WHERE id in (:_0_28,:_0_29,:_0_30)',
+            $whereIn->getString()
+        );
+
+        $whereIn = $table->write('id = id + 1')->where(['name' => 'dxkite']);
+        $this->assertEquals(
+            'UPDATE user_table SET id = id + 1 WHERE `name`=:_name_31',
             $whereIn->getString()
         );
     }

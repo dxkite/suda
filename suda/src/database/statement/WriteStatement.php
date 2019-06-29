@@ -1,4 +1,5 @@
 <?php
+
 namespace suda\database\statement;
 
 use function implode;
@@ -17,7 +18,7 @@ class WriteStatement extends Statement
     /**
      * 数据
      *
-     * @var array
+     * @var array|string
      */
     protected $data;
 
@@ -81,13 +82,15 @@ class WriteStatement extends Statement
             foreach ($name as $key => $value) {
                 $this->write($key, $value);
             }
-        } else {
+        } elseif (is_string($name) && $value !== null) {
             $name = $this->middleware->inputName($name);
             if ($this->struct->hasField($name)) {
                 $this->data[$name] = $value;
             } else {
                 throw new SQLException(sprintf('table `%s` has no field `%s`', $this->struct->getName(), $name));
             }
+        } else {
+            $this->data = $name;
         }
         return $this;
     }
@@ -176,17 +179,22 @@ class WriteStatement extends Statement
         }
         return $values;
     }
+
     /**
      * 获取字符串
      *
      * @return Query
      */
-    protected function prepareQuery():Query
+    protected function prepareQuery(): Query
     {
         if ($this->whereCondition !== null) {
-            if ($this->delete === false) {
+            if ($this->delete === false && is_array($this->data)) {
                 list($updateSet, $upbinder) = $this->prepareUpdateSet($this->data);
                 $this->binder = array_merge($this->binder, $upbinder);
+                $string = "UPDATE {$this->table} SET {$updateSet} WHERE {$this->whereCondition}";
+                return new Query($string, $this->binder);
+            } elseif ($this->delete === false && is_string($this->data)) {
+                $updateSet = trim($this->data);
                 $string = "UPDATE {$this->table} SET {$updateSet} WHERE {$this->whereCondition}";
                 return new Query($string, $this->binder);
             } else {
@@ -235,7 +243,7 @@ class WriteStatement extends Statement
      * @param array $data
      * @return Query
      */
-    public function parepareInsert(array $data):Query
+    public function parepareInsert(array $data): Query
     {
         $names = [];
         $binds = [];

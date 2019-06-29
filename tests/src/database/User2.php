@@ -1,5 +1,5 @@
 <?php
-namespace test\orm;
+namespace test\database;
 
 /**
  * @table user

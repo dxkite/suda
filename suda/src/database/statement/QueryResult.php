@@ -6,6 +6,7 @@ use function method_exists;
 use PDO;
 use ReflectionClass;
 use ReflectionException;
+use suda\database\exception\FetchResultException;
 use suda\database\exception\SQLException;
 use suda\database\connection\Connection;
 use suda\database\middleware\Middleware;
@@ -44,7 +45,6 @@ class QueryResult
      * @param Statement $statement
      * @return mixed
      * @throws SQLException
-     * @throws ReflectionException
      */
     public function createResult(Statement $statement)
     {
@@ -69,7 +69,6 @@ class QueryResult
      * @param string|null $class
      * @param array $ctor_args
      * @return mixed
-     * @throws ReflectionException
      */
     protected function fetchResult(Statement $statement, ?string $class = null, array $ctor_args = [])
     {
@@ -79,12 +78,12 @@ class QueryResult
         if ($statement->isFetchOne()) {
             $data = $statement->getStatement()->fetch(PDO::FETCH_ASSOC) ?: null;
             if ($data !== null) {
-                return $this->fetchOneProccess($statement, $data);
+                return $this->fetchOneProcessor($statement, $data);
             }
             return $data;
         } elseif ($statement->isFetchAll()) {
             $data = $statement->getStatement()->fetchAll(PDO::FETCH_ASSOC);
-            return $this->fetchAllProccess($statement, $data);
+            return $this->fetchAllProcessor($statement, $data);
         }
         return null;
     }
@@ -97,12 +96,15 @@ class QueryResult
      * @param ReadStatement|QueryStatement $statement
      * @param array $data
      * @return mixed
-     * @throws ReflectionException
      */
-    protected function fetchOneProccess($statement, array $data)
+    protected function fetchOneProcessor($statement, array $data)
     {
         if ($statement->getFetchClass() !== null) {
-            $reflectClass = new ReflectionClass($statement->getFetchClass());
+            try {
+                $reflectClass = new ReflectionClass($statement->getFetchClass());
+            } catch (ReflectionException $e) {
+                throw new FetchResultException('error create class: '. $e->getMessage(), $e->getCode(), $e);
+            }
             $object = $reflectClass->newInstanceArgs($statement->getFetchClassArgs());
             if (method_exists($object, '__set')) {
                 $this->setValueWithMagicSet($object, $data);
@@ -111,7 +113,7 @@ class QueryResult
             }
             return $object;
         }
-        return $this->fetchOneProccessArray($data);
+        return $this->fetchOneProcessorArray($data);
     }
 
     /**
@@ -121,7 +123,6 @@ class QueryResult
      * @param mixed $object
      * @param array $data
      * @return void
-     * @throws ReflectionException
      */
     protected function setValueWithReflection(ReflectionClass $reflectClass, $object, array $data)
     {
@@ -129,7 +130,11 @@ class QueryResult
             $value = $this->middleware->output($name, $value);
             $propertyName = $this->middleware->outputName($name);
             if ($reflectClass->hasProperty($propertyName)) {
-                $property = $reflectClass->getProperty($propertyName);
+                try {
+                    $property = $reflectClass->getProperty($propertyName);
+                } catch (ReflectionException $e) {
+                    throw new FetchResultException('error create property: '. $e->getMessage(), $e->getCode(), $e);
+                }
                 $property->setAccessible(true);
                 $property->setValue($object, $value);
             } else {
@@ -161,12 +166,11 @@ class QueryResult
      * @param ReadStatement|QueryStatement $statement
      * @param array $data
      * @return array
-     * @throws ReflectionException
      */
-    protected function fetchAllProccess($statement, array $data): array
+    protected function fetchAllProcessor($statement, array $data): array
     {
         foreach ($data as $index => $row) {
-            $row = $this->fetchOneProccess($statement, $row);
+            $row = $this->fetchOneProcessor($statement, $row);
             $row = $this->middleware->outputRow($row);
             $data[$index] = $row;
         }
@@ -225,7 +229,7 @@ class QueryResult
      * @param array $data
      * @return array
      */
-    protected function fetchOneProccessArray($data)
+    protected function fetchOneProcessorArray($data)
     {
         if ($this->middleware !== null) {
             foreach ($data as $name => $value) {

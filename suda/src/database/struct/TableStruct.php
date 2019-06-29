@@ -10,7 +10,7 @@ use Traversable;
 
 /**
  * Class TableStruct
- * @package suda\orm\struct
+ * @package suda\database\struct
  */
 class TableStruct implements IteratorAggregate
 {

@@ -7,7 +7,7 @@ use suda\database\exception\SQLException;
 
 /**
  * Trait PrepareTrait
- * @package suda\orm\statement
+ * @package suda\database\statement
  */
 trait PrepareTrait
 {

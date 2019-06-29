@@ -8,7 +8,7 @@ use Traversable;
 
 /**
  * Interface ArrayDataInterface
- * @package suda\orm\struct
+ * @package suda\database\struct
  */
 interface ArrayDataInterface extends ArrayAccess, IteratorAggregate, Countable
 {

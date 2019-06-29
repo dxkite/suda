@@ -116,6 +116,7 @@ class CommonMiddleware extends NullMiddleware
      * @param string $name
      * @param mixed $data
      * @return mixed
+     * @throws \ReflectionException
      */
     public function input(string $name, $data)
     {
@@ -132,6 +133,7 @@ class CommonMiddleware extends NullMiddleware
      * @param string $name
      * @param mixed $data
      * @return mixed
+     * @throws \ReflectionException
      */
     public function output(string $name, $data)
     {
@@ -147,6 +149,7 @@ class CommonMiddleware extends NullMiddleware
      *
      * @param mixed $row
      * @return mixed
+     * @throws \ReflectionException
      */
     public function outputRow($row)
     {
@@ -162,6 +165,7 @@ class CommonMiddleware extends NullMiddleware
      *
      * @param string $name
      * @return string
+     * @throws \ReflectionException
      */
     public function inputName(string $name):string
     {
@@ -177,6 +181,7 @@ class CommonMiddleware extends NullMiddleware
      *
      * @param string $name
      * @return string
+     * @throws \ReflectionException
      */
     public function outputName(string $name):string
     {

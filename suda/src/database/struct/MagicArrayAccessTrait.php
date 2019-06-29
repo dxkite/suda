@@ -3,7 +3,7 @@ namespace suda\database\struct;
 
 /**
  * Trait MagicArrayAccessTrait
- * @package suda\orm\struct
+ * @package suda\database\struct
  */
 trait MagicArrayAccessTrait
 {
