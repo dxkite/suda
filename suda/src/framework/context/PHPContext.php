@@ -2,7 +2,6 @@
 namespace suda\framework\context;
 
 use suda\framework\Config;
-use suda\framework\debug\log\LoggerInterface;
 use suda\framework\Debugger;
 use suda\framework\loader\Loader;
 

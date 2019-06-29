@@ -3,7 +3,6 @@ namespace suda\database\connection;
 
 use PDO;
 use PDOException;
-use ReflectionException;
 use suda\database\exception\SQLException;
 use suda\database\statement\QueryStatement;
 

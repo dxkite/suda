@@ -1,7 +1,6 @@
 <?php
 namespace suda\database\struct;
 
-use ReflectionException;
 use suda\database\exception\SQLException;
 use suda\database\statement\QueryAccess;
 

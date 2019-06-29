@@ -1,11 +1,6 @@
 <?php
 namespace suda\framework\response;
 
-use Exception;
-use function get_class;
-use function gettype;
-use function in_array;
-use function method_exists;
 use ReflectionException;
 use SplFileObject;
 use ReflectionClass;

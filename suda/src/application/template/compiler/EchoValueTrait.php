@@ -1,7 +1,6 @@
 <?php
 namespace suda\application\template\compiler;
 
-use Exception;
 use http\Exception\RuntimeException;
 
 trait EchoValueTrait

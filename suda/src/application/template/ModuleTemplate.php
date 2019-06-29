@@ -5,8 +5,6 @@ namespace suda\application\template;
 use Exception;
 use ReflectionException;
 use suda\application\template\compiler\Compiler;
-use suda\framework\Request;
-use suda\application\Application;
 use suda\framework\filesystem\FileSystem;
 
 /**

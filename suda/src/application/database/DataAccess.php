@@ -2,7 +2,6 @@
 namespace suda\application\database;
 
 use ReflectionException;
-use suda\application\Application;
 use suda\database\middleware\Middleware;
 
 /**

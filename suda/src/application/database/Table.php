@@ -2,7 +2,6 @@
 namespace suda\application\database;
 
 use suda\database\TableAccess;
-use suda\application\Application;
 use suda\database\struct\TableStruct;
 use suda\database\middleware\Middleware;
 

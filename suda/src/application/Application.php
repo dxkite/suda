@@ -9,7 +9,6 @@ use suda\framework\Request;
 use suda\framework\Response;
 use suda\database\exception\SQLException;
 use suda\framework\route\MatchResult;
-use suda\application\database\Database;
 use suda\application\loader\ModuleLoader;
 use suda\application\template\RawTemplate;
 use suda\application\loader\LanguageLoader;
