@@ -48,7 +48,6 @@ class PHPContext
     /**
      * 注册调试器
      *
-     * @param LoggerInterface $logger
      * @return void
      */
     public function registerDebugger()

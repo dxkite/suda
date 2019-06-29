@@ -1,13 +1,10 @@
 <?php
 namespace suda\framework\filesystem;
 
-use function is_dir;
-use function is_writable;
 use Iterator;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use RecursiveRegexIterator;
-use function strlen;
 use suda\framework\loader\Path;
 use suda\framework\loader\PathTrait;
 
@@ -145,9 +142,8 @@ trait DirectoryHelper
             }
         }
     }
-    
 
-    protected static function buildIterator(string $directory, bool $recursive = false, ?string $regex = null, int $mode): Iterator
+    protected static function buildIterator(string $directory, bool $recursive, ?string $regex, int $mode): Iterator
     {
         $it = new RecursiveDirectoryIterator($directory, RecursiveDirectoryIterator::SKIP_DOTS);
         if ($regex !== null) {

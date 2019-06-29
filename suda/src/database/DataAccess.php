@@ -1,10 +1,6 @@
 <?php
 namespace suda\database;
 
-use function array_shift;
-use function is_object;
-use function method_exists;
-use function preg_match;
 use ReflectionClass;
 use ReflectionException;
 use ReflectionProperty;
@@ -62,6 +58,7 @@ class DataAccess
      *
      * @param array|string $fields
      * @return ReadStatement
+     * @throws exception\SQLException
      */
     public function read(...$fields): ReadStatement
     {
@@ -130,6 +127,7 @@ class DataAccess
      * @param string $query
      * @param mixed ...$parameter
      * @return QueryStatement
+     * @throws exception\SQLException
      */
     public function query(string $query, ...$parameter):QueryStatement
     {
@@ -143,13 +141,12 @@ class DataAccess
      * @param Statement $statement
      * @return mixed
      * @throws exception\SQLException
-     * @throws ReflectionException
      */
     public function run(Statement $statement)
     {
         return $this->access->run($statement);
     }
-    
+
     /**
      * 获取最后一次插入的主键ID（用于自增值
      *

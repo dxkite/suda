@@ -30,7 +30,6 @@ class ReadStatement extends \suda\database\statement\ReadStatement
      * @param array $args
      * @return mixed
      * @throws SQLException
-     * @throws \ReflectionException
      */
     public function one(?string $class = null, array $args = [])
     {
@@ -44,7 +43,6 @@ class ReadStatement extends \suda\database\statement\ReadStatement
      * @param array $args
      * @return array
      * @throws SQLException
-     * @throws \ReflectionException
      */
     public function all(?string $class = null, array $args = []):array
     {
@@ -58,7 +56,6 @@ class ReadStatement extends \suda\database\statement\ReadStatement
      * @param array $args
      * @return mixed
      * @throws SQLException
-     * @throws \ReflectionException
      */
     public function fetch(?string $class = null, array $args = [])
     {
@@ -72,7 +69,6 @@ class ReadStatement extends \suda\database\statement\ReadStatement
      * @param array $args
      * @return array
      * @throws SQLException
-     * @throws \ReflectionException
      */
     public function fetchAll(?string $class = null, array $args = []):array
     {

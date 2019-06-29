@@ -60,7 +60,6 @@ class MySQLConnection extends Connection
      * @param string $database
      * @return mixed
      * @throws SQLException
-     * @throws ReflectionException
      */
     public function switchDatabase(string $database)
     {

@@ -86,7 +86,6 @@ class QueryAccess
      *
      * @param Statement $statement
      * @return mixed
-     * @throws ReflectionException
      * @throws SQLException
      */
     public function run(Statement $statement)

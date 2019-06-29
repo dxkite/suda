@@ -28,7 +28,6 @@ class WriteStatement extends \suda\database\statement\WriteStatement
      *
      * @return int
      * @throws SQLException
-     * @throws \ReflectionException
      */
     public function rows():int
     {
@@ -40,7 +39,6 @@ class WriteStatement extends \suda\database\statement\WriteStatement
      *
      * @return boolean
      * @throws SQLException
-     * @throws \ReflectionException
      */
     public function ok():bool
     {
@@ -52,7 +50,6 @@ class WriteStatement extends \suda\database\statement\WriteStatement
      *
      * @return string
      * @throws SQLException
-     * @throws \ReflectionException
      */
     public function id():string
     {

@@ -68,7 +68,7 @@ class Module
      * @param string $name
      * @param string $version
      * @param string $path
-     * @param string $property
+     * @param array $property
      * @param array $config
      */
     public function __construct(string $name, string $version, string $path, array $property, array $config = [])

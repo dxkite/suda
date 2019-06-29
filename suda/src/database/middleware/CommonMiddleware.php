@@ -2,11 +2,8 @@
 namespace suda\database\middleware;
 
 use Closure;
-use function json_decode;
-use function json_encode;
-use function serialize;
+use ReflectionException;
 use suda\framework\runnable\Runnable;
-use function unserialize;
 
 /**
  * 通用中间件
@@ -116,7 +113,7 @@ class CommonMiddleware extends NullMiddleware
      * @param string $name
      * @param mixed $data
      * @return mixed
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     public function input(string $name, $data)
     {
@@ -133,7 +130,7 @@ class CommonMiddleware extends NullMiddleware
      * @param string $name
      * @param mixed $data
      * @return mixed
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     public function output(string $name, $data)
     {
@@ -149,7 +146,7 @@ class CommonMiddleware extends NullMiddleware
      *
      * @param mixed $row
      * @return mixed
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     public function outputRow($row)
     {
@@ -165,7 +162,7 @@ class CommonMiddleware extends NullMiddleware
      *
      * @param string $name
      * @return string
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     public function inputName(string $name):string
     {
@@ -181,7 +178,7 @@ class CommonMiddleware extends NullMiddleware
      *
      * @param string $name
      * @return string
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     public function outputName(string $name):string
     {

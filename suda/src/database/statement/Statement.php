@@ -2,9 +2,9 @@
 
 namespace suda\database\statement;
 
-use function is_array;
 use PDOStatement;
 use suda\database\Binder;
+use suda\database\exception\SQLException;
 use suda\database\middleware\Middleware;
 
 abstract class Statement
@@ -109,7 +109,7 @@ abstract class Statement
      * Statement constructor.
      * @param string $sql
      * @param mixed ...$args
-     * @throws \suda\database\exception\SQLException
+     * @throws SQLException
      */
     public function __construct(string $sql, ...$args)
     {
@@ -123,7 +123,7 @@ abstract class Statement
     /**
      * @param string $sql
      * @param array $parameter
-     * @throws \suda\database\exception\SQLException
+     * @throws SQLException
      */
     protected function create(string $sql, array $parameter)
     {

@@ -2,11 +2,8 @@
 
 namespace suda\application\template;
 
-use function array_key_exists;
-use function constant;
 use Exception;
-use function in_array;
-use function pathinfo;
+use ReflectionException;
 use suda\application\Resource;
 use suda\framework\runnable\Runnable;
 use suda\framework\filesystem\FileSystem;
@@ -236,6 +233,12 @@ class CompilableTemplate extends RawTemplate
         echo $included->getRenderedString();
     }
 
+    /**
+     * @param string $name
+     * @param mixed ...$args
+     * @return mixed
+     * @throws ReflectionException
+     */
     public function data(string $name, ...$args)
     {
         if (func_num_args() > 1) {
