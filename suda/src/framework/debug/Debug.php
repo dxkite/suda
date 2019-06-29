@@ -11,6 +11,7 @@ use suda\framework\debug\attach\DumpInterface;
 use suda\framework\debug\log\LoggerAwareTrait;
 use suda\framework\debug\attach\AttachInterface;
 use suda\framework\debug\log\LoggerAwareInterface;
+use Throwable;
 
 class Debug implements LoggerInterface, LoggerAwareInterface, DumpInterface, AttachInterface, ConfigInterface
 {
@@ -66,9 +67,16 @@ class Debug implements LoggerInterface, LoggerAwareInterface, DumpInterface, Att
     {
         $replace = [];
         foreach ($context as $key => $val) {
-            $replace['{' . $key . '}'] = $val;
+            if ($this->canBeStringValue($val)) {
+                $replace['{' . $key . '}'] = $val;
+            }
         }
         return strtr($message, $replace);
+    }
+
+    protected function canBeStringValue($val) : bool
+    {
+        return !is_array($val) && (!is_object($val) || method_exists($val, '__toString'));
     }
 
     protected function assignAttributes(array $attribute): array
