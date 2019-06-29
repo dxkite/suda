@@ -187,22 +187,22 @@ class WriteStatement extends Statement
      */
     protected function prepareQuery(): Query
     {
-        if ($this->whereCondition !== null) {
-            if ($this->delete === false && is_array($this->data)) {
-                list($updateSet, $upbinder) = $this->prepareUpdateSet($this->data);
-                $this->binder = array_merge($this->binder, $upbinder);
-                $string = "UPDATE {$this->table} SET {$updateSet} WHERE {$this->whereCondition}";
-                return new Query($string, $this->binder);
-            } elseif ($this->delete === false && is_string($this->data)) {
-                $updateSet = trim($this->data);
+        if (is_array($this->data) && $this->whereCondition === null) {
+            return $this->parepareInsert($this->data);
+        } else {
+            if ($this->delete === false) {
+                if (is_string($this->data)) {
+                    $updateSet = trim($this->data);
+                } else {
+                    list($updateSet, $upbinder) = $this->prepareUpdateSet($this->data);
+                    $this->binder = array_merge($this->binder, $upbinder);
+                }
                 $string = "UPDATE {$this->table} SET {$updateSet} WHERE {$this->whereCondition}";
                 return new Query($string, $this->binder);
             } else {
                 $string = "DELETE FROM {$this->table} WHERE {$this->whereCondition}";
                 return new Query($string, $this->binder);
             }
-        } else {
-            return $this->parepareInsert($this->data);
         }
     }
 
@@ -256,6 +256,6 @@ class WriteStatement extends Statement
         }
         $i_name = implode(',', $names);
         $i_bind = implode(',', $binds);
-        return new Query(sprintf("INSERT INTO %s (%s) VALUES (%s)", $this->table, $i_name, $i_bind), $this->binder);
+        return new Query(sprintf('INSERT INTO %s (%s) VALUES (%s)', $this->table, $i_name, $i_bind), $this->binder);
     }
 }

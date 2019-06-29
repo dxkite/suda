@@ -20,7 +20,7 @@ class ContentLoader
         $content = static::parseValue($content, $extra);
         $data = json_decode($content, true);
         if (json_last_error() !== JSON_ERROR_NONE) {
-            throw new JsonException('load json config error : ' . json_last_error());
+            throw new JsonException('load json config', json_last_error());
         }
         return $data;
     }

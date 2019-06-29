@@ -35,7 +35,7 @@ class ApplicationBuilder
         $application = new $applicationClass($path, $manifestConfig, $loader, $dataPath);
         return $application;
     }
-    
+
     /**
      * 获取Manifest路径
      *
@@ -63,7 +63,7 @@ class ApplicationBuilder
     {
         foreach ($import as $name => $path) {
             $path = Resource::getPathByRelativePath($path, $relativePath);
-            if (is_numeric($name)) {
+            if (is_numeric($name) && is_dir($path)) {
                 $loader->addIncludePath($path);
             } elseif (is_file($path)) {
                 $loader->import($path);
