@@ -26,6 +26,10 @@ use suda\application\processor\TemplateRequestProcessor;
  */
 class Application extends ApplicationSource
 {
+    /**
+     * @var DebugDumper
+     */
+    protected $dumper;
 
     /**
      * 准备运行环境
@@ -67,8 +71,8 @@ class Application extends ApplicationSource
         $response->getWrapper()->register(ExceptionContentWrapper::class, [Throwable::class]);
         $response->getWrapper()->register(TemplateWrapper::class, [RawTemplate::class]);
 
-        $debugDumper = new DebugDumper($this, $request, $response);
-        $debugDumper->register();
+        $this->dumper = new DebugDumper($this, $request, $response);
+        $this->dumper->register();
 
         $this->debug->info('{request-time} {remote-ip} {request-method} {request-uri} debug={debug}', [
             'remote-ip' => $request->getRemoteAddr(),
@@ -82,6 +86,13 @@ class Application extends ApplicationSource
             $this->load();
             $this->isPrepared = true;
         }
+    }
+
+    /**
+     * @param Throwable $throwable
+     */
+    public function dumpException($throwable) {
+        $this->dumper->dumpThrowable($throwable);
     }
 
     /**
@@ -109,6 +120,7 @@ class Application extends ApplicationSource
             $this->debug->timeEnd('sending response');
         } catch (Throwable $e) {
             $this->debug->uncaughtException($e);
+            $this->dumper->dumpThrowable($e);
             $response->sendContent($e);
             $response->end();
             $this->debug->timeEnd('sending response');

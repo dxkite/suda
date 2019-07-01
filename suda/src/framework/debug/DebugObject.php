@@ -48,12 +48,12 @@ class DebugObject implements \JsonSerializable
     {
         $objectHash = spl_object_hash($object);
         if ($this->isObjectExported($objectHash)) {
-            return ['_type' => get_class($object), '_address' => $objectHash];
+            return ['_type' => get_class($object), '_hash' => $objectHash];
         }
         $this->setObjectIsExported($objectHash);
         return [
             '_type' => get_class($object),
-            '_address' => $objectHash,
+            '_hash' => $objectHash,
             '_properties' => $this->getObjectProp($object)
         ];
     }

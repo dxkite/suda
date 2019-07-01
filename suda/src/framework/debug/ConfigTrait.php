@@ -18,7 +18,9 @@ trait ConfigTrait
             $this->config[$name] = $config[$name] ?? $this->config[$name] ?? $value;
         }
     }
-    public function getConfig(string $name) {
+
+    public function getConfig(string $name)
+    {
         $defaultConfig = $this->getDefaultConfig();
         return $this->config[$name] ?? $defaultConfig[$name];
     }

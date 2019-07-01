@@ -2,6 +2,9 @@
 namespace suda\application;
 
 use Exception;
+use phpDocumentor\Reflection\File;
+use suda\framework\debug\DebugObject;
+use suda\framework\filesystem\FileSystem;
 use suda\framework\Request;
 use suda\framework\Response;
 use Throwable;
@@ -63,9 +66,36 @@ class DebugDumper
     {
         $this->application->debug()->addIgnorePath(__FILE__);
         $this->application->debug()->uncaughtException($exception);
+        $this->dumpThrowable($exception);
         if ($this->response->isSend() === false) {
             $this->response->sendContent($exception);
             $this->response->end();
         }
+    }
+
+    /**
+     * @param Throwable $throwable
+     */
+    public function dumpThrowable($throwable)
+    {
+        $dumper = [
+            'time' => time(),
+            'throwable' => $throwable,
+            'context' => [
+                'application' => $this->application,
+                'request' => $this->request,
+                'response' => $this->response,
+            ],
+            'backtrace' => $throwable->getTrace(),
+        ];
+        $dumpPath = $this->application->getDataPath().'/logs/dump';
+        $exceptionHash = md5($throwable->getFile().$throwable->getLine().$throwable->getCode());
+        $path = $dumpPath.'/'.microtime(true).'.'.substr($exceptionHash, 0, 8).'.json';
+        FileSystem::make($dumpPath);
+        FileSystem::put($path, json_encode(
+            new DebugObject($dumper),
+            JSON_PRETTY_PRINT
+            | JSON_UNESCAPED_UNICODE
+        ));
     }
 }
