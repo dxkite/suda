@@ -1,9 +1,6 @@
 <?php
 namespace suda\database;
 
-use function array_keys;
-use function func_get_args;
-use function func_num_args;
 use suda\database\struct\ReadStatement;
 use suda\database\middleware\Middleware;
 use suda\database\statement\QueryAccess;
@@ -110,6 +107,7 @@ class TableAccess extends QueryAccess
      *
      * @param mixed $fields
      * @return ReadStatement
+     * @throws exception\SQLException
      */
     public function read($fields):ReadStatement
     {

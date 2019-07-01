@@ -11,7 +11,6 @@ use suda\framework\debug\attach\DumpInterface;
 use suda\framework\debug\log\LoggerAwareTrait;
 use suda\framework\debug\attach\AttachInterface;
 use suda\framework\debug\log\LoggerAwareInterface;
-use Throwable;
 
 class Debug implements LoggerInterface, LoggerAwareInterface, DumpInterface, AttachInterface, ConfigInterface
 {

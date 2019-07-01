@@ -1,10 +1,8 @@
 <?php
 namespace suda\application\loader;
 
-use function strtolower;
 use suda\framework\Config;
 use suda\application\Module;
-use suda\database\DataSource;
 use suda\application\Resource;
 use suda\application\ModuleBag;
 use suda\application\Application;
@@ -12,8 +10,6 @@ use suda\application\database\Database;
 use suda\database\exception\SQLException;
 use suda\framework\filesystem\FileSystem;
 use suda\application\builder\ModuleBuilder;
-use suda\application\database\DebugObserver;
-use suda\database\connection\observer\Observer;
 
 /**
  * 应用程序

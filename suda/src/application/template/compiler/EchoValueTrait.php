@@ -1,14 +1,13 @@
 <?php
 namespace suda\application\template\compiler;
 
-use Exception;
+use http\Exception\RuntimeException;
 
 trait EchoValueTrait
 {
     /**
      * @param $var
      * @return string
-     * @throws Exception
      */
     public function parseEchoValue($var):string
     {
@@ -20,7 +19,7 @@ trait EchoValueTrait
         );
         $error = preg_last_error();
         if ($error !== PREG_NO_ERROR) {
-            throw new Exception($error);
+            throw new RuntimeException($error);
         }
         return $code;
     }

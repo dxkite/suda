@@ -1,6 +1,7 @@
 <?php
 namespace suda\database\statement;
 
+use suda\database\exception\SQLException;
 use suda\database\middleware\NullMiddleware;
 
 class QueryStatement extends Statement
@@ -22,7 +23,7 @@ class QueryStatement extends Statement
      *
      * @param string $query
      * @param array $args
-     * @throws \suda\database\exception\SQLException
+     * @throws SQLException
      */
     public function __construct(string $query, ...$args)
     {

@@ -2,6 +2,7 @@
 namespace suda\framework\debug\attach;
 
 use ReflectionClass;
+use ReflectionException;
 use Throwable;
 
 /**
@@ -11,6 +12,11 @@ trait DumpTrait
 {
     protected static $dumpStringLength = 80;
 
+    /**
+     * @param object $object
+     * @param int $deep
+     * @return string
+     */
     protected static function objectToString(object $object, int $deep):string
     {
         $objectName = get_class($object);
@@ -27,9 +33,19 @@ trait DumpTrait
         return $objectName.' {'.trim($parameterString, ',').'}';
     }
 
+    /**
+     * @param string $objectName
+     * @param object $object
+     * @param int $deep
+     * @return string
+     */
     protected static function objectGetter(string $objectName, object $object, int $deep)
     {
-        $class = new ReflectionClass($objectName);
+        try {
+            $class = new ReflectionClass($objectName);
+        } catch (ReflectionException $e) {
+            return $objectName.'{error:'.$e->getMessage().'}';
+        }
         $properties = $class->getProperties();
         $parameterString = '';
         foreach ($properties as $property) {
@@ -74,6 +90,7 @@ trait DumpTrait
             return $key.'='.self::parameterToString($value, $deep - 1) .' ,';
         }
     }
+
 
     public static function parameterToString($object, int $deep = 2)
     {

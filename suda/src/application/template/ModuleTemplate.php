@@ -2,13 +2,9 @@
 
 namespace suda\application\template;
 
-use function constant;
 use Exception;
-use function is_array;
-use function is_string;
+use ReflectionException;
 use suda\application\template\compiler\Compiler;
-use suda\framework\Request;
-use suda\application\Application;
 use suda\framework\filesystem\FileSystem;
 
 /**
@@ -76,7 +72,7 @@ class ModuleTemplate extends ModuleTemplateBase
 
     /**
      * @return Compiler
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     protected function createCompiler(): Compiler
     {

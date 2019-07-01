@@ -3,8 +3,6 @@ namespace suda\database\connection;
 
 use PDO;
 use PDOException;
-use ReflectionException;
-use function register_shutdown_function;
 use suda\database\DataSource;
 use suda\database\statement\Statement;
 use suda\database\statement\QueryAccess;
@@ -248,7 +246,6 @@ abstract class Connection
      * @param Statement $statement
      * @return mixed
      * @throws SQLException
-     * @throws ReflectionException
      */
     public function query(Statement $statement)
     {

@@ -80,7 +80,6 @@ class MySQLTableCreator
     /**
      * @return bool
      * @throws SQLException
-     * @throws \ReflectionException
      */
     public function create()
     {

@@ -4,7 +4,6 @@ namespace suda\database\statement;
 use PDO;
 use PDOStatement;
 use suda\database\Binder;
-use ReflectionException;
 use suda\database\DataSource;
 use suda\database\connection\Connection;
 use suda\database\middleware\Middleware;
@@ -86,7 +85,6 @@ class QueryAccess
      *
      * @param Statement $statement
      * @return mixed
-     * @throws ReflectionException
      * @throws SQLException
      */
     public function run(Statement $statement)

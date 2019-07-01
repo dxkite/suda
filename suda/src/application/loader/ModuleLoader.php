@@ -5,10 +5,7 @@ use Exception;
 use suda\framework\Config;
 use suda\application\Module;
 use suda\application\Resource;
-use suda\application\Application;
 use suda\framework\filesystem\FileSystem;
-use suda\application\builder\ApplicationBuilder;
-use suda\application\exception\ApplicationException;
 
 /**
  * 应用程序

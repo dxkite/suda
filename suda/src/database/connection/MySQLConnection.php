@@ -3,7 +3,6 @@ namespace suda\database\connection;
 
 use PDO;
 use PDOException;
-use ReflectionException;
 use suda\database\statement\QueryStatement;
 use suda\database\exception\SQLException;
 
@@ -60,7 +59,6 @@ class MySQLConnection extends Connection
      * @param string $database
      * @return mixed
      * @throws SQLException
-     * @throws ReflectionException
      */
     public function switchDatabase(string $database)
     {

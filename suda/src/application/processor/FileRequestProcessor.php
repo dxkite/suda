@@ -1,6 +1,7 @@
 <?php
 namespace suda\application\processor;
 
+use Exception;
 use suda\framework\Request;
 use suda\framework\Response;
 use suda\application\Application;
@@ -17,7 +18,7 @@ class FileRequestProcessor implements RequestProcessor
             $processor = new FileRangeProccessor($filename);
             try {
                 $processor->onRequest($application, $request, $response);
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 $response->status(500);
             }
         } else {

@@ -1,7 +1,6 @@
 <?php
 namespace suda\database\struct;
 
-use ReflectionException;
 use suda\database\exception\SQLException;
 use suda\database\statement\QueryAccess;
 
@@ -28,7 +27,6 @@ class QueryStatement extends \suda\database\statement\QueryStatement
      * @param array $args
      * @return mixed
      * @throws SQLException
-     * @throws ReflectionException
      */
     public function one(?string $class = null, array $args = [])
     {
@@ -47,7 +45,6 @@ class QueryStatement extends \suda\database\statement\QueryStatement
      * @param array $args
      * @return array
      * @throws SQLException
-     * @throws ReflectionException
      */
     public function all(?string $class = null, array $args = []):array
     {
@@ -62,7 +59,6 @@ class QueryStatement extends \suda\database\statement\QueryStatement
      * @param array $args
      * @return mixed
      * @throws SQLException
-     * @throws ReflectionException
      */
     public function fetch(?string $class = null, array $args = [])
     {
@@ -76,7 +72,6 @@ class QueryStatement extends \suda\database\statement\QueryStatement
      * @param array $args
      * @return array
      * @throws SQLException
-     * @throws ReflectionException
      */
     public function fetchAll(?string $class = null, array $args = []):array
     {
@@ -88,7 +83,6 @@ class QueryStatement extends \suda\database\statement\QueryStatement
      *
      * @return int
      * @throws SQLException
-     * @throws \ReflectionException
      */
     public function rows():int
     {
@@ -102,7 +96,6 @@ class QueryStatement extends \suda\database\statement\QueryStatement
      *
      * @return boolean
      * @throws SQLException
-     * @throws \ReflectionException
      */
     public function ok():bool
     {
@@ -116,7 +109,6 @@ class QueryStatement extends \suda\database\statement\QueryStatement
      *
      * @return string
      * @throws SQLException
-     * @throws \ReflectionException
      */
     public function id():string
     {
