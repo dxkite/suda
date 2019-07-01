@@ -81,9 +81,9 @@ class Debugger extends Debug
         if ($e = error_get_last()) {
             $isFatalError = E_ERROR | E_PARSE | E_CORE_ERROR | E_CORE_WARNING | E_COMPILE_ERROR | E_COMPILE_WARNING;
             if ($e['type'] === ($e['type'] & $isFatalError)) {
-                $errorHander = set_error_handler(null);
-                if ($errorHander !== null) {
-                    $errorHander($e['type'], $e['message'], $e['file'], $e['line']);
+                $handler = set_error_handler(null);
+                if ($handler !== null) {
+                    $handler($e['type'], $e['message'], $e['file'], $e['line']);
                 }
                 restore_error_handler();
             }
