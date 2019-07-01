@@ -14,7 +14,7 @@ interface Cache
      * @param int $expire
      * @return bool
      */
-    public function set(string $name, $value, int $expire):bool;
+    public function set(string $name, $value, int $expire = null):bool;
 
     /**
      * 获取Cache

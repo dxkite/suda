@@ -133,6 +133,9 @@ class FileCache implements Cache
 
     protected function getFilePath(string $name)
     {
-        return $this->path.'/'.md5($name).'.cache';
+        $path = md5($name);
+        $savePath = $this->path.'/'.substr($path, 0,2);
+        FileSystem::make($savePath);
+        return $savePath.'/'.$path.'.cache';
     }
 }
