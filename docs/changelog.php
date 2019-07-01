@@ -29,6 +29,7 @@ function create_name(string $name, string $text)
 
 
 $lines = explode("\n", $content);
+$info = [];
 
 foreach ($lines as $line) {
     $msg = trim($line);
