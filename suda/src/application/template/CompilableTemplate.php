@@ -257,7 +257,7 @@ class CompilableTemplate extends RawTemplate
         } else {
             $prefix = '/assets';
         }
-        return $prefix . '/' . $this->getStaticName();
+        return '/'.ltrim($prefix, '/') . '/' . $this->getStaticName();
     }
 
     protected function prepareStaticSource()
