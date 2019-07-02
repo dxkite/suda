@@ -32,6 +32,7 @@ class ApplicationBuilder
             static::importClassLoader($loader, $manifestConfig['import'], $path);
         }
         $applicationClass = $manifestConfig['application'] ?? Application::class;
+        /** @var Application $application */
         $application = new $applicationClass($path, $manifestConfig, $loader, $dataPath);
         return $application;
     }

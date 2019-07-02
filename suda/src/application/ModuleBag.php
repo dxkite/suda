@@ -117,7 +117,7 @@ class ModuleBag implements IteratorAggregate
     public function get(string $name):?Module
     {
         $full = $this->getFullName($name);
-        return  $this->module[$full];
+        return  $this->module[$full] ?? null;
     }
 
     /**
@@ -186,19 +186,30 @@ class ModuleBag implements IteratorAggregate
         return $fullname;
     }
 
+    /**
+     * 创建模块全名
+     *
+     * @param string $name
+     * @return string
+     */
     protected function createFullName(string $name)
     {
         $version = null;
         $hasVersion = false;
         if (strpos($name, ':')) {
             $hasVersion = true;
-            list($name, $version) = explode(':', $name, 2);
+            list($sortName, $version) = explode(':', $name, 2);
+        } else {
+            $sortName = $name;
         }
-        $name = $this->getLikeName($name);
-        if (array_key_exists($version, $this->knownsFullName[$name])) {
-            return $this->knownsFullName[$name][$version];
+        $sortName = $this->getLikeName($sortName);
+        if (array_key_exists($sortName, $this->knownsFullName) === false) {
+            return $name;
         }
-        return $hasVersion?$name.':'.$version:end($this->knownsFullName[$name]);
+        if (array_key_exists($version, $this->knownsFullName[$sortName])) {
+            return $this->knownsFullName[$sortName][$version];
+        }
+        return $hasVersion?$sortName.':'.$version:end($this->knownsFullName[$sortName]);
     }
 
     protected function getLikeName(string $name):string
@@ -210,7 +221,7 @@ class ModuleBag implements IteratorAggregate
             }
         }
         if (count($names) === 0) {
-            throw new ApplicationException(sprintf('module %s not exist', $name), ApplicationException::ERR_MODULE_NAME);
+            return $name;
         }
         if (count($names) > 1 && in_array($name, $names) === false) {
             throw new ApplicationException(sprintf('conflict module name %s in %s', $name, implode(',', $names)), ApplicationException::ERR_CONFLICT_MODULE_NAME);
