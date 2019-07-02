@@ -1,4 +1,5 @@
 <?php
+
 namespace suda\application\loader;
 
 use suda\framework\Config;
@@ -31,9 +32,21 @@ class ApplicationLoader
     protected $moduleLoader;
 
 
+    /**
+     * @var array
+     */
+    protected $actionableModules;
+
+    /**
+     * @var array
+     */
+    protected $reachableModules;
+
     public function __construct(Application $application)
     {
         $this->application = $application;
+        $this->actionableModules = [];
+        $this->reachableModules = [];
     }
 
     public function load()
@@ -41,6 +54,7 @@ class ApplicationLoader
         $this->loadVendorIfExist();
         $this->loadGlobalConfig();
         $this->registerModule();
+        $this->setModuleStatus();
         $this->prepareModule();
         $this->activeModule();
     }
@@ -50,7 +64,7 @@ class ApplicationLoader
     {
         foreach ($this->application->getModules() as $name => $module) {
             if ($module->getStatus() === Module::REACHABLE) {
-                call_user_func([$this->moduleLoader[$name],'toReachable']);
+                call_user_func([$this->moduleLoader[$name], 'toReachable']);
             }
         }
     }
@@ -69,7 +83,7 @@ class ApplicationLoader
 
     public function loadVendorIfExist()
     {
-        $vendorAutoload = $this->application->getPath().'/vendor/autoload.php';
+        $vendorAutoload = $this->application->getPath() . '/vendor/autoload.php';
         if (FileSystem::exist($vendorAutoload)) {
             require_once $vendorAutoload;
         }
@@ -84,7 +98,6 @@ class ApplicationLoader
         $dataSource = Database::getDefaultDataSource();
         $this->application->setDataSource($dataSource);
     }
-
 
 
     protected function prepareModule()
@@ -107,11 +120,19 @@ class ApplicationLoader
 
     protected function registerModule()
     {
-        $extractPath = $this->application->getDataPath() .'/extract-module';
+        $extractPath = $this->application->getDataPath() . '/extract-module';
         FileSystem::make($extractPath);
         foreach ($this->application->getModulePaths() as $path) {
             $this->registerModuleFrom($path, $extractPath);
         }
+    }
+
+    protected function setModuleStatus()
+    {
+        $active = $this->application->getManifest('module.active', $this->actionableModules);
+        $reachable = $this->application->getManifest('module.reachable', $this->reachableModules);
+        $this->setModuleActive($this->application->getModules(), $active);
+        $this->setModuleReachable($this->application->getModules(), $reachable);
     }
 
     protected function registerModuleFrom(string $path, string $extractPath)
@@ -120,27 +141,39 @@ class ApplicationLoader
         foreach (ModuleBuilder::scan($path, $extractPath) as $module) {
             $modules->add($module);
         }
-        $this->assignModuleToApplication($path, $modules);
+        $this->prepareModuleConfig($path, $modules);
     }
 
-    protected function assignModuleToApplication(string $path, ModuleBag $modules)
+    protected function prepareModuleConfig(string $path, ModuleBag $modules)
+    {
+        $config = $this->getModuleDirectoryConfig($path);
+        $moduleNames = array_keys($modules->all());
+        // 获取模块文件夹模块配置
+        $load = $config['load'] ?? $moduleNames;
+        $active = $config['active'] ?? $load;
+        $reachable = $config['reachable'] ?? $active;
+        // 获取允许加载的模块
+        $load = $this->application->getManifest('module.load', $load);
+        $this->loadModuleFromBag($modules, $load);
+        $this->actionableModules = array_merge($this->actionableModules, $active);
+        $this->reachableModules = array_merge($this->reachableModules, $reachable);
+    }
+
+    /**
+     * @param string $path
+     * @return array
+     */
+    protected function getModuleDirectoryConfig(string $path)
     {
         $resource = new Resource([$path]);
         $configPath = $resource->getConfigResourcePath('config');
-        $config = null;
         if ($configPath) {
-            $config = Config::loadConfig($configPath, $this->application->getConfig());
+            return Config::loadConfig($configPath, $this->application->getConfig()) ?? [];
         }
-        $config = $config ?? [];
-        $moduleNames = array_keys($modules->all());
-        $load  = $config['load'] ?? $moduleNames;
-        $this->loadModules($modules, $load);
-        $active = $config['active'] ?? $load;
-        $this->setModuleActive($modules, $active);
-        $this->setModuleReachable($modules, $config['reachable'] ?? $active);
+        return [];
     }
 
-    protected function loadModules(ModuleBag $bag, array $load)
+    protected function loadModuleFromBag(ModuleBag $bag, array $load)
     {
         foreach ($load as $moduleName) {
             if ($module = $bag->get($moduleName)) {
