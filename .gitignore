@@ -5,6 +5,7 @@ composer.lock
 *.db
 /public/assets/*
 /public/hello/*
+/public/test/*
 /tests/resource/runtime-data
 .php_cs.cache
 .idea/workspace.xml
