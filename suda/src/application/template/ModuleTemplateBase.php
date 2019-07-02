@@ -82,6 +82,7 @@ class ModuleTemplateBase extends CompilableTemplate
     protected function createCompiler():Compiler
     {
         $compiler = new ModuleTemplateCompiler;
+        $compiler->init();
         return $compiler;
     }
 

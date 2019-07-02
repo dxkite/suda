@@ -20,7 +20,9 @@ class ModuleTemplate extends ModuleTemplateBase
     public function getSourcePath(): ?string
     {
         $subfix = $this->config['subfix'] ?? '.tpl.html';
-        return $this->getResource($this->module)->getResourcePath($this->getTemplatePath() . '/' . $this->name . $subfix);
+        return $this
+            ->getResource($this->module)
+            ->getResourcePath($this->getTemplatePath() . '/' . $this->name . $subfix);
     }
 
     /**

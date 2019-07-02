@@ -107,7 +107,7 @@ class ApplicationLoader
 
     protected function registerModule()
     {
-        $extractPath = SUDA_DATA .'/extract-module';
+        $extractPath = $this->application->getDataPath() .'/extract-module';
         FileSystem::make($extractPath);
         foreach ($this->application->getModulePaths() as $path) {
             $this->registerModuleFrom($path, $extractPath);

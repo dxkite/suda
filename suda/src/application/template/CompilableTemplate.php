@@ -311,6 +311,8 @@ class CompilableTemplate extends RawTemplate
 
     protected function createCompiler(): Compiler
     {
-        return new Compiler;
+        $compiler = new Compiler;
+        $compiler->init();
+        return $compiler;
     }
 }

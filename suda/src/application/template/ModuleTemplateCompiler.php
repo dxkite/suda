@@ -24,14 +24,8 @@ class ModuleTemplateCompiler extends Compiler
         'event' => ['{:', '}', '<?php $this->application->event()->exec("$code", [$this]); ?>' ],
     ];
 
-    /**
-     * ModuleTemplateCompiler constructor.
-     */
-    public function __construct()
+    public function init()
     {
-        parent::__construct();
-        $this->commands = [];
-        $this->tag = [];
         $this->registerCommand(new ModuleTemplateCommand);
         foreach ($this->tag as $name => $value) {
             $this->registerTag(new Tag($name, $value[0], $value[1], $value[2]));

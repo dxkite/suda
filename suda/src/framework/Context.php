@@ -31,18 +31,20 @@ class Context extends PHPContext
      * @var Cache
      */
     protected $cache;
-    
+
     /**
      * 创建PHP环境
      *
      * @param Config $config
      * @param Loader $loader
+     * @param Event|null $event
+     * @param Route|null $route
      */
-    public function __construct(Config $config, Loader $loader)
+    public function __construct(Config $config, Loader $loader, ?Event $event = null, ?Route $route = null)
     {
         parent::__construct($config, $loader);
-        $this->event = new Event;
-        $this->route = new Route;
+        $this->event = $event ?: new Event;
+        $this->route = $route ?: new Route;
     }
 
     /**

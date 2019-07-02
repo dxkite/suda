@@ -35,7 +35,7 @@ class Compiler
      */
     protected $commands=[];
 
-    public function __construct()
+    public function init()
     {
         $this->registerCommand(new Command);
         foreach ($this->tag as $name => $value) {
