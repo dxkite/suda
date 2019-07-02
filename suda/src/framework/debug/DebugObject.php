@@ -89,18 +89,18 @@ class DebugObject implements \JsonSerializable
      */
     public function isObjectExported(string $objectHash)
     {
-        if ($this->context === null) {
-            return in_array($objectHash, $this->object);
+        if ($this->context !== null) {
+            return $this->context->isObjectExported($objectHash);
         }
-        return $this->context->isObjectExported($objectHash);
+        return in_array($objectHash, $this->object);
     }
 
     public function setObjectIsExported(string $objectHash)
     {
-        if ($this->context === null) {
-            $this->object [] = $objectHash;
-        } else {
+        if ($this->context !== null) {
             $this->context->setObjectIsExported($objectHash);
+        } else {
+            $this->object [] = $objectHash;
         }
     }
 

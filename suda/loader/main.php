@@ -16,7 +16,8 @@ $loader->register();
 $loader->addIncludePath(SUDA_SYSTEM .'/src', 'suda');
 // 初始化数据目录
 defined('SUDA_DATA') or define('SUDA_DATA', Path::toAbsolutePath('~/data'));
-$application = ApplicationBuilder::build($loader, SUDA_APP, SUDA_DATA);
+defined('SUDA_APP_MANIFEST') or define('SUDA_APP_MANIFEST', SUDA_APP.'/manifest');
+$application = ApplicationBuilder::build($loader, SUDA_APP, SUDA_APP_MANIFEST, SUDA_DATA);
 $application->registerDebugger();
 $application->getDebug()->setLogger(new FileLogger(
     [

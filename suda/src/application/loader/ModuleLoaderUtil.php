@@ -3,7 +3,6 @@
 
 namespace suda\application\loader;
 
-
 use suda\application\Application;
 use suda\application\builder\ApplicationBuilder;
 use suda\application\exception\ApplicationException;

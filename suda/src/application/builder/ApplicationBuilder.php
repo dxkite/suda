@@ -21,13 +21,13 @@ class ApplicationBuilder
      * 创建应用
      * @param Loader $loader
      * @param string $path
+     * @param string $manifast
      * @param string $dataPath
      * @return Application
      */
-    public static function build(Loader $loader, string $path, string $dataPath):Application
+    public static function build(Loader $loader, string $path, string $manifast, string $dataPath):Application
     {
-        $manifest = static::resolveManifestPath($path);
-        $manifestConfig = Config::loadConfig($manifest) ?? [];
+        $manifestConfig = static::loadManifest($manifast);
         if (array_key_exists('import', $manifestConfig)) {
             static::importClassLoader($loader, $manifestConfig['import'], $path);
         }
@@ -37,21 +37,32 @@ class ApplicationBuilder
     }
 
     /**
+     * 加载App主配置
+     * @param string $path
+     * @return array|null
+     */
+    public static function loadManifest(string $path)
+    {
+        $manifest = static::resolveManifest($path);
+        return Config::loadConfig($manifest) ?? [];
+    }
+
+    /**
      * 获取Manifest路径
      *
      * @param string $path
      * @return string
      */
-    public static function resolveManifestPath(string $path):string
+    protected static function resolveManifest(string $path):string
     {
-        $manifest = PathResolver::resolve($path.'/manifest');
+        $manifest = PathResolver::resolve($path);
         if ($manifest === null) {
             FileSystem::copyDir(SUDA_RESOURCE.'/app', $path);
-            $manifest = PathResolver::resolve($path.'/manifest');
+            $manifest = PathResolver::resolve($path);
         }
         if ($manifest === null) {
             throw new ApplicationException(
-                sprintf('missing manifest in %s', $path),
+                sprintf('missing manifest in %s', dirname($path)),
                 ApplicationException::ERR_MANIFEST_IS_EMPTY
             );
         } else {
