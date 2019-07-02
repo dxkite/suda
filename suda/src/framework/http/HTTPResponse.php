@@ -134,6 +134,7 @@ class HTTPResponse implements Response
     {
         $this->sendHeaders();
         $this->writeOutput($data);
+        $this->closeConnection();
     }
 
     /**
@@ -153,6 +154,7 @@ class HTTPResponse implements Response
         $data = new DataStream($filename, $offset, $length);
         $this->sendHeaders();
         $this->writeOutput($data);
+        $this->closeConnection();
     }
 
     /**
@@ -176,6 +178,7 @@ class HTTPResponse implements Response
     public function end()
     {
         $this->sendHeaders();
+        $this->closeConnection();
         $this->send = true;
     }
 
@@ -253,6 +256,12 @@ class HTTPResponse implements Response
             $data->echo();
         } else {
             echo $data;
+        }
+    }
+
+    protected function closeConnection() {
+        if (function_exists('fastcgi_finish_request')) {
+            fastcgi_finish_request();
         }
     }
 }
