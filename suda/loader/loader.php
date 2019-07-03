@@ -10,7 +10,7 @@ defined('SUDA_RESOURCE') or define('SUDA_RESOURCE', SUDA_SYSTEM.'/resource');
 defined('SUDA_START_TIME') or define('SUDA_START_TIME', microtime(true));
 defined('SUDA_START_MEMORY') or define('SUDA_START_MEMORY', memory_get_usage());
 defined('SUDA_DEBUG') or define('SUDA_DEBUG', false);
-defined('SUDA_DEBUG_LEVEL') or define('SUDA_DEBUG_LEVEL', 'trace');
+defined('SUDA_DEBUG_LEVEL') or define('SUDA_DEBUG_LEVEL', 'debug');
 // 定义版本
 define('SUDA_VERSION', '3.0.0');
 // 设置默认时区

@@ -33,14 +33,31 @@ class Debug implements LoggerInterface, LoggerAwareInterface, DumpInterface, Att
     public function log(string $level, string $message, array $context = [])
     {
         $attribute = $this->getAttribute();
-        $attribute['message'] = $this->strtr($message, $context);
+        list($attach, $replace) = $this->analyse($message, $context);
+        $attribute = array_merge($attribute, $attach);
+        $attribute['message'] = strtr($message, $replace);
         $attribute['level'] = $level;
         $caller = new Caller(debug_backtrace(), $this->getIgnoreTraces());
         $trace = $caller->getCallerTrace();
         $attribute['file'] = $trace['file'];
         $attribute['line'] = $trace['line'];
         $attribute = $this->assignAttributes($attribute);
-        $this->logger->log($level, $this->interpolate($this->getConfig('log-format'), $context, $attribute), []);
+        $this->logger->log($level, $this->interpolate($this->getConfig('log-format'), $attach, $attribute), []);
+    }
+
+    public function analyse(string $message, array $context)
+    {
+        $replace = [];
+        $attach = [];
+        foreach ($context as $key => $val) {
+            $replaceKey = '{' . $key . '}';
+            if ($this->canBeStringValue($val) && strpos($message, $replaceKey) !== false) {
+                $replace['{' . $key . '}'] = $val;
+            } else {
+                $attach[$key] = $val;
+            }
+        }
+        return [$attach, $replace];
     }
 
     /**
@@ -60,17 +77,6 @@ class Debug implements LoggerInterface, LoggerAwareInterface, DumpInterface, Att
             'start-time' => 0,
             'start-memory' => 0,
         ];
-    }
-
-    protected function strtr(string $message, array $context)
-    {
-        $replace = [];
-        foreach ($context as $key => $val) {
-            if ($this->canBeStringValue($val)) {
-                $replace['{' . $key . '}'] = $val;
-            }
-        }
-        return strtr($message, $replace);
     }
 
     protected function canBeStringValue($val) : bool

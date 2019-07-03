@@ -1,4 +1,5 @@
 <?php
+
 namespace suda\framework\debug\attach;
 
 use Throwable;
@@ -14,51 +15,37 @@ trait AttachTrait
      * @var array
      */
     protected $attribute = [];
-    
+
     public function addAttribute(string $name, $value)
     {
         $this->attribute[$name] = $value;
     }
 
-    protected function analyse(string $message, array $context)
+    protected function isReplacedObj($val): bool
     {
-        $replace = [];
-        $attach = [] ;
-        foreach ($context as $key => $val) {
-            $replaceKey = '{' . $key . '}';
-            if ($this->isReplacedObj($val) && strpos($message, $replaceKey) !== false) {
-                $replace['{' . $key . '}'] = $val;
-            } else {
-                $attach[$key] = $val;
-            }
-        }
-        return [$attach, $replace];
-    }
-
-    protected function isReplacedObj($val) : bool
-    {
-        return !is_array($val) && (!is_object($val) || method_exists($val, '__toString')) && (! $val instanceof Throwable);
+        return !is_array($val) && (!is_object($val)
+                || method_exists($val, '__toString')) && (!$val instanceof Throwable);
     }
 
     public function interpolate(string $message, array $context, array $attribute)
     {
-        list($attach, $replace) = $this->analyse($message, $context);
+        $replace = [];
         $attribute = array_merge($this->attribute, $attribute);
         foreach ($attribute as $key => $val) {
             $replace['%' . $key . '%'] = $val;
         }
         $message = strtr($message, $replace);
         $attachInfo = '';
-        foreach ($attach as $name => $value) {
-            $attachInfo .= $name.' = ';
+        foreach ($context as $name => $value) {
+            $attachInfo .= $name . ' = ';
             if ($value instanceof AttachValueInterface) {
-                $attachInfo .= $value->getLogAttach().PHP_EOL;
+                $attachInfo .= $value->getLogAttach() . PHP_EOL;
             } else {
-                $attachInfo .= DumpTrait::parameterToString($value).PHP_EOL;
+                $attachInfo .= DumpTrait::parameterToString($value) . PHP_EOL;
             }
         }
         if (strlen($attachInfo) > 0) {
-            return $message.PHP_EOL.$attachInfo;
+            return $message . PHP_EOL . $attachInfo;
         }
         return $message;
     }

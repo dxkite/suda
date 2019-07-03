@@ -1,4 +1,5 @@
 <?php
+
 namespace suda\framework;
 
 use ReflectionException;
@@ -101,7 +102,7 @@ class Event
     {
         if ($this->hasListenEvent($name)) {
             foreach ($this->queue[$name] as $command) {
-                $this->call($command, $args);
+                $this->call($name, $command, $args);
             }
         }
     }
@@ -121,7 +122,7 @@ class Event
             array_unshift($args, $value);
             foreach ($this->queue[$name] as $command) {
                 $args[0] = $value;
-                $value = $this->call($command, $args);
+                $value = $this->call($name, $command, $args);
             }
         }
         return $value;
@@ -136,11 +137,11 @@ class Event
      * @return boolean
      * @throws ReflectionException
      */
-    public function next(string $name, array $args = [], $condition = true):bool
+    public function next(string $name, array $args = [], $condition = true): bool
     {
         if ($this->hasListenEvent($name)) {
             foreach ($this->queue[$name] as $command) {
-                if ($this->call($command, $args) === $condition) {
+                if ($this->call($name, $command, $args) === $condition) {
                     continue;
                 } else {
                     return false;
@@ -161,7 +162,7 @@ class Event
     public function execFirst(string $name, array $args = [])
     {
         if ($this->hasListenEvent($name)) {
-            return  $this->call(array_shift($this->queue[$name]), $args);
+            return $this->call($name, array_shift($this->queue[$name]), $args);
         }
         return null;
     }
@@ -177,7 +178,7 @@ class Event
     public function execLast(string $name, array $args = [])
     {
         if ($this->hasListenEvent($name)) {
-            return $this->call(array_pop($this->queue[$name]), $args);
+            return $this->call($name, array_pop($this->queue[$name]), $args);
         }
         return null;
     }
@@ -185,12 +186,13 @@ class Event
     /**
      * 调用对象
      *
+     * @param string $event
      * @param mixed $command
      * @param array $args
      * @return mixed
      * @throws ReflectionException
      */
-    protected function call($command, array &$args)
+    protected function call(string $event, $command, array &$args)
     {
         return (new Runnable($command))->apply($args);
     }
@@ -201,7 +203,7 @@ class Event
      * @param string $name
      * @return boolean
      */
-    public function hasListenEvent(string $name):bool
+    public function hasListenEvent(string $name): bool
     {
         return array_key_exists($name, $this->queue) && is_array($this->queue[$name]);
     }

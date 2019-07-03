@@ -3,6 +3,7 @@
 namespace suda\application;
 
 use Exception;
+use suda\framework\loader\Loader;
 use Throwable;
 use ReflectionException;
 use suda\framework\Request;
@@ -26,6 +27,12 @@ use suda\application\processor\TemplateRequestProcessor;
  */
 class Application extends ApplicationSource
 {
+    public function __construct(string $path, array $manifest, Loader $loader, ?string $dataPath = null)
+    {
+        parent::__construct($path, $manifest, $loader, $dataPath);
+        $this->event = new Event($this);
+    }
+
     /**
      * @var DebugDumper
      */
@@ -91,7 +98,8 @@ class Application extends ApplicationSource
     /**
      * @param Throwable $throwable
      */
-    public function dumpException($throwable) {
+    public function dumpException($throwable)
+    {
         $this->dumper->dumpThrowable($throwable);
     }
 
