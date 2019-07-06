@@ -1,4 +1,5 @@
 <?php
+
 namespace suda\application\template;
 
 use suda\application\template\compiler\Tag;
@@ -16,12 +17,30 @@ class ModuleTemplateCompiler extends Compiler
      * @var array
      */
     protected $tag = [
-        'raw' => ['{{!', '}}', '<?php echo $code; ?>'],
-        'comment' => ['{--', '--}', '<?php /* $code */ ?>'],
-        'echo' => [ '{{', '}}', '<?php echo htmlspecialchars($this->application->_($code), ENT_SUBSTITUTE | ENT_QUOTES | ENT_HTML5); ?>' ],
-        'string' => ['{=', '}', '<?php echo htmlspecialchars($this->application->_("$code"), ENT_SUBSTITUTE | ENT_QUOTES | ENT_HTML5); ?>'],
-        'raw-string' => ['@{', '}', '<?php echo htmlspecialchars($code, ENT_SUBSTITUTE | ENT_QUOTES | ENT_HTML5); ?>' ],
-        'event' => ['{:', '}', '<?php $this->application->event()->exec("$code", [$this]); ?>' ],
+        'raw' => [
+            '{{!', '}}',
+            '<?php echo $code; ?>',
+        ],
+        'comment' => [
+            '{--', '--}',
+            '<?php /* $code */ ?>',
+        ],
+        'echo' => [
+            '{{', '}}',
+            '<?php echo htmlspecialchars($this->application->_($code), ENT_SUBSTITUTE | ENT_QUOTES | ENT_HTML5); ?>',
+        ],
+        'string' => [
+            '{=', '}',
+            '<?php echo htmlspecialchars($this->application->_("$code"), ENT_SUBSTITUTE | ENT_QUOTES | ENT_HTML5); ?>',
+        ],
+        'raw-string' => [
+            '@{', '}',
+            '<?php echo htmlspecialchars($code, ENT_SUBSTITUTE | ENT_QUOTES | ENT_HTML5); ?>',
+        ],
+        'event' => [
+            '{:', '}',
+            '<?php $this->application->event()->exec("$code", [$this]); ?>',
+        ],
     ];
 
     public function init()

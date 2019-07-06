@@ -23,3 +23,4 @@ suda 是一款轻量化、模块化的Web框架，基于 `PHP7.2` 开发。
     - [U·更新记录](05-database.update.html)
     - [D·删除记录](05-database.delete.html)
 - [预定义常量](06-constant.html)
+- [内置模板](07-template.html)
