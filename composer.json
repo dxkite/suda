@@ -1,29 +1,30 @@
 {
-    "name": "dxkite/suda",
-    "description": "a simple php framework",
-    "type": "project",
-    "autoload": {
-        "psr-4": {
-            "suda\\": "./suda/src",
-            "test\\": "./tests/src"
-        }
-    },
-    "require-dev": {
-        "phpunit/phpunit": "^7.5",
-        "mustangostang/spyc": "^0.6.2"
-    },
-    "license": "MIT",
-    "authors": [
-        {
-            "name": "DXkite",
-            "email": "DXkite@163.com"
-        }
-    ],
-    "require": {
-      "ext-zip": "*",
-      "ext-json": "*",
-      "ext-pdo": "*",
-      "ext-iconv": "*",
-      "ext-mbstring": "*"
+  "name": "dxkite/suda",
+  "description": "a simple php framework",
+  "type": "project",
+  "autoload": {
+    "psr-4": {
+      "suda\\": "./suda/src",
+      "test\\": "./tests/src"
     }
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^7.5",
+    "mustangostang/spyc": "^0.6.2"
+  },
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "DXkite",
+      "email": "DXkite@163.com"
+    }
+  ],
+  "require": {
+    "php": "^7.2",
+    "ext-zip": "*",
+    "ext-json": "*",
+    "ext-pdo": "*",
+    "ext-iconv": "*",
+    "ext-mbstring": "*"
+  }
 }
