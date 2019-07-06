@@ -33,7 +33,10 @@ class ReadStatement extends \suda\database\statement\ReadStatement
      */
     public function one(?string $class = null, array $args = [])
     {
-        return $this->access->run($this->limit(0,1)->wantOne($class, $args));
+        if ($this->isScroll() === false) {
+            $this->limit(0, 1);
+        }
+        return $this->access->run($this->wantOne($class, $args));
     }
 
     /**

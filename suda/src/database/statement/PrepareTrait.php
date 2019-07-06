@@ -177,19 +177,20 @@ trait PrepareTrait
     /**
      * 合并绑定工具
      *
-     * @param Binder[] $binder
+     * @param Binder[] $binderArray
      * @param array $parameter
      * @return Binder[]
      */
-    protected function mergeBinder(array $binder, array $parameter)
+    protected function mergeBinder(array $binderArray, array $parameter)
     {
         foreach ($parameter as $key => $value) {
-            if ($value instanceof Binder) {
-                $binder[] = $value;
-            } else {
-                $binder[] = new Binder($key, $value);
+            if (! ($value instanceof Binder)) {
+                $value = new Binder($key, $value);
+            }
+            if (!in_array($value, $binderArray)) {
+                $binderArray[] = $value;
             }
         }
-        return $binder;
+        return $binderArray;
     }
 }

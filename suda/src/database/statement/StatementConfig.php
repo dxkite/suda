@@ -3,7 +3,6 @@
 
 namespace suda\database\statement;
 
-
 class StatementConfig
 {
     const WRITE = 0;

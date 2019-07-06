@@ -246,14 +246,24 @@ abstract class Statement extends StatementConfig
     }
 
     /**
-     * @param Binder $binder
+     * @param Binder|Binder[] $binder
      * @return $this
      */
-    public function addBinder(Binder $binder)
+    public function addBinder($binder)
     {
-        if (!in_array($binder, $this->binder)) {
-            $this->binder[] = $binder;
+        if ($binder instanceof Binder) {
+            $binder = [$binder];
         }
+        return $this->addBinderArray($binder);
+    }
+
+    /**
+     * @param Binder[] $binder
+     * @return $this
+     */
+    protected function addBinderArray(array $binder)
+    {
+        $this->binder = $this->mergeBinder($this->binder, $binder);
         return $this;
     }
 

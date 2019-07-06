@@ -150,7 +150,7 @@ class WriteStatement extends Statement
     public function where($where, ...$args)
     {
         if (is_string($where)) {
-            if (is_array($args[0])) {
+            if (count($args) > 0 && is_array($args[0])) {
                 $whereParameter = $args[0];
                 $this->whereCondition($where, $whereParameter);
             } else {
@@ -194,8 +194,8 @@ class WriteStatement extends Statement
                 if (is_string($this->data)) {
                     $updateSet = trim($this->data);
                 } else {
-                    list($updateSet, $upbinder) = $this->prepareUpdateSet($this->data);
-                    $this->binder = array_merge($this->binder, $upbinder);
+                    list($updateSet, $upBinder) = $this->prepareUpdateSet($this->data);
+                    $this->binder = array_merge($this->binder, $upBinder);
                 }
                 $string = "UPDATE {$this->table} SET {$updateSet} WHERE {$this->whereCondition}";
                 return new Query($string, $this->binder);
@@ -230,8 +230,8 @@ class WriteStatement extends Statement
      */
     protected function arrayWhereCondition(array $where, array $whereParameter)
     {
-        list($this->whereCondition, $wherebinder) = $this->parepareWhere($where);
-        $this->binder = array_merge($this->binder, $wherebinder);
+        list($this->whereCondition, $whereBinder) = $this->parepareWhere($where);
+        $this->binder = array_merge($this->binder, $whereBinder);
         foreach ($whereParameter as $key => $value) {
             $this->binder[] = new Binder($key, $value);
         }
