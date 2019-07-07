@@ -21,13 +21,13 @@ class ApplicationBuilder
      * 创建应用
      * @param Loader $loader
      * @param string $path
-     * @param string $manifast
+     * @param string $manifest
      * @param string $dataPath
      * @return Application
      */
-    public static function build(Loader $loader, string $path, string $manifast, string $dataPath):Application
+    public static function build(Loader $loader, string $path, string $manifest, string $dataPath):Application
     {
-        $manifestConfig = static::loadManifest($manifast);
+        $manifestConfig = static::loadManifest($path, $manifest);
         if (array_key_exists('import', $manifestConfig)) {
             static::importClassLoader($loader, $manifestConfig['import'], $path);
         }
@@ -40,11 +40,12 @@ class ApplicationBuilder
     /**
      * 加载App主配置
      * @param string $path
+     * @param string $manifest
      * @return array|null
      */
-    public static function loadManifest(string $path)
+    public static function loadManifest(string $path, string $manifest)
     {
-        $manifest = static::resolveManifest($path);
+        $manifest = static::resolveManifest($path, $manifest);
         return Config::loadConfig($manifest) ?? [];
     }
 
@@ -52,18 +53,19 @@ class ApplicationBuilder
      * 获取Manifest路径
      *
      * @param string $path
+     * @param string $manifestPath
      * @return string
      */
-    protected static function resolveManifest(string $path):string
+    protected static function resolveManifest(string $path, string $manifestPath):string
     {
-        $manifest = PathResolver::resolve($path);
+        $manifest = PathResolver::resolve($manifestPath);
         if ($manifest === null) {
             FileSystem::copyDir(SUDA_RESOURCE.'/app', $path);
-            $manifest = PathResolver::resolve($path);
+            $manifest = PathResolver::resolve($manifestPath);
         }
         if ($manifest === null) {
             throw new ApplicationException(
-                sprintf('missing manifest in %s', dirname($path)),
+                sprintf('missing manifest in %s', dirname($manifestPath)),
                 ApplicationException::ERR_MANIFEST_IS_EMPTY
             );
         } else {
