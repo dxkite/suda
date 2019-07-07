@@ -18,7 +18,7 @@ class HtmlContentWrapper extends AbstractContentWrapper
      * @param Response $response
      * @return Stream
      */
-    public function getContent(Response $response): Stream
+    public function getWrappedContent(Response $response): Stream
     {
         $response->setType('html');
         if (is_object($this->content)) {

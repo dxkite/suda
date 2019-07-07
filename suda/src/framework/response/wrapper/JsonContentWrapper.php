@@ -18,7 +18,7 @@ class JsonContentWrapper extends AbstractContentWrapper
      * @param Response $response
      * @return Stream
      */
-    public function getContent(Response $response): Stream
+    public function getWrappedContent(Response $response): Stream
     {
         $response->setType('json');
         return new StringStream(json_encode($this->content));

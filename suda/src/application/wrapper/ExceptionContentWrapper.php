@@ -8,7 +8,7 @@ use suda\application\template\ExceptionTemplate;
 use suda\framework\response\AbstractContentWrapper;
 
 /**
- * 响应包装器
+ * 异常类型响应包装器
  */
 class ExceptionContentWrapper extends AbstractContentWrapper
 {
@@ -18,7 +18,7 @@ class ExceptionContentWrapper extends AbstractContentWrapper
      * @param Response $response
      * @return Stream
      */
-    public function getContent(Response $response):Stream
+    public function getWrappedContent(Response $response):Stream
     {
         $content = $this->content;
         $template = new ExceptionTemplate($content);

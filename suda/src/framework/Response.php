@@ -84,7 +84,7 @@ class Response extends HTTPResponse
             $this->data = $content;
         } else {
             $wrapper = $this->wrapper->getWrapper($content);
-            $this->data = $wrapper->getContent($this);
+            $this->data = $wrapper->getWrappedContent($this);
         }
         return $this;
     }

@@ -1,4 +1,5 @@
 <?php
+
 namespace suda\framework\http;
 
 /**
@@ -12,7 +13,7 @@ interface Stream
      * @return string
      */
     public function __toString();
-    
+
     /**
      * 输出
      *
@@ -25,5 +26,5 @@ interface Stream
      *
      * @return integer
      */
-    public function length():int;
+    public function length(): int;
 }

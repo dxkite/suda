@@ -80,9 +80,27 @@ class ContentWrapper
      * 包装
      *
      * @param mixed $content
-     * @return AbstractContentWrapper
+     * @return ContentWrapperInterface
      */
-    public function getWrapper($content): AbstractContentWrapper
+    public function getWrapper($content): ContentWrapperInterface
+    {
+        if ($content instanceof ContentWrapperInterface) {
+            return $content;
+        }
+        if ($wrapper = $this->matchWrapper($content)) {
+            return $wrapper;
+        }
+        if (method_exists($content, '__toString')) {
+            return new HtmlContentWrapper($content, 'string');
+        }
+        throw new NoWrapperFoundException(sprintf('no wrapper for type %s', get_class($content)), E_USER_ERROR);
+    }
+
+    /**
+     * @param $content
+     * @return ContentWrapperInterface|null
+     */
+    private function matchWrapper($content):?ContentWrapperInterface
     {
         foreach ($this->types as $typeConfig) {
             list($wrapper, $types) = $typeConfig;
@@ -92,9 +110,6 @@ class ContentWrapper
                 }
             }
         }
-        if (method_exists($content, '__toString')) {
-            return new HtmlContentWrapper($content, 'string');
-        }
-        throw new NoWrapperFoundException(sprintf('no wrapper for type %s', get_class($content)), E_USER_ERROR);
+        return null;
     }
 }

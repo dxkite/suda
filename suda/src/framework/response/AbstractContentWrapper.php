@@ -9,7 +9,7 @@ use suda\framework\http\Stream;
 /**
  * 响应接口
  */
-abstract class AbstractContentWrapper
+abstract class AbstractContentWrapper implements ContentWrapperInterface
 {
 
     /**
@@ -31,12 +31,4 @@ abstract class AbstractContentWrapper
         $this->content = $content;
         $this->type = $type;
     }
-
-    /**
-     * 获取内容
-     *
-     * @param Response $response
-     * @return Stream
-     */
-    abstract public function getContent(Response $response): Stream;
 }

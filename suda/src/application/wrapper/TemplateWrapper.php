@@ -17,7 +17,7 @@ class TemplateWrapper extends AbstractContentWrapper
      * @param Response $response
      * @return Stream
      */
-    public function getContent(Response $response):Stream
+    public function getWrappedContent(Response $response):Stream
     {
         $content = $this->content;
         return new StringStream($content->getRenderedString());
