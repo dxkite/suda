@@ -70,12 +70,12 @@ class StatementTest extends TestCase
         );
 
         $this->assertEquals(
-            'SELECT `id`,`name` FROM user_table WHERE name like :name ORDER BY id ASC LIMIT 0,10',
+            'SELECT `id`,`name` FROM user_table WHERE name like :name ORDER BY `id` ASC LIMIT 0,10',
             $table->read('id', 'name')->where('name like :name', ['name' => 'dxkite'])->page(1, 10)->orderBy('id', 'ASC')->getString()
         );
 
         $this->assertEquals(
-            'SELECT DISTINCT `id`,`name` FROM user_table WHERE name like :name ORDER BY id ASC LIMIT 0,10',
+            'SELECT DISTINCT `id`,`name` FROM user_table WHERE name like :name ORDER BY `id` ASC LIMIT 0,10',
             $table->read('id', 'name')->distinct()->where('name like :name', ['name' => 'dxkite'])->page(1, 10)->orderBy('id', 'ASC')->getString()
         );
 
@@ -144,6 +144,16 @@ class StatementTest extends TestCase
         $this->assertEquals(
             'UPDATE user_table SET id = id + 1 WHERE `name`=:_name_31',
             $whereIn->getString()
+        );
+
+        $this->assertEquals(
+            'SELECT `id`,`name` FROM user_table WHERE id in (:_0_32,:_0_33) HAVING name like :_0_34 ORDER BY `id` DESC,`name` ASC LIMIT 0,10',
+            $table->read('id', 'name')
+                ->where('id in (?)', new ArrayObject([ 1, 2]))
+                ->page(1, 10)
+                ->having('name like ?', 'dxkite')
+                ->orderBy('id','desc')
+                ->orderBy('name','asc')->getString()
         );
     }
 

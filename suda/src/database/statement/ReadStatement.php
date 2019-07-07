@@ -1,4 +1,5 @@
 <?php
+
 namespace suda\database\statement;
 
 use function func_get_args;
@@ -8,6 +9,10 @@ use suda\database\struct\TableStruct;
 use suda\database\middleware\Middleware;
 use suda\database\exception\SQLException;
 
+/**
+ * Class ReadStatement
+ * @package suda\database\statement
+ */
 class ReadStatement extends QueryStatement
 {
     use PrepareTrait;
@@ -26,18 +31,39 @@ class ReadStatement extends QueryStatement
      */
     protected $table;
 
+    /**
+     * @var string
+     */
     protected $distinct = '';
 
+    /**
+     * @var string
+     */
     protected $select = '*';
 
+    /**
+     * @var string
+     */
     protected $where = '';
 
+    /**
+     * @var string
+     */
     protected $groupBy = '';
 
+    /**
+     * @var string
+     */
     protected $having = '';
 
+    /**
+     * @var string
+     */
     protected $orderBy = '';
 
+    /**
+     * @var string
+     */
     protected $limit = '';
 
     /**
@@ -145,7 +171,7 @@ class ReadStatement extends QueryStatement
     protected function whereStringArray(string $where, array $whereBinder)
     {
         list($where, $whereBinder) = $this->prepareWhereString($where, $whereBinder);
-        $this->where = 'WHERE '. $where;
+        $this->where = 'WHERE ' . $where;
         $this->binder = $this->mergeBinder($this->binder, $whereBinder);
     }
 
@@ -157,7 +183,7 @@ class ReadStatement extends QueryStatement
      */
     public function groupBy(string $what)
     {
-        $this->groupBy = 'GROUP BY '. $what;
+        $this->groupBy = 'GROUP BY ' . $what;
         return $this;
     }
 
@@ -201,7 +227,7 @@ class ReadStatement extends QueryStatement
     {
 
         list($having, $havingBinder) = $this->prepareWhereString($having, $havingBinder);
-        $this->having = 'HAVING '. $having;
+        $this->having = 'HAVING ' . $having;
         $this->binder = $this->mergeBinder($this->binder, $havingBinder);
     }
 
@@ -214,7 +240,12 @@ class ReadStatement extends QueryStatement
      */
     public function orderBy(string $what, string $order = 'ASC')
     {
-        $this->orderBy = 'ORDER BY '. $what.' '. $order;
+        $order = strtoupper($order);
+        if (strlen($this->orderBy) > 0) {
+            $this->orderBy .= ',`' . $what . '` ' . $order;
+        } else {
+            $this->orderBy = 'ORDER BY `' . $what . '` ' . $order;
+        }
         return $this;
     }
 
@@ -227,7 +258,7 @@ class ReadStatement extends QueryStatement
      */
     public function limit(int $start, int $length = null)
     {
-        $this->limit = 'LIMIT '. $start . ($length !== null ? ',' .$length :'');
+        $this->limit = 'LIMIT ' . $start . ($length !== null ? ',' . $length : '');
         return $this;
     }
 
@@ -252,11 +283,11 @@ class ReadStatement extends QueryStatement
      *
      * @return Query
      */
-    protected function prepareQuery():Query
+    protected function prepareQuery(): Query
     {
-        $where = [$this->where,$this->groupBy,$this->having,$this->orderBy,$this->limit];
+        $where = [$this->where, $this->groupBy, $this->having, $this->orderBy, $this->limit];
         $condition = implode(' ', array_filter(array_map('trim', $where), 'strlen'));
-        $select = [$this->distinct,$this->select];
+        $select = [$this->distinct, $this->select];
         $selection = implode(' ', array_filter(array_map('trim', $select), 'strlen'));
         $string = sprintf("SELECT %s FROM %s %s", $selection, $this->table, $condition);
         return new Query($string, $this->binder);
