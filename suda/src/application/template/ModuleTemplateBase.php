@@ -1,7 +1,9 @@
 <?php
 namespace suda\application\template;
 
+use Exception;
 use function in_array;
+use suda\application\Resource;
 use suda\framework\Request;
 use suda\application\Resource as ApplicationResource;
 use suda\application\Application;
@@ -86,17 +88,18 @@ class ModuleTemplateBase extends CompilableTemplate
         return $compiler;
     }
 
-    protected function getModuleStaticPath(?string $module)
+    protected function getModuleStaticPath(?string $module, ?string  $name = null)
     {
-        $name = $this->getModuleConfig($module)['static'];
+        $name = $name ?? $this->getModuleConfig($module)['static'];
         return $this->getResource($module)->getResourcePath($this->getTemplatePath().'/'.$name) ?? '';
     }
  
 
-    protected function getModuleStaticOutpath(?string $module)
+    protected function getModuleStaticOutputPath(?string $module, ?string  $name = null)
     {
         $config = $this->getModuleConfig($module);
-        $path = $config['assets-path'].'/'. $this->getModuleUriName($module) .'/'.$config['static'];
+        $name = $name ?? $this->getModuleConfig($module)['static'];
+        $path = $config['assets-path'].'/'. $this->getModuleUriName($module) .'/'.$name;
         FileSystem::make($path);
         return $path;
     }
@@ -117,14 +120,15 @@ class ModuleTemplateBase extends CompilableTemplate
         return TemplateUtil::getTemplatePath($this->application);
     }
 
-    protected function getStaticModulePrefix(?string $module = null)
+    protected function getStaticModulePrefix(?string $module = null, ?string $name = null)
     {
         if ($module === null) {
             $module = $this->module;
         }
-        $this->prepareStaticModuleSource($module);
+        $this->prepareStaticModuleSource($module, $name);
         $config = TemplateUtil::getConfig($this->application, $module);
-        return $this->getModuleStaticAssetRoot($module) .'/'.$this->getModuleUriName($module). '/'.$config['static'];
+        $name = $name ?? $config['static'];
+        return $this->getModuleStaticAssetRoot($module) .'/'.$this->getModuleUriName($module). '/'.$name;
     }
 
     protected function getModulePrefix(?string $module = null)
@@ -145,12 +149,12 @@ class ModuleTemplateBase extends CompilableTemplate
         return TemplateUtil::getStaticRequestAsset($this->application, $this->request, $module);
     }
 
-    protected function prepareStaticModuleSource(?string $module)
+    protected function prepareStaticModuleSource(?string $module, ?string  $name = null)
     {
-        $static = $this->getModuleStaticPath($module);
+        $static = $this->getModuleStaticPath($module, $name);
         if (SUDA_DEBUG && is_dir($static) && !in_array($static, static::$copyedStaticPaths)) {
             $from = $static;
-            $to = $this->getModuleStaticOutpath($module);
+            $to = $this->getModuleStaticOutputPath($module, $name);
             $time = sprintf('copy template static source %s => %s ', $from, $to);
             $this->application->debug()->time($time);
             if (FileSystem::copyDir($from, $to)) {

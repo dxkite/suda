@@ -114,7 +114,8 @@ class TemplateUtil
     {
         $assetRoot = static::getAssetRoot($application, $module);
         if (in_array($request->getIndex(), $application->conf('index', ['/index.php']))) {
-            $name = static::writableAssets($application, $module) ? dirname($request->getIndex()):$request->getIndex();
+            $name = static::isAssetsWritable($application, $module)
+                ? dirname($request->getIndex()):$request->getIndex();
             return rtrim(str_replace('\\', '/', $name), '/').$assetRoot;
         }
         return rtrim(str_replace('\\', '/', $request->getIndex()), '/').$assetRoot;
@@ -127,7 +128,7 @@ class TemplateUtil
      * @param string|null $module
      * @return boolean
      */
-    public static function writableAssets(Application $application, ?string $module):bool
+    public static function isAssetsWritable(Application $application, ?string $module):bool
     {
         if ($application->conf('assets-auto-write', true) === false) {
             return false;
@@ -150,7 +151,7 @@ class TemplateUtil
         ?string $module = null
     ):string {
         $assetRoot = static::getAssetRoot($application, $module);
-        $name = static::writableAssets($application, $module) ? dirname($request->getIndex()):$request->getIndex();
+        $name = static::isAssetsWritable($application, $module) ? dirname($request->getIndex()):$request->getIndex();
         return rtrim(str_replace('\\', '/', $name), '/').$assetRoot;
     }
 

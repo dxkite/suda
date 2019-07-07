@@ -87,27 +87,37 @@ class CompilableTemplate extends RawTemplate
     protected $name;
 
     /**
+     * PHP模板
+     * @var bool
+     */
+    protected $raw;
+
+    /**
      * 构建模板
      *
      * @param string $source
      * @param array $config
+     * @param bool $raw
      */
-    public function __construct(string $source, array $config = [])
+    public function __construct(string $source, array $config = [], bool $raw = false)
     {
         parent::__construct('', []);
         $this->source = $source;
         $this->name = pathinfo($source, PATHINFO_FILENAME);
         $this->config = $config;
+        $this->raw = $raw;
     }
 
-    protected function getStaticPath()
+    protected function getStaticPath(?string $name = null)
     {
-        return Resource::getPathByRelativePath($this->config['static'] ?? 'static', dirname($this->getSourcePath()));
+        $name = is_null($name) ? $this->config['static'] ?? 'static' : $name;
+        return Resource::getPathByRelativePath($name, dirname($this->getSourcePath()));
     }
 
-    protected function getStaticOutpath()
+    protected function getStaticOutputPath(?string $name = null)
     {
-        $path = $this->config['assets-public'] ?? constant('SUDA_PUBLIC') . '/assets/' . $this->getStaticName();
+        $public = defined('SUDA_PUBLIC') ? constant('SUDA_PUBLIC') : '.';
+        $path = $this->config['assets-public'] ?? $public . '/assets/' . $this->getStaticName($name);
         FileSystem::make($path);
         return $path;
     }
@@ -119,9 +129,20 @@ class CompilableTemplate extends RawTemplate
      */
     public function getPath()
     {
+        if ($this->isRaw()) {
+            return $this->source;
+        }
         $output = $this->config['output'] ?? constant('SUDA_DATA') . '/template';
         FileSystem::make($output);
         return $output . '/' . $this->name . '-' . substr(md5_file($this->getSourcePath()), 10, 8) . '.php';
+    }
+
+    /**
+     * @return bool
+     */
+    public function isRaw(): bool
+    {
+        return $this->raw;
     }
 
     /**
@@ -176,7 +197,7 @@ class CompilableTemplate extends RawTemplate
         $sourcePath = $this->getSourcePath();
         if ($sourcePath === null) {
             throw new NoTemplateFoundException(
-                'missing source '.$this->name,
+                'missing source ' . $this->name,
                 E_USER_ERROR,
                 $this->name,
                 NoTemplateFoundException::T_SOURCE
@@ -184,8 +205,9 @@ class CompilableTemplate extends RawTemplate
         }
         $source = FileSystem::exist($sourcePath);
         $dest = FileSystem::exist($this->getPath());
+        $isDebug = defined('SUDA_DEBUG') ? constant('SUDA_DEBUG') : false;
         $notCompiled = $source === true && $dest === false;
-        return ($notCompiled || SUDA_DEBUG) === false;
+        return ($notCompiled || $isDebug) === false;
     }
 
     /**
@@ -247,9 +269,9 @@ class CompilableTemplate extends RawTemplate
         return (new Runnable($name))->apply([$this]);
     }
 
-    protected function getStaticPrefix()
+    protected function getStaticPrefix(?string $name = null)
     {
-        $this->prepareStaticSource();
+        $this->prepareStaticSource($name);
         if (array_key_exists('assets-prefix', $this->config)) {
             $prefix = $this->config['assets-prefix'];
         } elseif (defined('SUDA_ASSETS')) {
@@ -257,20 +279,24 @@ class CompilableTemplate extends RawTemplate
         } else {
             $prefix = '/assets';
         }
-        return '/'.ltrim($prefix, '/') . '/' . $this->getStaticName();
+        return '/' . ltrim($prefix, '/') . '/' . $this->getStaticName($name);
     }
 
-    protected function prepareStaticSource()
+    protected function prepareStaticSource(?string $name = null)
     {
-        if (SUDA_DEBUG && is_dir($this->getStaticPath()) && !in_array($this->getStaticPath(), static::$copyedStaticPaths)) {
-            FileSystem::copyDir($this->getStaticPath(), $this->getStaticOutpath());
-            static::$copyedStaticPaths[] = $this->getStaticPath();
+        $isDebug = defined('SUDA_DEBUG') ? constant('SUDA_DEBUG') : false;
+        $staticPath = $this->getStaticPath($name);
+        if ($isDebug &&
+            is_dir($staticPath) &&
+            !in_array($staticPath, static::$copyedStaticPaths)) {
+            FileSystem::copyDir($staticPath, $this->getStaticOutputPath($name));
+            static::$copyedStaticPaths[] = $staticPath;
         }
     }
 
-    protected function getStaticName()
+    protected function getStaticName(?string $name = null)
     {
-        return $this->config['static-name'] ?? substr(md5($this->getStaticPath()), 0, 8);
+        return $this->config['static-name'] ?? substr(md5($this->getStaticPath($name)), 0, 8);
     }
 
     public function insert(string $name, $callback)

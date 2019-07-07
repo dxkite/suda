@@ -3,6 +3,7 @@
 namespace suda\application;
 
 use Exception;
+use suda\application\template\Template;
 use suda\framework\loader\Loader;
 use Throwable;
 use ReflectionException;
@@ -13,7 +14,6 @@ use suda\framework\route\MatchResult;
 use suda\application\loader\ModuleLoader;
 use suda\application\template\RawTemplate;
 use suda\application\loader\LanguageLoader;
-use suda\application\template\ModuleTemplate;
 use suda\application\wrapper\TemplateWrapper;
 use suda\application\loader\ApplicationLoader;
 use suda\application\processor\FileRequestProcessor;
@@ -233,15 +233,15 @@ class Application extends ApplicationSource
      * @param string $name
      * @param Request $request
      * @param string|null $default
-     * @return ModuleTemplate
+     * @return Template
      */
-    public function getTemplate(string $name, Request $request, ?string $default = null): ModuleTemplate
+    public function getTemplate(string $name, Request $request, ?string $default = null): Template
     {
         if ($default === null && $this->running !== null) {
             $default = $this->running->getFullName();
         } else {
             $default = $default ?? $request->getAttribute('module');
         }
-        return new ModuleTemplate($this->getModuleSourceName($name, $default), $this, $request, $default);
+        return new Template($this->getModuleSourceName($name, $default), $this, $request, $default);
     }
 }
