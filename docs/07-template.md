@@ -190,3 +190,28 @@ static函数用于生成静态文件所在的前置URL，接受一个参数，�
 ```
 
 
+### @set 函数
+
+用于给模板中的变量赋值，与模板set方法一致
+
+```html
+@set('a.b', 1)
+```
+
+### @call 函数
+
+使用字符串形式调用函数，其中第一个参数为调用函数的模板，表达式支持 `\suda\framework\runnable\Runnable` 支持的表达式。
+
+常用：
+
+```
+namespace\class->method
+namespace\class::staticMethod
+function
+```
+
+如
+
+```html
+@call('\suda\welcome\event\LoadEnvironment::handle', ['simple'])
+```

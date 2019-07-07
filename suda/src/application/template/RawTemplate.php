@@ -12,7 +12,7 @@ use suda\application\exception\NoTemplateFoundException;
 use suda\framework\runnable\Runnable;
 
 /**
- * 应用程序
+ * 原始PHP模板
  */
 class RawTemplate
 {
@@ -115,6 +115,7 @@ class RawTemplate
     }
 
     /**
+     * 获取模板路径
      * @return string
      */
     protected function getPath()
@@ -123,12 +124,14 @@ class RawTemplate
     }
 
     /**
+     * 调用某函数
+     *
      * @param string $name
      * @param mixed ...$args
      * @return mixed
      * @throws ReflectionException
      */
-    public function data(string $name, ...$args)
+    public function call(string $name, ...$args)
     {
         if (func_num_args() > 1) {
             return (new Runnable($name))->run($this, ...$args);
@@ -137,6 +140,10 @@ class RawTemplate
     }
 
 
+    /**
+     * @param string $name
+     * @param $callback
+     */
     public function insert(string $name, $callback)
     {
         // 存在父模板
@@ -148,6 +155,9 @@ class RawTemplate
         }
     }
 
+    /**
+     * @param string $name
+     */
     public function exec(string $name)
     {
         try {

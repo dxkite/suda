@@ -12,7 +12,7 @@ defined('SUDA_START_MEMORY') or define('SUDA_START_MEMORY', memory_get_usage());
 defined('SUDA_DEBUG') or define('SUDA_DEBUG', false);
 defined('SUDA_DEBUG_LEVEL') or define('SUDA_DEBUG_LEVEL', 'debug');
 // 定义版本
-define('SUDA_VERSION', '3.1.2');
+define('SUDA_VERSION', '3.1.3-alpha');
 // 设置默认时区
 date_default_timezone_set(SUDA_TIMEZONE);
 // 调试模式

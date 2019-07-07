@@ -41,6 +41,9 @@ class Template extends ModuleTemplate
         echo $included->getRenderedString();
     }
 
+    /**
+     * @return array|null
+     */
     private function seekSourcePath():?array
     {
         $extArray = [];

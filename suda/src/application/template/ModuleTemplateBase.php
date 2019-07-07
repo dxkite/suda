@@ -64,6 +64,13 @@ class ModuleTemplateBase extends CompilableTemplate
      */
     protected $request;
 
+    /**
+     * ModuleTemplateBase constructor.
+     * @param string $name 模板描述符
+     * @param Application $application
+     * @param Request $request
+     * @param string|null $defaultModule
+     */
     public function __construct(string $name, Application $application, Request $request, ?string $defaultModule = null)
     {
         parent::__construct('', []);
@@ -76,11 +83,18 @@ class ModuleTemplateBase extends CompilableTemplate
         $this->value = [];
     }
 
+    /**
+     * @param string|null $module
+     * @return mixed
+     */
     protected function getModuleConfig(?string $module)
     {
         return TemplateUtil::getConfig($this->application, $module);
     }
 
+    /**
+     * @return Compiler
+     */
     protected function createCompiler():Compiler
     {
         $compiler = new ModuleTemplateCompiler;
@@ -88,13 +102,23 @@ class ModuleTemplateBase extends CompilableTemplate
         return $compiler;
     }
 
+    /**
+     * @param string|null $module
+     * @param string|null $name
+     * @return string|null
+     */
     protected function getModuleStaticPath(?string $module, ?string  $name = null)
     {
         $name = $name ?? $this->getModuleConfig($module)['static'];
         return $this->getResource($module)->getResourcePath($this->getTemplatePath().'/'.$name) ?? '';
     }
- 
 
+
+    /**
+     * @param string|null $module
+     * @param string|null $name
+     * @return string
+     */
     protected function getModuleStaticOutputPath(?string $module, ?string  $name = null)
     {
         $config = $this->getModuleConfig($module);
@@ -104,22 +128,38 @@ class ModuleTemplateBase extends CompilableTemplate
         return $path;
     }
 
+    /**
+     * @param string|null $module
+     * @return mixed
+     */
     protected function getModuleUriName(?string $module)
     {
         $config = $this->getModuleConfig($module);
         return $config['uri-name'];
     }
 
+    /**
+     * @param string|null $module
+     * @return ApplicationResource
+     */
     protected function getResource(?string $module): ApplicationResource
     {
         return TemplateUtil::getResource($this->application, $module ?? $this->module);
     }
 
+    /**
+     * @return string
+     */
     protected function getTemplatePath()
     {
         return TemplateUtil::getTemplatePath($this->application);
     }
 
+    /**
+     * @param string|null $module
+     * @param string|null $name
+     * @return string
+     */
     protected function getStaticModulePrefix(?string $module = null, ?string $name = null)
     {
         if ($module === null) {
@@ -131,6 +171,10 @@ class ModuleTemplateBase extends CompilableTemplate
         return $this->getModuleStaticAssetRoot($module) .'/'.$this->getModuleUriName($module). '/'.$name;
     }
 
+    /**
+     * @param string|null $module
+     * @return string
+     */
     protected function getModulePrefix(?string $module = null)
     {
         if ($module === null) {
@@ -139,16 +183,28 @@ class ModuleTemplateBase extends CompilableTemplate
         return $this->getModuleAssetRoot($module) .'/'.$this->getModuleUriName($module);
     }
 
+    /**
+     * @param string|null $module
+     * @return string
+     */
     protected function getModuleAssetRoot(?string $module)
     {
         return TemplateUtil::getRequestAsset($this->application, $this->request, $module);
     }
 
+    /**
+     * @param string|null $module
+     * @return string
+     */
     protected function getModuleStaticAssetRoot(?string $module)
     {
         return TemplateUtil::getStaticRequestAsset($this->application, $this->request, $module);
     }
 
+    /**
+     * @param string|null $module
+     * @param string|null $name
+     */
     protected function prepareStaticModuleSource(?string $module, ?string  $name = null)
     {
         $static = $this->getModuleStaticPath($module, $name);
@@ -167,21 +223,17 @@ class ModuleTemplateBase extends CompilableTemplate
     }
 
     /**
-     * Get 应用环境
-     *
-     * @return  Application
+     * @return Application
      */
-    public function getApplication()
+    public function getApplication(): Application
     {
         return $this->application;
     }
 
     /**
-     * Get 请求信息
-     *
-     * @return  Request
+     * @return Request
      */
-    public function getRequest()
+    public function getRequest(): Request
     {
         return $this->request;
     }
