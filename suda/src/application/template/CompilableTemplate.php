@@ -37,28 +37,6 @@ class CompilableTemplate extends RawTemplate
     protected $output;
 
     /**
-     * 父模版
-     *
-     * @var CompilableTemplate|null
-     */
-    protected $parent = null;
-
-
-    /**
-     * 模板钩子
-     *
-     * @var array
-     */
-    protected $hooks = [];
-
-    /**
-     * 继承的模板
-     *
-     * @var string|null
-     */
-    protected $extend = null;
-
-    /**
      * 编译器
      *
      * @var Compiler
@@ -108,12 +86,20 @@ class CompilableTemplate extends RawTemplate
         $this->raw = $raw;
     }
 
+    /**
+     * @param string|null $name
+     * @return string
+     */
     protected function getStaticPath(?string $name = null)
     {
         $name = is_null($name) ? $this->config['static'] ?? 'static' : $name;
         return Resource::getPathByRelativePath($name, dirname($this->getSourcePath()));
     }
 
+    /**
+     * @param string|null $name
+     * @return mixed|string
+     */
     protected function getStaticOutputPath(?string $name = null)
     {
         $public = defined('SUDA_PUBLIC') ? constant('SUDA_PUBLIC') : '.';
@@ -164,7 +150,7 @@ class CompilableTemplate extends RawTemplate
     public function getRenderedString()
     {
         $this->compile();
-        return $this->render();
+        return parent::getRenderedString();
     }
 
     /**
@@ -211,39 +197,6 @@ class CompilableTemplate extends RawTemplate
     }
 
     /**
-     * 获取渲染后的字符串
-     * @ignore-dump
-     * @throws Exception
-     */
-    public function render()
-    {
-        ob_start();
-        echo parent::getRenderedString();
-        if ($this->extend) {
-            $this->include($this->extend);
-        }
-        $content = trim(ob_get_clean());
-        return $content;
-    }
-
-    /**
-     * 创建模板
-     * @param $template
-     * @return CompilableTemplate
-     */
-    public function parent($template)
-    {
-        $this->parent = $template;
-        return $this;
-    }
-
-
-    public function extend(string $name)
-    {
-        $this->extend = $name;
-    }
-
-    /**
      * @param string $path
      * @throws Exception
      */
@@ -256,19 +209,9 @@ class CompilableTemplate extends RawTemplate
     }
 
     /**
-     * @param string $name
-     * @param mixed ...$args
-     * @return mixed
-     * @throws ReflectionException
+     * @param string|null $name
+     * @return string
      */
-    public function data(string $name, ...$args)
-    {
-        if (func_num_args() > 1) {
-            return (new Runnable($name))->run($this, ...$args);
-        }
-        return (new Runnable($name))->apply([$this]);
-    }
-
     protected function getStaticPrefix(?string $name = null)
     {
         $this->prepareStaticSource($name);
@@ -282,6 +225,9 @@ class CompilableTemplate extends RawTemplate
         return '/' . ltrim($prefix, '/') . '/' . $this->getStaticName($name);
     }
 
+    /**
+     * @param string|null $name
+     */
     protected function prepareStaticSource(?string $name = null)
     {
         $isDebug = defined('SUDA_DEBUG') ? constant('SUDA_DEBUG') : false;
@@ -294,39 +240,19 @@ class CompilableTemplate extends RawTemplate
         }
     }
 
+    /**
+     * @param string|null $name
+     * @return bool|mixed|string
+     */
     protected function getStaticName(?string $name = null)
     {
         return $this->config['static-name'] ?? substr(md5($this->getStaticPath($name)), 0, 8);
     }
 
-    public function insert(string $name, $callback)
-    {
-        // 存在父模板
-        if ($this->parent) {
-            $this->parent->insert($name, $callback);
-        } else {
-            // 添加回调钩子
-            $this->hooks[$name][] = new Runnable($callback);
-        }
-    }
 
-    public function exec(string $name)
-    {
-        try {
-            // 存在父模板
-            if ($this->parent) {
-                $this->parent->exec($name);
-            } elseif (isset($this->hooks[$name])) {
-                foreach ($this->hooks[$name] as $hook) {
-                    $hook->run();
-                }
-            }
-        } catch (Exception $e) {
-            echo '<div style="color:red">' . $e->getMessage() . '</div>';
-            return;
-        }
-    }
-
+    /**
+     * @return Compiler
+     */
     protected function compiler()
     {
         if (static::$compiler === null) {
@@ -335,6 +261,9 @@ class CompilableTemplate extends RawTemplate
         return static::$compiler;
     }
 
+    /**
+     * @return Compiler
+     */
     protected function createCompiler(): Compiler
     {
         $compiler = new Compiler;

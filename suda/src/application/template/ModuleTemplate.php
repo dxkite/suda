@@ -52,6 +52,10 @@ class ModuleTemplate extends ModuleTemplateBase
         echo $included->getRenderedString();
     }
 
+    /**
+     * @return string
+     * @throws Exception
+     */
     public function getRenderedString()
     {
         $this->application->debug()->time('render ' . $this->name);
@@ -60,6 +64,10 @@ class ModuleTemplate extends ModuleTemplateBase
         return $code;
     }
 
+    /**
+     * @return bool
+     * @throws Exception
+     */
     protected function compile()
     {
         if ($this->isCompiled() === false) {

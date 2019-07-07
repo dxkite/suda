@@ -11,6 +11,10 @@ use suda\application\exception\NoTemplateFoundException;
  */
 class ExceptionTemplate extends RawTemplate
 {
+    /**
+     * ExceptionTemplate constructor.
+     * @param Throwable $exception
+     */
     public function __construct(Throwable $exception)
     {
         parent::__construct('', []);
@@ -24,6 +28,9 @@ class ExceptionTemplate extends RawTemplate
         ];
     }
 
+    /**
+     * @return string
+     */
     public function getRenderedString()
     {
         try {

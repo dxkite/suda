@@ -2,10 +2,14 @@
 
 namespace suda\application\template;
 
+use Exception;
 use function extract;
 use function ob_get_clean;
+use ReflectionException;
+use suda\application\Resource;
 use suda\framework\arrayobject\ArrayDotAccess;
 use suda\application\exception\NoTemplateFoundException;
+use suda\framework\runnable\Runnable;
 
 /**
  * 应用程序
@@ -26,6 +30,32 @@ class RawTemplate
      */
     protected $value;
 
+    /**
+     * 父模版
+     *
+     * @var self|null
+     */
+    protected $parent = null;
+
+    /**
+     * 模板钩子
+     *
+     * @var array
+     */
+    protected $hooks = [];
+
+    /**
+     * 继承的模板
+     *
+     * @var string|null
+     */
+    protected $extend = null;
+
+    /**
+     * RawTemplate constructor.
+     * @param string $path
+     * @param array $value
+     */
     public function __construct(string $path, array $value = [])
     {
         $this->path = $path;
@@ -84,18 +114,71 @@ class RawTemplate
         return ArrayDotAccess::exist($this->value, $name);
     }
 
+    /**
+     * @return string
+     */
     protected function getPath()
     {
         return $this->path;
     }
 
+    /**
+     * @param string $name
+     * @param mixed ...$args
+     * @return mixed
+     * @throws ReflectionException
+     */
+    public function data(string $name, ...$args)
+    {
+        if (func_num_args() > 1) {
+            return (new Runnable($name))->run($this, ...$args);
+        }
+        return (new Runnable($name))->apply([$this]);
+    }
+
+
+    public function insert(string $name, $callback)
+    {
+        // 存在父模板
+        if ($this->parent) {
+            $this->parent->insert($name, $callback);
+        } else {
+            // 添加回调钩子
+            $this->hooks[$name][] = new Runnable($callback);
+        }
+    }
+
+    public function exec(string $name)
+    {
+        try {
+            // 存在父模板
+            if ($this->parent) {
+                $this->parent->exec($name);
+            } elseif (isset($this->hooks[$name])) {
+                foreach ($this->hooks[$name] as $hook) {
+                    $hook->run();
+                }
+            }
+        } catch (Exception $e) {
+            echo '<div style="color:red">' . $e->getMessage() . '</div>';
+            return;
+        }
+    }
+
+    /**
+     * @return string
+     * @throws Exception
+     */
     public function getRenderedString()
     {
         if (file_exists($this->getPath())) {
             ob_start();
             extract($this->value);
             include $this->getPath();
-            return ob_get_clean();
+            if ($this->extend) {
+                $this->include($this->extend);
+            }
+            return ob_get_clean() ?: '';
         }
         throw new NoTemplateFoundException(
             'missing dest at ' . $this->getPath(),
@@ -103,5 +186,51 @@ class RawTemplate
             $this->getPath(),
             1
         );
+    }
+
+    /**
+     * 获取渲染后的字符串
+     * @ignore-dump
+     * @throws Exception
+     * @return string
+     */
+    public function render()
+    {
+        $content = $this->getRenderedString();
+        $content = trim($content);
+        return $content;
+    }
+
+    /**
+     * 创建模板
+     * @param $template
+     * @return $this
+     */
+    public function parent($template)
+    {
+        $this->parent = $template;
+        return $this;
+    }
+
+
+    /**
+     * @param string $name
+     * @return $this
+     */
+    public function extend(string $name)
+    {
+        $this->extend = $name;
+        return $this;
+    }
+
+    /**
+     * @param string $path
+     * @throws Exception
+     */
+    public function include(string $path)
+    {
+        $included = new self($path, $this->value);
+        $included->parent = $this;
+        echo $included->getRenderedString();
     }
 }
