@@ -23,7 +23,7 @@ class RequestWrapper
      * @var string
      */
     protected $remoteAddr = '0.0.0.0';
-    
+
     /**
      * 获取本地HOST
      *
@@ -254,7 +254,7 @@ class RequestWrapper
 
         return $this;
     }
-    
+
     /**
      * 设置查询参数
      *
@@ -307,11 +307,11 @@ class RequestWrapper
      * 获取文件
      *
      * @param string|null $name
-     * @return  UploadedFile[]|UploadedFile|null
+     * @return  UploadedFile|null
      */
-    public function getFile(?string $name = null)
+    public function getFile(string $name)
     {
-        return null === $name ? $this->request->files() : $this->request->files()[$name] ?? null;
+        return $this->request->files()[$name] ?? null;
     }
 
     /**
