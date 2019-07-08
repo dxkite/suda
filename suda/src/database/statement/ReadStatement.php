@@ -127,7 +127,7 @@ class ReadStatement extends QueryStatement
         if (is_array($where)) {
             $where = $this->aliasKeyField($where);
             $this->whereArray($where, $args[0] ?? []);
-        } elseif (is_array($args[0])) {
+        } elseif (count($args) > 0 && is_array($args[0])) {
             $this->whereStringArray($where, $args[0]);
         } else {
             list($string, $array) = $this->prepareQueryMark($where, $args);

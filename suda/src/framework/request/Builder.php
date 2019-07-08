@@ -42,7 +42,7 @@ class Builder
         $request->setSecure($this->getSecure());
         $request->setPort($this->getServerPort());
         $this->createUri($request);
-        $this->createUribase($request);
+        $request->setUriBase(static::createUriBase($request));
     }
 
     /**
@@ -144,9 +144,9 @@ class Builder
      * 获取URI基础部分
      *
      * @param RequestWrapper $request
-     * @return void
+     * @return string
      */
-    private function createUribase(RequestWrapper $request)
+    public static function createUriBase(RequestWrapper $request)
     {
         $scheme = $request->isSecure()?'https':'http';
         $port = $request->getPort();
@@ -158,6 +158,6 @@ class Builder
             $port = ':'.$port;
         }
         $base = $scheme.'://'. $request->getHost().$port;
-        $request->setUriBase($base);
+        return $base;
     }
 }
