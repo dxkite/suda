@@ -73,7 +73,6 @@ trait PrepareTrait
      */
     protected function prepareWhereString(string $where, array $whereBinder)
     {
-
         $newWhereBinder = [];
         foreach ($whereBinder as $name => $value) {
             if (is_array($value) || $value instanceof ArrayObject) {
@@ -81,9 +80,9 @@ trait PrepareTrait
                 $newWhereBinder = array_merge($newWhereBinder, $binders);
                 $name = ltrim($name, ':');
                 $where = str_replace(':'.$name, $inSQL, $where);
-            } elseif($value instanceof  Binder) {
+            } elseif ($value instanceof  Binder) {
                 $newWhereBinder[] = $value;
-            }else{
+            } else {
                 $newWhereBinder[] = new Binder($name, $value);
             }
         }
@@ -102,7 +101,7 @@ trait PrepareTrait
     protected function prepareIn(string $name, $values)
     {
         list($inSQL, $binders) = $this->prepareInParameter($values, $name);
-        $sql = $name.' IN ('.$inSQL.')';
+        $sql = '`'.$name.'` IN ('.$inSQL.')';
         return [$sql,$binders];
     }
 

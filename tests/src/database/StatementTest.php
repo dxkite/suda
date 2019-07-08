@@ -147,11 +147,12 @@ class StatementTest extends TestCase
         );
 
         $this->assertEquals(
-            'SELECT `id`,`name` FROM user_table WHERE id in (:_0_32,:_0_33) HAVING name like :_0_34 ORDER BY `id` DESC,`name` ASC LIMIT 0,10',
+            'SELECT `id`,`name` FROM user_table WHERE `id` IN (:_id_32,:_id_33) GROUP BY `name` HAVING name like :_0_34 ORDER BY `id` DESC,`name` ASC LIMIT 0,10',
             $table->read('id', 'name')
-                ->where('id in (?)', new ArrayObject([ 1, 2]))
+                ->where(['id' => new ArrayObject([ 1, 2])])
                 ->page(1, 10)
                 ->having('name like ?', 'dxkite')
+                ->groupBy('name')
                 ->orderBy('id','desc')
                 ->orderBy('name','asc')->getString()
         );

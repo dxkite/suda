@@ -183,7 +183,7 @@ class ReadStatement extends QueryStatement
      */
     public function groupBy(string $what)
     {
-        $this->groupBy = 'GROUP BY ' . $what;
+        $this->groupBy = 'GROUP BY `' . $what.'`';
         return $this;
     }
 
