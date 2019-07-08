@@ -108,7 +108,9 @@ class HTTPResponse implements Response
      */
     public function cookie(Cookie $cookie)
     {
-        $this->cookie[$cookie->getName()] = $cookie;
+        if (!in_array($cookie, $this->cookie)) {
+            $this->cookie[] = $cookie;
+        }
         return $this;
     }
 
@@ -259,7 +261,8 @@ class HTTPResponse implements Response
         }
     }
 
-    protected function closeConnection() {
+    protected function closeConnection()
+    {
         if (function_exists('fastcgi_finish_request')) {
             fastcgi_finish_request();
         }

@@ -240,7 +240,7 @@ class Cookie implements JsonSerializable
     /**
      * Get the value of fulltime
      */
-    public function isFulltime():bool
+    public function isFullTime():bool
     {
         return $this->fulltime;
     }
