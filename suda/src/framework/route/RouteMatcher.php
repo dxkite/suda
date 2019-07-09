@@ -165,7 +165,7 @@ class RouteMatcher
             return null;
         }
         if (($parameter = $this->matcher->match($request->getUri())) !== null) {
-            return $this->matcher->buildParamter($parameter);
+            return $this->matcher->buildParameter($parameter);
         }
         return null;
     }

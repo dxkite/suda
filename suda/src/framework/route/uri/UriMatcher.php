@@ -61,7 +61,7 @@ class UriMatcher extends MatcherHelper
      * @param array $matchedParameter
      * @return array
      */
-    public function buildParamter(array $matchedParameter):array
+    public function buildParameter(array $matchedParameter):array
     {
         $parameters = [];
         foreach ($this->parameter as $index => $parameter) {
