@@ -216,7 +216,10 @@ class Application extends ApplicationSource
      */
     protected function runResult(MatchResult $result, Request $request, Response $response)
     {
-        $request->mergeQueries($result->getParameter())->setAttributes($result->getMatcher()->getAttribute());
+        $request
+            ->setParameter($request->getParameter())
+            ->mergeQueries($result->getParameter())
+            ->setAttributes($result->getMatcher()->getAttribute());
         $request->setAttribute('result', $result);
         $module = $request->getAttribute('module');
         if ($module && ($running = $this->find($module))) {

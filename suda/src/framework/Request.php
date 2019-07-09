@@ -13,14 +13,14 @@ class Request extends RequestWrapper
      *
      * @var array
      */
-    protected $parameter;
+    protected $parameter = [];
 
     /**
      * 附加属性
      *
      * @var array
      */
-    protected $attribute;
+    protected $attribute = [];
 
     /**
      * 是否为JSON提交
@@ -38,7 +38,6 @@ class Request extends RequestWrapper
     {
         parent::__construct($request);
         $this->setIsJson($this->contentIsJson());
-        $this->buildData();
     }
 
     /**
@@ -76,7 +75,7 @@ class Request extends RequestWrapper
 
         return $this;
     }
-    
+
     /**
      * Set 属性
      *
@@ -120,7 +119,7 @@ class Request extends RequestWrapper
     {
         return $this->getMethod() === 'GET';
     }
-    
+
     /**
      * 判断内容是否为JSON
      *
@@ -203,7 +202,7 @@ class Request extends RequestWrapper
     public function hasPost(?string $name = null)
     {
         $post = $this->post();
-        if ($name !== null) {
+        if ($name !== null && is_array($post)) {
             return array_key_exists($name, $post);
         }
         return count($post) > 0;
@@ -218,7 +217,7 @@ class Request extends RequestWrapper
      */
     public function post(?string $name = null, $default = null)
     {
-        return $this->getParameter($name, $default);
+        return $this->request->post()[$name] ?? $default;
     }
 
     /**
@@ -246,11 +245,10 @@ class Request extends RequestWrapper
     }
 
     /**
-     * Get 参数
-     *
+     * 获取URI中的参数
      * @param string|null $name
      * @param mixed $default
-     * @return  array
+     * @return mixed
      */
     public function getParameter(?string $name = null, $default = null)
     {
@@ -258,33 +256,27 @@ class Request extends RequestWrapper
     }
 
     /**
-     * Set 参数
-     *
-     * @param  array  $parameter  参数
-     *
-     * @return  self
+     * 设置URI中的参数
+     * @param array $parameter
+     * @return $this
      */
     public function setParameter(array $parameter)
     {
         $this->parameter = $parameter;
-
         return $this;
     }
 
     /**
-     * Set 是否为JSON提交
-     *
-     * @param  bool  $isJson  是否为JSON提交
-     *
-     * @return  self
+     * 设置是否为JSON提交
+     * @param bool $isJson
+     * @return $this
      */
     public function setIsJson(bool $isJson)
     {
         $this->isJson = $isJson;
-
         return $this;
     }
-    
+
     /**
      * 判断是否为JSON
      *
@@ -294,22 +286,5 @@ class Request extends RequestWrapper
     {
         $header = strtolower($this->request->server()['content-type'] ?? '');
         return null !== $header && strpos($header, 'json') !== false;
-    }
-
-    /**
-     * 获取请求数据
-     *
-     * @return void
-     */
-    private function buildData()
-    {
-        if ($this->contentIsJson()) {
-            $data = json_decode($this->request->input(), true, 512, JSON_BIGINT_AS_STRING);
-            if (json_last_error() === JSON_ERROR_NONE) {
-                $this->setParameter($data);
-            }
-        } else {
-            $this->setParameter($this->request->post());
-        }
     }
 }

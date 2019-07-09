@@ -221,7 +221,14 @@ class Route
     public function run(?MatchResult $result, Request $request, Response $response):Response
     {
         if ($result !== null) {
-            return $this->buildResponse($result, $request->mergeQueries($result->getParameter())->setAttributes($result->getMatcher()->getAttribute()), $response);
+            return $this->buildResponse(
+                $result,
+                $request
+                    ->setParameter($request->getParameter())
+                    ->mergeQueries($result->getParameter())
+                    ->setAttributes($result->getMatcher()->getAttribute()),
+                $response
+            );
         }
         return $this->buildDefaultResponse($request, $response);
     }
