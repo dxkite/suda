@@ -8,6 +8,10 @@ use suda\database\connection\Connection;
 use suda\database\statement\QueryAccess as StatementQueryAccess;
 use suda\database\connection\observer\Observer;
 
+/**
+ * Class DebugObserver
+ * @package suda\application\database
+ */
 class DebugObserver implements Observer
 {
     /**
@@ -17,6 +21,10 @@ class DebugObserver implements Observer
      */
     protected $debug;
 
+    /**
+     * DebugObserver constructor.
+     * @param Debugger $debug
+     */
     public function __construct(Debugger $debug)
     {
         $this->debug = $debug;

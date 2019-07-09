@@ -10,6 +10,10 @@ use suda\database\exception\SQLException;
 use suda\database\connection\observer\Observer;
 use suda\application\Resource as ApplicationResource;
 
+/**
+ * Class Database
+ * @package suda\application\database
+ */
 class Database
 {
     /**

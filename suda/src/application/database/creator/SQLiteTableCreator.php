@@ -71,7 +71,7 @@ class SQLiteTableCreator
 
     protected function toSQL()
     {
-        // TODO
+        // TODO GENERATE SQLite DB
         return '';
     }
 }

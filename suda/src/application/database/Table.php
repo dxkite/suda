@@ -15,6 +15,10 @@ abstract class Table extends TableAccess implements Middleware
 {
     use TableMiddlewareTrait;
 
+    /**
+     * Table constructor.
+     * @param string $tableName
+     */
     public function __construct(string $tableName)
     {
         parent::__construct($this->initStruct($tableName), Database::application()->getDataSource(), $this);

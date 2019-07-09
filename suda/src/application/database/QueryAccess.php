@@ -3,7 +3,6 @@
 
 namespace suda\application\database;
 
-
 use suda\database\middleware\Middleware;
 
 class QueryAccess extends \suda\database\statement\QueryAccess

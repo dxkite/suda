@@ -1,6 +1,10 @@
 <?php
 namespace suda\application\database;
 
+/**
+ * Trait TableMiddlewareTrait
+ * @package suda\application\database
+ */
 trait TableMiddlewareTrait
 {
     /**
