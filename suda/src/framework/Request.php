@@ -1,10 +1,9 @@
 <?php
 namespace suda\framework;
 
-use function array_key_exists;
 use suda\framework\http\UploadedFile;
 use suda\framework\request\RequestWrapper;
-use suda\framework\http\Request as HTTPRequest;
+use suda\framework\http\Request as RequestInterface;
 
 class Request extends RequestWrapper
 {
@@ -32,9 +31,9 @@ class Request extends RequestWrapper
     /**
      * 创建请求
      *
-     * @param HTTPRequest $request
+     * @param RequestInterface $request
      */
-    public function __construct(HTTPRequest $request)
+    public function __construct(RequestInterface $request)
     {
         parent::__construct($request);
         $this->setIsJson($this->contentIsJson());

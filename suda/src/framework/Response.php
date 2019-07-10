@@ -2,16 +2,14 @@
 namespace suda\framework;
 
 use Exception;
-use function is_string;
-use SplFileObject;
 use suda\framework\http\Cookie;
 use suda\framework\http\Stream;
 use suda\framework\response\MimeType;
-use suda\framework\http\stream\DataStream;
 use suda\framework\response\ContentWrapper;
-use suda\framework\http\HTTPResponse;
+use suda\framework\response\ResponseWrapper;
+use suda\framework\http\Response as ResponseInterface;
 
-class Response extends HTTPResponse
+class Response extends ResponseWrapper
 {
     /**
      * 包装器
@@ -27,12 +25,10 @@ class Response extends HTTPResponse
      */
     protected $data;
 
-    /**
-     * 创建响应
-     */
-    public function __construct()
+
+    public function __construct(ResponseInterface $response)
     {
-        parent::__construct();
+        parent::__construct($response);
         $this->wrapper = new ContentWrapper;
     }
 
@@ -46,16 +42,6 @@ class Response extends HTTPResponse
     {
         $this->header('content-type', MimeType::getMimeType($extension), true);
         return $this;
-    }
-
-    /**
-     * 获取状态码
-     *
-     * @return integer
-     */
-    public function getStatus():int
-    {
-        return $this->status;
     }
 
     /**
@@ -100,22 +86,12 @@ class Response extends HTTPResponse
      */
     public function sendFile(string $filename, int $offset = 0, int $length = null)
     {
-        $content = new  SplFileObject($filename);
-        if ($content->isFile()) {
-            $this->setType($content->getExtension());
-            $this->data = new DataStream($content->getRealPath(), $offset, $length);
-        } else {
-            throw new Exception('sendFile must be file');
-        }
         $this->sendContentLength($this->data);
-        $this->end();
+        $this->response->sendFile($filename, $offset, $length);
     }
 
-
     /**
-     * 结束请求
      *
-     * @return void
      */
     public function end()
     {
@@ -201,26 +177,18 @@ class Response extends HTTPResponse
     }
 
     /**
-     * Get 包装器
-     *
-     * @return  ContentWrapper
+     * @return ContentWrapper
      */
-    public function getWrapper()
+    public function getWrapper(): ContentWrapper
     {
         return $this->wrapper;
     }
 
     /**
-     * Set 包装器
-     *
-     * @param  ContentWrapper  $wrapper  包装器
-     *
-     * @return  self
+     * @param ContentWrapper $wrapper
      */
     public function setWrapper(ContentWrapper $wrapper)
     {
         $this->wrapper = $wrapper;
-
-        return $this;
     }
 }

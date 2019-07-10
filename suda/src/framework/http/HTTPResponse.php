@@ -174,8 +174,6 @@ class HTTPResponse implements Response
 
     /**
      * 请求结束处理
-     *
-     * @return void
      */
     public function end()
     {
@@ -261,6 +259,11 @@ class HTTPResponse implements Response
         }
     }
 
+    /**
+     * 关闭请求连接
+     *
+     * @return void
+     */
     protected function closeConnection()
     {
         if (function_exists('fastcgi_finish_request')) {

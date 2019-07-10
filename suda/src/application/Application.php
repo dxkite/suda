@@ -3,22 +3,24 @@
 namespace suda\application;
 
 use Exception;
-use suda\application\template\Template;
-use suda\framework\loader\Loader;
 use Throwable;
 use ReflectionException;
 use suda\framework\Request;
 use suda\framework\Response;
-use suda\database\exception\SQLException;
+use suda\framework\loader\Loader;
 use suda\framework\route\MatchResult;
+use suda\application\template\Template;
 use suda\application\loader\ModuleLoader;
+use suda\database\exception\SQLException;
 use suda\application\template\RawTemplate;
 use suda\application\loader\LanguageLoader;
 use suda\application\wrapper\TemplateWrapper;
 use suda\application\loader\ApplicationLoader;
 use suda\application\processor\FileRequestProcessor;
+use suda\framework\http\Request as RequestInterface;
 use suda\application\wrapper\ExceptionContentWrapper;
 use suda\application\exception\ConfigurationException;
+use suda\framework\http\Response as ResponseInterface;
 use suda\application\processor\TemplateAssetProccesser;
 use suda\application\processor\TemplateRequestProcessor;
 
@@ -109,9 +111,11 @@ class Application extends ApplicationSource
      * @param Request $request
      * @param Response $response
      */
-    public function run(Request $request, Response $response)
+    public function run(RequestInterface $request, ResponseInterface $response)
     {
         try {
+            $request = new Request($request);
+            $response = new Response($response);
             $this->prepare($request, $response);
             $this->debug->time('match route');
             $result = $this->route->match($request);

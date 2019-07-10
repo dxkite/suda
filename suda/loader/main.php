@@ -1,11 +1,10 @@
 <?php
 
 use suda\framework\debug\log\logger\FileLogger;
-use suda\framework\Request;
-use suda\framework\Response;
 use suda\framework\loader\Path;
 use suda\framework\loader\Loader;
 use suda\framework\http\HTTPRequest;
+use suda\framework\http\HTTPResponse;
 use suda\application\builder\ApplicationBuilder;
 
 require_once __DIR__ .'/loader.php';
@@ -28,5 +27,5 @@ $application->getDebug()->setLogger(new FileLogger(
         'save-pack-path' => $application->getDataPath().'/logs/dump',
     ]
 ));
-$application->run(new Request(HTTPRequest::create()), new Response);
+$application->run(HTTPRequest::create(), new HTTPResponse);
 exit;
