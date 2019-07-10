@@ -8,23 +8,18 @@ use ReflectionProperty;
 class DebugObject implements \JsonSerializable
 {
     /**
-     * @var DebugObject
+     * @var DebugObjectContext
      */
     protected $context;
-
-    /**
-     * @var array
-     */
-    protected $object = [];
 
     /**
      * @var mixed
      */
     protected $value;
 
-    public function __construct($value, DebugObject $context = null)
+    public function __construct($value, DebugObjectContext $context = null)
     {
-        $this->context = $context;
+        $this->context = $context ?: new DebugObjectContext();
         $this->value = $value;
     }
 
@@ -35,7 +30,7 @@ class DebugObject implements \JsonSerializable
     protected function parseArray(array $value)
     {
         foreach ($value as $key => $val) {
-            $value[$key] = new DebugObject($val, $this);
+            $value[$key] = new DebugObject($val, $this->context);
         }
         return $value;
     }
@@ -47,10 +42,10 @@ class DebugObject implements \JsonSerializable
     protected function parseObject($object)
     {
         $objectHash = spl_object_hash($object);
-        if ($this->isObjectExported($objectHash)) {
+        if ($this->context->isObjectExported($objectHash)) {
             return ['_type' => get_class($object), '_hash' => $objectHash];
         }
-        $this->setObjectIsExported($objectHash);
+        $this->context->setObjectIsExported($objectHash);
         return [
             '_type' => get_class($object),
             '_hash' => $objectHash,
@@ -75,7 +70,7 @@ class DebugObject implements \JsonSerializable
             foreach ($props as $value) {
                 $name = dechex($value->getModifiers()) . '$' . $value->getName();
                 $value->setAccessible(true);
-                $exported[$name] = new DebugObject($value->getValue($object), $this);
+                $exported[$name] = new DebugObject($value->getValue($object), $this->context);
             }
             return $exported;
         } catch (\ReflectionException $e) {
@@ -83,26 +78,7 @@ class DebugObject implements \JsonSerializable
         }
     }
 
-    /**
-     * @param string $objectHash
-     * @return bool
-     */
-    public function isObjectExported(string $objectHash)
-    {
-        if ($this->context !== null) {
-            return $this->context->isObjectExported($objectHash);
-        }
-        return in_array($objectHash, $this->object);
-    }
 
-    public function setObjectIsExported(string $objectHash)
-    {
-        if ($this->context !== null) {
-            $this->context->setObjectIsExported($objectHash);
-        } else {
-            $this->object [] = $objectHash;
-        }
-    }
 
     public function jsonSerialize()
     {
