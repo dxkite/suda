@@ -49,8 +49,10 @@ class ContentLoader
             $name = 'yaml_parse';
         } elseif (class_exists('Spyc')) {
             $name = 'Spyc::YAMLLoadString';
+        } elseif (class_exists('Symfony\Component\Yaml\Yaml')) {
+            $name = 'Symfony\Component\Yaml\Yaml::parse';
         } else {
-            throw new YamlException('load yaml config error : missing yaml extension or spyc', 1);
+            throw new YamlException('load yaml config error : missing yaml parse, you can use yaml extension, symfony/yaml, mustangostang/spyc to active yaml support', 1);
         }
         $content = file_get_contents($path);
         $content = static::parseValue($content, $extra);

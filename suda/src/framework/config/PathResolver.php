@@ -17,7 +17,7 @@ class PathResolver
             return $path;
         }
         $basepath = dirname($path).'/'.pathinfo($path, PATHINFO_FILENAME);
-        
+
         return static::resolveYaml($basepath) ?? static::resolveExtensions($basepath, ['json','php','ini']);
     }
 
@@ -28,7 +28,7 @@ class PathResolver
     protected static function resolveYaml(string $basepath):?string
     {
         if (file_exists($conf = $basepath.'.yml') || file_exists($conf = $basepath.'.yaml')) {
-            if (function_exists('yaml_parse') || class_exists('Spyc')) {
+            if (function_exists('yaml_parse') || class_exists('Spyc') || class_exists('Symfony\Component\Yaml\Yaml')) {
                 return $conf;
             }
         }
