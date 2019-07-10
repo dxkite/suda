@@ -36,6 +36,15 @@ class IncludeManager implements PathInterface
     }
 
     /**
+     * 载入依赖控制变量环境
+     * @param string $path
+     */
+    public static function requireOnce(string $path)
+    {
+        @require_once $path;
+    }
+
+    /**
      * 获取真实或者虚拟存在的地址
      *
      * @param string $name

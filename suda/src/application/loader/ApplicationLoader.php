@@ -11,6 +11,7 @@ use suda\application\database\Database;
 use suda\database\exception\SQLException;
 use suda\framework\filesystem\FileSystem;
 use suda\application\builder\ModuleBuilder;
+use suda\framework\loader\Loader;
 
 /**
  * 应用程序
@@ -85,7 +86,7 @@ class ApplicationLoader
     {
         $vendorAutoload = $this->application->getPath() . '/vendor/autoload.php';
         if (FileSystem::exist($vendorAutoload)) {
-            require_once $vendorAutoload;
+            Loader::requireOnce($vendorAutoload);
         }
     }
 

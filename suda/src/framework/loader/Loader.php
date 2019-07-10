@@ -1,10 +1,10 @@
 <?php
 namespace suda\framework\loader;
 
-
-
 /**
+ * Class Loader
  * 类自动加载器
+ * @package suda\framework\loader
  */
 class Loader extends IncludeManager
 {
@@ -30,7 +30,7 @@ class Loader extends IncludeManager
     {
         if ($path = $this->getClassPath($className)) {
             if (!class_exists($className, false)) {
-                @require_once $path;
+                static::requireOnce($path);
             }
         }
     }
@@ -61,12 +61,12 @@ class Loader extends IncludeManager
     public function import(string $filename):?string
     {
         if ($filename = static::realPath($filename)) {
-            @require_once $filename;
+            static::requireOnce($filename);
             return $filename;
         } else {
             foreach ($this->includePath[0] as $includePath) {
                 if ($path = static::realPath($includePath.DIRECTORY_SEPARATOR.$filename)) {
-                    @require_once $path;
+                    static::requireOnce($path);
                     return $path;
                 }
             }
