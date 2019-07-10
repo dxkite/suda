@@ -81,6 +81,13 @@ class RequestWrapper
     protected $uriBase;
 
     /**
+     * 服务器环境信息
+     *
+     * @var array
+     */
+    protected $server;
+
+    /**
      * 创建请求包装器
      *
      * @param Request $request
@@ -385,9 +392,9 @@ class RequestWrapper
     public function getServer(string $name = null, $default = null)
     {
         if ($name === null) {
-            return $this->request->server();
+            return $this->server;
         }
-        return $this->request->server()[$name] ?? $default;
+        return $this->server[$name] ?? $default;
     }
 
     /**
@@ -397,6 +404,14 @@ class RequestWrapper
     public function getUriBase()
     {
         return $this->uriBase;
+    }
+
+    /**
+     * @param array $server
+     */
+    public function setServer(array $server): void
+    {
+        $this->server = $server;
     }
 
     /**

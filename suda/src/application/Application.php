@@ -113,28 +113,29 @@ class Application extends ApplicationSource
      */
     public function run(RequestInterface $request, ResponseInterface $response)
     {
+        $appRequest = new Request($request);
+        $appResponse = new Response($response);
+
         try {
-            $request = new Request($request);
-            $response = new Response($response);
-            $this->prepare($request, $response);
+            $this->prepare($appRequest, $appResponse);
             $this->debug->time('match route');
-            $result = $this->route->match($request);
+            $result = $this->route->match($appRequest);
             $this->debug->timeEnd('match route');
             if ($result !== null) {
-                $this->event->exec('application:route:match::after', [$result, $request]);
+                $this->event->exec('application:route:match::after', [$result, $appRequest]);
             }
             $this->debug->time('sending response');
-            $response = $this->createResponse($result, $request, $response);
-            if (!$response->isSend()) {
-                $response->end();
+            $appResponse = $this->createResponse($result, $appRequest, $appResponse);
+            if (!$appResponse->isSend()) {
+                $appResponse->end();
             }
-            $this->debug->info('responded with code ' . $response->getStatus());
+            $this->debug->info('responded with code ' . $appResponse->getStatus());
             $this->debug->timeEnd('sending response');
         } catch (Throwable $e) {
             $this->debug->uncaughtException($e);
             $this->dumper->dumpThrowable($e);
-            $response->sendContent($e);
-            $response->end();
+            $appResponse->sendContent($e);
+            $appResponse->end();
             $this->debug->timeEnd('sending response');
         }
         $this->debug->info('system shutdown');

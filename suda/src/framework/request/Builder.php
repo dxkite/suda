@@ -17,7 +17,12 @@ class Builder
      * @var RawRequest
      */
     protected $request;
-    
+
+    /**
+     * @var array
+     */
+    protected $server;
+
     /**
      * 创建请求包装器
      *
@@ -26,6 +31,7 @@ class Builder
     public function __construct(RawRequest $request)
     {
         $this->request = $request;
+        $this->server = $this->getFormatServer($request);
     }
 
     /**
@@ -36,8 +42,10 @@ class Builder
      */
     public function build(RequestWrapper $request)
     {
+        $request->setServer($this->server);
         $request->setRemoteAddr($this->filterRemoteAddr());
-        $request->setMethod(strtoupper($this->request->server()['request-method'] ?? 'GET'));
+        $method = strtoupper($request->getServer('request-method', 'GET'));
+        $request->setMethod($method);
         $request->setHost($this->getHttpHost());
         $request->setSecure($this->getSecure());
         $request->setPort($this->getServerPort());
@@ -61,9 +69,10 @@ class Builder
             'http-forwarded',
             'remote-addr',
         ];
+
         foreach ($ipFrom as $key) {
-            if (array_key_exists($key, $this->request->server())) {
-                foreach (explode(',', $this->request->server()[$key]) as $ip) {
+            if (array_key_exists($key, $this->server)) {
+                foreach (explode(',', $this->server[$key]) as $ip) {
                     $ip = trim($ip);
                     if (filter_var(
                         $ip,
@@ -91,7 +100,7 @@ class Builder
         if (array_key_exists('host', $this->request->header())) {
             return explode(':', $this->request->header()['host'])[0];
         }
-        return $this->request->server()['server-name'] ?? 'localhost';
+        return $this->server['server-name'] ?? 'localhost';
     }
 
     /**
@@ -101,8 +110,8 @@ class Builder
      */
     private function getServerPort():int
     {
-        if (array_key_exists('server-port', $this->request->server())) {
-            return $this->request->server()['server-port'];
+        if (array_key_exists('server-port', $this->server)) {
+            return $this->server['server-port'];
         }
         return $this->getSecure()?443:80;
     }
@@ -114,10 +123,10 @@ class Builder
      */
     private function getSecure():bool
     {
-        $https = array_key_exists('https', $this->request->server())
-            && strcasecmp($this->request->server()['https'], 'off') != 0;
-        $scheme = array_key_exists('request-scheme', $this->request->server())
-            && strcasecmp($this->request->server()['request-scheme'], 'https') === 0;
+        $https = array_key_exists('https', $this->server)
+            && strcasecmp($this->server['https'], 'off') != 0;
+        $scheme = array_key_exists('request-scheme', $this->server)
+            && strcasecmp($this->server['request-scheme'], 'https') === 0;
         return $https || $scheme;
     }
 
@@ -129,13 +138,13 @@ class Builder
      */
     private function createUri(RequestWrapper $request)
     {
-        if (array_key_exists('document-root', $this->request->server())) {
-            $index = (new IndexFinder(null, $this->request->server()['document-root']))->getIndexFile();
+        if (array_key_exists('document-root', $this->server)) {
+            $index = (new IndexFinder(null, $this->server['document-root']))->getIndexFile();
         } else {
             $index = '';
         }
         $request->setIndex($index);
-        $url = new UriParser($this->request->server()['request-uri'] ?? '/', $index);
+        $url = new UriParser($this->server['request-uri'] ?? '/', $index);
         $request->setQueries($url->getQuery());
         $request->setUri($url->getUri());
     }
@@ -159,5 +168,21 @@ class Builder
         }
         $base = $scheme.'://'. $request->getHost().$port;
         return $base;
+    }
+
+    /**
+     * 构建环境数据
+     *
+     * @param RawRequest $request
+     * @return array
+     */
+    private function getFormatServer(RawRequest $request)
+    {
+        $server = [];
+        foreach ($request->server() as $key => $value) {
+            $name = strtolower(str_replace('_', '-', $key));
+            $server[$name] = $value;
+        }
+        return $server;
     }
 }

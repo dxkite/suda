@@ -1,25 +1,15 @@
 <?php
 namespace suda\framework\debug\log\logger;
 
-use function class_exists;
-use function file_exists;
-use function fwrite;
-use function is_bool;
-use function is_dir;
-use function is_file;
-use function is_resource;
-use function microtime;
-use RecursiveDirectoryIterator;
+use ZipArchive;
 use RecursiveIteratorIterator;
-use function register_shutdown_function;
-use function strtr;
+use RecursiveDirectoryIterator;
 use suda\framework\debug\ConfigTrait;
 use suda\framework\debug\log\LogLevel;
 use suda\framework\debug\ConfigInterface;
+use suda\framework\filesystem\FileSystem;
 use suda\framework\debug\log\AbstractLogger;
 use suda\framework\debug\log\logger\exception\FileLoggerException;
-use suda\framework\filesystem\FileSystem;
-use ZipArchive;
 
 class FileLogger extends AbstractLogger implements ConfigInterface
 {

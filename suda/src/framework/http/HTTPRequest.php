@@ -117,7 +117,8 @@ class HTTPRequest implements Request
      *
      * @return array
      */
-    public function header():array {
+    public function header():array
+    {
         return $this->header;
     }
    
@@ -126,7 +127,8 @@ class HTTPRequest implements Request
      *
      * @return array
      */
-    public function server():array {
+    public function server():array
+    {
         return $this->server;
     }
 
@@ -135,7 +137,8 @@ class HTTPRequest implements Request
      *
      * @return array
      */
-    public function get():array {
+    public function get():array
+    {
         return $this->get;
     }
 
@@ -144,7 +147,8 @@ class HTTPRequest implements Request
      *
      * @return array
      */
-    public function post():array {
+    public function post():array
+    {
         return $this->post;
     }
 
@@ -153,7 +157,8 @@ class HTTPRequest implements Request
      *
      * @return array
      */
-    public function cookies():array {
+    public function cookies():array
+    {
         return $this->cookies;
     }
 
@@ -162,7 +167,8 @@ class HTTPRequest implements Request
      *
      * @return  UploadedFile[]
      */
-    public function files():array {
+    public function files():array
+    {
         return $this->files;
     }
 
