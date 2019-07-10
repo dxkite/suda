@@ -4,6 +4,7 @@ namespace suda\framework;
 use Exception;
 use suda\framework\http\Cookie;
 use suda\framework\http\Stream;
+use suda\framework\http\stream\DataStream;
 use suda\framework\response\MimeType;
 use suda\framework\response\ContentWrapper;
 use suda\framework\response\ResponseWrapper;
@@ -86,7 +87,8 @@ class Response extends ResponseWrapper
      */
     public function sendFile(string $filename, int $offset = 0, int $length = null)
     {
-        $this->sendContentLength($this->data);
+        $data = new DataStream($filename, $offset, $length);
+        $this->setHeader('content-length', $data->length());
         $this->response->sendFile($filename, $offset, $length);
     }
 

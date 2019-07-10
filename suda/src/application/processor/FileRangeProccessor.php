@@ -1,4 +1,5 @@
 <?php
+
 namespace suda\application\processor;
 
 use Exception;
@@ -37,7 +38,7 @@ class FileRangeProccessor implements RequestProcessor
 
     public function __construct($file)
     {
-        $this->file = $file instanceof SplFileObject? $file : new SplFileObject($file);
+        $this->file = $file instanceof SplFileObject ? $file : new SplFileObject($file);
         $this->mime = MimeType::getMimeType($this->file->getExtension());
     }
 
@@ -54,9 +55,22 @@ class FileRangeProccessor implements RequestProcessor
     {
         $ranges = $this->getRanges($request);
         $response->setHeader('accept-ranges', 'bytes');
-        if ($ranges === false || $request->getMethod() !== 'GET') {
+        if ($request->getMethod() !== 'GET' || $ranges === false) {
             $response->status(400);
-        } elseif ($ranges === null) {
+        } else {
+            $this->sendFileRanges($response, $ranges);
+        }
+    }
+
+    /**
+     * @param Response $response
+     * @param array $ranges
+     * @throws Exception
+     */
+    protected function sendFileRanges(Response $response, array $ranges)
+    {
+        if (count($ranges) === 0) {
+            $response->setHeader('content-type', $this->mime);
             $response->sendFile($this->file->getRealPath());
         } elseif (count($ranges) === 1) {
             $response->status(206);
@@ -79,10 +93,10 @@ class FileRangeProccessor implements RequestProcessor
      */
     protected function sendMultipleFileByRange(Response $response, array $ranges)
     {
-        $separates = 'multiple_range_'.base64_encode(md5(uniqid(), true));
-        $response->setHeader('content-type', 'multipart/byteranges; boundary='.$separates);
+        $separates = 'multiple_range_' . base64_encode(md5(uniqid(), true));
+        $response->setHeader('content-type', 'multipart/byteranges; boundary=' . $separates);
         foreach ($ranges as $range) {
-            $response->write('--'.$separates."\r\n");
+            $response->write('--' . $separates . "\r\n");
             $this->sendMultipleRangePart($response, $range);
             $this->sendFileByRange($response, $range);
             $response->write("\r\n");
@@ -105,17 +119,14 @@ class FileRangeProccessor implements RequestProcessor
 
     /**
      * 获取Range描述
-     *
      * @param Request $request
      * @return array|bool|null
      */
     protected function getRanges(Request $request)
     {
         $ranges = $this->parseRangeHeader($request);
-        if (is_array($ranges)) {
+        if (count($ranges) > 0) {
             return $this->parseRanges($ranges);
-        } elseif ($ranges === false) {
-            return false;
         }
         return null;
     }
@@ -129,8 +140,8 @@ class FileRangeProccessor implements RequestProcessor
      */
     protected function sendMultipleRangePart(Response $response, array $range)
     {
-        $response->write('Content-Type: '.$this->mime."\r\n");
-        $response->write('Content-Range: '.$this->getRangeHeader($range) ."\r\n\r\n");
+        $response->write('Content-Type: ' . $this->mime . "\r\n");
+        $response->write('Content-Range: ' . $this->getRangeHeader($range) . "\r\n\r\n");
     }
 
     /**
@@ -139,31 +150,27 @@ class FileRangeProccessor implements RequestProcessor
      * @param array $range
      * @return string
      */
-    protected function getRangeHeader(array $range):string
+    protected function getRangeHeader(array $range): string
     {
         return sprintf('bytes %d-%d/%d', $range['start'], $range['end'], $this->file->getSize());
     }
 
     /**
      * 获取Range描述
-     *
      * @param Request $request
-     * @return array|bool|null
+     * @return array
      */
     protected function parseRangeHeader(Request $request)
     {
         $range = $request->getHeader('range', null);
-        if (is_string($range)) {
-            $range = trim($range);
-            if (strpos($range, 'bytes=') !== 0) {
-                return false;
-            }
+        $range = trim($range);
+        if (strpos($range, 'bytes=') === 0) {
             $rangesFrom = substr($range, strlen('bytes='));
             return explode(',', $rangesFrom);
         }
-        return null;
+        return [];
     }
-    
+
     /**
      * 处理范围
      *
@@ -173,7 +180,7 @@ class FileRangeProccessor implements RequestProcessor
     protected function parseRanges(array $ranges)
     {
         $range = [];
-        foreach ($ranges as  $value) {
+        foreach ($ranges as $value) {
             if (($r = $this->parseRange($value)) !== null) {
                 $range[] = $r;
             } else {
@@ -185,11 +192,10 @@ class FileRangeProccessor implements RequestProcessor
 
     /**
      * 处理Range
-     *
      * @param string $range
-     * @return array
+     * @return array|null
      */
-    protected function parseRange(string $range):?array
+    protected function parseRange(string $range): ?array
     {
         $range = trim($range);
         if (strrpos($range, '-') === strlen($range) - 1) {
@@ -201,9 +207,9 @@ class FileRangeProccessor implements RequestProcessor
             list($start, $end) = explode('-', $range, 2);
             $length = intval($end - $start);
             if ($length <= 0) {
-                return ['start' => intval($start) , 'end' => $this->file->getSize() - 1 ];
+                return ['start' => intval($start), 'end' => $this->file->getSize() - 1];
             }
-            return ['start' => intval($start) , 'end' => intval($end) ];
+            return ['start' => intval($start), 'end' => intval($end)];
         }
         return null;
     }

@@ -71,6 +71,10 @@ class MimeType
     ];
 
 
+    /**
+     * @param string $extension
+     * @return string
+     */
     public static function getMimeType(string $extension)
     {
         return static::$mimes[$extension] ?? 'application/octet-stream';
