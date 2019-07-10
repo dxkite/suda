@@ -217,6 +217,9 @@ class Request extends RequestWrapper
      */
     public function post(?string $name = null, $default = null)
     {
+        if ($name === null) {
+            return $this->request->post();
+        }
         return $this->request->post()[$name] ?? $default;
     }
 
