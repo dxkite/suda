@@ -19,7 +19,7 @@ class Template extends ModuleTemplate
     {
         if (strlen($this->source) === 0) {
             $path = $this->seekSourcePath();
-            if (count($path) === 2) {
+            if (is_array($path) && count($path) === 2) {
                 list($this->source, $this->raw) = $path;
             }
         }

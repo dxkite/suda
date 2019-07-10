@@ -17,7 +17,7 @@ class ContentLoader
     public static function loadJson(string $path, array $extra = []): array
     {
         $content = file_get_contents($path);
-        $content = static::parseValue($content, $extra);
+        $content = static::parseValue($content, $extra, false);
         $data = json_decode($content, true);
         if (json_last_error() !== JSON_ERROR_NONE) {
             throw new JsonException('load json config', json_last_error());
@@ -52,22 +52,26 @@ class ContentLoader
         } elseif (class_exists('Symfony\Component\Yaml\Yaml')) {
             $name = 'Symfony\Component\Yaml\Yaml::parse';
         } else {
-            throw new YamlException('load yaml config error : missing yaml parse, you can use yaml extension, symfony/yaml, mustangostang/spyc to active yaml support', 1);
+            throw new YamlException(
+                'load yaml config error: missing yaml parse; '
+                .' you can use yaml extension, symfony/yaml, mustangostang/spyc to active yaml support',
+                1
+            );
         }
         $content = file_get_contents($path);
         $content = static::parseValue($content, $extra);
         return call_user_func_array($name, [$content]);
     }
 
-    protected static function parseValue(string $content, array $extra = []): string
+    protected static function parseValue(string $content, array $extra = [], bool $raw = true): string
     {
-        return preg_replace_callback('/\$\{(.+?)\}/', function ($matchs) use ($extra) {
+        return preg_replace_callback('/\$\{(.+?)\}/', function ($matchs) use ($extra, $raw) {
             $name = $matchs[1];
             if (($value = ArrayDotAccess::get($extra, $name, null)) !== null) {
             } elseif (defined($name)) {
                 $value = constant($name);
             }
-            return is_string($value) ? trim(json_encode($value), '"') : $value;
+            return is_string($value) && $raw === false ? trim(json_encode($value), '"') : $value;
         }, $content);
     }
 }
