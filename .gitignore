@@ -2,6 +2,7 @@
 .vscode/
 composer.lock
 /app/
+/data/
 *.db
 /public/assets/*
 /public/hello/*

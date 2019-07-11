@@ -1,13 +1,16 @@
 <?php
 require_once __DIR__ . '/loader.php';
 
-
-use suda\framework\debug\log\logger\FileLogger;
-use suda\framework\loader\Loader;
-use suda\application\builder\ApplicationBuilder;
+use Swoole\Http\Server;
 use suda\swoole\Request;
 use suda\swoole\Response;
-use Swoole\Http\Server;
+use suda\framework\loader\Loader;
+use suda\framework\debug\log\logger\FileLogger;
+use suda\application\builder\ApplicationBuilder;
+
+
+defined('SUDA_SWOOLE_IP') or define('SUDA_SWOOLE_IP', '127.0.0.1');
+defined('SUDA_SWOOLE_PORT') or define('SUDA_SWOOLE_PORT', 8080);
 
 
 // 初始化系统加载器
