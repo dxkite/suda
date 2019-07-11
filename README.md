@@ -17,3 +17,23 @@
 - 多缓存支持
 - 模块化支持
 - 标准化日志接口
+
+## 运行
+
+### PHP 运行
+
+```
+git clone https://github.com/dxkite/suda .
+php -S 127.0.0.1:8080 -t ./public 
+```
+
+### PHP+Swoole 运行 (推荐)
+
+```
+git clone https://github.com/dxkite/suda .
+php server.php 127.0.0.1:8080
+```
+
+### Web服务器运行
+
+将WEB更目录调整到 `public`，如果需要URL重写，`nginx` 配置需包含 `nginx.conf`, `Apache` 无需配置
