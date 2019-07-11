@@ -1,4 +1,5 @@
 <?php
+
 namespace suda\framework;
 
 use suda\framework\http\UploadedFile;
@@ -44,9 +45,9 @@ class Request extends RequestWrapper
      *
      * @return string
      */
-    public function getUrl():string
+    public function getUrl(): string
     {
-        return $this->request->server()['request-uri'] ?? '/';
+        return $this->getServer('request-uri', '/');
     }
 
     /**
@@ -78,7 +79,7 @@ class Request extends RequestWrapper
     /**
      * Set 属性
      *
-     * @param  array  $attribute  属性
+     * @param array $attribute 属性
      *
      * @return  self
      */
@@ -94,9 +95,9 @@ class Request extends RequestWrapper
      *
      * @return string
      */
-    public function getScheme():string
+    public function getScheme(): string
     {
-        return $this->isSecure()?'https':'http';
+        return $this->isSecure() ? 'https' : 'http';
     }
 
     /**
@@ -104,7 +105,7 @@ class Request extends RequestWrapper
      *
      * @return boolean
      */
-    public function isPost():bool
+    public function isPost(): bool
     {
         return $this->getMethod() === 'POST';
     }
@@ -114,7 +115,7 @@ class Request extends RequestWrapper
      *
      * @return boolean
      */
-    public function isGet():bool
+    public function isGet(): bool
     {
         return $this->getMethod() === 'GET';
     }
@@ -124,7 +125,7 @@ class Request extends RequestWrapper
      *
      * @return boolean
      */
-    public function isJson():bool
+    public function isJson(): bool
     {
         return $this->isJson;
     }
@@ -134,7 +135,7 @@ class Request extends RequestWrapper
      *
      * @return string
      */
-    public function input():string
+    public function input(): string
     {
         return $this->request->input();
     }
@@ -144,9 +145,9 @@ class Request extends RequestWrapper
      *
      * @return array|null
      */
-    public function json():?array
+    public function json(): ?array
     {
-        return $this->isJson?$this->parameter:null;
+        return $this->isJson ? $this->parameter : null;
     }
 
     /**
@@ -286,7 +287,7 @@ class Request extends RequestWrapper
      */
     private function contentIsJson()
     {
-        $header = strtolower($this->request->server()['content-type'] ?? '');
+        $header = strtolower($this->getServer('content-type', ''));
         return null !== $header && strpos($header, 'json') !== false;
     }
 }
