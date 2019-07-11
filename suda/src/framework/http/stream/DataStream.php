@@ -107,7 +107,8 @@ class DataStream implements Stream
      *
      * @return string
      */
-    public function getStreamName() {
+    public function getStreamName()
+    {
         if (is_string($this->stream)) {
             return $this->stream;
         } else {
