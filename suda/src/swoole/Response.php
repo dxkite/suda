@@ -34,6 +34,7 @@ class Response implements \suda\framework\http\Response
     public function __construct(\Swoole\Http\Response $response)
     {
         $this->response = $response;
+        $this->send = false;
     }
 
 
@@ -127,6 +128,7 @@ class Response implements \suda\framework\http\Response
      */
     public function sendFile(string $filename, int $offset = 0, int $length = null)
     {
+        $this->send = true;
         $this->response->sendfile($filename, $offset, $length);
     }
 
