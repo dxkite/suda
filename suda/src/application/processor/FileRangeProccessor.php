@@ -120,7 +120,7 @@ class FileRangeProccessor implements RequestProcessor
     /**
      * 获取Range描述
      * @param Request $request
-     * @return array|bool|null
+     * @return array|bool
      */
     protected function getRanges(Request $request)
     {
@@ -128,7 +128,7 @@ class FileRangeProccessor implements RequestProcessor
         if (count($ranges) > 0) {
             return $this->parseRanges($ranges);
         }
-        return null;
+        return [];
     }
 
     /**
