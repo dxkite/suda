@@ -33,8 +33,8 @@ $logger = new FileLogger(
         'log-level' => SUDA_DEBUG_LEVEL,
         'save-path' => $application->getDataPath() . '/logs',
         'save-zip-path' => $application->getDataPath() . '/logs/zip',
+        'save-dump-path' => $application->getDataPath() . '/logs/dump',
         'log-format' => '%message%',
-        'save-pack-path' => $application->getDataPath() . '/logs/dump',
     ]
 );
 

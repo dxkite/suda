@@ -28,9 +28,9 @@ $logger = new FileLogger(
     [
         'log-level' => SUDA_DEBUG_LEVEL,
         'save-path' => $application->getDataPath().'/logs',
+        'save-dump-path' => $application->getDataPath().'/logs/dump',
         'save-zip-path' => $application->getDataPath().'/logs/zip',
         'log-format' => '%message%',
-        'save-pack-path' => $application->getDataPath().'/logs/dump',
     ]
 );
 $application->getDebug()->setLogger($logger);
