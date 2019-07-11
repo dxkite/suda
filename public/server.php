@@ -28,6 +28,8 @@ $application = ApplicationBuilder::build($loader, SUDA_APP, SUDA_APP_MANIFEST, S
 
 $application->registerDebugger();
 
+$application->config()->set('copy-static-source', false);
+
 $logger = new FileLogger(
     [
         'log-level' => SUDA_DEBUG_LEVEL,
@@ -45,8 +47,8 @@ $http = new Server('127.0.0.1', 9501);
 
 $http->on('request', function ($request, $response) use ($application, $logger) {
     $application->getDebug()->applyConfig([
-        'start-time' => defined('SUDA_START_TIME') ? constant('SUDA_START_TIME') : microtime(true),
-        'start-memory' => defined('SUDA_START_MEMORY') ? constant('SUDA_START_MEMORY') : memory_get_usage(),
+        'start-time' => microtime(true),
+        'start-memory' => memory_get_usage(),
     ]);
     $application->run(new Request($request), new Response($response));
     $logger->write();
