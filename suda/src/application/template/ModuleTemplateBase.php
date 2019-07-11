@@ -207,17 +207,21 @@ class ModuleTemplateBase extends CompilableTemplate
      */
     protected function prepareStaticModuleSource(?string $module, ?string  $name = null)
     {
-        $static = $this->getModuleStaticPath($module, $name);
-        if (SUDA_DEBUG && is_dir($static) && !in_array($static, static::$copyedStaticPaths)) {
-            $from = $static;
-            $to = $this->getModuleStaticOutputPath($module, $name);
-            $time = sprintf('copy template static source %s => %s ', $from, $to);
-            $this->application->debug()->time($time);
-            if (FileSystem::copyDir($from, $to)) {
-                $this->application->debug()->timeEnd($time);
-                static::$copyedStaticPaths[] = $static;
-            } else {
-                $this->application->debug()->warning('Failed: '.$time);
+        $copySource = $this->application->conf('copy-static-source', SUDA_DEBUG);
+        if ($copySource) {
+            $static = $this->getModuleStaticPath($module, $name);
+            $staticCopyed = is_dir($static) && in_array($static, static::$copyedStaticPaths);
+            if ($staticCopyed === false) {
+                $from = $static;
+                $to = $this->getModuleStaticOutputPath($module, $name);
+                $time = sprintf('copy template static source %s => %s ', $from, $to);
+                $this->application->debug()->time($time);
+                if (FileSystem::copyDir($from, $to)) {
+                    $this->application->debug()->timeEnd($time);
+                    static::$copyedStaticPaths[] = $static;
+                } else {
+                    $this->application->debug()->warning('Failed: '.$time);
+                }
             }
         }
     }
