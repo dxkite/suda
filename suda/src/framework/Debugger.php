@@ -51,8 +51,8 @@ class Debugger extends Debug
     public function load(PHPContext $context): Debugger
     {
         $this->applyConfig([
-            'start-time' => constant('SUDA_START_TIME'),
-            'start-memory' => constant('SUDA_START_MEMORY'),
+            'start-time' => defined('SUDA_START_TIME') ? constant('SUDA_START_TIME') : microtime(true),
+            'start-memory' => defined('SUDA_START_MEMORY') ? constant('SUDA_START_MEMORY') : memory_get_usage(),
         ]);
         $this->context = $context;
         return $this;

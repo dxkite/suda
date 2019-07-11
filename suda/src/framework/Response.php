@@ -93,7 +93,7 @@ class Response extends ResponseWrapper
     }
 
     /**
-     *
+     * 发送缓存的内容
      */
     public function end()
     {
@@ -164,7 +164,7 @@ class Response extends ResponseWrapper
     }
 
     /**
-     * 发送数据
+     * 直接发送数据
      *
      * @param mixed $content
      * @return void

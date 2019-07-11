@@ -135,7 +135,6 @@ class Application extends ApplicationSource
             $this->debug->uncaughtException($e);
             $this->dumper->dumpThrowable($e);
             $appResponse->sendContent($e);
-            $appResponse->end();
             $this->debug->timeEnd('sending response');
         }
         $this->debug->info('system shutdown');

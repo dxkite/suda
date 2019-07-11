@@ -4,8 +4,7 @@ namespace suda\framework\config;
 
 use function call_user_func_array;
 use function parse_ini_string;
-use suda\framework\exception\JsonException;
-use suda\framework\exception\YamlException;
+use suda\framework\exception\ConfigLoadException;
 use suda\framework\arrayobject\ArrayDotAccess;
 
 /**
@@ -20,7 +19,7 @@ class ContentLoader
         $content = static::parseValue($content, $extra, false);
         $data = json_decode($content, true);
         if (json_last_error() !== JSON_ERROR_NONE) {
-            throw new JsonException('load json config', json_last_error());
+            throw new ConfigLoadException('json: '.$path.': '.json_last_error_msg(), json_last_error());
         }
         return $data;
     }
@@ -52,15 +51,19 @@ class ContentLoader
         } elseif (class_exists('Symfony\Component\Yaml\Yaml')) {
             $name = 'Symfony\Component\Yaml\Yaml::parse';
         } else {
-            throw new YamlException(
+            throw new ConfigLoadException(
                 'load yaml config error: missing yaml parse; '
-                .' you can use yaml extension, symfony/yaml, mustangostang/spyc to active yaml support',
+                . ' you can use yaml extension, symfony/yaml, mustangostang/spyc to active yaml support',
                 1
             );
         }
         $content = file_get_contents($path);
         $content = static::parseValue($content, $extra);
-        return call_user_func_array($name, [$content]);
+        try {
+            return call_user_func_array($name, [$content]);
+        } catch (\Exception $e) {
+            throw new ConfigLoadException('yaml: '.$path.': '.$e->getMessage(), $e->getCode(), $e);
+        }
     }
 
     protected static function parseValue(string $content, array $extra = [], bool $raw = true): string

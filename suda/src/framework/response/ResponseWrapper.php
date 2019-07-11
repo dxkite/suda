@@ -4,8 +4,8 @@
 namespace suda\framework\response;
 
 use suda\framework\http\Cookie;
-use suda\framework\http\Response;
 use suda\framework\http\Stream;
+use suda\framework\http\Response;
 
 class ResponseWrapper implements Response
 {
@@ -37,6 +37,7 @@ class ResponseWrapper implements Response
      */
     public function status(int $statusCode)
     {
+        $this->sendWarningIfy(__METHOD__);
         $this->status = $statusCode;
         $this->response->status($statusCode);
         return $this;
@@ -62,6 +63,7 @@ class ResponseWrapper implements Response
      */
     public function version(string $version)
     {
+        $this->sendWarningIfy(__METHOD__);
         $this->response->version($version);
         return $this;
     }
@@ -87,6 +89,7 @@ class ResponseWrapper implements Response
      */
     public function header(string $name, string $value, bool $replace = false, bool $ucfirst = true)
     {
+        $this->sendWarningIfy(__METHOD__);
         $this->response->header($name, $value, $replace, $ucfirst);
         return $this;
     }
@@ -99,6 +102,7 @@ class ResponseWrapper implements Response
      */
     public function cookie(Cookie $cookie)
     {
+        $this->sendWarningIfy(__METHOD__);
         $this->response->cookie($cookie);
         return $this;
     }
@@ -111,6 +115,7 @@ class ResponseWrapper implements Response
      */
     public function write($data)
     {
+        $this->sendWarningIfy(__METHOD__);
         $this->response->write($data);
     }
 
@@ -122,6 +127,7 @@ class ResponseWrapper implements Response
      */
     public function send($data)
     {
+        $this->sendWarningIfy(__METHOD__);
         $this->response->send($data);
     }
 
@@ -134,6 +140,7 @@ class ResponseWrapper implements Response
      */
     public function redirect(string $url, int $httpCode = 302)
     {
+        $this->sendWarningIfy(__METHOD__);
         $this->response->redirect($url, $httpCode);
     }
 
@@ -147,6 +154,17 @@ class ResponseWrapper implements Response
      */
     public function sendFile(string $filename, int $offset = 0, int $length = null)
     {
+        $this->sendWarningIfy(__METHOD__);
         $this->response->sendFile($filename, $offset, $length);
+    }
+
+    /**
+     * @param string $name
+     */
+    private function sendWarningIfy(string $name)
+    {
+        if ($this->isSend()) {
+            trigger_error($name .': response has been send', E_USER_WARNING);
+        }
     }
 }

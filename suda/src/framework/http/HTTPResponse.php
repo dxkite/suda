@@ -3,6 +3,7 @@ namespace suda\framework\http;
 
 use Exception;
 use function header as send_header;
+use RuntimeException;
 use suda\framework\http\stream\DataStream;
 
 /**
@@ -146,12 +147,11 @@ class HTTPResponse implements Response
      * @param integer $offset
      * @param integer $length
      * @return void
-     * @throws Exception
      */
     public function sendFile(string $filename, int $offset = 0, int $length = null)
     {
         if (!file_exists($filename)) {
-            throw new Exception('file no found: '.$filename);
+            throw new RuntimeException('file no found: '.$filename);
         }
         $data = new DataStream($filename, $offset, $length);
         $this->sendHeaders();

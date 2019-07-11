@@ -52,8 +52,9 @@ class FileLogger extends AbstractLogger implements ConfigInterface
     {
         $this->applyConfig($config);
         FileSystem::make($this->getConfig('save-path'));
-        FileSystem::make($this->getConfig('save-pack-path'));
+        FileSystem::make($this->getConfig('save-dump-path'));
         FileSystem::make($this->getConfig('save-zip-path'));
+        register_shutdown_function([$this, 'shutdown']);
     }
 
     /**
@@ -72,7 +73,7 @@ class FileLogger extends AbstractLogger implements ConfigInterface
     /**
      * @throws FileLoggerException
      */
-    protected function prepareWrite()
+    private function prepareWrite()
     {
         $msec = explode('.', microtime(true))[1];
         $save = $this->getConfig('save-path');
@@ -81,10 +82,9 @@ class FileLogger extends AbstractLogger implements ConfigInterface
         if ($temp !== false) {
             $this->temp = $temp;
         } else {
-            throw new FileLoggerException(__CLASS__.':'.sprintf('cannot create log file'));
+            throw new FileLoggerException(__METHOD__.':'.sprintf('cannot create log file'));
         }
         $this->latest = $save.'/'.$this->getConfig('file-name');
-        register_shutdown_function([$this,'save']);
     }
 
     public function getDefaultConfig():array
@@ -92,15 +92,18 @@ class FileLogger extends AbstractLogger implements ConfigInterface
         return [
             'save-path' => './logs',
             'save-zip-path' => './logs/zip',
-            'save-pack-path' => './logs/dump',
+            'save-dump-path' => './logs/dump',
             'max-file-size' => 2097152,
             'file-name' => 'latest.log',
             'log-level' => 'debug',
             'log-format' => '[%level%] %message%',
         ];
     }
-    
-    protected function packLogFile()
+
+    /**
+     * 打包文件
+     */
+    private function packLogFile()
     {
         $logFile = $this->latest;
         $path = preg_replace('/[\\\\]+/', '/', $this->getConfig('save-zip-path') .'/'.date('Y-m-d').'.zip');
@@ -109,10 +112,13 @@ class FileLogger extends AbstractLogger implements ConfigInterface
             if ($zip->addFile($logFile, date('Y-m-d'). '-'. $zip->numFiles .'.log')) {
                 array_push($this->removeFiles, $logFile);
             }
-            if (is_dir($this->getConfig('save-pack-path'))) {
-                $it = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($this->getConfig('save-pack-path'), RecursiveDirectoryIterator::SKIP_DOTS));
+            if (is_dir($this->getConfig('save-dump-path'))) {
+                $it = new RecursiveIteratorIterator(new RecursiveDirectoryIterator(
+                    $this->getConfig('save-dump-path'),
+                    RecursiveDirectoryIterator::SKIP_DOTS
+                ));
                 foreach ($it as $dumpLog) {
-                    if ($zip->addFile($dumpLog, 'pack/'.basename($dumpLog))) {
+                    if ($zip->addFile($dumpLog, 'dump/'.basename($dumpLog))) {
                         array_push($this->removeFiles, $dumpLog);
                     }
                 }
@@ -120,7 +126,10 @@ class FileLogger extends AbstractLogger implements ConfigInterface
             $zip->close();
         } else {
             if (is_file($logFile) && file_exists($logFile)) {
-                rename($logFile, $this->getConfig('save-path') . '/' . date('Y-m-d'). '-'. substr(md5_file($logFile), 0, 8).'.log');
+                rename(
+                    $logFile,
+                    $this->getConfig('save-path') . '/' . date('Y-m-d'). '-'. substr(md5_file($logFile), 0, 8).'.log'
+                );
             }
         }
     }
@@ -179,6 +188,7 @@ class FileLogger extends AbstractLogger implements ConfigInterface
         }
     }
 
+
     protected function rollLatest()
     {
         if (isset($this->latest)) {
@@ -189,6 +199,7 @@ class FileLogger extends AbstractLogger implements ConfigInterface
                 file_put_contents($this->latest, $body, FILE_APPEND);
             }
             fclose($this->temp);
+            $this->temp = null;
             if ($this->tempname !== null) {
                 unlink($this->tempname);
             }
@@ -204,16 +215,21 @@ class FileLogger extends AbstractLogger implements ConfigInterface
         }
     }
 
-    public function save()
+    public function write()
     {
-        if (function_exists('fastcgi_finish_request')) {
-            fastcgi_finish_request();
-        }
         if ($this->checkSize()) {
             $this->packLogFile();
         }
         $this->rollLatest();
         $this->removePackFiles();
+    }
+
+    public function shutdown()
+    {
+        if (function_exists('fastcgi_finish_request')) {
+            fastcgi_finish_request();
+        }
+        $this->write();
     }
 
     public function interpolate(string $message, array $context)

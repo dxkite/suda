@@ -1,4 +1,5 @@
 <?php
+
 namespace suda\framework\http;
 
 use DateTime;
@@ -17,7 +18,7 @@ class Cookie implements JsonSerializable
      * @var string
      */
     protected $name;
-    
+
     /**
      * 值
      *
@@ -70,8 +71,13 @@ class Cookie implements JsonSerializable
     /**
      * @var bool
      */
-    private $fulltime = true;
+    private $fullTime = true;
 
+
+    /**
+     * @var bool
+     */
+    private $sameSite = false;
 
     /**
      * Cookie constructor.
@@ -85,7 +91,7 @@ class Cookie implements JsonSerializable
         $this->value = $value;
         $this->expire = $expire;
     }
-    
+
     /**
      * 设置 HTTP Only
      *
@@ -106,7 +112,7 @@ class Cookie implements JsonSerializable
      */
     public function full(bool $set = true)
     {
-        $this->fulltime = $set;
+        $this->fullTime = $set;
         return $this;
     }
 
@@ -168,7 +174,7 @@ class Cookie implements JsonSerializable
     {
         return $this->value;
     }
-    
+
     /**
      * Get the value of name
      */
@@ -182,7 +188,7 @@ class Cookie implements JsonSerializable
      *
      * @return  boolean
      */
-    public function isHttpOnly():bool
+    public function isHttpOnly(): bool
     {
         return $this->httpOnly;
     }
@@ -222,7 +228,7 @@ class Cookie implements JsonSerializable
      *
      * @return  boolean
      */
-    public function isSecure():bool
+    public function isSecure(): bool
     {
         return $this->secure;
     }
@@ -232,7 +238,7 @@ class Cookie implements JsonSerializable
      *
      * @return  boolean
      */
-    public function isSession():bool
+    public function isSession(): bool
     {
         return $this->session;
     }
@@ -240,11 +246,11 @@ class Cookie implements JsonSerializable
     /**
      * Get the value of fulltime
      */
-    public function isFullTime():bool
+    public function isFullTime(): bool
     {
-        return $this->fulltime;
+        return $this->fullTime;
     }
-    
+
     /**
      * 设置Session
      *
@@ -269,6 +275,23 @@ class Cookie implements JsonSerializable
     }
 
     /**
+     * @return bool
+     */
+    public function isSameSite(): bool
+    {
+        return $this->sameSite;
+    }
+
+    /**
+     * @param bool $sameSite
+     */
+    public function setSameSite(bool $sameSite): void
+    {
+        $this->sameSite = $sameSite;
+    }
+
+
+    /**
      * 发送文本
      *
      * @return string
@@ -279,25 +302,29 @@ class Cookie implements JsonSerializable
         $cookie = sprintf('%s=%s', $this->name, $this->value);
 
         if ($this->expire !== 0) {
-            $time = $this->fulltime ? $this->expire : time() + $this->expire;
+            $time = $this->fullTime ? $this->expire : time() + $this->expire;
             $dateTime = DateTime::createFromFormat('U', $time, new DateTimeZone('GMT'));
-            $cookie .= '; expires='.str_replace('+0000', '', $dateTime->format('D, d M Y H:i:s T'));
+            $cookie .= '; Expires=' . str_replace('+0000', '', $dateTime->format('D, d M Y H:i:s T'));
         }
 
         if ($this->domain !== null) {
-            $cookie .= '; domain='.$this->domain;
+            $cookie .= '; Domain=' . $this->domain;
         }
 
         if ($this->path) {
-            $cookie .= '; path='.$this->path;
+            $cookie .= '; Path=' . $this->path;
         }
 
         if ($this->secure) {
-            $cookie .= '; secure';
+            $cookie .= '; Secure';
         }
 
         if ($this->httpOnly) {
-            $cookie .= '; httponly';
+            $cookie .= '; HttpOnly';
+        }
+
+        if ($this->sameSite) {
+            $cookie .= '; SameSite=Strict';
         }
         return $cookie;
     }

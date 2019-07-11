@@ -4,8 +4,8 @@ namespace suda\framework\exception;
 use RuntimeException;
 
 /**
- * yaml 配置
+ *  配置加载异常
  */
-class YamlException extends RuntimeException
+class ConfigLoadException extends RuntimeException
 {
 }

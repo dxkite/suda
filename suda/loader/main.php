@@ -18,7 +18,13 @@ defined('SUDA_DATA') or define('SUDA_DATA', Path::toAbsolutePath('~/data'));
 defined('SUDA_APP_MANIFEST') or define('SUDA_APP_MANIFEST', SUDA_APP.'/manifest');
 $application = ApplicationBuilder::build($loader, SUDA_APP, SUDA_APP_MANIFEST, SUDA_DATA);
 $application->registerDebugger();
-$application->getDebug()->setLogger(new FileLogger(
+
+$application->getDebug()->applyConfig([
+    'start-time' => defined('SUDA_START_TIME') ? constant('SUDA_START_TIME') : microtime(true),
+    'start-memory' => defined('SUDA_START_MEMORY') ? constant('SUDA_START_MEMORY') : memory_get_usage(),
+]);
+
+$logger = new FileLogger(
     [
         'log-level' => SUDA_DEBUG_LEVEL,
         'save-path' => $application->getDataPath().'/logs',
@@ -26,6 +32,7 @@ $application->getDebug()->setLogger(new FileLogger(
         'log-format' => '%message%',
         'save-pack-path' => $application->getDataPath().'/logs/dump',
     ]
-));
+);
+$application->getDebug()->setLogger($logger);
 $application->run(Request::create(), new Response);
 exit;

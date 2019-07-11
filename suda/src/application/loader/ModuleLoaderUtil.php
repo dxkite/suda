@@ -110,15 +110,15 @@ class ModuleLoaderUtil
      * 比较版本
      *
      * @param string $version 比较用的版本，包含比较符号
-     * @param string $compire 对比的版本
+     * @param string $compare 对比的版本
      * @return bool
      */
-    public static function versionCompare(string $version, string $compire)
+    public static function versionCompare(string $version, string $compare)
     {
         if (preg_match('/^(<=?|>=?|<>|!=)(.+)$/i', $version, $match)) {
             list($s, $op, $ver) = $match;
-            return  version_compare($compire, $ver, $op);
+            return  version_compare($compare, $ver, $op);
         }
-        return version_compare($compire, $version, '>=');
+        return version_compare($compare, $version, '>=');
     }
 }
