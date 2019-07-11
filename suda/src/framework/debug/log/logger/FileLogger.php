@@ -1,4 +1,5 @@
 <?php
+
 namespace suda\framework\debug\log\logger;
 
 use ZipArchive;
@@ -11,6 +12,10 @@ use suda\framework\filesystem\FileSystem;
 use suda\framework\debug\log\AbstractLogger;
 use suda\framework\debug\log\logger\exception\FileLoggerException;
 
+/**
+ * Class FileLogger
+ * @package suda\framework\debug\log\logger
+ */
 class FileLogger extends AbstractLogger implements ConfigInterface
 {
     use ConfigTrait;
@@ -27,7 +32,7 @@ class FileLogger extends AbstractLogger implements ConfigInterface
      *
      * @var string
      */
-    protected $tempname;
+    protected $tempName;
 
     /**
      * 移除文件
@@ -50,11 +55,20 @@ class FileLogger extends AbstractLogger implements ConfigInterface
      */
     public function __construct(array $config = [])
     {
+        $this->set($config);
+        register_shutdown_function([$this, 'shutdown']);
+    }
+
+    /**
+     * 设置配置
+     * @param array $config
+     */
+    public function set(array $config)
+    {
         $this->applyConfig($config);
         FileSystem::make($this->getConfig('save-path'));
         FileSystem::make($this->getConfig('save-dump-path'));
         FileSystem::make($this->getConfig('save-zip-path'));
-        register_shutdown_function([$this, 'shutdown']);
     }
 
     /**
@@ -77,17 +91,20 @@ class FileLogger extends AbstractLogger implements ConfigInterface
     {
         $msec = explode('.', microtime(true))[1];
         $save = $this->getConfig('save-path');
-        $this->tempname = $save.'/'.date('YmdHis').'.'.$msec.'.log';
-        $temp = fopen($this->tempname, 'w+');
+        $this->tempName = $save . '/' . date('YmdHis') . '.' . $msec . '.log';
+        $temp = fopen($this->tempName, 'w+');
         if ($temp !== false) {
             $this->temp = $temp;
         } else {
-            throw new FileLoggerException(__METHOD__.':'.sprintf('cannot create log file'));
+            throw new FileLoggerException(__METHOD__ . ':' . sprintf('cannot create log file'));
         }
-        $this->latest = $save.'/'.$this->getConfig('file-name');
+        $this->latest = $save . '/' . $this->getConfig('file-name');
     }
 
-    public function getDefaultConfig():array
+    /**
+     * @return array
+     */
+    public function getDefaultConfig(): array
     {
         return [
             'save-path' => './logs',
@@ -106,10 +123,14 @@ class FileLogger extends AbstractLogger implements ConfigInterface
     private function packLogFile()
     {
         $logFile = $this->latest;
-        $path = preg_replace('/[\\\\]+/', '/', $this->getConfig('save-zip-path') .'/'.date('Y-m-d').'.zip');
+        $path = preg_replace(
+            '/[\\\\]+/',
+            '/',
+            $this->getConfig('save-zip-path') . '/' . date('Y-m-d') . '.zip'
+        );
         $zip = $this->getZipArchive($path);
         if ($zip !== null) {
-            if ($zip->addFile($logFile, date('Y-m-d'). '-'. $zip->numFiles .'.log')) {
+            if ($zip->addFile($logFile, date('Y-m-d') . '-' . $zip->numFiles . '.log')) {
                 array_push($this->removeFiles, $logFile);
             }
             if (is_dir($this->getConfig('save-dump-path'))) {
@@ -118,7 +139,7 @@ class FileLogger extends AbstractLogger implements ConfigInterface
                     RecursiveDirectoryIterator::SKIP_DOTS
                 ));
                 foreach ($it as $dumpLog) {
-                    if ($zip->addFile($dumpLog, 'dump/'.basename($dumpLog))) {
+                    if ($zip->addFile($dumpLog, 'dump/' . basename($dumpLog))) {
                         array_push($this->removeFiles, $dumpLog);
                     }
                 }
@@ -128,7 +149,9 @@ class FileLogger extends AbstractLogger implements ConfigInterface
             if (is_file($logFile) && file_exists($logFile)) {
                 rename(
                     $logFile,
-                    $this->getConfig('save-path') . '/' . date('Y-m-d'). '-'. substr(md5_file($logFile), 0, 8).'.log'
+                    $this->getConfig('save-path')
+                    . '/' . date('Y-m-d')
+                    . '-' . substr(md5_file($logFile), 0, 8) . '.log'
                 );
             }
         }
@@ -140,7 +163,7 @@ class FileLogger extends AbstractLogger implements ConfigInterface
      * @param string $path
      * @return ZipArchive|null
      */
-    protected function getZipArchive(string $path)
+    private function getZipArchive(string $path)
     {
         if (class_exists('ZipArchive')) {
             $zip = new ZipArchive;
@@ -157,7 +180,7 @@ class FileLogger extends AbstractLogger implements ConfigInterface
      *
      * @return boolean
      */
-    protected function checkSize():bool
+    private function checkSize(): bool
     {
         $logFile = $this->latest;
         if (file_exists($logFile)) {
@@ -184,12 +207,15 @@ class FileLogger extends AbstractLogger implements ConfigInterface
             $replace['%level%'] = $level;
             $replace['%message%'] = $message;
             $write = strtr($this->getConfig('log-format'), $replace);
-            fwrite($this->getAvailableWrite(), $write.PHP_EOL);
+            fwrite($this->getAvailableWrite(), $write . PHP_EOL);
         }
     }
 
 
-    protected function rollLatest()
+    /**
+     * 将临时文件写入最后日志
+     */
+    private function rollLatest()
     {
         if (isset($this->latest)) {
             $size = ftell($this->temp);
@@ -200,21 +226,29 @@ class FileLogger extends AbstractLogger implements ConfigInterface
             }
             fclose($this->temp);
             $this->temp = null;
-            if ($this->tempname !== null) {
-                unlink($this->tempname);
+            if ($this->tempName !== null) {
+                unlink($this->tempName);
+                $this->tempName = null;
             }
         }
     }
 
-    protected function removePackFiles()
+    /**
+     * 删除已经压缩的文件
+     */
+    private function removePackFiles()
     {
         foreach ($this->removeFiles as $file) {
             if (is_file($file) && file_exists($file)) {
                 unlink($file);
             }
         }
+        $this->removeFiles = [];
     }
 
+    /**
+     * 即时写入日志
+     */
     public function write()
     {
         if ($this->checkSize()) {
@@ -224,6 +258,9 @@ class FileLogger extends AbstractLogger implements ConfigInterface
         $this->removePackFiles();
     }
 
+    /**
+     * 程序关闭时调用
+     */
     public function shutdown()
     {
         if (function_exists('fastcgi_finish_request')) {
@@ -232,6 +269,11 @@ class FileLogger extends AbstractLogger implements ConfigInterface
         $this->write();
     }
 
+    /**
+     * @param string $message
+     * @param array $context
+     * @return string
+     */
     public function interpolate(string $message, array $context)
     {
         $replace = [];

@@ -10,7 +10,7 @@ use suda\application\builder\ApplicationBuilder;
 
 
 defined('SUDA_SWOOLE_IP') or define('SUDA_SWOOLE_IP', '127.0.0.1');
-defined('SUDA_SWOOLE_PORT') or define('SUDA_SWOOLE_PORT', 8080);
+defined('SUDA_SWOOLE_PORT') or define('SUDA_SWOOLE_PORT', 9501);
 
 
 // 初始化系统加载器

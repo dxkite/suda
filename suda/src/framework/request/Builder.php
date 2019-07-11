@@ -43,7 +43,7 @@ class Builder
     public function build(RequestWrapper $request)
     {
         $request->setServer($this->server);
-        $request->setRemoteAddr($this->filterRemoteAddr());
+        $request->setRemoteAddr($this->parseRemoteAddr());
         $method = strtoupper($request->getServer('request-method', 'GET'));
         $request->setMethod($method);
         $request->setHost($this->getHttpHost());
@@ -58,9 +58,10 @@ class Builder
      *
      * @return string
      */
-    private function filterRemoteAddr():string
+    private function parseRemoteAddr():string
     {
         static $ipFrom = [
+            'http-x-real-ip', // For Nginx
             'http-client-ip',
             'http-x-forwarded-for',
             'http-x-forwarded',
@@ -72,22 +73,34 @@ class Builder
 
         foreach ($ipFrom as $key) {
             if (array_key_exists($key, $this->server)) {
-                foreach (explode(',', $this->server[$key]) as $ip) {
-                    $ip = trim($ip);
-                    if (filter_var(
-                        $ip,
-                        FILTER_VALIDATE_IP,
-                        FILTER_FLAG_IPV4
-                        | FILTER_FLAG_IPV6
-                        | FILTER_FLAG_NO_PRIV_RANGE
-                        | FILTER_FLAG_NO_RES_RANGE
-                    ) !== false) {
-                        return $ip;
-                    }
+                $ip = $this->parseIpAddress($this->server[$key]);
+                if ($ip !== null) {
+                    return $ip;
                 }
             }
         }
         return  '0.0.0.0';
+    }
+
+    /**
+     * 解析IP字段
+     * @param string $value
+     * @return string|null
+     */
+    private function parseIpAddress(string $value)
+    {
+        $ipPart = explode(',', $value);
+        $options = FILTER_FLAG_IPV4
+            | FILTER_FLAG_IPV6
+            | FILTER_FLAG_NO_PRIV_RANGE
+            | FILTER_FLAG_NO_RES_RANGE;
+        foreach ($ipPart as $ip) {
+            $ip = trim($ip);
+            if (filter_var($ip, FILTER_VALIDATE_IP, $options) !== false) {
+                return $ip;
+            }
+        }
+        return null;
     }
     
     /**

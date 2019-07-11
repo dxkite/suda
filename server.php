@@ -1,5 +1,5 @@
 <?php
-$host = $argv[1] ?? '127.0.0.1:8080';
+$host = $argv[1] ?? '127.0.0.1:9501';
 list($ip, $port) = explode(':', $host);
 
 define('SUDA_APP', __DIR__ . '/app');
