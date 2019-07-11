@@ -3,9 +3,12 @@
 
 namespace suda\swoole;
 
-
 use suda\framework\http\UploadedFile;
 
+/**
+ * Class Request
+ * @package suda\swoole
+ */
 class Request implements \suda\framework\http\Request
 {
 
@@ -19,6 +22,10 @@ class Request implements \suda\framework\http\Request
      */
     protected $files;
 
+    /**
+     * Request constructor.
+     * @param \Swoole\Http\Request $request
+     */
     public function __construct(\Swoole\Http\Request $request)
     {
         $this->request = $request;
@@ -103,7 +110,7 @@ class Request implements \suda\framework\http\Request
      */
     protected function buildFilesFromEnv()
     {
-        if(is_array($this->request->files))  {
+        if (is_array($this->request->files)) {
             foreach ($this->request->files as $name => $file) {
                 $this->files[$name] = new UploadedFile($file['tmp_name'], $file['name'], $file['type'], $file['error']);
             }
