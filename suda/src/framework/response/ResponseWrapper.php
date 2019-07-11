@@ -164,7 +164,7 @@ class ResponseWrapper implements Response
     private function sendWarningIfy(string $name)
     {
         if ($this->isSend()) {
-            trigger_error($name .'response has been send', E_USER_WARNING);
+            trigger_error($name .': response has been send', E_USER_WARNING);
         }
     }
 }
