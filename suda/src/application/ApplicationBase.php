@@ -39,12 +39,6 @@ class ApplicationBase extends ApplicationContext
      */
     protected $running;
 
-    /**
-     * 系统准备完成
-     *
-     * @var boolean
-     */
-    protected $isPrepared = false;
 
     /**
      * 创建应用

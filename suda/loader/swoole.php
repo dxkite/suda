@@ -26,28 +26,33 @@ $application->registerDebugger();
 
 // 不复制资源
 $application->config()->set('copy-static-source', false);
+// 文件日志记录
+$logger = new FileLogger(
+    [
+        'log-level' => SUDA_DEBUG_LEVEL,
+        'save-path' => $application->getDataPath() . '/logs',
+        'save-zip-path' => $application->getDataPath() . '/logs/zip',
+        'save-dump-path' => $application->getDataPath() . '/logs/dump',
+        'log-format' => '%message%',
+    ]
+);
+
 $http = new Server(SUDA_SWOOLE_IP, SUDA_SWOOLE_PORT);
 
-$http->on('request', function ($request, $response) use ($application) {
+$http->on('request', function ($request, $response) use ($application, $logger) {
     // 拷贝副本
     $runApplication = clone $application;
-    // 文件日志记录
-    $logger = new FileLogger(
-        [
-            'log-level' => SUDA_DEBUG_LEVEL,
-            'save-path' => $application->getDataPath() . '/logs',
-            'save-zip-path' => $application->getDataPath() . '/logs/zip',
-            'save-dump-path' => $application->getDataPath() . '/logs/dump',
-            'log-format' => '%message%',
-        ]
-    );
-    $runApplication->getDebug()->setLogger($logger);
+    $runLogger = clone $logger;
+    // 设置环境变量
+    $runApplication->getDebug()->setLogger($runLogger);
     $runApplication->getDebug()->applyConfig([
         'start-time' => microtime(true),
         'start-memory' => memory_get_usage(),
     ]);
+    // 运行
     $runApplication->run(new Request($request), new Response($response));
-    $logger->write();
+    // 写入日志
+    $runLogger->write();
 });
 
 $http->start();

@@ -86,6 +86,8 @@ class Debugger extends Debug
                     $handler($e['type'], $e['message'], $e['file'], $e['line']);
                 }
                 restore_error_handler();
+            } else {
+                $this->error($e['message'], ['exception' => $e]);
             }
         }
     }
@@ -113,31 +115,19 @@ class Debugger extends Debug
      */
     public function uncaughtError($errno, $errstr, $errfile, $errline)
     {
-        $severity =
-            1 * E_ERROR |
-            1 * E_WARNING |
-            0 * E_PARSE |
-            1 * E_NOTICE |
-            0 * E_CORE_ERROR |
-            1 * E_CORE_WARNING |
-            0 * E_COMPILE_ERROR |
-            1 * E_COMPILE_WARNING |
-            0 * E_USER_ERROR |
-            1 * E_USER_WARNING |
-            1 * E_USER_NOTICE |
-            0 * E_STRICT |
-            0 * E_RECOVERABLE_ERROR |
-            0 * E_DEPRECATED |
-            0 * E_USER_DEPRECATED;
+        $isFatalError = E_ERROR | E_PARSE | E_CORE_ERROR | E_CORE_WARNING | E_COMPILE_ERROR | E_COMPILE_WARNING;
         $exception = new ErrorException($errstr, $errno, $errno, $errfile, $errline);
-        if ($exception->getSeverity() & $severity === 0) {
-            throw $exception;
-        } else {
+        if ($exception->getSeverity() & $isFatalError === 0) {
             $exceptionHandler = set_exception_handler(null);
+            // 有上一级非默认处理器
             if ($exceptionHandler !== null) {
                 $exceptionHandler($exception);
+                restore_exception_handler();
+            } else {
+                throw $exception;
             }
-            restore_exception_handler();
+        } else {
+            $this->warning($errstr, ['exception' => $exception]);
         }
     }
 

@@ -53,7 +53,9 @@ class Event
      */
     public function add(string $name, $command)
     {
-        $this->queue[$name][] = $command;
+        if (!in_array($command, $this->queue[$name] ?? [])) {
+            $this->queue[$name][] = $command;
+        }
     }
 
     /**
@@ -66,7 +68,9 @@ class Event
     public function addTop(string $name, $command)
     {
         if (array_key_exists($name, $this->queue) && is_array($this->queue[$name])) {
-            array_unshift($this->queue[$name], $command);
+            if (!in_array($command, $this->queue[$name])) {
+                array_unshift($this->queue[$name], $command);
+            }
         } else {
             $this->add($name, $command);
         }

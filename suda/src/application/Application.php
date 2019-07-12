@@ -29,16 +29,24 @@ use suda\application\processor\TemplateRequestProcessor;
  */
 class Application extends ApplicationSource
 {
+    /**
+     * @var DebugDumper
+     */
+    protected $dumper;
+
+    /**
+     * Application constructor.
+     * @param string $path
+     * @param array $manifest
+     * @param Loader $loader
+     * @param string|null $dataPath
+     */
     public function __construct(string $path, array $manifest, Loader $loader, ?string $dataPath = null)
     {
         parent::__construct($path, $manifest, $loader, $dataPath);
         $this->event = new Event($this);
     }
 
-    /**
-     * @var DebugDumper
-     */
-    protected $dumper;
 
     /**
      * 准备运行环境
@@ -91,10 +99,7 @@ class Application extends ApplicationSource
             'request-time' => date('Y-m-d H:i:s', constant('SUDA_START_TIME')),
         ]);
 
-        if ($this->isPrepared === false) {
-            $this->load();
-            $this->isPrepared = true;
-        }
+        $this->load();
     }
 
     /**
