@@ -159,7 +159,7 @@ class ReadStatement extends QueryStatement
      */
     protected function whereArray(array $where, array $binders)
     {
-        list($where, $whereBinder) = $this->parepareWhere($where);
+        list($where, $whereBinder) = $this->prepareWhere($where);
         $this->whereStringArray($where, array_merge($whereBinder, $binders));
     }
 
@@ -183,7 +183,7 @@ class ReadStatement extends QueryStatement
      */
     public function groupBy(string $what)
     {
-        $this->groupBy = 'GROUP BY `' . $what.'`';
+        $this->groupBy = 'GROUP BY `' . $what . '`';
         return $this;
     }
 
@@ -214,7 +214,7 @@ class ReadStatement extends QueryStatement
      */
     protected function havingArray(array $want)
     {
-        list($having, $havingBinder) = $this->parepareWhere($want);
+        list($having, $havingBinder) = $this->prepareWhere($want);
         $this->havingStringArray($having, $havingBinder);
     }
 
@@ -225,7 +225,6 @@ class ReadStatement extends QueryStatement
      */
     protected function havingStringArray(string $having, array $havingBinder)
     {
-
         list($having, $havingBinder) = $this->prepareWhereString($having, $havingBinder);
         $this->having = 'HAVING ' . $having;
         $this->binder = $this->mergeBinder($this->binder, $havingBinder);

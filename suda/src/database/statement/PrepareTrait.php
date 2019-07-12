@@ -41,28 +41,77 @@ trait PrepareTrait
      * @return array
      * @throws SQLException
      */
-    protected function parepareWhere(array $where)
+    protected function prepareWhere(array $where)
     {
         $and = [];
         $binders = [];
         foreach ($where as $name => $value) {
-            $_name = Binder::index($name);
-            // in cause
-            if ($value instanceof ArrayObject) {
-                list($sql, $in_binder) = $this->prepareIn($name, $value);
-                $and[] = $sql;
-                $binders = array_merge($binders, $in_binder);
-            } elseif (is_array($value)) {
-                list($op, $val) = $value;
-                $op = trim($op);
-                $and[] = "`{$name}` {$op} :{$_name}";
-                $binders[] = new Binder($_name, $val);
-            } else {
-                $and[] = "`{$name}`=:{$_name}";
-                $binders[] = new Binder($_name, $value);
-            }
+            $query = $this->getQueryForArray($name, $value);
+            $and[] = $query->getQuery();
+            $binders  = array_merge($binders, $query->getBinder());
         }
         return [implode(' AND ', $and), $binders];
+    }
+
+    /**
+     * @param string $name
+     * @param $value
+     * @return Query
+     * @throws SQLException
+     */
+    private function getQueryForArray(string $name, $value)
+    {
+        if ($value instanceof ArrayObject) {
+            return $this->prepareIn($name, $value);
+        } elseif (is_array($value)) {
+            list($op, $val) = $value;
+            $op = trim($op);
+            return $this->createQueryOperation($name, $op, $val);
+        } else {
+            return $this->createQueryOperation($name, '=', $value);
+        }
+    }
+
+    /**
+     * @param string $name
+     * @param string $operation
+     * @param string $indexName
+     * @param mixed $value
+     * @return Query
+     */
+    private function createQueryOperation(string $name, string $operation, $value, string $indexName = '')
+    {
+        if ($value instanceof Query) {
+            return new Query("`{$name}` {$operation} ".$value, $value->getBinder());
+        }
+        if ($value instanceof Statement) {
+            return new Query("`{$name}` {$operation} (".$value->getQuery().')', $value->getBinder());
+        }
+        if (strlen($indexName) === 0) {
+            $indexName = Binder::index($name);
+        }
+        return new Query("`{$name}` {$operation} :{$indexName}", [new Binder($indexName, $value)]);
+    }
+
+    /**
+     * @param string $where
+     * @param string $name
+     * @param $value
+     * @return Query
+     * @throws SQLException
+     */
+    private function getQueryForString(string $where, string $name, $value)
+    {
+        if (is_array($value) || $value instanceof ArrayObject) {
+            list($inSQL, $binders) = $this->prepareInParameter($value, $name);
+            $name = ltrim($name, ':');
+            $where = str_replace(':'.$name, $inSQL, $where);
+            return new Query($where, $binders);
+        } elseif ($value instanceof  Binder) {
+            return new Query($where, [$value]);
+        } else {
+            return new Query($where, [new Binder($name, $value)]);
+        }
     }
 
     /**
@@ -75,16 +124,9 @@ trait PrepareTrait
     {
         $newWhereBinder = [];
         foreach ($whereBinder as $name => $value) {
-            if (is_array($value) || $value instanceof ArrayObject) {
-                list($inSQL, $binders) = $this->prepareInParameter($value, $name);
-                $newWhereBinder = array_merge($newWhereBinder, $binders);
-                $name = ltrim($name, ':');
-                $where = str_replace(':'.$name, $inSQL, $where);
-            } elseif ($value instanceof  Binder) {
-                $newWhereBinder[] = $value;
-            } else {
-                $newWhereBinder[] = new Binder($name, $value);
-            }
+            $query = $this->getQueryForString($where, $name, $value);
+            $where = $query->getQuery();
+            $newWhereBinder = array_merge($newWhereBinder, $query->getBinder());
         }
         return [$where, $newWhereBinder];
     }
@@ -94,19 +136,22 @@ trait PrepareTrait
      * 准备In
      *
      * @param string $name
-     * @param ArrayObject|array $values
-     * @return array
+     * @param ArrayObject|array|Query|Statement $values
+     * @return Query
      * @throws SQLException
      */
     protected function prepareIn(string $name, $values)
     {
+        if ($values instanceof Query || $values instanceof Statement) {
+            return $this->createQueryOperation($name, 'in', $values);
+        }
         list($inSQL, $binders) = $this->prepareInParameter($values, $name);
         $sql = '`'.$name.'` IN ('.$inSQL.')';
-        return [$sql,$binders];
+        return new Query($sql, $binders);
     }
 
     /**
-     * @param $values
+     * @param ArrayObject|array $values
      * @param string $name
      * @return array
      * @throws SQLException

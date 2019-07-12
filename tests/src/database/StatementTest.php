@@ -55,17 +55,17 @@ class StatementTest extends TestCase
         );
 
         $this->assertEquals(
-            'SELECT `id`,`name` FROM user_table WHERE `id`=:_id_0',
+            'SELECT `id`,`name` FROM user_table WHERE `id` = :_id_0',
             $table->read('id', 'name')->where(['id' => 1])->getString()
         );
 
         $this->assertEquals(
-            'SELECT `id`,`name` FROM user_table WHERE `id`=:_id_1 LIMIT 0,10',
+            'SELECT `id`,`name` FROM user_table WHERE `id` = :_id_1 LIMIT 0,10',
             $table->read('id', 'name')->where(['id' => 1])->page(1, 10)->getString()
         );
 
         $this->assertEquals(
-            'SELECT `id`,`name` FROM user_table WHERE `id`=:_id_2 HAVING `name`=:_name_3 LIMIT 0,10',
+            'SELECT `id`,`name` FROM user_table WHERE `id` = :_id_2 HAVING `name` = :_name_3 LIMIT 0,10',
             $table->read('id', 'name')->where(['id' => 1])->page(1, 10)->having(['name' => 'dxkite'])->getString()
         );
 
@@ -142,7 +142,7 @@ class StatementTest extends TestCase
 
         $whereIn = $table->write('id = id + 1')->where(['name' => 'dxkite']);
         $this->assertEquals(
-            'UPDATE user_table SET id = id + 1 WHERE `name`=:_name_31',
+            'UPDATE user_table SET id = id + 1 WHERE `name` = :_name_31',
             $whereIn->getString()
         );
 
@@ -150,6 +150,17 @@ class StatementTest extends TestCase
             'SELECT `id`,`name` FROM user_table WHERE `id` IN (:_id_32,:_id_33) GROUP BY `name` HAVING name like :_0_34 ORDER BY `id` DESC,`name` ASC LIMIT 0,10',
             $table->read('id', 'name')
                 ->where(['id' => new ArrayObject([ 1, 2])])
+                ->page(1, 10)
+                ->having('name like ?', 'dxkite')
+                ->groupBy('name')
+                ->orderBy('id','desc')
+                ->orderBy('name','asc')->getString()
+        );
+
+        $this->assertEquals(
+            'SELECT `id`,`name` FROM user_table WHERE `id` = (SELECT `id` FROM user_table WHERE `id` > :val) GROUP BY `name` HAVING name like :_0_36 ORDER BY `id` DESC,`name` ASC LIMIT 0,10',
+            $table->read('id', 'name')
+                ->where(['id' => new QueryStatement('SELECT `id` FROM user_table WHERE `id` > :val', ['val' => 100])])
                 ->page(1, 10)
                 ->having('name like ?', 'dxkite')
                 ->groupBy('name')

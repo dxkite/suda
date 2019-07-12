@@ -1,4 +1,5 @@
 <?php
+
 namespace suda\database\struct;
 
 use suda\database\exception\SQLException;
@@ -33,10 +34,18 @@ class ReadStatement extends \suda\database\statement\ReadStatement
      */
     public function one(?string $class = null, array $args = [])
     {
-        if ($this->isScroll() === false && strlen($this->limit) === 0) {
+        if ($this->isScroll() === false && $this->hasLimit() === false) {
             $this->limit(0, 1);
         }
         return $this->access->run($this->wantOne($class, $args));
+    }
+
+    /**
+     * @return bool
+     */
+    private function hasLimit()
+    {
+        return strlen($this->limit) > 0;
     }
 
     /**
@@ -47,7 +56,7 @@ class ReadStatement extends \suda\database\statement\ReadStatement
      * @return array
      * @throws SQLException
      */
-    public function all(?string $class = null, array $args = []):array
+    public function all(?string $class = null, array $args = []): array
     {
         return $this->access->run($this->wantAll($class, $args));
     }
@@ -73,7 +82,7 @@ class ReadStatement extends \suda\database\statement\ReadStatement
      * @return array
      * @throws SQLException
      */
-    public function fetchAll(?string $class = null, array $args = []):array
+    public function fetchAll(?string $class = null, array $args = []): array
     {
         return $this->all($class, $args);
     }
@@ -83,7 +92,7 @@ class ReadStatement extends \suda\database\statement\ReadStatement
      *
      * @return  TableAccess
      */
-    public function getAccess():TableAccess
+    public function getAccess(): TableAccess
     {
         return $this->access;
     }
