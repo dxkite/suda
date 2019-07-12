@@ -1,4 +1,5 @@
 <?php
+
 namespace suda\framework\filesystem;
 
 use function dirname;
@@ -19,10 +20,10 @@ class FileSystem implements FileSystemInterface
         copy as copyDir;
     }
 
-    use FileHelper  {
-       delete as protected deleteFile;
-       FileHelper::copy insteadof DirectoryHelper;
-       FileHelper::move insteadof DirectoryHelper;
+    use FileHelper {
+        delete as protected deleteFile;
+        FileHelper::copy insteadof DirectoryHelper;
+        FileHelper::move insteadof DirectoryHelper;
     }
 
     /**
@@ -34,9 +35,9 @@ class FileSystem implements FileSystemInterface
      */
     public static function isOverflowPath(string $root, string $target)
     {
-        $abslute = PathTrait::toAbsolutePath($target);
+        $absolute = PathTrait::toAbsolutePath($target);
         $root = PathTrait::toAbsolutePath($root);
-        return strpos($abslute, $root.DIRECTORY_SEPARATOR) !== 0;
+        return strpos($absolute, $root . DIRECTORY_SEPARATOR) !== 0;
     }
 
     /**
@@ -45,7 +46,7 @@ class FileSystem implements FileSystemInterface
      * @param string $path
      * @return boolean
      */
-    public static function delete(string $path):bool
+    public static function delete(string $path): bool
     {
         if (($path = Path::format($path)) !== null) {
             if (is_file($path)) {
@@ -65,7 +66,7 @@ class FileSystem implements FileSystemInterface
      * @param string $path
      * @return boolean
      */
-    public static function isWritable(string $path):bool
+    public static function isWritable(string $path): bool
     {
         if (static::exist($path) === false) {
             return static::isWritable(dirname($path));
@@ -73,7 +74,7 @@ class FileSystem implements FileSystemInterface
         return static::tryCheckWritable($path);
     }
 
-    protected static function tryCheckWritable(string $path):bool
+    protected static function tryCheckWritable(string $path): bool
     {
         $writable = false;
         set_error_handler(null);
@@ -99,7 +100,7 @@ class FileSystem implements FileSystemInterface
 
     protected static function tryWriteDirectory(string $path): bool
     {
-        $path = rtrim($path, '/').'/'.md5(mt_rand(1, 100).mt_rand(1, 100));
+        $path = rtrim($path, '/') . '/' . md5(mt_rand(1, 100) . mt_rand(1, 100));
         if (($fp = fopen($path, 'ab')) === false) {
             return false;
         }

@@ -23,7 +23,7 @@ trait DirectoryHelper
      */
     public static function make(string $path, int $mode = 0777, bool $recursive = true):bool
     {
-        if (!is_dir($path)) {
+        if (!file_exists($path)) {
             $mk = mkdir($path, $mode, $recursive);
             if ($mk) {
                 chmod($path, $mode);

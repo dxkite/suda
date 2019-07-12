@@ -225,11 +225,11 @@ class FileLogger extends AbstractLogger implements ConfigInterface
                 file_put_contents($this->latest, $body, FILE_APPEND);
             }
             fclose($this->temp);
-            $this->temp = null;
-            if ($this->tempName !== null) {
-                unlink($this->tempName);
-                $this->tempName = null;
+            if (file_exists($this->tempName)) {
+                @unlink($this->tempName);
             }
+            $this->temp = null;
+            $this->tempName = null;
         }
     }
 
@@ -240,7 +240,7 @@ class FileLogger extends AbstractLogger implements ConfigInterface
     {
         foreach ($this->removeFiles as $file) {
             if (is_file($file) && file_exists($file)) {
-                unlink($file);
+                @unlink($file);
             }
         }
         $this->removeFiles = [];

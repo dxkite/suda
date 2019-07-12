@@ -108,8 +108,8 @@ class Application extends ApplicationSource
     /**
      * 运行程序
      *
-     * @param Request $request
-     * @param Response $response
+     * @param RequestInterface $request
+     * @param ResponseInterface $response
      */
     public function run(RequestInterface $request, ResponseInterface $response)
     {
