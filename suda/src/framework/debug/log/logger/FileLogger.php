@@ -69,9 +69,9 @@ class FileLogger extends FileLoggerBase
     {
         if ($this->checkSize()) {
             $this->packLogFile();
+            $this->removePackFiles();
         }
         $this->rollLatest();
-        $this->removePackFiles();
     }
 
     /**

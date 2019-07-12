@@ -77,6 +77,9 @@ abstract class FileLoggerBase extends AbstractLogger implements ConfigInterface
     protected function checkSize(): bool
     {
         $logFile = $this->latest;
+        if ($this->getConfig('max-file-size') == 0) {
+            return false;
+        }
         if (file_exists($logFile)) {
             if (filesize($logFile) > $this->getConfig('max-file-size')) {
                 return true;
