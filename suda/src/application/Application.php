@@ -256,4 +256,10 @@ class Application extends ApplicationSource
         }
         return new Template($this->getModuleSourceName($name, $default), $this, $request, $default);
     }
+
+    public function __clone()
+    {
+        $this->event = clone $this->event;
+        $this->loader = clone $this->loader;
+    }
 }
