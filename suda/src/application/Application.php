@@ -259,6 +259,7 @@ class Application extends ApplicationSource
 
     public function __clone()
     {
+        $this->config = clone $this->config;
         $this->event = clone $this->event;
         $this->loader = clone $this->loader;
     }

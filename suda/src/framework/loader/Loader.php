@@ -19,6 +19,13 @@ class Loader extends IncludeManager
         spl_autoload_register(array($this, 'classLoader'));
     }
 
+    /**
+     * 取消注册自己作为加载器
+     */
+    public function unregister()
+    {
+        spl_autoload_unregister(array($this, 'classLoader'));
+    }
 
     /**
      * 自动类加载器

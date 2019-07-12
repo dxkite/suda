@@ -17,13 +17,10 @@ defined('SUDA_SWOOLE_PORT') or define('SUDA_SWOOLE_PORT', 9501);
 $loader = new Loader;
 $loader->register();
 $loader->addIncludePath(SUDA_SYSTEM . '/src', 'suda');
-
 // 创建应用
 $application = ApplicationBuilder::build($loader, SUDA_APP, SUDA_APP_MANIFEST, SUDA_DATA);
-
 // 注册Debug工具
 $application->registerDebugger();
-
 // 不复制资源
 $application->config()->set('copy-static-source', false);
 // 文件日志记录
@@ -39,6 +36,10 @@ $logger = new FileLogger(
 
 $http = new Server(SUDA_SWOOLE_IP, SUDA_SWOOLE_PORT);
 
+$http->set([
+    'log_file' => $logger->getConfig('save-dump-path').'/swoole.log',
+]);
+
 $http->on('request', function ($request, $response) use ($application, $logger) {
     // 拷贝副本
     $runApplication = clone $application;
@@ -49,12 +50,14 @@ $http->on('request', function ($request, $response) use ($application, $logger) 
         'start-time' => microtime(true),
         'start-memory' => memory_get_usage(),
     ]);
+    // 注册自动加载副本
+    $runApplication->getLoader()->register();
     // 运行
     $runApplication->run(new Request($request), new Response($response));
     // 写入日志
     $runLogger->write();
+    // 取消自动加载副本
+    $runApplication->getLoader()->unregister();
 });
 
 $http->start();
-
-
