@@ -89,9 +89,9 @@ class FileLogger extends AbstractLogger implements ConfigInterface
      */
     private function prepareWrite()
     {
-        $msec = explode('.', microtime(true))[1];
+        $unique = uniqid();
         $save = $this->getConfig('save-path');
-        $this->tempName = $save . '/' . date('YmdHis') . '.' . $msec . '.log';
+        $this->tempName = $save . '/' . date('YmdHis') . '.' . $unique . '.log';
         $temp = fopen($this->tempName, 'w+');
         if ($temp !== false) {
             $this->temp = $temp;
@@ -218,16 +218,17 @@ class FileLogger extends AbstractLogger implements ConfigInterface
     private function rollLatest()
     {
         if (isset($this->latest)) {
-            $size = ftell($this->temp);
-            fseek($this->temp, 0);
-            if ($size > 0) {
-                $body = fread($this->temp, $size);
-                file_put_contents($this->latest, $body, FILE_APPEND);
+            $latest = fopen($this->latest, 'a+');
+            if (flock($latest, LOCK_EX)) {
+                rewind($this->temp);
+                stream_copy_to_stream($this->temp, $latest);
+                flock($latest, LOCK_UN);
+                if (file_exists($this->tempName)) {
+                    unlink($this->tempName);
+                }
             }
+            fclose($latest);
             fclose($this->temp);
-            if (file_exists($this->tempName)) {
-                @unlink($this->tempName);
-            }
             $this->temp = null;
             $this->tempName = null;
         }
@@ -240,7 +241,7 @@ class FileLogger extends AbstractLogger implements ConfigInterface
     {
         foreach ($this->removeFiles as $file) {
             if (is_file($file) && file_exists($file)) {
-                @unlink($file);
+                unlink($file);
             }
         }
         $this->removeFiles = [];
