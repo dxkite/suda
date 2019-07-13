@@ -53,6 +53,29 @@ class QueryStatement extends \suda\database\statement\QueryStatement
     }
 
     /**
+     * 取一列
+     * @param string $name
+     * @param mixed $default
+     * @return mixed
+     * @throws SQLException
+     */
+    public function field(string $name, $default = null) {
+        $row = $this->one();
+        return $row[$name] ?? $default;
+    }
+
+    /**
+     * 取数组的一列
+     * @param string $name
+     * @return array
+     * @throws SQLException
+     */
+    public function allField(string $name)  {
+        $row = $this->all();
+        return array_column($row, $name);
+    }
+
+    /**
      * 取1
      *
      * @param string|null $class
