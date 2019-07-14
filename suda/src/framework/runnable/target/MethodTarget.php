@@ -8,6 +8,7 @@ use function is_object;
 use ReflectionClass;
 use ReflectionException;
 use ReflectionMethod;
+use RuntimeException;
 use function str_replace;
 
 /**
@@ -140,22 +141,25 @@ class MethodTarget extends FileTarget
      *
      * @param array $parameter
      * @return mixed
-     * @throws ReflectionException
      */
     public function apply(array $parameter)
     {
-        $runnable = $this->getRunnableTarget();
-        $method = new ReflectionMethod($runnable[0], $runnable[1]);
-        if (!$method->isPublic()) {
-            $method->setAccessible(true);
-        }
-        if (count($parameter) == 0) {
-            $parameter = $this->getParameter();
-        }
-        if (is_object($runnable[0])) {
-            return $method->invokeArgs($runnable[0], $parameter);
-        } else {
-            return $method->invokeArgs(null, $parameter);
+        try {
+            $runnable = $this->getRunnableTarget();
+            $method = new ReflectionMethod($runnable[0], $runnable[1]);
+            if (!$method->isPublic()) {
+                $method->setAccessible(true);
+            }
+            if (count($parameter) == 0) {
+                $parameter = $this->getParameter();
+            }
+            if (is_object($runnable[0])) {
+                return $method->invokeArgs($runnable[0], $parameter);
+            } else {
+                return $method->invokeArgs(null, $parameter);
+            }
+        } catch (ReflectionException $e) {
+            throw new RuntimeException(''.$this->getName().' not executable: '.$e->getMessage(), $e->getCode(), $e);
         }
     }
 

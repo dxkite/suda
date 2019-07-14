@@ -2,6 +2,7 @@
 namespace suda\framework;
 
 use Exception;
+use suda\application\Application;
 use suda\framework\http\Cookie;
 use suda\framework\http\Stream;
 use suda\framework\http\stream\DataStream;
@@ -20,6 +21,11 @@ class Response extends ResponseWrapper
     protected $wrapper;
 
     /**
+     * @var Application
+     */
+    private $application;
+    
+    /**
      * 响应数据
      *
      * @var Stream|string
@@ -27,10 +33,11 @@ class Response extends ResponseWrapper
     protected $data;
 
 
-    public function __construct(ResponseInterface $response)
+    public function __construct(ResponseInterface $response, Application $application)
     {
         parent::__construct($response);
         $this->wrapper = new ContentWrapper;
+        $this->application = $application;
     }
 
     /**
@@ -76,29 +83,6 @@ class Response extends ResponseWrapper
         return $this;
     }
 
-    /**
-     * 发送文件内容
-     *
-     * @param string $filename
-     * @param integer $offset
-     * @param integer $length
-     * @return void
-     * @throws Exception
-     */
-    public function sendFile(string $filename, int $offset = 0, int $length = null)
-    {
-        $data = new DataStream($filename, $offset, $length);
-        $this->setHeader('content-length', $data->length());
-        $this->response->sendFile($filename, $offset, $length);
-    }
-
-    /**
-     * 发送缓存的内容
-     */
-    public function end()
-    {
-        $this->sendContent($this->data);
-    }
 
     /**
      * 发送内容数据
@@ -176,6 +160,61 @@ class Response extends ResponseWrapper
         }
         $this->sendContentLength($this->data);
         $this->send($this->data);
+    }
+
+
+    /**
+     * 发送文件内容
+     *
+     * @param string $filename
+     * @param integer $offset
+     * @param integer $length
+     * @return void
+     * @throws Exception
+     */
+    public function sendFile(string $filename, int $offset = 0, int $length = null)
+    {
+        $this->triggerSendEvent();
+        $data = new DataStream($filename, $offset, $length);
+        $this->setHeader('content-length', $data->length());
+        $this->response->sendFile($filename, $offset, $length);
+    }
+
+    /**
+     * @param string $url
+     * @param int $httpCode
+     */
+    public function redirect(string $url, int $httpCode = 302)
+    {
+        $this->triggerSendEvent();
+        parent::redirect($url, $httpCode);
+    }
+
+    /**
+     * 发送缓存的内容
+     */
+    public function end()
+    {
+        $this->sendContent($this->data);
+    }
+
+    /**
+     * @param string|Stream $data
+     */
+    public function send($data)
+    {
+        $this->triggerSendEvent();
+        parent::send($data);
+    }
+
+    /**
+     * 出发发送内容事件
+     */
+    private function triggerSendEvent()
+    {
+        if ($this->isSend() === false) {
+            $this->application->event()->exec('response::before-send', [$this]);
+        }
     }
 
     /**

@@ -10,7 +10,9 @@ use suda\framework\Response;
 use suda\framework\filesystem\FileSystem;
 
 /**
- * Session 接口
+ * PHP Session
+ * 
+ * Swoole 需要手动写入 `session_write_close`
  */
 class PHPSession implements Session
 {
@@ -73,7 +75,7 @@ class PHPSession implements Session
 
         if (is_string($id = $request->getCookie($name))) {
             session_id($id);
-        }else{
+        } else {
             $id = md5($path.$request->getRemoteAddr().uniqid());
             session_id($id);
         }

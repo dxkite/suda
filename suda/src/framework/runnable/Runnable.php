@@ -88,7 +88,6 @@ class Runnable
      *
      * @param array $parameter
      * @return mixed
-     * @throws ReflectionException
      */
     public function apply(array $parameter)
     {

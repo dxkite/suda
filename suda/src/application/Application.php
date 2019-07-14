@@ -119,7 +119,7 @@ class Application extends ApplicationSource
     public function run(RequestInterface $request, ResponseInterface $response)
     {
         $appRequest = new Request($request);
-        $appResponse = new Response($response);
+        $appResponse = new Response($response, $this);
 
         try {
             $this->prepare($appRequest, $appResponse);

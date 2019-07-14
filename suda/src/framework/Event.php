@@ -2,7 +2,6 @@
 
 namespace suda\framework;
 
-use ReflectionException;
 use suda\framework\runnable\Runnable;
 
 class Event
@@ -100,7 +99,6 @@ class Event
      * @param string $name
      * @param array $args
      * @return void
-     * @throws ReflectionException
      */
     public function exec(string $name, array $args = [])
     {
@@ -118,7 +116,6 @@ class Event
      * @param mixed $value
      * @param array $args
      * @return mixed
-     * @throws ReflectionException
      */
     public function process(string $name, $value, array $args = [])
     {
@@ -139,7 +136,6 @@ class Event
      * @param array $args
      * @param mixed $condition
      * @return boolean
-     * @throws ReflectionException
      */
     public function next(string $name, array $args = [], $condition = true): bool
     {
@@ -161,7 +157,6 @@ class Event
      * @param string $name
      * @param array $args
      * @return mixed
-     * @throws ReflectionException
      */
     public function execFirst(string $name, array $args = [])
     {
@@ -177,7 +172,6 @@ class Event
      * @param string $name
      * @param array $args
      * @return mixed
-     * @throws ReflectionException
      */
     public function execLast(string $name, array $args = [])
     {
@@ -194,7 +188,6 @@ class Event
      * @param mixed $command
      * @param array $args
      * @return mixed
-     * @throws ReflectionException
      */
     protected function call(string $event, $command, array &$args)
     {
