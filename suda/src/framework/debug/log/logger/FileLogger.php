@@ -2,14 +2,8 @@
 
 namespace suda\framework\debug\log\logger;
 
-use ZipArchive;
-use RecursiveIteratorIterator;
-use RecursiveDirectoryIterator;
-use suda\framework\debug\ConfigTrait;
 use suda\framework\debug\log\LogLevel;
-use suda\framework\debug\ConfigInterface;
 use suda\framework\filesystem\FileSystem;
-use suda\framework\debug\log\AbstractLogger;
 use suda\framework\debug\log\logger\exception\FileLoggerException;
 
 /**

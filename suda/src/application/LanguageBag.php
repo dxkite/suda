@@ -29,7 +29,7 @@ class LanguageBag
      * @param mixed ...$args
      * @return string
      */
-    public  function interpolate(?string $message, ...$args)
+    public function interpolate(?string $message, ...$args)
     {
         $message = trim($message);
         if (array_key_exists($message, $this->locales)) {

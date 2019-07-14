@@ -1,9 +1,8 @@
 <?php
 namespace suda\framework\http;
 
-use Exception;
-use function header as send_header;
 use RuntimeException;
+use function header as send_header;
 use suda\framework\http\stream\DataStream;
 
 /**

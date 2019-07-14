@@ -4,7 +4,6 @@ namespace suda\database\struct;
 use suda\database\exception\SQLException;
 use suda\database\statement\QueryAccess;
 
-
 class QueryStatement extends \suda\database\statement\QueryStatement
 {
     /**
@@ -59,7 +58,8 @@ class QueryStatement extends \suda\database\statement\QueryStatement
      * @return mixed
      * @throws SQLException
      */
-    public function field(string $name, $default = null) {
+    public function field(string $name, $default = null)
+    {
         $row = $this->one();
         return $row[$name] ?? $default;
     }
@@ -70,7 +70,8 @@ class QueryStatement extends \suda\database\statement\QueryStatement
      * @return array
      * @throws SQLException
      */
-    public function allField(string $name)  {
+    public function allField(string $name)
+    {
         $row = $this->all();
         return array_column($row, $name);
     }

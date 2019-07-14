@@ -3,19 +3,12 @@
 namespace suda\application\processor;
 
 use Exception;
-use function explode;
-use function is_array;
-use function md5;
-use function rtrim;
 use SplFileObject;
-use function strpos;
-use function substr;
 use suda\framework\Request;
 use suda\framework\Response;
 use suda\application\Application;
 use suda\framework\response\MimeType;
 use suda\framework\http\stream\DataStream;
-use function uniqid;
 
 /**
  * 响应

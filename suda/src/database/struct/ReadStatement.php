@@ -47,7 +47,8 @@ class ReadStatement extends \suda\database\statement\ReadStatement
      * @return mixed
      * @throws SQLException
      */
-    public function field(string $name, $default = null) {
+    public function field(string $name, $default = null)
+    {
         $row = $this->one();
         return $row[$name] ?? $default;
     }
@@ -58,7 +59,8 @@ class ReadStatement extends \suda\database\statement\ReadStatement
      * @return array
      * @throws SQLException
      */
-    public function allField(string $name)  {
+    public function allField(string $name)
+    {
         $row = $this->all();
         return array_column($row, $name);
     }

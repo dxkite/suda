@@ -93,7 +93,8 @@ class UploadedFile
      *
      * @return string
      */
-    public function getTempname() {
+    public function getTempname()
+    {
         return $this->tempname;
     }
 }

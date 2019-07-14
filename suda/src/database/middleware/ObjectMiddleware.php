@@ -56,10 +56,10 @@ class ObjectMiddleware extends NullMiddleware
     public function input(string $name, $data)
     {
         if (array_key_exists($name, $this->processor)) {
-            if ($this->processor[$name] === ObjectMiddleware::SERIALIZE){
+            if ($this->processor[$name] === ObjectMiddleware::SERIALIZE) {
                 return $data === null? $data : serialize($data);
             }
-            if ($this->processor[$name] === ObjectMiddleware::JSON){
+            if ($this->processor[$name] === ObjectMiddleware::JSON) {
                 return json_encode($data);
             }
         }
@@ -76,10 +76,10 @@ class ObjectMiddleware extends NullMiddleware
     public function output(string $name, $data)
     {
         if (array_key_exists($name, $this->processor)) {
-            if ($this->processor[$name] === ObjectMiddleware::SERIALIZE){
+            if ($this->processor[$name] === ObjectMiddleware::SERIALIZE) {
                 return unserialize($data) ?: null;
             }
-            if ($this->processor[$name] === ObjectMiddleware::JSON){
+            if ($this->processor[$name] === ObjectMiddleware::JSON) {
                 return json_decode($data);
             }
         }

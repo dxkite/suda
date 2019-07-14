@@ -1,14 +1,11 @@
 <?php
 namespace suda\application\template;
 
-use Exception;
-use function in_array;
-use suda\application\Resource;
 use suda\framework\Request;
-use suda\application\Resource as ApplicationResource;
 use suda\application\Application;
 use suda\framework\filesystem\FileSystem;
 use suda\application\template\compiler\Compiler;
+use suda\application\Resource as ApplicationResource;
 
 /**
  * 模块模板

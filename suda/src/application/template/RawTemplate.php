@@ -4,12 +4,10 @@ namespace suda\application\template;
 
 use Exception;
 use function extract;
-use function ob_get_clean;
 use ReflectionException;
-use suda\application\Resource;
+use suda\framework\runnable\Runnable;
 use suda\framework\arrayobject\ArrayDotAccess;
 use suda\application\exception\NoTemplateFoundException;
-use suda\framework\runnable\Runnable;
 
 /**
  * 原始PHP模板
@@ -129,7 +127,6 @@ class RawTemplate
      * @param string $name
      * @param mixed ...$args
      * @return mixed
-     * @throws ReflectionException
      */
     public function call(string $name, ...$args)
     {

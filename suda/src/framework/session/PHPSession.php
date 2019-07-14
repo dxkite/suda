@@ -1,8 +1,6 @@
 <?php
 namespace suda\framework\session;
 
-use function array_key_exists;
-use function defined;
 use Exception;
 use suda\framework\Request;
 use suda\framework\Session;
@@ -11,7 +9,7 @@ use suda\framework\filesystem\FileSystem;
 
 /**
  * PHP Session
- * 
+ *
  * Swoole 需要手动写入 `session_write_close`
  */
 class PHPSession implements Session

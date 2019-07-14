@@ -4,7 +4,7 @@ namespace suda\framework\debug\attach;
 /**
  * 多行附加属性
  */
-interface AttachValueInterface 
+interface AttachValueInterface
 {
     public function getLogAttach():string;
 }

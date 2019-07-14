@@ -370,7 +370,7 @@ abstract class Connection
      * @param string $query
      * @return string
      */
-    public function prefix( string $query):string
+    public function prefix(string $query):string
     {
         // _:table 前缀控制
         $prefix = $this->getConfig('prefix', '');

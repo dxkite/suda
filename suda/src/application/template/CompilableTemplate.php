@@ -3,9 +3,7 @@
 namespace suda\application\template;
 
 use Exception;
-use ReflectionException;
 use suda\application\Resource;
-use suda\framework\runnable\Runnable;
 use suda\framework\filesystem\FileSystem;
 use suda\application\template\compiler\Compiler;
 use suda\application\exception\NoTemplateFoundException;

@@ -4,8 +4,8 @@ namespace suda\application\template;
 
 use Exception;
 use ReflectionException;
-use suda\application\template\compiler\Compiler;
 use suda\framework\filesystem\FileSystem;
+use suda\application\template\compiler\Compiler;
 
 /**
  * 模块模板
@@ -82,7 +82,6 @@ class ModuleTemplate extends ModuleTemplateBase
 
     /**
      * @return Compiler
-     * @throws ReflectionException
      */
     protected function createCompiler(): Compiler
     {

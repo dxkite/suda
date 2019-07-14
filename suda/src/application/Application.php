@@ -53,7 +53,6 @@ class Application extends ApplicationSource
      *
      * @return void
      * @throws SQLException
-     * @throws ReflectionException
      */
     public function load()
     {
@@ -80,7 +79,6 @@ class Application extends ApplicationSource
      * @param Request $request
      * @param Response $response
      * @throws SQLException
-     * @throws ReflectionException
      */
     protected function prepare(Request $request, Response $response)
     {
@@ -221,7 +219,6 @@ class Application extends ApplicationSource
      * @param Request $request
      * @param Response $response
      * @return mixed
-     * @throws ReflectionException
      */
     protected function runResult(MatchResult $result, Request $request, Response $response)
     {

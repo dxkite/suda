@@ -4,7 +4,7 @@ namespace suda\database\struct;
 use ArrayIterator;
 use InvalidArgumentException;
 
-trait ArrayDataTrait  
+trait ArrayDataTrait
 {
     use MagicArrayAccessTrait;
 

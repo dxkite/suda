@@ -6,7 +6,7 @@ use Throwable;
 /**
  * 多行附加属性
  */
-interface DumpInterface 
+interface DumpInterface
 {
     public static function parameterToString($object, int $deep=2);
     public static function dumpThrowable(Throwable $e);

@@ -4,12 +4,10 @@ namespace suda\framework\filesystem;
 use Iterator;
 use RecursiveIteratorIterator;
 
-
-
 /**
  * 文件辅助函数
  */
-interface FileSystemInterface 
+interface FileSystemInterface
 {
     /**
      * 判断文件是否存在
@@ -33,7 +31,7 @@ interface FileSystemInterface
      * @param string $src
      * @param string $dest
      * @return boolean
-     */    
+     */
     public static function move(string $src, string $dest):bool;
 
     /**

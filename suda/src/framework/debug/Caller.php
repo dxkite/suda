@@ -29,7 +29,8 @@ class Caller
         return null;
     }
 
-    protected function isIgnore(string $file):bool {
+    protected function isIgnore(string $file):bool
+    {
         foreach ($this->ignorePath as $path) {
             if (strpos($file, $path) === 0) {
                 return true;

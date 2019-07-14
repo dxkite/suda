@@ -76,7 +76,6 @@ class Runnable
      *
      * @param mixed ...$args
      * @return mixed
-     * @throws ReflectionException
      */
     public function run(...$args)
     {
@@ -99,7 +98,6 @@ class Runnable
      *
      * @param mixed ...$args
      * @return mixed
-     * @throws ReflectionException
      */
     public function __invoke(...$args)
     {
