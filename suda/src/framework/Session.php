@@ -61,7 +61,7 @@ interface Session
      *
      * @return boolean
      */
-    public function destory():bool;
+    public function destroy():bool;
 
     /**
      * 更新SessionId

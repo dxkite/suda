@@ -2,7 +2,6 @@
 namespace suda\framework;
 
 use Exception;
-use suda\application\Application;
 use suda\framework\http\Cookie;
 use suda\framework\http\Stream;
 use suda\framework\http\stream\DataStream;
@@ -21,9 +20,9 @@ class Response extends ResponseWrapper
     protected $wrapper;
 
     /**
-     * @var Application
+     * @var Context
      */
-    private $application;
+    private $context;
     
     /**
      * 响应数据
@@ -33,11 +32,11 @@ class Response extends ResponseWrapper
     protected $data;
 
 
-    public function __construct(ResponseInterface $response, Application $application)
+    public function __construct(ResponseInterface $response, Context $context)
     {
         parent::__construct($response);
         $this->wrapper = new ContentWrapper;
-        $this->application = $application;
+        $this->context = $context;
     }
 
     /**
@@ -213,8 +212,24 @@ class Response extends ResponseWrapper
     private function triggerSendEvent()
     {
         if ($this->isSend() === false) {
-            $this->application->event()->exec('response::before-send', [$this]);
+            $this->context->event()->exec('response::before-send', [$this]);
         }
+    }
+
+    /**
+     * @return Context
+     */
+    public function getContext(): Context
+    {
+        return $this->context;
+    }
+
+    /**
+     * @param Context $context
+     */
+    public function setContext(Context $context): void
+    {
+        $this->context = $context;
     }
 
     /**

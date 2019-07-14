@@ -9,8 +9,6 @@ use suda\framework\filesystem\FileSystem;
 
 /**
  * PHP Session
- *
- * Swoole 需要手动写入 `session_write_close`
  */
 class PHPSession implements Session
 {
@@ -36,6 +34,11 @@ class PHPSession implements Session
     protected $request;
 
     /**
+     * @var Response
+     */
+    protected $response;
+
+    /**
      * 创建Session
      *
      * @param Request $request 请求
@@ -47,6 +50,8 @@ class PHPSession implements Session
     {
         $this->config = $config;
         $this->request = $request;
+        $this->response = $response;
+        $response->getContext()->getEvent()->register('response::before-send', [$this, 'write']);
         if (session_status() === PHP_SESSION_NONE) {
             $this->init($request, $config);
         } else {
@@ -156,7 +161,7 @@ class PHPSession implements Session
      *
      * @return boolean
      */
-    public function destory():bool
+    public function destroy():bool
     {
         session_unset();
         session_destroy();
@@ -171,8 +176,18 @@ class PHPSession implements Session
      */
     public function update():bool
     {
-        $this->destory();
+        $this->destroy();
         $this->init($this->request, $this->config);
         return true;
+    }
+
+    /**
+     * 写入Session到响应
+     */
+    public function write()
+    {
+        if (session_status() !== PHP_SESSION_NONE) {
+            session_write_close();
+        }
     }
 }
