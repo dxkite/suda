@@ -167,6 +167,12 @@ class StatementTest extends TestCase
                 ->orderBy('id','desc')
                 ->orderBy('name','asc')->getString()
         );
+
+        $whereIn = $table->delete([ 'id' => ['in', new ArrayObject([1, 3, 4])]])->getString();
+        $this->assertEquals(
+            'DELETE FROM user_table WHERE `id` IN (:_id_37,:_id_38,:_id_39)',
+            $whereIn
+        );
     }
 
     public function testStuctSet()

@@ -10,3 +10,4 @@ composer.lock
 /tests/resource/runtime-data
 .php_cs.cache
 .idea/workspace.xml
+changelog

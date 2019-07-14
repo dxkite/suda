@@ -91,7 +91,7 @@ class MySQLTableCreator
     /**
      * @return string
      */
-    protected function toSQL()
+    public function toSQL()
     {
         $content = [];
         foreach ($this->fields->all() as $field) {

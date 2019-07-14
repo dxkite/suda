@@ -141,7 +141,7 @@ class QueryAccess
         if ($stmt instanceof PDOStatement) {
             return $stmt;
         }
-        throw new SQLException(sprintf('error prepare %s', $statement->getString()), SQLException::ERR_PREPARE);
+        throw new SQLException(sprintf('prepare error: %s', $statement->getString()), SQLException::ERR_PREPARE);
     }
 
     /**

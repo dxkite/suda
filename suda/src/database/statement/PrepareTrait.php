@@ -1,7 +1,8 @@
 <?php
 namespace suda\database\statement;
 
-use ArrayObject;
+use Countable;
+use IteratorAggregate;
 use suda\database\Binder;
 use suda\database\exception\SQLException;
 
@@ -61,7 +62,7 @@ trait PrepareTrait
      */
     private function getQueryForArray(string $name, $value)
     {
-        if ($value instanceof ArrayObject) {
+        if ($value instanceof IteratorAggregate) {
             return $this->prepareIn($name, $value);
         } elseif (is_array($value)) {
             list($op, $val) = $value;
@@ -78,6 +79,7 @@ trait PrepareTrait
      * @param string $indexName
      * @param mixed $value
      * @return Query
+     * @throws SQLException
      */
     private function createQueryOperation(string $name, string $operation, $value, string $indexName = '')
     {
@@ -86,6 +88,9 @@ trait PrepareTrait
         }
         if ($value instanceof Statement) {
             return new Query("`{$name}` {$operation} (".$value->getQuery().')', $value->getBinder());
+        }
+        if ($value instanceof IteratorAggregate || is_array($value)) {
+            return $this->prepareIn($name, $value);
         }
         if (strlen($indexName) === 0) {
             $indexName = Binder::index($name);
@@ -102,7 +107,7 @@ trait PrepareTrait
      */
     private function getQueryForString(string $where, string $name, $value)
     {
-        if (is_array($value) || $value instanceof ArrayObject) {
+        if (is_array($value) || $value instanceof IteratorAggregate) {
             list($inSQL, $binders) = $this->prepareInParameter($value, $name);
             $name = ltrim($name, ':');
             $where = str_replace(':'.$name, $inSQL, $where);
@@ -136,7 +141,7 @@ trait PrepareTrait
      * 准备In
      *
      * @param string $name
-     * @param ArrayObject|array|Query|Statement $values
+     * @param IteratorAggregate|array|Query|Statement $values
      * @return Query
      * @throws SQLException
      */
@@ -151,14 +156,14 @@ trait PrepareTrait
     }
 
     /**
-     * @param ArrayObject|array $values
+     * @param IteratorAggregate|array $values
      * @param string $name
      * @return array
      * @throws SQLException
      */
     protected function prepareInParameter($values, string $name)
     {
-        if (count($values) <= 0) {
+        if ($this->count($values) <= 0) {
             throw new SQLException('on field '.$name.' value can\'t be empty array');
         }
         $names = [];
@@ -171,6 +176,18 @@ trait PrepareTrait
         return [implode(',', $names), $binders];
     }
 
+    /**
+     * @param array|Countable|IteratorAggregate $value
+     * @return int
+     */
+    private function count($value)
+    {
+        if (is_array($value) || $value instanceof Countable) {
+            return count($value);
+        }
+        return iterator_count($value);
+    }
+    
     /**
      * 准备更新
      *
@@ -203,7 +220,7 @@ trait PrepareTrait
             $index = count($binders);
             if (array_key_exists($index, $parameter)) {
                 $name = Binder::index($index);
-                if (is_array($parameter[$index]) || $parameter[$index] instanceof ArrayObject) {
+                if (is_array($parameter[$index]) || $parameter[$index] instanceof IteratorAggregate) {
                     list($inSQL, $inBinders) = $this->prepareInParameter($parameter[$index], $index);
                     $binders = array_merge($binders, $inBinders);
                     return $inSQL;

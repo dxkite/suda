@@ -79,14 +79,17 @@ class Database
         if ($dataSourceConfigPath !== null) {
             $dataSourceConfig = Config::loadConfig($dataSourceConfigPath);
             foreach ($dataSourceConfig as $name => $config) {
-                static::applyDataSource(
-                    $dataSource,
-                    $observer,
-                    $name,
-                    $config['type'] ?? 'mysql',
-                    $config['mode'] ?? '',
-                    $config
-                );
+                $enable = $config['enable'];
+                if ($enable) {
+                    static::applyDataSource(
+                        $dataSource,
+                        $observer,
+                        $name,
+                        $config['type'] ?? 'mysql',
+                        $config['mode'] ?? '',
+                        $config
+                    );
+                }
             }
         }
         return $dataSource;
