@@ -186,4 +186,21 @@ class TableStruct implements IteratorAggregate
     {
         return new ArrayIterator($this->fields);
     }
+
+    /**
+     * @param TableStruct $some
+     * @param TableStruct $struct
+     * @return bool
+     */
+    public static function isSubOf(TableStruct $some, TableStruct $struct)
+    {
+        foreach ($struct->fields as $field) {
+            $name = $field->getName();
+            if (array_key_exists($name, $some->fields) === false
+                || $some->fields[$name]->equals($field) === false) {
+                return false;
+            }
+        }
+        return true;
+    }
 }

@@ -32,18 +32,22 @@ class Field
      * @var string
      */
     protected $name;
+
     /**
      * @var string
      */
     protected $type;
+
     /**
      * @var int|string|array|null
      */
     protected $length;
+
     /**
      * @var
      */
     protected $default;
+
     /**
      * @var bool
      */
@@ -53,10 +57,12 @@ class Field
      * @var bool
      */
     protected $null = true; // isNullable
+
     /**
      * @var
      */
     protected $attribute; // binary unsigned
+
     /**
      * @var
      */
@@ -411,5 +417,22 @@ class Field
     public function getAlias()
     {
         return $this->alias ?? $this->name;
+    }
+
+    /**
+     * @param Field $field
+     * @return bool
+     */
+    public function equals(Field $field) {
+        if ($this->name !== $field->name) {
+            return false;
+        }
+        if ($this->type !== $field->type) {
+            return false;
+        }
+        if ($this->length !== $field->length) {
+            return false;
+        }
+        return true;
     }
 }

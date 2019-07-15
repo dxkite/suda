@@ -42,4 +42,14 @@ abstract class Table extends TableAccess implements Middleware
         $table = new TableStruct($tableName);
         return $this->onCreateStruct($table);
     }
+
+    /**
+     * 结构继承
+     * @param Table $table
+     * @return bool
+     */
+    public function isSubOf(Table $table)
+    {
+        return TableStruct::isSubOf($this->getStruct(), $table->getStruct());
+    }
 }
