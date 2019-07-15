@@ -103,11 +103,22 @@ class TableStruct implements IteratorAggregate
 
     /**
      * @param string $name
+     * @param string|null $type
+     * @param int|string|array|null $length
      * @return bool
      */
-    public function hasField(string $name)
+    public function hasField(string $name, string $type = null, $length = null)
     {
-        return array_key_exists($name, $this->fields);
+        // 检查字段
+        if (array_key_exists($name, $this->fields) === false) {
+            return false;
+        }
+        // 检查类型
+        if ($type !== null
+            && $this->fields[$name]->equals(new Field($this->getName(), $name, $type, $length)) === false) {
+            return false;
+        }
+        return true;
     }
 
     /**
