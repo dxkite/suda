@@ -82,6 +82,10 @@ class TableAccess extends QueryAccess
      */
     public function write($name, $value = null):WriteStatement
     {
+        $argcount = func_num_args();
+        if ($argcount === 1) {
+            return (new WriteStatement($this))->write($name);
+        }
         return (new WriteStatement($this))->write($name, $value);
     }
 

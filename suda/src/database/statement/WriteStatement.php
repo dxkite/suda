@@ -78,21 +78,33 @@ class WriteStatement extends Statement
      */
     public function write($name, $value = null)
     {
+        $argcount = func_num_args();
         if (is_array($name)) {
             foreach ($name as $key => $value) {
                 $this->write($key, $value);
             }
-        } elseif (is_string($name) && $value !== null) {
-            $name = $this->middleware->inputName($name);
-            if ($this->struct->hasField($name)) {
-                $this->data[$name] = $value;
-            } else {
-                throw new SQLException(sprintf('table %s has no field %s', $this->struct->getName(), $name));
-            }
+        } elseif (is_string($name) && $argcount >= 2) {
+            $this->prepareWriteField($name, $value);
         } else {
             $this->data = $name;
         }
         return $this;
+    }
+
+    /**
+     * 准备字段
+     *
+     * @param string $name
+     * @param mixed $value
+     * @return void
+     */
+    private function prepareWriteField(string $name, $value) {
+        $name = $this->middleware->inputName($name);
+        if ($this->struct->hasField($name)) {
+            $this->data[$name] = $value;
+        } else {
+            throw new SQLException(sprintf('table %s has no field %s', $this->struct->getName(), $name));
+        }
     }
 
     /**
