@@ -63,7 +63,7 @@ trait PrepareTrait
     private function getQueryForArray(string $name, $value)
     {
         if ($value instanceof IteratorAggregate) {
-            return $this->prepareIn($name, $value);
+            return $this->prepareIn($name, 'IN', $value);
         } elseif (is_array($value)) {
             list($op, $val) = $value;
             $op = trim($op);
@@ -90,7 +90,7 @@ trait PrepareTrait
             return new Query("`{$name}` {$operation} (".$value->getQuery().')', $value->getBinder());
         }
         if ($value instanceof IteratorAggregate || is_array($value)) {
-            return $this->prepareIn($name, $value);
+            return $this->prepareIn($name, $operation, $value);
         }
         if (strlen($indexName) === 0) {
             $indexName = Binder::index($name);
@@ -145,13 +145,13 @@ trait PrepareTrait
      * @return Query
      * @throws SQLException
      */
-    protected function prepareIn(string $name, $values)
+    protected function prepareIn(string $name, string $operation, $values)
     {
         if ($values instanceof Query || $values instanceof Statement) {
             return $this->createQueryOperation($name, 'in', $values);
         }
         list($inSQL, $binders) = $this->prepareInParameter($values, $name);
-        $sql = '`'.$name.'` IN ('.$inSQL.')';
+        $sql = '`'.$name.'` '.strtoupper($operation).' ('.$inSQL.')';
         return new Query($sql, $binders);
     }
 
@@ -187,7 +187,7 @@ trait PrepareTrait
         }
         return iterator_count($value);
     }
-    
+
     /**
      * 准备更新
      *
