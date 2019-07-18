@@ -83,7 +83,7 @@ class Compiler
                 // 所有将要编译的文本
                 // 跳过各种的PHP
                 if ($tag == T_INLINE_HTML) {
-                    $content=$this->proccesTags($content);
+                    $content=$this->processTags($content);
                     $content=$this->processCommands($content);
                 }
                 $result .= $content;
@@ -104,7 +104,7 @@ class Compiler
     }
 
 
-    protected function proccesTags(string $text):string
+    protected function processTags(string $text):string
     {
         foreach ($this->tags as $tag) {
             $pregExp = sprintf('/(!)?%s\s*(.+?)\s*%s/', preg_quote($tag->getOpen()), preg_quote($tag->getClose()));

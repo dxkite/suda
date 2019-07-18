@@ -92,12 +92,32 @@ class ModuleTemplateBase extends CompilableTemplate
     /**
      * @return Compiler
      */
-    protected function createCompiler():Compiler
+    protected function compiler()
+    {
+        // 自定义编译参数
+        if (array_key_exists('compile', $this->config)) {
+            return $this->createCompiler();
+        }
+        return parent::compiler();
+    }
+
+    /**
+     * @return Compiler
+     */
+    protected function createCompiler(): Compiler
     {
         $compiler = new ModuleTemplateCompiler;
+        if (array_key_exists('compile', $this->config)) {
+            $compiler->setConfig($this->config['compile']);
+        }
         $compiler->init();
+        $this->application->event()->exec(
+            'application:template:compile::create',
+            [$compiler, $this->config, $this->application]
+        );
         return $compiler;
     }
+
 
     /**
      * @param string|null $module

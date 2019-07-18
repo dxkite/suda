@@ -12,6 +12,11 @@ use suda\application\template\compiler\Compiler;
 class ModuleTemplateCompiler extends Compiler
 {
     /**
+     * @var array
+     */
+    protected $config = [];
+
+    /**
      * 定义的标签
      *
      * @var array
@@ -43,11 +48,29 @@ class ModuleTemplateCompiler extends Compiler
         ],
     ];
 
+    /**
+     * @return array
+     */
+    public function getConfig(): array
+    {
+        return $this->config;
+    }
+
+    /**
+     * @param array $config
+     */
+    public function setConfig(array $config): void
+    {
+        $this->config = $config;
+    }
+
     public function init()
     {
         $this->registerCommand(new ModuleTemplateCommand);
         foreach ($this->tag as $name => $value) {
-            $this->registerTag(new Tag($name, $value[0], $value[1], $value[2]));
+            $open = $this->config[$name]['open'] ?? $value[0];
+            $close = $this->config[$name]['close'] ?? $value[1];
+            $this->registerTag(new Tag($name, $open, $close, $value[2]));
         }
     }
 }

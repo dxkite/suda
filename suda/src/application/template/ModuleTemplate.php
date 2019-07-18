@@ -4,6 +4,7 @@ namespace suda\application\template;
 
 use Exception;
 use ReflectionException;
+use suda\framework\Config;
 use suda\framework\filesystem\FileSystem;
 use suda\application\template\compiler\Compiler;
 
@@ -20,9 +21,24 @@ class ModuleTemplate extends ModuleTemplateBase
     public function getSourcePath(): ?string
     {
         $subfix = $this->config['subfix'] ?? '.tpl.html';
-        return $this
+        $path = $this
             ->getResource($this->module)
             ->getResourcePath($this->getTemplatePath() . '/' . $this->name . $subfix);
+        $this->loadDynamicTemplateConfig($path.'.ini');
+        return $path;
+    }
+
+    /**
+     * @param string|null $path
+     */
+    protected function loadDynamicTemplateConfig(?string $path) {
+        if ($path !== null) {
+            $config = Config::loadConfig($path);
+            // 自定义编译标签
+            if ($config !== null) {
+                $this->config['compile'] = $config;
+            }
+        }
     }
 
     /**
@@ -79,19 +95,6 @@ class ModuleTemplate extends ModuleTemplateBase
         return true;
     }
 
-
-    /**
-     * @return Compiler
-     */
-    protected function createCompiler(): Compiler
-    {
-        $compiler = parent::createCompiler();
-        $this->application->event()->exec(
-            'application:template:compile::create',
-            [$compiler, $this->config, $this->application]
-        );
-        return $compiler;
-    }
 
     /**
      * @param string|array|null $name

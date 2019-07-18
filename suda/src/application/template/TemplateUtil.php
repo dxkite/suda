@@ -25,9 +25,20 @@ class TemplateUtil
     {
         $configPath = static::getResource($application, $module)
             ->getConfigResourcePath(static::getTemplatePath($application).'/config');
+        return static::getConfigFromPath($application, $module, $configPath);
+    }
+
+    /**
+     * 获取配置
+     * @param Application $application
+     * @param string|null $module
+     * @param string $path
+     * @return array|null
+     */
+    public static function getConfigFromPath(Application $application, ?string $module, ?string $path) {
         $config = [];
-        if ($configPath !== null) {
-            $config = Config::loadConfig($configPath) ?? [];
+        if ($path !== null) {
+            $config = Config::loadConfig($path) ?? [];
         }
         $config = static::fixConfig($application, $module, $config);
         return $config;

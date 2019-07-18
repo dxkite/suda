@@ -23,6 +23,7 @@ class Template extends ModuleTemplate
                 list($this->source, $this->raw) = $path;
             }
         }
+        $this->loadDynamicTemplateConfig($this->source.'.ini');
         return $this->source;
     }
 
