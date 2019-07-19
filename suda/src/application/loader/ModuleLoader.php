@@ -1,10 +1,12 @@
 <?php
+
 namespace suda\application\loader;
 
 use Exception;
+use suda\application\builder\ModuleBuilder;
 use suda\framework\Config;
 use suda\application\Module;
-use suda\application\Resource;
+use suda\application\Resource as ApplicationResource;
 use suda\framework\filesystem\FileSystem;
 use suda\framework\loader\Loader;
 
@@ -22,7 +24,7 @@ class ModuleLoader extends ModuleLoaderUtil
     {
         $this->loadVendorIfExist();
         $this->loadShareLibrary();
-        $this->application->debug()->debug('loaded - '.$this->module->getFullName());
+        $this->application->debug()->debug('loaded - ' . $this->module->getFullName());
     }
 
     /**
@@ -33,7 +35,7 @@ class ModuleLoader extends ModuleLoaderUtil
     public function toActive()
     {
         $this->loadConfig();
-        $this->application->debug()->debug('active = '.$this->module->getFullName());
+        $this->application->debug()->debug('active = ' . $this->module->getFullName());
     }
 
     /**
@@ -43,7 +45,7 @@ class ModuleLoader extends ModuleLoaderUtil
     public function toReachable()
     {
         $this->loadRoute();
-        $this->application->debug()->debug('reachable # '.$this->module->getFullName());
+        $this->application->debug()->debug('reachable # ' . $this->module->getFullName());
     }
 
     /**
@@ -54,7 +56,7 @@ class ModuleLoader extends ModuleLoaderUtil
         $this->checkRequirements();
         $this->loadPrivateLibrary();
         $this->application->setRunning($this->module);
-        $this->application->debug()->debug('run + '.$this->module->getFullName());
+        $this->application->debug()->debug('run + ' . $this->module->getFullName());
     }
 
     /**
@@ -64,11 +66,10 @@ class ModuleLoader extends ModuleLoaderUtil
     {
         $resource = $this->module->getProperty('module-resource', []);
         if (count($resource)) {
+            $parent = $this->module->getPath();
             foreach ($resource as $name => $path) {
                 if ($find = $this->application->find($name)) {
-                    $find->getResource()->addResourcePath(
-                        Resource::getPathByRelativePath($path, $this->module->getPath())
-                    );
+                    $find->getResource()->registerResourcePath($parent, $path);
                 }
             }
         }
@@ -102,7 +103,7 @@ class ModuleLoader extends ModuleLoaderUtil
      */
     public function loadVendorIfExist()
     {
-        $vendorAutoload = $this->module->getPath().'/vendor/autoload.php';
+        $vendorAutoload = $this->module->getPath() . '/vendor/autoload.php';
         if (FileSystem::exist($vendorAutoload)) {
             Loader::requireOnce($vendorAutoload);
         }
@@ -174,8 +175,8 @@ class ModuleLoader extends ModuleLoaderUtil
      */
     protected function loadRouteGroup(string $groupName)
     {
-        $group = $groupName === 'default' ? '': '-'. $groupName;
-        if ($path = $this->module->getResource()->getConfigResourcePath('config/route'.$group)) {
+        $group = $groupName === 'default' ? '' : '-' . $groupName;
+        if ($path = $this->module->getResource()->getConfigResourcePath('config/route' . $group)) {
             $routeConfig = Config::loadConfig($path, [
                 'module' => $this->module->getName(),
                 'group' => $groupName,
@@ -183,7 +184,7 @@ class ModuleLoader extends ModuleLoaderUtil
                 'config' => $this->module->getConfig(),
             ]);
             if ($routeConfig !== null) {
-                $prefix = $this->module->getConfig('route-prefix.'.$groupName, '');
+                $prefix = $this->module->getConfig('route-prefix.' . $groupName, '');
                 $this->loadRouteConfig($prefix, $groupName, $routeConfig);
             }
         }
@@ -199,7 +200,7 @@ class ModuleLoader extends ModuleLoaderUtil
      */
     protected function loadRouteConfig(string $prefix, string $groupName, array $routeConfig)
     {
-        $module =  $this->module->getFullName();
+        $module = $this->module->getFullName();
         foreach ($routeConfig as $name => $config) {
             $exname = $this->application->getRouteName($name, $module, $groupName);
             $method = $config['method'] ?? [];
@@ -211,9 +212,9 @@ class ModuleLoader extends ModuleLoaderUtil
             $uri = $config['uri'] ?? '/';
             $anti = array_key_exists('anti-prefix', $config) && $config['anti-prefix'];
             if ($anti) {
-                $uri = '/'.trim($uri, '/');
+                $uri = '/' . trim($uri, '/');
             } else {
-                $uri = '/'.trim($prefix . $uri, '/');
+                $uri = '/' . trim($prefix . $uri, '/');
             }
             $this->application->request($method, $exname, $uri, $attributes);
         }

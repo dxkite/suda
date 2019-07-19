@@ -75,8 +75,8 @@ class Database
         $group = $groupName === 'default' ? '': '-'. $groupName;
         $dataSourceConfigPath = $resource->getConfigResourcePath('config/data-source'.$group);
         $dataSource = new DataSource;
-        $observer = new DebugObserver(static::$application->debug());
         if ($dataSourceConfigPath !== null) {
+            $observer = new DebugObserver(static::$application->debug());
             $dataSourceConfig = Config::loadConfig($dataSourceConfigPath);
             foreach ($dataSourceConfig as $name => $config) {
                 $enable = $config['enable'];

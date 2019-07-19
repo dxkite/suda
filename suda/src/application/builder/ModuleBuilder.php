@@ -2,6 +2,7 @@
 namespace suda\application\builder;
 
 use Iterator;
+use suda\application\Resource as ApplicationResource;
 use ZipArchive;
 use suda\framework\Config;
 use suda\application\Module;
@@ -25,7 +26,7 @@ class ModuleBuilder
     {
         list($name, $version, $resource, $property) = static::getModuleProperty($path, $propertyPath);
         $module = new Module($name, $version, $path, $property);
-        $module->getResource()->addResourcePath(Resource::getPathByRelativePath($resource, $path));
+        $module->getResource()->registerResourcePath($path, $resource);
         return $module;
     }
 

@@ -83,7 +83,8 @@ class ApplicationContext extends Context
         parent::__construct(new Config(['app' => $manifest]), $loader);
         $this->path = $path;
         $this->routeGroup = $manifest['route-group'] ?? ['default'];
-        $this->resource = new Resource([Resource::getPathByRelativePath($manifest['resource'] ?? './resource', $path)]);
+        $this->resource = new Resource();
+        $this->resource->registerResourcePath($path, $manifest['resource'] ?? './resource');
         $this->locate = $manifest['locale'] ?? 'zh-cn';
         $this->style = $manifest['style'] ?? 'default';
         $this->manifest = $manifest;
