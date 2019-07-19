@@ -25,7 +25,7 @@ class SimpleResponse implements RequestProcessor
 }
 ```
 
-或者使用 `\suda\application\template\Template` 类来`new`一个模板对象，模板采用 `set` 方法进行复制，`get` 方法可以获取到模板设置的值，
+或者使用 `\suda\application\template\Template` 类来`new`一个模板对象，模板采用 `set` 方法进行赋值，`get` 方法可以获取到模板设置的值，
 模板在设置变量参数后，将模板作为请求处理器的返回值即可自动渲染，也可以用 `render` 方法手动渲染
 
 

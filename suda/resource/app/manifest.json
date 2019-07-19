@@ -1,7 +1,7 @@
 {
     "name": "suda-demo-app",
     "version": "1.0-dev",
-    "language": "zh-CN",
+    "locale": "zh-CN",
     "module-paths" : [
         "modules"
     ],

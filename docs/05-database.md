@@ -53,6 +53,24 @@
 | path | 数据库地址 | 
 
 
+## 执行SQL语句
+
+直接运行SQL语句需要使用 `\suda\database\statement\QueryStatement` 对象，通过使用 `\suda\application\Application->getDataSource()`
+方法来获取数据源，来进行操作，如：
+
+```php
+// 对数据源进行写操作
+$application->getDataSource()->write()->query(new QueryStatement('CREATE DATABASE test_demo'));
+
+// 对数据库进行读操作
+$query = (new QueryStatement('SELECT * FROM test_table'));
+// 取全部
+$query->setFetch(QueryStatement::FETCH_ALL);
+// 执行
+$rows = $application->getDataSource()->read()->query($query);
+```
+
+
 ## 数据库CUDR操作
 
 **注意：** 数据库建表需要手动建表
