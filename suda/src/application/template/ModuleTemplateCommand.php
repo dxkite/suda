@@ -35,9 +35,9 @@ class ModuleTemplateCommand extends Command
      * @param $content
      * @return string
      */
-    protected function parseFile($content)
+    protected function parseE($content)
     {
         $content = strlen(trim($content)) === 0 ?'()':$content;
-        return '<?php echo $this->getModulePrefix'.$content.'; ?>';
+        return '<?php echo $this->application->_'.$content.'; ?>';
     }
 }
