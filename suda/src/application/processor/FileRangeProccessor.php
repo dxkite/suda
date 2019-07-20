@@ -42,7 +42,6 @@ class FileRangeProccessor implements RequestProcessor
      * @param Request $request
      * @param Response $response
      * @return void
-     * @throws Exception
      */
     public function onRequest(Application $application, Request $request, Response $response)
     {
@@ -58,7 +57,6 @@ class FileRangeProccessor implements RequestProcessor
     /**
      * @param Response $response
      * @param array $ranges
-     * @throws Exception
      */
     protected function sendFileRanges(Response $response, array $ranges)
     {
