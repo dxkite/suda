@@ -67,6 +67,11 @@ class ReadStatement extends QueryStatement
     protected $limit = '';
 
     /**
+     * @var bool
+     */
+    protected $rawRead = true;
+
+    /**
      * 创建写
      *
      * @param string $rawTableName
@@ -107,6 +112,7 @@ class ReadStatement extends QueryStatement
             $fields = func_get_args();
         }
         if (is_array($fields)) {
+            $this->rawRead = false;
             foreach ($fields as $index => $name) {
                 $fields[$index] = $this->middleware->inputName($name);
             }
@@ -114,6 +120,15 @@ class ReadStatement extends QueryStatement
         $this->select = $this->prepareReadFields($fields);
         return $this;
     }
+
+    /**
+     * @return bool
+     */
+    public function isRawRead(): bool
+    {
+        return $this->rawRead;
+    }
+
 
     /**
      * 条件
@@ -245,6 +260,14 @@ class ReadStatement extends QueryStatement
         } else {
             $this->orderBy = 'ORDER BY `' . $what . '` ' . $order;
         }
+        return $this;
+    }
+
+    /**
+     * 清除排序语句
+     */
+    public function clearOrderBy() {
+        $this->orderBy = '';
         return $this;
     }
 
