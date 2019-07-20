@@ -109,14 +109,24 @@ trait PrepareTrait
     {
         if (is_array($value) || $value instanceof IteratorAggregate) {
             list($inSQL, $binders) = $this->prepareInParameter($value, $name);
-            $name = ltrim($name, ':');
-            $where = str_replace(':'.$name, $inSQL, $where);
+            $where = $this->replaceQuote($name, $inSQL, $where);
             return new Query($where, $binders);
         } elseif ($value instanceof  Binder) {
             return new Query($where, [$value]);
         } else {
             return new Query($where, [new Binder($name, $value)]);
         }
+    }
+
+    /**
+     * @param string $name
+     * @param string $replace
+     * @param string $target
+     * @return string
+     */
+    protected function replaceQuote(string $name, string $replace, string $target) {
+        $name = ltrim($name, ':');
+        return preg_replace('/(?<!_):'.preg_quote($name).'/', $replace, $target);
     }
 
     /**
