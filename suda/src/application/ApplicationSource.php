@@ -1,4 +1,5 @@
 <?php
+
 namespace suda\application;
 
 use function explode;
@@ -31,11 +32,11 @@ class ApplicationSource extends ApplicationBase
         bool $allowQuery = true,
         ?string $default = null,
         ?string $group = null
-    ):?string {
+    ): ?string {
         $group = $group ?? $request->getAttribute('group');
         $default = $default ?? $request->getAttribute('module');
         $url = $this->route->create($this->getRouteName($name, $default, $group), $parameter, $allowQuery);
-        return $this->getUrlIndex($request).'/'.ltrim($url, '/');
+        return $this->getUrlIndex($request) . '/' . ltrim($url, '/');
     }
 
     /**
@@ -44,9 +45,9 @@ class ApplicationSource extends ApplicationBase
      * @param Request $request
      * @return string
      */
-    protected function getUrlIndex(Request $request):string
+    protected function getUrlIndex(Request $request): string
     {
-        $indexArray = $this->conf('index') ?? [ 'index.php' ];
+        $indexArray = $this->conf('index') ?? ['index.php'];
         $index = ltrim($request->getIndex(), '/');
         if (!in_array($index, $indexArray)) {
             return $request->getIndex();
@@ -61,7 +62,7 @@ class ApplicationSource extends ApplicationBase
      * @param string|null $default
      * @return string
      */
-    public function getModuleSourceName(string $name, ?string $default = null):string
+    public function getModuleSourceName(string $name, ?string $default = null): string
     {
         if (strpos($name, ':') > 0) {
             list($module, $group, $name) = $this->parseRouteName($name, $default);
@@ -69,7 +70,7 @@ class ApplicationSource extends ApplicationBase
             $module = $default;
         }
         if ($module !== null && ($moduleObj = $this->find($module))) {
-            return $moduleObj->getFullName().':'.$name;
+            return $moduleObj->getFullName() . ':' . $name;
         }
         return $name;
     }
@@ -82,7 +83,7 @@ class ApplicationSource extends ApplicationBase
      * @param string|null $group
      * @return string
      */
-    public function getRouteName(string $name, ?string $default = null, ?string $group = null):string
+    public function getRouteName(string $name, ?string $default = null, ?string $group = null): string
     {
         if (strpos($name, ':') !== false) {
             list($module, $group, $name) = $this->parseRouteName($name, $default, $group);
@@ -91,7 +92,7 @@ class ApplicationSource extends ApplicationBase
         }
         $prefixGroup = $this->getRouteGroupPrefix($group);
         if ($module !== null && ($moduleObj = $this->find($module))) {
-            return $moduleObj->getFullName().$prefixGroup.':'.$name;
+            return $moduleObj->getFullName() . $prefixGroup . ':' . $name;
         }
         return $name;
     }
@@ -130,7 +131,7 @@ class ApplicationSource extends ApplicationBase
      * @param boolean $beautify
      * @return string
      */
-    public function getUriBase(Request $request, bool $beautify = true):string
+    public function getUriBase(Request $request, bool $beautify = true): string
     {
         $index = $beautify ? $this->getUrlIndex($request) : $request->getIndex();
         return $request->getUriBase() . $index;
@@ -142,8 +143,8 @@ class ApplicationSource extends ApplicationBase
      * @param string|null $group
      * @return string
      */
-    protected function getRouteGroupPrefix(?string $group):string
+    protected function getRouteGroupPrefix(?string $group): string
     {
-        return $group === null || $group === 'default' ? '': '@'. $group;
+        return $group === null || $group === 'default' ? '' : '@' . $group;
     }
 }

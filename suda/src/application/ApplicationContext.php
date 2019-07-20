@@ -89,6 +89,7 @@ class ApplicationContext extends Context
         $this->style = $manifest['style'] ?? 'default';
         $this->manifest = $manifest;
         $this->dataPath = $dataPath ?? Resource::getPathByRelativePath($manifest['resource'] ?? './data', $path);
+        $this->config->set('data_path', $this->dataPath);
     }
 
     /**
