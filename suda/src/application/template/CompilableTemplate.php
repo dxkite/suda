@@ -46,7 +46,7 @@ class CompilableTemplate extends RawTemplate
      *
      * @var array
      */
-    protected static $copyedStaticPaths = [];
+    protected static $copiedStaticPaths = [];
 
     /**
      * 静态目录
@@ -163,7 +163,14 @@ class CompilableTemplate extends RawTemplate
             $destPath = $this->getPath();
             $content = FileSystem::get($sourcePath);
             if ($content !== null) {
-                $compiled = $this->compiler()->compileText($content, $this->config);
+                $compiler = $this->compiler();
+                if (array_key_exists('tag', $this->config)) {
+                    $tags = $compiler->getTags();
+                    $compiled = $compiler->compileText($content, $this->config['tag']);
+                    $compiler->setTags($tags);
+                } else {
+                    $compiled = $this->compiler()->compileText($content);
+                }
                 FileSystem::make(dirname($destPath));
                 FileSystem::put($destPath, $compiled);
             }
@@ -232,9 +239,9 @@ class CompilableTemplate extends RawTemplate
         $staticPath = $this->getStaticPath($name);
         if ($isDebug &&
             is_dir($staticPath) &&
-            !in_array($staticPath, static::$copyedStaticPaths)) {
+            !in_array($staticPath, static::$copiedStaticPaths)) {
             FileSystem::copyDir($staticPath, $this->getStaticOutputPath($name));
-            static::$copyedStaticPaths[] = $staticPath;
+            static::$copiedStaticPaths[] = $staticPath;
         }
     }
 

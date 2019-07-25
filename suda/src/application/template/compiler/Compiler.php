@@ -35,12 +35,31 @@ class Compiler
      */
     protected $commands=[];
 
+    /**
+     * 初始化
+     */
     public function init()
     {
         $this->registerCommand(new Command);
         foreach ($this->tag as $name => $value) {
             $this->registerTag(new Tag($name, $value[0], $value[1], $value[2]));
         }
+    }
+
+    /**
+     * @return Tag[]
+     */
+    public function getTags(): array
+    {
+        return $this->tags;
+    }
+
+    /**
+     * @param Tag[] $tags
+     */
+    public function setTags(array $tags): void
+    {
+        $this->tags = $tags;
     }
 
     /**
@@ -94,16 +113,28 @@ class Compiler
         return $result;
     }
 
+    /**
+     * 替换标签配置
+     * @param array $config
+     */
     protected function applyTagConfig(array $config)
     {
         foreach ($config as $name => $tagConfig) {
             if (array_key_exists($name, $this->tags)) {
-                $this->tags[$name]->setConfig($tagConfig);
+                // 创建标签副本
+                $tag = clone $this->tags[$name];
+                $tag->setConfig($tagConfig);
+                $this->tags[$name] = $tag;
             }
         }
     }
 
-
+    /**
+     * 处理标签
+     *
+     * @param string $text
+     * @return string
+     */
     protected function processTags(string $text):string
     {
         foreach ($this->tags as $tag) {

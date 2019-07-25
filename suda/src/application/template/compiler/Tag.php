@@ -1,4 +1,5 @@
 <?php
+
 namespace suda\application\template\compiler;
 
 use Exception;
@@ -34,13 +35,13 @@ class Tag implements EchoValueInterface
      * @var string
      */
     protected $close;
-    
+
     public function __construct(string $name, string $open, string $close, string $content)
     {
         $this->content = $content;
         $this->name = $name;
         $this->open = $open;
-        $this->close= $close;
+        $this->close = $close;
     }
 
     /**
@@ -48,7 +49,7 @@ class Tag implements EchoValueInterface
      * @return string
      * @throws Exception
      */
-    public function compile(string $content):string
+    public function compile(string $content): string
     {
         return $this->parseEchoValue(str_replace('$code', $content, $this->content));
     }
@@ -76,7 +77,7 @@ class Tag implements EchoValueInterface
     /**
      * Set 闭标签
      *
-     * @param  string  $close  闭标签
+     * @param string $close 闭标签
      *
      * @return  self
      */
@@ -90,7 +91,7 @@ class Tag implements EchoValueInterface
     /**
      * Set 开标签
      *
-     * @param  string  $open  开标签
+     * @param string $open 开标签
      *
      * @return  self
      */
@@ -114,7 +115,7 @@ class Tag implements EchoValueInterface
     /**
      * Set 标签名
      *
-     * @param  string  $name  标签名
+     * @param string $name 标签名
      *
      * @return  self
      */
@@ -128,18 +129,27 @@ class Tag implements EchoValueInterface
     /**
      * Set 配置信息
      *
-     * @param  array  $config  配置信息
+     * @param array $config 配置信息
      *
      * @return  self
      */
     public function setConfig(array $config)
     {
         $this->config = $config;
-        if (array_key_exists('open', $config)) {
-            $this->setOpen($config['open']);
-        }
-        if (array_key_exists('close', $config)) {
-            $this->setClose($config['close']);
+        if (is_numeric(key($config))) {
+            if (array_key_exists(0, $config)) {
+                $this->setOpen($config[0]);
+            }
+            if (array_key_exists(1, $config)) {
+                $this->setClose($config[1]);
+            }
+        } else {
+            if (array_key_exists('open', $config)) {
+                $this->setOpen($config['open']);
+            }
+            if (array_key_exists('close', $config)) {
+                $this->setClose($config['close']);
+            }
         }
         return $this;
     }

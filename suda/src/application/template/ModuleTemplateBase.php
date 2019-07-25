@@ -89,17 +89,6 @@ class ModuleTemplateBase extends CompilableTemplate
         return TemplateUtil::getConfig($this->application, $module);
     }
 
-    /**
-     * @return Compiler
-     */
-    protected function compiler()
-    {
-        // 自定义编译参数
-        if (array_key_exists('compile', $this->config)) {
-            return $this->createCompiler();
-        }
-        return parent::compiler();
-    }
 
     /**
      * @return Compiler
@@ -107,9 +96,6 @@ class ModuleTemplateBase extends CompilableTemplate
     protected function createCompiler(): Compiler
     {
         $compiler = new ModuleTemplateCompiler;
-        if (array_key_exists('compile', $this->config)) {
-            $compiler->setConfig($this->config['compile']);
-        }
         $compiler->init();
         $this->application->event()->exec(
             'application:template:compile::create',
@@ -117,7 +103,6 @@ class ModuleTemplateBase extends CompilableTemplate
         );
         return $compiler;
     }
-
 
     /**
      * @param string|null $module
@@ -227,7 +212,7 @@ class ModuleTemplateBase extends CompilableTemplate
         $copySource = $this->application->conf('copy-static-source', SUDA_DEBUG);
         if ($copySource) {
             $static = $this->getModuleStaticPath($module, $name);
-            $staticCopyed = is_dir($static) && in_array($static, static::$copyedStaticPaths);
+            $staticCopyed = is_dir($static) && in_array($static, static::$copiedStaticPaths);
             if ($staticCopyed === false) {
                 $from = $static;
                 $to = $this->getModuleStaticOutputPath($module, $name);
@@ -235,7 +220,7 @@ class ModuleTemplateBase extends CompilableTemplate
                 $this->application->debug()->time($time);
                 if (FileSystem::copyDir($from, $to)) {
                     $this->application->debug()->timeEnd($time);
-                    static::$copyedStaticPaths[] = $static;
+                    static::$copiedStaticPaths[] = $static;
                 } else {
                     $this->application->debug()->warning('Failed: '.$time);
                 }

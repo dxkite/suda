@@ -36,7 +36,7 @@ class ModuleTemplate extends ModuleTemplateBase
             $config = Config::loadConfig($path);
             // 自定义编译标签
             if ($config !== null) {
-                $this->config['compile'] = $config;
+                $this->config['tag'] = $config;
             }
         }
     }
