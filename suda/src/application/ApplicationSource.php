@@ -36,7 +36,7 @@ class ApplicationSource extends ApplicationBase
         $group = $group ?? $request->getAttribute('group');
         $default = $default ?? $request->getAttribute('module');
         $url = $this->route->create($this->getRouteName($name, $default, $group), $parameter, $allowQuery);
-        return $this->getUrlIndex($request) . '/' . ltrim($url, '/');
+        return $this->getUrlIndex($request) . ltrim($url, '/');
     }
 
     /**
@@ -48,11 +48,14 @@ class ApplicationSource extends ApplicationBase
     protected function getUrlIndex(Request $request): string
     {
         $indexArray = $this->conf('index') ?? ['index.php'];
-        $index = ltrim($request->getIndex(), '/');
-        if (!in_array($index, $indexArray)) {
-            return $request->getIndex();
+        $rewrite = $this->conf('url_rewrite', false);
+        $base = $request->getIndex();
+        $index = ltrim($base, '/');
+        // 根目录重写开启
+        if (in_array($index, $indexArray) && $rewrite) {
+            $base = '';
         }
-        return '';
+        return $base.'/';
     }
 
     /**
