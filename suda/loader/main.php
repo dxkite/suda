@@ -18,18 +18,20 @@ defined('SUDA_DATA') or define('SUDA_DATA', Path::toAbsolutePath('~/data'));
 defined('SUDA_APP_MANIFEST') or define('SUDA_APP_MANIFEST', SUDA_APP.'/manifest');
 $application = ApplicationBuilder::build($loader, SUDA_APP, SUDA_APP_MANIFEST, SUDA_DATA);
 $application->registerDebugger();
-
+// 调试信息
 $application->getDebug()->applyConfig([
     'start-time' => defined('SUDA_START_TIME') ? constant('SUDA_START_TIME') : microtime(true),
     'start-memory' => defined('SUDA_START_MEMORY') ? constant('SUDA_START_MEMORY') : memory_get_usage(),
 ]);
-
+// 日志路径
+defined('SUDA_DEBUG_LOG_PATH') or define('SUDA_DEBUG_LOG_PATH', $application->getDataPath().'/logs');
+// 文件日志
 $logger = new FileLogger(
     [
         'log-level' => SUDA_DEBUG_LEVEL,
-        'save-path' => $application->getDataPath().'/logs',
-        'save-dump-path' => $application->getDataPath().'/logs/dump',
-        'save-zip-path' => $application->getDataPath().'/logs/zip',
+        'save-path' => SUDA_DEBUG_LOG_PATH,
+        'save-dump-path' => SUDA_DEBUG_LOG_PATH.'/dump',
+        'save-zip-path' => SUDA_DEBUG_LOG_PATH.'/zip',
         'log-format' => '%message%',
     ]
 );

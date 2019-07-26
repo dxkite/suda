@@ -87,7 +87,7 @@ class DebugDumper
             ],
             'backtrace' => $throwable->getTrace(),
         ];
-        $dumpPath = $this->application->getDataPath().'/logs/dump';
+        $dumpPath = $this->application->getDebug()->getConfig('save-dump-path');
         $exceptionHash = md5($throwable->getFile().$throwable->getLine().$throwable->getCode());
         $path = $dumpPath.'/'.microtime(true).'.'.substr($exceptionHash, 0, 8).'.json';
         FileSystem::make($dumpPath);

@@ -23,17 +23,19 @@ $application = ApplicationBuilder::build($loader, SUDA_APP, SUDA_APP_MANIFEST, S
 $application->registerDebugger();
 // 不复制资源
 $application->config()->set('copy-static-source', false);
-// 文件日志记录
+// 日志路径
+defined('SUDA_DEBUG_LOG_PATH') or define('SUDA_DEBUG_LOG_PATH', $application->getDataPath().'/logs');
+// 文件日志
 $logger = new FileLogger(
     [
         'log-level' => SUDA_DEBUG_LEVEL,
-        'save-path' => $application->getDataPath() . '/logs',
-        'save-zip-path' => $application->getDataPath() . '/logs/zip',
-        'save-dump-path' => $application->getDataPath() . '/logs/dump',
+        'save-path' => SUDA_DEBUG_LOG_PATH,
+        'save-dump-path' => SUDA_DEBUG_LOG_PATH.'/dump',
+        'save-zip-path' => SUDA_DEBUG_LOG_PATH.'/zip',
         'log-format' => '%message%',
     ]
 );
-
+// Swoole 服务器
 $http = new Server(SUDA_SWOOLE_IP, SUDA_SWOOLE_PORT);
 
 $http->set([
