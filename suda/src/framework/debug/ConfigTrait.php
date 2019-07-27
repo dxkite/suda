@@ -11,6 +11,9 @@ trait ConfigTrait
      */
     protected $config;
 
+    /**
+     * @param array $config
+     */
     public function applyConfig(array $config)
     {
         $defaultConfig = $this->getDefaultConfig();
@@ -19,6 +22,19 @@ trait ConfigTrait
         }
     }
 
+    /**
+     * @param string $name
+     * @param $value
+     */
+    public function setConfig(string $name, $value)
+    {
+        $this->config[$name] = $value;
+    }
+
+    /**
+     * @param string $name
+     * @return mixed
+     */
     public function getConfig(string $name)
     {
         $defaultConfig = $this->getDefaultConfig();
