@@ -1,7 +1,6 @@
 <?php
 namespace suda\framework;
 
-use Exception;
 use suda\framework\http\Cookie;
 use suda\framework\http\Stream;
 use suda\framework\http\stream\DataStream;
@@ -56,7 +55,7 @@ class Response extends ResponseWrapper
      *
      * @param string $name
      * @param string $content
-     * @param boolean $replace
+     * @param bool $replace
      * @return $this
      */
     public function setHeader(string $name, string $content, bool $replace = false)
@@ -169,7 +168,6 @@ class Response extends ResponseWrapper
      * @param integer $offset
      * @param integer $length
      * @return void
-     * @throws Exception
      */
     public function sendFile(string $filename, int $offset = 0, int $length = null)
     {

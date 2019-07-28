@@ -4,7 +4,6 @@ namespace suda\application\template;
 
 use Exception;
 use function extract;
-use ReflectionException;
 use suda\framework\runnable\Runnable;
 use suda\framework\arrayobject\ArrayDotAccess;
 use suda\application\exception\NoTemplateFoundException;

@@ -97,6 +97,7 @@ class WriteStatement extends Statement
      * @param string $name
      * @param mixed $value
      * @return void
+     * @throws SQLException
      */
     private function prepareWriteField(string $name, $value) {
         $name = $this->middleware->inputName($name);

@@ -71,7 +71,7 @@ abstract class Connection
      * 创建连接
      *
      * @param array $config
-     * @param string|null $name
+     * @param string $name
      */
     public function __construct(array $config, string $name = null)
     {

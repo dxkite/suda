@@ -151,6 +151,7 @@ trait PrepareTrait
      * 准备In
      *
      * @param string $name
+     * @param string $operation
      * @param IteratorAggregate|array|Query|Statement $values
      * @return Query
      * @throws SQLException

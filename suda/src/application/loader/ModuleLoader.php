@@ -3,10 +3,8 @@
 namespace suda\application\loader;
 
 use Exception;
-use suda\application\builder\ModuleBuilder;
 use suda\framework\Config;
 use suda\application\Module;
-use suda\application\Resource as ApplicationResource;
 use suda\framework\filesystem\FileSystem;
 use suda\framework\loader\Loader;
 

@@ -29,7 +29,12 @@ class UriParser
      * @var array
      */
     protected $query = [];
-    
+
+    /**
+     * UriParser constructor.
+     * @param string $uri
+     * @param string|null $indexFile
+     */
     public function __construct(string $uri, ?string $indexFile = null)
     {
         $url = strlen($indexFile) > 0 && $indexFile !== null ? $this->clearIndex($uri, $indexFile) : $uri;

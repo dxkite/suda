@@ -90,7 +90,7 @@ abstract class RunnableTarget
     /**
      * Set 可执行命令字符串表示
      *
-     * @param  string  $name  可执行命令字符串表示
+     * @param string $name 可执行命令字符串表示
      *
      * @return  self
      */

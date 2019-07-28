@@ -2,11 +2,9 @@
 namespace suda\application\builder;
 
 use Iterator;
-use suda\application\Resource as ApplicationResource;
 use ZipArchive;
 use suda\framework\Config;
 use suda\application\Module;
-use suda\application\Resource;
 use suda\framework\config\PathResolver;
 use suda\framework\filesystem\FileSystem;
 

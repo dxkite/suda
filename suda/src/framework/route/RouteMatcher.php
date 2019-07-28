@@ -51,7 +51,7 @@ class RouteMatcher
         $this->matcher = UriMatcher::build($uri);
         $this->attribute = $attribute;
     }
-    
+
     /**
      * 获取属性
      *
@@ -132,7 +132,7 @@ class RouteMatcher
     /**
      * Set 匹配的URI
      *
-     * @param  string  $uri  匹配的URI
+     * @param string $uri 匹配的URI
      *
      * @return  self
      */

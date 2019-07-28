@@ -3,9 +3,12 @@
 
 namespace suda\framework\debug;
 
+use JsonSerializable;
+use ReflectionClass;
+use ReflectionException;
 use ReflectionProperty;
 
-class DebugObject implements \JsonSerializable
+class DebugObject implements JsonSerializable
 {
     /**
      * @var DebugObjectContext
@@ -60,7 +63,7 @@ class DebugObject implements \JsonSerializable
     protected function getObjectProp($object)
     {
         try {
-            $oR = new \ReflectionClass($object);
+            $oR = new ReflectionClass($object);
             $props = $oR->getProperties(
                 ReflectionProperty::IS_PUBLIC
                 | ReflectionProperty::IS_PROTECTED
@@ -73,7 +76,7 @@ class DebugObject implements \JsonSerializable
                 $exported[$name] = new DebugObject($value->getValue($object), $this->context);
             }
             return $exported;
-        } catch (\ReflectionException $e) {
+        } catch (ReflectionException $e) {
             return 'Err:' . $e->getMessage();
         }
     }

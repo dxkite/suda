@@ -59,6 +59,12 @@ class MatcherHelper
         return new UriMatcher($uri, $url, $parameters);
     }
 
+    /**
+     * @param UriMatcher $matcher
+     * @param array $parameter
+     * @param bool $allowQuery
+     * @return string
+     */
     public static function buildUri(UriMatcher $matcher, array $parameter, bool $allowQuery = true): string
     {
         $uri = $matcher->getUri();

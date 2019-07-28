@@ -4,9 +4,9 @@ namespace suda\framework;
 
 
 use ErrorException;
+use Psr\Log\LoggerInterface;
 use suda\framework\debug\Debug;
 use suda\framework\context\PHPContext;
-use suda\framework\debug\log\LoggerInterface;
 use suda\framework\debug\log\logger\NullLogger;
 use Throwable;
 

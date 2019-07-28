@@ -53,7 +53,7 @@ class Database
     {
         return static::getDataSource('default');
     }
-    
+
     /**
      * @param string $name
      * @return DataSource

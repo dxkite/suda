@@ -43,9 +43,9 @@ class DataStream implements Stream
      * 输入文件流
      *
      * @param SplFileObject|string $stream
-     * @param integer $offset
-     * @param integer|null $length
-     * @param integer $blockSize
+     * @param int $offset
+     * @param int|null $length
+     * @param int $blockSize
      */
     public function __construct($stream, int $offset = 0, ?int $length = null, int $blockSize = 8192)
     {

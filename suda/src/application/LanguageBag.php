@@ -44,7 +44,7 @@ class LanguageBag
     /**
      * 格式化输出
      *
-     * @param string $string
+     * @param string $string $string
      * @param array $param
      * @return string
      */

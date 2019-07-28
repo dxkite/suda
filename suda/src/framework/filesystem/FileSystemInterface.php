@@ -66,8 +66,8 @@ interface FileSystemInterface
      * 创建目录
      *
      * @param string $path
-     * @param integer $mode
-     * @param boolean $recursive
+     * @param int $mode
+     * @param bool $recursive
      * @return boolean
      */
     public static function make(string $path, int $mode = 0777, bool $recursive = true):bool;

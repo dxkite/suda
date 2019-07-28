@@ -105,7 +105,7 @@ class ApplicationContext extends Context
     /**
      * Set 使用的样式
      *
-     * @param  string  $style  使用的样式
+     * @param string $style 使用的样式
      *
      * @return  self
      */
@@ -129,7 +129,7 @@ class ApplicationContext extends Context
     /**
      * Set 语言
      *
-     * @param  string  $locate  语言
+     * @param string $locate 语言
      *
      * @return  self
      */
@@ -236,7 +236,7 @@ class ApplicationContext extends Context
     /**
      * Set 数据路径
      *
-     * @param  string  $dataPath  数据路径
+     * @param string $dataPath 数据路径
      *
      * @return  self
      */

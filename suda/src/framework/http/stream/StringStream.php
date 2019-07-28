@@ -33,8 +33,8 @@ class StringStream implements Stream
      * 创建字符流
      *
      * @param string $stream
-     * @param integer $offset
-     * @param integer $length
+     * @param int $offset
+     * @param int $length
      */
     public function __construct(string $stream, int $offset = 0, int $length = null)
     {

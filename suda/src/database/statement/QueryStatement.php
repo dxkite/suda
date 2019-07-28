@@ -77,7 +77,7 @@ class QueryStatement extends Statement
         $this->setFetchType($class, $args);
         return $this;
     }
-    
+
     /**
      * 设置使用某个字段做Key
      *

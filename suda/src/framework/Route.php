@@ -297,7 +297,7 @@ class Route
      *
      * @param string $name
      * @param array $parameter
-     * @param boolean $allowQuery
+     * @param bool $allowQuery
      * @return string|null
      */
     public function create(string $name, array $parameter, bool $allowQuery = true):?string

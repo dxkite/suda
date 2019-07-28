@@ -15,12 +15,20 @@ class StringParameter extends Parameter
             $this->default = $this->getCommonDefault($extra);
         }
     }
- 
+
+    /**
+     * @param string $matched
+     * @return string
+     */
     public function unpackValue(string $matched)
     {
         return urldecode($matched);
     }
 
+    /**
+     * @param string|null $matched
+     * @return string|null
+     */
     public function packValue(?string $matched)
     {
         return $matched ? urlencode($matched): '';

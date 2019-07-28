@@ -19,7 +19,7 @@ class HeaderContainer
      * 添加请求头
      *
      * @param Header $header
-     * @param boolean $replace
+     * @param bool $replace
      * @return $this
      */
     public function add(Header $header, bool $replace = false)

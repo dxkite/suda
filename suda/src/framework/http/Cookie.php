@@ -157,7 +157,6 @@ class Cookie implements JsonSerializable
      *
      * @param string $set
      * @return $this
-     *
      */
     public function domain(string $set)
     {

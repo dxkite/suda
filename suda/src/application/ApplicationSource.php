@@ -20,7 +20,7 @@ class ApplicationSource extends ApplicationBase
      * @param Request $request
      * @param string $name
      * @param array $parameter
-     * @param boolean $allowQuery
+     * @param bool $allowQuery
      * @param string|null $default
      * @param string|null $group
      * @return string|null

@@ -20,6 +20,13 @@ class NoTemplateFoundException extends RuntimeException
      */
     protected $type;
 
+    /**
+     * NoTemplateFoundException constructor.
+     * @param string $message
+     * @param int $code
+     * @param string $name
+     * @param int $type
+     */
     public function __construct(string $message, int $code, string $name, int $type = 0)
     {
         $this->name = $name;

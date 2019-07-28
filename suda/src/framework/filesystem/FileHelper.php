@@ -71,7 +71,7 @@ trait FileHelper
      *
      * @param string $filename
      * @param string $content
-     * @param integer $flags
+     * @param int $flags
      * @return boolean
      */
     public static function put(string $filename, string $content, int $flags = 0):bool

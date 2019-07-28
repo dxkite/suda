@@ -6,6 +6,9 @@ namespace suda\framework\route\uri\parameter;
  */
 abstract class Parameter
 {
+    /**
+     * @var
+     */
     protected static $name;
     /**
      * 索引名
@@ -26,16 +29,29 @@ abstract class Parameter
      * @var int
      */
     protected $index;
-    
+
+    /**
+     * Parameter constructor.
+     * @param string $extra
+     */
     public function __construct(string $extra)
     {
     }
 
+    /**
+     * @return string
+     */
     public static function name():string
     {
         return static::$name;
     }
 
+    /**
+     * @param int $index
+     * @param string $indexName
+     * @param string $extra
+     * @return Parameter
+     */
     public static function build(int $index, string $indexName, string $extra):Parameter
     {
         $parameter = new static($extra);
@@ -43,22 +59,36 @@ abstract class Parameter
         $parameter->setIndexName($indexName);
         return $parameter;
     }
-    
+
+    /**
+     * @param string $value
+     * @return string
+     */
     public function unpackValue(string $value)
     {
         return $value;
     }
 
+    /**
+     * @param string|null $value
+     * @return string|null
+     */
     public function packValue(?string $value)
     {
         return $value;
     }
-
+    
+    /**
+     * @return mixed|null
+     */
     public function getDefaultValue()
     {
         return $this->hasDefault() ? $this->default : null;
     }
 
+    /**
+     * @return bool
+     */
     public function hasDefault()
     {
         return isset($this->default);
@@ -71,6 +101,10 @@ abstract class Parameter
      */
     abstract public function getMatch():string;
 
+    /**
+     * @param string $extra
+     * @return string
+     */
     public function getCommonDefault(string $extra):string
     {
         return $extra;

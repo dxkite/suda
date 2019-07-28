@@ -14,5 +14,5 @@ define('SUDA_APP_MANIFEST', SUDA_APP . '/manifest');
 define('SUDA_SWOOLE_IP', $ip);
 define('SUDA_SWOOLE_PORT', $port);
 
-
+require_once __DIR__ .'/vendor/autoload.php';
 require_once SUDA_SYSTEM.'/loader/swoole.php';

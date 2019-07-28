@@ -2,7 +2,7 @@
 
 namespace suda\framework\debug\log\logger;
 
-use suda\framework\debug\log\LogLevel;
+use suda\framework\debug\Debug;
 use suda\framework\filesystem\FileSystem;
 use suda\framework\debug\log\logger\exception\FileLoggerException;
 
@@ -40,12 +40,11 @@ class FileLogger extends FileLoggerBase
      * @param string $level
      * @param string $message
      * @param array $context
-     * @return mixed|void
      * @throws FileLoggerException
      */
-    public function log($level, string $message, array $context = [])
+    public function log($level, $message, array $context = [])
     {
-        if (LogLevel::compare($level, $this->getConfig('log-level')) >= 0) {
+        if (Debug::compare($level, $this->getConfig('log-level')) >= 0) {
             $replace = [];
             $message = $this->interpolate($message, $context);
             $replace['%level%'] = $level;

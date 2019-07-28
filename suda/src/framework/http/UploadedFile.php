@@ -40,7 +40,7 @@ class UploadedFile
      * @param string $path 路径
      * @param string $name 文件名
      * @param string $mimeType mime类型
-     * @param integer $error 错误码
+     * @param int $error 错误码
      */
     public function __construct(string $path, string $name, string $mimeType = null, int $error = null)
     {

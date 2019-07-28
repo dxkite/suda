@@ -27,6 +27,12 @@ trait AttachTrait
                 || method_exists($val, '__toString')) && (!$val instanceof Throwable);
     }
 
+    /**
+     * @param string $message
+     * @param array $context
+     * @param array $attribute
+     * @return string
+     */
     public function interpolate(string $message, array $context, array $attribute)
     {
         $replace = [];

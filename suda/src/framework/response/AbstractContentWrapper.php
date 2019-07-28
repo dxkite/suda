@@ -26,6 +26,11 @@ abstract class AbstractContentWrapper implements ContentWrapperInterface
      */
     protected $content;
 
+    /**
+     * AbstractContentWrapper constructor.
+     * @param $content
+     * @param string $type
+     */
     public function __construct($content, string $type)
     {
         $this->content = $content;

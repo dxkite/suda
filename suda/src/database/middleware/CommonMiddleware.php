@@ -2,7 +2,6 @@
 namespace suda\database\middleware;
 
 use Closure;
-use ReflectionException;
 use suda\framework\runnable\Runnable;
 
 /**

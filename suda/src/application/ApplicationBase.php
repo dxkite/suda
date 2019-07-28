@@ -82,7 +82,6 @@ class ApplicationBase extends ApplicationContext
      *
      * @param string $name
      * @return Module
-     *@throws ApplicationException
      */
     public function get(string $name): Module
     {
@@ -136,7 +135,7 @@ class ApplicationBase extends ApplicationContext
      * 语言翻译
      *
      * @param string|null $message
-     * @param mixed  ...$args
+     * @param mixed ...$args
      * @return string
      */
     public function _(?string $message, ...$args):string

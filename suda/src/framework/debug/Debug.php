@@ -2,19 +2,21 @@
 
 namespace suda\framework\debug;
 
-use suda\framework\debug\log\LogLevel;
-use suda\framework\debug\log\LoggerTrait;
+use Psr\Log\LoggerAwareInterface;
+use Psr\Log\LoggerAwareTrait;
+use Psr\Log\LoggerInterface;
+use Psr\Log\LoggerTrait;
+use Psr\Log\LogLevel;
 use suda\framework\debug\attach\DumpTrait;
 use suda\framework\debug\attach\AttachTrait;
-use suda\framework\debug\log\LoggerInterface;
 use suda\framework\debug\attach\DumpInterface;
-use suda\framework\debug\log\LoggerAwareTrait;
 use suda\framework\debug\attach\AttachInterface;
-use suda\framework\debug\log\LoggerAwareInterface;
 
 class Debug implements LoggerInterface, LoggerAwareInterface, DumpInterface, AttachInterface, ConfigInterface
 {
     use LoggerTrait, LoggerAwareTrait, DumpTrait, AttachTrait, ConfigTrait;
+
+    protected static $levels = ['debug', 'info', 'notice', 'warning', 'error', 'critical', 'alert', 'emergency'];
 
     /**
      * 忽略堆栈
@@ -30,7 +32,12 @@ class Debug implements LoggerInterface, LoggerAwareInterface, DumpInterface, Att
      */
     protected $timeRecord;
 
-    public function log(string $level, string $message, array $context = [])
+    /**
+     * @param mixed $level
+     * @param string $message
+     * @param array $context
+     */
+    public function log($level, $message, array $context = [])
     {
         $attribute = $this->getAttribute();
         list($attach, $replace) = $this->analyse($message, $context);
@@ -79,7 +86,7 @@ class Debug implements LoggerInterface, LoggerAwareInterface, DumpInterface, Att
         ];
     }
 
-    protected function canBeStringValue($val) : bool
+    protected function canBeStringValue($val): bool
     {
         return !is_array($val) && (!is_object($val) || method_exists($val, '__toString'));
     }
@@ -133,6 +140,20 @@ class Debug implements LoggerInterface, LoggerAwareInterface, DumpInterface, Att
         return $this;
     }
 
+
+    /**
+     * 比较优先级
+     *
+     * @param string $a
+     * @param string $b
+     * @return integer
+     */
+    public static function compare(string $a, string $b): int
+    {
+        $indexA = array_search($a, static::$levels);
+        $indexB = array_search($b, static::$levels);
+        return $indexA - $indexB;
+    }
 
     /**
      * 添加忽略路径

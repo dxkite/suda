@@ -99,7 +99,7 @@ class TableData implements ArrayDataInterface
     {
         return $this->struct;
     }
-    
+
     /**
      * 设置值
      *

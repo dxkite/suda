@@ -39,7 +39,7 @@ class FieldModifierParser
      * @var array
      */
     protected $modifier;
-    
+
     /**
      * 解析
      *

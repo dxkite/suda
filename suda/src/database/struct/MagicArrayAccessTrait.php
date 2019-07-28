@@ -49,7 +49,7 @@ trait MagicArrayAccessTrait
      * @param mixed $value
      */
     abstract public function __set(string $name, $value);
-    
+
     /**
      * 获取参数值
      *

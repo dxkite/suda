@@ -4,6 +4,7 @@
 namespace suda\application;
 
 use suda\framework\runnable\Runnable;
+use Throwable;
 
 class Event extends \suda\framework\Event
 {
@@ -36,7 +37,7 @@ class Event extends \suda\framework\Event
         ]);
         try {
             return $runnable->apply($args);
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             $this->application->debug()->error('invoke {event} event run {runnable} error', [
                 'runnable' => $runnable->getName(),
                 'event' => $event

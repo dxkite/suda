@@ -111,7 +111,7 @@ class RequestWrapper
     /**
      * Set 远程地址
      *
-     * @param  string  $remoteAddr  远程地址
+     * @param string $remoteAddr 远程地址
      *
      * @return  $this
      */
@@ -135,7 +135,7 @@ class RequestWrapper
     /**
      * Set 获取本地HOST
      *
-     * @param  string  $host  获取本地HOST
+     * @param string $host 获取本地HOST
      *
      * @return  $this
      */
@@ -159,7 +159,7 @@ class RequestWrapper
     /**
      * Set 获取本地端口
      *
-     * @param  int  $port  获取本地端口
+     * @param int $port 获取本地端口
      *
      * @return  $this
      */
@@ -183,7 +183,7 @@ class RequestWrapper
     /**
      * Set 是否为安全模式
      *
-     * @param  bool  $secure  是否为安全模式
+     * @param bool $secure 是否为安全模式
      * @return  $this
      */
     public function setSecure(bool $secure)
@@ -205,7 +205,7 @@ class RequestWrapper
     /**
      * Set 请求URI
      *
-     * @param  string  $uri  请求URI
+     * @param string $uri 请求URI
      * @return  $this
      */
     public function setUri(string $uri)
@@ -227,7 +227,7 @@ class RequestWrapper
     /**
      * Set 请求参数
      *
-     * @param  string  $method  请求参数
+     * @param string $method 请求参数
      * @return  $this
      */
     public function setMethod(string $method)
@@ -300,7 +300,7 @@ class RequestWrapper
     /**
      * Set 请求索引
      *
-     * @param  string  $index  请求索引
+     * @param string $index 请求索引
      * @return $this
      */
     public function setIndex(string $index)
@@ -417,7 +417,7 @@ class RequestWrapper
     /**
      * Set URI基础部分
      *
-     * @param  string  $uriBase  URI基础部分
+     * @param string $uriBase URI基础部分
      * @return  $this
      */
     public function setUriBase(string $uriBase)

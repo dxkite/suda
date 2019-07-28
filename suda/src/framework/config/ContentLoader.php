@@ -3,6 +3,7 @@
 namespace suda\framework\config;
 
 use function call_user_func_array;
+use Exception;
 use function parse_ini_string;
 use suda\framework\exception\ConfigLoadException;
 use suda\framework\arrayobject\ArrayDotAccess;
@@ -61,7 +62,7 @@ class ContentLoader
         $content = static::parseValue($content, $extra);
         try {
             return call_user_func_array($name, [$content]);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             throw new ConfigLoadException('yaml: '.$path.': '.$e->getMessage(), $e->getCode(), $e);
         }
     }

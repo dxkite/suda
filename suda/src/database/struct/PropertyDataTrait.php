@@ -4,6 +4,7 @@ namespace suda\database\struct;
 trait PropertyDataTrait
 {
     use MagicArrayAccessTrait;
+
     /**
      * 设置值
      *
@@ -14,7 +15,7 @@ trait PropertyDataTrait
     {
         $this->$name = $value;
     }
-    
+
     /**
      * 获取参数值
      *
