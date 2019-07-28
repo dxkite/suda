@@ -26,6 +26,7 @@
     "ext-json": "*",
     "ext-pdo": "*",
     "ext-iconv": "*",
-    "ext-mbstring": "*"
+    "ext-mbstring": "*",
+    "psr/log": "^1.1"
   }
 }
