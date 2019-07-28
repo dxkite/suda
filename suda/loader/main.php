@@ -36,6 +36,6 @@ $logger = new FileLogger(
     ]
 );
 $application->getDebug()->setLogger($logger);
-$application->getDebug()->setConfig('save-dump-path', SUDA_DEBUG_LOG_PATH . '/dump');
+$application->getConfig()->set('save-dump-path', SUDA_DEBUG_LOG_PATH . '/dump');
 $application->run(Request::create(), new Response);
 exit;

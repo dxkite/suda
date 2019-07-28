@@ -42,7 +42,7 @@ $http->set([
     'log_file' => $logger->getConfig('save-dump-path').'/swoole.log',
 ]);
 
-$application->getDebug()->setConfig('save-dump-path', SUDA_DEBUG_LOG_PATH . '/dump');
+$application->getConfig()->set('save-dump-path', SUDA_DEBUG_LOG_PATH . '/dump');
 
 $http->on('request', function ($request, $response) use ($application, $logger) {
     // 拷贝副本

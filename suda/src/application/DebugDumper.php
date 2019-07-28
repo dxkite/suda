@@ -77,24 +77,26 @@ class DebugDumper
      */
     public function dumpThrowable($throwable)
     {
-        $dumper = [
-            'time' => time(),
-            'throwable' => $throwable,
-            'context' => [
-                'application' => $this->application,
-                'request' => $this->request,
-                'response' => $this->response,
-            ],
-            'backtrace' => $throwable->getTrace(),
-        ];
-        $dumpPath = $this->application->getDebug()->getConfig('save-dump-path');
-        $exceptionHash = md5($throwable->getFile().$throwable->getLine().$throwable->getCode());
-        $path = $dumpPath.'/'.microtime(true).'.'.substr($exceptionHash, 0, 8).'.json';
-        FileSystem::make($dumpPath);
-        FileSystem::put($path, json_encode(
-            new DebugObject($dumper),
-            JSON_PRETTY_PRINT
-            | JSON_UNESCAPED_UNICODE
-        ));
+        $dumpPath = $this->application->conf('save-dump-path');
+        if ($dumpPath !== null) {
+            $dumper = [
+                'time' => time(),
+                'throwable' => $throwable,
+                'context' => [
+                    'application' => $this->application,
+                    'request' => $this->request,
+                    'response' => $this->response,
+                ],
+                'backtrace' => $throwable->getTrace(),
+            ];
+            $exceptionHash = md5($throwable->getFile().$throwable->getLine().$throwable->getCode());
+            $path = $dumpPath.'/'.microtime(true).'.'.substr($exceptionHash, 0, 8).'.json';
+            FileSystem::make($dumpPath);
+            FileSystem::put($path, json_encode(
+                new DebugObject($dumper),
+                JSON_PRETTY_PRINT
+                | JSON_UNESCAPED_UNICODE
+            ));
+        }
     }
 }
