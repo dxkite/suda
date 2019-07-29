@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__ . '/loader.php';
 
+use suda\framework\debug\log\logger\NullLogger;
 use Swoole\Http\Server;
 use suda\swoole\Request;
 use suda\swoole\Response;
@@ -41,28 +42,29 @@ $http->set([
     'log_file' => $logger->getConfig('save-dump-path').'/swoole.log',
 ]);
 
-$application->getConfig()->set('save-dump-path', SUDA_DEBUG_LOG_PATH . '/dump');
-$application->getConfig()->set('response-timing', SUDA_DEBUG);
+$application->config()->set('save-dump-path', SUDA_DEBUG_LOG_PATH . '/dump');
+$application->config()->set('response-timing', SUDA_DEBUG);
+
+$application->setDebug(new Debugger($application, new NullLogger()));
 
 $http->on('request', function ($request, $response) use ($application, $logger) {
     // 拷贝副本
     $runApplication = clone $application;
     $runLogger = clone $logger;
-    // 设置调试工具
-    $application->setDebug(new Debugger($application, $logger));
+    $runApplication->setDebug(new Debugger($runApplication, $runLogger));
     // 设置环境变量
     $runApplication->getDebug()->applyConfig([
         'start-time' => microtime(true),
         'start-memory' => memory_get_usage(),
     ]);
     // 注册自动加载副本
-    $runApplication->getLoader()->register();
+    $runApplication->loader()->register();
     // 运行
     $runApplication->run(new Request($request), new Response($response));
     // 写入日志
     $runLogger->write();
     // 取消自动加载副本
-    $runApplication->getLoader()->unregister();
+    $runApplication->loader()->unregister();
 });
 
 $http->start();
