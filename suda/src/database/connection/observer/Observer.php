@@ -10,11 +10,20 @@ use suda\database\statement\QueryAccess;
 interface Observer
 {
     /**
+     * 执行语句
+     *
      * @param QueryAccess $access
      * @param Connection $connection
      * @param Statement $statement
-     * @param $timeSpend
+     * @param float $timeSpend
      * @param bool $result
      */
-    public function observe(QueryAccess $access, Connection $connection, Statement $statement, $timeSpend, bool $result);
+    public function observe(QueryAccess $access, Connection $connection, Statement $statement, float $timeSpend, bool $result);
+
+    /**
+     * 链接数据库
+     *
+     * @param float $timeSpend
+     */
+    public function connectionDatabase(float $timeSpend);
 }

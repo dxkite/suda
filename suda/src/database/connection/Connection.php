@@ -104,7 +104,9 @@ abstract class Connection
         // 链接数据库
         if (null === $this->pdo && $this->getConfig('enable', true)) {
             try {
+                $time = microtime(true);
                 $this->pdo = $this->createPDO();
+                $this->observer->connectionDatabase(microtime(true) - $time);
                 $this->id = static::$connectionCount;
                 static::$connectionCount ++;
             } catch (PDOException $e) {

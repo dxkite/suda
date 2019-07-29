@@ -1,4 +1,5 @@
 <?php
+
 namespace suda\database\connection\observer;
 
 use suda\database\statement\Statement;
@@ -17,7 +18,17 @@ class NullObserver implements Observer
      * @param bool $result
      * @return void
      */
-    public function observe(QueryAccess $access, Connection $connection, Statement $statement, $timeSpend, bool $result)
+    public function observe(QueryAccess $access, Connection $connection, Statement $statement, float $timeSpend, bool $result)
+    {
+        // noop
+    }
+
+    /**
+     * 链接数据库
+     *
+     * @param float $timeSpend
+     */
+    public function connectionDatabase(float $timeSpend)
     {
         // noop
     }

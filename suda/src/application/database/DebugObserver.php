@@ -43,11 +43,11 @@ class DebugObserver implements Observer
      * @param $timeSpend
      * @param bool $result
      */
-    public function observe(StatementQueryAccess $access, Connection $connection, Statement $statement, $timeSpend, bool $result)
+    public function observe(StatementQueryAccess $access, Connection $connection, Statement $statement, float $timeSpend, bool $result)
     {
-        $this->count ++;
+        $this->count++;
         $query = $connection->prefix($statement->getString());
-        $this->debug->recordTiming('db', $timeSpend, $this->count.' queries');
+        $this->debug->recordTiming('query', $timeSpend, $this->count . ' queries');
         $status = $result ? 'OK' : 'Err';
         if ($result) {
             $effect = $statement->getStatement()->rowCount();
@@ -80,5 +80,16 @@ class DebugObserver implements Observer
             }
             $this->debug->debug(sprintf("query value :%s = %s", $item->getName(), json_encode($value, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)));
         }
+    }
+
+    /**
+     * 链接数据库
+     *
+     * @param float $timeSpend
+     */
+    public function connectionDatabase(float $timeSpend)
+    {
+        $this->debug->info('connection database cost {time}s', ['time' => number_format($timeSpend, 2)]);
+        $this->debug->recordTiming('db', $timeSpend, 'connection database');
     }
 }
