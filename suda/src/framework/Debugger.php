@@ -59,16 +59,18 @@ class Debugger extends Debug
     {
         $output = $this->context->getConfig()->get('response-timing', true);
         if ($output) {
+            $timing = [];
             foreach ($this->timing as $name => $info) {
                 $time = $info['time'];
                 $desc = $info['description'];
                 $ms = number_format($time * 1000, 3);
                 if (strlen($desc)) {
-                    $response->setHeader('server-timing', $name . ';desc="' . $desc . '";dur=' . $ms);
+                    $timing[] = $name . ';desc="' . $desc . '";dur=' . $ms;
                 } else {
-                    $response->setHeader('server-timing', $name . ';dur=' . $ms);
+                    $timing[] = $name . ';dur=' . $ms;
                 }
             }
+            $response->setHeader('server-timing', implode(',', $timing));
         }
     }
 
