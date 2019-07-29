@@ -127,7 +127,7 @@ class Application extends ApplicationSource
             $init = $this->debug->timeEnd('init');
             $this->debug->recordTiming('init', $init, 'init total');
             $this->debug->time('match route');
-            $result = $this->route->match($appRequest);
+            $result = $this->route->match($appRequest->getMethod(),  $appRequest->getUri());
             $match = $this->debug->timeEnd('match route');
             $this->debug->recordTiming('dispatch', $match);
             if ($result !== null) {

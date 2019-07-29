@@ -14,7 +14,7 @@ class NullObserver implements Observer
      * @param QueryAccess $access
      * @param Connection $connection
      * @param Statement $statement
-     * @param $timeSpend
+     * @param float $timeSpend
      * @param bool $result
      * @return void
      */

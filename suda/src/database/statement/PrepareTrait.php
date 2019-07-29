@@ -76,8 +76,8 @@ trait PrepareTrait
     /**
      * @param string $name
      * @param string $operation
-     * @param string $indexName
      * @param mixed $value
+     * @param string $indexName
      * @return Query
      * @throws SQLException
      */

@@ -44,11 +44,11 @@ class LanguageBag
     /**
      * 格式化输出
      *
-     * @param string $string $string
+     * @param string $text
      * @param array $param
      * @return string
      */
-    public static function format(string $string, array $param)
+    public static function format(string $text, array $param)
     {
         return preg_replace_callback('/(?<!\$)\$(\{)?(\d+|\w+?\b)(?(1)\})/', function ($match) use ($param) {
             $key = $match[2];
@@ -56,6 +56,6 @@ class LanguageBag
                 return strval($param[$key]);
             }
             return $match[0];
-        }, $string);
+        }, $text);
     }
 }

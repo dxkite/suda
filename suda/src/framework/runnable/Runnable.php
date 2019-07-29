@@ -1,6 +1,7 @@
 <?php
 namespace suda\framework\runnable;
 
+use Closure;
 use ReflectionException;
 use suda\framework\runnable\target\FileTarget;
 use suda\framework\runnable\target\MethodTarget;
@@ -22,6 +23,11 @@ class Runnable
      */
     protected $target;
 
+    /**
+     * Runnable constructor.
+     * @param Runnable|Closure|array|string $runnable
+     * @param array $parameter
+     */
     public function __construct($runnable, array $parameter = [])
     {
         if ($runnable instanceof self) {

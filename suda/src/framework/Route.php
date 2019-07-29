@@ -196,13 +196,16 @@ class Route
     /**
      * 匹配路由
      *
-     * @param Request $request
+     * @param string $method
+     * @param string $uri
      * @return MatchResult|null
      */
-    public function match(Request $request): ?MatchResult
+    public function match(string $method, string $uri): ?MatchResult
     {
+        /** @var RouteMatcher $matcher */
+        /** @var string $name */
         foreach ($this->routes as $name => $matcher) {
-            if (($parameter = $matcher->match($request)) !== null) {
+            if (($parameter = $matcher->match($method, $uri)) !== null) {
                 return new MatchResult($matcher, $name, $this->runnable[$name], $parameter);
             }
         }

@@ -40,7 +40,7 @@ class DebugObserver implements Observer
      * @param StatementQueryAccess $access
      * @param Connection $connection
      * @param Statement $statement
-     * @param $timeSpend
+     * @param float $timeSpend
      * @param bool $result
      */
     public function observe(StatementQueryAccess $access, Connection $connection, Statement $statement, float $timeSpend, bool $result)

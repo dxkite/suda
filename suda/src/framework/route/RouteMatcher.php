@@ -156,15 +156,16 @@ class RouteMatcher
     /**
      * 匹配请求
      *
-     * @param Request $request
+     * @param string $method
+     * @param string $uri
      * @return array|null
      */
-    public function match(Request $request):?array
+    public function match(string $method, string $uri):?array
     {
-        if (count($this->methods) > 0 && !in_array($request->getMethod(), $this->methods)) {
+        if (count($this->methods) > 0 && !in_array($method, $this->methods)) {
             return null;
         }
-        if (($parameter = $this->matcher->match($request->getUri())) !== null) {
+        if (($parameter = $this->matcher->match($uri)) !== null) {
             return $this->matcher->buildParameter($parameter);
         }
         return null;

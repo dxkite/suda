@@ -127,7 +127,7 @@ interface FileSystemInterface
      * @return boolean
      */
     public static function copyDir(string $path, string $toPath, ?string $regex=null, bool $move = false):bool;
-    
+
     /**
      * 移动文件夹
      *
