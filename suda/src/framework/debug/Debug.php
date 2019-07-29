@@ -175,7 +175,6 @@ class Debug implements LoggerInterface, LoggerAwareInterface, DumpInterface, Att
      */
     public function recordTiming(string $name, float $time, string $description = '')
     {
-        $this->info('timing '.$name);
         if (array_key_exists($name, $this->timing)) {
             $this->timing[$name]['time'] += $time;
         } else {

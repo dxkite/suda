@@ -47,6 +47,7 @@ class PHPContext
         return $this->loader;
     }
 
+
     /**
      * 获取配置
      *
@@ -57,15 +58,6 @@ class PHPContext
         return $this->config;
     }
 
-    /**
-     * 获取调试工具
-     *
-     * @return Debugger
-     */
-    public function debug(): Debugger
-    {
-        return $this->debug;
-    }
 
     /**
      * 获取配置信息

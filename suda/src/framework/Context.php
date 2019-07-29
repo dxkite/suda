@@ -215,7 +215,16 @@ class Context extends PHPContext
     public function setDebug(Debugger $debug)
     {
         $this->debug = $debug;
-
         return $this;
+    }
+
+    /**
+     * 获取调试工具
+     *
+     * @return Debugger
+     */
+    public function debug(): Debugger
+    {
+        return $this->debug;
     }
 }
