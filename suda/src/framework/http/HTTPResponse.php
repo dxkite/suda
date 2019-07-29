@@ -167,8 +167,9 @@ class HTTPResponse implements Response
      */
     public function redirect(string $url, int $httpCode = 302)
     {
-        $this->header('Location', $url);
+        $this->header('location', $url);
         $this->status($httpCode);
+        $this->end();
     }
 
     /**

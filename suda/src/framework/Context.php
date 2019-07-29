@@ -33,6 +33,13 @@ class Context extends PHPContext
     protected $cache;
 
     /**
+     * PHP错误调试
+     *
+     * @var Debugger
+     */
+    protected $debug;
+
+    /**
      * 创建PHP环境
      *
      * @param Config $config
@@ -184,6 +191,30 @@ class Context extends PHPContext
     public function setRoute(Route $route)
     {
         $this->route = $route;
+
+        return $this;
+    }
+
+    /**
+     * Get pHP错误调试
+     *
+     * @return  Debugger
+     */
+    public function getDebug()
+    {
+        return $this->debug;
+    }
+
+    /**
+     * Set PHP错误调试
+     *
+     * @param Debugger $debug  PHP错误调试
+     *
+     * @return  self
+     */
+    public function setDebug(Debugger $debug)
+    {
+        $this->debug = $debug;
 
         return $this;
     }

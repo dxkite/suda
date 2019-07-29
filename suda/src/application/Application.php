@@ -60,15 +60,17 @@ class Application extends ApplicationSource
         $this->debug->time('loading application');
         $appLoader->load();
         $this->event->exec('application:load-config', [$this->config, $this]);
-        $this->debug->timeEnd('loading application');
+        $boot = $this->debug->timeEnd('loading application');
         $this->debug->time('loading data-source');
         $appLoader->loadDataSource();
-        $this->debug->timeEnd('loading data-source');
+        $load = $this->debug->timeEnd('loading data-source');
+        $this->debug->recordTiming('boot', $boot + $load);
         $this->event->exec('application:load-environment', [$this->config, $this]);
         $this->debug->time('loading route');
         $appLoader->loadRoute();
         $this->event->exec('application:load-route', [$this->route, $this]);
-        $this->debug->timeEnd('loading route');
+        $route = $this->debug->timeEnd('loading route');
+        $this->debug->recordTiming('route', $route);
         $this->debug->info('-------------------------------');
     }
 
@@ -81,6 +83,7 @@ class Application extends ApplicationSource
      */
     protected function prepare(Request $request, Response $response)
     {
+
         $response->setHeader('x-powered-by', 'suda/' . SUDA_VERSION, true);
         $response->getWrapper()->register(ExceptionContentWrapper::class, [Throwable::class]);
         $response->getWrapper()->register(TemplateWrapper::class, [RawTemplate::class]);
@@ -119,10 +122,14 @@ class Application extends ApplicationSource
         $appResponse = new Response($response, $this);
 
         try {
+            $this->debug->time('init');
             $this->prepare($appRequest, $appResponse);
+            $init = $this->debug->timeEnd('init');
+            $this->debug->recordTiming('init', $init, 'init total');
             $this->debug->time('match route');
             $result = $this->route->match($appRequest);
-            $this->debug->timeEnd('match route');
+            $match = $this->debug->timeEnd('match route');
+            $this->debug->recordTiming('dispatch', $match);
             if ($result !== null) {
                 $this->event->exec('application:route:match::after', [$result, $appRequest]);
             }

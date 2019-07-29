@@ -4,6 +4,7 @@ require_once __DIR__ . '/loader.php';
 use Swoole\Http\Server;
 use suda\swoole\Request;
 use suda\swoole\Response;
+use suda\framework\Debugger;
 use suda\framework\loader\Loader;
 use suda\framework\debug\log\logger\FileLogger;
 use suda\application\builder\ApplicationBuilder;
@@ -19,8 +20,6 @@ $loader->register();
 $loader->addIncludePath(SUDA_SYSTEM . '/src', 'suda');
 // 创建应用
 $application = ApplicationBuilder::build($loader, SUDA_APP, SUDA_APP_MANIFEST, SUDA_DATA);
-// 注册Debug工具
-$application->registerDebugger();
 // 不复制资源
 $application->config()->set('copy-static-source', false);
 // 日志路径
@@ -43,13 +42,15 @@ $http->set([
 ]);
 
 $application->getConfig()->set('save-dump-path', SUDA_DEBUG_LOG_PATH . '/dump');
+$application->getConfig()->set('response-timing', SUDA_DEBUG);
 
 $http->on('request', function ($request, $response) use ($application, $logger) {
     // 拷贝副本
     $runApplication = clone $application;
     $runLogger = clone $logger;
+    // 设置调试工具
+    $application->setDebug(new Debugger($application, $logger));
     // 设置环境变量
-    $runApplication->getDebug()->setLogger($runLogger);
     $runApplication->getDebug()->applyConfig([
         'start-time' => microtime(true),
         'start-memory' => memory_get_usage(),

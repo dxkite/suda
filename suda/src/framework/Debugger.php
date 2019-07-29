@@ -6,7 +6,6 @@ namespace suda\framework;
 use ErrorException;
 use Psr\Log\LoggerInterface;
 use suda\framework\debug\Debug;
-use suda\framework\context\PHPContext;
 use suda\framework\debug\log\logger\NullLogger;
 use Throwable;
 
@@ -18,16 +17,27 @@ class Debugger extends Debug
     /**
      * 环境内容
      *
-     * @var PHPContext
+     * @var Context
      */
     protected $context;
 
     /**
      * 初始化
+     * @param Context $context
+     * @param LoggerInterface $logger
      */
-    public function __construct()
+    public function __construct(Context $context, LoggerInterface $logger)
     {
-        $this->setLogger(new NullLogger);
+        $this->context = $context;
+        $this->logger = $logger;
+        $this->applyConfig([
+            'start-time' => defined('SUDA_START_TIME') ? constant('SUDA_START_TIME') : microtime(true),
+            'start-memory' => defined('SUDA_START_MEMORY') ? constant('SUDA_START_MEMORY') : memory_get_usage(),
+        ]);
+        $this->context = $context;
+        $this->timing = [];
+        $this->timeRecord = [];
+        $context->event()->listen('response::before-send', [$this, 'writeTiming']);
     }
 
     /**
@@ -43,19 +53,23 @@ class Debugger extends Debug
     }
 
     /**
-     * 创建调式工具
-     *
-     * @param PHPContext $context
-     * @return Debugger
+     * @param Response $response
      */
-    public function load(PHPContext $context): Debugger
+    public function writeTiming(Response $response)
     {
-        $this->applyConfig([
-            'start-time' => defined('SUDA_START_TIME') ? constant('SUDA_START_TIME') : microtime(true),
-            'start-memory' => defined('SUDA_START_MEMORY') ? constant('SUDA_START_MEMORY') : memory_get_usage(),
-        ]);
-        $this->context = $context;
-        return $this;
+        $output = $this->context->getConfig()->get('response-timing', true);
+        if ($output) {
+            foreach ($this->timing as $name => $info) {
+                $time = $info['time'];
+                $desc = $info['description'];
+                $ms = number_format($time * 1000, 3);
+                if (strlen($desc)) {
+                    $response->setHeader('server-timing', $name . ';desc="' . $desc . '";dur=' . $ms);
+                } else {
+                    $response->setHeader('server-timing', $name . ';dur=' . $ms);
+                }
+            }
+        }
     }
 
     /**

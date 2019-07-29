@@ -24,12 +24,6 @@ class PHPContext
      */
     protected $config;
 
-    /**
-     * PHP错误调试
-     *
-     * @var Debugger
-     */
-    protected $debug;
 
     /**
      * 创建PHP环境
@@ -41,17 +35,6 @@ class PHPContext
     {
         $this->loader = $loader;
         $this->config = $config;
-        $this->debug = new Debugger;
-    }
-
-    /**
-     * 注册调试器
-     *
-     * @return void
-     */
-    public function registerDebugger()
-    {
-        $this->debug->load($this)->register();
     }
 
     /**
@@ -140,30 +123,6 @@ class PHPContext
     public function setConfig(Config $config)
     {
         $this->config = $config;
-
-        return $this;
-    }
-
-    /**
-     * Get pHP错误调试
-     *
-     * @return  Debugger
-     */
-    public function getDebug()
-    {
-        return $this->debug;
-    }
-
-    /**
-     * Set PHP错误调试
-     *
-     * @param Debugger $debug  PHP错误调试
-     *
-     * @return  self
-     */
-    public function setDebug(Debugger $debug)
-    {
-        $this->debug = $debug;
 
         return $this;
     }

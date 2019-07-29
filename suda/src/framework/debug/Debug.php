@@ -16,6 +16,9 @@ class Debug implements LoggerInterface, LoggerAwareInterface, DumpInterface, Att
 {
     use LoggerTrait, LoggerAwareTrait, DumpTrait, AttachTrait, ConfigTrait;
 
+    /**
+     * @var array
+     */
     protected static $levels = ['debug', 'info', 'notice', 'warning', 'error', 'critical', 'alert', 'emergency'];
 
     /**
@@ -31,6 +34,11 @@ class Debug implements LoggerInterface, LoggerAwareInterface, DumpInterface, Att
      * @var array
      */
     protected $timeRecord;
+
+    /**
+     * @var array
+     */
+    protected $timing;
 
     /**
      * @param mixed $level
@@ -52,6 +60,11 @@ class Debug implements LoggerInterface, LoggerAwareInterface, DumpInterface, Att
         $this->logger->log($level, $this->interpolate($this->getConfig('log-format'), $attach, $attribute), []);
     }
 
+    /**
+     * @param string $message
+     * @param array $context
+     * @return array
+     */
     public function analyse(string $message, array $context)
     {
         $replace = [];
@@ -77,6 +90,9 @@ class Debug implements LoggerInterface, LoggerAwareInterface, DumpInterface, Att
         return $this->ignoreTraces;
     }
 
+    /**
+     * @return array
+     */
     public function getDefaultConfig(): array
     {
         return [
@@ -86,11 +102,19 @@ class Debug implements LoggerInterface, LoggerAwareInterface, DumpInterface, Att
         ];
     }
 
+    /**
+     * @param $val
+     * @return bool
+     */
     protected function canBeStringValue($val): bool
     {
         return !is_array($val) && (!is_object($val) || method_exists($val, '__toString'));
     }
 
+    /**
+     * @param array $attribute
+     * @return array
+     */
     protected function assignAttributes(array $attribute): array
     {
         $attribute['current-time'] = number_format(microtime(true), 4, '.', '');
@@ -102,6 +126,11 @@ class Debug implements LoggerInterface, LoggerAwareInterface, DumpInterface, Att
         return $attribute;
     }
 
+    /**
+     * @param int $bytes
+     * @param int $precision
+     * @return string
+     */
     public static function formatBytes(int $bytes, int $precision = 0)
     {
         $human = ['B', 'KB', 'MB', 'GB', 'TB'];
@@ -112,11 +141,19 @@ class Debug implements LoggerInterface, LoggerAwareInterface, DumpInterface, Att
         return round($bytes, $precision) . ' ' . $human[$pos];
     }
 
+    /**
+     * @param string $name
+     * @param string $type
+     */
     public function time(string $name, string $type = LogLevel::INFO)
     {
         $this->timeRecord[$name] = ['time' => microtime(true), 'level' => $type];
     }
 
+    /**
+     * @param string $name
+     * @return float
+     */
     public function timeEnd(string $name)
     {
         if (array_key_exists($name, $this->timeRecord)) {
@@ -125,9 +162,34 @@ class Debug implements LoggerInterface, LoggerAwareInterface, DumpInterface, Att
                 $this->timeRecord[$name]['level'],
                 sprintf("process %s cost %ss", $name, number_format($pass, 5))
             );
+            unset($this->timeRecord[$name]);
             return $pass;
         }
         return 0;
+    }
+
+    /**
+     * @param string $name
+     * @param float $time
+     * @param string $description
+     */
+    public function recordTiming(string $name, float $time, string $description = '')
+    {
+        $this->info('timing '.$name);
+        if (array_key_exists($name, $this->timing)) {
+            $this->timing[$name]['time'] += $time;
+        } else {
+            $this->timing[$name]['time'] = $time;
+        }
+        $this->timing[$name]['description'] = $description;
+    }
+
+    /**
+     * @return array
+     */
+    public function getTiming(): array
+    {
+        return $this->timing;
     }
 
     /**

@@ -1,5 +1,6 @@
 <?php
 
+use suda\framework\Debugger;
 use suda\framework\loader\Path;
 use suda\framework\loader\Loader;
 use suda\framework\debug\log\logger\FileLogger;
@@ -17,12 +18,6 @@ $loader->addIncludePath(SUDA_SYSTEM . '/src', 'suda');
 defined('SUDA_DATA') or define('SUDA_DATA', Path::toAbsolutePath('~/data'));
 defined('SUDA_APP_MANIFEST') or define('SUDA_APP_MANIFEST', SUDA_APP . '/manifest');
 $application = ApplicationBuilder::build($loader, SUDA_APP, SUDA_APP_MANIFEST, SUDA_DATA);
-$application->registerDebugger();
-// 调试信息
-$application->getDebug()->applyConfig([
-    'start-time' => defined('SUDA_START_TIME') ? constant('SUDA_START_TIME') : microtime(true),
-    'start-memory' => defined('SUDA_START_MEMORY') ? constant('SUDA_START_MEMORY') : memory_get_usage(),
-]);
 // 日志路径
 defined('SUDA_DEBUG_LOG_PATH') or define('SUDA_DEBUG_LOG_PATH', $application->getDataPath() . '/logs');
 // 文件日志
@@ -35,7 +30,14 @@ $logger = new FileLogger(
         'log-format' => '%message%',
     ]
 );
-$application->getDebug()->setLogger($logger);
+// 设置调试工具
+$application->setDebug(new Debugger($application, $logger));
+// 调试信息
+$application->getDebug()->applyConfig([
+    'start-time' => defined('SUDA_START_TIME') ? constant('SUDA_START_TIME') : microtime(true),
+    'start-memory' => defined('SUDA_START_MEMORY') ? constant('SUDA_START_MEMORY') : memory_get_usage(),
+]);
 $application->getConfig()->set('save-dump-path', SUDA_DEBUG_LOG_PATH . '/dump');
+$application->getConfig()->set('response-timing', SUDA_DEBUG);
 $application->run(Request::create(), new Response);
 exit;

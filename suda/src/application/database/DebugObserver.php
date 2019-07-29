@@ -15,6 +15,11 @@ use suda\database\connection\observer\Observer;
 class DebugObserver implements Observer
 {
     /**
+     * @var int
+     */
+    private $count;
+
+    /**
      * 调试记录
      *
      * @var Debugger
@@ -28,6 +33,7 @@ class DebugObserver implements Observer
     public function __construct(Debugger $debug)
     {
         $this->debug = $debug;
+        $this->count = 0;
     }
 
     /**
@@ -39,7 +45,9 @@ class DebugObserver implements Observer
      */
     public function observe(StatementQueryAccess $access, Connection $connection, Statement $statement, $timeSpend, bool $result)
     {
+        $this->count ++;
         $query = $connection->prefix($statement->getString());
+        $this->debug->recordTiming('db', $timeSpend, $this->count.' queries');
         $status = $result ? 'OK' : 'Err';
         if ($result) {
             $effect = $statement->getStatement()->rowCount();

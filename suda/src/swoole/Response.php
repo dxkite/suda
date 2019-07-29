@@ -141,6 +141,7 @@ class Response implements \suda\framework\http\Response
      */
     public function redirect(string $url, int $httpCode = 302)
     {
+        $this->send = true;
         $this->response->redirect($url, $httpCode);
     }
 

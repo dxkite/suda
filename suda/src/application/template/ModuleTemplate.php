@@ -74,7 +74,8 @@ class ModuleTemplate extends ModuleTemplateBase
     {
         $this->application->debug()->time('render ' . $this->name);
         $code = parent::getRenderedString();
-        $this->application->debug()->timeEnd('render ' . $this->name);
+        $time = $this->application->debug()->timeEnd('render ' . $this->name);
+        $this->application->debug()->recordTiming('render', $time);
         return $code;
     }
 

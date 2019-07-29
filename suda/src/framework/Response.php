@@ -178,13 +178,15 @@ class Response extends ResponseWrapper
     }
 
     /**
+     * 重定向页面
+     * 不直接结束请求
      * @param string $url
      * @param int $httpCode
      */
     public function redirect(string $url, int $httpCode = 302)
     {
-        $this->triggerSendEvent();
-        parent::redirect($url, $httpCode);
+        $this->status($httpCode);
+        $this->header('location', $url);
     }
 
     /**
