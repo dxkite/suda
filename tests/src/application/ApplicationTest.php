@@ -1,9 +1,11 @@
 <?php
 namespace test\arrayobject;
 
+use suda\framework\Debugger;
 use suda\phpunit\TestRequest;
 use PHPUnit\Framework\TestCase;
 use suda\framework\loader\Loader;
+use suda\framework\debug\log\logger\NullLogger;
 use suda\application\builder\ApplicationBuilder;
 
 class ApplicationTest extends TestCase
@@ -15,9 +17,9 @@ class ApplicationTest extends TestCase
      */
     public function testRouteParse($expected, $parameter)
     {
-        $request = new TestRequest;
         $loader = new Loader;
         $application = ApplicationBuilder::build($loader, SUDA_APP, SUDA_APP.'/manifest', SUDA_DATA);
+        $application->setDebug(new Debugger($application, new NullLogger()));
         $this->assertEquals($expected, $application->parseRouteName(...$parameter));
     }
 
@@ -30,9 +32,9 @@ class ApplicationTest extends TestCase
      */
     public function testGetRouteName($expected, $parameter)
     {
-        $request = new TestRequest;
         $loader = new Loader;
         $application = ApplicationBuilder::build($loader, SUDA_APP, SUDA_APP.'/manifest', SUDA_DATA);
+        $application->setDebug(new Debugger($application, new NullLogger()));
         $application->loader()->register();
         $application->load();
         $this->assertEquals($expected, $application->getRouteName(...$parameter));
@@ -46,7 +48,6 @@ class ApplicationTest extends TestCase
             'simple module@group:name' => [ ['welcome','setting','index'], ['welcome@setting:index'] ],
             'module null name' => [ [null,'setting','index'], ['index', null , 'setting'] ],
             'module null @group:name' => [ [null,'setting','index'], ['@setting:index',null] ],
-            'simple module@group:name' => [ ['welcome','setting','index'], ['welcome@setting:index'] ],
         ];
     }
 
