@@ -28,7 +28,7 @@ class NullObserver implements Observer
      *
      * @param float $timeSpend
      */
-    public function connectionDatabase(float $timeSpend)
+    public function connectDatabase(float $timeSpend)
     {
         // noop
     }

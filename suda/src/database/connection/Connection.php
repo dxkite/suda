@@ -106,7 +106,7 @@ abstract class Connection
             try {
                 $time = microtime(true);
                 $this->pdo = $this->createPDO();
-                $this->observer->connectionDatabase(microtime(true) - $time);
+                $this->observer->connectDatabase(microtime(true) - $time);
                 $this->id = static::$connectionCount;
                 static::$connectionCount ++;
             } catch (PDOException $e) {

@@ -87,9 +87,9 @@ class DebugObserver implements Observer
      *
      * @param float $timeSpend
      */
-    public function connectionDatabase(float $timeSpend)
+    public function connectDatabase(float $timeSpend)
     {
-        $this->debug->info('connection database cost {time}s', ['time' => number_format($timeSpend, 2)]);
+        $this->debug->info('connection database cost {time}s', ['time' => number_format($timeSpend, 4)]);
         $this->debug->recordTiming('db', $timeSpend, 'connection database');
     }
 }
