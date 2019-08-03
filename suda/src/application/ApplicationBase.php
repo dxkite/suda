@@ -177,17 +177,14 @@ class ApplicationBase extends ApplicationContext
         return $this->running;
     }
 
+
     /**
-     * Set 运行的模块
-     *
-     * @param  Module  $running  运行的模块
-     *
-     * @return  self
+     * @param Module $running
+     * @return $this
      */
     public function setRunning(Module $running)
     {
         $this->running = $running;
-
         return $this;
     }
 

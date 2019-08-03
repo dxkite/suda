@@ -121,6 +121,14 @@ abstract class Connection
     }
 
     /**
+     * @return array
+     */
+    public function __sleep()
+    {
+        return ['type', 'config', 'observer'];
+    }
+
+    /**
      * 获取PDO
      * @ignore-dump
      * @return PDO

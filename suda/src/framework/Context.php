@@ -1,4 +1,5 @@
 <?php
+
 namespace suda\framework;
 
 use function is_array;
@@ -59,7 +60,7 @@ class Context extends PHPContext
      *
      * @return Route
      */
-    public function route():Route
+    public function route(): Route
     {
         return $this->route;
     }
@@ -82,7 +83,7 @@ class Context extends PHPContext
      *
      * @return Event
      */
-    public function event():Event
+    public function event(): Event
     {
         return $this->event;
     }
@@ -94,7 +95,7 @@ class Context extends PHPContext
      * @param array $cacheConfig
      * @return Cache
      */
-    protected function createCacheFrom(string $cacheName, array $cacheConfig):Cache
+    protected function createCacheFrom(string $cacheName, array $cacheConfig): Cache
     {
         return new $cacheName($cacheConfig);
     }
@@ -104,9 +105,12 @@ class Context extends PHPContext
      *
      * @return Cache
      */
-    protected function getDefaultCache():Cache
+    protected function getDefaultCache(): Cache
     {
-        return $this->createCacheFrom($this->conf('cache.class', FileCache::class), $this->conf('cache', []));
+        $config = $this->conf('cache', []);
+        $cacheClass = $this->conf('cache.class', FileCache::class);
+        $realClassName = Loader::realName($cacheClass);
+        return $this->createCacheFrom($realClassName, $config);
     }
 
     /**
@@ -122,14 +126,13 @@ class Context extends PHPContext
     /**
      * Set 事件监听器
      *
-     * @param  Event  $event  事件监听器
+     * @param Event $event 事件监听器
      *
-     * @return  self
+     * @return $this
      */
     public function setEvent(Event $event)
     {
         $this->event = $event;
-
         return $this;
     }
 
@@ -146,14 +149,13 @@ class Context extends PHPContext
     /**
      * Set 缓存
      *
-     * @param  Cache  $cache  缓存
+     * @param Cache $cache 缓存
      *
-     * @return  self
+     * @return $this
      */
     public function setCache(Cache $cache)
     {
         $this->cache = $cache;
-
         return $this;
     }
 
@@ -184,14 +186,13 @@ class Context extends PHPContext
     /**
      * Set 路由匹配工具
      *
-     * @param  Route  $route  路由匹配工具
+     * @param Route $route 路由匹配工具
      *
-     * @return  self
+     * @return $this
      */
     public function setRoute(Route $route)
     {
         $this->route = $route;
-
         return $this;
     }
 
@@ -208,9 +209,9 @@ class Context extends PHPContext
     /**
      * Set PHP错误调试
      *
-     * @param Debugger $debug  PHP错误调试
+     * @param Debugger $debug PHP错误调试
      *
-     * @return  self
+     * @return $this
      */
     public function setDebug(Debugger $debug)
     {

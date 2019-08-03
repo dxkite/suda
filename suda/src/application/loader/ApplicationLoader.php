@@ -50,6 +50,9 @@ class ApplicationLoader
         $this->reachableModules = [];
     }
 
+    /**
+     * 加载APP
+     */
     public function load()
     {
         $this->loadVendorIfExist();
@@ -61,6 +64,9 @@ class ApplicationLoader
     }
 
 
+    /**
+     * 加载路由
+     */
     public function loadRoute()
     {
         foreach ($this->application->getModules() as $name => $module) {
@@ -71,6 +77,9 @@ class ApplicationLoader
     }
 
 
+    /**
+     * 加载全局配置
+     */
     public function loadGlobalConfig()
     {
         $resource = $this->application->getResource();
@@ -82,6 +91,9 @@ class ApplicationLoader
         }
     }
 
+    /**
+     * 加载额外vendor
+     */
     public function loadVendorIfExist()
     {
         $vendorAutoload = $this->application->getPath() . '/vendor/autoload.php';
@@ -91,6 +103,8 @@ class ApplicationLoader
     }
 
     /**
+     * 准备数据源
+     *
      * @throws SQLException
      */
     public function loadDataSource()
@@ -100,16 +114,21 @@ class ApplicationLoader
         $this->application->setDataSource($dataSource);
     }
 
-
+    /**
+     * 准备模块
+     */
     protected function prepareModule()
     {
         foreach ($this->application->getModules()->all() as $name => $module) {
             $this->moduleLoader[$name] = new ModuleLoader($this->application, $module);
-            $this->moduleLoader[$name]->toLoad();
-            $this->moduleLoader[$name]->loadExtraModuleResourceLibrary();
+            $this->moduleLoader[$name]->toLoad(); // 切换到加载状态
+            $this->moduleLoader[$name]->loadExtraModuleResourceLibrary(); // 加载二外的模块源
         }
     }
 
+    /**
+     * 激活模块
+     */
     protected function activeModule()
     {
         foreach ($this->application->getModules()->all() as $name => $module) {
@@ -119,6 +138,9 @@ class ApplicationLoader
         }
     }
 
+    /**
+     * 注册模块
+     */
     protected function registerModule()
     {
         $extractPath = $this->application->getDataPath() . '/extract-module';
@@ -136,6 +158,10 @@ class ApplicationLoader
         $this->setModuleReachable($this->application->getModules(), $reachable);
     }
 
+    /**
+     * @param string $path
+     * @param string $extractPath
+     */
     protected function registerModuleFrom(string $path, string $extractPath)
     {
         $modules = new ModuleBag;
@@ -145,6 +171,10 @@ class ApplicationLoader
         $this->prepareModuleConfig($path, $modules);
     }
 
+    /**
+     * @param string $path
+     * @param ModuleBag $modules
+     */
     protected function prepareModuleConfig(string $path, ModuleBag $modules)
     {
         $config = $this->getModuleDirectoryConfig($path);

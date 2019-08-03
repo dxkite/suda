@@ -81,15 +81,40 @@ class ApplicationContext extends Context
     public function __construct(string $path, array $manifest, Loader $loader, ?string $dataPath = null)
     {
         parent::__construct(new Config(['app' => $manifest]), $loader);
-        $this->path = $path;
-        $this->routeGroup = $manifest['route-group'] ?? ['default'];
-        $this->resource = new Resource();
-        $this->resource->registerResourcePath($path, $manifest['resource'] ?? './resource');
-        $this->locate = $manifest['locale'] ?? 'zh-cn';
-        $this->style = $manifest['style'] ?? 'default';
-        $this->manifest = $manifest;
-        $this->dataPath = $dataPath ?? Resource::getPathByRelativePath($manifest['resource'] ?? './data', $path);
+        $this->setPath($path);
+        $this->setManifest($manifest);
+        $this->setRouteGroup($manifest['route-group'] ?? ['default']);
+        $resource = new Resource();
+        $resource->registerResourcePath($path, $manifest['resource'] ?? './resource');
+        $this->setResource($resource);
+        $this->setLocate($manifest['locale'] ?? 'zh-cn');
+        $this->setStyle($manifest['style'] ?? 'default');
+        $this->setDataPath($dataPath ?? Resource::getPathByRelativePath($manifest['resource'] ?? './data', $path));
         $this->config->set('data_path', $this->dataPath);
+    }
+
+    /**
+     * @param string $path
+     */
+    public function setPath(string $path): void
+    {
+        $this->path = $path;
+    }
+
+    /**
+     * @param array $manifest
+     */
+    public function setManifest(array $manifest): void
+    {
+        $this->manifest = $manifest;
+    }
+
+    /**
+     * @param array $routeGroup
+     */
+    public function setRouteGroup(array $routeGroup): void
+    {
+        $this->routeGroup = $routeGroup;
     }
 
     /**
@@ -117,28 +142,21 @@ class ApplicationContext extends Context
     }
 
     /**
-     * Get 语言
-     *
-     * @return  string
+     * @return string
      */
-    public function getLocate()
+    public function getLocate(): string
     {
         return $this->locate;
     }
 
     /**
-     * Set 语言
-     *
-     * @param string $locate 语言
-     *
-     * @return  self
+     * @param string $locate
      */
-    public function setLocate(string $locate)
+    public function setLocate(string $locate): void
     {
         $this->locate = $locate;
-
-        return $this;
     }
+
 
     /**
      * Get 配置数组

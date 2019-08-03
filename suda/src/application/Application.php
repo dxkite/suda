@@ -83,7 +83,6 @@ class Application extends ApplicationSource
      */
     protected function prepare(Request $request, Response $response)
     {
-
         $response->setHeader('x-powered-by', 'suda/' . SUDA_VERSION, true);
         $response->getWrapper()->register(ExceptionContentWrapper::class, [Throwable::class]);
         $response->getWrapper()->register(TemplateWrapper::class, [RawTemplate::class]);
@@ -127,7 +126,7 @@ class Application extends ApplicationSource
             $init = $this->debug->timeEnd('init');
             $this->debug->recordTiming('init', $init, 'init total');
             $this->debug->time('match route');
-            $result = $this->route->match($appRequest->getMethod(),  $appRequest->getUri());
+            $result = $this->route->match($appRequest->getMethod(), $appRequest->getUri());
             $match = $this->debug->timeEnd('match route');
             $this->debug->recordTiming('dispatch', $match);
             if ($result !== null) {
