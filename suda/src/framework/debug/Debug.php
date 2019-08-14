@@ -160,7 +160,7 @@ class Debug implements LoggerInterface, LoggerAwareInterface, DumpInterface, Att
             $pass = microtime(true) - $this->timeRecord[$name]['time'];
             $this->log(
                 $this->timeRecord[$name]['level'],
-                sprintf("process %s cost %ss", $name, number_format($pass, 5))
+                sprintf("process %s cost %ss", $name, number_format($pass, 5, '.', ''))
             );
             unset($this->timeRecord[$name]);
             return $pass;

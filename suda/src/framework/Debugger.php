@@ -63,7 +63,7 @@ class Debugger extends Debug
             foreach ($this->timing as $name => $info) {
                 $time = $info['time'];
                 $desc = $info['description'];
-                $ms = number_format($time * 1000, 3);
+                $ms = number_format($time * 1000, 3, '.', '');
                 if (strlen($desc)) {
                     $timing[] = $name . ';desc="' . $desc . '";dur=' . $ms;
                 } else {

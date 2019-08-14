@@ -189,14 +189,14 @@ trait DirectoryHelper
             foreach (static::read($directory, true, $regex, false, RecursiveIteratorIterator::CHILD_FIRST) as $subpath) {
                 $srcpath = $directory.DIRECTORY_SEPARATOR.$subpath;
                 $destpath = $toPath.DIRECTORY_SEPARATOR.$subpath;
-                static::proccessPath($srcpath, $destpath, $move);
+                static::processPath($srcpath, $destpath, $move);
             }
             return true;
         }
         return false;
     }
 
-    protected static function proccessPath(string $srcpath, string $destpath, bool $move)
+    protected static function processPath(string $srcpath, string $destpath, bool $move)
     {
         if (is_dir($srcpath)) {
             static::make($destpath);

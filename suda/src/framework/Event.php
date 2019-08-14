@@ -2,6 +2,8 @@
 
 namespace suda\framework;
 
+use ArrayIterator;
+use Iterator;
 use suda\framework\runnable\Runnable;
 
 class Event
@@ -98,15 +100,27 @@ class Event
      *
      * @param string $name
      * @param array $args
+     * @param bool $reverse
      * @return void
      */
-    public function exec(string $name, array $args = [])
+    public function exec(string $name, array $args = [], bool $reverse = false)
     {
         if ($this->hasListenEvent($name)) {
-            foreach ($this->queue[$name] as $command) {
+            $iterator = $this->getCallbackIterator($name, $reverse);
+            foreach ($iterator as $command) {
                 $this->call($name, $command, $args);
             }
         }
+    }
+
+    /**
+     * 获取迭代器
+     * @param string $name
+     * @param bool $reverse
+     * @return Iterator
+     */
+    protected function getCallbackIterator(string $name, bool $reverse = false): Iterator {
+        return $reverse?new ArrayIterator(array_reverse($this->queue[$name])):new ArrayIterator($this->queue[$name]);
     }
 
     /**
@@ -115,13 +129,15 @@ class Event
      * @param string $name
      * @param mixed $value
      * @param array $args
+     * @param bool $reverse
      * @return mixed
      */
-    public function process(string $name, $value, array $args = [])
+    public function process(string $name, $value, array $args = [], bool $reverse = false)
     {
         if ($this->hasListenEvent($name)) {
             array_unshift($args, $value);
-            foreach ($this->queue[$name] as $command) {
+            $iterator = $this->getCallbackIterator($name, $reverse);
+            foreach ($iterator as $command) {
                 $args[0] = $value;
                 $value = $this->call($name, $command, $args);
             }
@@ -135,12 +151,14 @@ class Event
      * @param string $name
      * @param array $args
      * @param mixed $condition
+     * @param bool $reverse
      * @return boolean
      */
-    public function next(string $name, array $args = [], $condition = true): bool
+    public function next(string $name, array $args = [], $condition = true, bool $reverse = false): bool
     {
         if ($this->hasListenEvent($name)) {
-            foreach ($this->queue[$name] as $command) {
+            $iterator = $this->getCallbackIterator($name, $reverse);
+            foreach ($iterator as $command) {
                 if ($this->call($name, $command, $args) === $condition) {
                     continue;
                 } else {
@@ -161,7 +179,7 @@ class Event
     public function execFirst(string $name, array $args = [])
     {
         if ($this->hasListenEvent($name)) {
-            return $this->call($name, array_shift($this->queue[$name]), $args);
+            return $this->call($name, $this->queue[$name][0], $args);
         }
         return null;
     }
@@ -176,7 +194,8 @@ class Event
     public function execLast(string $name, array $args = [])
     {
         if ($this->hasListenEvent($name)) {
-            return $this->call($name, array_pop($this->queue[$name]), $args);
+            $last = count($this->queue[$name]) - 1;
+            return $this->call($name, $this->queue[$name][$last], $args);
         }
         return null;
     }
@@ -202,6 +221,9 @@ class Event
      */
     public function hasListenEvent(string $name): bool
     {
-        return array_key_exists($name, $this->queue) && is_array($this->queue[$name]);
+        if (array_key_exists($name, $this->queue) && is_array($this->queue[$name])) {
+            return count($this->queue[$name]) > 0;
+        }
+        return false;
     }
 }

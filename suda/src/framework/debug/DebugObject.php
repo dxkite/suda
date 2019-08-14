@@ -86,6 +86,12 @@ class DebugObject implements JsonSerializable
     public function jsonSerialize()
     {
         if (is_object($this->value)) {
+            if ($this->value instanceof self){
+                return [
+                    '_type' => self::class,
+                    '_properties' => $this->value,
+                ];
+            }
             return $this->parseObject($this->value);
         }
         if (is_array($this->value)) {
