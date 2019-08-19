@@ -136,13 +136,22 @@ abstract class Connection
      */
     public function getPdo()
     {
+        $this->prepareConnection();
+        return $this->pdo;
+    }
+
+    /**
+     * 连接数据库
+     *
+     * @return void
+     */
+    protected function prepareConnection() {
         if (!$this->connect()) {
             throw new SQLException(sprintf(
                 "%s data source is not connected",
                 $this->getName()
             ), SQLException::ERR_NO_CONNECTION);
         }
-        return $this->pdo;
     }
 
     /**
@@ -165,6 +174,7 @@ abstract class Connection
      */
     public function lastInsertId(?string $name = null):string
     {
+        $this->prepareConnection();
         if (null === $name) {
             return $this->pdo->lastInsertId();
         } else {
@@ -189,6 +199,7 @@ abstract class Connection
      */
     public function beginTransaction()
     {
+        $this->prepareConnection();
         $this->transaction ++;
         if ($this->transaction == 1) {
             $this->pdo->beginTransaction();
@@ -212,6 +223,7 @@ abstract class Connection
      */
     public function commit()
     {
+        $this->prepareConnection();
         if ($this->transaction == 1) {
             $this->pdo->commit();
         }
@@ -225,6 +237,7 @@ abstract class Connection
      */
     public function rollBack()
     {
+        $this->prepareConnection();
         if ($this->transaction == 1) {
             $this->transaction = 0;
             $this->pdo->rollBack();
