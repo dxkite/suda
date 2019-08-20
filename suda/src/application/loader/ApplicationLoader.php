@@ -2,6 +2,7 @@
 
 namespace suda\application\loader;
 
+use suda\framework\Cache;
 use suda\framework\Config;
 use suda\application\Module;
 use suda\application\Resource;
@@ -12,6 +13,7 @@ use suda\database\exception\SQLException;
 use suda\framework\filesystem\FileSystem;
 use suda\application\builder\ModuleBuilder;
 use suda\framework\loader\Loader;
+use suda\framework\runnable\Runnable;
 
 /**
  * 应用程序
@@ -57,12 +59,43 @@ class ApplicationLoader
     {
         $this->loadVendorIfExist();
         $this->loadGlobalConfig();
-        $this->registerModule();
-        $this->setModuleStatus();
+        $this->loadModule();
         $this->prepareModule();
         $this->activeModule();
     }
 
+    /**
+     * 加载模块
+     */
+    protected function loadModule()
+    {
+        $this->application->debug()->time('prepare modules');
+        // 调试模式不缓存
+        if (static::isDebug()) {
+            $this->registerModule();
+            $this->setModuleStatus();
+        } else {
+            if ($this->application->cache()->has('application-module')) {
+                $module = $this->application->cache()->get('application-module');
+                $this->application->setModule($module);
+                $this->application->debug()->info('load modules from cache');
+            } else {
+                $this->registerModule();
+                $this->setModuleStatus();
+                $this->application->cache()->set('application-module', $this->application->getModules());
+            }
+        }
+        $this->application->debug()->timeEnd('prepare modules');
+    }
+
+    /**
+     * 调试模式
+     *
+     * @return bool
+     */
+    public static function isDebug() {
+        return boolval(defined('SUDA_DEBUG') ? constant('SUDA_DEBUG') : false);
+    }
 
     /**
      * 加载路由
@@ -75,7 +108,6 @@ class ApplicationLoader
             }
         }
     }
-
 
     /**
      * 加载全局配置
@@ -150,6 +182,9 @@ class ApplicationLoader
         }
     }
 
+    /**
+     * 设置模块状态
+     */
     protected function setModuleStatus()
     {
         $active = $this->application->getManifest('module.active', $this->actionableModules);
@@ -159,6 +194,8 @@ class ApplicationLoader
     }
 
     /**
+     * 注册模块下的模块
+     *
      * @param string $path
      * @param string $extractPath
      */
@@ -172,6 +209,8 @@ class ApplicationLoader
     }
 
     /**
+     * 获取模块的配置
+     *
      * @param string $path
      * @param ModuleBag $modules
      */
@@ -191,6 +230,8 @@ class ApplicationLoader
     }
 
     /**
+     * 获取目录的模板配置
+     *
      * @param string $path
      * @return array
      */

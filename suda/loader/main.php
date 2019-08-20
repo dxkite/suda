@@ -37,7 +37,7 @@ $application->getDebug()->applyConfig([
     'start-time' => defined('SUDA_START_TIME') ? constant('SUDA_START_TIME') : microtime(true),
     'start-memory' => defined('SUDA_START_MEMORY') ? constant('SUDA_START_MEMORY') : memory_get_usage(),
 ]);
-$application->getConfig()->set('save-dump-path', SUDA_DEBUG_LOG_PATH . '/dump');
+$application->getConfig()->set('save-dump-path', SUDA_DEBUG_LOG_PATH .'/dump');
 $application->getConfig()->set('response-timing', SUDA_DEBUG);
 $application->run(Request::create(), new Response);
 exit;
