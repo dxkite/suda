@@ -69,23 +69,24 @@ class ApplicationLoader
      */
     protected function loadModule()
     {
-        $this->application->debug()->time('prepare modules');
+        $name = 'application-module';
+        $this->application->debug()->time($name);
         // 调试模式不缓存
         if (static::isDebug()) {
             $this->registerModule();
             $this->setModuleStatus();
         } else {
-            if ($this->application->cache()->has('application-module')) {
-                $module = $this->application->cache()->get('application-module');
+            if ($this->application->cache()->has($name)) {
+                $module = $this->application->cache()->get($name);
                 $this->application->setModule($module);
                 $this->application->debug()->info('load modules from cache');
             } else {
                 $this->registerModule();
                 $this->setModuleStatus();
-                $this->application->cache()->set('application-module', $this->application->getModules());
+                $this->application->cache()->set($name, $this->application->getModules());
             }
         }
-        $this->application->debug()->timeEnd('prepare modules');
+        $this->application->debug()->timeEnd($name);
     }
 
     /**
@@ -93,7 +94,8 @@ class ApplicationLoader
      *
      * @return bool
      */
-    public static function isDebug() {
+    public static function isDebug()
+    {
         return boolval(defined('SUDA_DEBUG') ? constant('SUDA_DEBUG') : false);
     }
 
@@ -101,6 +103,30 @@ class ApplicationLoader
      * 加载路由
      */
     public function loadRoute()
+    {
+        $name = 'application-route';
+        $this->application->debug()->time($name);
+        if (static::isDebug()) {
+            $this->loadRouteFromModules();
+        } elseif ($this->application->cache()->has($name.'-route')) {
+            $route = $this->application->cache()->get($name.'-route');
+            $runnable = $this->application->cache()->get($name.'-runnable');
+            $this->application->getRoute()->setRouteCollection($route);
+            $this->application->getRoute()->setRunnable($runnable);
+            $this->application->debug()->info('load route from cache');
+        } else {
+            $this->loadRouteFromModules();
+            if ($this->application->getRoute()->isContainClosure()) {
+                $this->application->debug()->warning('route contain closure, route prepare cannot be cacheables');
+            } else {
+                $this->application->cache()->set($name.'-route', $this->application->getRoute()->getRouteCollection());
+                $this->application->cache()->set($name.'-runnable', $this->application->getRoute()->getRunnable());
+            }
+        }
+        $this->application->debug()->timeEnd($name);
+    }
+
+    protected function loadRouteFromModules()
     {
         foreach ($this->application->getModules() as $name => $module) {
             if ($module->getStatus() === Module::REACHABLE) {

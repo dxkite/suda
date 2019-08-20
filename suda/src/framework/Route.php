@@ -37,7 +37,7 @@ class Route
      *
      * @var boolean
      */
-    protected $containClourse = false;
+    protected $containClosure = false;
     
     public function __construct()
     {
@@ -176,7 +176,7 @@ class Route
         $this->routes->add($name, $matcher);
         $this->runnable[$name] = $target;
         if ($target->isClosure()) {
-            $this->containClourse = true;
+            $this->containClosure = true;
         }
         return $this;
     }
@@ -316,9 +316,9 @@ class Route
      *
      * @return  boolean
      */
-    public function isContainClourse():bool
+    public function isContainClosure():bool
     {
-        return $this->containClourse;
+        return $this->containClosure;
     }
 
     /**
@@ -329,5 +329,29 @@ class Route
     public function getRouteCollection():RouteCollection
     {
         return $this->routes;
+    }
+
+    /**
+     * @param RouteCollection $routes
+     */
+    public function setRouteCollection(RouteCollection $routes)
+    {
+        $this->routes = $routes;
+    }
+
+    /**
+     * @return Runnable[]
+     */
+    public function getRunnable(): array
+    {
+        return $this->runnable;
+    }
+
+    /**
+     * @param Runnable[] $runnable
+     */
+    public function setRunnable(array $runnable): void
+    {
+        $this->runnable = $runnable;
     }
 }
