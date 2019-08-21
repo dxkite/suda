@@ -166,7 +166,7 @@ class MySQLTableCreator
     protected function parseKeys(array $content)
     {
         foreach ($this->fields->all() as $field) {
-            if ($field->getType() === Field::INDEX) {
+            if ($field->getType() === Field::KEY) {
                 $content[] = 'KEY `'.$field->getName().'` (`'.$field->getName().'`)';
             }
         }
