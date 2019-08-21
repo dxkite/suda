@@ -201,7 +201,7 @@ class WriteStatement extends Statement
     protected function prepareQuery(): Query
     {
         if (is_array($this->data) && $this->whereCondition === null) {
-            return $this->parepareInsert($this->data);
+            return $this->prepareInsert($this->data);
         } else {
             if ($this->delete === false) {
                 if (is_string($this->data)) {
@@ -210,10 +210,10 @@ class WriteStatement extends Statement
                     list($updateSet, $upBinder) = $this->prepareUpdateSet($this->data);
                     $this->binder = array_merge($this->binder, $upBinder);
                 }
-                $string = "UPDATE {$this->table} SET {$updateSet} WHERE {$this->whereCondition}";
+                $string = "UPDATE " . $this->table . " SET " . $updateSet . " WHERE " . $this->whereCondition;
                 return new Query($string, $this->binder);
             } else {
-                $string = "DELETE FROM {$this->table} WHERE {$this->whereCondition}";
+                $string = "DELETE FROM " . $this->table . " WHERE " . $this->whereCondition;
                 return new Query($string, $this->binder);
             }
         }
@@ -256,7 +256,7 @@ class WriteStatement extends Statement
      * @param array $data
      * @return Query
      */
-    public function parepareInsert(array $data): Query
+    public function prepareInsert(array $data): Query
     {
         $names = [];
         $binds = [];
