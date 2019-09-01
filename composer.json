@@ -27,7 +27,6 @@
     "ext-iconv": "*",
     "ext-mbstring": "*",
     "psr/log": "^1.1",
-    "ext-zip": "*",
-    "ext-redis": "*"
+    "ext-zip": "*"
   }
 }
