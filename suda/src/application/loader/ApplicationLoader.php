@@ -14,6 +14,9 @@ use suda\framework\filesystem\FileSystem;
 class ApplicationLoader extends ApplicationModuleLoader
 {
 
+    const CACHE_ROUTE = 'application-route';
+    const CACHE_ROUTE_RUNNABLE = 'application-route-runnable';
+
     /**
      * 加载额外vendor
      */
@@ -56,22 +59,22 @@ class ApplicationLoader extends ApplicationModuleLoader
     {
         $name = 'application-route';
         $this->application->debug()->time($name);
-        if ($this->enableRouteCache() === false) {
+        if (static::isDebug()) {
             $this->loadRouteFromModules();
-        } elseif ($this->application->cache()->has($name.'-route')) {
-            $route = $this->application->cache()->get($name.'-route');
-            $runnable = $this->application->cache()->get($name.'-runnable');
+            if ($this->application->getRoute()->isContainClosure()) {
+                $this->application->debug()->warning('route contain closure, route prepare cannot be cacheables');
+            } else {
+                $this->application->cache()->set(ApplicationLoader::CACHE_ROUTE, $this->application->getRoute()->getRouteCollection());
+                $this->application->cache()->set(ApplicationLoader::CACHE_ROUTE_RUNNABLE, $this->application->getRoute()->getRunnable());
+            }
+        } elseif ($this->routeCacheAvailable()) {
+            $route = $this->application->cache()->get(ApplicationLoader::CACHE_ROUTE);
+            $runnable = $this->application->cache()->get(ApplicationLoader::CACHE_ROUTE_RUNNABLE);
             $this->application->getRoute()->setRouteCollection($route);
             $this->application->getRoute()->setRunnable($runnable);
             $this->application->debug()->info('load route from cache');
         } else {
             $this->loadRouteFromModules();
-            if ($this->application->getRoute()->isContainClosure()) {
-                $this->application->debug()->warning('route contain closure, route prepare cannot be cacheables');
-            } else {
-                $this->application->cache()->set($name.'-route', $this->application->getRoute()->getRouteCollection());
-                $this->application->cache()->set($name.'-runnable', $this->application->getRoute()->getRunnable());
-            }
         }
         $this->application->debug()->timeEnd($name);
     }
@@ -91,8 +94,10 @@ class ApplicationLoader extends ApplicationModuleLoader
     /**
      * @return bool
      */
-    private function enableRouteCache() {
-        return boolval($this->application->getCache()->get('route-cache', static::isDebug()));
+    private function routeCacheAvailable()
+    {
+        return $this->application->cache()->has(ApplicationLoader::CACHE_ROUTE)
+            && $this->application->cache()->has(ApplicationLoader::CACHE_ROUTE_RUNNABLE);
     }
 
     /**

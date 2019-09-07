@@ -19,6 +19,7 @@ use suda\application\builder\ModuleBuilder;
  */
 class ApplicationModuleLoader
 {
+    const CACHE_MODULE = 'application-module';
     /**
      * 应用程序
      *
@@ -73,13 +74,6 @@ class ApplicationModuleLoader
     public static function isDebug()
     {
         return boolval(defined('SUDA_DEBUG') ? constant('SUDA_DEBUG') : false);
-    }
-
-    /**
-     * @return bool
-     */
-    private function enableModuleCache() {
-        return boolval($this->application->getCache()->get('module-cache', static::isDebug()));
     }
 
     /**
@@ -153,22 +147,20 @@ class ApplicationModuleLoader
      */
     private function loadModuleLocalOrCache()
     {
-        $name = 'application-module';
+        $name = ApplicationModuleLoader::CACHE_MODULE;
         $this->application->debug()->time($name);
         // 调试模式不缓存
-        if ($this->enableModuleCache() === false) {
+        if (static::isDebug()) {
             $this->registerModule();
             $this->setModuleStatus();
+            $this->application->cache()->set($name, $this->application->getModules());
+        } elseif ($this->application->cache()->has($name)) {
+            $module = $this->application->cache()->get($name);
+            $this->application->setModule($module);
+            $this->application->debug()->info('load modules from cache');
         } else {
-            if ($this->application->cache()->has($name)) {
-                $module = $this->application->cache()->get($name);
-                $this->application->setModule($module);
-                $this->application->debug()->info('load modules from cache');
-            } else {
-                $this->registerModule();
-                $this->setModuleStatus();
-                $this->application->cache()->set($name, $this->application->getModules());
-            }
+            $this->registerModule();
+            $this->setModuleStatus();
         }
         $this->application->debug()->timeEnd($name);
     }
