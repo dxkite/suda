@@ -3,7 +3,6 @@
 
 namespace suda\database\statement;
 
-
 use Countable;
 use IteratorAggregate;
 use suda\database\Binder;
@@ -77,45 +76,42 @@ trait WherePrepareTrait
 
     /**
      * @param string $name
-     * @param string $operation
+     * @param string $operator
      * @param mixed $value
      * @param string $indexName
      * @return Query
      * @throws SQLException
      */
-    public function createQueryOperation(string $name, string $operation, $value, string $indexName = '')
+    public function createQueryOperation(string $name, string $operator, $value, string $indexName = '')
     {
         if ($value instanceof Query) {
-            return new Query("`{$name}` {$operation} " . $value, $value->getBinder());
+            return new Query("`{$name}` {$operator} " . $value, $value->getBinder());
         }
         if ($value instanceof Statement) {
-            return new Query("`{$name}` {$operation} (" . $value->getQuery() . ')', $value->getBinder());
+            return new Query("`{$name}` {$operator} (" . $value->getQuery() . ')', $value->getBinder());
         }
         if ($value instanceof IteratorAggregate || is_array($value)) {
-            return $this->prepareIn($name, $operation, $value);
+            return $this->prepareIn($name, $operator, $value);
         }
         if (strlen($indexName) === 0) {
             $indexName = Binder::index($name);
         }
-        return new Query("`{$name}` {$operation} :{$indexName}", [new Binder($indexName, $value)]);
+        return new Query("`{$name}` {$operator} :{$indexName}", [new Binder($indexName, $value)]);
     }
 
     /**
      * @param string $name
+     * @param string $operator
      * @param $value
      * @return Query
      * @throws SQLException
      */
-    public function getQueryForArray(string $name, $value)
+    public function getQueryForArray(string $name, string $operator, $value)
     {
-        if ($value instanceof IteratorAggregate) {
+        if ($value instanceof IteratorAggregate || is_array($value)) {
             return $this->prepareIn($name, 'IN', $value);
-        } elseif (is_array($value)) {
-            list($op, $val) = $value;
-            $op = trim($op);
-            return $this->createQueryOperation($name, $op, $val);
         } else {
-            return $this->createQueryOperation($name, '=', $value);
+            return $this->createQueryOperation($name, $operator, $value);
         }
     }
 
@@ -145,14 +141,57 @@ trait WherePrepareTrait
      */
     public function prepareWhere(array $where)
     {
+        $whereArray = $this->normalizeWhereArray($where);
         $and = [];
         $binders = [];
-        foreach ($where as $name => $value) {
-            $query = $this->getQueryForArray($name, $value);
+        foreach ($whereArray as $item) {
+            list($name, $option, $value) = $this->fixWhereArray($item);
+            $query = $this->getQueryForArray($name, $option, $value);
             $and[] = $query->getQuery();
             $binders = array_merge($binders, $query->getBinder());
         }
         return [implode(' AND ', $and), $binders];
+    }
+
+    /**
+     * @param array $item
+     * @return array
+     */
+    protected function fixWhereArray(array $item) {
+        if (count($item) === 2) {
+            list($name, $value) = $item;
+            return [$name, '=', $value];
+        }
+        return $item;
+    }
+
+    /**
+     * @param array $where
+     * @return array
+     */
+    protected function normalizeWhereArray(array $where)
+    {
+        if ($this->isNumberArray($where)) {
+            return $where;
+        }
+        $newWhere = [];
+        foreach ($where as $name => $value) {
+            if (is_array($value) && $this->count($value) === 2) {
+                $newWhere[] = [$name, $value[0], $value[1]];
+            } else {
+                $newWhere[] = [$name, '=', $value];
+            }
+        }
+        return $newWhere;
+    }
+
+    /**
+     * @param array $where
+     * @return bool
+     */
+    protected function isNumberArray(array $where)
+    {
+        return is_numeric(key($where)) && array_keys($where) === range(0, count($where) - 1);
     }
 
     /**

@@ -140,7 +140,6 @@ class ReadStatement extends QueryStatement
     public function where($where, ...$args)
     {
         if (is_array($where)) {
-            $where = $this->aliasKeyField($where);
             $this->whereArray($where, $args[0] ?? []);
         } elseif (count($args) > 0 && is_array($args[0])) {
             $this->whereStringArray($where, $args[0]);
@@ -160,9 +159,9 @@ class ReadStatement extends QueryStatement
     protected function aliasKeyField(array $fields)
     {
         $values = [];
-        foreach ($fields as $name => $value) {
-            $index = $this->middleware->inputName($name);
-            $values[$index] = $value;
+        foreach ($fields as $value) {
+            $value[0] = $this->middleware->inputName($value[0]);
+            $values[] = $value;
         }
         return $values;
     }
@@ -176,6 +175,18 @@ class ReadStatement extends QueryStatement
     {
         list($where, $whereBinder) = $this->prepareWhere($where);
         $this->whereStringArray($where, array_merge($whereBinder, $binders));
+    }
+
+    /**
+     * @param array $where
+     * @return array
+     * @throws SQLException
+     */
+    public function prepareWhere(array $where)
+    {
+        $where = $this->normalizeWhereArray($where);
+        $where = $this->aliasKeyField($where);
+        return parent::prepareWhere($where);
     }
 
     /**
@@ -198,6 +209,7 @@ class ReadStatement extends QueryStatement
      */
     public function groupBy(string $what)
     {
+        $what = $this->middleware->inputName($what);
         $this->groupBy = 'GROUP BY `' . $what . '`';
         return $this;
     }
@@ -254,6 +266,7 @@ class ReadStatement extends QueryStatement
      */
     public function orderBy(string $what, string $order = 'ASC')
     {
+        $what = $this->middleware->inputName($what);
         $order = strtoupper($order);
         if (strlen($this->orderBy) > 0) {
             $this->orderBy .= ',`' . $what . '` ' . $order;

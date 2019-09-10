@@ -171,7 +171,6 @@ class WriteStatement extends Statement
                 $this->whereCondition($string, $array);
             }
         } else {
-            $this->aliasKeyField($where);
             $this->arrayWhereCondition($where, $args[0] ?? []);
         }
         return $this;
@@ -186,9 +185,9 @@ class WriteStatement extends Statement
     protected function aliasKeyField(array $fields)
     {
         $values = [];
-        foreach ($fields as $name => $value) {
-            $index = $this->middleware->inputName($name);
-            $values[$index] = $value;
+        foreach ($fields as $value) {
+            $value[0] = $this->middleware->inputName($value[0]);
+            $values[] = $value;
         }
         return $values;
     }
@@ -248,6 +247,18 @@ class WriteStatement extends Statement
         foreach ($whereParameter as $key => $value) {
             $this->binder[] = new Binder($key, $value);
         }
+    }
+
+    /**
+     * @param array $where
+     * @return array
+     * @throws SQLException
+     */
+    public function prepareWhere(array $where)
+    {
+        $where = $this->normalizeWhereArray($where);
+        $where = $this->aliasKeyField($where);
+        return parent::prepareWhere($where);
     }
 
     /**

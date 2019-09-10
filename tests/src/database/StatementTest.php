@@ -1,9 +1,11 @@
 <?php
+
 namespace test\database;
 
 use ArrayObject;
 use suda\application\database\creator\MySQLTableCreator;
 use suda\database\DataSource;
+use suda\database\middleware\Middleware;
 use suda\database\TableAccess;
 use suda\database\struct\TableStruct;
 use PHPUnit\Framework\TestCase;
@@ -36,17 +38,15 @@ class StatementTest extends TestCase
         ]);
 
 
-
         $source->add(DataSource::new('mysql', [
             'host' => 'localhost',
             'name' => 'test',
             'user' => 'root',
-            'password' => DIRECTORY_SEPARATOR === '/' ?'':'root',
+            'password' => DIRECTORY_SEPARATOR === '/' ? '' : 'root',
         ]));
 
 
         $table = new TableAccess($struct, $source);
-
 
 
         $this->assertEquals(
@@ -81,7 +81,7 @@ class StatementTest extends TestCase
 
         $this->assertEquals(
             'UPDATE user_table SET `id`=:_id_7,`name`=:_name_8 WHERE `name` like :_name_6',
-            $table->write('id', '1')->write('name', 'dxkite')->where(['name' => ['like','dxkite']])->getString()
+            $table->write('id', '1')->write('name', 'dxkite')->where(['name' => ['like', 'dxkite']])->getString()
         );
 
         $this->assertEquals(
@@ -101,7 +101,7 @@ class StatementTest extends TestCase
 
         $this->assertEquals(
             'DELETE FROM user_table WHERE `name` like :_name_14',
-            $table->delete(['name' => ['like','dxkite']])->getString()
+            $table->delete(['name' => ['like', 'dxkite']])->getString()
         );
         $this->assertEquals(
             'DELETE FROM user_table WHERE `id` > :_id_15',
@@ -123,7 +123,7 @@ class StatementTest extends TestCase
             $table->delete(['id' => ['is', null]])->getString()
         );
 
-        $whereIn = $table->delete('id in (:id)', [ 'id' => new ArrayObject([1, 3, 4])])->getString();
+        $whereIn = $table->delete('id in (:id)', ['id' => new ArrayObject([1, 3, 4])])->getString();
         $this->assertEquals(
             'DELETE FROM user_table WHERE id in (:_id_22,:_id_23,:_id_24)',
             $whereIn
@@ -131,7 +131,7 @@ class StatementTest extends TestCase
 
         $this->assertEquals(
             'SELECT `id`,`name` FROM user_table WHERE id in (:_0_25,:_0_26) HAVING name like :_0_27 LIMIT 0,10',
-            $table->read('id', 'name')->where('id in (?)', new ArrayObject([ 1, 2]))->page(1, 10)->having('name like ?', 'dxkite')->getString()
+            $table->read('id', 'name')->where('id in (?)', new ArrayObject([1, 2]))->page(1, 10)->having('name like ?', 'dxkite')->getString()
         );
 
         $whereIn = $table->delete('id in (?)', new ArrayObject([1, 3, 4]));
@@ -149,12 +149,12 @@ class StatementTest extends TestCase
         $this->assertEquals(
             'SELECT `id`,`name` FROM user_table WHERE `id` IN (:_id_32,:_id_33) GROUP BY `name` HAVING name like :_0_34 ORDER BY `id` DESC,`name` ASC LIMIT 0,10',
             $table->read('id', 'name')
-                ->where(['id' => new ArrayObject([ 1, 2])])
+                ->where(['id' => new ArrayObject([1, 2])])
                 ->page(1, 10)
                 ->having('name like ?', 'dxkite')
                 ->groupBy('name')
-                ->orderBy('id','desc')
-                ->orderBy('name','asc')->getString()
+                ->orderBy('id', 'desc')
+                ->orderBy('name', 'asc')->getString()
         );
 
         $this->assertEquals(
@@ -164,15 +164,123 @@ class StatementTest extends TestCase
                 ->page(1, 10)
                 ->having('name like ?', 'dxkite')
                 ->groupBy('name')
-                ->orderBy('id','desc')
-                ->orderBy('name','asc')->getString()
+                ->orderBy('id', 'desc')
+                ->orderBy('name', 'asc')->getString()
         );
 
-        $whereIn = $table->delete([ 'id' => ['in', new ArrayObject([1, 3, 4])]])->getString();
+        $whereIn = $table->delete(['id' => ['in', new ArrayObject([1, 3, 4])]])->getString();
         $this->assertEquals(
             'DELETE FROM user_table WHERE `id` IN (:_id_37,:_id_38,:_id_39)',
             $whereIn
         );
+
+        $whereIn = $table->write('id = id + 1')->where([
+            ['name', '>', 'dxkite'],
+            ['name', ['dxkite', 'dxkite2', 'dxkite3']],
+            ['name', 'like', '%dxkite%'],
+            ['name', '<', 'dxkite'],
+        ]);
+        $this->assertEquals(
+            'UPDATE user_table SET id = id + 1 WHERE `name` > :_name_40 AND `name` IN (:_name_41,:_name_42,:_name_43) AND `name` like :_name_44 AND `name` < :_name_45',
+            $whereIn->getString()
+        );
+
+    }
+
+    public function testMiddleware()
+    {
+        $source = new DataSource;
+        $struct = new TableStruct('user_table');
+
+        $struct->fields([
+            $struct->field('id', 'bigint', 20)->auto()->primary(),
+            $struct->field('name', 'varchar', 80),
+        ]);
+
+        $source->add(DataSource::new('mysql', [
+            'host' => 'localhost',
+            'name' => 'test',
+            'user' => 'root',
+            'password' => DIRECTORY_SEPARATOR === '/' ? '' : 'root',
+        ]));
+
+        $table = new TableAccess($struct, $source, new class implements Middleware
+        {
+
+            /**
+             * 处理输入数据
+             *
+             * @param string $name
+             * @param mixed $data
+             * @return mixed
+             */
+            public function input(string $name, $data)
+            {
+                return $data;
+            }
+
+            /**
+             * 输入名处理
+             *
+             * @param string $name
+             * @return string
+             */
+            public function inputName(string $name): string
+            {
+                return $name . '_raw';
+            }
+
+            /**
+             * 处理输出数据
+             *
+             * @param string $name
+             * @param mixed $data
+             * @return mixed
+             */
+            public function output(string $name, $data)
+            {
+                return $data;
+            }
+
+            /**
+             * 输出名处理
+             *
+             * @param string $name
+             * @return string
+             */
+            public function outputName(string $name): string
+            {
+                return $name;
+            }
+
+            /**
+             * 对输出列进行处理
+             *
+             * @param mixed $row
+             * @return mixed
+             */
+            public function outputRow($row)
+            {
+                return $row;
+            }
+        });
+
+        $whereIn = $table->write('id = id + 1')->where([
+            ['name', '>', 'dxkite'],
+            ['name', ['dxkite', 'dxkite2', 'dxkite3']],
+            ['name', 'like', '%dxkite%'],
+            ['name', '<', 'dxkite'],
+        ]);
+        $this->assertEquals(
+            'UPDATE user_table SET id = id + 1 WHERE `name_raw` > :_name_raw_46 AND `name_raw` IN (:_name_raw_47,:_name_raw_48,:_name_raw_49) AND `name_raw` like :_name_raw_50 AND `name_raw` < :_name_raw_51',
+            $whereIn->getString()
+        );
+
+        $this->assertEquals(
+            'SELECT DISTINCT `id_raw`,`name_raw` FROM user_table WHERE name like :name ORDER BY `id_raw` ASC LIMIT 0,10',
+            $table->read('id', 'name')->distinct()->where('name like :name', ['name' => 'dxkite'])->page(1, 10)->orderBy('id', 'ASC')->getString()
+        );
+
     }
 
     public function testStuctSet()
@@ -200,7 +308,7 @@ class StatementTest extends TestCase
             'host' => 'localhost',
             'name' => 'test',
             'user' => 'root',
-            'password' => DIRECTORY_SEPARATOR === '/' ?'':'root',
+            'password' => DIRECTORY_SEPARATOR === '/' ? '' : 'root',
         ]));
 
         $table = new TableAccess($struct, $source);
