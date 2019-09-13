@@ -18,7 +18,6 @@ class TemplateAssetProcessor implements RequestProcessor
      * @param Application $application
      * @param Request $request
      * @param Response $response
-     * @return bool
      * @throws Exception
      */
     public function onRequest(Application $application, Request $request, Response $response)
@@ -34,10 +33,8 @@ class TemplateAssetProcessor implements RequestProcessor
                 if ($realPath) {
                     $file = new FileRangeProcessor($realPath);
                     $file->onRequest($application, $request, $response);
-                    return true;
                 }
             }
         }
-        return false;
     }
 }

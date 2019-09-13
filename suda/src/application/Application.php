@@ -6,6 +6,7 @@ use Exception;
 use Throwable;
 use suda\framework\Request;
 use suda\framework\Response;
+use suda\framework\http\Status;
 use suda\framework\loader\Loader;
 use suda\framework\route\MatchResult;
 use suda\application\template\Template;
@@ -183,15 +184,16 @@ class Application extends ApplicationSource
      * @param Application $application
      * @param Request $request
      * @param Response $response
-     * @return mixed|void
+     * @return mixed
      * @throws Exception
      */
     protected function defaultResponse(Application $application, Request $request, Response $response)
     {
-        if ((new TemplateAssetProcessor)->onRequest($application, $request, $response)) {
-            return;
+        (new TemplateAssetProcessor)->onRequest($application, $request, $response);
+        if ($response->getStatus() === Status::HTTP_NOT_FOUND) {
+            return $this->route->getDefaultRunnable()->run($request, $response);
         }
-        return $this->route->getDefaultRunnable()->run($request, $response);
+        return null;
     }
 
     /**
@@ -208,9 +210,14 @@ class Application extends ApplicationSource
             $response->setHeader('x-route', $result === null ? 'default' : $result->getName());
         }
         if ($result === null) {
+            $response->status(Status::HTTP_NOT_FOUND);
             $content = $this->defaultResponse($this, $request, $response);
         } else {
+            $response->status(Status::HTTP_OK);
             $content = $this->runResult($result, $request, $response);
+        }
+        if ($content instanceof  Response) {
+            return $response;
         }
         if ($content !== null && !$response->isSend()) {
             $response->setContent($content);

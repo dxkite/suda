@@ -6,6 +6,7 @@ use Exception;
 use SplFileObject;
 use suda\framework\Request;
 use suda\framework\Response;
+use suda\framework\http\Status;
 use suda\application\Application;
 use suda\framework\response\MimeType;
 use suda\framework\http\stream\DataStream;
@@ -41,7 +42,6 @@ class FileRangeProcessor implements RequestProcessor
      * @param Application $application
      * @param Request $request
      * @param Response $response
-     * @return void
      * @throws Exception
      */
     public function onRequest(Application $application, Request $request, Response $response)
@@ -49,7 +49,7 @@ class FileRangeProcessor implements RequestProcessor
         $ranges = $this->getRanges($request);
         $response->setHeader('accept-ranges', 'bytes');
         if ($request->getMethod() !== 'GET' || $ranges === false) {
-            $response->status(400);
+            $response->status(Status::HTTP_BAD_REQUEST);
         } else {
             $this->sendFileRanges($response, $ranges);
         }
@@ -63,16 +63,17 @@ class FileRangeProcessor implements RequestProcessor
     protected function sendFileRanges(Response $response, array $ranges)
     {
         if (count($ranges) === 0) {
+            $response->status(Status::HTTP_OK);
             $response->setHeader('content-type', $this->mime);
             $response->sendFile($this->file->getRealPath());
         } elseif (count($ranges) === 1) {
-            $response->status(206);
+            $response->status(Status::HTTP_PARTIAL_CONTENT);
             $range = $ranges[0];
             $response->setHeader('content-type', $this->mime);
             $response->setHeader('content-range', $this->getRangeHeader($range));
             $this->sendFileByRange($response, $range);
         } else {
-            $response->status(206);
+            $response->status(Status::HTTP_PARTIAL_CONTENT);
             $this->sendMultipleFileByRange($response, $ranges);
         }
     }
