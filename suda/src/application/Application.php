@@ -238,7 +238,6 @@ class Application extends ApplicationSource
             $moduleLoader = new ModuleLoader($this, $running);
             $moduleLoader->toRunning();
         }
-        LanguageLoader::load($this);
         return ($result->getRunnable())($this, $request, $response);
     }
 

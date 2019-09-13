@@ -36,6 +36,7 @@ class ApplicationLoader extends ApplicationModuleLoader
         $this->loadVendorIfExist();
         $this->loadGlobalConfig();
         $this->loadModule();
+        LanguageLoader::load($this->application);
     }
 
     /**

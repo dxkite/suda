@@ -38,7 +38,7 @@ class RunnableRequestProcessor implements RequestProcessor
      */
     protected function getNextRunnable(Application $application, Request $request)
     {
-        $runnable = $this->getNextRunnableFromChan($application, $request);
+        $runnable = $this->getNextRunnableFromChain($application, $request);
         if ($runnable === null) {
             return null;
         }
@@ -50,7 +50,7 @@ class RunnableRequestProcessor implements RequestProcessor
      * @param Request $request
      * @return string|null
      */
-    protected function getNextRunnableFromChan(Application $application, Request $request)
+    protected function getNextRunnableFromChain(Application $application, Request $request)
     {
         if ($this->runnable === null) {
             $this->runnable = $this->createRunnable($application, $request);
@@ -70,7 +70,7 @@ class RunnableRequestProcessor implements RequestProcessor
     {
         $class = $application->getConfig()->get('processor', []);
         $processor = $this->formatClassAsRunnable($class);
-        $runnable = $this->createChanFromRequest($request);
+        $runnable = $this->createChainFromRequest($request);
         return array_merge($processor, $runnable);
     }
 
@@ -78,7 +78,7 @@ class RunnableRequestProcessor implements RequestProcessor
      * @param Request $request
      * @return array
      */
-    protected function createChanFromRequest(Request $request)
+    protected function createChainFromRequest(Request $request)
     {
         $runnable = $request->getAttribute('runnable');
         if (is_string($runnable)) {
@@ -92,7 +92,7 @@ class RunnableRequestProcessor implements RequestProcessor
     }
 
     /**
-     * @param $class
+     * @param string|array $class
      * @return array
      */
     private function formatClassAsRunnable($class)
