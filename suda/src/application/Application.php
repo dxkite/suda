@@ -20,8 +20,9 @@ use suda\framework\http\Request as RequestInterface;
 use suda\application\wrapper\ExceptionContentWrapper;
 use suda\application\exception\ConfigurationException;
 use suda\framework\http\Response as ResponseInterface;
-use suda\application\processor\TemplateAssetProccesser;
+use suda\application\processor\TemplateAssetProcessor;
 use suda\application\processor\TemplateRequestProcessor;
+use suda\application\processor\RunnableRequestProcessor;
 
 /**
  * 应用程序
@@ -160,17 +161,17 @@ class Application extends ApplicationSource
     public function request(array $method, string $name, string $url, array $attributes = [])
     {
         $route = $attributes['config'] ?? [];
-        $runnable = null;
+        $runnable = RunnableRequestProcessor::class . '->onRequest';
         if (array_key_exists('class', $route)) {
-            $runnable = $this->className($route['class']) . '->onRequest';
+            $attributes['class'] = $route['class'];
         } elseif (array_key_exists('source', $route)) {
+            $attributes['class'] = FileRequestProcessor::class;
             $attributes['source'] = $route['source'];
-            $runnable = FileRequestProcessor::class . '->onRequest';
         } elseif (array_key_exists('template', $route)) {
+            $attributes['class'] = TemplateRequestProcessor::class;
             $attributes['template'] = $route['template'];
-            $runnable = TemplateRequestProcessor::class . '->onRequest';
         } elseif (array_key_exists('runnable', $route)) {
-            $runnable = $route['runnable'];
+            $attributes['runnable'] = $route['runnable'];
         } else {
             throw new ConfigurationException('request config error', ConfigurationException::ERR_CONFIG_SET);
         }
@@ -187,7 +188,7 @@ class Application extends ApplicationSource
      */
     protected function defaultResponse(Application $application, Request $request, Response $response)
     {
-        if ((new TemplateAssetProccesser)->onRequest($application, $request, $response)) {
+        if ((new TemplateAssetProcessor)->onRequest($application, $request, $response)) {
             return;
         }
         return $this->route->getDefaultRunnable()->run($request, $response);

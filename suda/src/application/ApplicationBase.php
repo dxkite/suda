@@ -121,17 +121,6 @@ class ApplicationBase extends ApplicationContext
 
 
     /**
-     * 转换类名
-     *
-     * @param string $name
-     * @return string
-     */
-    protected function className(string $name)
-    {
-        return str_replace(['.','/'], '\\', $name);
-    }
-
-    /**
      * 语言翻译
      *
      * @param string|null $message

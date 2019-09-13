@@ -111,7 +111,7 @@ class ApplicationModuleLoader
      */
     private function prepareModule()
     {
-        foreach ($this->application->getModules()->all() as $name => $module) {
+        foreach ($this->application->getModules() as $name => $module) {
             $this->moduleLoader[$name] = new ModuleLoader($this->application, $module);
             $this->moduleLoader[$name]->toLoad(); // 切换到加载状态
             $this->moduleLoader[$name]->loadExtraModuleResourceLibrary(); // 加载二外的模块源

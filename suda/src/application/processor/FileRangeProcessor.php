@@ -13,7 +13,7 @@ use suda\framework\http\stream\DataStream;
 /**
  * 响应
  */
-class FileRangeProccessor implements RequestProcessor
+class FileRangeProcessor implements RequestProcessor
 {
     /**
      * 文件路径

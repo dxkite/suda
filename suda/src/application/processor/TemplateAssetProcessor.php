@@ -10,7 +10,7 @@ use suda\application\template\TemplateUtil;
 /**
  * 模块资源处理响应
  */
-class TemplateAssetProccesser implements RequestProcessor
+class TemplateAssetProcessor implements RequestProcessor
 {
     /**
      * 处理文件请求
@@ -32,7 +32,7 @@ class TemplateAssetProccesser implements RequestProcessor
                 $resourcePath = $parent.'/'.$assetPath;
                 $realPath = $module->getResource()->getResourcePath($resourcePath, $parent);
                 if ($realPath) {
-                    $file = new FileRangeProccessor($realPath);
+                    $file = new FileRangeProcessor($realPath);
                     $file->onRequest($application, $request, $response);
                     return true;
                 }

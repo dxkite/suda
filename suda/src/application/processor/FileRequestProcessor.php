@@ -15,7 +15,7 @@ class FileRequestProcessor implements RequestProcessor
     {
         $filename = $request->getAttribute('source');
         if (is_string($filename)) {
-            $processor = new FileRangeProccessor($filename);
+            $processor = new FileRangeProcessor($filename);
             try {
                 $processor->onRequest($application, $request, $response);
             } catch (Exception $e) {
