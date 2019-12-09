@@ -27,11 +27,12 @@ class TableData implements ArrayDataInterface
      * 创建表结构
      *
      * @param string $name
+     * @param bool $raw
      */
-    public function __construct(string $name)
+    public function __construct(string $name, bool $raw = false)
     {
         $this->name = $name;
-        $this->struct = new TableStruct($name);
+        $this->struct = new TableStruct($name, $raw);
     }
 
     public function createAll(array $data)

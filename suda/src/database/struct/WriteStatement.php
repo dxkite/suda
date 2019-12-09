@@ -17,7 +17,7 @@ class WriteStatement extends \suda\database\statement\WriteStatement
     {
         $this->access = $access;
         parent::__construct(
-            $access->getSource()->write()->rawTableName($access->getStruct()->getName()),
+            $access->getStruct()->getRealTableName($access->getSource()->write()),
             $access->getStruct(),
             $access->getMiddleware()
         );

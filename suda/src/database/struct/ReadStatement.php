@@ -18,7 +18,7 @@ class ReadStatement extends \suda\database\statement\ReadStatement
     {
         $this->access = $access;
         parent::__construct(
-            $access->getSource()->write()->rawTableName($access->getStruct()->getName()),
+            $access->getStruct()->getRealTableName($access->getSource()->write()),
             $access->getStruct(),
             $access->getMiddleware()
         );

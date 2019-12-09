@@ -102,7 +102,7 @@ class MySQLTableCreator
         $content = $this->parseIndexKeys($content);
         $content = $this->parseKeys($content);
         $content = $this->parseForeignKeys($content);
-        $table = $this->connection->rawTableName($this->name);
+        $table = $this->fields->getRealTableName($this->connection);
         $sql = "CREATE TABLE IF NOT EXISTS `{$table}` (\r\n\t";
         $sql .= implode(",\r\n\t", array_filter($content, 'strlen'));
         $auto = null === $this->auto?'':'AUTO_INCREMENT='.$this->auto;

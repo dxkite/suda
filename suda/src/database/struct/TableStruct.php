@@ -2,6 +2,7 @@
 
 namespace suda\database\struct;
 
+use suda\database\connection\Connection;
 use function array_key_exists;
 use function array_search;
 use ArrayIterator;
@@ -22,6 +23,13 @@ class TableStruct implements IteratorAggregate
     protected $name;
 
     /**
+     * 是否为原始表名
+     *
+     * @var bool
+     */
+    protected $isRawName;
+
+    /**
      * 字段集合
      *
      * @var Field[]
@@ -39,10 +47,12 @@ class TableStruct implements IteratorAggregate
      * 创建字段集合
      *
      * @param string $name
+     * @param bool $raw
      */
-    public function __construct(string $name)
+    public function __construct(string $name, bool $raw = false)
     {
         $this->name = $name;
+        $this->isRawName = $raw;
         $this->fields = [];
     }
 
@@ -183,6 +193,14 @@ class TableStruct implements IteratorAggregate
     }
 
     /**
+     * @param bool $isRawName
+     */
+    public function setIsRawName(bool $isRawName): void
+    {
+        $this->isRawName = $isRawName;
+    }
+
+    /**
      * Get the value of fields
      */
     public function all()
@@ -213,5 +231,16 @@ class TableStruct implements IteratorAggregate
             }
         }
         return true;
+    }
+
+    /**
+     * @param Connection $connection
+     * @return string
+     */
+    public function getRealTableName(Connection $connection): string  {
+        if ($this->isRawName) {
+            return $this->getName();
+        }
+        return $connection->rawTableName($this->getName());
     }
 }

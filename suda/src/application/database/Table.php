@@ -18,10 +18,14 @@ abstract class Table extends TableAccess implements Middleware
     /**
      * Table constructor.
      * @param string $tableName
+     * @param bool $raw
      */
-    public function __construct(string $tableName)
+    public function __construct(string $tableName, bool $raw = false)
     {
-        parent::__construct($this->initStruct($tableName), Database::application()->getDataSource(), $this);
+        parent::__construct(
+            $this->initStruct($tableName,$raw),
+            Database::application()->getDataSource(),
+            $this);
     }
 
     /**
@@ -35,11 +39,12 @@ abstract class Table extends TableAccess implements Middleware
      * 创建表结构
      *
      * @param string $tableName
+     * @param bool $raw
      * @return TableStruct
      */
-    protected function initStruct(string $tableName):TableStruct
+    protected function initStruct(string $tableName, bool $raw = false):TableStruct
     {
-        $table = new TableStruct($tableName);
+        $table = new TableStruct($tableName, $raw);
         return $this->onCreateStruct($table);
     }
 
