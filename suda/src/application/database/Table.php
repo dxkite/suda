@@ -4,6 +4,7 @@ namespace suda\application\database;
 use suda\database\TableAccess;
 use suda\database\struct\TableStruct;
 use suda\database\middleware\Middleware;
+use suda\database\exception\SQLException;
 
 /**
  * 数据表抽象对象
@@ -18,13 +19,15 @@ abstract class Table extends TableAccess implements Middleware
     /**
      * Table constructor.
      * @param string $tableName
+     * @param string $connection
      * @param bool $raw
+     * @throws SQLException
      */
-    public function __construct(string $tableName, bool $raw = false)
+    public function __construct(string $tableName, string $connection = 'default', bool $raw = false)
     {
         parent::__construct(
             $this->initStruct($tableName,$raw),
-            Database::application()->getDataSource(),
+            Database::getDataSource($connection),
             $this);
     }
 
