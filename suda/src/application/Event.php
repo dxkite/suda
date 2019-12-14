@@ -9,15 +9,15 @@ use Throwable;
 class Event extends \suda\framework\Event
 {
     /**
-     * @var Application
+     * @var ApplicationContext|Application
      */
     protected $application;
 
     /**
      * Event constructor.
-     * @param Application $application
+     * @param ApplicationContext|Application $application
      */
-    public function __construct(Application $application)
+    public function __construct($application)
     {
         $this->application = $application;
     }
@@ -33,17 +33,20 @@ class Event extends \suda\framework\Event
         $runnable = new Runnable($command);
         $this->application->debug()->debug('invoke {event} event run {runnable}', [
             'runnable' => $runnable->getName(),
-            'event' => $event
+            'event' => $event,
         ]);
         try {
             return $runnable->apply($args);
         } catch (Throwable $e) {
             $this->application->debug()->error('invoke {event} event run {runnable} error', [
                 'runnable' => $runnable->getName(),
-                'event' => $event
+                'event' => $event,
             ]);
+            $this->application->debug()->addIgnorePath(__FILE__);
             $this->application->debug()->uncaughtException($e);
-            $this->application->dumpException($e);
+            if ($this->application instanceof  Application) {
+                $this->application->dumpException($e);
+            }
             return null;
         }
     }

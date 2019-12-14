@@ -8,6 +8,7 @@ use suda\application\Module;
 use suda\application\Resource;
 use suda\application\ModuleBag;
 use suda\application\Application;
+use suda\application\ApplicationModule;
 use suda\framework\filesystem\FileSystem;
 use suda\application\builder\ModuleBuilder;
 
@@ -48,9 +49,9 @@ class ApplicationModuleLoader
 
     /**
      * ApplicationModuleLoader constructor.
-     * @param Application $application
+     * @param ApplicationModule $application
      */
-    public function __construct(Application $application)
+    public function __construct(ApplicationModule $application)
     {
         $this->application = $application;
         $this->actionableModules = [];

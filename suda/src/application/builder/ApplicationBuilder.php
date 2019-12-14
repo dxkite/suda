@@ -6,6 +6,7 @@ use suda\application\Resource;
 use suda\application\Application;
 use suda\framework\loader\Loader;
 use suda\framework\config\PathResolver;
+use suda\application\ApplicationModule;
 use suda\framework\filesystem\FileSystem;
 use suda\application\exception\ApplicationException;
 

@@ -4,6 +4,7 @@
 namespace suda\application\loader;
 
 use suda\application\Application;
+use suda\application\ApplicationModule;
 use suda\application\builder\ApplicationBuilder;
 use suda\application\exception\ApplicationException;
 use suda\application\Module;
@@ -13,7 +14,7 @@ class ModuleLoaderUtil
     /**
      * 应用程序
      *
-     * @var Application
+     * @var ApplicationModule
      */
     protected $application;
 
@@ -27,10 +28,10 @@ class ModuleLoaderUtil
     /**
      * 模块加载器
      *
-     * @param Application $application
+     * @param ApplicationModule $application
      * @param Module $module
      */
-    public function __construct(Application $application, Module $module)
+    public function __construct(ApplicationModule $application, Module $module)
     {
         $this->module = $module;
         $this->application = $application;

@@ -18,17 +18,6 @@ class ApplicationLoader extends ApplicationBaseLoader
     const CACHE_ROUTE_RUNNABLE = 'application-route-runnable';
 
     /**
-     * 加载APP
-     */
-    public function load()
-    {
-        $this->loadVendorIfExist();
-        $this->loadGlobalConfig();
-        $this->loadModule();
-        LanguageLoader::load($this->application);
-    }
-
-    /**
      * 加载路由
      */
     public function loadRoute()

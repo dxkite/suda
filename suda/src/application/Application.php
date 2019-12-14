@@ -35,21 +35,6 @@ class Application extends ApplicationRoute
      */
     protected $dumper;
 
-
-    /**
-     * Application constructor.
-     * @param string $path
-     * @param array $manifest
-     * @param Loader $loader
-     * @param string|null $dataPath
-     */
-    public function __construct(string $path, array $manifest, Loader $loader, ?string $dataPath = null)
-    {
-        parent::__construct($path, $manifest, $loader, $dataPath);
-        $this->event = new Event($this);
-    }
-
-
     /**
      * 准备运行环境
      *
@@ -60,15 +45,7 @@ class Application extends ApplicationRoute
     {
         $appLoader = new ApplicationLoader($this);
         $this->debug->info('===============================');
-        $this->debug->time('loading application');
-        $appLoader->load();
-        $this->event->exec('application:load-config', [$this->config, $this]);
-        $boot = $this->debug->timeEnd('loading application');
-        $this->debug->time('loading data-source');
-        $appLoader->loadDataSource();
-        $load = $this->debug->timeEnd('loading data-source');
-        $this->debug->recordTiming('boot', $boot + $load);
-        $this->event->exec('application:load-environment', [$this->config, $this]);
+        parent::load();
         $this->debug->time('loading route');
         $appLoader->loadRoute();
         $this->event->exec('application:load-route', [$this->route, $this]);

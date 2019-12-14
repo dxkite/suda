@@ -48,4 +48,15 @@ class ApplicationBaseLoader extends ApplicationModuleLoader
             $this->application->loadEvent($listenerPath);
         }
     }
+
+    /**
+     * 加载APP
+     */
+    public function load()
+    {
+        $this->loadVendorIfExist();
+        $this->loadGlobalConfig();
+        $this->loadModule();
+        LanguageLoader::load($this->application);
+    }
 }

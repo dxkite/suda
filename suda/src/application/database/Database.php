@@ -5,7 +5,7 @@ namespace suda\application\database;
 
 use suda\framework\Config;
 use suda\database\DataSource;
-use suda\application\Application;
+use suda\application\ApplicationModule;
 use suda\database\exception\SQLException;
 use suda\database\connection\observer\Observer;
 use suda\application\Resource as ApplicationResource;
@@ -19,17 +19,17 @@ class Database
     /**
      * 应用引用
      *
-     * @var Application
+     * @var ApplicationModule
      */
     protected static $application;
 
     /**
      * 从应用创建表
      *
-     * @param Application $application
+     * @param ApplicationModule $application
      * @return void
      */
-    public static function loadApplication(Application $application)
+    public static function loadApplication(ApplicationModule $application)
     {
         static::$application = $application;
     }
@@ -37,7 +37,7 @@ class Database
     /**
      * Get 应用引用
      *
-     * @return  Application
+     * @return  ApplicationModule
      */
     public static function application()
     {

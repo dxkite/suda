@@ -1,9 +1,11 @@
 <?php
+
 namespace suda\application;
 
-use function array_key_exists;
-use function sprintf;
 use suda\framework\loader\Loader;
+use suda\database\exception\SQLException;
+use suda\application\debug\ExceptionCatcher;
+use suda\application\loader\ApplicationLoader;
 use suda\application\exception\ApplicationException;
 
 /**
@@ -40,7 +42,6 @@ class ApplicationModule extends ApplicationContext
      */
     protected $running;
 
-
     /**
      * 创建应用
      *
@@ -53,7 +54,28 @@ class ApplicationModule extends ApplicationContext
     {
         parent::__construct($path, $manifest, $loader, $dataPath);
         $this->module = new ModuleBag;
-        $this->initProperty($manifest);
+        $this->event = new Event($this);
+        $this->initModulePath($manifest);
+    }
+
+    /**
+     * 准备运行环境
+     *
+     * @return void
+     * @throws SQLException
+     */
+    public function load()
+    {
+        $appLoader = new ApplicationLoader($this);
+        $this->debug->time('loading application');
+        $appLoader->load();
+        $this->event->exec('application:load-config', [$this->config, $this]);
+        $boot = $this->debug->timeEnd('loading application');
+        $this->debug->time('loading data-source');
+        $appLoader->loadDataSource();
+        $load = $this->debug->timeEnd('loading data-source');
+        $this->debug->recordTiming('boot', $boot + $load);
+        $this->event->exec('application:load-environment', [$this->config, $this]);
     }
 
     /**
@@ -73,7 +95,7 @@ class ApplicationModule extends ApplicationContext
      * @param string $name
      * @return Module|null
      */
-    public function find(string $name):?Module
+    public function find(string $name): ?Module
     {
         return $this->module->get($name);
     }
@@ -98,7 +120,7 @@ class ApplicationModule extends ApplicationContext
      * @param array $manifest
      * @return void
      */
-    protected function initProperty(array $manifest)
+    protected function initModulePath(array $manifest)
     {
         if (array_key_exists('module-paths', $manifest)) {
             $modulePaths = $manifest['module-paths'];
@@ -106,7 +128,7 @@ class ApplicationModule extends ApplicationContext
                 $this->modulePaths[] = Resource::getPathByRelativePath($path, $this->path);
             }
         } else {
-            $this->modulePaths = [ Resource::getPathByRelativePath('modules', $this->path) ];
+            $this->modulePaths = [Resource::getPathByRelativePath('modules', $this->path)];
         }
     }
 
@@ -128,7 +150,7 @@ class ApplicationModule extends ApplicationContext
      * @param mixed ...$args
      * @return string
      */
-    public function _(?string $message, ...$args):string
+    public function _(?string $message, ...$args): string
     {
         return $this->language->interpolate($message, ...$args);
     }
@@ -146,7 +168,7 @@ class ApplicationModule extends ApplicationContext
     /**
      * Set 字符串包
      *
-     * @param  LanguageBag  $language  字符串包
+     * @param LanguageBag $language 字符串包
      *
      * @return  self
      */
@@ -183,7 +205,7 @@ class ApplicationModule extends ApplicationContext
      *
      * @return  ModuleBag
      */
-    public function getModules():ModuleBag
+    public function getModules(): ModuleBag
     {
         return $this->module;
     }
@@ -191,7 +213,7 @@ class ApplicationModule extends ApplicationContext
     /**
      * Set 模块集合
      *
-     * @param  ModuleBag  $module  模块集合
+     * @param ModuleBag $module 模块集合
      *
      * @return  self
      */
@@ -213,9 +235,9 @@ class ApplicationModule extends ApplicationContext
     public function parseSourceName(string $name, ?string $default = null, ?string $groupName = null)
     {
         if (strpos($name, ':') !== false) {
-            $dotpos = strrpos($name, ':');
-            $module = substr($name, 0, $dotpos);
-            $name = substr($name, $dotpos + 1);
+            $pos = strrpos($name, ':');
+            $module = substr($name, 0, $pos);
+            $name = substr($name, $pos + 1);
             if (strlen($module) === 0) {
                 $module = $default;
             }

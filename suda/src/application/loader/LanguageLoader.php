@@ -2,15 +2,15 @@
 namespace suda\application\loader;
 
 use suda\framework\Config;
-use suda\application\Application;
 use suda\application\LanguageBag;
+use suda\application\ApplicationModule;
 
 /**
  * 应用程序
  */
 class LanguageLoader
 {
-    public static function load(Application $application)
+    public static function load(ApplicationModule $application)
     {
         $language = $application->getLocate();
         $languageBag = new LanguageBag;
