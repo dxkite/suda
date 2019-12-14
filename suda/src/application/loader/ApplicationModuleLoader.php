@@ -25,7 +25,7 @@ class ApplicationModuleLoader
     /**
      * 应用程序
      *
-     * @var Application
+     * @var ApplicationModule
      */
     protected $application;
 

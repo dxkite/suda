@@ -43,9 +43,9 @@ class Application extends ApplicationRoute
      */
     public function load()
     {
-        $appLoader = new ApplicationLoader($this);
         $this->debug->info('===============================');
         parent::load();
+        $appLoader = new ApplicationLoader($this);
         $this->debug->time('loading route');
         $appLoader->loadRoute();
         $this->event->exec('application:load-route', [$this->route, $this]);

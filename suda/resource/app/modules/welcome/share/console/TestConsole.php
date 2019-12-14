@@ -31,7 +31,8 @@ class TestConsole extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $name = $input->getArgument('name');
-        if ($name) {
+        
+        if (is_string($name)) {
             $text = 'Hello ' . $name;
         } else {
             $text = 'Hello';

@@ -37,16 +37,6 @@ class ModuleLoader extends ModuleLoaderUtil
     }
 
     /**
-     * 将模块的路由设置为可见
-     * @throws Exception
-     */
-    public function toReachable()
-    {
-        $this->loadRoute();
-        $this->application->debug()->debug('reachable # ' . $this->module->getFullName());
-    }
-
-    /**
      * 载入模块私有代码库
      */
     public function toRunning()
@@ -152,69 +142,6 @@ class ModuleLoader extends ModuleLoaderUtil
             if (is_array($event)) {
                 $this->application->event()->load($event);
             }
-        }
-    }
-
-    /**
-     * 加载路由
-     */
-    protected function loadRoute()
-    {
-        foreach ($this->application->getRouteGroup() as $group) {
-            $this->loadRouteGroup($group);
-        }
-    }
-
-    /**
-     * 加载路由组
-     *
-     * @param string $groupName
-     * @return void
-     */
-    protected function loadRouteGroup(string $groupName)
-    {
-        $group = $groupName === 'default' ? '' : '-' . $groupName;
-        if ($path = $this->module->getResource()->getConfigResourcePath('config/route' . $group)) {
-            $routeConfig = Config::loadConfig($path, [
-                'module' => $this->module->getName(),
-                'group' => $groupName,
-                'property' => $this->module->getProperty(),
-                'config' => $this->module->getConfig(),
-            ]);
-            if ($routeConfig !== null) {
-                $prefix = $this->module->getConfig('route-prefix.' . $groupName, '');
-                $this->loadRouteConfig($prefix, $groupName, $routeConfig);
-            }
-        }
-    }
-
-    /**
-     * 加载模块路由配置
-     *
-     * @param string $prefix
-     * @param string $groupName
-     * @param array $routeConfig
-     * @return void
-     */
-    protected function loadRouteConfig(string $prefix, string $groupName, array $routeConfig)
-    {
-        $module = $this->module->getFullName();
-        foreach ($routeConfig as $name => $config) {
-            $exname = $this->application->getRouteName($name, $module, $groupName);
-            $method = $config['method'] ?? [];
-            $attributes = [];
-            $attributes['module'] = $module;
-            $attributes['config'] = $config;
-            $attributes['group'] = $groupName;
-            $attributes['route'] = $exname;
-            $uri = $config['uri'] ?? '/';
-            $anti = array_key_exists('anti-prefix', $config) && $config['anti-prefix'];
-            if ($anti) {
-                $uri = '/' . trim($uri, '/');
-            } else {
-                $uri = '/' . trim($prefix . $uri, '/');
-            }
-            $this->application->request($method, $exname, $uri, $attributes);
         }
     }
 }

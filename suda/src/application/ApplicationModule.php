@@ -4,8 +4,8 @@ namespace suda\application;
 
 use suda\framework\loader\Loader;
 use suda\database\exception\SQLException;
-use suda\application\debug\ExceptionCatcher;
 use suda\application\loader\ApplicationLoader;
+use suda\application\loader\ApplicationBaseLoader;
 use suda\application\exception\ApplicationException;
 
 /**
@@ -66,7 +66,7 @@ class ApplicationModule extends ApplicationContext
      */
     public function load()
     {
-        $appLoader = new ApplicationLoader($this);
+        $appLoader = new ApplicationBaseLoader($this);
         $this->debug->time('loading application');
         $appLoader->load();
         $this->event->exec('application:load-config', [$this->config, $this]);
