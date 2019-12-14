@@ -1,18 +1,18 @@
 <?php
 namespace suda\application\database\creator;
 
-use function implode;
-use suda\database\exception\SQLException;
 use suda\database\struct\Field;
 use suda\database\struct\TableStruct;
 use suda\database\connection\Connection;
+use suda\database\exception\SQLException;
+use suda\application\database\TableCreator;
 use suda\database\statement\QueryStatement;
 
 /**
  * 数据表链接对象
  *
  */
-class MySQLTableCreator
+class MySQLTableCreator extends TableCreator
 {
     /**
      * 连接
@@ -66,23 +66,16 @@ class MySQLTableCreator
     protected $auto;
 
     /**
-     * MySQLTableCreator constructor.
      * @param Connection $connection
      * @param TableStruct $fields
+     * @return bool
+     * @throws SQLException
      */
-    public function __construct(Connection $connection, TableStruct $fields)
+    public function create(Connection $connection, TableStruct $fields)
     {
         $this->name = $fields->getName();
         $this->fields = $fields;
         $this->connection = $connection;
-    }
-
-    /**
-     * @return bool
-     * @throws SQLException
-     */
-    public function create()
-    {
         $statement = new QueryStatement($this->toSQL());
         $statement->setType(QueryStatement::WRITE);
         return $this->connection->query($statement) > 0;
@@ -218,7 +211,7 @@ class MySQLTableCreator
     {
         $type = strtoupper($field->getValueType()).$this->parseLength($field->getLength());
         $auto = $field->getAuto() ?'AUTO_INCREMENT':'';
-        $null = $field->isNullable() ?'NULL':'NOT NULL';
+        $null = $field->isNullable() === null? '': $field->isNullable() === true ? 'NULL':'NOT NULL';
         $attr = $field->getAttribute() ?strtoupper($field->getAttribute()):'';
         $comment = $field->getComment() ?('COMMENT \''.addcslashes($field->getComment(), '\'').'\''):'';
         // default设置

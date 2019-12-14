@@ -9,6 +9,7 @@ use suda\application\ApplicationModule;
 use suda\database\exception\SQLException;
 use suda\database\connection\observer\Observer;
 use suda\application\Resource as ApplicationResource;
+use suda\application\database\creator\MySQLTableCreator;
 
 /**
  * Class Database

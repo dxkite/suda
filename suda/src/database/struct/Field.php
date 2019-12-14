@@ -44,7 +44,7 @@ class Field
     protected $length;
 
     /**
-     * @var
+     * @var mixed
      */
     protected $default;
 
@@ -54,9 +54,9 @@ class Field
     protected $hasDefault;
 
     /**
-     * @var bool
+     * @var bool|null
      */
-    protected $null = true; // isNullable
+    protected $null; // isNullable
 
     /**
      * @var
@@ -364,7 +364,7 @@ class Field
      *
      * @return boolean
      */
-    public function isNullable(): bool
+    public function isNullable(): ?bool
     {
         return $this->null;
     }
