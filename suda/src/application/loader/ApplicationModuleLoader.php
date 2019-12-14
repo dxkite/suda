@@ -20,6 +20,7 @@ use suda\application\builder\ModuleBuilder;
 class ApplicationModuleLoader
 {
     const CACHE_MODULE = 'application-module';
+
     /**
      * 应用程序
      *

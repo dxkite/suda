@@ -20,7 +20,7 @@ class ApplicationTest extends TestCase
         $loader = new Loader;
         $application = ApplicationBuilder::build($loader, SUDA_APP, SUDA_APP.'/manifest', SUDA_DATA);
         $application->setDebug(new Debugger($application, new NullLogger()));
-        $this->assertEquals($expected, $application->parseRouteName(...$parameter));
+        $this->assertEquals($expected, $application->parseSourceName(...$parameter));
     }
 
     /**

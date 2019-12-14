@@ -11,22 +11,11 @@ use suda\framework\filesystem\FileSystem;
 /**
  * 应用程序
  */
-class ApplicationLoader extends ApplicationModuleLoader
+class ApplicationLoader extends ApplicationBaseLoader
 {
 
     const CACHE_ROUTE = 'application-route';
     const CACHE_ROUTE_RUNNABLE = 'application-route-runnable';
-
-    /**
-     * 加载额外vendor
-     */
-    public function loadVendorIfExist()
-    {
-        $vendorAutoload = $this->application->getPath() . '/vendor/autoload.php';
-        if (FileSystem::exist($vendorAutoload)) {
-            Loader::requireOnce($vendorAutoload);
-        }
-    }
 
     /**
      * 加载APP
@@ -37,20 +26,6 @@ class ApplicationLoader extends ApplicationModuleLoader
         $this->loadGlobalConfig();
         $this->loadModule();
         LanguageLoader::load($this->application);
-    }
-
-    /**
-     * 加载全局配置
-     */
-    public function loadGlobalConfig()
-    {
-        $resource = $this->application->getResource();
-        if ($configPath = $resource->getConfigResourcePath('config/config')) {
-            $this->application->getConfig()->load($configPath);
-        }
-        if ($listenerPath = $resource->getConfigResourcePath('config/listener')) {
-            $this->application->loadEvent($listenerPath);
-        }
     }
 
     /**
@@ -101,15 +76,4 @@ class ApplicationLoader extends ApplicationModuleLoader
             && $this->application->cache()->has(ApplicationLoader::CACHE_ROUTE_RUNNABLE);
     }
 
-    /**
-     * 加载数据源
-     *
-     * @throws SQLException
-     */
-    public function loadDataSource()
-    {
-        Database::loadApplication($this->application);
-        $dataSource = Database::getDefaultDataSource();
-        $this->application->setDataSource($dataSource);
-    }
 }

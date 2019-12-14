@@ -7,10 +7,11 @@ use suda\framework\loader\Loader;
 use suda\application\exception\ApplicationException;
 
 /**
- * 基础应用程序
+ * 模块化应用
  */
-class ApplicationBase extends ApplicationContext
+class ApplicationModule extends ApplicationContext
 {
+
     /**
      * 模块集合
      *
@@ -199,5 +200,52 @@ class ApplicationBase extends ApplicationContext
         $this->module = $module;
 
         return $this;
+    }
+
+    /**
+     * 解析资源名
+     *
+     * @param string $name
+     * @param string|null $default
+     * @param string|null $groupName
+     * @return array
+     */
+    public function parseSourceName(string $name, ?string $default = null, ?string $groupName = null)
+    {
+        if (strpos($name, ':') !== false) {
+            $dotpos = strrpos($name, ':');
+            $module = substr($name, 0, $dotpos);
+            $name = substr($name, $dotpos + 1);
+            if (strlen($module) === 0) {
+                $module = $default;
+            }
+        } else {
+            $module = $default;
+        }
+        if ($module !== null && strpos($module, '@') !== false) {
+            list($module, $groupName) = explode('@', $module, 2);
+            $module = strlen($module) ? $module : $default;
+        }
+        return [$module, $groupName, $name];
+    }
+
+    /**
+     * 获取模板下的资源名
+     *
+     * @param string $name
+     * @param string|null $default
+     * @return string
+     */
+    public function getModuleSourceName(string $name, ?string $default = null): string
+    {
+        if (strpos($name, ':') > 0) {
+            list($module, $group, $name) = $this->parseSourceName($name, $default);
+        } else {
+            $module = $default;
+        }
+        if ($module !== null && ($moduleObj = $this->find($module))) {
+            return $moduleObj->getFullName() . ':' . $name;
+        }
+        return $name;
     }
 }

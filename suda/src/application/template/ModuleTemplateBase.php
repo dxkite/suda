@@ -73,7 +73,7 @@ class ModuleTemplateBase extends CompilableTemplate
         parent::__construct('', []);
         $this->application = $application;
         $this->request = $request;
-        list($this->module, $this->group, $this->name) = $application->parseRouteName($name, $defaultModule, 'default');
+        list($this->module, $this->group, $this->name) = $application->parseSourceName($name, $defaultModule, 'default');
         $this->group = $request->getAttribute('group', $this->group);
         $this->config = $this->getModuleConfig($this->module);
         $this->uriName = TemplateUtil::getSafeUriName($this->application, $this->module);

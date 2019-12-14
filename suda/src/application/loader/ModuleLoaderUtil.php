@@ -116,8 +116,7 @@ class ModuleLoaderUtil
     public static function versionCompare(string $version, string $compare)
     {
         if (preg_match('/^(<=?|>=?|<>|!=)(.+)$/i', $version, $match)) {
-            list($s, $op, $ver) = $match;
-            return  version_compare($compare, $ver, $op);
+            return version_compare($compare, $match[2], $match[1]);
         }
         return version_compare($compare, $version, '>=');
     }

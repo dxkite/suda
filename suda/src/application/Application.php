@@ -10,10 +10,10 @@ use suda\framework\http\Status;
 use suda\framework\loader\Loader;
 use suda\framework\route\MatchResult;
 use suda\application\template\Template;
+use suda\application\debug\RequestDumper;
 use suda\application\loader\ModuleLoader;
 use suda\database\exception\SQLException;
 use suda\application\template\RawTemplate;
-use suda\application\loader\LanguageLoader;
 use suda\application\wrapper\TemplateWrapper;
 use suda\application\loader\ApplicationLoader;
 use suda\application\processor\FileRequestProcessor;
@@ -28,12 +28,13 @@ use suda\application\processor\RunnableRequestProcessor;
 /**
  * 应用程序
  */
-class Application extends ApplicationSource
+class Application extends ApplicationRoute
 {
     /**
-     * @var DebugDumper
+     * @var RequestDumper
      */
     protected $dumper;
+
 
     /**
      * Application constructor.
@@ -89,7 +90,7 @@ class Application extends ApplicationSource
         $response->getWrapper()->register(ExceptionContentWrapper::class, [Throwable::class]);
         $response->getWrapper()->register(TemplateWrapper::class, [RawTemplate::class]);
 
-        $this->dumper = new DebugDumper($this, $request, $response);
+        $this->dumper = new RequestDumper($this, $request, $response);
         $this->dumper->register();
 
         $this->debug->info('{request-time} {remote-ip} {request-method} {request-uri} debug={debug}', [
@@ -266,6 +267,9 @@ class Application extends ApplicationSource
         return new Template($this->getModuleSourceName($name, $default), $this, $request, $default);
     }
 
+    /**
+     * @inheritDoc
+     */
     public function __clone()
     {
         $this->config = clone $this->config;

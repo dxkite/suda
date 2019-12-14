@@ -50,13 +50,6 @@ class ApplicationContext extends Context
     protected $style;
 
     /**
-     * 路由组
-     *
-     * @var array
-     */
-    protected $routeGroup;
-
-    /**
      * 资源目录
      *
      * @var ApplicationResource
@@ -83,7 +76,6 @@ class ApplicationContext extends Context
         parent::__construct(new Config(['app' => $manifest]), $loader);
         $this->setPath($path);
         $this->setManifest($manifest);
-        $this->setRouteGroup($manifest['route-group'] ?? ['default']);
         $resource = new Resource();
         $resource->registerResourcePath($path, $manifest['resource'] ?? './resource');
         $this->setResource($resource);
@@ -107,14 +99,6 @@ class ApplicationContext extends Context
     public function setManifest(array $manifest): void
     {
         $this->manifest = $manifest;
-    }
-
-    /**
-     * @param array $routeGroup
-     */
-    public function setRouteGroup(array $routeGroup): void
-    {
-        $this->routeGroup = $routeGroup;
     }
 
     /**
@@ -171,16 +155,6 @@ class ApplicationContext extends Context
             return ArrayDotAccess::get($this->manifest, $name, $default);
         }
         return $this->manifest;
-    }
-
-    /**
-     * Get 路由组
-     *
-     * @return  array
-     */
-    public function getRouteGroup()
-    {
-        return $this->routeGroup;
     }
 
     /**
