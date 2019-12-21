@@ -5,6 +5,7 @@ namespace suda\database\struct;
 use suda\database\exception\SQLException;
 use suda\database\TableAccess;
 
+
 class ReadStatement extends \suda\database\statement\ReadStatement
 {
     /**
@@ -110,6 +111,20 @@ class ReadStatement extends \suda\database\statement\ReadStatement
     public function fetchAll(?string $class = null, array $args = []): array
     {
         return $this->all($class, $args);
+    }
+
+    /**
+     * 统计
+     *
+     * @return int
+     * @throws SQLException
+     */
+    public function count() {
+        $totalQuery = new QueryStatement($this->getAccess(), sprintf("SELECT count(*) as count from (%s) as total", $this->getString()),
+            $this->getBinder());
+        $totalQuery->wantType(null);
+        $data = $totalQuery->one();
+        return intval($data['count']);
     }
 
     /**

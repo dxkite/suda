@@ -142,6 +142,20 @@ class QueryStatement extends \suda\database\statement\QueryStatement
     }
 
     /**
+     * 统计
+     *
+     * @return int
+     * @throws SQLException
+     */
+    public function count() {
+        $totalQuery = new QueryStatement($this->getAccess(), sprintf("SELECT count(*) as count from (%s) as total", $this->getString()),
+            $this->getBinder());
+        $totalQuery->wantType(null);
+        $data = $totalQuery->one();
+        return intval($data['count']);
+    }
+
+    /**
      * Get 访问操作
      *
      * @return  QueryAccess

@@ -26,7 +26,7 @@ trait WherePrepareTrait
             if (array_key_exists($index, $parameter)) {
                 $name = Binder::index($index);
                 if (is_array($parameter[$index]) || $parameter[$index] instanceof IteratorAggregate) {
-                    list($inSQL, $inBinders) = $this->prepareInParameter($parameter[$index], $index);
+                    [$inSQL, $inBinders] = $this->prepareInParameter($parameter[$index], $index);
                     $binders = array_merge($binders, $inBinders);
                     return $inSQL;
                 } else {
@@ -49,7 +49,7 @@ trait WherePrepareTrait
      */
     public function prepareInParameter($values, string $name)
     {
-        if ($this->count($values) <= 0) {
+        if ($this->countObject($values) <= 0) {
             throw new SQLException('on field ' . $name . ' value can\'t be empty array');
         }
         $names = [];
@@ -66,7 +66,7 @@ trait WherePrepareTrait
      * @param array|Countable|IteratorAggregate $value
      * @return int
      */
-    public function count($value)
+    protected function countObject($value)
     {
         if (is_array($value) || $value instanceof Countable) {
             return count($value);
@@ -145,7 +145,7 @@ trait WherePrepareTrait
         $and = [];
         $binders = [];
         foreach ($whereArray as $item) {
-            list($name, $option, $value) = $this->fixWhereArray($item);
+            [$name, $option, $value] = $this->fixWhereArray($item);
             $query = $this->getQueryForArray($name, $option, $value);
             $and[] = $query->getQuery();
             $binders = array_merge($binders, $query->getBinder());
@@ -159,7 +159,7 @@ trait WherePrepareTrait
      */
     protected function fixWhereArray(array $item) {
         if (count($item) === 2) {
-            list($name, $value) = $item;
+            [$name, $value] = $item;
             return [$name, '=', $value];
         }
         return $item;
@@ -176,7 +176,7 @@ trait WherePrepareTrait
         }
         $newWhere = [];
         foreach ($where as $name => $value) {
-            if (is_array($value) && $this->count($value) === 2) {
+            if (is_array($value) && $this->countObject($value) === 2) {
                 $newWhere[] = [$name, $value[0], $value[1]];
             } else {
                 $newWhere[] = [$name, '=', $value];
@@ -204,7 +204,7 @@ trait WherePrepareTrait
     public function getQueryForString(string $where, string $name, $value)
     {
         if (is_array($value) || $value instanceof IteratorAggregate) {
-            list($inSQL, $binders) = $this->prepareInParameter($value, $name);
+            [$inSQL, $binders] = $this->prepareInParameter($value, $name);
             $where = $this->replaceQuote($name, $inSQL, $where);
             return new Query($where, $binders);
         } elseif ($value instanceof Binder) {
@@ -228,7 +228,7 @@ trait WherePrepareTrait
         if ($values instanceof Query || $values instanceof Statement) {
             return $this->createQueryOperation($name, 'in', $values);
         }
-        list($inSQL, $binders) = $this->prepareInParameter($values, $name);
+        [$inSQL, $binders] = $this->prepareInParameter($values, $name);
         $sql = '`' . $name . '` ' . strtoupper($operation) . ' (' . $inSQL . ')';
         return new Query($sql, $binders);
     }

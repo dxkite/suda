@@ -144,7 +144,7 @@ class ReadStatement extends QueryStatement
         } elseif (count($args) > 0 && is_array($args[0])) {
             $this->whereStringArray($where, $args[0]);
         } else {
-            list($string, $array) = $this->prepareQueryMark($where, $args);
+            [$string, $array] = $this->prepareQueryMark($where, $args);
             $this->whereStringArray($string, $array);
         }
         return $this;
@@ -173,7 +173,7 @@ class ReadStatement extends QueryStatement
      */
     protected function whereArray(array $where, array $binders)
     {
-        list($where, $whereBinder) = $this->prepareWhere($where);
+        [$where, $whereBinder] = $this->prepareWhere($where);
         $this->whereStringArray($where, array_merge($whereBinder, $binders));
     }
 
@@ -196,7 +196,7 @@ class ReadStatement extends QueryStatement
      */
     protected function whereStringArray(string $where, array $whereBinder)
     {
-        list($where, $whereBinder) = $this->prepareWhereString($where, $whereBinder);
+        [$where, $whereBinder] = $this->prepareWhereString($where, $whereBinder);
         $this->where = 'WHERE ' . $where;
         $this->binder = $this->mergeBinder($this->binder, $whereBinder);
     }
@@ -229,7 +229,7 @@ class ReadStatement extends QueryStatement
         } elseif (is_array($args[0])) {
             $this->havingStringArray($what, $args[0]);
         } else {
-            list($string, $array) = $this->prepareQueryMark($what, $args);
+            [$string, $array] = $this->prepareQueryMark($what, $args);
             $this->havingStringArray($string, $array);
         }
         return $this;
@@ -241,7 +241,7 @@ class ReadStatement extends QueryStatement
      */
     protected function havingArray(array $want)
     {
-        list($having, $havingBinder) = $this->prepareWhere($want);
+        [$having, $havingBinder] = $this->prepareWhere($want);
         $this->havingStringArray($having, $havingBinder);
     }
 
@@ -252,7 +252,7 @@ class ReadStatement extends QueryStatement
      */
     protected function havingStringArray(string $having, array $havingBinder)
     {
-        list($having, $havingBinder) = $this->prepareWhereString($having, $havingBinder);
+        [$having, $havingBinder] = $this->prepareWhereString($having, $havingBinder);
         $this->having = 'HAVING ' . $having;
         $this->binder = $this->mergeBinder($this->binder, $havingBinder);
     }
