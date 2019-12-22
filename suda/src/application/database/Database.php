@@ -25,6 +25,11 @@ class Database
     protected static $application;
 
     /**
+     * @var DataSource[]
+     */
+    protected static $dataSource = [];
+
+    /**
      * 从应用创建表
      *
      * @param ApplicationModule $application
@@ -73,6 +78,9 @@ class Database
      */
     public static function getDataSourceFrom(ApplicationResource $resource, string $groupName)
     {
+        if (array_key_exists($groupName, static::$dataSource)) {
+            return static::$dataSource[$groupName];
+        }
         $group = $groupName === 'default' ? '': '-'. $groupName;
         $dataSourceConfigPath = $resource->getConfigResourcePath('config/data-source'.$group);
         $dataSource = new DataSource;
@@ -93,7 +101,7 @@ class Database
                 }
             }
         }
-        return $dataSource;
+        return static::$dataSource[$groupName] = $dataSource;
     }
 
 
