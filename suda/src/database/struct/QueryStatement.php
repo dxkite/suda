@@ -148,7 +148,9 @@ class QueryStatement extends \suda\database\statement\QueryStatement
      * @throws SQLException
      */
     public function count() {
-        $totalQuery = new QueryStatement($this->getAccess(), sprintf("SELECT count(*) as count from (%s) as total", $this->getString()),
+        $query = $this->getString();
+        $query = preg_replace('/LIMIT\s+\d+(\s*,\s*\d+)?\s*$/ims', '', $query);
+        $totalQuery = new QueryStatement($this->getAccess(), sprintf("SELECT count(*) as count from (%s) as total", $query),
             $this->getBinder());
         $totalQuery->wantType(null);
         $data = $totalQuery->one();

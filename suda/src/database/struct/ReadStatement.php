@@ -120,7 +120,10 @@ class ReadStatement extends \suda\database\statement\ReadStatement
      * @throws SQLException
      */
     public function count() {
-        $totalQuery = new QueryStatement($this->getAccess(), sprintf("SELECT count(*) as count from (%s) as total", $this->getString()),
+        $query = clone $this;
+        $query->orderBy = '';
+        $query->limit = '';
+        $totalQuery = new QueryStatement($this->getAccess(), sprintf("SELECT count(*) as count from (%s) as total", $query->getString()),
             $this->getBinder());
         $totalQuery->wantType(null);
         $data = $totalQuery->one();

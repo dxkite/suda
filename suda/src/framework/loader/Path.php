@@ -18,6 +18,9 @@ class Path
      */
     public static function format(string $path):?string
     {
+        if (strlen(trim($path)) === 0) {
+            return null;
+        }
         return static::existCharset($path, ['GBK','GB2312','BIG5']);
     }
 

@@ -177,19 +177,20 @@ class RawTemplate
      */
     public function getRenderedString()
     {
-        if (file_exists($this->getPath())) {
+        $path = $this->getPath();
+        if (file_exists($path)) {
             ob_start();
             extract($this->value);
-            include $this->getPath();
+            include $path;
             if ($this->extend) {
                 $this->include($this->extend);
             }
             return ob_get_clean() ?: '';
         }
         throw new NoTemplateFoundException(
-            'missing dest at ' . $this->getPath(),
+            'missing dest at ' . $path ,
             E_USER_ERROR,
-            $this->getPath(),
+            $path ,
             1
         );
     }
