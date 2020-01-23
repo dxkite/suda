@@ -134,7 +134,9 @@ class QueryAccess
         $queryObj = $statement->getQuery();
         $query = $connection->prefix($queryObj->getQuery());
         if ($statement->isScroll()) {
-            $stmt = $connection->getPdo()->prepare($query, [PDO::ATTR_CURSOR => PDO::CURSOR_SCROLL]);
+            $stmt = $connection->getPdo()->prepare($query, [
+                PDO::ATTR_CURSOR => PDO::CURSOR_SCROLL
+            ]);
         } else {
             $stmt = $connection->getPdo()->prepare($query);
         }

@@ -123,6 +123,11 @@ class ReadStatement extends \suda\database\statement\ReadStatement
         $query = clone $this;
         $query->orderBy = '';
         $query->limit = '';
+        $fields = $this->struct->all();
+        if (count($fields) > 0) {
+            $field = \array_shift($fields);
+            $query->read([$field->getName()]);
+        }
         $totalQuery = new QueryStatement($this->getAccess(), sprintf("SELECT count(*) as count from (%s) as total", $query->getString()),
             $this->getBinder());
         $totalQuery->wantType(null);

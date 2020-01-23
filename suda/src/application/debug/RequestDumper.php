@@ -29,16 +29,4 @@ class RequestDumper extends ExceptionCatcher
         parent::__construct($application, $context);
         $this->response = $response;
     }
-
-    /**
-     * @param Throwable $throwable
-     */
-    public function dumpThrowable($throwable)
-    {
-        parent::dumpThrowable($throwable);
-        if ($this->response->isSend() === false) {
-            $this->response->sendContent($throwable);
-            $this->response->end();
-        }
-    }
 }
