@@ -5,17 +5,16 @@ use suda\framework\Config;
 use suda\application\Module;
 use suda\framework\Debugger;
 use suda\framework\loader\Loader;
-use suda\application\ApplicationModule;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Command\Command;
 use suda\framework\debug\log\logger\FileLogger;
 use suda\application\builder\ApplicationBuilder;
-use suda\application\loader\ApplicationBaseLoader;
 
 defined('SUDA_APP') or define('SUDA_APP', __DIR__ . '/app');
 defined('SUDA_DATA') or define('SUDA_DATA', __DIR__ . '/data');
 defined('SUDA_SYSTEM') or define('SUDA_SYSTEM', __DIR__ . '/suda');
-defined('SUDA_PUBLIC') or define('SUDA_PUBLIC', __DIR__);
+defined('SUDA_PUBLIC') or define('SUDA_PUBLIC', __DIR__ . '/public');
+
 defined('SUDA_DEBUG') or define('SUDA_DEBUG', true);
 defined('SUDA_DEBUG_LEVEL') or define('SUDA_DEBUG_LEVEL', 'debug');
 defined('SUDA_APP_MANIFEST') or define('SUDA_APP_MANIFEST', SUDA_APP . '/manifest');
@@ -28,13 +27,8 @@ $loader = new Loader;
 $loader->register();
 $loader->addIncludePath(SUDA_SYSTEM . '/src', 'suda');
 // 初始化数据目录
-$manifestConfig = ApplicationBuilder::loadManifest(SUDA_APP, SUDA_APP_MANIFEST);
+$application = ApplicationBuilder::build($loader, SUDA_APP, SUDA_APP_MANIFEST, SUDA_DATA);
 
-if (array_key_exists('import', $manifestConfig)) {
-    ApplicationBuilder::importClassLoader($loader, $manifestConfig['import'], SUDA_APP);
-}
-
-$application = new ApplicationModule(SUDA_APP, $manifestConfig, $loader, SUDA_DATA);
 // 文件日志
 $logger = new FileLogger(
     [
@@ -57,6 +51,8 @@ $application->load();
 
 $app = new Application();
 
+$app->setName('suda-app');
+
 /** @var Module $module */
 foreach ($application->getModules() as $name => $module) {
     if ($path = $module->getResource()->getConfigResourcePath('config/console')) {
@@ -67,10 +63,17 @@ foreach ($application->getModules() as $name => $module) {
                 $className = Loader::realName($item['class']);
                 $cmd = new $className;
                 $cmd->setName($module->getName() . ':' . $cmd->getName());
+                if (method_exists($cmd, 'putApplication')) {
+                    call_user_func_array([$cmd, 'putApplication'], [$application]);
+                }
                 $app->add($cmd);
             }
         }
     }
 }
 
-$app->run();
+try {
+    $app->run();
+} catch (Exception $e) {
+    $application->dumpException($e);
+}
