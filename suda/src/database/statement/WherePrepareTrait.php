@@ -109,7 +109,7 @@ trait WherePrepareTrait
     public function getQueryForArray(string $name, string $operator, $value)
     {
         if ($value instanceof IteratorAggregate || is_array($value)) {
-            return $this->prepareIn($name, 'IN', $value);
+            return $this->prepareIn($name, $operator, $value);
         } else {
             return $this->createQueryOperation($name, $operator, $value);
         }
