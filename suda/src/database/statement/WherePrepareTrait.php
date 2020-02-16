@@ -176,13 +176,22 @@ trait WherePrepareTrait
         }
         $newWhere = [];
         foreach ($where as $name => $value) {
-            if (is_array($value) && $this->countObject($value) === 2) {
+            if (is_array($value)) {
                 $newWhere[] = [$name, $value[0], $value[1]];
             } else {
-                $newWhere[] = [$name, '=', $value];
+                $op = $this->isArray($value)?'in':'=';
+                $newWhere[] = [$name, $op, $value];
             }
         }
         return $newWhere;
+    }
+
+    /**
+     * @param $value
+     * @return bool
+     */
+    protected function isArray($value) {
+        return is_array($value) || $value instanceof IteratorAggregate;
     }
 
     /**
@@ -203,7 +212,7 @@ trait WherePrepareTrait
      */
     public function getQueryForString(string $where, string $name, $value)
     {
-        if (is_array($value) || $value instanceof IteratorAggregate) {
+        if ($this->isArray($value)) {
             [$inSQL, $binders] = $this->prepareInParameter($value, $name);
             $where = $this->replaceQuote($name, $inSQL, $where);
             return new Query($where, $binders);
