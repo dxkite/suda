@@ -1,6 +1,7 @@
 <?php
 namespace suda\framework\debug;
 
+use Psr\Log\LoggerTrait;
 use function array_merge;
 
 /**
@@ -8,12 +9,17 @@ use function array_merge;
  */
 class Caller
 {
-    protected $ignorePath = [__FILE__];
+    protected $ignorePath = [SUDA_SYSTEM];
     protected $backtrace;
 
     public function __construct(array $backtrace, array $ignorePath =[])
     {
         $this->ignorePath = array_merge($this->ignorePath, $ignorePath);
+        $rc = new \ReflectionClass(LoggerTrait::class);
+        $file = $rc->getFileName();
+        if ($file) {
+            $this->ignorePath[] = $file;
+        }
         $this->backtrace = $backtrace;
     }
 

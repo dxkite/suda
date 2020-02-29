@@ -3,7 +3,9 @@
 namespace suda\framework\debug\log\logger;
 
 
+use Psr\Log\LogLevel;
 use Psr\Log\AbstractLogger;
+use suda\framework\debug\Debug;
 
 /**
  * 控制台日志输出
@@ -11,13 +13,25 @@ use Psr\Log\AbstractLogger;
 class ConsoleLogger extends AbstractLogger
 {
     /**
+     * @var string
+     */
+    protected $level;
+
+    public function __construct(string $level)
+    {
+        $this->level = $level;
+    }
+
+    /**
      * @param mixed $level
      * @param string $message
      * @param array $context
      */
     public function log($level, $message, array $context = [])
     {
-        print date('Y-m-d H:i:s') . ' ' . $this->interpolate($message, $context) . PHP_EOL;
+        if (Debug::compare($level, $this->level) >= 0) {
+            print date('Y-m-d H:i:s') . ' ' . $this->interpolate($message, $context) . PHP_EOL;
+        }
     }
 
     /**

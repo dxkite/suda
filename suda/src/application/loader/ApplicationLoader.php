@@ -38,13 +38,7 @@ class ApplicationLoader extends ApplicationBaseLoader
         $name = 'application-route';
         $this->application->debug()->time($name);
         if (static::isDebug()) {
-            $this->loadRouteFromModules();
-            if ($this->application->getRoute()->isContainClosure()) {
-                $this->application->debug()->warning('route contain closure, route prepare cannot be cacheables');
-            } else {
-                $this->application->cache()->set(ApplicationLoader::CACHE_ROUTE, $this->application->getRoute()->getRouteCollection());
-                $this->application->cache()->set(ApplicationLoader::CACHE_ROUTE_RUNNABLE, $this->application->getRoute()->getRunnable());
-            }
+            $this->setRouteCache();
         } elseif ($this->routeCacheAvailable()) {
             $route = $this->application->cache()->get(ApplicationLoader::CACHE_ROUTE);
             $runnable = $this->application->cache()->get(ApplicationLoader::CACHE_ROUTE_RUNNABLE);
@@ -55,6 +49,23 @@ class ApplicationLoader extends ApplicationBaseLoader
             $this->loadRouteFromModules();
         }
         $this->application->debug()->timeEnd($name);
+    }
+
+    /**
+     * 设置路由缓存
+     */
+    private function setRouteCache() {
+        $this->application->cache()->delete(ApplicationLoader::CACHE_ROUTE);
+        $this->application->cache()->delete(ApplicationLoader::CACHE_ROUTE_RUNNABLE);
+        $this->application->debug()->info('delete route cache');
+        $this->loadRouteFromModules();
+        if ($this->application->getRoute()->isContainClosure()) {
+            $this->application->debug()->warning('route contain closure, route prepare cannot be cacheables');
+        } else {
+            $this->application->cache()->set(ApplicationLoader::CACHE_ROUTE, $this->application->getRoute()->getRouteCollection());
+            $this->application->cache()->set(ApplicationLoader::CACHE_ROUTE_RUNNABLE, $this->application->getRoute()->getRunnable());
+            $this->application->debug()->info('set route cache');
+        }
     }
 
     /**

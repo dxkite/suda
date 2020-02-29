@@ -28,7 +28,7 @@ class ExceptionCatcher
      * @param ApplicationContext $application
      * @param array $context
      */
-    public function __construct(ApplicationContext $application, array $context)
+    public function __construct(ApplicationContext $application, array $context = [])
     {
         $this->applicationContext = $application;
         $this->context = $context;
@@ -42,6 +42,13 @@ class ExceptionCatcher
     {
         set_exception_handler([$this, 'uncaughtException']);
         return $this;
+    }
+
+    /**
+     * @return void
+     */
+    public static function restore() {
+        restore_exception_handler();
     }
 
     /**

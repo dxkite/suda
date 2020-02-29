@@ -14,6 +14,7 @@ use suda\application\debug\RequestDumper;
 use suda\application\loader\ModuleLoader;
 use suda\database\exception\SQLException;
 use suda\application\template\RawTemplate;
+use suda\application\debug\ExceptionCatcher;
 use suda\application\wrapper\TemplateWrapper;
 use suda\application\loader\ApplicationLoader;
 use suda\application\processor\FileRequestProcessor;
@@ -33,7 +34,7 @@ class Application extends ApplicationRoute
     /**
      * @var RequestDumper
      */
-    protected $dumper;
+    protected $catcher;
 
     /**
      * 准备运行环境
@@ -66,9 +67,7 @@ class Application extends ApplicationRoute
         $response->setHeader('x-powered-by', 'suda/' . SUDA_VERSION, true);
         $response->getWrapper()->register(ExceptionContentWrapper::class, [Throwable::class]);
         $response->getWrapper()->register(TemplateWrapper::class, [RawTemplate::class]);
-
-        $this->dumper = new RequestDumper($this, $request, $response);
-        $this->dumper->register();
+        $this->setCatcher(new RequestDumper($this, $request, $response));
 
         $this->debug->info('{request-time} {remote-ip} {request-method} {request-uri} debug={debug}', [
             'remote-ip' => $request->getRemoteAddr(),
@@ -82,11 +81,20 @@ class Application extends ApplicationRoute
     }
 
     /**
+     * @param ExceptionCatcher $catcher
+     */
+    public function setCatcher(ExceptionCatcher $catcher) {
+        ExceptionCatcher::restore();
+        $this->catcher = $catcher;
+        $this->catcher->register();
+    }
+
+    /**
      * @param Throwable $throwable
      */
     public function dumpException($throwable)
     {
-        $this->dumper->dumpThrowable($throwable);
+        $this->catcher->dumpThrowable($throwable);
     }
 
     /**
@@ -121,7 +129,7 @@ class Application extends ApplicationRoute
             $this->debug->timeEnd('sending response');
         } catch (Throwable $e) {
             $this->debug->uncaughtException($e);
-            $this->dumper->dumpThrowable($e);
+            $this->catcher->dumpThrowable($e);
             $appResponse->sendContent($e);
             $this->debug->timeEnd('sending response');
         }
