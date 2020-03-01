@@ -7,10 +7,9 @@ use Throwable;
 use suda\framework\Request;
 use suda\framework\Response;
 use suda\framework\http\Status;
-use suda\framework\loader\Loader;
 use suda\framework\route\MatchResult;
 use suda\application\template\Template;
-use suda\application\debug\RequestDumper;
+use suda\application\debug\RequestDumpCatcher;
 use suda\application\loader\ModuleLoader;
 use suda\database\exception\SQLException;
 use suda\application\template\RawTemplate;
@@ -32,7 +31,7 @@ use suda\application\processor\RunnableRequestProcessor;
 class Application extends ApplicationRoute
 {
     /**
-     * @var RequestDumper
+     * @var ExceptionCatcher
      */
     protected $catcher;
 
@@ -67,7 +66,7 @@ class Application extends ApplicationRoute
         $response->setHeader('x-powered-by', 'suda/' . SUDA_VERSION, true);
         $response->getWrapper()->register(ExceptionContentWrapper::class, [Throwable::class]);
         $response->getWrapper()->register(TemplateWrapper::class, [RawTemplate::class]);
-        $this->setCatcher(new RequestDumper($this, $request, $response));
+        $this->setCatcher(new RequestDumpCatcher($this, $request, $response));
 
         $this->debug->info('{request-time} {remote-ip} {request-method} {request-uri} debug={debug}', [
             'remote-ip' => $request->getRemoteAddr(),
