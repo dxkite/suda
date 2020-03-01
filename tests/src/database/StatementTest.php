@@ -3,6 +3,7 @@
 namespace test\database;
 
 use ArrayObject;
+use suda\database\statement\Query;
 use suda\application\database\creator\MySQLTableCreator;
 use suda\database\DataSource;
 use suda\database\middleware\Middleware;
@@ -39,9 +40,9 @@ class StatementTest extends TestCase
 
 
         $source->add(DataSource::new('mysql', [
-            'host' => 'localhost',
-            'name' => 'test',
-            'user' => 'root',
+            'host'     => 'localhost',
+            'name'     => 'test',
+            'user'     => 'root',
             'password' => DIRECTORY_SEPARATOR === '/' ? '' : 'root',
         ]));
 
@@ -149,23 +150,23 @@ class StatementTest extends TestCase
         $this->assertEquals(
             'SELECT `id`,`name` FROM user_table WHERE `id` IN (:_id_32,:_id_33) GROUP BY `name` HAVING name like :_0_34 ORDER BY `id` DESC,`name` ASC LIMIT 0,10',
             $table->read('id', 'name')
-                ->where(['id' => new ArrayObject([1, 2])])
-                ->page(1, 10)
-                ->having('name like ?', 'dxkite')
-                ->groupBy('name')
-                ->orderBy('id', 'desc')
-                ->orderBy('name', 'asc')->getString()
+                  ->where(['id' => new ArrayObject([1, 2])])
+                  ->page(1, 10)
+                  ->having('name like ?', 'dxkite')
+                  ->groupBy('name')
+                  ->orderBy('id', 'desc')
+                  ->orderBy('name', 'asc')->getString()
         );
 
         $this->assertEquals(
             'SELECT `id`,`name` FROM user_table WHERE `id` = (SELECT `id` FROM user_table WHERE `id` > :val) GROUP BY `name` HAVING name like :_0_36 ORDER BY `id` DESC,`name` ASC LIMIT 0,10',
             $table->read('id', 'name')
-                ->where(['id' => new QueryStatement('SELECT `id` FROM user_table WHERE `id` > :val', ['val' => 100])])
-                ->page(1, 10)
-                ->having('name like ?', 'dxkite')
-                ->groupBy('name')
-                ->orderBy('id', 'desc')
-                ->orderBy('name', 'asc')->getString()
+                  ->where(['id' => new QueryStatement('SELECT `id` FROM user_table WHERE `id` > :val', ['val' => 100])])
+                  ->page(1, 10)
+                  ->having('name like ?', 'dxkite')
+                  ->groupBy('name')
+                  ->orderBy('id', 'desc')
+                  ->orderBy('name', 'asc')->getString()
         );
 
         $whereIn = $table->delete(['id' => ['in', new ArrayObject([1, 3, 4])]])->getString();
@@ -198,14 +199,13 @@ class StatementTest extends TestCase
         ]);
 
         $source->add(DataSource::new('mysql', [
-            'host' => 'localhost',
-            'name' => 'test',
-            'user' => 'root',
+            'host'     => 'localhost',
+            'name'     => 'test',
+            'user'     => 'root',
             'password' => DIRECTORY_SEPARATOR === '/' ? '' : 'root',
         ]));
 
-        $table = new TableAccess($struct, $source, new class implements Middleware
-        {
+        $table = new TableAccess($struct, $source, new class implements Middleware {
 
             /**
              * 处理输入数据
@@ -280,7 +280,10 @@ class StatementTest extends TestCase
             'SELECT DISTINCT `id_raw`,`name_raw` FROM user_table WHERE name like :name ORDER BY `id_raw` ASC LIMIT 0,10',
             $table->read('id', 'name')->distinct()->where('name like :name', ['name' => 'dxkite'])->page(1, 10)->orderBy('id', 'ASC')->getString()
         );
-
+        $this->assertEquals(
+            'SELECT DISTINCT `id_raw`,`name_raw` FROM user_table WHERE `name_raw` is null ORDER BY `id_raw` ASC LIMIT 0,10',
+            $table->read('id', 'name')->distinct()->where([['name', 'is', $table->raw('null')]])->page(1, 10)->orderBy('id', 'ASC')->getString()
+        );
     }
 
     public function testStuctSet()
@@ -305,16 +308,16 @@ class StatementTest extends TestCase
         ]);
 
         $source->add(DataSource::new('mysql', [
-            'host' => 'localhost',
-            'name' => 'test',
-            'user' => 'root',
+            'host'     => 'localhost',
+            'name'     => 'test',
+            'user'     => 'root',
             'password' => DIRECTORY_SEPARATOR === '/' ? '' : 'root',
         ]));
 
         $table = new TableAccess($struct, $source);
 
         if (DIRECTORY_SEPARATOR === '\\') {
-            $this->assertNotNull((new MySQLTableCreator($table->getSource()->write(), $struct))->create());
+            $this->assertNotNull((new MySQLTableCreator())->create($table->getSource()->write(), $struct));
 
             $this->assertTrue($table->run($table->write(['name' => 'dxkite'])));
 

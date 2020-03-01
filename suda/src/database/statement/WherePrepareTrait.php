@@ -108,7 +108,7 @@ trait WherePrepareTrait
      */
     public function getQueryForArray(string $name, string $operator, $value)
     {
-        if ($value instanceof IteratorAggregate || is_array($value)) {
+        if ($this->isArray($value)) {
             return $this->prepareIn($name, $operator, $value);
         } else {
             return $this->createQueryOperation($name, $operator, $value);
@@ -160,7 +160,8 @@ trait WherePrepareTrait
     protected function fixWhereArray(array $item) {
         if (count($item) === 2) {
             [$name, $value] = $item;
-            return [$name, '=', $value];
+            $op = $this->isArray($value)?'in':'=';
+            return [$name, $op, $value];
         }
         return $item;
     }

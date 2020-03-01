@@ -200,4 +200,14 @@ class QueryAccess
     {
         return $this->middleware;
     }
+
+    /**
+     * 原始SQL
+     * @param string $query
+     * @param array $parameter
+     * @return Query
+     */
+    public function raw(string $query, array $parameter = []) {
+        return new Query($query, $parameter);
+    }
 }
