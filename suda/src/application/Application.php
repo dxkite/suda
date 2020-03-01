@@ -84,7 +84,9 @@ class Application extends ApplicationRoute
      * @param ExceptionCatcher $catcher
      */
     public function setCatcher(ExceptionCatcher $catcher) {
-        ExceptionCatcher::restore();
+        if ($this->catcher !== null) {
+            $this->catcher->restore();
+        }
         $this->catcher = $catcher;
         $this->catcher->register();
     }

@@ -9,7 +9,7 @@ use function array_merge;
  */
 class Caller
 {
-    protected $ignorePath = [SUDA_SYSTEM];
+    protected $ignorePath = [__FILE__];
     protected $backtrace;
 
     public function __construct(array $backtrace, array $ignorePath =[])

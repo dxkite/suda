@@ -24,6 +24,11 @@ class ExceptionCatcher
     protected $context;
 
     /**
+     * @var callable
+     */
+    protected $last;
+
+    /**
      * ExceptionCatcher constructor.
      * @param ApplicationContext $application
      * @param array $context
@@ -40,15 +45,18 @@ class ExceptionCatcher
      */
     public function register()
     {
-        set_exception_handler([$this, 'uncaughtException']);
+        $this->last = set_exception_handler([$this, 'uncaughtException']);
         return $this;
     }
 
     /**
-     * @return void
+     * 重置监控工具
      */
-    public static function restore() {
+    public function restore() {
         restore_exception_handler();
+        if ($this->last !== null) {
+            set_exception_handler($this->last);
+        }
     }
 
     /**

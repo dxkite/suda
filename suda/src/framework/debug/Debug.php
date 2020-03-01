@@ -48,16 +48,29 @@ class Debug implements LoggerInterface, LoggerAwareInterface, DumpInterface, Att
     public function log($level, $message, array $context = [])
     {
         $attribute = $this->getAttribute();
-        list($attach, $replace) = $this->analyse($message, $context);
-        $attribute = array_merge($attribute, $attach);
+
+        $caller = $this->getCaller($context);
+
+        [$attach, $replace] = $this->analyse($message, $context);
+        $attribute            = array_merge($attribute, $attach);
         $attribute['message'] = strtr($message, $replace);
-        $attribute['level'] = $level;
-        $caller = new Caller(debug_backtrace(), $this->getIgnoreTraces());
-        $trace = $caller->getCallerTrace();
-        $attribute['file'] = $trace['file'];
-        $attribute['line'] = $trace['line'];
+        $attribute['level']   = $level;
+        $attribute['file']    = $caller['file'];
+        $attribute['line']    = $caller['line'];
+
         $attribute = $this->assignAttributes($attribute);
         $this->logger->log($level, $this->interpolate($this->getConfig('log-format'), $attach, $attribute), []);
+    }
+
+    private function getCaller(array $context)
+    {
+        if (array_key_exists('exception', $context) && $context['exception'] instanceof \Throwable) {
+            $backtrace = $context['exception']->getTrace();
+        } else {
+            $backtrace = debug_backtrace();
+        }
+        $caller = new Caller($backtrace, $this->getIgnoreTraces());
+        return $caller->getCallerTrace();
     }
 
     /**
@@ -68,7 +81,7 @@ class Debug implements LoggerInterface, LoggerAwareInterface, DumpInterface, Att
     public function analyse(string $message, array $context)
     {
         $replace = [];
-        $attach = [];
+        $attach  = [];
         foreach ($context as $key => $val) {
             $replaceKey = '{' . $key . '}';
             if ($this->canBeStringValue($val) && strpos($message, $replaceKey) !== false) {
@@ -96,8 +109,8 @@ class Debug implements LoggerInterface, LoggerAwareInterface, DumpInterface, Att
     public function getDefaultConfig(): array
     {
         return [
-            'log-format' => '%time-format% - %memory-format% [%level%] %file%:%line% %message%',
-            'start-time' => 0,
+            'log-format'   => '%time-format% - %memory-format% [%level%] %file%:%line% %message%',
+            'start-time'   => 0,
             'start-memory' => 0,
         ];
     }
@@ -117,12 +130,12 @@ class Debug implements LoggerInterface, LoggerAwareInterface, DumpInterface, Att
      */
     protected function assignAttributes(array $attribute): array
     {
-        $attribute['current-time'] = number_format(microtime(true), 4, '.', '');
-        $time = microtime(true) - $this->getConfig('start-time');
-        $memory = memory_get_usage() - $this->getConfig('start-memory');
-        $attribute['time-format'] = number_format($time, 10, '.', '');
+        $attribute['current-time']  = number_format(microtime(true), 4, '.', '');
+        $time                       = microtime(true) - $this->getConfig('start-time');
+        $memory                     = memory_get_usage() - $this->getConfig('start-memory');
+        $attribute['time-format']   = number_format($time, 10, '.', '');
         $attribute['memory-format'] = $this->formatBytes($memory, 2);
-        $attribute['memory'] = $memory;
+        $attribute['memory']        = $memory;
         return $attribute;
     }
 
@@ -135,8 +148,8 @@ class Debug implements LoggerInterface, LoggerAwareInterface, DumpInterface, Att
     {
         $human = ['B', 'KB', 'MB', 'GB', 'TB'];
         $bytes = max($bytes, 0);
-        $pow = floor(($bytes ? log($bytes) : 0) / log(1024));
-        $pos = min($pow, count($human) - 1);
+        $pow   = floor(($bytes ? log($bytes) : 0) / log(1024));
+        $pos   = min($pow, count($human) - 1);
         $bytes /= (1 << (10 * $pos));
         return round($bytes, $precision) . ' ' . $human[$pos];
     }

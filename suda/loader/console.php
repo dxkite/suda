@@ -8,9 +8,12 @@ use suda\application\Module;
 use suda\framework\Debugger;
 use suda\framework\loader\Loader;
 use Symfony\Component\Console\Application;
+use suda\application\debug\ExceptionCatcher;
 use Symfony\Component\Console\Command\Command;
 use suda\framework\debug\log\logger\FileLogger;
 use suda\application\builder\ApplicationBuilder;
+use suda\framework\debug\log\logger\MultiLogger;
+use suda\framework\debug\log\logger\ConsoleLogger;
 
 defined('SUDA_APP') or define('SUDA_APP', __DIR__ . '/app');
 defined('SUDA_DATA') or define('SUDA_DATA', __DIR__ . '/data');
@@ -30,7 +33,7 @@ $loader->addIncludePath(SUDA_SYSTEM . '/src', 'suda');
 $application = ApplicationBuilder::build($loader, SUDA_APP, SUDA_APP_MANIFEST, SUDA_DATA);
 
 // 文件日志
-$logger = new FileLogger(
+$logger = new MultiLogger(new FileLogger(
     [
         'log-level' => SUDA_DEBUG_LEVEL,
         'save-path' => SUDA_DEBUG_LOG_PATH,
@@ -38,9 +41,12 @@ $logger = new FileLogger(
         'save-zip-path' => SUDA_DEBUG_LOG_PATH . '/zip',
         'log-format' => '%message%',
     ]
-);
+), new ConsoleLogger('warning'));
+$debugger = new Debugger($application, $logger);
 // 设置调试工具
-$application->setDebug(new Debugger($application, $logger));
+$application->setDebug($debugger);
+// 设置异常捕获
+$application->setCatcher(new ExceptionCatcher($application));
 // 调试信息
 $application->getDebug()->applyConfig([
     'start-time' => defined('SUDA_START_TIME') ? constant('SUDA_START_TIME') : microtime(true),
