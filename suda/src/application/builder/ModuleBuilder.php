@@ -25,6 +25,7 @@ class ModuleBuilder
         list($name, $version, $resource, $property) = static::getModuleProperty($path, $propertyPath);
         $module = new Module($name, $version, $path, $property);
         $module->getResource()->registerResourcePath($path, $resource);
+        $module->setUnique($module->getConfig('unique', ''));
         return $module;
     }
 

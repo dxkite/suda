@@ -16,6 +16,13 @@ class Module
     const RUNNING = 4;
 
     /**
+     * 全局唯一名称
+     *
+     * @var string
+     */
+    protected $unique;
+
+    /**
      * 模块名
      *
      * @var string
@@ -238,5 +245,21 @@ class Module
     public function getPath(): string
     {
         return $this->path;
+    }
+
+    /**
+     * @return string
+     */
+    public function getUnique(): string
+    {
+        return strlen($this->unique) > 0 ? $this->unique : $this->getFullName();
+    }
+
+    /**
+     * @param string $unique
+     */
+    public function setUnique(string $unique): void
+    {
+        $this->unique = $unique;
     }
 }

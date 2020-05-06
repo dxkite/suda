@@ -1,4 +1,5 @@
 <?php
+
 namespace suda\application;
 
 use function array_key_exists;
@@ -33,7 +34,7 @@ class ModuleBag implements IteratorAggregate
      *
      * @var array
      */
-    protected $knownsFullName = [];
+    protected $version = [];
 
     /**
      * 查找缓存
@@ -50,14 +51,18 @@ class ModuleBag implements IteratorAggregate
      */
     public function add(Module $module)
     {
-        $name = $module->getName();
+        $name    = $module->getName();
         $version = $module->getVersion();
+        $unique  = $module->getUnique();
         $version = $this->formatVersion($version);
-        if (!in_array($name, $this->knownsFullName)) {
-            $this->knownsFullName[$name][$version] = $name.':'.$version;
-            uksort($this->knownsFullName[$name], [$this, 'sort']);
+        if (!in_array($name, $this->version)) {
+            $this->version[$name][$version] = $unique;
+            uksort($this->version[$name], [$this, 'sort']);
         }
-        $this->module[$name.':'.$version] = $module;
+        if (in_array($unique, $this->module)) {
+            throw new ApplicationException(sprintf('conflict module unique name %s', $unique), ApplicationException::ERR_CONFLICT_MODULE_UNIQUE);
+        }
+        $this->module[$unique] = $module;
     }
 
     /**
@@ -68,9 +73,9 @@ class ModuleBag implements IteratorAggregate
      */
     public function merge(ModuleBag $module)
     {
-        $this->module = array_merge($this->module, $module->module);
-        $this->knownsFullName = array_merge($this->knownsFullName, $module->knownsFullName);
-        $this->cache = array_merge($this->cache, $module->cache);
+        $this->module  = array_merge($this->module, $module->module);
+        $this->version = array_merge($this->version, $module->version);
+        $this->cache   = array_merge($this->cache, $module->cache);
     }
 
     /**
@@ -79,7 +84,7 @@ class ModuleBag implements IteratorAggregate
      * @param string $path
      * @return Module|null
      */
-    public function guess(string $path):?Module
+    public function guess(string $path): ?Module
     {
         foreach ($this->module as $module) {
             if (FileSystem::isOverflowPath($module->getPath(), $path) === false) {
@@ -95,7 +100,7 @@ class ModuleBag implements IteratorAggregate
      * @param string $path
      * @return Module
      */
-    public function getModuleFromPath(string $path):Module
+    public function getModuleFromPath(string $path): Module
     {
         if (($module = $this->guess($path)) !== null) {
             return $module;
@@ -112,10 +117,10 @@ class ModuleBag implements IteratorAggregate
      * @param string $name
      * @return Module|null
      */
-    public function get(string $name):?Module
+    public function get(string $name): ?Module
     {
-        $full = $this->getFullName($name);
-        return  $this->module[$full] ?? null;
+        $uniqueName = $this->getUniqueName($name);
+        return $this->module[$uniqueName] ?? null;
     }
 
     /**
@@ -123,7 +128,7 @@ class ModuleBag implements IteratorAggregate
      *
      * @return Module[]
      */
-    public function all():array
+    public function all(): array
     {
         return $this->module;
     }
@@ -139,7 +144,7 @@ class ModuleBag implements IteratorAggregate
      * @param string $name
      * @return boolean
      */
-    public function exist(string $name) :bool
+    public function exist(string $name): bool
     {
         return $this->get($name) !== null;
     }
@@ -152,16 +157,16 @@ class ModuleBag implements IteratorAggregate
      * @param string|null $default
      * @return array
      */
-    public function info(string $name, ?string $default = null):array
+    public function info(string $name, ?string $default = null): array
     {
-        $rpos = strrpos($name, ':');
-        if ($rpos > 0) {
-            $module = substr($name, 0, $rpos);
-            $name = substr($name, $rpos + 1);
-            $moduleFull = $this->getFullName($module);
-            return [$moduleFull, $name];
+        $rp = strrpos($name, ':');
+        if ($rp > 0) {
+            $module     = substr($name, 0, $rp);
+            $name       = substr($name, $rp + 1);
+            $uniqueName = $this->getUniqueName($module);
+            return [$uniqueName, $name];
         }
-        if ($rpos === 0) {
+        if ($rp === 0) {
             return [$default, substr($name, 1)];
         }
         return [$default, $name];
@@ -173,13 +178,17 @@ class ModuleBag implements IteratorAggregate
      * @param string $name
      * @return string
      */
-    public function getFullName(string $name):string
+    public function getUniqueName(string $name): string
     {
-        if (array_key_exists($name, $this->cache)) {
-            return  $this->cache[$name];
+        if (array_key_exists($name, $this->module)) {
+            return $name;
         }
-        $fullname = $this->createFullName($name);
-        return $fullname;
+        if (array_key_exists($name, $this->cache)) {
+            return $this->cache[$name];
+        }
+        $uniqueName         = $this->createUniqueName($name);
+        $this->cache[$name] = $uniqueName;
+        return $uniqueName;
     }
 
     /**
@@ -188,30 +197,30 @@ class ModuleBag implements IteratorAggregate
      * @param string $name
      * @return string
      */
-    protected function createFullName(string $name)
+    protected function createUniqueName(string $name)
     {
-        $version = null;
+        $version    = null;
         $hasVersion = false;
         if (strpos($name, ':')) {
             $hasVersion = true;
-            list($sortName, $version) = explode(':', $name, 2);
+            list($shortName, $version) = explode(':', $name, 2);
         } else {
-            $sortName = $name;
+            $shortName = $name;
         }
-        $sortName = $this->getLikeName($sortName);
-        if (array_key_exists($sortName, $this->knownsFullName) === false) {
+        $shortName = $this->getLikeName($shortName);
+        if (array_key_exists($shortName, $this->version) === false) {
             return $name;
         }
-        if (array_key_exists($version, $this->knownsFullName[$sortName])) {
-            return $this->knownsFullName[$sortName][$version];
+        if (array_key_exists($version, $this->version[$shortName])) {
+            return $this->version[$shortName][$version];
         }
-        return $hasVersion?$sortName.':'.$version:end($this->knownsFullName[$sortName]);
+        return $hasVersion ? $shortName . ':' . $version : end($this->version[$shortName]);
     }
 
-    protected function getLikeName(string $name):string
+    protected function getLikeName(string $name): string
     {
         $names = [];
-        foreach (array_keys($this->knownsFullName) as $keyName) {
+        foreach (array_keys($this->version) as $keyName) {
             if (strpos($keyName, $name) !== false) {
                 $names[] = $keyName;
             }

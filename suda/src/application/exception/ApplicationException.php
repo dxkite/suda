@@ -13,5 +13,6 @@ class ApplicationException extends RuntimeException
     const ERR_MODULE_REQUIREMENTS = 3;
     const ERR_MODULE_NAME = 4;
     const ERR_CONFLICT_MODULE_NAME = 5;
-    const ERR_PATH_NOT_EXISTS_IN_MODULE = 6;
+    const ERR_CONFLICT_MODULE_UNIQUE = 6;
+    const ERR_PATH_NOT_EXISTS_IN_MODULE = 7;
 }

@@ -15,6 +15,7 @@ composer create-project --prefer-dist dxkite/suda project
 
 ### 下载安装
 
+1. 下载项目
 直接 [下载项目代码](https://github.com/dxkite/suda/archive/master.zip) 解压后在项目的结构如下：
 
 ```
@@ -25,6 +26,12 @@ composer create-project --prefer-dist dxkite/suda project
 ├── README.md
 ├── suda
 └── tests
+```
+
+2. 运行 composer 命令 安装依赖 [怎么安装composer?](https://pkg.phpcomposer.com/#how-to-install-composer)
+
+```bash
+composer install
 ```
 
 
